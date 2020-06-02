@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-02T20:25:00.633Z</updated>
+    <updated>2020-06-02T20:52:48.513Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -12,1766 +12,1334 @@
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[自定义grub主题]]></title>
-        <id>https://2293736867.github.io/post/zi-ding-yi-grub-zhu-ti/</id>
-        <link href="https://2293736867.github.io/post/zi-ding-yi-grub-zhu-ti/">
+        <title type="html"><![CDATA[每天AC系列(九):合并K个排序链表]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao/">
         </link>
-        <updated>2020-06-02T20:24:31.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E4%B8%8B%E8%BD%BD%E4%B8%BB%E9%A2%98">2 下载主题</a></li>
-<li><a href="#3-%E8%A7%A3%E5%8E%8B">3 解压</a></li>
-<li><a href="#4-%E5%AE%89%E8%A3%85">4 安装</a></li>
-<li><a href="#5-%E6%95%88%E6%9E%9C">5 效果</a></li>
-<li><a href="#6-%E6%94%B9%E8%BF%9B">6 改进</a>
-<ul>
-<li><a href="#61-progress_bar">6.1 progress_bar</a></li>
-<li><a href="#62-boot_menu">6.2 boot_menu</a></li>
-<li><a href="#63-image">6.3 image</a></li>
-<li><a href="#64-etcdefaultgrub">6.4 /etc/default/grub</a></li>
-<li><a href="#65-bootgrubgrubcfg">6.5 /boot/grub/grub.cfg</a></li>
-<li><a href="#66-%E8%83%8C%E6%99%AF">6.6 背景</a></li>
-</ul>
-</li>
-<li><a href="#7-%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C">7 最终效果</a></li>
-<li><a href="#8-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">8 配置文件</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>自定义grub引导菜单的主题，笔者的linux是deepin，感觉默认的grub主题不太好看，嗯，没办法，就是想改了。<br>
-这篇文章主要是修改/boot/grub/grub.cfg以及/boot/grub/themes/.../theme.txt这两个文件，修改之前要备份，不要问为什么。</p>
-<h1 id="2-下载主题">2 下载主题</h1>
-<p><a href="https://www.gnome-look.org/browse/cat/109/order/latest/">到这里</a>下载自己喜欢的主题。这是笔者下载的<a href="https://www.gnome-look.org/p/1197062/">主题</a>。</p>
-<h1 id="3-解压">3 解压</h1>
-<pre><code class="language-bash">tar -zxvf xxxx.tar.gz
-</code></pre>
-<h1 id="4-安装">4 安装</h1>
-<p>直接在解压后的文件夹运行：</p>
-<pre><code class="language-bash">sudo ./install.sh
-</code></pre>
-<p>输入y：<br>
-<img src="https://img-blog.csdnimg.cn/20200123142024186.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5-效果">5 效果</h1>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200123142733309.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6-改进">6 改进</h1>
-<p>还不满意，嗯。。。</p>
-<h2 id="61-progress_bar">6.1 progress_bar</h2>
-<p>这个是进度条的设置，如果觉得进度条不满意可以直接去修改/boot/grub/themes/主题名/theme.txt下的progress_bar设置：<br>
-<img src="https://img-blog.csdnimg.cn/20200123143655826.png" alt="在这里插入图片描述" loading="lazy"><br>
-可以修改（距离左边和顶部的）位置，宽度，高度，是否显示文本，设置文本等，还可以设置前景颜色（fg_color）与背景颜色（bg_color），还有进度条的风格，就是显示哪一些图片等。</p>
-<h2 id="62-boot_menu">6.2 boot_menu</h2>
-<p>这个是启动项菜单的设置，可以调整启动项的位置，字体大小，启动项高度，各个启动项之间的间隔，启动项前的图标大小等。<br>
-<img src="https://img-blog.csdnimg.cn/20200123143131832.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="63-image">6.3 image</h2>
-<p>笔者的这个theme.txt有一个image,用来显示KDElogo的，这个可以选择直接不要，删除全部即可，如果想更换成自己喜欢的图片，可以直接修改文件位置，或者再新建一个image:<br>
-<img src="https://img-blog.csdnimg.cn/20200123144744120.png" alt="在这里插入图片描述" loading="lazy"><br>
-如果是自己的文件需要把图片放到与theme.txt同一个文件夹，其他宽度，高度之类的，设置合适就好了。</p>
-<h2 id="64-etcdefaultgrub">6.4 /etc/default/grub</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200123145607854.png" alt="在这里插入图片描述" loading="lazy"><br>
-一些系统相关的基本上不用改，经常改的是默认项，timeout这几个。</p>
-<ul>
-<li>GRUB_DEFAULT：设置默认启动项，按menuentry排序（menuentry顺序可以通过/boot/grub/grub.cfg查看），从0开始计数，从0开始计数，从0开始计数，重要的事再说一遍不是从1开始计数，若设为“saved”的话表示保存上次项，需要配合GRUB_SAVEDEFULT使用。</li>
-<li>GRUB_SAVEDEFAULT：当GRUB_DEFAULT设置为“saved”时这个选项才生效，默认为false，设为true的话默认的启动项是上次启动项。</li>
-<li>GRUB_TIMEOUT：进入默认项的等待时间，单位秒，有其他键被按下这个时间会取消，默认为5，设为0表示立即启动，不会显示启动项菜单，设为-1的话表示无限等待。</li>
-<li>GRUB_TIMEOUT_STYLE：默认为&quot;menu&quot;（不设置这个值与设为“menu”等价），表示显示启动项菜单，如果设为&quot;countdown&quot;，不会显示启动项菜单，会显示一行倒计时文字，若设为“hidden”，效果与“countdown”类似，不过不会显示倒计时文字，等待GRUB_TIMEOUT结束后启动默认启动项。若设为&quot;countdown&quot;或&quot;hidden&quot;，想要显示启动项菜单按Esc即可。</li>
-</ul>
-<p>不过这里其实有一个坑，就是只需要按Esc一次即可显示启动项菜单，一次即可，两次就会进入grub中的shell，这个要把握好时机，按快了的话没效果或者会进入grub，按慢了就直接启动默认启动项了，当然这个如果GRUB_TIMEOUT稍微大一点就无所谓，笔者说这个因为经历过把GRUB_TIMEOUT设为1，然后GRUB_TIMEOUT_STYLE设为了“hidden”这样的情形，然后就悲剧了。。。想进去启动菜单要重启好几次。。。。因此，GRUB_TIMEOUT_STYLE不太建议设为“countdown”或“hidden”，笔者“血的教训”。。。</p>
-<p>/etc/default/grub还有其他设置，不过一般不怎么用，需要的话可以来<a href="https://www.gnu.org/software/grub/manual/grub/grub.html">这里</a>看一下。</p>
-<h2 id="65-bootgrubgrubcfg">6.5 /boot/grub/grub.cfg</h2>
-<p>执行update-grub后会更新这个文件，手动修改这个文件是因为想修改启动项的文字，因为太长了，感觉没必要。<br>
-注意，如果手动修改过/etc/default/grub，也就是需要执行update-grub后使其生效后，需要重新修改/boot/grub/grub.cfg.</p>
-<pre><code class="language-bash">sudo vim /boot/grub/grub.cfg
-</code></pre>
-<p>笔者只是想改文字，因此这里搜索找到menuentry直接修改：<br>
-<img src="https://img-blog.csdnimg.cn/20200123153323958.png" alt="在这里插入图片描述" loading="lazy"><br>
-改短一点就好了，submenu同理：<br>
-<img src="https://img-blog.csdnimg.cn/20200123153439487.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="66-背景">6.6 背景</h2>
-<p>这个比较简单，这接把想要的背景复制到/boot/grub/themes/主题名/下，重命名叫background.png即可，或者可以在theme.txt中修改：<br>
-<img src="https://img-blog.csdnimg.cn/20200123155728534.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="7-最终效果">7 最终效果</h1>
-<p>这是笔者的最终效果，主要就是加了一个头像，换个背景啥的。(手机问题。。。)<br>
-<img src="https://img-blog.csdnimg.cn/20200123164911424.jpg" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="8-配置文件">8 配置文件</h1>
-<p>这是需要的配置文件以及主题。<br>
-<a href="https://github.com/2293736867/GRUBconfig">github</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每天AC系列(一):三数之和]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-yi-san-shu-zhi-he/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-yi-san-shu-zhi-he/">
-        </link>
-        <updated>2020-06-02T20:24:02.000Z</updated>
+        <updated>2020-06-02T20:52:24.000Z</updated>
         <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/3sum/">LeetCode第15题</a>,难度中等,题目描述:<br>
-给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。</p>
-<p>注意：答案中不可以包含重复的三元组。<br>
-<img src="https://img-blog.csdnimg.cn/20200122160536118.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-解法">2 解法</h1>
-<p>什么也不管先来个O(n3):</p>
-<pre><code class="language-java">for(int i=0;i&lt;nums.length;++i)
+<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/">LeetCode第23题</a>,合并k个有序的链表.<br>
+<img src="https://img-blog.csdnimg.cn/20200130181741680.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-暴力法">2 暴力法</h1>
+<p>直接遍历所有链表,取出所有节点的值,用数组存储,非降序排序,然后创建一个新链表用头插法依次插入节点.</p>
+<pre><code class="language-java">List&lt;Integer&gt; s = new ArrayList&lt;&gt;();
+for(ListNode x:lists)
 {
-    for(int j=i+1;j&lt;nums.length;++j)
+    while(x != null)
     {
-        for(int k=j+1;k&lt;nums.length;++k)
+        s.add(x.val);
+        x = x.next;
+    }
+}
+s.sort((a,b) -&gt; {return a.compareTo(b);});
+ListNode result = new ListNode(0);
+ListNode t = result;
+for(Integer x:s)
+{
+    t.next = new ListNode(x);
+    t = t.next;
+}
+return result.next;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200130205630834.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里要注意一下,sort那里不能写成:</p>
+<pre><code class="language-java">s.sort((a,b)-&gt;{return a&gt;b ? 1 : -1;});
+</code></pre>
+<p>没有考虑到等于的情况,所以用compareTo代替:</p>
+<pre><code class="language-java">s.sort((a,b)-&gt;{return a.compareTo(b);});
+</code></pre>
+<h1 id="3-直接合并法">3 直接合并法</h1>
+<p>每次遍历所有链表,取出首节点的值,各个比较然后得出最小值,将最小值插入新链表,然后移动最小值所在的链表的指针,直到所有链表为空.</p>
+<pre><code class="language-java">ListNode result = new ListNode(0);
+ListNode t = result;
+int len = lists.length;
+int nullNodeNums = 0;
+for(boolean [] b = new boolean[len];nullNodeNums&lt;len;)
+{
+    int min = Integer.MAX_VALUE;
+    int minIndex = -1;
+    for(int index = 0;index&lt;len;++index)
+    {
+        ListNode x = lists[index];
+        if(x == null)
         {
-            if(nums[i]+nums[j]+nums[k] == 0)
+            if(!b[index])
             {
-                ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
-                arrayList.add(nums[i]);
-                arrayList.add(nums[j]);
-                arrayList.add(nums[k]);
-                result.add(arrayList);
+                b[index] = true;
+                ++nullNodeNums;
             }
         }
-    }
-}
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200122160740540.png" alt="在这里插入图片描述" loading="lazy"><br>
-well.</p>
-<h1 id="3-优化">3 优化</h1>
-<p>上面暴力算法的思想就是单纯三个循环,优化的方法可以考虑降低一个循环,使用&quot;双指针&quot;的思想,首先对数组进行排序,然后一开始固定一个数,然后让两个指针一个指向这个数的右区间的起点,一个指向终点,不断计算这三个值的和,根据得出的和移动左指针或者右指针,一共三种情况:</p>
-<ul>
-<li>和等于0,同时移动左右指针,两者向中间方向移动.</li>
-<li>和大于0,说明取值过大,需要把右指针向左移动.</li>
-<li>和小于0,说明取值过小,需要把左指针向右移动.</li>
-</ul>
-<p>基于以上的三种情况,写出了如下代码:</p>
-<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
-if (nums.length == 3 &amp;&amp; nums[0] + nums[1] + nums[2] == 0)
-    result.add(Arrays.asList(nums[0], nums[1], nums[2]));
-else if (nums.length &gt; 3) 
-{
-    Arrays.sort(nums);
-    Set&lt;List&lt;Integer&gt;&gt; resultSet = new HashSet&lt;&gt;();
-    for (int i = 0; i &lt; nums.length - 2 &amp;&amp; nums[i] &lt;= 0; ++i) 
-    {
-        int left = i + 1;
-        int right = nums.length - 1;
-        while (left &lt; right) 
+        else if(x.val &lt; min)
         {
-            int sum = nums[i] + nums[left] + nums[right];
-            if (sum == 0) 
-            {
-                if (!resultSet.contains(Arrays.asList(nums[i], nums[left], nums[right]))) 
-                    resultSet.add(Arrays.asList(nums[i], nums[left], nums[right]));
-                --right;
-                ++left;
-            } 
-            else if (sum &gt; 0)
-                --right;
-            else
-                ++left;
+            min = x.val;
+            minIndex = index;
         }
     }
-    result.addAll(resultSet);
+    if(minIndex != -1)
+    {
+        t.next = new ListNode(min);
+        t = t.next;
+        lists[minIndex] = lists[minIndex].next;
+    }
+}
+return result.next;
+</code></pre>
+<p>这里使用了一个布尔数组判断是否某个节点已经移动到尾部,即表示是否为空,为空的话跳过这个节点,不为空的话取其值,计算是否为最小值.得到最小值后,添加到结果节点中,并移动最小值所在链表的指针.<br>
+<img src="https://img-blog.csdnimg.cn/20200131022403181.png" alt="在这里插入图片描述" loading="lazy"><br>
+这个方法看起来慢得很啊.</p>
+<h1 id="4-优先队列">4 优先队列</h1>
+<p>优先队列是上两个方法的结合,遍历所有节点,取值并根据其值确定优先级添加到优先队列中,然后依次出队,将出队的值直接插入到新链表中.</p>
+<pre><code class="language-java">PriorityQueue&lt;Integer&gt; queue = new PriorityQueue&lt;&gt;();
+for(ListNode x:lists)
+{
+    while(x != null)
+    {
+        queue.add(x.val);
+        x = x.next;
+    }
+}
+ListNode s = new ListNode(0);
+ListNode t = s;
+while(!queue.isEmpty())
+{
+    t.next = new ListNode(queue.poll());
+    t = t.next;
+}
+return s.next;
+</code></pre>
+<p>java的优先队列可以直接add即可,按照默认出队序列(对于整数是小的先出)使用尾插法插入到新链表中.<br>
+<img src="https://img-blog.csdnimg.cn/20200131023647945.png" alt="在这里插入图片描述" loading="lazy"><br>
+嗯,好像还可以的样子,但是还是不够快.</p>
+<h1 id="5-两两合并法">5 两两合并法</h1>
+<p>合并k个链表,相当于合并2个链表k-1次,利用递归的思想,每次合并两个链表,将合并后的链表后返回作为下一个要合并的链表继续合并.</p>
+<pre><code class="language-java">public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0)
+        return null;
+    ListNode t = lists[0];
+    for(int i=1;i&lt;lists.length;++i)
+        t = merge(t, lists[i]);
+    return t;
+}
+//public ListNode merge(ListNode a,ListNode b)
+</code></pre>
+<p>merge为直接合并两个链表的操作,不难,就不贴代码了,首先赋值t为第一个链表,然后依次合并t与剩下的n-1个链表.<br>
+<img src="https://img-blog.csdnimg.cn/20200131025014753.png" alt="在这里插入图片描述" loading="lazy"><br>
+好慢啊.</p>
+<h1 id="6-分治法">6 分治法</h1>
+<p>分治法是两两合并法的改进,两两合并每次合并两个链表,分治法每次合并一半数量的链表,总体思想是这样的:想要得到最终有序的链表,若左半部分的链表与右半部分的链表都有序,则相当于合并两个有序链表,为了得到左半部分的有序链表,需要继续对左半部分进行一半的分割,再次分成左半部分与右半部分,然后再分,直到某部分只有一个链表,然后返回,以合并两个普通有序链表的方式合并两个返回的链表.</p>
+<pre><code class="language-java">public ListNode f(int start,int end)
+{
+    int len = end - start;
+    if(len &lt;= 1)
+        return lists[start];
+    ListNode l = f(start,start+len/2);
+    ListNode r = f(start+len/2,end);
+    return merge(l, r);
 }
 </code></pre>
-<p>首先判断数组的长度是否大于等于3,小于3的话直接返回一个空List,等于3判断是否这三个数之和为0,大于3的话,首先排序,接着需要确保被确定的相对不移动的数为负数,这样的话剩下两个数的和才有可能为正数,否则的话会造成全部都是正数还要进行判断的局面.接着计算left指针与right指针的值,一直判断直到两指针相遇.</p>
-<h1 id="4-提交">4 提交</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200123014120558.png" alt="在这里插入图片描述" loading="lazy"><br>
-AC!</p>
-<h1 id="5-完整代码">5 完整代码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay">github</a><br>
-<a href="https://gitee.com/imykr/ACEveryDay">码云</a></p>
+<p>代码非常简洁,一开始为判断递归的条件,区间长度小于等于1直接返回[start]的节点,然后递归合并左半部分与右半部分的节点.<br>
+<img src="https://img-blog.csdnimg.cn/20200131031405559.png" alt="在这里插入图片描述" loading="lazy"><br>
+一个字,舒服.<br>
+真快.</p>
+<h1 id="7-源码">7 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day9">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day9">码云</a></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Java备份MySQL]]></title>
-        <id>https://2293736867.github.io/post/java-bei-fen-mysql/</id>
-        <link href="https://2293736867.github.io/post/java-bei-fen-mysql/">
+        <title type="html"><![CDATA[每天AC系列(八):括号生成]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng/">
         </link>
-        <updated>2020-06-02T20:23:39.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%88%9B%E5%BB%BA%E5%A4%87%E4%BB%BD%E8%B7%AF%E5%BE%84">2 创建备份路径</a></li>
-<li><a href="#3-%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4">3 执行命令</a></li>
-<li><a href="#4-%E6%89%A7%E8%A1%8C">4 执行</a></li>
-<li><a href="#5-%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98">5 其他问题</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>使用java备份mysql数据库,主要是使用mysqldump与Runtime().getRuntime().exec().</p>
-<h1 id="2-创建备份路径">2 创建备份路径</h1>
-<p>如果没有备份的存储路径首先创建路径.</p>
-<pre><code class="language-java">Path path = Paths.get(xxxx);
-try
+        <updated>2020-06-02T20:52:04.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/generate-parentheses/">LeetCode第22题</a>,根据一个整数生成所有的有效的括号组合,这个整数表示括号的对数.<br>
+<img src="https://img-blog.csdnimg.cn/20200129171333358.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-暴力法">2 暴力法</h1>
+<p>对于n对括号,总共2n个字符,每个字符可以为左括号或右括号,所以总共2^(2n)中组合,暴力法就是枚举各个组合,然后判断它们是否为有效的组合:</p>
+<pre><code class="language-java">public void f(char c[],int pos,List&lt;String&gt; result)
 {
-	Files.createDirectories(path);
-}
-catch(IOException e)
-{
-	//xxxx
-}
-</code></pre>
-<h1 id="3-执行命令">3 执行命令</h1>
-<p>如果是直接用shell执行的话:</p>
-<pre><code class="language-bash">mysqldump -u user_name -p database_name &gt; xxxx\database_name.sql
-</code></pre>
-<p>使用-u与-p分别指定用户与密码,最后重定向到文件.<br>
-但是,要注意再java中用exec()时,千万千万不能使用-p选项,-p是交互式输入密码的,使用了-p的话导出的文件是0KB的,需要使用</p>
-<pre><code class="language-bash">--password
-</code></pre>
-<p>代替.</p>
-<pre><code class="language-java">String command = &quot;mysqldump -u user --password=xxxx &gt; xxxx\\xxxx.sql&quot;
-</code></pre>
-<p>要注意一下路径问题,另外,在windows下,需要使用cmd:</p>
-<pre><code class="language-java">String command = &quot;cmd /c mysqldump -u user --password=xxxx &gt; xxxx\\xxxx.sql&quot;
-</code></pre>
-<p>这需要把</p>
-<pre><code>%MYSQL_HOME%/bin
-</code></pre>
-<p>加入到环境变量,如果没有加入的话输入绝对路径:</p>
-<pre><code class="language-java">String command = &quot;cmd /c C:\\Program Files\\mysql\\bin\\mysqldump -u user --password=xxxx &gt; xxxx\\xxxx.sql&quot;
-</code></pre>
-<h1 id="4-执行">4 执行</h1>
-<pre><code class="language-java">try
-{
-	Runtime.getRuntime().exec(command);
-}
-catch(IOException e)
-{
-	//xxxx
-}
-</code></pre>
-<h1 id="5-其他问题">5 其他问题</h1>
-<p>如果没有导出文件或者导出的文件为0KB,可能原因是:</p>
-<ul>
-<li>语法错误:命令的空格使用不当,路径设置错误,使用了错误的参数等.</li>
-<li>环境问题:如在windows下没有添加到环境变量,没有加上&quot;cmd /c&quot;.</li>
-<li>用户名/密码错误:这个....</li>
-<li>权限问题:用户没有相应权限,要登陆到mysql中授权.</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python生成词云]]></title>
-        <id>https://2293736867.github.io/post/python-sheng-cheng-ci-yun/</id>
-        <link href="https://2293736867.github.io/post/python-sheng-cheng-ci-yun/">
-        </link>
-        <updated>2020-06-02T20:23:15.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">2 准备工作</a>
-<ul>
-<li><a href="#21-%E5%AE%89%E8%A3%85anaconda">2.1 安装anaconda</a></li>
-<li><a href="#22-%E5%AE%89%E8%A3%85cython">2.2 安装cython</a></li>
-<li><a href="#23-%E5%AE%89%E8%A3%85wordcloud">2.3 安装wordcloud</a></li>
-</ul>
-</li>
-<li><a href="#3-%E4%BD%BF%E7%94%A8">3 使用</a>
-<ul>
-<li><a href="#31-%E6%89%93%E5%BC%80jupyter">3.1 打开Jupyter</a></li>
-<li><a href="#32-%E5%88%9B%E5%BB%BA%E6%96%87%E5%AD%97%E5%BA%93">3.2 创建文字库</a></li>
-<li><a href="#33-%E7%94%9F%E6%88%90%E8%AF%8D%E4%BA%91">3.3 生成词云</a></li>
-<li><a href="#34-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">3.4 注意事项</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>利用Python生成简单的词云,需要的工具是cython,wordcloud与anaconda.</p>
-<h1 id="2-准备工作">2 准备工作</h1>
-<p>包括安装cython,wordcloud与anaconda.</p>
-<h2 id="21-安装anaconda">2.1 安装anaconda</h2>
-<p><a href="https://www.anaconda.com/distribution/#download-section">下载官网</a><br>
-<img src="https://img-blog.csdnimg.cn/20200113190514642.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择对应的版本下载即可.</p>
-<h2 id="22-安装cython">2.2 安装cython</h2>
-<p>cython是为了安装wordcloud准备的.</p>
-<pre><code class="language-bash">pip -m pip install --upgrade cython
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200113190715912.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="23-安装wordcloud">2.3 安装wordcloud</h2>
-<p>安装wordcloud前需要先安装Microsoft Visuall C++ 14.0.<br>
-<a href="https://545c.com/file/1445568-239446865">这里下载</a><br>
-安装好了以后重启,输入</p>
-<pre><code class="language-bash">python -m easy_install wordcloud
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200113191153967.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-使用">3 使用</h1>
-<h2 id="31-打开jupyter">3.1 打开Jupyter</h2>
-<p>打开Jupyter Notebook.<br>
-<img src="https://img-blog.csdnimg.cn/20200113223651852.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后会在浏览器打开这个页面,新建一个notebook.<br>
-<img src="https://img-blog.csdnimg.cn/20200113223734330.png" alt="在这里插入图片描述" loading="lazy"><br>
-先把需要的库导入:</p>
-<pre><code class="language-python">from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200113224045388.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="32-创建文字库">3.2 创建文字库</h2>
-<p>简单的文字库可以直接选择一个txt文件,复杂的话可以选择创建一个excel,导出为csv文件,然后利用pandas库的read_csv()读入文件.这里创建一个txt,空格分隔单词即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200113224749967.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后上传到Jupyter中:<br>
-<img src="https://img-blog.csdnimg.cn/20200113224830283.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="33-生成词云">3.3 生成词云</h2>
-<p>首先读入文件:</p>
-<pre><code class="language-python">text = open('1.txt').read()
-</code></pre>
-<p>然后使用WordCloud().generate(text),在里面设置各种属性.</p>
-<pre><code class="language-python">wc=WordCloud(
-    width=800,
-    repeat=True,
-    height=800).generate(text)
-</code></pre>
-<p>这里设置了高度与宽度,允许重复.</p>
-<pre><code class="language-python">plt.imshow(wc,interpolation=&quot;bilinear&quot;)
-plt.axis(&quot;off&quot;)
-plt.show()
-</code></pre>
-<p>显示词云,</p>
-<pre><code class="language-python">interpolation='bilinear'
-</code></pre>
-<p>会使显示平滑更加平滑,axis(&quot;off&quot;)表示不显示坐标轴.<br>
-下面是效果:<br>
-<img src="https://img-blog.csdnimg.cn/20200113230237645.jpg" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="34-注意事项">3.4 注意事项</h2>
-<p>如果含有汉字,首先在读取时设置编码:</p>
-<pre><code class="language-python">text = open('1.txt',encoding='utf-8')
-</code></pre>
-<p>然后再生成词云时设置字体:</p>
-<pre><code class="language-python">wc = WordCloud(font_path=r'C:\Windows\Fonts\simfang.ttf')
-</code></pre>
-<p>测试:<br>
-<img src="https://img-blog.csdnimg.cn/20200113231026766.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-python">text=open('1.txt',encoding='utf-8').read()
-wc=WordCloud(
-    width=1300,
-    repeat=True,
-    font_path=r'C:\Windows\Fonts\simfang.ttf',
-    height=1300).generate(text)
-plt.imshow(wc,interpolation=&quot;bilinear&quot;)
-plt.axis(&quot;off&quot;)
-plt.savefig('aaaa.jpg')
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/2020011323125091.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200113231307585.jpg" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[git push时出现Permission denied(publickey)的解决]]></title>
-        <id>https://2293736867.github.io/post/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/</id>
-        <link href="https://2293736867.github.io/post/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/">
-        </link>
-        <updated>2020-06-02T20:22:51.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200113160239767.png" alt="在这里插入图片描述" loading="lazy"><br>
-push的时候出现上述错误,它说请确保有足够的权限和这个仓库存在,仓库不存在...这个估计不是,所以是权限的问题,准确来说是sshkey的问题.</p>
-<h1 id="2-重新生成ssh-key">2 重新生成ssh key</h1>
-<pre><code class="language-bash">ssh-key -t rsa -b 4096 -C xxxx@xxxxx
-</code></pre>
-<p>这是gitub推荐的生成新ssh key的方法.注意,请不要使用默认的名字,第一个就会提示输入名字,请使用自定义的名字.</p>
-<h1 id="3-修改~sshconfig">3 修改~/.ssh/config</h1>
-<p>移动公钥和私钥到~/.ssh下.</p>
-<pre><code>mv xxx xxx.pub ~/.ssh
-</code></pre>
-<p>修改~/.ssh/config:</p>
-<pre><code>vim ~/.ssh/config
-</code></pre>
-<p>输入</p>
-<pre><code>Host github.com
-HostName github.com
-User git
-IdentityFile ~/.ssh/name
-</code></pre>
-<p>其中name为上一步的自定义的key名字,是私钥,不是.pub结尾的公钥.</p>
-<h1 id="4-添加公钥到github">4 添加公钥到github</h1>
-<p>在github首页中,点击右上角头像进入设置.<br>
-<img src="https://img-blog.csdnimg.cn/20200113161704918.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200113161738893.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择:<br>
-<img src="https://img-blog.csdnimg.cn/20200113161757536.png" alt="在这里插入图片描述" loading="lazy"><br>
-输入名字与公钥的内容,保存.<br>
-<img src="https://img-blog.csdnimg.cn/20200113161815741.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5-push">5 push</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200113161919367.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功!</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vim替换命令]]></title>
-        <id>https://2293736867.github.io/post/vim-ti-huan-ming-ling/</id>
-        <link href="https://2293736867.github.io/post/vim-ti-huan-ming-ling/">
-        </link>
-        <updated>2020-06-02T20:22:32.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-语法">1 语法</h1>
-<pre><code>:[range]s/source/target/[option]
-</code></pre>
-<h1 id="2-range">2 range</h1>
-<p>range表示要替换的范围,想要全局替换的话,可以使用一个百分号.</p>
-<pre><code>:%s/xxx/xxxx
-</code></pre>
-<p>另外,小数点表示当前行,美元符号表示最后一行,数字表示范围.</p>
-<pre><code>:1,.s     替换第一行到当前行
-:.,$s     替换当前行到最后一行
-:1,$s     替换第一行到最后一行,相当于 :%s
-</code></pre>
-<h1 id="3-source与target">3 source与target</h1>
-<p>表示源字符串与目标字符串,如</p>
-<pre><code>:1,.s/123/456
-</code></pre>
-<p>表示把第一行到当前行的首次出现的123替换成456,注意是首次出现,如果要替换某一行全部源字符串需要在后面加上</p>
-<pre><code>/g
-</code></pre>
-<p>另外,对于一些特殊字符比如小数点,斜杠,双引号等需要转义,方式是使用反斜杠,在需要转义的字符面前加一个反斜杠<br>
-如把</p>
-<pre><code>&quot;123//&quot;   
-</code></pre>
-<p>替换为</p>
-<pre><code>'123\\'
-</code></pre>
-<p>命令如下:</p>
-<pre><code>:s/\&quot;123\/\/\&quot;/\'123\\\\\'/g
-</code></pre>
-<p>因为</p>
-<pre><code>&quot;123//&quot; 中
-&quot;     转义为      \&quot;
-/     转义为      \/
-</code></pre>
-<pre><code>'123\\' 中
-'     转义为      \'
-\     转义为      \\
-</code></pre>
-<h1 id="4-option">4 option</h1>
-<p>选项如下:</p>
-<pre><code>/g  全局替换
-/c  确认
-/p  替换结果逐行显示
-</code></pre>
-<p>注意选项的组合结果是</p>
-<pre><code>/cg
-/pc
-</code></pre>
-<p>这样的形式,而不是</p>
-<pre><code>/c/g
-/g/p
-</code></pre>
-<p>这样的形式.</p>
-<h1 id="5-总结">5 总结</h1>
-<p>全局替换的话,使用</p>
-<pre><code>:%s/source/target/g
-</code></pre>
-<p>局部替换的话,使用</p>
-<pre><code>:n,ms/source/target
-</code></pre>
-<p>n,m为行数,表示要替换的范围.<br>
-注意如果字符串需要转义要加上反斜杠.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Spring Boot上传文件+部署到Tomcat]]></title>
-        <id>https://2293736867.github.io/post/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/</id>
-        <link href="https://2293736867.github.io/post/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/">
-        </link>
-        <updated>2020-06-02T20:22:07.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
-<li><a href="#3-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3 新建工程</a></li>
-<li><a href="#4-%E6%96%B0%E5%BB%BA%E5%8C%85">4 新建包</a></li>
-<li><a href="#5-exception">5 exception</a>
-<ul>
-<li><a href="#51-storageexception">5.1 StorageException</a></li>
-<li><a href="#52-storagefilenotfoundexception">5.2 StorageFileNotFoundException</a></li>
-</ul>
-</li>
-<li><a href="#6-properties">6 properties</a></li>
-<li><a href="#7-service">7 service</a>
-<ul>
-<li><a href="#71-init">7.1 init</a></li>
-<li><a href="#72-deleteall">7.2 deleteAll</a></li>
-<li><a href="#73-load">7.3 load</a></li>
-<li><a href="#74-loadall">7.4 loadAll</a></li>
-<li><a href="#75-loadasresource">7.5 loadAsResource</a></li>
-<li><a href="#76-store">7.6 store</a></li>
-</ul>
-</li>
-<li><a href="#8-controller">8 controller</a>
-<ul>
-<li><a href="#81-listuploadedfiles">8.1 listUploadedFiles</a>
-<ul>
-<li><a href="#811-requestmapping">8.1.1 RequestMapping</a></li>
-<li><a href="#812-model">8.1.2 Model</a></li>
-</ul>
-</li>
-<li><a href="#82-servefile">8.2 serveFile</a></li>
-<li><a href="#83-handlefileupload">8.3 handleFileUpload</a></li>
-<li><a href="#84-handlestoragefilenotfound">8.4 handleStorageFileNotFound</a></li>
-</ul>
-</li>
-<li><a href="#9-main">9 main</a></li>
-<li><a href="#10-applicationproperties">10 application.properties</a></li>
-<li><a href="#11-%E6%B5%8B%E8%AF%95">11 测试</a></li>
-<li><a href="#12-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0tomcat%E4%B8%8A">12 打包部署到Tomcat上</a>
-<ul>
-<li><a href="#121-%E6%94%B9%E5%8F%98%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F">12.1 改变打包方式</a></li>
-<li><a href="#122-%E5%8E%BB%E9%99%A4tomcat%E4%BE%9D%E8%B5%96">12.2 去除Tomcat依赖</a></li>
-<li><a href="#123-%E4%BF%AE%E6%94%B9main%E7%B1%BB">12.3 修改Main类</a></li>
-<li><a href="#124-%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98">12.4 路径问题</a>
-<ul>
-<li><a href="#1241-action">12.4.1 action</a></li>
-<li><a href="#1242-getmapping">12.4.2 @GetMapping</a></li>
-<li><a href="#1243-postmapping">12.4.3 @PostMapping</a></li>
-<li><a href="#1244-redirect">12.4.4 redirect</a></li>
-</ul>
-</li>
-<li><a href="#125-%E8%AE%BE%E7%BD%AE%E6%89%93%E5%8C%85%E5%90%8D%E5%AD%97">12.5 设置打包名字</a></li>
-<li><a href="#126-maven%E6%89%93%E5%8C%85">12.6 Maven打包</a></li>
-<li><a href="#127-%E6%89%93%E5%8C%85%E5%AE%8C%E6%88%90">12.7 打包完成</a></li>
-<li><a href="#128-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">12.8 上传到服务器</a></li>
-<li><a href="#129-%E5%BC%80%E5%90%AFtomcat">12.9 开启Tomcat</a></li>
-<li><a href="#1210-%E6%B5%8B%E8%AF%95">12.10 测试</a></li>
-</ul>
-</li>
-<li><a href="#13-%E6%BA%90%E7%A0%81">13 源码</a></li>
-<li><a href="#14-%E5%8F%82%E8%80%83">14 参考</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>Spring Boot上传文件,根据<a href="https://spring.io/guides/gs/uploading-files/">官方uploadfile示例</a>修改的,可以打成war放到服务器上(笔者使用的是Tomcat).主要步骤是创建异常类,属性类,接口类与控制器类,最后进行少量修改打包部署到服务器上.</p>
-<h1 id="2-环境">2 环境</h1>
-<ul>
-<li>win10</li>
-<li>Tomcat 9.0.30</li>
-<li>IDEA 2019.03</li>
-<li>Spring boot 2.2.2 RELEASE</li>
-</ul>
-<h1 id="3-新建工程">3 新建工程</h1>
-<p>选择spring initializer:</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2019122510504427.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>改一下包名,打包选项这里可以jar可以war,选jar的话可以在build的时候再生成war.</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191225105131702.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里用的是模板引擎Thymeleaf,选择spring web与Thymeleaf.</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191225105310422.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191225105349122.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>最后点击finish.</p>
-<h1 id="4-新建包">4 新建包</h1>
-<p>4个包,service,properties,controller,exception.</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191225105559157.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-exception">5 exception</h1>
-<p>处理两个异常,分别是存储异常与存储文件找不到异常.</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2019122511011711.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="51-storageexception">5.1 StorageException</h2>
-<pre><code class="language-java">package kr.test.exception;
-
-public class StorageException extends RuntimeException
-{
-    public StorageException(String message)
+    if(pos == c.length)
     {
-        super(message);
+        if(valid(c))
+            result.add(Arrays.toString(c).replaceAll(&quot;(\\[)|(\\])| |,&quot;,&quot;&quot;));
     }
-
-    public StorageException(String message,Throwable cause)
+    else
     {
-        super(message,cause);
-    }
-}
-</code></pre>
-<h2 id="52-storagefilenotfoundexception">5.2 StorageFileNotFoundException</h2>
-<pre><code class="language-java">package kr.test.exception;
-
-public class StorageFileNotFoundException extends StorageException
-{
-    public StorageFileNotFoundException(String message)
-    {
-        super(message);
-    }
-
-    public StorageFileNotFoundException(String message,Throwable cause)
-    {
-        super(message,cause);
-    }
-}
-</code></pre>
-<pre><code class="language-java">Exception(String message,Throwable cause);
-</code></pre>
-<p>这个构造函数中的cause是引起这个异常的异常,允许空值,如果是空值则表示这个引起这个异常的异常不存在或者未知.</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20191225110727222.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6-properties">6 properties</h1>
-<p>新建StorageProperties.java,设定存储文件的位置,就是location的值,可以使用&quot;../../&quot;这样的值,什么也不加的话会在项目路径下新建文件夹,若有同名的文件夹会被删除再重新创建.</p>
-<p>注意一下权限的问题,后面部署到Tomcat上面时可能会因为没有写权限而不能写入文件,要确保文件夹拥有写权限.</p>
-<pre><code class="language-java">package kr.test.properties;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-@ConfigurationProperties(&quot;storage&quot;)
-public class StorageProperties {
-    private String location = &quot;upload_dir&quot;;
-    public String getLocation()
-    {
-        return location;
-    }
-    
-    public void setLocation(String location)
-    {
-        this.location = location;
+        c[pos] = '(';
+        f(c,pos+1,result);
+        c[pos] = ')';
+        f(c,pos+1,result);
     }
 }
 
-</code></pre>
-<p>这里使用@ConfigurationProperties会报红,提示没有@EnableConfigurationProperties:</p>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20191225122451481.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>可以先不管,后面会在Main类中添加@EnableConfigurationProperties(StorageProperties.class).</p>
-<h1 id="7-service">7 service</h1>
-<p>先加一个StorageService接口:</p>
-<pre><code class="language-java">package kr.test.service;
-
-import org.springframework.core.io.Resource;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Path;
-import java.util.stream.Stream;
-
-public interface StorageService
+public boolean valid(char [] f)
 {
-    void init();
-    void store(MultipartFile file);
-    Stream&lt;Path&gt; loadAll();
-    Path load(String filename);
-    Resource loadAsResource(String filename);
-    void deleteAll();
-}
-
-</code></pre>
-<p>然后新建一个FileSystemStorageService实现该接口:</p>
-<pre><code class="language-java">package kr.test.service;
-
-import kr.test.exception.StorageException;
-import kr.test.exception.StorageFileNotFoundException;
-import kr.test.properties.StorageProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
-
-@Service
-public class FileSystemStroageService implements StorageService
-{
-    private final Path rootLocation;
-
-    @Autowired
-    public FileSystemStroageService(StorageProperties properties)
+    int len = 0;
+    for(char c:f)
     {
-        this.rootLocation = Paths.get(properties.getLocation());
-    }
-
-    @Override
-    public void init()
-    {
-        try {
-            Files.createDirectories(rootLocation);
-        }
-        catch (IOException e)
+        if(c == '(' )
         {
-            throw new StorageException(&quot;Could not initialize storage&quot;,e);
+            if(++len &gt; f.length/2)
+                return false;
         }
+        else if(len-- &lt;=0)
+            return false;
     }
-
-    @Override
-    public void deleteAll()
+    return len == 0;
+}
+</code></pre>
+<p>首先加上左括号,进入下一轮递归,同时把加括号的位置加1,然后到达2n长度后,判断是否有效,有效的话加入结果数组,然后回到上一层的递归,把当前位置的括号换成右括号,接着再次进入下一轮递归,一样直到2n长度,继续判断是否有效,这样不断递归就会枚举了所有的组合.<br>
+<img src="https://img-blog.csdnimg.cn/2020013013414089.png" alt="在这里插入图片描述" loading="lazy"><br>
+看来不太理想啊.</p>
+<h1 id="3-深搜">3 深搜</h1>
+<p>深搜的话是暴力的改进,暴力的话不管序列是什么状态都直接添加括号,而深搜的话,当序列有效时才添加括号.<br>
+<strong>添加左括号的条件:当前的左括号数量小于n.</strong><br>
+<strong>添加右括号的条件:当前左括号的数量小于右括号的数量.</strong></p>
+<pre><code class="language-java">public void f(String c,int n,int l,int r,List&lt;String&gt; result)
+{
+    if(l == n &amp;&amp; r == n)
+        result.add(c);
+    else
     {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+        if(l &lt; r)
+            return ;
+        if(l &lt; n)
+            f(c+&quot;(&quot;,n,l+1,r,result);
+        if(r &lt; n)
+            f(c+&quot;)&quot;,n,l,r+1,result);
     }
-
-    @Override
-    public Path load(String filename)
+}
+</code></pre>
+<p>c为上一次递归的结果,l,r分别表示左括号与右括号的数量,递归的结束条件是左右括号的数量均为n,继续递归的条件是左右括号的数量小于n.<br>
+<img src="https://img-blog.csdnimg.cn/20200130143438111.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-动态规划">4 动态规划</h1>
+<p>设f(n)表示n对括号的所有有效序列,则有<br>
+<img src="https://img-blog.csdnimg.cn/20200130161054631.png" alt="在这里插入图片描述" loading="lazy"><br>
+具体来说:</p>
+<pre><code>f(3) = ( + f(0) + ) + f(2)
+f(3) = ( + f(1) + ) + f(1)
+f(3) = ( + f(2) + ) + f(0)
+</code></pre>
+<p>这三个都是三对括号的有效序列,因此f(3)最后的结果是这三个有效序列组成的数组.<br>
+因为f(n)不一定为一个有效序列,因此返回值为一个数组,剩下的只需要遍历这个数组,把它们添加到最终结果数组中去:</p>
+<pre><code class="language-java">public List&lt;String&gt; f(int n)
+{
+    List&lt;String&gt; s = new ArrayList&lt;&gt;();
+    if(n == 0)
+        s.add(&quot;&quot;);
+    for(int i=0;i&lt;n;++i)
     {
-        return rootLocation.resolve(filename);
-    }
-
-    @Override
-    public Stream&lt;Path&gt; loadAll()
-    {
-        try
+        List&lt;String&gt; l = f(i);
+        List&lt;String&gt; r = f(n-i-1);
+        for(String ll:l)
         {
-            return Files.walk(rootLocation,1)
-                    .filter(path -&gt; !path.equals(rootLocation))
-                    .map(rootLocation::relativize);
-        }
-        catch (IOException e)
-        {
-            throw new StorageException(&quot;Failed to read stored file.&quot;,e);
-        }
-    }
-
-    @Override
-    public Resource loadAsResource(String filename)
-    {
-        try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable())
+            for(String rr:r)
             {
-                return resource;
-            }
-            else {
-                throw new StorageFileNotFoundException(&quot;Could not read file: &quot;+filename);
+                s.add(&quot;(&quot;+ll+&quot;)&quot;+rr);
             }
         }
-        catch (MalformedURLException e)
-        {
-            throw new StorageFileNotFoundException(&quot;Could not read file : &quot;+filename,e);
-        }
     }
-
-    @Override
-    public void store(MultipartFile file)
-    {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        try {
-            if(file.isEmpty())
-            {
-                throw new StorageException(&quot;Failed to store empty file : &quot;+filename);
-            }
-            if(filename.contains(&quot;..&quot;))
-            {
-                throw new StorageException(&quot;Cannot store file with relative path outside current directory&quot;+filename);
-            }
-            try(InputStream inputStream = file.getInputStream())
-            {
-                Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new StorageException(&quot;Failed to store file : &quot;+ filename,e);
-        }
-    }
-}
-
-</code></pre>
-<h2 id="71-init">7.1 init</h2>
-<pre><code class="language-java">@Override
-public void init()
-{
-    try {
-        Files.createDirectories(rootLocation);
-    }
-    catch (IOException e)
-    {
-        throw new StorageException(&quot;Could not initialize storage&quot;,e);
-    }
+    return s;
 }
 </code></pre>
-<p>使用java.nio.file.Files.createDirectories()创建存储目录,可以建立多级目录.</p>
-<h2 id="72-deleteall">7.2 deleteAll</h2>
-<pre><code class="language-java">@Override
-public void deleteAll()
-{
-    FileSystemUtils.deleteRecursively(rootLocation.toFile());
-}
+<p>若n为0,添加一个空序列然后返回,若n不为0,l表示i对括号的所有有效序列,r表示n-i-1对括号的所有有效序列,然后只需要遍历这两个序列,在两边加上左括号与右括号即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200130160421541.png" alt="在这里插入图片描述" loading="lazy"><br>
+这个...好像没有深搜快.</p>
+<h1 id="5-动规优化">5 动规优化</h1>
+<p>上面的递归的动规没有保存之前计算过的结果,比如计算n=3的时候,</p>
+<pre><code>f(3) = ( + f(0) + ) + f(2)
+f(3) = ( + f(1) + ) + f(1)
+f(3) = ( + f(2) + ) + f(0)
 </code></pre>
-<p>使用工具类FileSystemUtils的方法递归删除文件与文件夹.参数是一个File. 下面是方法源码:</p>
-<pre><code class="language-java">public static boolean deleteRecursively(File root) 
+<p>f(2):</p>
+<pre><code>f(2) = ( + f(1) + ) + f(0)
+f(2) = ( + f(0) + ) + f(1)
+</code></pre>
+<p>f(1)</p>
+<pre><code>f(1) = ( + f(0) + ) + f(0)
+</code></pre>
+<p>只是计算f(3),计算了</p>
+<pre><code>f(2):2次
+f(1):2+2*2=6次
+f(0):2+2*2+6*2=18次
+</code></pre>
+<p>当n增大时,计算的重复度会变得更大,因此可以考虑用一个数组存储之前计算的结果,需要时直接取出来即可.</p>
+<pre><code class="language-java">public List&lt;String&gt; generateParenthesis(int n) 
 {
-    if (root != null &amp;&amp; root.exists()) 
+    List&lt;List&lt;String&gt;&gt; s = new ArrayList&lt;&gt;();
+    s.add(Arrays.asList(&quot;&quot;));
+    s.add(Arrays.asList(&quot;()&quot;));
+    for(int n1 = 2;n1&lt;=n;++n1)
     {
-        if (root.isDirectory()) 
+        List&lt;String&gt; t = new ArrayList&lt;&gt;();
+        for(int i=0;i&lt;n1;++i)
         {
-            File[] children = root.listFiles();
-            if (children != null) 
+            List&lt;String&gt; l = s.get(i);
+            List&lt;String&gt; r = s.get(n1-i-1);
+            for(String ll:l)
             {
-                for (File child : children) 
+                for(String rr:r)
                 {
-                    deleteRecursively(child);
+                    t.add(&quot;(&quot;+ll+&quot;)&quot;+rr);
                 }
             }
         }
-        return root.delete();
+        s.add(t);
     }
+    return s.get(n);
+}
+</code></pre>
+<p>可以先看最后的return,因为s保存了0到n的所有结果,所以,直接get即可.<br>
+然后设置一个临时的n1,表示当前要计算的n1对括号的序列,当n1增加时,表示已经完成了计算n1对括号的序列,t为结果,添加到s中去.直到n1与n相等,计算完最后一个n1后,直接返回s的最后一个序列.<br>
+<img src="https://img-blog.csdnimg.cn/2020013016333722.png" alt="在这里插入图片描述" loading="lazy"><br>
+嗯,快了1ms,看来优化还是有效果的.</p>
+<h1 id="6-源码">6 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day8">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day8">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[正则表达式匹配方括号]]></title>
+        <id>https://2293736867.github.io/post/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao/</id>
+        <link href="https://2293736867.github.io/post/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao/">
+        </link>
+        <updated>2020-06-02T20:51:13.000Z</updated>
+        <content type="html"><![CDATA[<p>Java代码:</p>
+<pre><code class="language-java">String s = &quot;[1,2,3]+[4,5,6]&quot;;
+System.out.println(s.replaceAll(&quot;(\\[)&quot;,&quot;&quot;));         //匹配左方括号
+System.out.println(s.replaceAll(&quot;(\\])&quot;,&quot;&quot;));         //匹配右方括号
+System.out.println(s.replaceAll(&quot;(\\[)|(\\])&quot;,&quot;&quot;));   //匹配左右方括号
+</code></pre>
+<p>结果:<br>
+<img src="https://img-blog.csdnimg.cn/20200130134515159.png" alt="在这里插入图片描述" loading="lazy"><br>
+需要使用replaceAll而不是replace.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每天AC系列(七):合并两个有序链表]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-qi-he-bing-liang-ge-you-xu-lian-biao/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-qi-he-bing-liang-ge-you-xu-lian-biao/">
+        </link>
+        <updated>2020-06-02T20:50:31.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/">LeetCode第21题</a>,合并两个有序链表.<br>
+<img src="https://img-blog.csdnimg.cn/20200129164140734.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-直接合并">2 直接合并</h1>
+<p>因为已经有序了,类似归并排序中的合并一样,操作不难,直接上代码了.</p>
+<pre><code class="language-java">ListNode t = new ListNode(0);
+ListNode head = t;
+while(l1 != null &amp;&amp; l2 != null)    
+{
+    if(l1.val &lt; l2.val)
+    {
+        t.next = l1;
+        l1 = l1.next;
+    }
+    else
+    {
+        t.next = l2;
+        l2 = l2.next;
+    }
+    t = t.next;
+}
+while(l1 != null)
+{
+    t.next = l1;
+    l1 = l1.next;
+    t = t.next;
+}
+while(l2 != null)
+{
+    t.next = l2;
+    l2 = l2.next;
+    t = t.next;
+}
+return head.next;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200129164254378.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-递归合并">3 递归合并</h1>
+<p>这个可以采用递归优化,而且不用额外设置一个移动的临时结点t.首先对两个指针进行判空操作,其中一个为空的话返回另一个,然后进行递归合并,首先创建一个head结点,进行赋值后递归合并next结点,将返回值赋给head.next,最后返回head.</p>
+<pre><code class="language-java">if(l1 == null) return l2;
+if(l2 == null) return l1;
+
+ListNode head = null;
+if(l1.val &lt; l2.val)
+{
+    head = l1;
+    head.next = mergeTwoLists(l1.next, l2);
+}
+else
+{
+    head = l2;
+    head.next = mergeTwoLists(l1, l2.next);
+}
+return head;
+</code></pre>
+<h1 id="4-源码">4 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day7">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day7">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每天AC系列(六):有效的括号]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-liu-you-xiao-de-gua-hao/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-liu-you-xiao-de-gua-hao/">
+        </link>
+        <updated>2020-06-02T20:49:29.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/valid-parentheses/">LeetCode第20题</a>,这题比较简单,匹配括号.<br>
+<img src="https://img-blog.csdnimg.cn/20200128181932985.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-栈">2 栈</h1>
+<p>这是栈的典型应用,括号匹配,当然不需要直接使用栈,使用一个StringBuilder即可:</p>
+<pre><code class="language-java">if(s.isEmpty())
+   return true;
+char a = s.charAt(0);
+if (a != '(' &amp;&amp; a != '[' &amp;&amp; a != '{')
     return false;
-}
-</code></pre>
-<p>首先判断根是否为空,不为空的话判断是否是目录,不是目录的话直接删除,是目录的话,利用listFiles()获取所有文件及文件夹,判断是否为空并进行递归删除.</p>
-<h2 id="73-load">7.3 load</h2>
-<pre><code class="language-java">@Override
-public Path load(String filename) {
-	return rootLocation.resolve(filename);
-}
-</code></pre>
-<p>Path.resolve(String)返回相对于this的路径,具体来说,等于执行</p>
-<pre><code class="language-bash">cd rootLocation
-cd filename
-pwd
-</code></pre>
-<p>返回pwd的值.</p>
-<h2 id="74-loadall">7.4 loadAll</h2>
-<pre><code class="language-java">@Override
-public Stream&lt;Path&gt; loadAll()
+StringBuilder t = new StringBuilder();
+int len = -1;
+for(char c:s.toCharArray())
 {
-    try 
+    if(c == '(' || c == '[' || c == '{')
     {
-        return Files.walk(rootLocation,1)
-                .filter(path -&gt; !path.equals(rootLocation))
-                .map(rootLocation::relativize);
+        t.append(c);
+        ++len;
     }
-    catch (IOException e)
+    else
     {
-        throw new StorageException(&quot;Failed to read stored file.&quot;,e);
+        if(len == -1)
+            return false;
+        char cc = t.charAt(len);
+        if(
+            (c == ')' &amp;&amp; cc != '(')
+            ||
+            (c == ']' &amp;&amp; cc != '[')
+            ||
+            (c == '}' &amp;&amp; cc != '{')
+        )
+            return false;
+        t.deleteCharAt(len--);
     }
 }
+return len == -1;
 </code></pre>
-<p>Files.walk遍历目录,返回一个Stream&lt;Path&gt;,返回的Stream包含打开的一个或多个目录的引用,会在Stream关闭时关闭,第二个参数1表示遍历的最大深度.</p>
-<p>然后对这个Stream进行filter过滤,这里是把与rootLocation不相等的Path留下,注意是不相等,就是留下filter()中条件为真的Path,不是把条件为真的Path给&quot;删去&quot;.</p>
-<p>最后进行map,relativize返回参数相对于调用者的路径,这里是返回Stream中的每个Path相对于rootLocation的路径.<br>
-对于relativize,无论什么情况下:</p>
-<pre><code class="language-java">Path a = xxxx;
-Path b = xxxx;
-</code></pre>
-<p>都有</p>
-<pre><code class="language-java">a.relativize(a.resolve(b)).equals(b)
-</code></pre>
-<p>为真.</p>
-<h2 id="75-loadasresource">7.5 loadAsResource</h2>
-<pre><code class="language-java">@Override
-public Resource loadAsResource(String filename)
+<p>首先判断是否为空,再判断第一个字符,然后进入逐个循环判断,若表示左边的括号则append,若表示右边的括号首先判断len,然后取出len处字符进行判断是否匹配,不匹配直接返回false,匹配的话则删除这个字符.最后根据len是否为-1返回最终结果.<br>
+<img src="https://img-blog.csdnimg.cn/20200129005758741.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-优化">3 优化</h1>
+<p>其实就是简化一下代码,直接开辟一个大的空间,不需要进行append与delete,只需移动栈顶指针.栈顶指针从1开始,若从0开始的话对于&quot;]&quot;这种情况会报下标越界错误,压栈就是++p,压入字符,出栈直接- - p,然后判断是否匹配即可.</p>
+<pre><code class="language-java">char[] t = new char[s.length() + 1];
+int p = 1;
+for (char c : s.toCharArray()) 
 {
-    try {
-        Path file = load(filename);
-        Resource resource = new UrlResource(file.toUri());
-        if(resource.exists() || resource.isReadable())
-        {
-            return resource;
-        }
-        else {
-            throw new StorageFileNotFoundException(&quot;Could not read file: &quot;+filename);
-        }
-    }
-    catch (MalformedURLException e)
+    if (c == '(' || c == '[' || c == '{')
+        t[p++] = c;
+    else 
     {
-        throw new StorageFileNotFoundException(&quot;Could not read file : &quot;+filename,e);
+        --p;
+        if ((c == ')' &amp;&amp; t[p] != '(') || (c == ']' &amp;&amp; t[p] != '[') || (c == '}' &amp;&amp; t[p] != '{'))
+            return false;
     }
 }
+return p == 1;
 </code></pre>
-<p>这里的Resource是org.springframework.core.io.Resource,是一个接口,可以通过它访问各种资源,实现类有UrlResource,InputStreamResource等,这里利用Path.toUri()把file转换为Resource后,判断这个源是否存在或者是否可读并返回,否则抛出存储文件找不到异常.</p>
-<h2 id="76-store">7.6 store</h2>
-<pre><code class="language-java">@Override
-public void store(MultipartFile file)
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200129010905339.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-源码">4 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day6">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day6">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每天AC系列(五):删除链表的倒数第N个节点]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-wu-shan-chu-lian-biao-de-dao-shu-di-n-ge-jie-dian/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-wu-shan-chu-lian-biao-de-dao-shu-di-n-ge-jie-dian/">
+        </link>
+        <updated>2020-06-02T20:49:07.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/">LeetCode第19题</a>,删除链表倒数的第n个结点.<br>
+<img src="https://img-blog.csdnimg.cn/20200128030219150.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-两趟扫描">2 两趟扫描</h1>
+<p>两趟扫描的思想很简单,第一趟扫描确定长度,第二趟扫描定位到目标结点并进行删除操作.</p>
+<pre><code class="language-java">public ListNode removeNthFromEnd(ListNode head, int n) 
 {
-    String filename = StringUtils.cleanPath(file.getOriginalFilename());
-    try {
-        if(file.isEmpty())
-        {
-            throw new StorageException(&quot;Failed to store empty file : &quot;+filename);
-        }
-        if(filename.contains(&quot;..&quot;))
-        {
-            throw new StorageException(&quot;Cannot store file with relative path outside current directory&quot;+filename);
-        }
-        try(InputStream inputStream = file.getInputStream()) 
-        {
-            Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
-    catch (IOException e)
-    {
-        throw new StorageException(&quot;Failed to store file : &quot;+ filename,e);
-    }
+	if(head == null || head.next == null)
+	    return null;
+	ListNode head_copy = head;
+	int length = 0;
+	while(head != null)
+	{
+	    head = head.next;
+	    ++length;
+	}
+	head = head_copy;
+	ListNode before = head;
+	int i = 0;
+	for(;i&lt;length-n;++i)
+	{
+	    before = head;
+	    head = head.next;
+	}
+	if(i == 0)
+	    return head.next;
+	else
+	    before.next = before.next.next;
+	return head_copy;
+}
 </code></pre>
-<p>getOriginalFilename()获取文件原名字,然后通过StringUtils.cleanPath()将其标准化,.处理掉&quot;.&quot;与&quot;..&quot;,然后判断文件是否为空与是否包含相对路径,没有的话利用Files.copy()进行复制,resolve获取filename相对于rootLocation的值,复制选项是REPLACE_EXISTING.<br>
-StandardCopyOption有三个可选值:</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200128030433545.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-一趟扫描">3 一趟扫描</h1>
+<p>当然,来刷题的话不能就这样就算了,肯定得把它弄成一趟扫描,对吧?<br>
+两趟扫描的目的是获取长度再进行定位,因此,为了能一次定位,可以使用两个头指针,对于给定的n,先让第一个头指针访问n次,第二个头指针不动,当第一个头指针访问n次后,第一个头指针继续访问直到最后一个,第二个头指针与第一个头指针并行访问,这样,当第一个头指针访问到最后一个时,第二个头指针就指向倒数第N个节点.</p>
+<pre><code class="language-java">public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode a = head;
+    ListNode b = head;
+    ListNode t = head;
+    for(int i=0;i&lt;n;++i)
+        a = a.next;
+    if(a == null)
+        return head.next;
+    while(a != null)
+    {
+        t = b;
+        a = a.next;
+        b = b.next;
+    }
+    t.next = t.next.next;
+    return head;
+}
+</code></pre>
+<p>总的来说这个只需要一趟扫描即可,针对只有两个结点或者一个结点的要判断一下.<br>
+<img src="https://img-blog.csdnimg.cn/20200129003032302.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-源码">4 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day5">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day5">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[android+spring boot 选择,上传,下载文件]]></title>
+        <id>https://2293736867.github.io/post/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/</id>
+        <link href="https://2293736867.github.io/post/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/">
+        </link>
+        <updated>2020-06-02T20:48:29.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-android">3 android</a>
 <ul>
-<li>ATOMIC_MOVE:原子性的移动操作,一般在移动文件或目录时使用.</li>
-<li>COPY_ATTRIBUTES:复制属性,可以保留源文件或源目录的属性.</li>
-<li>REPLACE_EXISTING:替换已存在的文件.</li>
-</ul>
-<h1 id="8-controller">8 controller</h1>
-<p>新建FileUploadController.</p>
-<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20191225212707860.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<pre><code class="language-java">package kr.test.controller;
-
-import kr.test.exception.StorageFileNotFoundException;
-import kr.test.service.StorageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.stream.Collectors;
-
-@Controller
-public class FileUploadController {
-    private final StorageService storageService;
-
-    @Autowired
-    public FileUploadController(StorageService storageService)
-    {
-        this.storageService = storageService;
-    }
-
-    @GetMapping(&quot;/&quot;)
-    public String listUploadedFiles(Model model)
-    {
-        model.addAttribute(&quot;files&quot;,storageService.loadAll().map(
-                path -&gt; MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                &quot;serveFile&quot;,path.getFileName().toString()).build().toString())
-                .collect(Collectors.toList()));
-        return &quot;uploadForm&quot;;
-    }
-
-    @GetMapping(&quot;/files/{filename:.+}&quot;)
-    @ResponseBody
-    public ResponseEntity&lt;Resource&gt; serveFile(@PathVariable String filename)
-    {
-        Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;).body(file);
-    }
-
-    @PostMapping(&quot;/&quot;)
-    public String handleFileUpload(@RequestParam(&quot;file&quot;) MultipartFile file, RedirectAttributes redirectAttributes)
-    {
-        storageService.store(file);
-        redirectAttributes.addFlashAttribute(&quot;message&quot;,&quot;You successully uploaded &quot;+file.getOriginalFilename()+&quot;!&quot;);
-        return &quot;redirect:/&quot;;
-    }
-
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity&lt;?&gt; handleStorageFileNotFound(StorageFileNotFoundException e)
-    {
-        return ResponseEntity.notFound().build();
-    }
-}
-
-</code></pre>
-<h2 id="81-listuploadedfiles">8.1 listUploadedFiles</h2>
-<pre><code class="language-java">@GetMapping(&quot;/&quot;)
-public String listUploadedFiles(Model model)
-{
-    model.addAttribute(&quot;files&quot;,storageService.loadAll().map(
-            path -&gt; MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-            &quot;serveFile&quot;,path.getFileName().toString()).build().toString())
-            .collect(Collectors.toList()));
-    return &quot;uploadForm&quot;;
-}
-</code></pre>
-<p>@GetMapping是@RequestMapping(method = RequestMethod.GET)的简化写法,将HTTP GET路径映射到特定的处理方法上.<br>
-方法的参数是spring MVC中的Model,Model实质上是一个Map,添加的key可以在视图中用${key}获取值,比如,这里添加了&quot;files&quot;作为key,则在视图中可用 ${files}获取值.</p>
-<p>MvcUriComponentsBuilder可以为Controller指定uri,fromMethod简单地说就是会调用FileUploadController的serveFile(),参数是path.getFileName().toString(),由于serveFile()返回的是Stream&lt;Path&gt;,利用Stream的collect将其转换成List添加到model中,然后返回uploadForm,表示这是视图的名称,会到resource/templates下寻找.</p>
-<p>这里说一下RequestMapping与Model:</p>
-<h3 id="811-requestmapping">8.1.1 RequestMapping</h3>
-<p>可以用@RequestMapping()来映射URL,可以映射到某个类或某个具体方法.@RequestMapping常用的有以下属性:</p>
+<li><a href="#31-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3.1 准备工作</a>
 <ul>
-<li>value:请求的URL路径,支持URL模板,正则表达式.</li>
-<li>method:HTTP请求方法,如GET,POST,PUT,DELTE等.</li>
-<li>consumes:允许的媒体类型,如consumes=&quot;application/json&quot;.对应于HTTP请求的Content-Type.</li>
-<li>produces:相应的媒体类型,如produces=&quot;application/json&quot;,对于HTTP请求的Accept.</li>
-<li>params:请求参数,如params=&quot;action=update&quot;.</li>
-<li>headers:请求头.</li>
+<li><a href="#311-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3.1.1 新建工程</a></li>
+<li><a href="#312-androidmanifestxml">3.1.2 AndroidManifest.xml</a></li>
+<li><a href="#313-buildgradle">3.1.3 build.gradle</a></li>
+<li><a href="#314-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">3.1.4 上传文件</a></li>
+<li><a href="#315-%E5%B8%83%E5%B1%80">3.1.5 布局</a></li>
 </ul>
-<p>Spring提供了简化的@RequestMapping,提供了新的注解来标识HTTP方法:</p>
+</li>
+<li><a href="#32-%E9%80%89%E6%8B%A9%E6%96%87%E4%BB%B6">3.2 选择文件</a>
 <ul>
-<li>@GetMapping</li>
-<li>@PostMapping</li>
-<li>@PutMapping</li>
-<li>...</li>
+<li><a href="#321-%E7%94%B3%E8%AF%B7%E6%9D%83%E9%99%90">3.2.1 申请权限</a></li>
+<li><a href="#322-intent%E9%80%89%E6%8B%A9%E6%96%87%E4%BB%B6">3.2.2 Intent选择文件</a></li>
 </ul>
-<p>所以这里的@GetMapping是简化了的@RequestMapping.</p>
-<h3 id="812-model">8.1.2 Model</h3>
-<p>可以向Model添加视图所需要的变量,Model主要有以下方法:</p>
-<pre><code class="language-java">Model addAttribute(Object value);
-Model addAttribute(String name,Object value);
-Model addAllAttributes(Map attributes);
-Model addAllAttributes(Collection&lt;?&gt; attributes);
-Model mergeAttributes(Map attributes);
-boolean containAttribute(String name);
+</li>
+<li><a href="#33-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">3.3 上传文件</a></li>
+<li><a href="#34-%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6">3.4 下载文件</a></li>
+</ul>
+</li>
+<li><a href="#4-spring-boot">4 Spring Boot</a>
+<ul>
+<li><a href="#41-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">4.1 准备工作</a>
+<ul>
+<li><a href="#411-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">4.1.1 新建工程</a></li>
+<li><a href="#412-applicationproperties">4.1.2 application.properties</a></li>
+<li><a href="#413-pomxml">4.1.3 pom.xml</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%A4%84%E7%90%86%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">4.2 处理上传文件</a></li>
+<li><a href="#43-%E5%A4%84%E7%90%86%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6">4.3 处理下载文件</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%B5%8B%E8%AF%95">5 测试</a>
+<ul>
+<li><a href="#51-postman%E6%B5%8B%E8%AF%95">5.1 postman测试</a>
+<ul>
+<li><a href="#511-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.1.1 上传测试</a></li>
+<li><a href="#512-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.1.2 下载测试</a></li>
+</ul>
+</li>
+<li><a href="#52-android%E7%AB%AF%E6%B5%8B%E8%AF%95">5.2 android端测试</a>
+<ul>
+<li><a href="#521-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.2.1 上传测试</a></li>
+<li><a href="#522-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.2.2 下载测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E9%83%A8%E7%BD%B2%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">6 部署到服务器</a>
+<ul>
+<li><a href="#61-%E9%83%A8%E7%BD%B2">6.1 部署</a>
+<ul>
+<li><a href="#611-%E6%94%B9%E5%8F%98%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F">6.1.1 改变打包方式</a></li>
+<li><a href="#612-%E5%8E%BB%E9%99%A4tomcat%E4%BE%9D%E8%B5%96">6.1.2 去除tomcat依赖</a></li>
+<li><a href="#613-%E4%BF%AE%E6%94%B9main">6.1.3 修改Main</a></li>
+<li><a href="#614-%E4%BF%AE%E6%94%B9%E8%B7%AF%E5%BE%84">6.1.4 修改路径</a></li>
+<li><a href="#615-%E8%AE%BE%E7%BD%AE%E6%89%93%E5%8C%85%E5%90%8D%E5%AD%97">6.1.5 设置打包名字</a></li>
+<li><a href="#616-%E6%89%93%E5%8C%85">6.1.6 打包</a></li>
+<li><a href="#617-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">6.1.7 上传到服务器</a></li>
+<li><a href="#618-%E8%BF%90%E8%A1%8C">6.1.8 运行</a></li>
+</ul>
+</li>
+<li><a href="#62-%E6%B5%8B%E8%AF%95">6.2 测试</a>
+<ul>
+<li><a href="#621-postman%E6%B5%8B%E8%AF%95">6.2.1 postman测试</a></li>
+<li><a href="#622-android%E7%AB%AF%E6%B5%8B%E8%AF%95">6.2.2 android端测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-%E6%9C%80%E6%9C%80%E6%9C%80%E5%96%9C%E6%AC%A2%E7%9A%84-%E5%9D%91">7 <s>最最最喜欢的</s> 坑</a>
+<ul>
+<li><a href="#71-%E6%9D%83%E9%99%90">7.1 权限</a></li>
+<li><a href="#72-%E8%B7%AF%E5%BE%84">7.2 路径</a></li>
+<li><a href="#73-%E6%9C%89%E5%85%B3http%E7%9A%84%E9%97%AE%E9%A2%98">7.3 有关http的问题</a>
+<ul>
+<li><a href="#731-okhttp%E7%9A%84stream%E5%85%B3%E9%97%AD">7.3.1 okhttp的stream关闭</a></li>
+<li><a href="#732-http">7.3.2 http</a></li>
+<li><a href="#733-%E7%BA%BF%E7%A8%8B">7.3.3 线程</a></li>
+<li><a href="#734-avd">7.3.4 AVD</a></li>
+</ul>
+</li>
+<li><a href="#74-ip">7.4 ip</a></li>
+<li><a href="#75-%E5%88%A4%E7%A9%BA%E5%A4%84%E7%90%86">7.5 判空处理</a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%BA%90%E7%A0%81">8 源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>前端android,上传与下载文件,使用OkHttp处理请求,后端使用spring boot+MVC,处理android发送来的上传与下载请求.这个其实不难,就是特别多奇奇怪怪的坑,因此,希望看到的,不要像笔者这样踩的那么痛苦了...</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>win10</li>
+<li>Spring Boot 2.2.2 RELEASE</li>
+<li>IDEA 2019.3.1</li>
+<li>Android Studio 3.6RC1</li>
+<li>Tomcat 9.0.30</li>
+</ul>
+<h1 id="3-android">3 android</h1>
+<h2 id="31-准备工作">3.1 准备工作</h2>
+<h3 id="311-新建工程">3.1.1 新建工程</h3>
+<p>这次用一个全新的例子写博客,因此从新建工程开始:<br>
+<img src="https://img-blog.csdnimg.cn/20200127143649841.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200127143753821.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="312-androidmanifestxml">3.1.2 AndroidManifest.xml</h3>
+<p>加入</p>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;
+&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
+&lt;application android:usesCleartextTraffic=&quot;true&quot;&gt;
 </code></pre>
-<p>addAttribute()添加一个变量,对于两个参数的,使用name作为变量名称,后面的是值,对于只有一个Object的,变量的名字就是类名字首字母小写后转为的java变量.<br>
-addAttributes()添加多个变量,如果变量存在则覆盖,其中参数为Collection&lt;?&gt;的方法添加变量名时与addAttribute(Object)的命名规范类似.<br>
-mergeAttributes()也是添加多个变量,不过变量已存在的话会忽略.<br>
-containAttributte()判断是否存在变量.</p>
-<h2 id="82-servefile">8.2 serveFile</h2>
-<pre><code class="language-java">@GetMapping(&quot;/files/{filename:.+}&quot;)
-@ResponseBody
-public ResponseEntity&lt;Resource&gt; serveFile(@PathVariable String filename)
-{
-    Resource file = storageService.loadAsResource(filename);
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;).body(file);
+<p>网络权限,读写SD卡权限,当然还有允许http请求的权限.</p>
+<h3 id="313-buildgradle">3.1.3 build.gradle</h3>
+<p>加入</p>
+<pre><code class="language-css">compileOptions {
+	sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }
 </code></pre>
-<p>这里的@GetMapping用来表示显示的用来供下载的文件名,@ResponseBody表示直接返回内容而不是视图名,因为默认返回的是视图名称,@ResponseBody对于String直接返回,否则默认使用Jackson进行序列化.</p>
-<p>@PathVariable表示这是@GetMapping中的参数的值,可以省略,默认同名,就是形参的名字与GetMapping中的名字一样,从中取值赋给形参,通过filename加载资源后,作为ResponseEntity的请求体.<br>
-ResponseEntity从HttpEntity继承而来,ResponseEntity.ok()是一个静态方法,表示构建一个状态为&quot;ok&quot;的ResponseEntity,然后添加请求头.</p>
-<pre><code class="language-java">HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;
+<p>这个是支持JDK8的.<br>
+还有这两个okhttp与conscrypt,<a href="https://github.com/square/okhttp">最新版本okhttp可以在这里查看</a>,<a href="https://github.com/google/conscrypt">最新版本conscrypt在这里</a>:</p>
+<pre><code class="language-java">implementation 'com.squareup.okhttp3:okhttp:4.3.1'
+implementation 'org.conscrypt:conscrypt-android:2.2.1'
 </code></pre>
-<p>content_disposition表示文件是直接在浏览器打开还是下载,attachment表示是要下载,文件名为file.getFilename().</p>
-<h2 id="83-handlefileupload">8.3 handleFileUpload</h2>
-<pre><code class="language-java">@PostMapping(&quot;/&quot;)
-public String handleFileUpload(@RequestParam(&quot;file&quot;) MultipartFile file,RedirectAttributes redirectAttributes)
-{
-    storageService.store(file);
-    redirectAttributes.addFlashAttribute(&quot;message&quot;,&quot;You successully uploaded &quot;+file.getOriginalFilename()+&quot;!&quot;);
-    return &quot;redirect:/&quot;;
-}
+<h3 id="314-上传文件">3.1.4 上传文件</h3>
+<p>手动上传一些文件到AVD设备,为下一步选择与上传文件做准备,先把这个窗口工具栏打开:<br>
+<img src="https://img-blog.csdnimg.cn/20200127144628683.png" alt="在这里插入图片描述" loading="lazy"><br>
+打开后,打开在右侧栏中的Device File Explorer:<br>
+<img src="https://img-blog.csdnimg.cn/20200127144718597.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后选择sdcard文件夹上传文件即可,其他文件夹一般没有权限.<br>
+<img src="https://img-blog.csdnimg.cn/2020012714483682.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="315-布局">3.1.5 布局</h3>
+<p>添加三个button(上传/下载/选择文件),一个EditText(上传文件名与下载文件名),一个ImageView(显示下载的图片).<br>
+<img src="https://img-blog.csdnimg.cn/20200127153503538.png" alt="在这里插入图片描述" loading="lazy"><br>
+直接拖放改一下id.</p>
+<h2 id="32-选择文件">3.2 选择文件</h2>
+<h3 id="321-申请权限">3.2.1 申请权限</h3>
+<p>首先申请动态读写文件权限(其实选择文件只需要读权限,因为后面的下载需要写权限所以这里就一起申请了):<br>
+<img src="https://img-blog.csdnimg.cn/20200127153643669.png" alt="在这里插入图片描述" loading="lazy"><br>
+使用checkSelfPermission检查权限,参数为一个Context与String,String表示相应的权限,如果有了这个权限就会返回</p>
+<pre><code class="language-js">PackageManager.PERMISSION_GRANTED
 </code></pre>
-<p>@PostMapping()与@GetMapping()类似,只不过方法不是GET而是POST.@RequestParam表示请求参数,里面的是请求参数的名字,使用MultipartFile来处理文件上传.<br>
-RedirectAttributes是用于重定向使用的,可以附带参数,RedirectAttributes有两种带参的形式:</p>
-<pre><code class="language-java">addAttribute(String name,Object value);
-addFlashAttribute(String name,Object value);
+<p>没有就会返回</p>
+<pre><code class="language-js">PackageManager.PERMISSION_DENIED
 </code></pre>
-<p>addAttribute()相当于直接在重定向的地址添加</p>
-<pre><code class="language-java">name=value
+<p>没有就利用requestPermissions()申请,参数为Content,String[],int,String[]表示要申请的所有权限,int是一个requestCode.</p>
+<h3 id="322-intent选择文件">3.2.2 Intent选择文件</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200127150444157.png" alt="在这里插入图片描述" loading="lazy"><br>
+新建一个Intent后,设置选择类型,然后就重写onActivityResult:<br>
+<img src="https://img-blog.csdnimg.cn/20200127165315522.png" alt="在这里插入图片描述" loading="lazy"><br>
+这是简化了的处理,因为选择的是图片,选择其他文件的话可以参照<a href="https://blog.csdn.net/yingtian648/article/details/79066800">这里</a>.<br>
+其中path是选择的文件的路径,可能你会问:</p>
+<pre><code class="language-java">String path = dir.toString().substring(0,dir.toString().indexOf(&quot;0&quot;)+2) +
+	DocumentsContract.getDocumentId(uri).split(&quot;:&quot;)[1];
 </code></pre>
-<p>这样的形式,会将参数暴露在重定向的地址上.</p>
-<p>而addFlashAttribute()隐藏了参数,只能在重定向的页面中获取参数的值,用到了session,session跳转到页面后就会删除对象.<br>
-handleFileUpload首先保存文件,然后添加一个保存成功的信息,由于Controller中重定向可以返回以&quot;redirect:&quot;或以&quot;forward:&quot;为前缀的URI,因此返回&quot;redirect:/&quot;,重定向到根.</p>
-<h2 id="84-handlestoragefilenotfound">8.4 handleStorageFileNotFound</h2>
-<pre><code class="language-java">@ExceptionHandler(StorageFileNotFoundException.class)
-public ResponseEntity&lt;?&gt; handleStorageFileNotFound(StorageFileNotFoundException e)
-{
-    return ResponseEntity.notFound().build();
-}
+<p>这个是怎么来的,其实是拼凑过来的,因为这是图片,是这个的简化版:<br>
+<img src="https://img-blog.csdnimg.cn/20200127164352187.png" alt="在这里插入图片描述" loading="lazy"><br>
+(<a href="https://blog.csdn.net/yingtian648/article/details/79066800">博客在这里</a>)</p>
+<h2 id="33-上传文件">3.3 上传文件</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200128161254596.png" alt="在这里插入图片描述" loading="lazy"><br>
+参数为文件路径与文件名,然后使用OkHttpClient,因为是文件,用的body是MultipartBody,增加一个叫file的FormDataPart与一个叫filename的FormDataPart.然后使用execute()发送请求,body()获取响应内容,这里假设了后端响应一个布尔,表示上传成功或失败,url的话使用了本地的路径,注意不能是localhost,使用内网ip,然后还要与后端对应.</p>
+<h2 id="34-下载文件">3.4 下载文件</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200128161427455.png" alt="在这里插入图片描述" loading="lazy"><br>
+参数为一个文件名,根据这个文件名返回对应的文件,返回一个File,这里请求体可以选择FormBody或MultipartBody,因为这是一个文件名参数,这里笔者为了统一就选择了MultipartBody,使用FormBody的话,只需要将RequestBody的那一行改为:</p>
+<pre><code class="language-java">RequestBody body = new FormBody.Builder().add(&quot;filename&quot;,filename).build();
 </code></pre>
-<p>@ExceptionHandler()注解会处理Controller层抛出的所有StorageFileNotFoundException类及其子类的异常,ResponseEntity.notFound()相当于返回404标识码.</p>
-<h1 id="9-main">9 main</h1>
-<pre><code class="language-java">package kr.test;
+<p>有了请求体后发送请求获取响应体,进而获取输入流,然后首先需要判断是否为空,但不能直接这样判断:</p>
+<pre><code class="language-java">inputStream == null
+</code></pre>
+<p>因为后端是这样的:<br>
+<img src="https://img-blog.csdnimg.cn/20200128161951334.png" alt="在这里插入图片描述" loading="lazy"><br>
+从响应体获取的inputStream肯定不为null,需要先进行一次读取(也就是判断里面的文件是否为null),若为null的话删除这个文件,不为null的话继续读取并写入文件.</p>
+<h1 id="4-spring-boot">4 Spring Boot</h1>
+<h2 id="41-准备工作">4.1 准备工作</h2>
+<p>用的是IDEA,其他IDE请自行搜索如何新建一个SpringBoot工程.</p>
+<h3 id="411-新建工程">4.1.1 新建工程</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200127172340171.png" alt="在这里插入图片描述" loading="lazy"><br>
+打包的话可以jar或war,不用部署的话jar即可,要部署的话后期也可以改成war.<br>
+<img src="https://img-blog.csdnimg.cn/20200127172434434.png" alt="在这里插入图片描述" loading="lazy"><br>
+两个,一个Spring Web,用于MVC等,一个模板引擎,用于显示视图,如果不需要显示可以不选.<br>
+<img src="https://img-blog.csdnimg.cn/20200127172855499.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="412-applicationproperties">4.1.2 application.properties</h3>
+<p>作为一个示例demo,属性就直接在application.properties中配置了,实际情况请在相应的配置文件中配置相应属性.<br>
+<img src="https://img-blog.csdnimg.cn/20200128032048667.png" alt="在这里插入图片描述" loading="lazy"><br>
+需要配置上传文件的大小限制与上传文件夹的路径.</p>
+<h3 id="413-pomxml">4.1.3 pom.xml</h3>
+<p>这里其实不需要干什么,只是如果下载依赖慢的话,可以这样设置settings.xml文件,在&lt;mirrors&gt;中加上:</p>
+<pre><code class="language-xml">&lt;mirror&gt;
+    &lt;id&gt;alimaven&lt;/id&gt;
+    &lt;name&gt;aliyun maven&lt;/name&gt;
+    &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
 
-import kr.test.properties.StorageProperties;
-import kr.test.service.StorageService;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
+&lt;mirror&gt;
+    &lt;id&gt;uk&lt;/id&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+    &lt;name&gt;Human Readable Name for this Mirror.&lt;/name&gt;
+    &lt;url&gt;http://uk.maven.org/maven2/&lt;/url&gt;
+&lt;/mirror&gt;
 
-@SpringBootApplication
-@EnableConfigurationProperties(StorageProperties.class)
-public class TestApplication {
+&lt;mirror&gt;
+    &lt;id&gt;CN&lt;/id&gt;
+    &lt;name&gt;OSChina Central&lt;/name&gt;
+    &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
 
-    public static void main(String[] args) {
-        SpringApplication.run(TestApplication.class, args);
-    }
+&lt;mirror&gt;
+    &lt;id&gt;nexus&lt;/id&gt;
+    &lt;name&gt;internal nexus repository&lt;/name&gt;
+    &lt;!-- &lt;url&gt;http://192.168.1.100:8081/nexus/content/groups/public/&lt;/url&gt;--&gt;
+    &lt;url&gt;http://repo.maven.apache.org/maven2&lt;/url&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
 
-    @Bean
-    CommandLineRunner init(StorageService storageService)
-    {
-        return (args) -&gt;
-        {
-            storageService.deleteAll();
-            storageService.init();
-        };
-    }
-}
 </code></pre>
-<p>在原来的基础上添加</p>
-<pre><code class="language-java">@EnableConfigurationProperties(StorageProperties.class)
+<p>windows用户的话这个文件在</p>
+<pre><code class="language-bash">C:\Users\{username}\.m2\settings.xml
 </code></pre>
-<p>与</p>
-<pre><code class="language-java">@Bean
-CommandLineRunner init(StorageService storageService)
-{
-    return (args) -&gt;
-    {
-        storageService.deleteAll();
-        storageService.init();
-    };
-}
+<p>linux的话在</p>
+<pre><code class="language-bash">~/.m2/settings.xml
 </code></pre>
-<p>@EnableConfigurationProperties可以为带有@ConfigurationProperties注解的Bean提供有效的支持,将带有@Configuration注解的类注入为Spring的Bean,在这里是使StorageProperties的@ConfigurationProperties生效,如果没有这一行会报红:</p>
-<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20191227074427818.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>@Bean标注在方法上,等价于spring的xml配置文件的&lt;bean&gt;,注册bean对象.<br>
-CommandLineRunner接口用于应用初始化后去执行一段代码逻辑,这段代码在整个应用周期只执行一次.</p>
-<h1 id="10-applicationproperties">10 application.properties</h1>
-<p>这里可以设置一些环境配置属性,Spring Boot允许准备多个配置文件,在部署时可以指定那个配置文件覆盖默认的application.properties.这里是有关上传文件的设置:</p>
-<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200111132534787.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>默认如下:</p>
-<pre><code class="language-java">spring.servlet.multipart.enabled=true 
-spring.servlet.multipart.file-size-threshold=0
-spring.servlet.multipart.location=
-spring.servlet.multipart.max-file-size=1MB
-spring.servlet.multipart.max-request-size=10MB
-spring.servlet.multipart.resolve-lazily=false
-</code></pre>
-<p>enabled表示允许上传,file-size-threshold表示上传文件超过一定长度就先写入临时文件,单位MB或KB,location是临时文件存放目录,不设定的话使用web服务器提供的临时目录.max-file-size表示单个文件最大长度,默认1MB,max-request-size为单次HTTP请求上传的最大长度,默认10MB,resolve-lazily表示文件和参数被访问的时候再解析成文件.</p>
-<p>在这里只需把max-size调大一点即可.</p>
-<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200111133100485.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="11-测试">11 测试</h1>
-<p>这是在本地进行的测试.直接在IDE上点击运行应用,然后打开浏览器输入:</p>
-<pre><code class="language-java">localhost:8080
-</code></pre>
-<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200111132132959.gif" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="12-打包部署到tomcat上">12 打包部署到Tomcat上</h1>
-<p>Spring Boot通常打成jar包或war包,这里部署到Tomcat上的是打成war包.</p>
-<h2 id="121-改变打包方式">12.1 改变打包方式</h2>
-<p>pom.xml中,&lt;packaing&gt;改成war:</p>
-<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200111072952169.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="122-去除tomcat依赖">12.2 去除Tomcat依赖</h2>
-<p>Spring Boot默认自带了一个嵌入式的Tomcat,需要把Tomcat依赖方式改为provided.<br>
-pom.xml中,在&lt;dependencies&gt;添加:</p>
+<h2 id="42-处理上传文件">4.2 处理上传文件</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200128162502371.png" alt="在这里插入图片描述" loading="lazy"><br>
+首先对应的post映射路径为/upload,与android端的路径对应,然后需要一个表示文件的MultipartFile与一个表示文件名的String,判断这两个是否为空后,如果上传的文件夹不存在则先创建,存在的话直接进行复制,然后根据复制成功或失败返回布尔值.复制使用了Files.copy(),第一个InputStream为上传文件的输入流,第二个Path为存储文件的路径,resolve(filename)相当于在上传目录下的filename文件.输出的话建议使用日志代替.</p>
+<h2 id="43-处理下载文件">4.3 处理下载文件</h2>
+<p>下载的话可以选择使用get或post请求,这里选择了post请求,因为android端是post请求,需要对应.get请求的话可以从浏览器发起.<br>
+<img src="https://img-blog.csdnimg.cn/2020012803350758.png" alt="在这里插入图片描述" loading="lazy"><br>
+首先根据文件名获取对应文件,判断文件是否存在后返回一个ResponseEntity,需要设定content-type与body,content-type根据需要设置即可,这里是图片,默认.jpg或.png,body的话使用FileSystemResource,直接new一个放进body即可.<br>
+如果不存在相应的文件则返回null,这里需要注意一下前端的判断,不能直接判断ResponseBody是否为null.</p>
+<h1 id="5-测试">5 测试</h1>
+<h2 id="51-postman测试">5.1 postman测试</h2>
+<p>postman只能测试与后端的连接,上传等是否有问题,可以用来定位后端的问题.</p>
+<h3 id="511-上传测试">5.1.1 上传测试</h3>
+<p>再Headers中设置了Content-Type为multipart/form-data后:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041048644.png" alt="在这里插入图片描述" loading="lazy"><br>
+在body添加一个叫file的文件与一个叫filename的字符串表示文件名:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041026926.png" alt="在这里插入图片描述" loading="lazy"><br>
+发送,返回true.<br>
+<img src="https://img-blog.csdnimg.cn/2020012804134376.png" alt="在这里插入图片描述" loading="lazy"><br>
+服务器端有输出提示:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041409533.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看文件夹:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041427428.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="512-下载测试">5.1.2 下载测试</h3>
+<p>把file参数关掉,保留filename,修改路径.<br>
+<img src="https://img-blog.csdnimg.cn/20200128041539668.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后发送,postman可以直接显示图片:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041741395.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="52-android端测试">5.2 android端测试</h2>
+<h3 id="521-上传测试">5.2.1 上传测试</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200128155806544.gif" alt="在这里插入图片描述" loading="lazy"><br>
+后端提示:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155753985.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看文件夹:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155829103.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="522-下载测试">5.2.2 下载测试</h3>
+<p>输入文件名后直接下载:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155933425.gif" alt="在这里插入图片描述" loading="lazy"><br>
+默认的话是放在这里,按需要更改位置即可,注意加上写权限:<br>
+<img src="https://img-blog.csdnimg.cn/20200128161027921.png" alt="在这里插入图片描述" loading="lazy"><br>
+若看不到文件选择synchronize即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128153926242.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="6-部署到服务器">6 部署到服务器</h1>
+<p>服务器用的是tomcat,需要修改一些Spring Boot的部分.</p>
+<h2 id="61-部署">6.1 部署</h2>
+<h3 id="611-改变打包方式">6.1.1 改变打包方式</h3>
+<p>pom.xml中jar改成war.<br>
+<img src="https://img-blog.csdnimg.cn/20200128164613506.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="612-去除tomcat依赖">6.1.2 去除tomcat依赖</h3>
+<p>pom.xml加入:</p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
     &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 </code></pre>
-<h2 id="123-修改main类">12.3 修改Main类</h2>
-<p>修改Main类,让其继承SpringBootServletInitializer,重载configure(),同时main()保持不变.</p>
-<pre><code class="language-java">@SpringBootApplication
-public class MainClass extends SpringBootServletInitializer
-{
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
-	{
-		return application.sources(MainClass.class);
-	}
-	//main()不变
-}
+<h3 id="613-修改main">6.1.3 修改Main</h3>
+<p>修改Main类,让其继承SpringBootServletInitializer,重载configure(),同时main()保持不变.<br>
+修改前:<br>
+<img src="https://img-blog.csdnimg.cn/20200128165014319.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改后:<br>
+<img src="https://img-blog.csdnimg.cn/20200128164908318.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="614-修改路径">6.1.4 修改路径</h3>
+<p>这个按需要修改即可,在这里不需要,注意就是@PostMapping,@GetMapping等都是相对于</p>
+<pre><code class="language-bash">tomcat/webapps/项目/
 </code></pre>
-<h2 id="124-路径问题">12.4 路径问题</h2>
-<p>这个很重要,设置不当的话就无法访问了,主要就是四个路径:</p>
-<ul>
-<li>action:</li>
-</ul>
-<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200111144619164.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li>@GetMapping</li>
-</ul>
-<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200111144651888.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li>@PostMapping</li>
-</ul>
-<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200111144735284.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li>redirect</li>
-</ul>
-<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200111144808831.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="1241-action">12.4.1 action</h3>
-<p>这个是绝对路径,要加上/war项目名.</p>
-<pre><code>/war项目名/上传路径名
-</code></pre>
-<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200111145056680.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>比如这里war项目名是kr,上传路径名是upload.</p>
-<h3 id="1242-getmapping">12.4.2 @GetMapping</h3>
-<p>这个是相对路径,相对于当前项目的路径,不用加上/war项目名.</p>
-<pre><code>/上传路径名
-</code></pre>
-<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20200111145235205.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里是upload.</p>
-<h3 id="1243-postmapping">12.4.3 @PostMapping</h3>
-<p>与@GetMapping一样,上传路径名.</p>
-<pre><code>/上传路径名
-</code></pre>
-<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200111145438464.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="1244-redirect">12.4.4 redirect</h3>
-<p>这个是返回的重定向的路径名,相对路径,与上两个一样,也是上传路径名.</p>
-<pre><code>/上传路径名
-</code></pre>
-<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200111150534769.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="125-设置打包名字">12.5 设置打包名字</h2>
-<p>在&lt;build&gt;中添加&lt;finalName&gt;,指定打包出来的war名,注意这个要与上面的war项目名一样,这里设置的是kr.</p>
-<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200111140233480.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="126-maven打包">12.6 Maven打包</h2>
-<p>运行</p>
-<pre><code class="language-java">mvn package
-</code></pre>
-<p>即可打包,对于IDEA,可以在IDEA右侧栏的Maven中,打开Lifecycle,选择package:</p>
-<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200111074204520.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="127-打包完成">12.7 打包完成</h2>
-<p>打包后的war默认放在target下,名字默认为&lt;artifactId&gt;+&lt;version&gt;.</p>
-<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/2020011107431451.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200111074359386.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="128-上传到服务器">12.8 上传到服务器</h2>
-<p>上传的话笔者用的是密钥认证的scp:</p>
-<pre><code class="language-bash">scp -i xxxx\id_rsa kr.war username@ip:/usr/local/tomcat/webapps
-</code></pre>
-<p>放到服务器的Tomcat下的webapps目录.</p>
-<h2 id="129-开启tomcat">12.9 开启Tomcat</h2>
-<p>进入到Tomcat目录的bin下:</p>
-<pre><code class="language-bash">cd /usr/local/tomcat/bin
+<p>目录下的.</p>
+<h3 id="615-设置打包名字">6.1.5 设置打包名字</h3>
+<p>build加上&lt;finalName&gt;.<br>
+<img src="https://img-blog.csdnimg.cn/20200128165243261.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="616-打包">6.1.6 打包</h3>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020012816533874.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="617-上传到服务器">6.1.7 上传到服务器</h3>
+<p>打包后的文件放在target下,使用scp上传即可,这里是本地的tomcat,就这接移动war了.</p>
+<h3 id="618-运行">6.1.8 运行</h3>
+<p>开启tomcat,双击startup.bat即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128165527920.png" alt="在这里插入图片描述" loading="lazy"><br>
+linux的话:</p>
+<pre><code class="language-bash">cd xxxx/tomcat/bin
 ./startup.sh
 </code></pre>
-<p>如果正在运行的话就不用启动了,因为会自动检测到webapps目录的变化,把新的war自动解包.</p>
-<h2 id="1210-测试">12.10 测试</h2>
-<p>略,与本地测试类似,不过要注意的是上传的文件夹是在tomcat/bin下,想要修改的话可以修改StorageProperties的location.</p>
-<h1 id="13-源码">13 源码</h1>
-<p><a href="https://github.com/2293736867/SpringBootUploadFileExample">github</a></p>
-<p><a href="https://gitee.com/imykr/SpringBootUploadFileExample">码云</a></p>
-<h1 id="14-参考">14 参考</h1>
-<p>1.<a href="https://blog.csdn.net/zknxx/article/details/79183698">ConfigurationProperties</a></p>
-<p>2.<a href="https://www.cnblogs.com/chenpi/p/9696310.html">CommandLineRunner</a></p>
-<p>3.<a href="https://zhuanlan.zhihu.com/p/21353217?refer=pengsong-java">RedirectAttribute</a></p>
+<h2 id="62-测试">6.2 测试</h2>
+<p>在测试前需要确保没有占用相应端口,默认8080,也就是说,如果不改端口的话,需要关闭IDEA运行中的SpringBoot应用.</p>
+<h3 id="621-postman测试">6.2.1 postman测试</h3>
+<p>上传测试,注意需要改路径,加上打包项目名,ip的话可以使用localhost或者内网ip.<br>
+<img src="https://img-blog.csdnimg.cn/20200128170329136.gif" alt="在这里插入图片描述" loading="lazy"><br>
+服务器这边收到了,因为上传路径只是直接写名字,因此会与startup.bat同一路径.<br>
+<img src="https://img-blog.csdnimg.cn/20200128170016425.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载测试:<br>
+<img src="https://img-blog.csdnimg.cn/202001281706212.gif" alt="在这里插入图片描述" loading="lazy"><br>
+服务器的输出:<br>
+<img src="https://img-blog.csdnimg.cn/2020012817092774.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="622-android端测试">6.2.2 android端测试</h3>
+<p>android端需要修改路径即可,加上war打包的名字.<br>
+<img src="https://img-blog.csdnimg.cn/2020012817072767.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里打包的名字是kr,直接加上即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128170759231.png" alt="在这里插入图片描述" loading="lazy"><br>
+上传那里也是要加上,然后:<br>
+<img src="https://img-blog.csdnimg.cn/20200128172216981.gif" alt="在这里插入图片描述" loading="lazy"><br>
+服务器的输出:<br>
+<img src="https://img-blog.csdnimg.cn/20200128172200484.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看文件:<br>
+<img src="https://img-blog.csdnimg.cn/20200128172253701.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-最最最喜欢的-坑">7 <s>最最最喜欢的</s> 坑</h1>
+<h2 id="71-权限">7.1 权限</h2>
+<p>android需要读权限才能读取文件并上传,需要写权限才能保存从服务器返回的文件,在AndroidManifest.xml中加入:</p>
+<pre><code class="language-xml">&lt;manifest&gt;...
+&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;
+&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
+&lt;application&gt;...&lt;/application&gt;
+</code></pre>
+<p>这是外部设备的读写权限.当然,加入这个还不能访问,因为,android6.0以后还需要动态申请权限,所以:</p>
+<pre><code class="language-java">String [] permission = new String[]{
+	&quot;android.permission.READ_EXTERNAL_STORAGE&quot;,
+	&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;
+};
+if(
+	ActivityCompat.checkSelfPermission(this,permission[0]) != PackageManager.PERMISSION_GRANTED
+	||
+	ActivityCompat.checkSelfPermission(this,permission[1]) != PackageManager.PERMISSION_DENIED
+)
+{
+    ActivityCompat.requestPermissions(this,permission,1);
+}
+</code></pre>
+<h2 id="72-路径">7.2 路径</h2>
+<p>需要保证下面几个路径正确,还有可读,可写等:</p>
+<ul>
+<li>url路径不能错.</li>
+<li>前端上传文件的路径.</li>
+<li>后端接收前端上传文件的路径.</li>
+<li>后端发送前端需要下载的文件的路径.</li>
+<li>前端接收下载文件的路径.</li>
+</ul>
+<h2 id="73-有关http的问题">7.3 有关http的问题</h2>
+<h3 id="731-okhttp的stream关闭">7.3.1 okhttp的stream关闭</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200128163649815.png" alt="在这里插入图片描述" loading="lazy"><br>
+若前端是这样写的,在工具类中返回了之后Response已经关闭,因此需要读取输入流之类的需要先读取再返回,而不是返回一个ResponseBody或InputStream进行读取,否则会提示&quot;closed&quot;.</p>
+<h3 id="732-http">7.3.2 http</h3>
+<p>Android P开始默认禁用http,因此可以使用https或者在AndroidManifest.xml中允许http连接:</p>
+<pre><code class="language-xml">&lt;application android:usesCleartextTraffic=&quot;true&quot;&gt;
+</code></pre>
+<h3 id="733-线程">7.3.3 线程</h3>
+<p>网络请求不能在主线程中,新开一个线程即可.</p>
+<h3 id="734-avd">7.3.4 AVD</h3>
+<p>若检查过了服务器与android端没问题,那么有可能是AVD的问题,解决方法很简单,卸载,重启AVD,注意一定要卸载再重启.</p>
+<h2 id="74-ip">7.4 ip</h2>
+<p>在本地测试的话后端可以直接localhost,在android端不能直接localhost,可以使用ipconfig或ifconfig查看内网ip,输入内网ip即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128150557717.png" alt="在这里插入图片描述" loading="lazy"><br>
+若在服务器上测试直接使用服务器ip.</p>
+<h2 id="75-判空处理">7.5 判空处理</h2>
+<p>对于前端,应该判断存储路径是否为空,是否为null等,再传给后端,对于后端,要判断文件是否存在等,不存在就返回null,这时又需要前端进行判断返回的null,在下载文件时,虽然对不存在的文件后端返回null,但是,前端收到的是一个InputStream,不能直接判断是否为null,需要先读取一次,再进行剩下的读取:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155640346.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="8-源码">8 源码</h1>
+<p><a href="https://github.com/2293736867/Android-SpringBoot-Upload-Download-file">github</a></p>
+<p><a href="https://gitee.com/imykr/Android-SpringBoot-Upload-Download-file">码云</a></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[软件工程学习笔记(三):需求工程]]></title>
-        <id>https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-san-xu-qiu-gong-cheng/</id>
-        <link href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-san-xu-qiu-gong-cheng/">
+        <title type="html"><![CDATA[每天AC系列(四):四数之和]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-si-si-shu-zhi-he/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-si-si-shu-zhi-he/">
         </link>
-        <updated>2020-06-02T20:21:45.000Z</updated>
+        <updated>2020-06-02T20:47:58.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/4sum/">Leetcode第18题</a>,给定一个数组与一个target,找出数组中的四个数之和为target的不重复的所有四个数.<br>
+<img src="https://img-blog.csdnimg.cn/20200126100609278.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-暴力">2 暴力</h1>
+<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+if (nums.length == 4 &amp;&amp; nums[0] + nums[1] + nums[2] + nums[3] == target)
+    result.add(Arrays.asList(nums[0], nums[1], nums[2],nums[3]));
+else if (nums.length &gt; 4) 
+{
+    Arrays.sort(nums);
+    Set&lt;List&lt;Integer&gt;&gt; resultSet = new HashSet&lt;&gt;();
+    for(int i=0;i&lt;nums.length-3;++i)
+    {
+        for(int j=i+1;j&lt;nums.length-2;++j)
+        {
+            for(int k=j+1;k&lt;nums.length-1;++k)
+            {
+                for(int m=k+1;m&lt;nums.length;++m)
+                {
+                    if(nums[i]+nums[j]+nums[k]+nums[m] == target)
+                        resultSet.add(Arrays.asList(nums[i],nums[j],nums[k],nums[m]));
+                }
+            }
+        }
+    }
+    result.addAll(resultSet);
+    Collections.sort(result,(t1,t2)-&gt;
+    {
+        if(t1.get(0) &gt; t2.get(0))
+            return 1;
+        if (t1.get(0) &lt; t2.get(0))
+            return -1;
+        if (t1.get(1) &gt; t2.get(1))
+            return 1;
+        if (t1.get(1) &lt; t2.get(1))
+            return -1;
+        if (t1.get(2) &gt; t2.get(2))
+            return 1;
+        if (t1.get(2) &lt; t2.get(2))
+            return -1;
+        if (t1.get(3) &gt; t2.get(3))
+            return 1;
+        if (t1.get(3) &lt; t2.get(3))
+            return -1;
+        return 0;
+    });
+}
+return result;
+</code></pre>
+<p>判断长度,然后排序,直接上四个for,然后...<br>
+<img src="https://img-blog.csdnimg.cn/20200126100444693.png" alt="在这里插入图片描述" loading="lazy"><br>
+好! 惨败.</p>
+<h1 id="3-优化">3 优化</h1>
+<h2 id="31-去掉结果排序">3.1 去掉结果排序</h2>
+<p>首先最后的排序是不必要的,也就是后面的</p>
+<pre><code class="language-java">Collections.sort(result,(t1,t2)-&gt;
+{
+    if(t1.get(0) &gt; t2.get(0))
+        return 1;
+    if (t1.get(0) &lt; t2.get(0))
+        return -1;
+    if (t1.get(1) &gt; t2.get(1))
+        return 1;
+    if (t1.get(1) &lt; t2.get(1))
+        return -1;
+    if (t1.get(2) &gt; t2.get(2))
+        return 1;
+    if (t1.get(2) &lt; t2.get(2))
+        return -1;
+    if (t1.get(3) &gt; t2.get(3))
+        return 1;
+    if (t1.get(3) &lt; t2.get(3))
+        return -1;
+    return 0;
+});
+</code></pre>
+<p>对结果进行排序不必要,虽然会在测试时与答案有差别,但是提交的话不需要排序.</p>
+<h2 id="32-stream去重">3.2 stream去重</h2>
+<p>之前的操作用的是HashSet进行去重,有一个符合的四元组就直接添加进集合中,现在采用了stream+distinct去重:</p>
+<pre><code class="language-java">return result.stream().distinct().collect(Collectors.toList());
+</code></pre>
+<h2 id="33-双指针最大最小剪枝">3.3 双指针+最大最小剪枝</h2>
+<p>可以利用类似三数之和的思想,固定一个数,双指针分别指向两端的两个数,这里的话,四个数,选择固定两个数,计算它们的和并把它们看作一个数,即可利用双指针.</p>
+<pre><code class="language-java">for(int i=0;i&lt;nums.length-3;++i)
+{
+     for(int j=i+1;j&lt;nums.length-2;++j)
+     {
+         int m = nums[i] + nums[j];
+         int left = j+1;
+         int right = nums.length-1;
+         while(left &lt; right)
+         {
+             int temp = m + nums[left] + nums[right];
+             if(temp == target)
+             {
+                 result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                 --right;
+                 ++left;
+             }
+             else if(temp &gt; target)
+                 --right;
+             else
+                 ++left;
+         }
+     }
+ }
+</code></pre>
+<p>m为固定的数,left与right就是双指针,根据&quot;三数&quot;之和判断与目标值的大小移动双指针.<br>
+最小剪枝就是首先计算&quot;三数&quot;的最小值,若大于目标值就可以跳过,最大剪枝就是计算&quot;三数&quot;的最大值,若小于目标值则跳过,进入下一个循环:</p>
+<pre><code class="language-java">int m = nums[i] + nums[j];
+int left = j+1;
+int right = nums.length-1;
+if(m + nums[left] + nums[left+1] &gt; target)
+    continue;
+if (m + nums[right-1] + nums[right] &lt; target)
+    continue;
+</code></pre>
+<h2 id="34-提交">3.4 提交</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200126104700810.png" alt="在这里插入图片描述" loading="lazy"><br>
+呃...好了那么一点点吧.</p>
+<h1 id="4-来来来再快一点">4 来来来再快一点</h1>
+<h2 id="41-初始判断">4.1 初始判断</h2>
+<p>首先,初始的判断可以再简单一点,如果数组为空或长度小于4,直接返回.</p>
+<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+if (nums == null &amp;&amp; nums.length &lt; 4)
+	return result;
+</code></pre>
+<h2 id="42-一次不够就再剪几次">4.2 一次不够,就再剪几次</h2>
+<p>上面的算法中,只是在两层for里面进行了一次最大最小剪枝,可以在没进入for之前剪一次:</p>
+<pre><code class="language-java">Arrays.sort(nums);
+int len = nums.length;
+if(
+	nums[0] + nums[1] + nums[2] + nums[3] &gt;  target 
+	|| 
+	nums[len-4] + nums[len-3] + nums[len-2] + nums[len-1] &lt; target
+)
+    return result;
+for(int i=0;i&lt;len-3;++i)   
+</code></pre>
+<p>注意要先排序,然后直接判断整个数组的最大最小值并与target判断.<br>
+然后在进入第一层for之后再剪一次:</p>
+<pre><code class="language-java">for(int i=0;i&lt;len-3;++i)
+{
+	if(nums[i] + nums[i+1] + nums[i+2] + nums[i+3] &gt; target)
+		break;
+    if(nums[i] + nums[len-3] + nums[len-2] + nums[len-1] &lt; target)
+		continue;
+    for(int j=i+1;j&lt;len-2;++j)
+}
+</code></pre>
+<p>因为数组是升序排序的,因此,&quot;最左边&quot;四个数肯定是最小值,若这个最小值大于target,可以直接break了,但是,最右边三个数与nums[i]相加不一定为最大值,因此判断之后若小于target只能continue.</p>
+<h2 id="43-去重">4.3 去重</h2>
+<h3 id="431-双指针去重">4.3.1 双指针去重</h3>
+<p>首先,在双指针的循环中,若发现了有四个数符合条件,可以尝试多次移动指针:</p>
+<pre><code class="language-java">result.add(Arrays.asList(nums[i], nums[j], nums[left++], nums[right--]));
+while(left &lt; right &amp;&amp; nums[left] == nums[left-1])
+    ++left;
+while(left &lt; right &amp;&amp; nums[right] == nums[right+1]) 
+    --right;
+</code></pre>
+<p>因为值一样的可以一次性移动指针,不需要再次进行和的判断.<br>
+呃,可以尝试提交了.<br>
+<img src="https://img-blog.csdnimg.cn/20200126112957623.png" alt="在这里插入图片描述" loading="lazy"><br>
+咦,不对啊,做了这么多,没快多少啊...<br>
+为啥呢...<br>
+...</p>
+<h3 id="432-外循环去重">4.3.2 外循环去重</h3>
+<p>找了很久,发现是这里的原因:</p>
+<pre><code class="language-java">return result.stream().distinct().collect(Collectors.toList());
+</code></pre>
+<p>这里去重的话,用是用的很舒服,一个stream(),一个distinct()就好了,问题是...还是很慢啊!!!<br>
+所以呢,需要手动去重,出现重复的原因就是数组中有重复的数,比如:</p>
+<pre><code class="language-java">[1,1,1,1,2,2,2,2],target=6
+</code></pre>
+<p>顺序判断时,会好几个</p>
+<pre><code class="language-java">[1,1,2,2]
+</code></pre>
+<p>因此,对于重复的数,进行跳过处理,在第一层for中,对重复过的进行跳过:</p>
+<pre><code class="language-java">for(int i=0;i&lt;len-2;++i)
+	if(i&gt;0 &amp;&amp; nums[i] == nums[i-1]) continue;
+</code></pre>
+<p>其次,在第二层for中,也对重复过的进行跳过:</p>
+<pre><code class="language-java">for(int j=i+1;j&lt;len-2;++j)
+	if(j &gt; i+1 &amp;&amp; nums[j] == nums[j-1]) continue;
+</code></pre>
+<p>这样的话,例如对于上面的(不同的1用字母区分)</p>
+<pre><code class="language-java">[1(a),1(b),1(c),1(d),2,2,2,2]
+</code></pre>
+<p>一开始是a处的1与b处的1,然后到了第二层循环,因为此时j=i+1,指向b处的1,因此不会跳过1,会进入双指针循环,第二次j指向c处的1,出现重复,j不断跳过直到j指向2.然后2结束后,到了i这层循环,因为1出现过,i不断跳过直到i指向2.</p>
+<p>没错,说了这么多,去重不需要什么HashSet,不需要什么stream,只需两行:</p>
+<pre><code class="language-java">if(i&gt;0 &amp;&amp; nums[i] == nums[i-1]) continue;
+if(j&gt;i + 1 &amp;&amp; nums[j] == nums[j-1]) continue;
+</code></pre>
+<h2 id="44-提交">4.4 提交</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200126125547527.png" alt="在这里插入图片描述" loading="lazy"><br>
+尽力了.</p>
+<h1 id="5-源码">5 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day4">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day4">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[@Scheduled注解]]></title>
+        <id>https://2293736867.github.io/post/scheduled-zhu-jie/</id>
+        <link href="https://2293736867.github.io/post/scheduled-zhu-jie/">
+        </link>
+        <updated>2020-06-02T20:47:28.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E9%9C%80%E6%B1%82%E8%8E%B7%E5%8F%96">2 需求获取</a>
+<li><a href="#2-cron">2 cron</a>
 <ul>
-<li><a href="#21-%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82">2.1 软件需求</a>
-<ul>
-<li><a href="#211-%E5%8A%9F%E8%83%BD%E9%9C%80%E6%B1%82">2.1.1 功能需求</a></li>
-<li><a href="#212-%E6%80%A7%E8%83%BD%E9%9C%80%E6%B1%82">2.1.2 性能需求</a></li>
-<li><a href="#213-%E7%94%A8%E6%88%B7%E6%88%96%E4%BA%BA%E7%9A%84%E5%9B%A0%E7%B4%A0">2.1.3 用户或人的因素</a></li>
-<li><a href="#214-%E7%8E%AF%E5%A2%83%E9%9C%80%E6%B1%82">2.1.4 环境需求</a></li>
-<li><a href="#215-%E7%95%8C%E9%9D%A2%E9%9C%80%E6%B1%82">2.1.5 界面需求</a></li>
-<li><a href="#216-%E6%96%87%E6%A1%A3%E9%9C%80%E6%B1%82">2.1.6 文档需求</a></li>
-<li><a href="#217-%E6%95%B0%E6%8D%AE%E9%9C%80%E6%B1%82">2.1.7 数据需求</a></li>
-<li><a href="#218-%E8%B5%84%E6%BA%90%E4%BD%BF%E7%94%A8%E9%9C%80%E6%B1%82">2.1.8 资源使用需求</a></li>
-<li><a href="#219-%E5%AE%89%E5%85%A8%E4%BF%9D%E5%AF%86%E9%9C%80%E6%B1%82">2.1.9 安全保密需求</a></li>
-<li><a href="#2110-%E5%8F%AF%E9%9D%A0%E6%80%A7%E9%9C%80%E6%B1%82">2.1.10 可靠性需求</a></li>
-<li><a href="#2111-%E8%BD%AF%E4%BB%B6%E6%88%90%E6%9C%AC%E6%B6%88%E8%80%97%E4%B8%8E%E5%BC%80%E5%8F%91%E8%BF%9B%E5%BA%A6%E9%9C%80%E6%B1%82">2.1.11 软件成本消耗与开发进度需求</a></li>
-<li><a href="#2112-%E5%85%B6%E4%BB%96%E9%9D%9E%E5%8A%9F%E8%83%BD%E6%80%A7%E9%9C%80%E6%B1%82">2.1.12 其他非功能性需求</a></li>
+<li><a href="#21-cron%E9%80%9A%E9%85%8D%E7%AC%A6">2.1 cron通配符</a></li>
+<li><a href="#22-cron%E7%A4%BA%E4%BE%8B">2.2 cron示例</a></li>
 </ul>
 </li>
-<li><a href="#22-%E9%9C%80%E6%B1%82%E8%8E%B7%E5%8F%96%E7%9A%84%E6%96%B9%E6%B3%95%E5%8D%B3%E7%AD%96%E7%95%A5">2.2 需求获取的方法即策略</a>
+<li><a href="#3-fixedrate">3 fixedRate</a>
 <ul>
-<li><a href="#221-%E5%BB%BA%E7%AB%8B%E9%A1%BA%E7%95%85%E7%9A%84%E9%80%9A%E4%BF%A1%E9%80%94%E5%BE%84">2.2.1 建立顺畅的通信途径</a></li>
-<li><a href="#222-%E8%AE%BF%E8%B0%88%E4%B8%8E%E8%B0%83%E6%9F%A5">2.2.2 访谈与调查</a></li>
-<li><a href="#223-%E8%A7%82%E5%AF%9F%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B">2.2.3 观察用户操作流程</a></li>
-<li><a href="#224-%E6%88%90%E7%AB%8B%E8%81%94%E5%90%88%E5%B0%8F%E7%BB%84">2.2.4 成立联合小组</a></li>
-<li><a href="#225-%E7%94%A8%E5%86%B5">2.2.5 用况</a></li>
+<li><a href="#31-fixedrate">3.1 fixedRate</a></li>
+<li><a href="#32-fixedratestring">3.2 fixedRateString</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#3-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90">3 需求分析</a>
+<li><a href="#4-fixeddelay">4 fixedDelay</a>
 <ul>
-<li><a href="#31-%E5%8E%9F%E5%88%99">3.1 原则</a></li>
-<li><a href="#32-%E4%BF%A1%E6%81%AF%E5%9F%9F">3.2 信息域</a>
+<li><a href="#41-fixeddelay">4.1 fixedDelay</a></li>
+<li><a href="#42-fixeddelaystring">4.2 fixedDelayString</a></li>
+</ul>
+</li>
+<li><a href="#5-initialdelay">5 initialDelay</a>
 <ul>
-<li><a href="#321-%E4%BF%A1%E6%81%AF%E5%86%85%E5%AE%B9">3.2.1 信息内容</a></li>
-<li><a href="#322-%E4%BF%A1%E6%81%AF%E6%B5%81">3.2.2 信息流</a></li>
-<li><a href="#323-%E4%BF%A1%E6%81%AF%E7%BB%93%E6%9E%84">3.2.3 信息结构</a></li>
+<li><a href="#51-initialdelay">5.1 initialDelay</a></li>
+<li><a href="#52-initialdelaystring">5.2 initialDelayString</a></li>
 </ul>
 </li>
-<li><a href="#33-%E9%9C%80%E6%B1%82%E5%8D%8F%E5%95%86">3.3 需求协商</a></li>
-<li><a href="#34-%E9%9C%80%E6%B1%82%E5%BB%BA%E6%A8%A1">3.4 需求建模</a></li>
-</ul>
-</li>
-<li><a href="#4-%E9%9C%80%E6%B1%82%E8%A7%84%E7%BA%A6">4 需求规约</a>
-<ul>
-<li><a href="#41-%E5%BC%95%E8%A8%80">4.1 引言</a></li>
-<li><a href="#42-%E4%BF%A1%E6%81%AF%E6%8F%8F%E8%BF%B0">4.2 信息描述</a></li>
-<li><a href="#43-%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0">4.3 功能描述</a></li>
-<li><a href="#44-%E8%A1%8C%E4%B8%BA%E6%8F%8F%E8%BF%B0">4.4 行为描述</a></li>
-<li><a href="#45-%E6%A3%80%E9%AA%8C%E6%A0%87%E5%87%86">4.5 检验标准</a></li>
-<li><a href="#46-%E5%8F%82%E8%80%83%E4%B9%A6%E7%9B%AE">4.6 参考书目</a></li>
-<li><a href="#47-%E9%99%84%E5%BD%95">4.7 附录</a></li>
-</ul>
-</li>
-<li><a href="#5-%E9%9C%80%E6%B1%82%E9%AA%8C%E8%AF%81">5 需求验证</a></li>
-<li><a href="#6-%E9%9C%80%E6%B1%82%E7%AE%A1%E7%90%86">6 需求管理</a></li>
 </ul>
 </p>
 <h1 id="1-概述">1 概述</h1>
-<p>需求工程是应用已证实有效的技术与方法开展需求分析,确定客户需求,帮助分析人员理解问题,评估可行性,协商合理的解决方案,无歧义地规约方案,确认规约以及将规约转换到可运行系统时的需求管理.需求工程是一个不断反复的需求定义,文档记录,需求演进的过程,并最终在验证的基础上冻结需求.需求工程可以分为六个阶段:需求获取,需求分析与协商,系统建模,需求规约,需求验证,需求管理.</p>
-<h1 id="2-需求获取">2 需求获取</h1>
-<p>需求获取阶段分析人员通过与用户的交流,对现有系统的观察以及对任务进行分析,确定系统或产品范围的限制性描述,与系统或产品有关的人员及特征列表,系统的技术环境的描述,系统功能列表及应用于每个需求的领域限制,描述不同运行条件下系统或产品使用状况的应用场景等,为需求分析打下基础.</p>
-<h2 id="21-软件需求">2.1 软件需求</h2>
-<p>软件需求是指用户对目标软件系统在功能,行为,性能,设计约束等方面的期望,包括:</p>
-<h3 id="211-功能需求">2.1.1 功能需求</h3>
-<p>考虑系统要做什么,在何时做,在何时及如何修改或升级等.</p>
-<h3 id="212-性能需求">2.1.2 性能需求</h3>
-<p>考虑软件开发的技术性指标,例如,存储容量限制,执行速度,响应时间以及吞吐量.</p>
-<h3 id="213-用户或人的因素">2.1.3 用户或人的因素</h3>
-<p>考虑用户的类型,例如用户对使用计算机的熟练程度,需要接受的训练,用户理解,使用系统的难度,用户错误操纵系统的可能性等.</p>
-<h3 id="214-环境需求">2.1.4 环境需求</h3>
-<p>考虑未来软件应用的环境,包括硬件和软件,对硬件设备的需求包括机型,外设,接口,地点,分布,温度,湿度,磁场干扰等.对软件的需求包括操作系统,网络,数据库等.</p>
-<h3 id="215-界面需求">2.1.5 界面需求</h3>
-<p>考虑来自其他系统的输入,到其他系统的输出,对数据格式的特殊规定,对数据存储介质的规定.</p>
-<h3 id="216-文档需求">2.1.6 文档需求</h3>
-<p>考虑需要哪些文档,文档针对的读者.</p>
-<h3 id="217-数据需求">2.1.7 数据需求</h3>
-<p>考虑输入,输出数据的格式,接受,发送数据的频率,数据的准确度与精度,数据流量,数据需保持的时间等.</p>
-<h3 id="218-资源使用需求">2.1.8 资源使用需求</h3>
-<p>考虑软件运行时所需要的数据,其他软件,内存空间等资源.软件开发,维护所需的人力,支撑软件,开发设备等.</p>
-<h3 id="219-安全保密需求">2.1.9 安全保密需求</h3>
-<p>考虑是否需要对访问系统或系统信息加以控制,隔离用户数据与方法,用户程序如何与其他程序和操作系统隔离以及系统备份要求等等.</p>
-<h3 id="2110-可靠性需求">2.1.10 可靠性需求</h3>
-<p>考虑系统的可靠性技术,系统是否必须监测和隔离错误,出错后重启系统允许的时间等.</p>
-<h3 id="2111-软件成本消耗与开发进度需求">2.1.11 软件成本消耗与开发进度需求</h3>
-<p>考虑开发是否有规定的时间表,软硬件投资有无限制等.</p>
-<h3 id="2112-其他非功能性需求">2.1.12 其他非功能性需求</h3>
-<p>如采用某种开发模式,确定质量控制标准,里程碑和评审,验收标准,各种质量要求的优先级等,以及可维护性方面的需求.</p>
-<h2 id="22-需求获取的方法即策略">2.2 需求获取的方法即策略</h2>
-<h3 id="221-建立顺畅的通信途径">2.2.1 建立顺畅的通信途径</h3>
-<p>在用户,系统分析人员,软件开发小组,管理人员之间建立良好的沟通方式,以保证能顺利地对问题进行分析.</p>
-<h3 id="222-访谈与调查">2.2.2 访谈与调查</h3>
-<p>分析人员要从分析已经存在的同类的软件产品,或从行业标准,规则中提取初步需求,然后以个别访谈的形式或小组会议的形式开始与用户进行初步的沟通.除了进行面谈外,可以进行市场调查,了解市场对将开发的软件有什么样的要求,可以采取多种调查方式,指定调查提纲,向不同层次的用户发调查表,或访问用户和领域专家.</p>
-<h3 id="223-观察用户操作流程">2.2.3 观察用户操作流程</h3>
-<p>到用户的实际工作环境中对用户的工作流程进行观察,了解用户的实际操作环境,操作过程与操作要求,对照用户提交的问题陈述,对用户需求可以有更全面细致的认识.</p>
-<h3 id="224-成立联合小组">2.2.4 成立联合小组</h3>
-<p>采用一种叫FAST(facilitated application sepcification techniques)的技术用户与开发方成立一个联合小组,发挥各自的长处,共同负责项目的推进.FAST鼓励建立用户与开发者队伍之间的合作,共同工作来标识问题,提出解决方法的要素,商议不同的方法以及刻画初步的解决方案.</p>
-<p>它已经成为信息系统使用的主流技术,该技术为改善各种应用中的相互通信提供了潜在的可能.FAST团队由来自市场,软件与硬件工程以及制造方的代表组成,并选择外来人员作为协调者.该方法有一下基本原则:</p>
-<ul>
-<li>在中立的地点举行由开发者和用户出席的会议</li>
-<li>建立准备和参与会议的规则</li>
-<li>建立一个足够正式的议程以便可以进行自由的交流</li>
-<li>由一个&quot;协调者&quot;(用户,开发者,或其他人)来控制会议</li>
-<li>使用一种&quot;定义机制&quot;(工作表,图标等)</li>
-<li>目标是标识问题,提出解决方案的要素,商议不同的方法以及在有利于完成目标的氛围中刻画出初步的需求</li>
-</ul>
-<h3 id="225-用况">2.2.5 用况</h3>
-<p>用况常被称为用例,应该包含:</p>
-<ul>
-<li>执行者完成的主要任务或功能</li>
-<li>执行者将获取,生产或改变什么信息</li>
-<li>执行者是否必须通知系统关于外部环境的变化</li>
-<li>执行者希望从系统获得什么信息</li>
-<li>执行者是否希望被通知未预期的变化</li>
-</ul>
-<h1 id="3-需求分析">3 需求分析</h1>
-<h2 id="31-原则">3.1 原则</h2>
-<ul>
-<li>必须能够表示和理解问题的信息域</li>
-<li>必须能够定义软件将完成的功能</li>
-<li>必须能够表示软件的行为</li>
-<li>必须划分描述的数据,功能和行为的模型</li>
-<li>分析过程应该从要素信息移向细节信息</li>
-</ul>
-<h2 id="32-信息域">3.2 信息域</h2>
-<p>信息域包括信息内容,信息流以及信息结构.</p>
-<h3 id="321-信息内容">3.2.1 信息内容</h3>
-<p>信息内容表示了单个数据和控制对象,目标软件所有处理的信息集合由它们构成.</p>
-<h3 id="322-信息流">3.2.2 信息流</h3>
-<p>信息流表示了数据和控制在系统中流动时的变化方式,输入对象被变换为中间信息,然后进一步被变换为输出.</p>
-<h3 id="323-信息结构">3.2.3 信息结构</h3>
-<p>信息结构表示了各种数据和控制项的内部组织形式.</p>
-<h2 id="33-需求协商">3.3 需求协商</h2>
-<p>需求很容易出现冲突,这就需要进行协商,讨论需求冲突,通常会议是解决冲突最快的方式.</p>
-<h2 id="34-需求建模">3.4 需求建模</h2>
-<p>创建模型是需求分析的重要活动.模型以一种简洁,准确,结构清晰的方式系统地描述了软件需求,从而帮助分析员理解系统的信息,功能与行为,模型还将成为软件设计的基础,为设计者提供软件要素的表示视图.</p>
-<h1 id="4-需求规约">4 需求规约</h1>
-<p>需求规约是分析任务的最终产物,通过建立完整的信息描述,详细的功能和行为描述,性能需求和设计约束的说明,合适的验收标准,给出对目标软件的各种需求.软件需求规约的框架主要分为5部分:</p>
-<h2 id="41-引言">4.1 引言</h2>
-<p>引言陈述软件目标,在基于计算机的系统语境内进行描述,包括系统参考文献,整体描述,软件项目约束等.</p>
-<h2 id="42-信息描述">4.2 信息描述</h2>
-<p>信息描述给出软件必须解决的问题的详细描述,记录信息内容,信息流,信息结构.</p>
-<h2 id="43-功能描述">4.3 功能描述</h2>
-<p>功能描述用以描述解决问题所需要的每个功能,其中包括为每个功能说明一个处理过程,叙述设计约束,叙述性能特征,用一个或多个图形来形象地表示软件的整体结构和软件功能与其他元素间的相互影响.</p>
-<h2 id="44-行为描述">4.4 行为描述</h2>
-<p>行为描述用以描述作为外部事件和内部产生的控制特征的软件操作.</p>
-<h2 id="45-检验标准">4.5 检验标准</h2>
-<p>检验标准描述检验系统成功的标志,即对系统进行什么样的测试,得到什么样的结果,就表示系统已经成功实现了.检验标准是确认测试的基础.</p>
-<h2 id="46-参考书目">4.6 参考书目</h2>
-<p>对所有和该软件相关文档的引用,包括其他的软件工程的文档,技术参考文献,厂商文献和标准.</p>
-<h2 id="47-附录">4.7 附录</h2>
-<p>包含了规约的补充信息,表格数据,算法的详细描述,图表和其他材料.</p>
-<h1 id="5-需求验证">5 需求验证</h1>
-<p>需求验证的目的是检验是否能够反映用户的意愿,需要对需求文档中定义的需求执行多种检查,评审团队应该检查需求的有效性,一致性和作为一个整体的完备性.包括系统定义的目标是否与用户的要求一致,系统需求分析阶段提供的文档资料是否齐全,被开发的数据流与数据结构是否确定且充足,主要功能是否已包括在规定的软件范围之内,是否都已充分说明,设计的约束条件或限制条件是否符合实际,开发的技术风险是什么,是否详细制定了检验标准,它们能否对系统定义进行确认.</p>
-<h1 id="6-需求管理">6 需求管理</h1>
-<p>需求管理是一组用于帮助项目组在项目进展中的任何时候去标识,控制和跟踪需求的活动.在需求管理中,每个需求被赋予唯一的标识符,一旦标示出需求,就可以为需求建立跟踪表,每个跟踪表标示需求与其他需求或设计文档,代码,测试用例的不同版本间的关系.这些跟踪表可以用于需求跟踪,在整个开发过程中,进行需求跟踪的目的是为了建立和维护从用户需求开始到测试之间的一致性与完整性.确保所有的实现是以用户需求为基础,所有的输出符合用户需求,并且全面覆盖了用户需求.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[软件工程学习笔记(二):系统工程]]></title>
-        <id>https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-er-xi-tong-gong-cheng/</id>
-        <link href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-er-xi-tong-gong-cheng/">
-        </link>
-        <updated>2020-06-02T20:21:27.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B">1 系统工程</a></li>
-<li><a href="#2-%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B%E7%9A%84%E4%BB%BB%E5%8A%A1">2 系统工程的任务</a>
-<ul>
-<li><a href="#21-%E8%AF%86%E5%88%AB%E7%94%A8%E6%88%B7%E7%9A%84%E8%A6%81%E6%B1%82">2.1 识别用户的要求</a></li>
-<li><a href="#22-%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1%E4%B8%8E%E6%A8%A1%E6%8B%9F">2.2 系统建模与模拟</a>
-<ul>
-<li><a href="#221-%E7%A1%AC%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B">2.2.1 硬件系统模型</a></li>
-<li><a href="#222-%E8%BD%AF%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B">2.2.2 软件系统模型</a></li>
-<li><a href="#223-%E4%BA%BA%E6%9C%BA%E6%8E%A5%E5%8F%A3%E6%A8%A1%E5%9E%8B">2.2.3 人机接口模型</a></li>
-<li><a href="#224-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B">2.2.4 数据模型</a></li>
-</ul>
-</li>
-<li><a href="#23-%E6%88%90%E6%9C%AC%E4%BC%B0%E7%AE%97%E5%8F%8A%E8%BF%9B%E5%BA%A6%E5%AE%89%E6%8E%92">2.3 成本估算及进度安排</a></li>
-<li><a href="#24-%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%88%86%E6%9E%90">2.4 可行性分析</a>
-<ul>
-<li><a href="#241-%E7%BB%8F%E6%B5%8E%E5%8F%AF%E8%A1%8C%E6%80%A7">2.4.1 经济可行性</a>
-<ul>
-<li><a href="#2411-%E6%88%90%E6%9C%AC">2.4.1.1 成本</a></li>
-<li><a href="#2412-%E6%95%88%E7%9B%8A">2.4.1.2 效益</a></li>
-<li><a href="#2413-%E8%B4%A7%E5%B8%81%E7%9A%84%E6%97%B6%E9%97%B4%E4%BB%B7%E5%80%BC">2.4.1.3 货币的时间价值</a></li>
-<li><a href="#2414-%E6%8A%95%E8%B5%84%E5%9B%9E%E6%94%B6%E6%9C%9F">2.4.1.4 投资回收期</a></li>
-<li><a href="#2415-%E7%BA%AF%E6%94%B6%E5%85%A5">2.4.1.5 纯收入</a></li>
-</ul>
-</li>
-<li><a href="#242-%E6%8A%80%E6%9C%AF%E5%8F%AF%E8%A1%8C%E6%80%A7">2.4.2 技术可行性</a>
-<ul>
-<li><a href="#2421-%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90">2.4.2.1 风险分析</a></li>
-<li><a href="#2422-%E8%B5%84%E6%BA%90%E5%88%86%E6%9E%90">2.4.2.2 资源分析</a></li>
-<li><a href="#2423-%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90">2.4.2.3 技术分析</a></li>
-</ul>
-</li>
-<li><a href="#243-%E6%B3%95%E5%BE%8B%E5%8F%AF%E8%A1%8C%E6%80%A7">2.4.3 法律可行性</a></li>
-</ul>
-</li>
-<li><a href="#25-%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A0%BC%E8%AF%B4%E6%98%8E">2.5 生成系统规格说明</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-系统工程">1 系统工程</h1>
-<p>软件工程中的系统是指基于计算机的系统,而基于计算机的系统是指通过完成处理某些预定义目标而组织在一起的元素的集合或排列.系统工程过程依赖于应用领域而呈现不同的形式,当工作的语境集中于业务企业时,进行业务过程工程,当关注产品生产的过程时,称为产品工程.</p>
-<h1 id="2-系统工程的任务">2 系统工程的任务</h1>
-<p>系统工程主要包括以下5个方面的任务:</p>
-<h2 id="21-识别用户的要求">2.1 识别用户的要求</h2>
-<p>系统工程的第一步就是识别用户对基于计算机的系统的总体要求,标识系统的功能和性能范围,确定系统的功能,性能,约束和接口.</p>
-<h2 id="22-系统建模与模拟">2.2 系统建模与模拟</h2>
-<p>系统模型通常可用图形来描述,配合相应的文字说明,.必要时在系统建模后可构造原型,进行系统模拟,以分析所建的模型是否满足整个基于计算机的系统的要求.一个基于计算机的系统通常可以考虑一下的模型:</p>
-<h3 id="221-硬件系统模型">2.2.1 硬件系统模型</h3>
-<p>硬件系统模型描述基于计算机系统中的硬件配置,通信协议,拓扑结构,以及确保基于计算机系统的安全性,可靠性,性能等要求的措施.</p>
-<h3 id="222-软件系统模型">2.2.2 软件系统模型</h3>
-<p>基于计算机系统中的软件部分可以分为若干个子系统,软件系统模型描述各个子系统的功能,性能等要求,各软件子系统在硬件系统中的部署情况,以及软件子系统之间的交互.</p>
-<h3 id="223-人机接口模型">2.2.3 人机接口模型</h3>
-<p>人机接口模型描述人如何与基于计算机的系统进行交互,包括用户环境,用户的活动,人机交互的语法与语义等.</p>
-<h3 id="224-数据模型">2.2.4 数据模型</h3>
-<p>数据模型主要描述基于计算机的系统使用了哪些数据库管理系统,如果使用多个数据库管理系统还应描述它们之间的数据转换方式,必要时可给出主要的数据结构.</p>
-<h2 id="23-成本估算及进度安排">2.3 成本估算及进度安排</h2>
-<p>开发一个基于计算机的系统需要一定的资金投入和时间约束,因此在系统工程阶段对需开发的基于计算机的系统进行成本估算,并作出进度安排.</p>
-<h2 id="24-可行性分析">2.4 可行性分析</h2>
-<p>可行性分析主要从三方面进行:</p>
-<h3 id="241-经济可行性">2.4.1 经济可行性</h3>
-<p>主要进行成本效益分析,从经济角度确定系统是否值得开发.</p>
-<h4 id="2411-成本">2.4.1.1 成本</h4>
-<ul>
-<li>购置硬件,软件和设备的费用</li>
-<li>系统的开发费用</li>
-<li>系统安装,运行与维护费用</li>
-<li>人员培训费用</li>
-</ul>
-<h4 id="2412-效益">2.4.1.2 效益</h4>
-<p>效益可以分为社会效益与经济效益,经济效益包括使用基于计算机的系统后可增加的收入和可节省的运行费用.社会效益指使用基于计算机的系统后对社会产生的影响,通常社会效益只能定性地估计,经济效益通常可用货币的时间价值,投资回收期和纯收入来度量.</p>
-<h4 id="2413-货币的时间价值">2.4.1.3 货币的时间价值</h4>
-<p>通常可以利用年利率来衡量货币的时间价值,设银行储蓄的年利率为i,现存入钱P,在n年后可得到的钱F,则<br>
-<img src="https://img-blog.csdnimg.cn/20200105125125762.png" alt="在这里插入图片描述" loading="lazy"><br>
-因此,n年后得到的F,折合成现在的钱P的公式为:<br>
-<img src="https://img-blog.csdnimg.cn/20200105125239926.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h4 id="2414-投资回收期">2.4.1.4 投资回收期</h4>
-<p>投资回收期是指累计的经济效益正好等于投资成本所需的时间,投资回收期通常是用于评价开发一个工程的价值的重要经济指标.</p>
-<h4 id="2415-纯收入">2.4.1.5 纯收入</h4>
-<p>纯收入指出了若干年扣除成本后的实际收入: 纯收入 = 累计经济效益 - 成本.</p>
-<h3 id="242-技术可行性">2.4.2 技术可行性</h3>
-<p>技术可行性主要根据系统的功能,性能,约束条件等,分析在现有资源和技术条件系统下能否实现.主要包括:</p>
-<h4 id="2421-风险分析">2.4.2.1 风险分析</h4>
-<p>风险分析主要分析在给定的约束条件下设计和实现系统的风险,在可行性分析时,风险分析的目的是找出风险,评价风险的大小,分析能否有效地控制和缓解风险.</p>
-<h4 id="2422-资源分析">2.4.2.2 资源分析</h4>
-<p>资源分析主要论证是否具备系统开发所需的各类人员,软件,硬件等资源和相应的工作环境.</p>
-<h4 id="2423-技术分析">2.4.2.3 技术分析</h4>
-<p>技术分析主要分析当前的科学技术是否支持系统开发的各项活动.在技术分析过程中,分析员收集系统的性能,可靠性,可维护性和生产率方面的信息,分析实现系统功能,性能所需的技术,方法,算法或过程,从技术角度分析可能存在的风险,以及这些技术问题对成本的影响.</p>
-<h3 id="243-法律可行性">2.4.3 法律可行性</h3>
-<p>法律可行性主要研究系统开发过程中可能涉及到的合同,侵权,责任以及各种与法律相关抵触的问题.《中华人民共和国著作权法》与《计算机软件保护条例》是可行性分析的主要依据.</p>
-<h2 id="25-生成系统规格说明">2.5 生成系统规格说明</h2>
-<p>完成以上任务后应生成一份系统规格说明,作为以后开发基于计算机的系统的依据.系统规格说明描述基于计算机的系统的功能,性能与约束条件,描述系统的输入与输出控制信息给出各系统元素的模型,进行可行性分析,最后给出成本估算以及进度安排计划.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[软件工程学习笔记(一):软件工程]]></title>
-        <id>https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-yi-ruan-jian-gong-cheng/</id>
-        <link href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-yi-ruan-jian-gong-cheng/">
-        </link>
-        <updated>2020-06-02T20:21:02.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E4%BB%B6">1 计算机软件</a>
-<ul>
-<li><a href="#11-%E8%BD%AF%E4%BB%B6">1.1 软件</a></li>
-<li><a href="#12-%E8%BD%AF%E4%BB%B6%E7%89%B9%E7%82%B9">1.2 软件特点</a></li>
-<li><a href="#13-%E8%BD%AF%E4%BB%B6%E5%88%86%E7%B1%BB">1.3 软件分类</a>
-<ul>
-<li><a href="#131-%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6">1.3.1 系统软件</a></li>
-<li><a href="#132-%E6%94%AF%E6%92%91%E8%BD%AF%E4%BB%B6">1.3.2 支撑软件</a></li>
-<li><a href="#133-%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6">1.3.3 应用软件</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#2-%E8%BD%AF%E4%BB%B6%E8%AF%AD%E8%A8%80">2 软件语言</a>
-<ul>
-<li><a href="#21-%E9%9C%80%E6%B1%82%E5%AE%9A%E4%B9%89%E8%AF%AD%E8%A8%80">2.1 需求定义语言</a></li>
-<li><a href="#22-%E5%8A%9F%E8%83%BD%E6%80%A7%E8%AF%AD%E8%A8%80">2.2 功能性语言</a></li>
-<li><a href="#23-%E8%AE%BE%E8%AE%A1%E6%80%A7%E8%AF%AD%E8%A8%80">2.3 设计性语言</a></li>
-<li><a href="#24-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80">2.4 程序设计语言</a></li>
-<li><a href="#25-%E6%96%87%E6%A1%A3%E8%AF%AD%E8%A8%80">2.5 文档语言</a></li>
-</ul>
-</li>
-<li><a href="#3-%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B">3 软件工程</a></li>
-<li><a href="#4-%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99">4 软件工程的基本原则</a>
-<ul>
-<li><a href="#41-%E9%80%82%E5%AE%9C%E7%9A%84%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83">4.1 适宜的开发规范</a></li>
-<li><a href="#42-%E5%90%88%E9%80%82%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%B3%95">4.2 合适的设计方法</a></li>
-<li><a href="#43-%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E5%B7%A5%E7%A8%8B%E6%94%AF%E6%8C%81">4.3 高质量的工程支持</a></li>
-<li><a href="#44-%E6%9C%89%E6%95%88%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86">4.4 有效的软件工程管理</a></li>
-</ul>
-</li>
-<li><a href="#5-%E8%BD%AF%E4%BB%B6%E7%94%9F%E5%AD%98%E5%91%A8%E6%9C%9F">5 软件生存周期</a>
-<ul>
-<li><a href="#51-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B">5.1 计算机系统工程</a></li>
-<li><a href="#52-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90">5.2 需求分析</a></li>
-<li><a href="#53-%E8%AE%BE%E8%AE%A1">5.3 设计</a></li>
-<li><a href="#54-%E7%BC%96%E7%A0%81">5.4 编码</a></li>
-<li><a href="#55-%E6%B5%8B%E8%AF%95">5.5 测试</a></li>
-<li><a href="#56-%E8%BF%90%E8%A1%8C%E4%B8%8E%E7%BB%B4%E6%8A%A4">5.6 运行与维护</a></li>
-</ul>
-</li>
-<li><a href="#6-cmm">6 CMM</a>
-<ul>
-<li><a href="#61-%E5%88%9D%E5%A7%8B%E7%BA%A7">6.1 初始级</a></li>
-<li><a href="#62-%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%BA%A7">6.2 可重复级</a></li>
-<li><a href="#63-%E5%B7%B2%E5%AE%9A%E4%B9%89%E7%BA%A7">6.3 已定义级</a></li>
-<li><a href="#64-%E5%B7%B2%E7%AE%A1%E7%90%86%E7%BA%A7">6.4 已管理级</a></li>
-<li><a href="#65-%E4%BC%98%E5%8C%96%E7%BA%A7">6.5 优化级</a></li>
-</ul>
-</li>
-<li><a href="#7-cmmi">7 CMMI</a>
-<ul>
-<li><a href="#71-%E9%98%B6%E6%AE%B5%E5%BC%8F%E6%A8%A1%E5%9E%8B">7.1 阶段式模型</a>
-<ul>
-<li><a href="#711-%E5%88%9D%E5%A7%8B%E7%9A%84">7.1.1 初始的</a></li>
-<li><a href="#712-%E5%B7%B2%E7%AE%A1%E7%90%86%E7%9A%84">7.1.2 已管理的</a></li>
-<li><a href="#713-%E5%B7%B2%E5%AE%9A%E4%B9%89%E7%9A%84">7.1.3 已定义的</a></li>
-<li><a href="#714-%E5%AE%9A%E9%87%8F%E7%AE%A1%E7%90%86%E7%9A%84">7.1.4 定量管理的</a></li>
-<li><a href="#715-%E4%BC%98%E5%8C%96%E7%9A%84">7.1.5 优化的</a></li>
-</ul>
-</li>
-<li><a href="#72-%E8%BF%9E%E7%BB%AD%E5%BC%8F%E6%A8%A1%E5%9E%8B">7.2 连续式模型</a>
-<ul>
-<li><a href="#721-cl0">7.2.1 CL0</a></li>
-<li><a href="#722-cl1">7.2.2 CL1</a></li>
-<li><a href="#723-cl2">7.2.3 CL2</a></li>
-<li><a href="#724-cl3">7.2.4 CL3</a></li>
-<li><a href="#725-cl4">7.2.5 CL4</a></li>
-<li><a href="#726-cl5">7.2.6 CL5</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#8-%E8%BD%AF%E4%BB%B6%E8%BF%87%E7%A8%8B%E6%A8%A1%E5%9E%8B">8 软件过程模型</a>
-<ul>
-<li><a href="#81-%E7%80%91%E5%B8%83%E6%A8%A1%E5%9E%8B">8.1 瀑布模型</a>
-<ul>
-<li><a href="#811-%E4%BC%98%E7%82%B9">8.1.1 优点</a></li>
-<li><a href="#812-%E7%BC%BA%E7%82%B9">8.1.2 缺点</a></li>
-</ul>
-</li>
-<li><a href="#82-%E5%A2%9E%E9%87%8F%E6%A8%A1%E5%9E%8B">8.2 增量模型</a>
-<ul>
-<li><a href="#821-%E4%BC%98%E7%82%B9">8.2.1 优点</a></li>
-<li><a href="#822-%E7%BC%BA%E7%82%B9">8.2.2 缺点</a></li>
-</ul>
-</li>
-<li><a href="#83-%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B">8.3 原型模型</a>
-<ul>
-<li><a href="#831-%E4%BC%98%E7%82%B9">8.3.1 优点</a></li>
-<li><a href="#832-%E7%BC%BA%E7%82%B9">8.3.2 缺点</a></li>
-</ul>
-</li>
-<li><a href="#84-%E8%9E%BA%E6%97%8B%E6%A8%A1%E5%9E%8B">8.4 螺旋模型</a>
-<ul>
-<li><a href="#841-%E4%BC%98%E7%82%B9">8.4.1 优点</a></li>
-<li><a href="#842-%E7%BC%BA%E7%82%B9">8.4.2 缺点</a></li>
-</ul>
-</li>
-<li><a href="#85-%E5%96%B7%E6%B3%89%E6%A8%A1%E5%9E%8B">8.5 喷泉模型</a>
-<ul>
-<li><a href="#851-%E4%BC%98%E7%82%B9">8.5.1 优点</a></li>
-<li><a href="#852-%E7%BC%BA%E7%82%B9">8.5.2 缺点</a></li>
-</ul>
-</li>
-<li><a href="#86-%E5%9F%BA%E4%BA%8E%E6%9E%84%E4%BB%B6%E7%9A%84%E5%BC%80%E5%8F%91%E6%A8%A1%E5%9E%8B">8.6 基于构件的开发模型</a>
-<ul>
-<li><a href="#861-%E4%BC%98%E7%82%B9">8.6.1 优点</a></li>
-<li><a href="#862-%E7%BC%BA%E7%82%B9">8.6.2 缺点</a></li>
-</ul>
-</li>
-<li><a href="#87-%E5%BD%A2%E5%BC%8F%E5%8C%96%E6%96%B9%E6%B3%95%E6%A8%A1%E5%9E%8B">8.7 形式化方法模型</a>
-<ul>
-<li><a href="#871-%E4%BC%98%E7%82%B9">8.7.1 优点</a></li>
-<li><a href="#872-%E7%BC%BA%E7%82%B9">8.7.2 缺点</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-计算机软件">1 计算机软件</h1>
-<h2 id="11-软件">1.1 软件</h2>
-<p>计算机软件是指计算机系统中的程序以及文档,程序是计算任务处理对象和处理规则的描述.</p>
-<h2 id="12-软件特点">1.2 软件特点</h2>
-<ul>
-<li>一种逻辑实体.</li>
-<li>维护工作量大.</li>
-<li>维护软件过程中会引入副作用.</li>
-</ul>
-<h2 id="13-软件分类">1.3 软件分类</h2>
-<h3 id="131-系统软件">1.3.1 系统软件</h3>
-<p>最靠近硬件的一层,比如操作系统.</p>
-<h3 id="132-支撑软件">1.3.2 支撑软件</h3>
-<p>软件开发,维护与运行的软件,比如各种IDE等.</p>
-<h3 id="133-应用软件">1.3.3 应用软件</h3>
-<p>应用于特定领域的软件.</p>
-<h1 id="2-软件语言">2 软件语言</h1>
-<p>软件语言主要包括需求定义语言,功能性语言,设计性语言,程序设计语言与文档语言.</p>
-<h2 id="21-需求定义语言">2.1 需求定义语言</h2>
-<p>用于书写软件需求定义的语言,包括功能需求与非功能需求.典型的语言有PSL.</p>
-<h2 id="22-功能性语言">2.2 功能性语言</h2>
-<p>书写软件功能规约的语言,描述软件做什么以及只做什么.典型语言有广谱语言,Z语言.</p>
-<h2 id="23-设计性语言">2.3 设计性语言</h2>
-<p>书写软件设计规约的语言,是软件设计的严格而完整的描述.典型语言有PDL.</p>
-<h2 id="24-程序设计语言">2.4 程序设计语言</h2>
-<p>即编程语言,可以分为低级语言与高级语言,过程式语言与非过程式语言,通用语言与专用语言,交互式语言与非交互式语言,顺序语言与并发语言与分布语言.</p>
-<h2 id="25-文档语言">2.5 文档语言</h2>
-<p>书写软件文档使用的语言,比如Z语言.</p>
-<h1 id="3-软件工程">3 软件工程</h1>
-<p>软件工程是建立和使用一套合理的工程原则,以便获得经济的软件,这种软件是可靠的,可以在实际机器上高效地运行.软件工程是应用计算机科学理论以及工程管理原则的方法,按预算与进度实现满足用户要求的软件产品的工程,或以此为研究对象的学科.</p>
-<h1 id="4-软件工程的基本原则">4 软件工程的基本原则</h1>
-<h2 id="41-适宜的开发规范">4.1 适宜的开发规范</h2>
-<p>选用适宜的开发规范,以保证软件开发的可持续性,并使最终的软件产品满足客户的需求.</p>
-<h2 id="42-合适的设计方法">4.2 合适的设计方法</h2>
-<p>要考虑软件的模块化,信息隐藏,局部化,一致性以及适应性等问题,采用合适的设计方法有助于支持问题的解决与实现.</p>
-<h2 id="43-高质量的工程支持">4.3 高质量的工程支持</h2>
-<p>需要提供高质量的工程支持,例如配置管理,质量保证等.</p>
-<h2 id="44-有效的软件工程管理">4.4 有效的软件工程管理</h2>
-<p>软件工程的管理直接影响可用资源的有效利用,以提高软件组织的生产能力.</p>
-<h1 id="5-软件生存周期">5 软件生存周期</h1>
-<p>软件生存周期分为6个阶段:</p>
-<h2 id="51-计算机系统工程">5.1 计算机系统工程</h2>
-<p>计算机系统工程的任务是确定待开发软件的总体要求与范围,以及该软件与其他计算机系统元素之间的关系,进行成本估算,作出进度安排,并进行可行性分析.</p>
-<h2 id="52-需求分析">5.2 需求分析</h2>
-<p>需求分析主要解决待开发软件要做什么的问题,确定软件的功能,性能,数据,界面等要求,生成软件需求规约.</p>
-<h2 id="53-设计">5.3 设计</h2>
-<p>软件设计主要解决待开发软件怎么做的问题,通常可以分为系统设计与详细设计,系统设计的任务是设计软件系统的体系结构,详细设计的任务是设计各个组成成分的实现细节.</p>
-<h2 id="54-编码">5.4 编码</h2>
-<p>利用程序设计语言进行编码.</p>
-<h2 id="55-测试">5.5 测试</h2>
-<p>发现并纠正软件中的错误与缺陷,包括单元测试,集成测试,确认测试与系统测试.</p>
-<h2 id="56-运行与维护">5.6 运行与维护</h2>
-<p>软件运行期间需要进行维护,对软件进行修改.</p>
-<h1 id="6-cmm">6 CMM</h1>
-<p>CMM是能力成熟度模型,定义了5个软件过程成熟度等级,包括初始级,可重复级,已定义级,已管理级,优化级.</p>
-<h2 id="61-初始级">6.1 初始级</h2>
-<p>软件过程的特点是无秩序的,甚至是混乱的,几乎没有什么过程是经过妥善定义的.</p>
-<h2 id="62-可重复级">6.2 可重复级</h2>
-<p>建立了基本的项目管理过程来跟踪成本,进度与功能特性.制定了必要的过程纪律,能重复早先类似应用项目取得的成功.</p>
-<h2 id="63-已定义级">6.3 已定义级</h2>
-<p>已将管理和工程活动两方面的软件过程文档化,标准化,并综合成该组织的标准软件过程.所有项目均使用经批准,剪裁的标准软件过程来开发与维护软件.</p>
-<h2 id="64-已管理级">6.4 已管理级</h2>
-<p>收集对软件过程和产品质量的详细度量值,对软件过程和产品都有定量的理解与控制.</p>
-<h2 id="65-优化级">6.5 优化级</h2>
-<p>过程的量化反馈和先进的新思想,新技术促使过程不断改进.</p>
-<h1 id="7-cmmi">7 CMMI</h1>
-<p>CMMI是若干过程模型的综合与改进,是支撑多个工程学科和领域的系统的,一致的过程改进框架,能适应现代工程的特点与需要,能提高过程的质量与工作效率.CMMI有两种表示法:阶段式模型与连续式模型.</p>
-<h2 id="71-阶段式模型">7.1 阶段式模型</h2>
-<p>阶段式模型的结构类似于CMM,分为5个成熟度等级:</p>
-<h3 id="711-初始的">7.1.1 初始的</h3>
-<p>过程不可预测且缺乏控制.</p>
-<h3 id="712-已管理的">7.1.2 已管理的</h3>
-<p>过程为项目服务.</p>
-<h3 id="713-已定义的">7.1.3 已定义的</h3>
-<p>过程为组织服务.</p>
-<h3 id="714-定量管理的">7.1.4 定量管理的</h3>
-<p>过程已度量和控制.</p>
-<h3 id="715-优化的">7.1.5 优化的</h3>
-<p>集中与过程改进.</p>
-<h2 id="72-连续式模型">7.2 连续式模型</h2>
-<p>连续式模型关注每个过程域的能力,一个组织对不同的过程域可以达到不同的过程域能力等级.<br>
-CMMI包含了6个过程域能力等级,等级号为0-5,能力等级表明了单个过程域中组织执行的好坏程度.能力等级包括共性目标及相关的共性实践,可以独立地应用于任何单独的过程域,各能力等级的含义:</p>
-<h3 id="721-cl0">7.2.1 CL0</h3>
-<p>未完成的,过程域未执行或未达到CL1中定义的所有目标.</p>
-<h3 id="722-cl1">7.2.2 CL1</h3>
-<p>已执行的,其共性目标是过程可以将标识的输入工作产品转换成可标识的输出工作产品,以实现支持过程域的特定目标.</p>
-<h3 id="723-cl2">7.2.3 CL2</h3>
-<p>已管理的,共性目标是集中于已管理的过程的制度化.根据组织政策规定过程的运作将使用哪个过程,项目遵循已文档化的计划和过程描述,所有正在工作的人都有权使用足够的资源,所有工作任务和工作产品都被监督,控制和评审.</p>
-<h3 id="724-cl3">7.2.4 CL3</h3>
-<p>已定义的,共性目标是集中于已定义的过程的制度化.过程是按照组织的剪裁指南从组织的标准过程集中剪裁得到的,还必须收集过程资产和过程的度量,并用于将来对该过程的改进上.</p>
-<h3 id="725-cl4">7.2.5 CL4</h3>
-<p>定量管理的,共性目标是集中于可定量管理的过程的制度化.使用测量与质量保证来控制和改进过程域,建立和使用关于质量和过程执行的定量目标作为管理准则.</p>
-<h3 id="726-cl5">7.2.6 CL5</h3>
-<p>优化的,使用量化手段改变和优化过程域,以应对客户的要求的改变与持续改进计划的过程域的功效.</p>
-<h1 id="8-软件过程模型">8 软件过程模型</h1>
-<p>软件过程模型习惯上也叫软件开发模型,是软件开发全部过程,活动和任务的结构框架.</p>
-<h2 id="81-瀑布模型">8.1 瀑布模型</h2>
-<p>1970年由W.Royce提出,给出了软件生存周期活动的固定顺序,上一阶段的活动完成后向下一阶段活动过渡,最终得到开发的软件产品.瀑布模型中上一阶段的活动完成并经过评审后才能开始下一阶段的活动,特征是:</p>
-<ul>
-<li>接受上一阶段活动的结果作为本阶段活动的输入.</li>
-<li>依据上一阶段活动的结果实施本阶段应完成的活动.</li>
-<li>对本阶段的活动进行评审.</li>
-<li>将本阶段活动的结果作为输出,传递给下一阶段.</li>
-</ul>
-<h3 id="811-优点">8.1.1 优点</h3>
-<p>最早出现应用最广泛的模型,确保软件开发的顺利进行,对提高软件项目的质量和开发效率起到重要作用.</p>
-<h3 id="812-缺点">8.1.2 缺点</h3>
-<ul>
-<li>用户难以清晰描述所有需求,开发过程中需求也有可能发生改变.</li>
-<li>发现错误时,为了改正错误要回到前一阶段,造成瀑布倒流.</li>
-<li>在测试完成后才可以看到可运行的软件,发现问题的修改代价极大.</li>
-</ul>
-<h2 id="82-增量模型">8.2 增量模型</h2>
-<p>增量模型将软件的开发过程分成若干个日程时间交错的线性序列,每个线性序列产生一个可发布的增量版本,后一个版本是对前一个版本的修改和补充,重复增量发布的过程,直至产生最终的完善产品.</p>
-<h3 id="821-优点">8.2.1 优点</h3>
-<p>适用于需求经常发生变化的软件开发,以后的增量中可以逐渐加入需求,另外可以有计划地管理技术风险.</p>
-<h3 id="822-缺点">8.2.2 缺点</h3>
-<p>需要良好的架构设计,避免加入的构件破坏已构造好的系统部分,需要对系统有好的全盘分析,否则容易退化成边做边改模型.</p>
-<h2 id="83-原型模型">8.3 原型模型</h2>
-<p>原型是预期系统的一个可执行版本,反映了系统性质的一个选定的子集.一个原型不必满足目标软件的所有约束,目的是可以快速,低成本地构建原型.步骤是:</p>
-<pre><code class="language-mermaid">graph TB
-定义总体目标 --&gt; 标识需求 
-标识需求  --&gt; 指定原型开发计划
- 指定原型开发计划 --&gt; 确定原型目标和范围
- 确定原型目标和范围 --&gt; 快速设计建模
- 快速设计建模 --&gt; 构建原型
- 构建原型 --&gt; 交付使用
- 交付使用 --&gt; 收集反馈意见
- 收集反馈意见 --下一轮原型迭代开发--&gt; 定义总体目标
+<p>@Scheduled注解是spring boot提供的用于定时任务控制的注解,主要用于控制任务在某个指定时间执行,或者每隔一段时间执行.注意需要配合@EnableScheduling使用,配置@Scheduled主要有三种配置执行时间的方式,cron,fixedRate,fixedDelay.</p>
+<h1 id="2-cron">2 cron</h1>
+<p>cron是@Scheduled的一个参数,是一个字符串,以5个空格隔开,只允许6个域(注意不是7个,7个直接会报错),分别表示秒,分,时,日,月,周.</p>
+<table>
+<thead>
+<tr>
+<th>单位</th>
+<th>允许值</th>
+<th>允许通配符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>秒</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>分</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>时</td>
+<td>0-23</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>日</td>
+<td>1-31</td>
+<td>, - * / ? L W</td>
+</tr>
+<tr>
+<td>月</td>
+<td>1-12 或 JAN-DEC(大小写均可)</td>
+<td>, - * / ?</td>
+</tr>
+<tr>
+<td>周</td>
+<td>1-7 或 SUN-SAT(大小写均可)</td>
+<td>, - * / ? L #</td>
+</tr>
+</tbody>
+</table>
+<h2 id="21-cron通配符">2.1 cron通配符</h2>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>所有值.在秒字段上表示每秒执行,在月字段上表示每月执行</td>
+</tr>
+<tr>
+<td>?</td>
+<td>不指定值,不需要关系当前指定的字段的值,比如每天都执行但不需要关心周几,就可以把周的字段设为?</td>
+</tr>
+<tr>
+<td>-</td>
+<td>区间,如秒的0-2,表示0秒,1秒,2秒都会触发</td>
+</tr>
+<tr>
+<td>,</td>
+<td>多个值,比如在0秒,20秒,25秒触发,可以把秒的字段设为0,20,25</td>
+</tr>
+<tr>
+<td>/</td>
+<td>递增触发,比如秒的字段上设0/3,从第0秒开始,每隔3秒触发</td>
+</tr>
+<tr>
+<td>L</td>
+<td>最后,只允许在日字段或周字段上,在日字段上使用L表示当月最后一天,在周字段上使用3L表示该月最后一个周四</td>
+</tr>
+<tr>
+<td>W</td>
+<td>只允许用在日字段上,表示距离最近的该日的工作日.工作日指的是周一至周五</td>
+</tr>
+<tr>
+<td>#</td>
+<td>只允许在周字段上,表示每月的第几个周几,如2#3,每月的第3个周二</td>
+</tr>
+</tbody>
+</table>
+<h2 id="22-cron示例">2.2 cron示例</h2>
+<pre><code class="language-java">@Scheduled(cron = &quot;0 * * * 1 SAT&quot;) //每年的1月的所有周六的所有0秒时间执行
 </code></pre>
-<h3 id="831-优点">8.3.1 优点</h3>
-<p>用户与开发者在原型上达成一致,减少错误,缩短开发周期,加快进度,降低成本.</p>
-<h3 id="832-缺点">8.3.2 缺点</h3>
-<p>不利于原型系统作为最终产品,原型被建造仅仅是用户用来定义需求,之后便会被部分或全部抛弃,准确的原型设计比较困难,不利于开发人员创新.</p>
-<h2 id="84-螺旋模型">8.4 螺旋模型</h2>
-<p>螺旋模型将原型实现的迭代特征与瀑布模型中的控制的和系统化的方面结合起来,增加了风险分析.螺旋模型沿着螺线自内向外旋转,4个任务区域(4个象限)内分别完成以下任务:</p>
-<ul>
-<li>第一象限:风险分析,评价所选方案,识别风险,清楚风险.</li>
-<li>第二象限:制订计划,确定软件目标,选定实施方案,弄清项目开发的限制条件.</li>
-<li>第三象限:客户评估,评价开发工作,提出修正建议.</li>
-<li>第四象限:工程实施,实施软件开发,验证工作产品.</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200104005230732.png" alt="在这里插入图片描述" loading="lazy"><br>
-(图片来源:https://www.itread01.com/content/1544588849.html)</p>
-<h3 id="841-优点">8.4.1 优点</h3>
-<p>设计灵活,成本计算容易,客户始终参加每个阶段的开发,可以进行有效的互动.</p>
-<h3 id="842-缺点">8.4.2 缺点</h3>
-<p>周期长,需要丰富的风险评估经验以及专门知识,如果未能及时标识风险,势必造成重大损失.</p>
-<h2 id="85-喷泉模型">8.5 喷泉模型</h2>
-<p>喷泉模型是一种支持面向对象开发的过程模型.喷泉体现了面向对象的迭代与无间隙特性.<br>
-<img src="https://img-blog.csdnimg.cn/2020010401573075.jpg" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="851-优点">8.5.1 优点</h3>
-<p>各个阶段没有明显的边界,开发人员可以进行同步开发,提高软件项目的开发效率,节省开发时间.</p>
-<h3 id="852-缺点">8.5.2 缺点</h3>
-<p>不利于项目管理,要求严格编写文档,审核难度大.</p>
-<h2 id="86-基于构件的开发模型">8.6 基于构件的开发模型</h2>
-<p>利用预先包装的构件来构造应用系统.构件可以是内部开发的构件,也可以是商业化的构件.</p>
-<h3 id="861-优点">8.6.1 优点</h3>
-<p>构件可重用,易于维护,对提高软件生产率,提高软件质量,降低成本有很大的帮助.</p>
-<h3 id="862-缺点">8.6.2 缺点</h3>
-<p>很难找到100%合适的构件,就是现有的构件不一定很适合使用,但基于已有构件构造出的构件未必经过100%的测试,难以保证质量.</p>
-<h2 id="87-形式化方法模型">8.7 形式化方法模型</h2>
-<p>形式化方法是建立在严格的数学基础上的一种软件开发方法,用严格的数学语言和语义描述功能规约与设计规约,通过数学的分析与推导,易于发现需求的歧义性,不完整性与不一致性,易于对分析模型,设计模型和程序进行验证.通过数学的演算,使得从形式化功能规约到形式化设计规约,以及从形式化设计规约到程序代码的转换成为可能.</p>
-<h3 id="871-优点">8.7.1 优点</h3>
-<p>用数学语言解决了规格说明的二义性问题,提高了精确性用数学提供了确认手段,使得证明与验证软件按程序满足用户和系统的需求成为可能,可以可视化地模拟/执行模型.</p>
-<h3 id="872-缺点">8.7.2 缺点</h3>
-<p>形式化的方法比其他技术的抽象级别要低,容易陷入细节,需要提早确定系统边界,通常限于正确一致的模型,但大多数情况下模型并非正确与一致.</p>
+<pre><code class="language-java">@Scheduled(cron = &quot;0 0 0 1 Jan ?&quot;) //每年的1月的1日的0时0分0秒执行
+</code></pre>
+<p>cron支持占位符,若在配置文件中有</p>
+<pre><code class="language-java">cron = 2 2 2 2 2 ?
+</code></pre>
+<p>则</p>
+<pre><code class="language-java">@Scheduled(cron = &quot;${cron}&quot;)
+</code></pre>
+<p>表示每年的二月二号的两时两分两秒执行.</p>
+<h1 id="3-fixedrate">3 fixedRate</h1>
+<h2 id="31-fixedrate">3.1 fixedRate</h2>
+<p>fixedRate表示自上一次执行时间之后多长时间执行,以ms为单位.<br>
+如</p>
+<pre><code class="language-java">@Scheduled(fixedRate = 1000 * 5)
+</code></pre>
+<p>自上次执行之后5秒再执行.</p>
+<h2 id="32-fixedratestring">3.2 fixedRateString</h2>
+<p>有一个类似的参数叫fixedRateString,是字符串的形式,支持占位符.<br>
+如</p>
+<pre><code class="language-java">@Scheduled(fixedRateString = &quot;1000&quot;)
+</code></pre>
+<p>自上次执行1秒再执行.<br>
+若在配置文件中有相应的属性,可以用占位符获取属性,如在application.properties中有</p>
+<pre><code class="language-xml">interval=2000
+</code></pre>
+<p>可以使用</p>
+<pre><code class="language-java">@Scheduled(fixedRateStirng=&quot;${interval}&quot;)
+</code></pre>
+<p>表示2秒间隔.</p>
+<h1 id="4-fixeddelay">4 fixedDelay</h1>
+<h2 id="41-fixeddelay">4.1 fixedDelay</h2>
+<p>fixedDelay与fixedRate有点类似,不过fixedRate是上一次开始之后计时,fixedDelay是上一次结束之后计时,也就是说,fixedDelay表示上一次执行完毕之后多长时间执行,单位也是ms.</p>
+<pre><code class="language-java">@Scheduled(fixedDelay = 1000 * 3600 * 12) //上一次执行完毕后半天后再次执行
+</code></pre>
+<h2 id="42-fixeddelaystring">4.2 fixedDelayString</h2>
+<p>与fixedRateString类似,也是支持占位符</p>
+<pre><code class="language-java">@Scheduled(fixedDelayString = &quot;${fixedDelay}&quot;)
+</code></pre>
+<h1 id="5-initialdelay">5 initialDelay</h1>
+<h2 id="51-initialdelay">5.1 initialDelay</h2>
+<p>initialDelay表示首次延迟多长时间后执行,单位ms,之后按照cron/fixedRate/fixedRateString/fixedDelay/fixedDelayString指定的规则执行,需要指定其中一个规则.</p>
+<pre><code class="language-java">@Scheduled(initialDelay=1000,fixedRate=1000) //首次运行延迟1s
+</code></pre>
+<h2 id="52-initialdelaystring">5.2 initialDelayString</h2>
+<p>与initialDelay类似,不过是字符串,支持占位符.</p>
+<pre><code class="language-java">@Scheduled(initialDelayString = &quot;${initialDelay}&quot;,cron = &quot;0 0 0 14 4 ?&quot;) 
+//按照配置文件initialDelay指定的时间首次延迟,并于每年4月14日0时0分0秒执行
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每天AC系列(三):电话号码的字母组合]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-san-dian-hua-hao-ma-de-zi-mu-zu-he/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-san-dian-hua-hao-ma-de-zi-mu-zu-he/">
+        </link>
+        <updated>2020-06-02T20:46:56.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/">Leetcode第17题。</a><br>
+数字2-9映射字母，给出一个包含字符串的数字，列出字母的所有组合。<br>
+<img src="https://img-blog.csdnimg.cn/20200125132943630.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-递归">2 递归</h1>
+<p>拿到这样的题目想到了递归实现，创建一个Map映射对应的字母，然后把它传给递归函数，同时创建一个临时变量temp，保存每一次添加字母的结果，递归的结束条件是数字串的长度为0.</p>
+<pre><code class="language-java">public void one(String digits,List&lt;String&gt; result,HashMap&lt;Integer,String&gt; ss,String temp)
+{
+    if(digits.length() &gt; 0)
+    {
+        String s = ss.get((int)(digits.charAt(0))-48);
+        for(int i=0;i&lt;s.length();++i)
+            one(digits.substring(1),result,ss,temp+s.charAt(i));
+    }
+    else
+        result.add(temp);
+}
+</code></pre>
+<h1 id="3-提交">3 提交</h1>
+<p>直接一次AC.</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200125133042554.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-优化">4 优化</h1>
+<p>其实可以不需要Map的，可以直接使用一个字符串数组，因为是数字到字符串的映射，对于数字可以用下标代替。其次，为了更快的速度可以使用StringBuilder代替String.</p>
+<p>还有就是用下标代替了截断digits，对于digits其实没必要使用截断，只需要一个下标表示范围即可，对于StringBuilder，因为没有像String这样的+，因此需要在使用append后对其进行删除处理。</p>
+<pre><code class="language-java">public void one(String digits,int index,StringBuilder temp)
+{
+    if(index &lt; digits.length())
+    {
+        String d = s[digits.charAt(index)-'0'];
+        for(int i=0;i&lt;d.length();++i)
+        {
+            one(digits,index+1,temp.append(d.charAt(i)));
+            temp.deleteCharAt(index);
+        }
+    }
+    else
+        result.add(temp.toString());
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200125140355421.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-源码">5 源码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day3">github</a></p>
+<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day3">码云</a></p>
 ]]></content>
     </entry>
 </feed>

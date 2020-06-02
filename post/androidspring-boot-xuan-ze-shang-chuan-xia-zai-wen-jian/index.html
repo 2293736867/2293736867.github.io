@@ -1,0 +1,897 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>android+spring boot 选择,上传,下载文件 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 环境
+3 android
+
+3.1 准备工作
+
+3.1.1 新建工程
+3.1.2 AndroidManifest.xml
+3.1.3 build.gradle
+3.1.4 上传文件
+3.1.5 布局
+
+
+3.2 选择文件
+
+..." />
+    <meta name="keywords" content="Spring Boot,Android" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591131164264" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/"> </span>
+              </a>
+              <span id="/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-1 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">android+spring boot 选择,上传,下载文件</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-android">3 android</a>
+<ul>
+<li><a href="#31-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3.1 准备工作</a>
+<ul>
+<li><a href="#311-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3.1.1 新建工程</a></li>
+<li><a href="#312-androidmanifestxml">3.1.2 AndroidManifest.xml</a></li>
+<li><a href="#313-buildgradle">3.1.3 build.gradle</a></li>
+<li><a href="#314-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">3.1.4 上传文件</a></li>
+<li><a href="#315-%E5%B8%83%E5%B1%80">3.1.5 布局</a></li>
+</ul>
+</li>
+<li><a href="#32-%E9%80%89%E6%8B%A9%E6%96%87%E4%BB%B6">3.2 选择文件</a>
+<ul>
+<li><a href="#321-%E7%94%B3%E8%AF%B7%E6%9D%83%E9%99%90">3.2.1 申请权限</a></li>
+<li><a href="#322-intent%E9%80%89%E6%8B%A9%E6%96%87%E4%BB%B6">3.2.2 Intent选择文件</a></li>
+</ul>
+</li>
+<li><a href="#33-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">3.3 上传文件</a></li>
+<li><a href="#34-%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6">3.4 下载文件</a></li>
+</ul>
+</li>
+<li><a href="#4-spring-boot">4 Spring Boot</a>
+<ul>
+<li><a href="#41-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">4.1 准备工作</a>
+<ul>
+<li><a href="#411-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">4.1.1 新建工程</a></li>
+<li><a href="#412-applicationproperties">4.1.2 application.properties</a></li>
+<li><a href="#413-pomxml">4.1.3 pom.xml</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%A4%84%E7%90%86%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">4.2 处理上传文件</a></li>
+<li><a href="#43-%E5%A4%84%E7%90%86%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6">4.3 处理下载文件</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%B5%8B%E8%AF%95">5 测试</a>
+<ul>
+<li><a href="#51-postman%E6%B5%8B%E8%AF%95">5.1 postman测试</a>
+<ul>
+<li><a href="#511-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.1.1 上传测试</a></li>
+<li><a href="#512-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.1.2 下载测试</a></li>
+</ul>
+</li>
+<li><a href="#52-android%E7%AB%AF%E6%B5%8B%E8%AF%95">5.2 android端测试</a>
+<ul>
+<li><a href="#521-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.2.1 上传测试</a></li>
+<li><a href="#522-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.2.2 下载测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E9%83%A8%E7%BD%B2%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">6 部署到服务器</a>
+<ul>
+<li><a href="#61-%E9%83%A8%E7%BD%B2">6.1 部署</a>
+<ul>
+<li><a href="#611-%E6%94%B9%E5%8F%98%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F">6.1.1 改变打包方式</a></li>
+<li><a href="#612-%E5%8E%BB%E9%99%A4tomcat%E4%BE%9D%E8%B5%96">6.1.2 去除tomcat依赖</a></li>
+<li><a href="#613-%E4%BF%AE%E6%94%B9main">6.1.3 修改Main</a></li>
+<li><a href="#614-%E4%BF%AE%E6%94%B9%E8%B7%AF%E5%BE%84">6.1.4 修改路径</a></li>
+<li><a href="#615-%E8%AE%BE%E7%BD%AE%E6%89%93%E5%8C%85%E5%90%8D%E5%AD%97">6.1.5 设置打包名字</a></li>
+<li><a href="#616-%E6%89%93%E5%8C%85">6.1.6 打包</a></li>
+<li><a href="#617-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">6.1.7 上传到服务器</a></li>
+<li><a href="#618-%E8%BF%90%E8%A1%8C">6.1.8 运行</a></li>
+</ul>
+</li>
+<li><a href="#62-%E6%B5%8B%E8%AF%95">6.2 测试</a>
+<ul>
+<li><a href="#621-postman%E6%B5%8B%E8%AF%95">6.2.1 postman测试</a></li>
+<li><a href="#622-android%E7%AB%AF%E6%B5%8B%E8%AF%95">6.2.2 android端测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-%E6%9C%80%E6%9C%80%E6%9C%80%E5%96%9C%E6%AC%A2%E7%9A%84-%E5%9D%91">7 <s>最最最喜欢的</s> 坑</a>
+<ul>
+<li><a href="#71-%E6%9D%83%E9%99%90">7.1 权限</a></li>
+<li><a href="#72-%E8%B7%AF%E5%BE%84">7.2 路径</a></li>
+<li><a href="#73-%E6%9C%89%E5%85%B3http%E7%9A%84%E9%97%AE%E9%A2%98">7.3 有关http的问题</a>
+<ul>
+<li><a href="#731-okhttp%E7%9A%84stream%E5%85%B3%E9%97%AD">7.3.1 okhttp的stream关闭</a></li>
+<li><a href="#732-http">7.3.2 http</a></li>
+<li><a href="#733-%E7%BA%BF%E7%A8%8B">7.3.3 线程</a></li>
+<li><a href="#734-avd">7.3.4 AVD</a></li>
+</ul>
+</li>
+<li><a href="#74-ip">7.4 ip</a></li>
+<li><a href="#75-%E5%88%A4%E7%A9%BA%E5%A4%84%E7%90%86">7.5 判空处理</a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%BA%90%E7%A0%81">8 源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>前端android,上传与下载文件,使用OkHttp处理请求,后端使用spring boot+MVC,处理android发送来的上传与下载请求.这个其实不难,就是特别多奇奇怪怪的坑,因此,希望看到的,不要像笔者这样踩的那么痛苦了...</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>win10</li>
+<li>Spring Boot 2.2.2 RELEASE</li>
+<li>IDEA 2019.3.1</li>
+<li>Android Studio 3.6RC1</li>
+<li>Tomcat 9.0.30</li>
+</ul>
+<h1 id="3-android">3 android</h1>
+<h2 id="31-准备工作">3.1 准备工作</h2>
+<h3 id="311-新建工程">3.1.1 新建工程</h3>
+<p>这次用一个全新的例子写博客,因此从新建工程开始:<br>
+<img src="https://img-blog.csdnimg.cn/20200127143649841.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200127143753821.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="312-androidmanifestxml">3.1.2 AndroidManifest.xml</h3>
+<p>加入</p>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;
+&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
+&lt;application android:usesCleartextTraffic=&quot;true&quot;&gt;
+</code></pre>
+<p>网络权限,读写SD卡权限,当然还有允许http请求的权限.</p>
+<h3 id="313-buildgradle">3.1.3 build.gradle</h3>
+<p>加入</p>
+<pre><code class="language-css">compileOptions {
+	sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+</code></pre>
+<p>这个是支持JDK8的.<br>
+还有这两个okhttp与conscrypt,<a href="https://github.com/square/okhttp">最新版本okhttp可以在这里查看</a>,<a href="https://github.com/google/conscrypt">最新版本conscrypt在这里</a>:</p>
+<pre><code class="language-java">implementation 'com.squareup.okhttp3:okhttp:4.3.1'
+implementation 'org.conscrypt:conscrypt-android:2.2.1'
+</code></pre>
+<h3 id="314-上传文件">3.1.4 上传文件</h3>
+<p>手动上传一些文件到AVD设备,为下一步选择与上传文件做准备,先把这个窗口工具栏打开:<br>
+<img src="https://img-blog.csdnimg.cn/20200127144628683.png" alt="在这里插入图片描述" loading="lazy"><br>
+打开后,打开在右侧栏中的Device File Explorer:<br>
+<img src="https://img-blog.csdnimg.cn/20200127144718597.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后选择sdcard文件夹上传文件即可,其他文件夹一般没有权限.<br>
+<img src="https://img-blog.csdnimg.cn/2020012714483682.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="315-布局">3.1.5 布局</h3>
+<p>添加三个button(上传/下载/选择文件),一个EditText(上传文件名与下载文件名),一个ImageView(显示下载的图片).<br>
+<img src="https://img-blog.csdnimg.cn/20200127153503538.png" alt="在这里插入图片描述" loading="lazy"><br>
+直接拖放改一下id.</p>
+<h2 id="32-选择文件">3.2 选择文件</h2>
+<h3 id="321-申请权限">3.2.1 申请权限</h3>
+<p>首先申请动态读写文件权限(其实选择文件只需要读权限,因为后面的下载需要写权限所以这里就一起申请了):<br>
+<img src="https://img-blog.csdnimg.cn/20200127153643669.png" alt="在这里插入图片描述" loading="lazy"><br>
+使用checkSelfPermission检查权限,参数为一个Context与String,String表示相应的权限,如果有了这个权限就会返回</p>
+<pre><code class="language-js">PackageManager.PERMISSION_GRANTED
+</code></pre>
+<p>没有就会返回</p>
+<pre><code class="language-js">PackageManager.PERMISSION_DENIED
+</code></pre>
+<p>没有就利用requestPermissions()申请,参数为Content,String[],int,String[]表示要申请的所有权限,int是一个requestCode.</p>
+<h3 id="322-intent选择文件">3.2.2 Intent选择文件</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200127150444157.png" alt="在这里插入图片描述" loading="lazy"><br>
+新建一个Intent后,设置选择类型,然后就重写onActivityResult:<br>
+<img src="https://img-blog.csdnimg.cn/20200127165315522.png" alt="在这里插入图片描述" loading="lazy"><br>
+这是简化了的处理,因为选择的是图片,选择其他文件的话可以参照<a href="https://blog.csdn.net/yingtian648/article/details/79066800">这里</a>.<br>
+其中path是选择的文件的路径,可能你会问:</p>
+<pre><code class="language-java">String path = dir.toString().substring(0,dir.toString().indexOf(&quot;0&quot;)+2) +
+	DocumentsContract.getDocumentId(uri).split(&quot;:&quot;)[1];
+</code></pre>
+<p>这个是怎么来的,其实是拼凑过来的,因为这是图片,是这个的简化版:<br>
+<img src="https://img-blog.csdnimg.cn/20200127164352187.png" alt="在这里插入图片描述" loading="lazy"><br>
+(<a href="https://blog.csdn.net/yingtian648/article/details/79066800">博客在这里</a>)</p>
+<h2 id="33-上传文件">3.3 上传文件</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200128161254596.png" alt="在这里插入图片描述" loading="lazy"><br>
+参数为文件路径与文件名,然后使用OkHttpClient,因为是文件,用的body是MultipartBody,增加一个叫file的FormDataPart与一个叫filename的FormDataPart.然后使用execute()发送请求,body()获取响应内容,这里假设了后端响应一个布尔,表示上传成功或失败,url的话使用了本地的路径,注意不能是localhost,使用内网ip,然后还要与后端对应.</p>
+<h2 id="34-下载文件">3.4 下载文件</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200128161427455.png" alt="在这里插入图片描述" loading="lazy"><br>
+参数为一个文件名,根据这个文件名返回对应的文件,返回一个File,这里请求体可以选择FormBody或MultipartBody,因为这是一个文件名参数,这里笔者为了统一就选择了MultipartBody,使用FormBody的话,只需要将RequestBody的那一行改为:</p>
+<pre><code class="language-java">RequestBody body = new FormBody.Builder().add(&quot;filename&quot;,filename).build();
+</code></pre>
+<p>有了请求体后发送请求获取响应体,进而获取输入流,然后首先需要判断是否为空,但不能直接这样判断:</p>
+<pre><code class="language-java">inputStream == null
+</code></pre>
+<p>因为后端是这样的:<br>
+<img src="https://img-blog.csdnimg.cn/20200128161951334.png" alt="在这里插入图片描述" loading="lazy"><br>
+从响应体获取的inputStream肯定不为null,需要先进行一次读取(也就是判断里面的文件是否为null),若为null的话删除这个文件,不为null的话继续读取并写入文件.</p>
+<h1 id="4-spring-boot">4 Spring Boot</h1>
+<h2 id="41-准备工作">4.1 准备工作</h2>
+<p>用的是IDEA,其他IDE请自行搜索如何新建一个SpringBoot工程.</p>
+<h3 id="411-新建工程">4.1.1 新建工程</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200127172340171.png" alt="在这里插入图片描述" loading="lazy"><br>
+打包的话可以jar或war,不用部署的话jar即可,要部署的话后期也可以改成war.<br>
+<img src="https://img-blog.csdnimg.cn/20200127172434434.png" alt="在这里插入图片描述" loading="lazy"><br>
+两个,一个Spring Web,用于MVC等,一个模板引擎,用于显示视图,如果不需要显示可以不选.<br>
+<img src="https://img-blog.csdnimg.cn/20200127172855499.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="412-applicationproperties">4.1.2 application.properties</h3>
+<p>作为一个示例demo,属性就直接在application.properties中配置了,实际情况请在相应的配置文件中配置相应属性.<br>
+<img src="https://img-blog.csdnimg.cn/20200128032048667.png" alt="在这里插入图片描述" loading="lazy"><br>
+需要配置上传文件的大小限制与上传文件夹的路径.</p>
+<h3 id="413-pomxml">4.1.3 pom.xml</h3>
+<p>这里其实不需要干什么,只是如果下载依赖慢的话,可以这样设置settings.xml文件,在&lt;mirrors&gt;中加上:</p>
+<pre><code class="language-xml">&lt;mirror&gt;
+    &lt;id&gt;alimaven&lt;/id&gt;
+    &lt;name&gt;aliyun maven&lt;/name&gt;
+    &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
+
+&lt;mirror&gt;
+    &lt;id&gt;uk&lt;/id&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+    &lt;name&gt;Human Readable Name for this Mirror.&lt;/name&gt;
+    &lt;url&gt;http://uk.maven.org/maven2/&lt;/url&gt;
+&lt;/mirror&gt;
+
+&lt;mirror&gt;
+    &lt;id&gt;CN&lt;/id&gt;
+    &lt;name&gt;OSChina Central&lt;/name&gt;
+    &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
+
+&lt;mirror&gt;
+    &lt;id&gt;nexus&lt;/id&gt;
+    &lt;name&gt;internal nexus repository&lt;/name&gt;
+    &lt;!-- &lt;url&gt;http://192.168.1.100:8081/nexus/content/groups/public/&lt;/url&gt;--&gt;
+    &lt;url&gt;http://repo.maven.apache.org/maven2&lt;/url&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
+
+</code></pre>
+<p>windows用户的话这个文件在</p>
+<pre><code class="language-bash">C:\Users\{username}\.m2\settings.xml
+</code></pre>
+<p>linux的话在</p>
+<pre><code class="language-bash">~/.m2/settings.xml
+</code></pre>
+<h2 id="42-处理上传文件">4.2 处理上传文件</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200128162502371.png" alt="在这里插入图片描述" loading="lazy"><br>
+首先对应的post映射路径为/upload,与android端的路径对应,然后需要一个表示文件的MultipartFile与一个表示文件名的String,判断这两个是否为空后,如果上传的文件夹不存在则先创建,存在的话直接进行复制,然后根据复制成功或失败返回布尔值.复制使用了Files.copy(),第一个InputStream为上传文件的输入流,第二个Path为存储文件的路径,resolve(filename)相当于在上传目录下的filename文件.输出的话建议使用日志代替.</p>
+<h2 id="43-处理下载文件">4.3 处理下载文件</h2>
+<p>下载的话可以选择使用get或post请求,这里选择了post请求,因为android端是post请求,需要对应.get请求的话可以从浏览器发起.<br>
+<img src="https://img-blog.csdnimg.cn/2020012803350758.png" alt="在这里插入图片描述" loading="lazy"><br>
+首先根据文件名获取对应文件,判断文件是否存在后返回一个ResponseEntity,需要设定content-type与body,content-type根据需要设置即可,这里是图片,默认.jpg或.png,body的话使用FileSystemResource,直接new一个放进body即可.<br>
+如果不存在相应的文件则返回null,这里需要注意一下前端的判断,不能直接判断ResponseBody是否为null.</p>
+<h1 id="5-测试">5 测试</h1>
+<h2 id="51-postman测试">5.1 postman测试</h2>
+<p>postman只能测试与后端的连接,上传等是否有问题,可以用来定位后端的问题.</p>
+<h3 id="511-上传测试">5.1.1 上传测试</h3>
+<p>再Headers中设置了Content-Type为multipart/form-data后:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041048644.png" alt="在这里插入图片描述" loading="lazy"><br>
+在body添加一个叫file的文件与一个叫filename的字符串表示文件名:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041026926.png" alt="在这里插入图片描述" loading="lazy"><br>
+发送,返回true.<br>
+<img src="https://img-blog.csdnimg.cn/2020012804134376.png" alt="在这里插入图片描述" loading="lazy"><br>
+服务器端有输出提示:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041409533.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看文件夹:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041427428.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="512-下载测试">5.1.2 下载测试</h3>
+<p>把file参数关掉,保留filename,修改路径.<br>
+<img src="https://img-blog.csdnimg.cn/20200128041539668.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后发送,postman可以直接显示图片:<br>
+<img src="https://img-blog.csdnimg.cn/20200128041741395.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="52-android端测试">5.2 android端测试</h2>
+<h3 id="521-上传测试">5.2.1 上传测试</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200128155806544.gif" alt="在这里插入图片描述" loading="lazy"><br>
+后端提示:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155753985.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看文件夹:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155829103.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="522-下载测试">5.2.2 下载测试</h3>
+<p>输入文件名后直接下载:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155933425.gif" alt="在这里插入图片描述" loading="lazy"><br>
+默认的话是放在这里,按需要更改位置即可,注意加上写权限:<br>
+<img src="https://img-blog.csdnimg.cn/20200128161027921.png" alt="在这里插入图片描述" loading="lazy"><br>
+若看不到文件选择synchronize即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128153926242.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="6-部署到服务器">6 部署到服务器</h1>
+<p>服务器用的是tomcat,需要修改一些Spring Boot的部分.</p>
+<h2 id="61-部署">6.1 部署</h2>
+<h3 id="611-改变打包方式">6.1.1 改变打包方式</h3>
+<p>pom.xml中jar改成war.<br>
+<img src="https://img-blog.csdnimg.cn/20200128164613506.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="612-去除tomcat依赖">6.1.2 去除tomcat依赖</h3>
+<p>pom.xml加入:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h3 id="613-修改main">6.1.3 修改Main</h3>
+<p>修改Main类,让其继承SpringBootServletInitializer,重载configure(),同时main()保持不变.<br>
+修改前:<br>
+<img src="https://img-blog.csdnimg.cn/20200128165014319.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改后:<br>
+<img src="https://img-blog.csdnimg.cn/20200128164908318.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="614-修改路径">6.1.4 修改路径</h3>
+<p>这个按需要修改即可,在这里不需要,注意就是@PostMapping,@GetMapping等都是相对于</p>
+<pre><code class="language-bash">tomcat/webapps/项目/
+</code></pre>
+<p>目录下的.</p>
+<h3 id="615-设置打包名字">6.1.5 设置打包名字</h3>
+<p>build加上&lt;finalName&gt;.<br>
+<img src="https://img-blog.csdnimg.cn/20200128165243261.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="616-打包">6.1.6 打包</h3>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020012816533874.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="617-上传到服务器">6.1.7 上传到服务器</h3>
+<p>打包后的文件放在target下,使用scp上传即可,这里是本地的tomcat,就这接移动war了.</p>
+<h3 id="618-运行">6.1.8 运行</h3>
+<p>开启tomcat,双击startup.bat即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128165527920.png" alt="在这里插入图片描述" loading="lazy"><br>
+linux的话:</p>
+<pre><code class="language-bash">cd xxxx/tomcat/bin
+./startup.sh
+</code></pre>
+<h2 id="62-测试">6.2 测试</h2>
+<p>在测试前需要确保没有占用相应端口,默认8080,也就是说,如果不改端口的话,需要关闭IDEA运行中的SpringBoot应用.</p>
+<h3 id="621-postman测试">6.2.1 postman测试</h3>
+<p>上传测试,注意需要改路径,加上打包项目名,ip的话可以使用localhost或者内网ip.<br>
+<img src="https://img-blog.csdnimg.cn/20200128170329136.gif" alt="在这里插入图片描述" loading="lazy"><br>
+服务器这边收到了,因为上传路径只是直接写名字,因此会与startup.bat同一路径.<br>
+<img src="https://img-blog.csdnimg.cn/20200128170016425.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载测试:<br>
+<img src="https://img-blog.csdnimg.cn/202001281706212.gif" alt="在这里插入图片描述" loading="lazy"><br>
+服务器的输出:<br>
+<img src="https://img-blog.csdnimg.cn/2020012817092774.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="622-android端测试">6.2.2 android端测试</h3>
+<p>android端需要修改路径即可,加上war打包的名字.<br>
+<img src="https://img-blog.csdnimg.cn/2020012817072767.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里打包的名字是kr,直接加上即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128170759231.png" alt="在这里插入图片描述" loading="lazy"><br>
+上传那里也是要加上,然后:<br>
+<img src="https://img-blog.csdnimg.cn/20200128172216981.gif" alt="在这里插入图片描述" loading="lazy"><br>
+服务器的输出:<br>
+<img src="https://img-blog.csdnimg.cn/20200128172200484.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看文件:<br>
+<img src="https://img-blog.csdnimg.cn/20200128172253701.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-最最最喜欢的-坑">7 <s>最最最喜欢的</s> 坑</h1>
+<h2 id="71-权限">7.1 权限</h2>
+<p>android需要读权限才能读取文件并上传,需要写权限才能保存从服务器返回的文件,在AndroidManifest.xml中加入:</p>
+<pre><code class="language-xml">&lt;manifest&gt;...
+&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;
+&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
+&lt;application&gt;...&lt;/application&gt;
+</code></pre>
+<p>这是外部设备的读写权限.当然,加入这个还不能访问,因为,android6.0以后还需要动态申请权限,所以:</p>
+<pre><code class="language-java">String [] permission = new String[]{
+	&quot;android.permission.READ_EXTERNAL_STORAGE&quot;,
+	&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;
+};
+if(
+	ActivityCompat.checkSelfPermission(this,permission[0]) != PackageManager.PERMISSION_GRANTED
+	||
+	ActivityCompat.checkSelfPermission(this,permission[1]) != PackageManager.PERMISSION_DENIED
+)
+{
+    ActivityCompat.requestPermissions(this,permission,1);
+}
+</code></pre>
+<h2 id="72-路径">7.2 路径</h2>
+<p>需要保证下面几个路径正确,还有可读,可写等:</p>
+<ul>
+<li>url路径不能错.</li>
+<li>前端上传文件的路径.</li>
+<li>后端接收前端上传文件的路径.</li>
+<li>后端发送前端需要下载的文件的路径.</li>
+<li>前端接收下载文件的路径.</li>
+</ul>
+<h2 id="73-有关http的问题">7.3 有关http的问题</h2>
+<h3 id="731-okhttp的stream关闭">7.3.1 okhttp的stream关闭</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200128163649815.png" alt="在这里插入图片描述" loading="lazy"><br>
+若前端是这样写的,在工具类中返回了之后Response已经关闭,因此需要读取输入流之类的需要先读取再返回,而不是返回一个ResponseBody或InputStream进行读取,否则会提示&quot;closed&quot;.</p>
+<h3 id="732-http">7.3.2 http</h3>
+<p>Android P开始默认禁用http,因此可以使用https或者在AndroidManifest.xml中允许http连接:</p>
+<pre><code class="language-xml">&lt;application android:usesCleartextTraffic=&quot;true&quot;&gt;
+</code></pre>
+<h3 id="733-线程">7.3.3 线程</h3>
+<p>网络请求不能在主线程中,新开一个线程即可.</p>
+<h3 id="734-avd">7.3.4 AVD</h3>
+<p>若检查过了服务器与android端没问题,那么有可能是AVD的问题,解决方法很简单,卸载,重启AVD,注意一定要卸载再重启.</p>
+<h2 id="74-ip">7.4 ip</h2>
+<p>在本地测试的话后端可以直接localhost,在android端不能直接localhost,可以使用ipconfig或ifconfig查看内网ip,输入内网ip即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200128150557717.png" alt="在这里插入图片描述" loading="lazy"><br>
+若在服务器上测试直接使用服务器ip.</p>
+<h2 id="75-判空处理">7.5 判空处理</h2>
+<p>对于前端,应该判断存储路径是否为空,是否为null等,再传给后端,对于后端,要判断文件是否存在等,不存在就返回null,这时又需要前端进行判断返回的null,在下载文件时,虽然对不存在的文件后端返回null,但是,前端收到的是一个InputStream,不能直接判断是否为null,需要先读取一次,再进行剩下的读取:<br>
+<img src="https://img-blog.csdnimg.cn/20200128155640346.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="8-源码">8 源码</h1>
+<p><a href="https://github.com/2293736867/Android-SpringBoot-Upload-Download-file">github</a></p>
+<p><a href="https://gitee.com/imykr/Android-SpringBoot-Upload-Download-file">码云</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-tian-ac-xi-lie-wu-shan-chu-lian-biao-de-dao-shu-di-n-ge-jie-dian.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-wu-shan-chu-lian-biao-de-dao-shu-di-n-ge-jie-dian/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">每天AC系列(五):删除链表的倒数第N个节点</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-tian-ac-xi-lie-si-si-shu-zhi-he.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-si-si-shu-zhi-he/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">每天AC系列(四):四数之和</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao/">每天AC系列(九):合并K个排序链表</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng/">每天AC系列(八):括号生成</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao/">正则表达式匹配方括号</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-0 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-1 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-2 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-4 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-5 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-6 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-7 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-8 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-9 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-10 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-11 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-12 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-13 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-14 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-15 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-16 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-17 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-18 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-20 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-21 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-22 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-23 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-24 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-25 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-26 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-27 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-28 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-29 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-30 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-31 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-32 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 59 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
