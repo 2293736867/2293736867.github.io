@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-02T20:52:48.513Z</updated>
+    <updated>2020-06-02T21:12:19.438Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -12,715 +12,1581 @@
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[每天AC系列(九):合并K个排序链表]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-jiu-he-bing-k-ge-pai-xu-lian-biao/">
+        <title type="html"><![CDATA[ssh+scp基本使用]]></title>
+        <id>https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/</id>
+        <link href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/">
         </link>
-        <updated>2020-06-02T20:52:24.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/">LeetCode第23题</a>,合并k个有序的链表.<br>
-<img src="https://img-blog.csdnimg.cn/20200130181741680.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-暴力法">2 暴力法</h1>
-<p>直接遍历所有链表,取出所有节点的值,用数组存储,非降序排序,然后创建一个新链表用头插法依次插入节点.</p>
-<pre><code class="language-java">List&lt;Integer&gt; s = new ArrayList&lt;&gt;();
-for(ListNode x:lists)
-{
-    while(x != null)
-    {
-        s.add(x.val);
-        x = x.next;
-    }
-}
-s.sort((a,b) -&gt; {return a.compareTo(b);});
-ListNode result = new ListNode(0);
-ListNode t = result;
-for(Integer x:s)
-{
-    t.next = new ListNode(x);
-    t = t.next;
-}
-return result.next;
+        <updated>2020-06-02T21:10:51.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-ssh">1 ssh</h1>
+<p>ssh一般用于连接服务器，可以使用密码认证与密钥认证的方式。</p>
+<h2 id="11-密码认证">1.1 密码认证</h2>
+<p>直接使用ssh即可：</p>
+<pre><code class="language-bash">ssh username@xxx.xxx.xxx.xxx
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200130205630834.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里要注意一下,sort那里不能写成:</p>
-<pre><code class="language-java">s.sort((a,b)-&gt;{return a&gt;b ? 1 : -1;});
+<p>username为用户名，后面为公网ip.<br>
+若需要使用特定端口登录，加上p参数，比如使用12345端口：</p>
+<pre><code class="language-bash">ssh -p 12345 username@xxx.xxx.xxx.xxx
 </code></pre>
-<p>没有考虑到等于的情况,所以用compareTo代替:</p>
-<pre><code class="language-java">s.sort((a,b)-&gt;{return a.compareTo(b);});
+<h2 id="12-密钥认证">1.2 密钥认证</h2>
+<p>密钥认证需要先生成密钥，然后把公钥使用scp上传到服务器，接着修改服务器的ssh配置文件。</p>
+<h3 id="121-生成密钥">1.2.1 生成密钥</h3>
+<pre><code class="language-bash">ssh-keygen -t rsa -b 4096 -C &quot;email&quot; -f /xxx/id_rsa
 </code></pre>
-<h1 id="3-直接合并法">3 直接合并法</h1>
-<p>每次遍历所有链表,取出首节点的值,各个比较然后得出最小值,将最小值插入新链表,然后移动最小值所在的链表的指针,直到所有链表为空.</p>
-<pre><code class="language-java">ListNode result = new ListNode(0);
-ListNode t = result;
-int len = lists.length;
-int nullNodeNums = 0;
-for(boolean [] b = new boolean[len];nullNodeNums&lt;len;)
-{
-    int min = Integer.MAX_VALUE;
-    int minIndex = -1;
-    for(int index = 0;index&lt;len;++index)
-    {
-        ListNode x = lists[index];
-        if(x == null)
-        {
-            if(!b[index])
-            {
-                b[index] = true;
-                ++nullNodeNums;
-            }
-        }
-        else if(x.val &lt; min)
-        {
-            min = x.val;
-            minIndex = index;
-        }
-    }
-    if(minIndex != -1)
-    {
-        t.next = new ListNode(min);
-        t = t.next;
-        lists[minIndex] = lists[minIndex].next;
-    }
-}
-return result.next;
+<p>t表示加密算法，b指定位数，C表示注释，识别这个密钥，一般用邮箱即可。f表示生成的私钥文件位置（需要加上文件名），公钥会放在同一文件夹下。<br>
+<img src="https://img-blog.csdnimg.cn/20200322150759345.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="122-上传公钥">1.2.2 上传公钥</h3>
+<p>使用scp上传公钥到服务器，注意是公钥，ssh-keygen会生成一个公钥与私钥，pub结尾的文件就是公钥，默认叫id_rsa.pub .</p>
+<pre><code class="language-bash">scp /xxxx/id_rsa.pub username@xxx.xxx.xxx.xxx:/root/
 </code></pre>
-<p>这里使用了一个布尔数组判断是否某个节点已经移动到尾部,即表示是否为空,为空的话跳过这个节点,不为空的话取其值,计算是否为最小值.得到最小值后,添加到结果节点中,并移动最小值所在链表的指针.<br>
-<img src="https://img-blog.csdnimg.cn/20200131022403181.png" alt="在这里插入图片描述" loading="lazy"><br>
-这个方法看起来慢得很啊.</p>
-<h1 id="4-优先队列">4 优先队列</h1>
-<p>优先队列是上两个方法的结合,遍历所有节点,取值并根据其值确定优先级添加到优先队列中,然后依次出队,将出队的值直接插入到新链表中.</p>
-<pre><code class="language-java">PriorityQueue&lt;Integer&gt; queue = new PriorityQueue&lt;&gt;();
-for(ListNode x:lists)
-{
-    while(x != null)
-    {
-        queue.add(x.val);
-        x = x.next;
-    }
-}
-ListNode s = new ListNode(0);
-ListNode t = s;
-while(!queue.isEmpty())
-{
-    t.next = new ListNode(queue.poll());
-    t = t.next;
-}
-return s.next;
+<p>这里就直接放到服务器上的/root下。</p>
+<h3 id="123-修改ssh配置文件">1.2.3 修改ssh配置文件</h3>
+<p>先使用ssh密码认证的方式登录服务器，然后修改/etc/ssh/sshd_config：</p>
+<pre><code class="language-bash">cd /etc/ssh
+cp sshd_config sshd_config.bak
+vim sshd_config
 </code></pre>
-<p>java的优先队列可以直接add即可,按照默认出队序列(对于整数是小的先出)使用尾插法插入到新链表中.<br>
-<img src="https://img-blog.csdnimg.cn/20200131023647945.png" alt="在这里插入图片描述" loading="lazy"><br>
-嗯,好像还可以的样子,但是还是不够快.</p>
-<h1 id="5-两两合并法">5 两两合并法</h1>
-<p>合并k个链表,相当于合并2个链表k-1次,利用递归的思想,每次合并两个链表,将合并后的链表后返回作为下一个要合并的链表继续合并.</p>
-<pre><code class="language-java">public ListNode mergeKLists(ListNode[] lists) {
-    if (lists == null || lists.length == 0)
-        return null;
-    ListNode t = lists[0];
-    for(int i=1;i&lt;lists.length;++i)
-        t = merge(t, lists[i]);
-    return t;
-}
-//public ListNode merge(ListNode a,ListNode b)
+<p>找到PubKeyAuthentication这一行，修改如下：<br>
+<img src="https://img-blog.csdnimg.cn/2020032215152956.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果需要修改端口的，搜索Port，直接修改：<br>
+<img src="https://img-blog.csdnimg.cn/20200322151709569.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着重启sshd服务：</p>
+<pre><code class="language-bash">systemctl restart sshd
 </code></pre>
-<p>merge为直接合并两个链表的操作,不难,就不贴代码了,首先赋值t为第一个链表,然后依次合并t与剩下的n-1个链表.<br>
-<img src="https://img-blog.csdnimg.cn/20200131025014753.png" alt="在这里插入图片描述" loading="lazy"><br>
-好慢啊.</p>
-<h1 id="6-分治法">6 分治法</h1>
-<p>分治法是两两合并法的改进,两两合并每次合并两个链表,分治法每次合并一半数量的链表,总体思想是这样的:想要得到最终有序的链表,若左半部分的链表与右半部分的链表都有序,则相当于合并两个有序链表,为了得到左半部分的有序链表,需要继续对左半部分进行一半的分割,再次分成左半部分与右半部分,然后再分,直到某部分只有一个链表,然后返回,以合并两个普通有序链表的方式合并两个返回的链表.</p>
-<pre><code class="language-java">public ListNode f(int start,int end)
-{
-    int len = end - start;
-    if(len &lt;= 1)
-        return lists[start];
-    ListNode l = f(start,start+len/2);
-    ListNode r = f(start+len/2,end);
-    return merge(l, r);
-}
+<h3 id="124-测试连接">1.2.4 测试连接</h3>
+<pre><code class="language-bash">ssh -i /xxx/id_rsa -p port username@xxx.xxx.xxx.xxx
 </code></pre>
-<p>代码非常简洁,一开始为判断递归的条件,区间长度小于等于1直接返回[start]的节点,然后递归合并左半部分与右半部分的节点.<br>
-<img src="https://img-blog.csdnimg.cn/20200131031405559.png" alt="在这里插入图片描述" loading="lazy"><br>
-一个字,舒服.<br>
-真快.</p>
-<h1 id="7-源码">7 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day9">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day9">码云</a></p>
+<p>其中i后为私钥的位置，p参数如果修改了默认的端口（22）则需要加上自定义端口。<br>
+如果在windows上生成的私钥，可能会有如下问题：<br>
+<img src="https://img-blog.csdnimg.cn/20200322151915913.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里提示私钥的权限是755，也就是其他用户可读，需要修改为600：</p>
+<pre><code class="language-bash">chmod 600 /xxx/id_rsa
+</code></pre>
+<p>如果用的是wsl可能会修改失败，需要加上wsl的配置，修改/etc/wsl.conf（如果没有就新建）</p>
+<pre><code class="language-bash">vim /etc/wsl.conf
+</code></pre>
+<p>输入：</p>
+<pre><code class="language-bash">[automount]
+enabled = true
+options = &quot;metadata,umask=22,fmask=11&quot;
+mountFsTab = false
+</code></pre>
+<p>退出wsl重启，然后再修改权限，应该就没问题了。</p>
+<h1 id="2-scp">2 scp</h1>
+<p>scp是secure copy的缩写，一般用于从服务器下载文件或上传文件到服务器，与ssh类似，可以使用密码认证或密钥认证或指定端口。</p>
+<h2 id="21-上传文件夹到服务器">2.1 上传文件（夹）到服务器</h2>
+<pre><code class="language-bash">scp localFile username@xxx.xxx.xxx.xxx:/xxxx
+scp -r localDir username@xxx.xxx.xxx.xxx:/xxx
+</code></pre>
+<p>上面是密码认证的方式，密钥认证请加上i参数，指定私钥位置：</p>
+<pre><code class="language-bash">scp localFile username@xxx.xxx.xxx.xxx:/xxx
+scp -i /xxx/id_rsa -r localDir username@xxx.xxx.xxx.xxx:/xxxx
+</code></pre>
+<p>需要特定端口请加上P参数（注意是大写，不是ssh的小写p端口参数）</p>
+<pre><code class="language-bash">scp -i /xxx/id_rsa -P xx localFile username@xxx.xxx.xxx.xxx
+</code></pre>
+<h2 id="22-从服务器下载文件夹">2.2 从服务器下载文件（夹）</h2>
+<pre><code class="language-bash">scp username@xxx.xxx.xxx.xxx:/xxx   /localDir
+scp -r username@xxx.xxx.xxx:/xxx  /localDir
+</code></pre>
+<p>第一个是下载文件，第二个是下载文件夹，需要加上r参数。<br>
+同理，密钥认证加i参数，端口加P参数：</p>
+<pre><code class="language-bash">scp -i /xxx/id_rsa -P xx username@xxx.xxx.xxx.xxx:/xxx  /localDir
+scp -i /xxx/id_rsa -P xx -r username@xxx.xxx.xxx.xxx:/xxx  /localDir
+</code></pre>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[每天AC系列(八):括号生成]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-ba-gua-hao-sheng-cheng/">
+        <title type="html"><![CDATA[Nginx/Apache + acme.sh 实现https访问]]></title>
+        <id>https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/</id>
+        <link href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/">
         </link>
-        <updated>2020-06-02T20:52:04.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/generate-parentheses/">LeetCode第22题</a>,根据一个整数生成所有的有效的括号组合,这个整数表示括号的对数.<br>
-<img src="https://img-blog.csdnimg.cn/20200129171333358.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-暴力法">2 暴力法</h1>
-<p>对于n对括号,总共2n个字符,每个字符可以为左括号或右括号,所以总共2^(2n)中组合,暴力法就是枚举各个组合,然后判断它们是否为有效的组合:</p>
-<pre><code class="language-java">public void f(char c[],int pos,List&lt;String&gt; result)
-{
-    if(pos == c.length)
-    {
-        if(valid(c))
-            result.add(Arrays.toString(c).replaceAll(&quot;(\\[)|(\\])| |,&quot;,&quot;&quot;));
-    }
-    else
-    {
-        c[pos] = '(';
-        f(c,pos+1,result);
-        c[pos] = ')';
-        f(c,pos+1,result);
-    }
-}
-
-public boolean valid(char [] f)
-{
-    int len = 0;
-    for(char c:f)
-    {
-        if(c == '(' )
-        {
-            if(++len &gt; f.length/2)
-                return false;
-        }
-        else if(len-- &lt;=0)
-            return false;
-    }
-    return len == 0;
-}
-</code></pre>
-<p>首先加上左括号,进入下一轮递归,同时把加括号的位置加1,然后到达2n长度后,判断是否有效,有效的话加入结果数组,然后回到上一层的递归,把当前位置的括号换成右括号,接着再次进入下一轮递归,一样直到2n长度,继续判断是否有效,这样不断递归就会枚举了所有的组合.<br>
-<img src="https://img-blog.csdnimg.cn/2020013013414089.png" alt="在这里插入图片描述" loading="lazy"><br>
-看来不太理想啊.</p>
-<h1 id="3-深搜">3 深搜</h1>
-<p>深搜的话是暴力的改进,暴力的话不管序列是什么状态都直接添加括号,而深搜的话,当序列有效时才添加括号.<br>
-<strong>添加左括号的条件:当前的左括号数量小于n.</strong><br>
-<strong>添加右括号的条件:当前左括号的数量小于右括号的数量.</strong></p>
-<pre><code class="language-java">public void f(String c,int n,int l,int r,List&lt;String&gt; result)
-{
-    if(l == n &amp;&amp; r == n)
-        result.add(c);
-    else
-    {
-        if(l &lt; r)
-            return ;
-        if(l &lt; n)
-            f(c+&quot;(&quot;,n,l+1,r,result);
-        if(r &lt; n)
-            f(c+&quot;)&quot;,n,l,r+1,result);
-    }
-}
-</code></pre>
-<p>c为上一次递归的结果,l,r分别表示左括号与右括号的数量,递归的结束条件是左右括号的数量均为n,继续递归的条件是左右括号的数量小于n.<br>
-<img src="https://img-blog.csdnimg.cn/20200130143438111.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4-动态规划">4 动态规划</h1>
-<p>设f(n)表示n对括号的所有有效序列,则有<br>
-<img src="https://img-blog.csdnimg.cn/20200130161054631.png" alt="在这里插入图片描述" loading="lazy"><br>
-具体来说:</p>
-<pre><code>f(3) = ( + f(0) + ) + f(2)
-f(3) = ( + f(1) + ) + f(1)
-f(3) = ( + f(2) + ) + f(0)
-</code></pre>
-<p>这三个都是三对括号的有效序列,因此f(3)最后的结果是这三个有效序列组成的数组.<br>
-因为f(n)不一定为一个有效序列,因此返回值为一个数组,剩下的只需要遍历这个数组,把它们添加到最终结果数组中去:</p>
-<pre><code class="language-java">public List&lt;String&gt; f(int n)
-{
-    List&lt;String&gt; s = new ArrayList&lt;&gt;();
-    if(n == 0)
-        s.add(&quot;&quot;);
-    for(int i=0;i&lt;n;++i)
-    {
-        List&lt;String&gt; l = f(i);
-        List&lt;String&gt; r = f(n-i-1);
-        for(String ll:l)
-        {
-            for(String rr:r)
-            {
-                s.add(&quot;(&quot;+ll+&quot;)&quot;+rr);
-            }
-        }
-    }
-    return s;
-}
-</code></pre>
-<p>若n为0,添加一个空序列然后返回,若n不为0,l表示i对括号的所有有效序列,r表示n-i-1对括号的所有有效序列,然后只需要遍历这两个序列,在两边加上左括号与右括号即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200130160421541.png" alt="在这里插入图片描述" loading="lazy"><br>
-这个...好像没有深搜快.</p>
-<h1 id="5-动规优化">5 动规优化</h1>
-<p>上面的递归的动规没有保存之前计算过的结果,比如计算n=3的时候,</p>
-<pre><code>f(3) = ( + f(0) + ) + f(2)
-f(3) = ( + f(1) + ) + f(1)
-f(3) = ( + f(2) + ) + f(0)
-</code></pre>
-<p>f(2):</p>
-<pre><code>f(2) = ( + f(1) + ) + f(0)
-f(2) = ( + f(0) + ) + f(1)
-</code></pre>
-<p>f(1)</p>
-<pre><code>f(1) = ( + f(0) + ) + f(0)
-</code></pre>
-<p>只是计算f(3),计算了</p>
-<pre><code>f(2):2次
-f(1):2+2*2=6次
-f(0):2+2*2+6*2=18次
-</code></pre>
-<p>当n增大时,计算的重复度会变得更大,因此可以考虑用一个数组存储之前计算的结果,需要时直接取出来即可.</p>
-<pre><code class="language-java">public List&lt;String&gt; generateParenthesis(int n) 
-{
-    List&lt;List&lt;String&gt;&gt; s = new ArrayList&lt;&gt;();
-    s.add(Arrays.asList(&quot;&quot;));
-    s.add(Arrays.asList(&quot;()&quot;));
-    for(int n1 = 2;n1&lt;=n;++n1)
-    {
-        List&lt;String&gt; t = new ArrayList&lt;&gt;();
-        for(int i=0;i&lt;n1;++i)
-        {
-            List&lt;String&gt; l = s.get(i);
-            List&lt;String&gt; r = s.get(n1-i-1);
-            for(String ll:l)
-            {
-                for(String rr:r)
-                {
-                    t.add(&quot;(&quot;+ll+&quot;)&quot;+rr);
-                }
-            }
-        }
-        s.add(t);
-    }
-    return s.get(n);
-}
-</code></pre>
-<p>可以先看最后的return,因为s保存了0到n的所有结果,所以,直接get即可.<br>
-然后设置一个临时的n1,表示当前要计算的n1对括号的序列,当n1增加时,表示已经完成了计算n1对括号的序列,t为结果,添加到s中去.直到n1与n相等,计算完最后一个n1后,直接返回s的最后一个序列.<br>
-<img src="https://img-blog.csdnimg.cn/2020013016333722.png" alt="在这里插入图片描述" loading="lazy"><br>
-嗯,快了1ms,看来优化还是有效果的.</p>
-<h1 id="6-源码">6 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day8">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day8">码云</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[正则表达式匹配方括号]]></title>
-        <id>https://2293736867.github.io/post/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao/</id>
-        <link href="https://2293736867.github.io/post/zheng-ze-biao-da-shi-pi-pei-fang-gua-hao/">
-        </link>
-        <updated>2020-06-02T20:51:13.000Z</updated>
-        <content type="html"><![CDATA[<p>Java代码:</p>
-<pre><code class="language-java">String s = &quot;[1,2,3]+[4,5,6]&quot;;
-System.out.println(s.replaceAll(&quot;(\\[)&quot;,&quot;&quot;));         //匹配左方括号
-System.out.println(s.replaceAll(&quot;(\\])&quot;,&quot;&quot;));         //匹配右方括号
-System.out.println(s.replaceAll(&quot;(\\[)|(\\])&quot;,&quot;&quot;));   //匹配左右方括号
-</code></pre>
-<p>结果:<br>
-<img src="https://img-blog.csdnimg.cn/20200130134515159.png" alt="在这里插入图片描述" loading="lazy"><br>
-需要使用replaceAll而不是replace.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每天AC系列(七):合并两个有序链表]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-qi-he-bing-liang-ge-you-xu-lian-biao/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-qi-he-bing-liang-ge-you-xu-lian-biao/">
-        </link>
-        <updated>2020-06-02T20:50:31.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/">LeetCode第21题</a>,合并两个有序链表.<br>
-<img src="https://img-blog.csdnimg.cn/20200129164140734.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-直接合并">2 直接合并</h1>
-<p>因为已经有序了,类似归并排序中的合并一样,操作不难,直接上代码了.</p>
-<pre><code class="language-java">ListNode t = new ListNode(0);
-ListNode head = t;
-while(l1 != null &amp;&amp; l2 != null)    
-{
-    if(l1.val &lt; l2.val)
-    {
-        t.next = l1;
-        l1 = l1.next;
-    }
-    else
-    {
-        t.next = l2;
-        l2 = l2.next;
-    }
-    t = t.next;
-}
-while(l1 != null)
-{
-    t.next = l1;
-    l1 = l1.next;
-    t = t.next;
-}
-while(l2 != null)
-{
-    t.next = l2;
-    l2 = l2.next;
-    t = t.next;
-}
-return head.next;
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200129164254378.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-递归合并">3 递归合并</h1>
-<p>这个可以采用递归优化,而且不用额外设置一个移动的临时结点t.首先对两个指针进行判空操作,其中一个为空的话返回另一个,然后进行递归合并,首先创建一个head结点,进行赋值后递归合并next结点,将返回值赋给head.next,最后返回head.</p>
-<pre><code class="language-java">if(l1 == null) return l2;
-if(l2 == null) return l1;
-
-ListNode head = null;
-if(l1.val &lt; l2.val)
-{
-    head = l1;
-    head.next = mergeTwoLists(l1.next, l2);
-}
-else
-{
-    head = l2;
-    head.next = mergeTwoLists(l1, l2.next);
-}
-return head;
-</code></pre>
-<h1 id="4-源码">4 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day7">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day7">码云</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每天AC系列(六):有效的括号]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-liu-you-xiao-de-gua-hao/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-liu-you-xiao-de-gua-hao/">
-        </link>
-        <updated>2020-06-02T20:49:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/valid-parentheses/">LeetCode第20题</a>,这题比较简单,匹配括号.<br>
-<img src="https://img-blog.csdnimg.cn/20200128181932985.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-栈">2 栈</h1>
-<p>这是栈的典型应用,括号匹配,当然不需要直接使用栈,使用一个StringBuilder即可:</p>
-<pre><code class="language-java">if(s.isEmpty())
-   return true;
-char a = s.charAt(0);
-if (a != '(' &amp;&amp; a != '[' &amp;&amp; a != '{')
-    return false;
-StringBuilder t = new StringBuilder();
-int len = -1;
-for(char c:s.toCharArray())
-{
-    if(c == '(' || c == '[' || c == '{')
-    {
-        t.append(c);
-        ++len;
-    }
-    else
-    {
-        if(len == -1)
-            return false;
-        char cc = t.charAt(len);
-        if(
-            (c == ')' &amp;&amp; cc != '(')
-            ||
-            (c == ']' &amp;&amp; cc != '[')
-            ||
-            (c == '}' &amp;&amp; cc != '{')
-        )
-            return false;
-        t.deleteCharAt(len--);
-    }
-}
-return len == -1;
-</code></pre>
-<p>首先判断是否为空,再判断第一个字符,然后进入逐个循环判断,若表示左边的括号则append,若表示右边的括号首先判断len,然后取出len处字符进行判断是否匹配,不匹配直接返回false,匹配的话则删除这个字符.最后根据len是否为-1返回最终结果.<br>
-<img src="https://img-blog.csdnimg.cn/20200129005758741.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-优化">3 优化</h1>
-<p>其实就是简化一下代码,直接开辟一个大的空间,不需要进行append与delete,只需移动栈顶指针.栈顶指针从1开始,若从0开始的话对于&quot;]&quot;这种情况会报下标越界错误,压栈就是++p,压入字符,出栈直接- - p,然后判断是否匹配即可.</p>
-<pre><code class="language-java">char[] t = new char[s.length() + 1];
-int p = 1;
-for (char c : s.toCharArray()) 
-{
-    if (c == '(' || c == '[' || c == '{')
-        t[p++] = c;
-    else 
-    {
-        --p;
-        if ((c == ')' &amp;&amp; t[p] != '(') || (c == ']' &amp;&amp; t[p] != '[') || (c == '}' &amp;&amp; t[p] != '{'))
-            return false;
-    }
-}
-return p == 1;
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200129010905339.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-源码">4 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day6">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day6">码云</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每天AC系列(五):删除链表的倒数第N个节点]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-wu-shan-chu-lian-biao-de-dao-shu-di-n-ge-jie-dian/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-wu-shan-chu-lian-biao-de-dao-shu-di-n-ge-jie-dian/">
-        </link>
-        <updated>2020-06-02T20:49:07.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/">LeetCode第19题</a>,删除链表倒数的第n个结点.<br>
-<img src="https://img-blog.csdnimg.cn/20200128030219150.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-两趟扫描">2 两趟扫描</h1>
-<p>两趟扫描的思想很简单,第一趟扫描确定长度,第二趟扫描定位到目标结点并进行删除操作.</p>
-<pre><code class="language-java">public ListNode removeNthFromEnd(ListNode head, int n) 
-{
-	if(head == null || head.next == null)
-	    return null;
-	ListNode head_copy = head;
-	int length = 0;
-	while(head != null)
-	{
-	    head = head.next;
-	    ++length;
-	}
-	head = head_copy;
-	ListNode before = head;
-	int i = 0;
-	for(;i&lt;length-n;++i)
-	{
-	    before = head;
-	    head = head.next;
-	}
-	if(i == 0)
-	    return head.next;
-	else
-	    before.next = before.next.next;
-	return head_copy;
-}
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200128030433545.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-一趟扫描">3 一趟扫描</h1>
-<p>当然,来刷题的话不能就这样就算了,肯定得把它弄成一趟扫描,对吧?<br>
-两趟扫描的目的是获取长度再进行定位,因此,为了能一次定位,可以使用两个头指针,对于给定的n,先让第一个头指针访问n次,第二个头指针不动,当第一个头指针访问n次后,第一个头指针继续访问直到最后一个,第二个头指针与第一个头指针并行访问,这样,当第一个头指针访问到最后一个时,第二个头指针就指向倒数第N个节点.</p>
-<pre><code class="language-java">public ListNode removeNthFromEnd(ListNode head, int n) {
-    ListNode a = head;
-    ListNode b = head;
-    ListNode t = head;
-    for(int i=0;i&lt;n;++i)
-        a = a.next;
-    if(a == null)
-        return head.next;
-    while(a != null)
-    {
-        t = b;
-        a = a.next;
-        b = b.next;
-    }
-    t.next = t.next.next;
-    return head;
-}
-</code></pre>
-<p>总的来说这个只需要一趟扫描即可,针对只有两个结点或者一个结点的要判断一下.<br>
-<img src="https://img-blog.csdnimg.cn/20200129003032302.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4-源码">4 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day5">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day5">码云</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[android+spring boot 选择,上传,下载文件]]></title>
-        <id>https://2293736867.github.io/post/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/</id>
-        <link href="https://2293736867.github.io/post/androidspring-boot-xuan-ze-shang-chuan-xia-zai-wen-jian/">
-        </link>
-        <updated>2020-06-02T20:48:29.000Z</updated>
+        <updated>2020-06-02T21:10:03.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
-<li><a href="#3-android">3 android</a>
+<li><a href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">2 准备工作</a>
 <ul>
-<li><a href="#31-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3.1 准备工作</a>
-<ul>
-<li><a href="#311-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3.1.1 新建工程</a></li>
-<li><a href="#312-androidmanifestxml">3.1.2 AndroidManifest.xml</a></li>
-<li><a href="#313-buildgradle">3.1.3 build.gradle</a></li>
-<li><a href="#314-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">3.1.4 上传文件</a></li>
-<li><a href="#315-%E5%B8%83%E5%B1%80">3.1.5 布局</a></li>
+<li><a href="#21-%E5%9F%9F%E5%90%8D%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8">2.1 域名与服务器</a></li>
+<li><a href="#22-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90">2.2 域名解析</a></li>
+<li><a href="#22-%E7%AB%AF%E5%8F%A3">2.2 端口</a></li>
 </ul>
 </li>
-<li><a href="#32-%E9%80%89%E6%8B%A9%E6%96%87%E4%BB%B6">3.2 选择文件</a>
+<li><a href="#3-nginx">3 Nginx</a>
 <ul>
-<li><a href="#321-%E7%94%B3%E8%AF%B7%E6%9D%83%E9%99%90">3.2.1 申请权限</a></li>
-<li><a href="#322-intent%E9%80%89%E6%8B%A9%E6%96%87%E4%BB%B6">3.2.2 Intent选择文件</a></li>
+<li><a href="#31-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84nginx1179">3.1 编译安装的Nginx(1.17.9)</a>
+<ul>
+<li><a href="#311-%E5%AE%89%E8%A3%85nginx">3.1.1 安装Nginx</a></li>
+<li><a href="#312-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">3.1.2 证书处理</a></li>
+<li><a href="#313-nginx%E9%85%8D%E7%BD%AE">3.1.3 Nginx配置</a></li>
+<li><a href="#314-%E6%B5%8B%E8%AF%95">3.1.4 测试</a></li>
 </ul>
 </li>
-<li><a href="#33-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">3.3 上传文件</a></li>
-<li><a href="#34-%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6">3.4 下载文件</a></li>
-</ul>
-</li>
-<li><a href="#4-spring-boot">4 Spring Boot</a>
+<li><a href="#32-%E4%BB%8E%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85nginx1161">3.2 从仓库安装Nginx(1.16.1)</a>
 <ul>
-<li><a href="#41-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">4.1 准备工作</a>
-<ul>
-<li><a href="#411-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">4.1.1 新建工程</a></li>
-<li><a href="#412-applicationproperties">4.1.2 application.properties</a></li>
-<li><a href="#413-pomxml">4.1.3 pom.xml</a></li>
-</ul>
-</li>
-<li><a href="#42-%E5%A4%84%E7%90%86%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6">4.2 处理上传文件</a></li>
-<li><a href="#43-%E5%A4%84%E7%90%86%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6">4.3 处理下载文件</a></li>
-</ul>
-</li>
-<li><a href="#5-%E6%B5%8B%E8%AF%95">5 测试</a>
-<ul>
-<li><a href="#51-postman%E6%B5%8B%E8%AF%95">5.1 postman测试</a>
-<ul>
-<li><a href="#511-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.1.1 上传测试</a></li>
-<li><a href="#512-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.1.2 下载测试</a></li>
-</ul>
-</li>
-<li><a href="#52-android%E7%AB%AF%E6%B5%8B%E8%AF%95">5.2 android端测试</a>
-<ul>
-<li><a href="#521-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.2.1 上传测试</a></li>
-<li><a href="#522-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.2.2 下载测试</a></li>
+<li><a href="#321-%E5%AE%89%E8%A3%85nginx">3.2.1 安装Nginx</a></li>
+<li><a href="#322-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">3.2.2 证书处理</a></li>
+<li><a href="#323-nginx%E9%85%8D%E7%BD%AE">3.2.3 Nginx配置</a></li>
+<li><a href="#324-%E6%B5%8B%E8%AF%95">3.2.4 测试</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#6-%E9%83%A8%E7%BD%B2%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">6 部署到服务器</a>
+<li><a href="#4-apache">4 Apache</a>
 <ul>
-<li><a href="#61-%E9%83%A8%E7%BD%B2">6.1 部署</a>
+<li><a href="#41-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84apache2441">4.1 编译安装的Apache(2.4.41)</a>
 <ul>
-<li><a href="#611-%E6%94%B9%E5%8F%98%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F">6.1.1 改变打包方式</a></li>
-<li><a href="#612-%E5%8E%BB%E9%99%A4tomcat%E4%BE%9D%E8%B5%96">6.1.2 去除tomcat依赖</a></li>
-<li><a href="#613-%E4%BF%AE%E6%94%B9main">6.1.3 修改Main</a></li>
-<li><a href="#614-%E4%BF%AE%E6%94%B9%E8%B7%AF%E5%BE%84">6.1.4 修改路径</a></li>
-<li><a href="#615-%E8%AE%BE%E7%BD%AE%E6%89%93%E5%8C%85%E5%90%8D%E5%AD%97">6.1.5 设置打包名字</a></li>
-<li><a href="#616-%E6%89%93%E5%8C%85">6.1.6 打包</a></li>
-<li><a href="#617-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">6.1.7 上传到服务器</a></li>
-<li><a href="#618-%E8%BF%90%E8%A1%8C">6.1.8 运行</a></li>
+<li><a href="#411-%E5%AE%89%E8%A3%85apache">4.1.1 安装Apache</a></li>
+<li><a href="#412-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">4.1.2 证书处理</a></li>
+<li><a href="#413-apache%E9%85%8D%E7%BD%AE">4.1.3 Apache配置</a></li>
+<li><a href="#414-%E6%B5%8B%E8%AF%95">4.1.4 测试</a></li>
 </ul>
 </li>
-<li><a href="#62-%E6%B5%8B%E8%AF%95">6.2 测试</a>
+<li><a href="#42-%E4%BB%8E%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85%E7%9A%84apache246">4.2 从仓库安装的Apache(2.4.6)</a>
 <ul>
-<li><a href="#621-postman%E6%B5%8B%E8%AF%95">6.2.1 postman测试</a></li>
-<li><a href="#622-android%E7%AB%AF%E6%B5%8B%E8%AF%95">6.2.2 android端测试</a></li>
+<li><a href="#421-%E5%AE%89%E8%A3%85apache">4.2.1 安装Apache</a></li>
+<li><a href="#422-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">4.2.2 证书处理</a></li>
+<li><a href="#423-apache%E9%85%8D%E7%BD%AE">4.2.3 Apache配置</a></li>
+<li><a href="#424-%E6%B5%8B%E8%AF%95">4.2.4 测试</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#7-%E6%9C%80%E6%9C%80%E6%9C%80%E5%96%9C%E6%AC%A2%E7%9A%84-%E5%9D%91">7 <s>最最最喜欢的</s> 坑</a>
-<ul>
-<li><a href="#71-%E6%9D%83%E9%99%90">7.1 权限</a></li>
-<li><a href="#72-%E8%B7%AF%E5%BE%84">7.2 路径</a></li>
-<li><a href="#73-%E6%9C%89%E5%85%B3http%E7%9A%84%E9%97%AE%E9%A2%98">7.3 有关http的问题</a>
-<ul>
-<li><a href="#731-okhttp%E7%9A%84stream%E5%85%B3%E9%97%AD">7.3.1 okhttp的stream关闭</a></li>
-<li><a href="#732-http">7.3.2 http</a></li>
-<li><a href="#733-%E7%BA%BF%E7%A8%8B">7.3.3 线程</a></li>
-<li><a href="#734-avd">7.3.4 AVD</a></li>
-</ul>
-</li>
-<li><a href="#74-ip">7.4 ip</a></li>
-<li><a href="#75-%E5%88%A4%E7%A9%BA%E5%A4%84%E7%90%86">7.5 判空处理</a></li>
-</ul>
-</li>
-<li><a href="#8-%E6%BA%90%E7%A0%81">8 源码</a></li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5 总结</a></li>
 </ul>
 </p>
 <h1 id="1-概述">1 概述</h1>
-<p>前端android,上传与下载文件,使用OkHttp处理请求,后端使用spring boot+MVC,处理android发送来的上传与下载请求.这个其实不难,就是特别多奇奇怪怪的坑,因此,希望看到的,不要像笔者这样踩的那么痛苦了...</p>
-<h1 id="2-环境">2 环境</h1>
+<p>acme.sh实现了acme协议，可以从Let‘s Encrypt生成免费的ssl证书用于实现https，本文介绍了常见的两种服务器Apache与Nginx上利用acme.sh配置https服务。<br>
+约定:</p>
+<pre><code class="language-bash">APACHE_INSTALL_DIR  ---   Apache安装目录
+NGINX_INSTALL_DIR   ---   Nginx安装目录
+www.test.com        ---   测试域名,请按需要换成自己的域名
+</code></pre>
+<h1 id="2-准备工作">2 准备工作</h1>
 <ul>
-<li>win10</li>
-<li>Spring Boot 2.2.2 RELEASE</li>
-<li>IDEA 2019.3.1</li>
-<li>Android Studio 3.6RC1</li>
-<li>Tomcat 9.0.30</li>
+<li>一个域名</li>
+<li>一台云服务器</li>
 </ul>
-<h1 id="3-android">3 android</h1>
-<h2 id="31-准备工作">3.1 准备工作</h2>
-<h3 id="311-新建工程">3.1.1 新建工程</h3>
-<p>这次用一个全新的例子写博客,因此从新建工程开始:<br>
-<img src="https://img-blog.csdnimg.cn/20200127143649841.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200127143753821.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="312-androidmanifestxml">3.1.2 AndroidManifest.xml</h3>
-<p>加入</p>
-<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;
-&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
-&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
-&lt;application android:usesCleartextTraffic=&quot;true&quot;&gt;
+<h2 id="21-域名与服务器">2.1 域名与服务器</h2>
+<p>域名与服务器直接买就好了，笔者的都是在阿里云上买的。</p>
+<h2 id="22-域名解析">2.2 域名解析</h2>
+<p>需要确保域名可以解析到对应的ip上面，一般的域名购买商会提供解析服务，按图形界面操作即可，以阿里云为例，选择域名进行解析：<br>
+<img src="https://img-blog.csdnimg.cn/20200317005748607.png" alt="在这里插入图片描述" loading="lazy"><br>
+主机记录填www，记录值填服务器公网ip.<br>
+<img src="https://img-blog.csdnimg.cn/20200317005817155.png" alt="在这里插入图片描述" loading="lazy"><br>
+间隔十分钟左右可以ping一下自己的域名，如果显示服务器ip则解析成功。</p>
+<h2 id="22-端口">2.2 端口</h2>
+<p>服务器要开启80与443端口，80用于HTTP测试，443用于HTTPS访问。以阿里云为例:<br>
+<img src="https://img-blog.csdnimg.cn/20200317135937646.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140139818.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140205495.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140231194.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140246326.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-nginx">3 Nginx</h1>
+<p>Nginx有两种安装方式，一种是仓库形式安装，另一种是从源码编译安装。</p>
+<h2 id="31-编译安装的nginx1179">3.1 编译安装的Nginx(1.17.9)</h2>
+<h3 id="311-安装nginx">3.1.1 安装Nginx</h3>
+<p>先去<a href="http://nginx.org/en/download.html">下载源码</a>，上传到服务器，解压：</p>
+<pre><code class="language-bash">tar -zxvf nginx-1.17.9.tar.gz
+cd nginx-1.17.9
 </code></pre>
-<p>网络权限,读写SD卡权限,当然还有允许http请求的权限.</p>
-<h3 id="313-buildgradle">3.1.3 build.gradle</h3>
-<p>加入</p>
-<pre><code class="language-css">compileOptions {
-	sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-}
+<p>可以先使用</p>
+<pre><code class="language-bash">./configure --help
 </code></pre>
-<p>这个是支持JDK8的.<br>
-还有这两个okhttp与conscrypt,<a href="https://github.com/square/okhttp">最新版本okhttp可以在这里查看</a>,<a href="https://github.com/google/conscrypt">最新版本conscrypt在这里</a>:</p>
-<pre><code class="language-java">implementation 'com.squareup.okhttp3:okhttp:4.3.1'
-implementation 'org.conscrypt:conscrypt-android:2.2.1'
+<p>查看选项帮助，这里要注意一下pcre与openssl，是源码目录，不是安装目录，安装之后删了源码的，重新来<a href="https://sourceforge.net/projects/pcre/">这里下载pcre</a>与<a href="https://www.openssl.org/source/">这里下载openssl</a>，注意一定需要http_ssl_module这个模块，不要漏了。</p>
+<pre><code class="language-bash">./configure --prefix=/xxxxx --with-pcre=/xxxxx --with-openssl=/xxxx --with-http_ssl_module
+make
+sudo make install
 </code></pre>
-<h3 id="314-上传文件">3.1.4 上传文件</h3>
-<p>手动上传一些文件到AVD设备,为下一步选择与上传文件做准备,先把这个窗口工具栏打开:<br>
-<img src="https://img-blog.csdnimg.cn/20200127144628683.png" alt="在这里插入图片描述" loading="lazy"><br>
-打开后,打开在右侧栏中的Device File Explorer:<br>
-<img src="https://img-blog.csdnimg.cn/20200127144718597.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后选择sdcard文件夹上传文件即可,其他文件夹一般没有权限.<br>
-<img src="https://img-blog.csdnimg.cn/2020012714483682.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="315-布局">3.1.5 布局</h3>
-<p>添加三个button(上传/下载/选择文件),一个EditText(上传文件名与下载文件名),一个ImageView(显示下载的图片).<br>
-<img src="https://img-blog.csdnimg.cn/20200127153503538.png" alt="在这里插入图片描述" loading="lazy"><br>
-直接拖放改一下id.</p>
-<h2 id="32-选择文件">3.2 选择文件</h2>
-<h3 id="321-申请权限">3.2.1 申请权限</h3>
-<p>首先申请动态读写文件权限(其实选择文件只需要读权限,因为后面的下载需要写权限所以这里就一起申请了):<br>
-<img src="https://img-blog.csdnimg.cn/20200127153643669.png" alt="在这里插入图片描述" loading="lazy"><br>
-使用checkSelfPermission检查权限,参数为一个Context与String,String表示相应的权限,如果有了这个权限就会返回</p>
-<pre><code class="language-js">PackageManager.PERMISSION_GRANTED
+<p>好了之后进入安装目录下的sbin，启动服务。</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sin
+./nginx
 </code></pre>
-<p>没有就会返回</p>
-<pre><code class="language-js">PackageManager.PERMISSION_DENIED
+<p>然后可以在浏览器输入服务器公网ip测试一下：<br>
+<img src="https://img-blog.csdnimg.cn/20200317004956936.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="312-证书处理">3.1.2 证书处理</h3>
+<p>首先安装acme.sh</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
 </code></pre>
-<p>没有就利用requestPermissions()申请,参数为Content,String[],int,String[]表示要申请的所有权限,int是一个requestCode.</p>
-<h3 id="322-intent选择文件">3.2.2 Intent选择文件</h3>
-<p><img src="https://img-blog.csdnimg.cn/20200127150444157.png" alt="在这里插入图片描述" loading="lazy"><br>
-新建一个Intent后,设置选择类型,然后就重写onActivityResult:<br>
-<img src="https://img-blog.csdnimg.cn/20200127165315522.png" alt="在这里插入图片描述" loading="lazy"><br>
-这是简化了的处理,因为选择的是图片,选择其他文件的话可以参照<a href="https://blog.csdn.net/yingtian648/article/details/79066800">这里</a>.<br>
-其中path是选择的文件的路径,可能你会问:</p>
-<pre><code class="language-java">String path = dir.toString().substring(0,dir.toString().indexOf(&quot;0&quot;)+2) +
-	DocumentsContract.getDocumentId(uri).split(&quot;:&quot;)[1];
+<p><img src="https://img-blog.csdnimg.cn/20200317005319462.png" alt="在这里插入图片描述" loading="lazy"><br>
+生成证书</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot NGINX_INSTALL_DIR/html
 </code></pre>
-<p>这个是怎么来的,其实是拼凑过来的,因为这是图片,是这个的简化版:<br>
-<img src="https://img-blog.csdnimg.cn/20200127164352187.png" alt="在这里插入图片描述" loading="lazy"><br>
-(<a href="https://blog.csdn.net/yingtian648/article/details/79066800">博客在这里</a>)</p>
-<h2 id="33-上传文件">3.3 上传文件</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200128161254596.png" alt="在这里插入图片描述" loading="lazy"><br>
-参数为文件路径与文件名,然后使用OkHttpClient,因为是文件,用的body是MultipartBody,增加一个叫file的FormDataPart与一个叫filename的FormDataPart.然后使用execute()发送请求,body()获取响应内容,这里假设了后端响应一个布尔,表示上传成功或失败,url的话使用了本地的路径,注意不能是localhost,使用内网ip,然后还要与后端对应.</p>
-<h2 id="34-下载文件">3.4 下载文件</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200128161427455.png" alt="在这里插入图片描述" loading="lazy"><br>
-参数为一个文件名,根据这个文件名返回对应的文件,返回一个File,这里请求体可以选择FormBody或MultipartBody,因为这是一个文件名参数,这里笔者为了统一就选择了MultipartBody,使用FormBody的话,只需要将RequestBody的那一行改为:</p>
-<pre><code class="language-java">RequestBody body = new FormBody.Builder().add(&quot;filename&quot;,filename).build();
+<p>webroot的话就直接使用Nginx的默认文档根目录。好了之后会看到这样的提示：<br>
+<img src="https://img-blog.csdnimg.cn/20200317010637741.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert \
+-d www.test.com \
+--keypath /xxxx/xxx.key \
+--fullchainpath /xxx/xxx.pem
 </code></pre>
-<p>有了请求体后发送请求获取响应体,进而获取输入流,然后首先需要判断是否为空,但不能直接这样判断:</p>
-<pre><code class="language-java">inputStream == null
+<p>路径与名字随便，后缀不能变。<br>
+<img src="https://img-blog.csdnimg.cn/2020031701091843.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="313-nginx配置">3.1.3 Nginx配置</h3>
+<p>修改Nginx配置文件：</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/conf
+cp nginx.conf nginx.conf.bak
+vim nginx.conf
 </code></pre>
-<p>因为后端是这样的:<br>
-<img src="https://img-blog.csdnimg.cn/20200128161951334.png" alt="在这里插入图片描述" loading="lazy"><br>
-从响应体获取的inputStream肯定不为null,需要先进行一次读取(也就是判断里面的文件是否为null),若为null的话删除这个文件,不为null的话继续读取并写入文件.</p>
-<h1 id="4-spring-boot">4 Spring Boot</h1>
-<h2 id="41-准备工作">4.1 准备工作</h2>
-<p>用的是IDEA,其他IDE请自行搜索如何新建一个SpringBoot工程.</p>
-<h3 id="411-新建工程">4.1.1 新建工程</h3>
-<p><img src="https://img-blog.csdnimg.cn/20200127172340171.png" alt="在这里插入图片描述" loading="lazy"><br>
-打包的话可以jar或war,不用部署的话jar即可,要部署的话后期也可以改成war.<br>
-<img src="https://img-blog.csdnimg.cn/20200127172434434.png" alt="在这里插入图片描述" loading="lazy"><br>
-两个,一个Spring Web,用于MVC等,一个模板引擎,用于显示视图,如果不需要显示可以不选.<br>
-<img src="https://img-blog.csdnimg.cn/20200127172855499.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="412-applicationproperties">4.1.2 application.properties</h3>
-<p>作为一个示例demo,属性就直接在application.properties中配置了,实际情况请在相应的配置文件中配置相应属性.<br>
-<img src="https://img-blog.csdnimg.cn/20200128032048667.png" alt="在这里插入图片描述" loading="lazy"><br>
-需要配置上传文件的大小限制与上传文件夹的路径.</p>
-<h3 id="413-pomxml">4.1.3 pom.xml</h3>
-<p>这里其实不需要干什么,只是如果下载依赖慢的话,可以这样设置settings.xml文件,在&lt;mirrors&gt;中加上:</p>
+<p>找到HTTPS server这一行，这里是96行，把从server开始到最后一个花括号的代码全部去掉注释。<br>
+<img src="https://img-blog.csdnimg.cn/20200317011257305.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改这三行，server_name填域名，ssl_certificate填刚才的pem文件路径，ssl_certificate_key填刚才的key文件路径。路径建议绝对路径，可以不加双引号。<br>
+<img src="https://img-blog.csdnimg.cn/20200317011502176.png" alt="在这里插入图片描述" loading="lazy"><br>
+记得记得要加上一行ssl协议：<br>
+<img src="https://img-blog.csdnimg.cn/20200317014031227.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="314-测试">3.1.4 测试</h3>
+<p>可以先使用-t测试语法错误：</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sbin
+./nginx -t
+</code></pre>
+<p>ok的话，重启服务并输入域名测试：</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sbin
+./nginx -s stop
+./nginx
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317014120675.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/2020031701405932.png" alt="在这里插入图片描述" loading="lazy"><br>
+成功！</p>
+<h2 id="32-从仓库安装nginx1161">3.2 从仓库安装Nginx(1.16.1)</h2>
+<h3 id="321-安装nginx">3.2.1 安装Nginx</h3>
+<p>从仓库安装就简单多了，一行就可以了，系统Centos，其他自行搜索：</p>
+<pre><code class="language-bash">yum install nginx
+</code></pre>
+<p>可以先测试一下，直接用</p>
+<pre><code class="language-bash">nginx
+</code></pre>
+<p>开启服务，然后浏览器输入公网ip：<br>
+<img src="https://img-blog.csdnimg.cn/20200317014949623.png" alt="在这里插入图片描述" loading="lazy"><br>
+（笔者有点怀疑是不是装了个假的Nginx，两个的主页居然不一样。。。。）</p>
+<h3 id="322-证书处理">3.2.2 证书处理</h3>
+<p>没安装acme.sh的先安装：</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p>申请证书：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot /usr/share/nginx/html
+</code></pre>
+<p>安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert \
+-d www.test.com \
+--keypath /xxxx/xxx.key \
+--fullchainpath /xxx/xxx.pem
+</code></pre>
+<h3 id="323-nginx配置">3.2.3 Nginx配置</h3>
+<p>同样先备份：</p>
+<pre><code class="language-bash">cd /etc/nginx
+cp nginx.conf nginx.conf.bak
+vim nginx.conf
+</code></pre>
+<p>这里的配置比编译安装的又多了不少，一样从server（61行）开始去掉注释：<br>
+<img src="https://img-blog.csdnimg.cn/20200317015539790.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改三行：<br>
+<img src="https://img-blog.csdnimg.cn/20200317015723131.png" alt="在这里插入图片描述" loading="lazy"><br>
+server_name填域名，ssl_certificate填pem文件，ssl_certificate_key填key文件。<br>
+最后增加一行ssl协议：<br>
+<img src="https://img-blog.csdnimg.cn/20200317025303324.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="324-测试">3.2.4 测试</h3>
+<p>可以先用-t测试语法错误：</p>
+<pre><code class="language-bash">nginx -t
+</code></pre>
+<p>ok的话重启服务：</p>
+<pre><code class="language-bash">nginx -s stop
+nginx
+</code></pre>
+<p>浏览器输入域名访问：<br>
+<img src="https://img-blog.csdnimg.cn/20200317025240627.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317025401531.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-apache">4 Apache</h1>
+<p>Apache也有两种安装方式，从源码编译安装与从仓库安装。</p>
+<h2 id="41-编译安装的apache2441">4.1 编译安装的Apache(2.4.41)</h2>
+<h3 id="411-安装apache">4.1.1 安装Apache</h3>
+<p>编译安装Apache比较麻烦，需要安装pcre，apr，apr-util，生成Makefile时需要指定以下几个选项：</p>
+<pre><code class="language-bash">--with-apr \
+--with-apr-util \
+--with-pcre \
+--enable-ssl \
+--with-ssl 
+</code></pre>
+<p>具体可以看<a href="https://blog.csdn.net/qq_27525611/article/details/104716600">这里</a>。<br>
+安装好了之后需要先确定ssl模块是否存在：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/modules
+ls | grep ssl
+</code></pre>
+<p>如果没有显示mod_ssl.so，则需要重新安装，确定生成Makefile时没有漏掉</p>
+<pre><code class="language-bash">--enable-ssl
+与
+--with-ssl
+</code></pre>
+<p>如果有ssl模块，直接修改配置文件测试一下。</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/conf
+vim httpd.conf
+</code></pre>
+<p>修改ServerName为</p>
+<pre><code class="language-bash">localhost:80
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317112929230.png" alt="在这里插入图片描述" loading="lazy"><br>
+启动服务输入localhost测试：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/bin
+./apachectl
+</code></pre>
+<p>页面只有一行It works!：<br>
+<img src="https://img-blog.csdnimg.cn/20200317113052882.png" alt="在这里插入图片描述" loading="lazy"><br>
+（话说这和仓库安装的Apache首页差距这么大。。。）</p>
+<h3 id="412-证书处理">4.1.2 证书处理</h3>
+<p>没安装acme.sh的先安装：</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p>申请证书：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot APACHE_INSTALL_DIR/htdocs
+</code></pre>
+<p>这里webroot为Apache默认的文档根目录.<br>
+安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert -d www.test.com \
+--key-file /xxxx/xxx.key \
+--cert-file /xxxx/xxxx.crt \
+--fullchain-file /xxx/xxxfullchain.crt 
+</code></pre>
+<p>路径与名字随便，后缀名不能变。</p>
+<h3 id="413-apache配置">4.1.3 Apache配置</h3>
+<p>首先修改conf/httpd.conf：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/conf
+cp httpd.conf httpd.conf.bak
+vim httpd.conf
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317133511616.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317132738142.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317132745841.png" alt="在这里插入图片描述" loading="lazy"><br>
+找到这三行，去掉注释。<br>
+然后修改httpd-ssl.conf:</p>
+<pre><code class="language-bash">cd extra
+cp http-ssl.conf http-ssl.conf.bak
+vim httpd-ssl.conf
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317133012729.png" alt="在这里插入图片描述" loading="lazy"><br>
+DocumentRoot可以默认，ServerName改成</p>
+<pre><code class="language-bash">www.test.com:443
+</code></pre>
+<p>然后修改这三行，把证书的文件相应填入。<br>
+<img src="https://img-blog.csdnimg.cn/20200317133145247.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="414-测试">4.1.4 测试</h3>
+<p>语法检查：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/bin
+./apachectl -t
+</code></pre>
+<p>没有错误之后重启服务：</p>
+<pre><code class="language-bash">./apachectl stop
+./apachectl
+</code></pre>
+<p>浏览器输入域名访问：<br>
+<img src="https://img-blog.csdnimg.cn/20200317133911280.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317133855215.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="42-从仓库安装的apache246">4.2 从仓库安装的Apache(2.4.6)</h2>
+<h3 id="421-安装apache">4.2.1 安装Apache</h3>
+<pre><code class="language-bash">yum install httpd
+</code></pre>
+<p>修改配置文件并进行测试：</p>
+<pre><code class="language-bash">cd /etc/httpd/conf
+cp httpd.conf httpd.conf.bak
+vim httpd.conf
+</code></pre>
+<p>找到ServerName改成</p>
+<pre><code class="language-bash">localhost:80
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317030501258.png" alt="在这里插入图片描述" loading="lazy"><br>
+开启服务后输入localhost:80.</p>
+<pre><code class="language-bash">systemctl start httpd
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317030857326.png" alt="在这里插入图片描述" loading="lazy"><br>
+另外要确保ssl模块存在：</p>
+<pre><code class="language-bash">cd /etc/httpd/modules
+ls | grep ssl
+</code></pre>
+<p>如果没有输出的话，证明没有ssl模块，需要安装：</p>
+<pre><code class="language-bash">yum install mod_ssl
+</code></pre>
+<p>再一次grep：</p>
+<pre><code class="language-bash">ls | grep ssl
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200317031220343.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="422-证书处理">4.2.2 证书处理</h3>
+<p>没安装acme.sh的先安装：</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p>申请证书：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot /var/www/html
+</code></pre>
+<p>其中/var/www/html为Apache默认文档根目录。<br>
+安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert -d www.test.com \
+--key-file /xxxx/xxx.key \
+--cert-file /xxxx/xxxx.crt \
+--fullchain-file /xxx/xxxfullchain.crt 
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200317032615967.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="423-apache配置">4.2.3 Apache配置</h3>
+<p>修改ssl.conf:</p>
+<pre><code class="language-bash">cd /etc/httpd/conf.d
+cp ssl.conf ssl.conf.bak
+vim ssl.conf
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317034408977.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改ServerName与DocumentRoot，ServerName填域名，DocumentRoot直接去掉注释。接着修改以下三行，根据刚才生成的三个文件对应填入即可。<br>
+<img src="https://img-blog.csdnimg.cn/2020031703450263.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="424-测试">4.2.4 测试</h3>
+<pre><code class="language-bash">apachectl -t
+</code></pre>
+<p>没有语法错误就重启服务：</p>
+<pre><code class="language-bash">systemctl stop httpd
+systemctl start httpd
+</code></pre>
+<p>浏览器输入访问：<br>
+<img src="https://img-blog.csdnimg.cn/20200317034119940.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-总结">5 总结</h1>
+<p>其实这里采用了比较麻烦的方式手动安装证书，acme.sh其实还有更简单的不需要webroot的命令：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --apache
+acme.sh --issue -d www.test.com --nginx
+</code></pre>
+<p>另外还可以通过手动dns的方式：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --dns dns_xxx
+</code></pre>
+<p>这种方式可以利用域名解析商提供的api自动添加记录完成认证，可以参考<a href="https://calfsoft.com/2018/12/06/Acme-Aliyun/#%E5%AE%89%E8%A3%85-acme-sh">这里</a>。<br>
+另外文章没有说到证书过期更新的问题，可以看官方中文说明，<a href="https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E">这里</a>。<br>
+除此之外还可以利用openssl使安全性的评分更高，<a href="https://www.ssllabs.com/ssltest/">测试网站这里</a>，<a href="https://www.jianshu.com/p/b6b172f69c14">修改配置这里</a>。<br>
+还有最后一个,现有云服务器厂商提供了免费的证书购买，如阿里云，可以直接购买免费证书然后利用文档安装到服务器上。</p>
+<p>祝你们早日有一个属于自己的https的网站。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Github Pages+Gridea搭建个人博客]]></title>
+        <id>https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/</id>
+        <link href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/">
+        </link>
+        <updated>2020-06-02T21:09:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>Github Pages可以用来托管个人网站，静态的，便于用来实现博客，可以在一个仓库的settings中开启：<br>
+<img src="https://img-blog.csdnimg.cn/2020031520214830.png" alt="在这里插入图片描述" loading="lazy"><br>
+Gridea是一个静态博客写作客户端，所有文件都在本地，没有数据库，实现简单，支持Markdown。<br>
+<img src="https://img-blog.csdnimg.cn/20200315202345239.png" alt="在这里插入图片描述" loading="lazy"><br>
+好了不多说开始动手。</p>
+<h1 id="2-准备工作">2 准备工作</h1>
+<ul>
+<li>一个Gthub账号</li>
+<li>一个Github Pages的仓库</li>
+<li>一个Gridea客户端（支持Mac，Windows，Linux）</li>
+<li>（可选）一个域名</li>
+</ul>
+<h1 id="3-github-pages">3 Github Pages</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200315203349869.png" alt="在这里插入图片描述" loading="lazy"><br>
+仓库名是:</p>
+<pre><code>用户名.github.io
+</code></pre>
+<p>需要公开仓库与一个REDAME文件,然后创建.<br>
+<img src="https://img-blog.csdnimg.cn/20200315203610218.png" alt="在这里插入图片描述" loading="lazy"><br>
+进入设置开启Github Pages:<br>
+<img src="https://img-blog.csdnimg.cn/20200315203501765.png" alt="在这里插入图片描述" loading="lazy"><br>
+下拉找到Github Pages:<br>
+<img src="https://img-blog.csdnimg.cn/20200315203715972.png" alt="在这里插入图片描述" loading="lazy"><br>
+默认使用master分支,可以选择主题.<br>
+<img src="https://img-blog.csdnimg.cn/20200315203800731.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后在浏览器输入刚才创建的仓库名就可以访问了.<br>
+<img src="https://img-blog.csdnimg.cn/20200315203855310.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-gridea">4 Gridea</h1>
+<p>理论上来说这样就完成了,但是如果想更好看和更方便管理一些,就要用Gridea.<br>
+先去下载,<a href="https://gridea.dev/">官网这里</a>.<br>
+下载之后直接打开,进入设置:<br>
+<img src="https://img-blog.csdnimg.cn/2020031520443512.png" alt="在这里插入图片描述" loading="lazy"><br>
+域名与仓库名一样,分支填master,email自己填,这里说一下Token.打开设置中的开发者设置:<br>
+<img src="https://img-blog.csdnimg.cn/20200315204535121.png" alt="在这里插入图片描述" loading="lazy"><br>
+新建一个Token:<br>
+<img src="https://img-blog.csdnimg.cn/20200315204615866.png" alt="在这里插入图片描述" loading="lazy"><br>
+只需要勾选仓库相关的权限,名字可以随便.<br>
+<img src="https://img-blog.csdnimg.cn/20200315204643285.png" alt="在这里插入图片描述" loading="lazy"><br>
+复制填入.<br>
+<img src="https://img-blog.csdnimg.cn/2020031520472566.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后可以测试一下连接:<br>
+<img src="https://img-blog.csdnimg.cn/20200315205359751.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200315205343447.png" alt="在这里插入图片描述" loading="lazy"><br>
+若失败请返回前几步看看哪里出错.<br>
+设置好了之后可以设置主题等,自定义美化.<br>
+<img src="https://img-blog.csdnimg.cn/20200315205847245.png" alt="在这里插入图片描述" loading="lazy"><br>
+设置好了之后可以先预览再同步.<br>
+<img src="https://img-blog.csdnimg.cn/20200315210305371.png" alt="在这里插入图片描述" loading="lazy"><br>
+同步完成后就可以在浏览器输入</p>
+<pre><code class="language-bash">用户名.github.io
+</code></pre>
+<p>进行访问了.</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200315234157577.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-绑定域名可选">5 绑定域名(可选)</h1>
+<p>如果购买了域名的话,可以绑定到自己的域名上面,笔者的域名是阿里云上购买的,因此这里以阿里云的为例,进入域名的解析页面,添加两个记录:<br>
+<img src="https://img-blog.csdnimg.cn/20200316000331100.png" alt="在这里插入图片描述" loading="lazy"><br>
+第一个记录类型是CNAME,主机记录是www,记录值为仓库的名字.<br>
+第二个记录类型是A,主机记录是@,记录值为ping仓库名字得到的ip.<br>
+若成功的话会这样显示:<br>
+<img src="https://img-blog.csdnimg.cn/20200316000551553.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加之后在Gridea的客户端中设置的CNAME添加域名:<br>
+<img src="https://img-blog.csdnimg.cn/20200316000202462.png" alt="在这里插入图片描述" loading="lazy"><br>
+使用左下角的按钮测试一下,测试通过之后就可以通过域名访问了.<br>
+如果想通过https访问,直接在Github Pages中设置Enforce HTTPS即可(解析域名之后需要一定时间才可以勾选).<br>
+<img src="https://img-blog.csdnimg.cn/20200316143452174.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200316143701802.png" alt="在这里插入图片描述" loading="lazy"><br>
+之后就可以通过https访问了.<br>
+<img src="https://img-blog.csdnimg.cn/20200316145611495.png" alt="在这里插入图片描述" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[编译安装Apache遇到的缺少expat.h与undefined reference to `XML_GetErrorCode'错误]]></title>
+        <id>https://2293736867.github.io/post/bian-yi-an-zhuang-apache-yu-dao-de-que-shao-expath-yu-undefined-reference-to-xml_geterrorcodecuo-wu/</id>
+        <link href="https://2293736867.github.io/post/bian-yi-an-zhuang-apache-yu-dao-de-que-shao-expath-yu-undefined-reference-to-xml_geterrorcodecuo-wu/">
+        </link>
+        <updated>2020-06-02T21:09:07.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-缺少expath">1 缺少expat.h</h1>
+<p>编译安装Apache需要apr-util，而在编译安装apr-util时提示说缺少expat.h，此时直接安装expat库即可（centos）：</p>
+<pre><code class="language-bash">yum install expat-devel
+</code></pre>
+<h1 id="2-undefined-reference-to-xml_geterrorcode">2 undefined reference to `XML_GetErrorCode'</h1>
+<p>首先安装libxml2-devel包：</p>
+<pre><code class="language-bash">yum install libxml2-devel
+</code></pre>
+<p>接着删除apr-util安装目录并重新编译安装：</p>
+<pre><code class="language-bash">sudo rm -rf /usr/local/apr-util
+cd apr-util
+make clean
+./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
+make
+make install
+</code></pre>
+<p>目录的话根据需要修改，最后重新编译安装apache：</p>
+<pre><code class="language-bash">cd httpd-xxxxx
+make clean
+./configure \
+--prefix=/usr/local/apache \
+--with-apr=/usr/local/apr \
+--with-apr-util=/usr/local/apr-util \
+--with-pcre=/usr/local/pcre
+</code></pre>
+<p>同样目录按需修改。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Android Activity间跳转与传递数据]]></title>
+        <id>https://2293736867.github.io/post/android-activity-jian-tiao-zhuan-yu-chuan-di-shu-ju/</id>
+        <link href="https://2293736867.github.io/post/android-activity-jian-tiao-zhuan-yu-chuan-di-shu-ju/">
+        </link>
+        <updated>2020-06-02T21:08:41.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-activity%E9%97%B4%E8%B7%B3%E8%BD%AC">2 Activity间跳转</a>
+<ul>
+<li><a href="#21-%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC">2.1 直接跳转</a></li>
+<li><a href="#22-%E5%9B%9E%E8%B0%83">2.2 回调</a></li>
+</ul>
+</li>
+<li><a href="#3-activity%E9%97%B4%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE">3 Activity间传递数据</a>
+<ul>
+<li><a href="#31-%E4%BC%A0%E9%80%92%E6%99%AE%E9%80%9A%E6%95%B0%E6%8D%AE">3.1 传递普通数据</a></li>
+<li><a href="#32-%E4%BC%A0%E9%80%92%E4%B8%80%E7%BB%84%E6%95%B0%E6%8D%AE">3.2 传递一组数据</a></li>
+<li><a href="#33-%E4%BC%A0%E9%80%92%E5%AF%B9%E8%B1%A1">3.3 传递对象</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%BA%90%E7%A0%81">4 源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>Activity之间的跳转主要使用</p>
+<pre><code class="language-java">startActivity(Intent intent);
+startActivityForResult(Intent intent,int requestCode);
+</code></pre>
+<p>这两个函数,传递数据的话利用Intent进行传递,负责数据需要配合Bundle使用.这篇文章讲述了如何利用这两个函数在Activity之间的跳转以及传递数据.</p>
+<h1 id="2-activity间跳转">2 Activity间跳转</h1>
+<h2 id="21-直接跳转">2.1 直接跳转</h2>
+<p>这里有两个Activity:FirstActivity与SecondActivity,从FirstActivity中跳转到SecondActivity中只需要一个startActivity()即可:</p>
+<pre><code class="language-java">startActivity(new Intent(this,SecondActivity.class));
+</code></pre>
+<p>一般需要在SecondActivity中加上finish()函数,表示这个Activity结束,比如这里直接在SecondActivity的按钮事件里面加上了finish():<br>
+<img src="https://img-blog.csdnimg.cn/20200313175708560.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200313175544752.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="22-回调">2.2 回调</h2>
+<p>很多情况下需要在FirstActivity跳转到SecondActivity后,在SecondActivity进行相应的操作,如更新数据之类,然后返回FirstActivity,通知FirstActivity执行某些操作,这时候就需要使用startActivityForResult().<br>
+startActivityForResult有两个参数,一个是Intent,表示将要跳转的Activity,一个是requestCode(int类型),表示请求码,用于调用Activity的onActivityResult()函数.<br>
+如FirstActivity中:</p>
+<pre><code class="language-java">startActivityForResult(new Intent(this,SecondActivity.class),11);
+</code></pre>
+<p>这里11就是请求码,然后在SecondActivity中,使用setResult()函数:</p>
+<pre><code class="language-java">setResult(22,new Intent().putExtra(&quot;str&quot;,&quot;from second activity&quot;));
+</code></pre>
+<p>setResult()接受两个参数,第一个参数表示resultCode,从这个SecondActivity返回的结果码,另一个Intent,表示要返回给FirstActivity的数据.<br>
+最后在FirstActivity中重载onActivityResult():<br>
+<img src="https://img-blog.csdnimg.cn/20200313181120869.png" alt="在这里插入图片描述" loading="lazy"><br>
+onActivityResult中判断请求码与结果码后进行相应操作.<br>
+<img src="https://img-blog.csdnimg.cn/2020031319241029.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-activity间传递数据">3 Activity间传递数据</h1>
+<h2 id="31-传递普通数据">3.1 传递普通数据</h2>
+<p>传递普通类型的数据直接使用Intent的putExtra()即可,putExtra接受两个参数,第一个是一个String,表示键,第二个是值,类型可以是byte,char,short,long等基本类型与这些基本类型组成的数组,当然String也可以.<br>
+<img src="https://img-blog.csdnimg.cn/20200313192606644.png" alt="在这里插入图片描述" loading="lazy"><br>
+比如在FirstActivity中,传递数据给SecondActivity:<br>
+<img src="https://img-blog.csdnimg.cn/20200313194509387.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后在SecondActivity中使用getIntent()获取Intent后,再从里面获取数据:<br>
+<img src="https://img-blog.csdnimg.cn/20200313193039193.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果想从SecondActivity中返回数据给FirstActivity,也就是从被调用的Activity中返回数据,可以使用前面介绍过的setResult()方法.<br>
+其中第二个参数是一个用于存储数据的Intent,把数据put进去即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200313194352444.png" alt="在这里插入图片描述" loading="lazy"><br>
+最后记得在onActivityResult做相应的判断处理:<br>
+<img src="https://img-blog.csdnimg.cn/20200313194455707.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200313194804122.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="32-传递一组数据">3.2 传递一组数据</h2>
+<p>当数据的种类变多时,比如混合了int,String,byte,char等,可以对逐个类型使用putExtra(),但更好的方法是使用Bundle.<br>
+Bundle的使用与Intent类似,也是对于不同的类型采用键值对的添加方法,直接putXXX:<br>
+<img src="https://img-blog.csdnimg.cn/20200313193559947.png" alt="在这里插入图片描述" loading="lazy"><br>
+数据添加完毕之后,在intent中使用putExtras(bundle):<br>
+<img src="https://img-blog.csdnimg.cn/20200313193640307.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后就可以在SecondActivity中接收数据了.<br>
+首先需要使用getIntent().getExtras()获取Bundle,再获取里面的数据.<br>
+<img src="https://img-blog.csdnimg.cn/20200313193854303.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意一下获取到的Bundle有可能为null,取数据前需要判断一下.<br>
+<img src="https://img-blog.csdnimg.cn/20200313194206415.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="33-传递对象">3.3 传递对象</h2>
+<p>如果想要传递的数据是一个对象怎么办?难道对每一个属性都使用getter再放进去吗?<br>
+并不是,Bundle提供了一个处理序列化对象的方法:<br>
+<img src="https://img-blog.csdnimg.cn/20200313195006276.png" alt="在这里插入图片描述" loading="lazy"><br>
+只要对象实现了Serializable,就可以被Bundle处理,比如这里有一个测试类Student:<br>
+<img src="https://img-blog.csdnimg.cn/20200313195514596.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后在FirstActivity中直接new一个,并使用Bundle的putSerializable即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200313195505432.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着再SecondActivity中通过Intent取出Bundle后,使用其中的getSerializable()取出对象,最后使用强制类型转换:<br>
+<img src="https://img-blog.csdnimg.cn/20200313200439154.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200313200747507.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-源码">4 源码</h1>
+<p><a href="https://github.com/2293736867/AndroidActivityJump">github</a><br>
+<a href="https://gitee.com/imykr/AndroidActivityJump">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[一文吃透jQuery选择器!]]></title>
+        <id>https://2293736867.github.io/post/yi-wen-chi-tou-jquery-xuan-ze-qi/</id>
+        <link href="https://2293736867.github.io/post/yi-wen-chi-tou-jquery-xuan-ze-qi/">
+        </link>
+        <updated>2020-06-02T21:08:22.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-jquery%E9%80%89%E6%8B%A9%E5%99%A8">1 jQuery选择器</a></li>
+<li><a href="#2-%E5%9F%BA%E6%9C%AC%E9%80%89%E6%8B%A9%E5%99%A8">2 基本选择器</a>
+<ul>
+<li><a href="#21-id%E9%80%89%E6%8B%A9%E5%99%A8">2.1 id选择器</a></li>
+<li><a href="#22-%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">2.2 元素选择器</a></li>
+<li><a href="#23-%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8">2.3 类选择器</a></li>
+<li><a href="#24-%E9%80%9A%E9%85%8D%E7%AC%A6%E9%80%89%E6%8B%A9%E5%99%A8">2.4 通配符选择器</a></li>
+<li><a href="#25-%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A8">2.5 组合选择器</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%B1%82%E7%BA%A7%E9%80%89%E6%8B%A9%E5%99%A8">3 层级选择器</a>
+<ul>
+<li><a href="#31-%E5%90%8E%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">3.1 后代选择器</a></li>
+<li><a href="#32-%E5%AD%90%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">3.2 子代选择器</a></li>
+<li><a href="#33-%E7%9B%B8%E9%82%BB%E9%80%89%E6%8B%A9%E5%99%A8">3.3 相邻选择器</a></li>
+<li><a href="#34-%E5%85%84%E5%BC%9F%E9%80%89%E6%8B%A9%E5%99%A8">3.4 兄弟选择器</a></li>
+</ul>
+</li>
+<li><a href="#4-%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">4 过滤选择器</a>
+<ul>
+<li><a href="#41-%E5%9F%BA%E6%9C%AC%E8%BF%87%E6%BB%A4%E5%99%A8">4.1 基本过滤器</a>
+<ul>
+<li><a href="#411-%E4%B8%A4%E7%AB%AF%E7%B1%BB">4.1.1 两端类</a></li>
+<li><a href="#412-%E8%8C%83%E5%9B%B4%E7%B4%A2%E5%BC%95%E7%B1%BB">4.1.2 范围索引类</a></li>
+<li><a href="#413-%E5%A5%87%E5%81%B6%E7%B1%BB">4.1.3 奇偶类</a></li>
+<li><a href="#414-%E5%85%B6%E4%BB%96">4.1.4 其他</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4%E5%99%A8">4.2 内容过滤器</a></li>
+<li><a href="#43-%E5%8F%AF%E8%A7%81%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.3 可见性过滤器</a></li>
+<li><a href="#44-%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.4 属性过滤器</a></li>
+<li><a href="#45-%E5%AD%90%E5%85%83%E7%B4%A0%E8%BF%87%E6%BB%A4%E5%99%A8">4.5 子元素过滤器</a>
+<ul>
+<li><a href="#451-%E7%B4%A2%E5%BC%95%E8%BF%87%E6%BB%A4%E5%99%A8">4.5.1 索引过滤器</a>
+<ul>
+<li><a href="#4511-first-child%E4%B8%8Elast-child">4.5.1.1 first-child与last-child</a></li>
+<li><a href="#4512-nth-child%E4%B8%8Enth-last-child19">4.5.1.2 nth-child与nth-last-child(1.9+)</a></li>
+</ul>
+</li>
+<li><a href="#452-%E7%B1%BB%E5%9E%8B%E8%BF%87%E6%BB%A4%E5%99%A819">4.5.2 类型过滤器(1.9+)</a></li>
+<li><a href="#453-%E5%94%AF%E4%B8%80%E8%BF%87%E6%BB%A4%E5%99%A8">4.5.3 唯一过滤器</a></li>
+</ul>
+</li>
+<li><a href="#46-%E8%A1%A8%E5%8D%95%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.6 表单对象属性过滤器</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%A1%A8%E5%8D%95%E9%80%89%E6%8B%A9%E5%99%A8">5 表单选择器</a>
+<ul>
+<li><a href="#51-%E6%96%87%E6%9C%AC%E6%A1%86%E7%B1%BB">5.1 文本框类</a></li>
+<li><a href="#52-%E9%80%89%E6%8B%A9%E6%A1%86%E7%B1%BB">5.2 选择框类</a></li>
+<li><a href="#53-%E6%8C%89%E9%92%AE%E7%B1%BB">5.3 按钮类</a></li>
+<li><a href="#54-%E5%85%B6%E4%BB%96">5.4 其他</a></li>
+<li><a href="#55-%E4%BE%8B%E5%AD%90">5.5 例子</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-jquery选择器">1 jQuery选择器</h1>
+<p>jQuery选择器用于选择DOM元素进行相应操作,允许通过多种方式选择,包括标签名,属性名,类名,id等对元素进行选择,基于CSS选择器.jQuery中所有的选择器都以$符号开头,后面加一对括号.<br>
+jQuery选择器可以分为基本选择器,层次选择器,过滤选择器与表单选择器.</p>
+<h1 id="2-基本选择器">2 基本选择器</h1>
+<p>基本选择器可以分成五个:</p>
+<ul>
+<li>id选择器</li>
+<li>元素选择器</li>
+<li>类选择器</li>
+<li>通配符选择器</li>
+<li>组合选择器</li>
+</ul>
+<h2 id="21-id选择器">2.1 id选择器</h2>
+<p>id选择器根据给定的id匹配一个元素,以</p>
+<pre><code>#
+</code></pre>
+<p>开头,如有:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>则选择器</p>
+<pre><code class="language-js">$(&quot;#div1&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312085650883.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果id中含有特殊字符,比如点:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1.1.1&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>则需要使用双反斜杠转义:</p>
+<pre><code class="language-js">$(&quot;#div1\\.1\\.1&quot;)
+</code></pre>
+<h2 id="22-元素选择器">2.2 元素选择器</h2>
+<p>根据元素的标签名查找所有符合的元素.假设有:</p>
+<pre><code class="language-html">&lt;div&gt;1&lt;/div&gt;
+&lt;div&gt;2&lt;/div&gt;
+&lt;div&gt;3&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div&quot;)
+</code></pre>
+<p>会选择所有div元素.<br>
+<img src="https://img-blog.csdnimg.cn/20200312090242302.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="23-类选择器">2.3 类选择器</h2>
+<p>根据给定的css类名匹配元素,以</p>
+<pre><code>.
+</code></pre>
+<p>开头.如有:</p>
+<pre><code class="language-html">&lt;div class=&quot;class1&quot;&gt;&lt;/div&gt;
+&lt;p class=&quot;class1&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;class2&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;.class1&quot;)
+</code></pre>
+<p>会选择:<br>
+<img src="https://img-blog.csdnimg.cn/20200312090622567.png" alt="在这里插入图片描述" loading="lazy"><br>
+选择器</p>
+<pre><code class="language-js">$(&quot;.class2&quot;)
+</code></pre>
+<p>会选择:<br>
+<img src="https://img-blog.csdnimg.cn/20200312090659823.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="24-通配符选择器">2.4 通配符选择器</h2>
+<p>选择所有的元素.</p>
+<pre><code class="language-html">&lt;div&gt;div&lt;/div&gt;
+&lt;p&gt;p&lt;/p&gt;
+&lt;span&gt;span&lt;/span&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;*&quot;)
+</code></pre>
+<p>会显示<br>
+<img src="https://img-blog.csdnimg.cn/20200312090926891.png" alt="在这里插入图片描述" loading="lazy"><br>
+也就是说整个&lt;html&gt;都在选择范围内,不仅仅是&lt;body&gt;.<br>
+若要选择&lt;body&gt;内的元素,可用</p>
+<pre><code class="language-js">$(&quot;body *&quot;)
+</code></pre>
+<h2 id="25-组合选择器">2.5 组合选择器</h2>
+<p>组合选择器就是多个选择器的组合,用</p>
+<pre><code>,
+</code></pre>
+<p>分隔每一个选择器,如有:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;class1&quot;&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;div class=&quot;class2&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;#div1,p,.class2&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312091320971.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-层级选择器">3 层级选择器</h1>
+<p>层级选择器共有四种:后代选择器,子代选择器,相邻选择器,兄弟选择器.</p>
+<h2 id="31-后代选择器">3.1 后代选择器</h2>
+<p>根据祖先元素选择所有的后代元素,使用空格分隔,如有</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;div id=&quot;div2&quot;&gt;
+        &lt;div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;div3&quot;&gt;
+        &lt;div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;#div1 div&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312093623872.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="32-子代选择器">3.2 子代选择器</h2>
+<p>选择给定父元素下的所有子元素,使用</p>
+<pre><code>&gt;
+</code></pre>
+<p>分隔,同样上面的例子:</p>
+<pre><code class="language-js">$(&quot;#div1&gt;div&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312093753914.png" alt="在这里插入图片描述" loading="lazy"><br>
+<strong>两者的区别在于后代选择器会选择所有的后代,不管里面有多少后代(层),而子选择器只会选择直接后代,也就是只选择&quot;一代&quot;后代(层).</strong></p>
+<h2 id="33-相邻选择器">3.3 相邻选择器</h2>
+<p>选择紧接在指定元素后面的元素,用</p>
+<pre><code>+
+</code></pre>
+<p>分隔,如有</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;div id=&quot;div2&quot;&gt;&lt;/div&gt;
+&lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;#div1+p&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312102652496.png" alt="在这里插入图片描述" loading="lazy"><br>
+可用</p>
+<pre><code class="language-js">.next()
+</code></pre>
+<p>代替,如上面的例子可以变为</p>
+<pre><code class="language-js">$(&quot;#div1&quot;).next()
+</code></pre>
+<h2 id="34-兄弟选择器">3.4 兄弟选择器</h2>
+<p>选择之后的所有兄弟元素,用</p>
+<pre><code>~
+</code></pre>
+<p>分隔,如有</p>
+<pre><code class="language-html">&lt;div&gt;
+	&lt;p&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>则</p>
+<pre><code class="language-js">$(&quot;div~p&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312094857604.png" alt="在这里插入图片描述" loading="lazy"><br>
+可用</p>
+<pre><code class="language-js">.nextAll()
+</code></pre>
+<p>代替,如上面的例子可以表示为:</p>
+<pre><code class="language-js">$(&quot;div&quot;).nextAll(&quot;p&quot;)
+</code></pre>
+<p>如果没有加上p选择器:</p>
+<pre><code class="language-js">$(&quot;div&quot;).nextAll()
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312095431456.png" alt="在这里插入图片描述" loading="lazy"><br>
+等价于</p>
+<pre><code class="language-js">$(&quot;div~*&quot;)
+</code></pre>
+<p><strong>与相邻选择器的区别:兄弟选择器会选择后面所有的兄弟,而相邻选择器只选择第一个兄弟.</strong></p>
+<h1 id="4-过滤选择器">4 过滤选择器</h1>
+<p>过滤选择器种类最多,可以分为:</p>
+<ul>
+<li>基本过滤器</li>
+<li>内容过滤器</li>
+<li>可见性过滤器</li>
+<li>属性过滤器</li>
+<li>子元素过滤器</li>
+<li>表单对象属性过滤器</li>
+</ul>
+<p>下面一个个进行说明.</p>
+<h2 id="41-基本过滤器">4.1 基本过滤器</h2>
+<p>根据某类过滤规则进行选择,以</p>
+<pre><code>:
+</code></pre>
+<p>开头.</p>
+<h3 id="411-两端类">4.1.1 两端类</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:first</td>
+<td>选择第一个元素</td>
+</tr>
+<tr>
+<td>:last</td>
+<td>选择最后一个元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div&gt;p:first&quot;)
+$(&quot;div&gt;p:last&quot;)
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200312104229381.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="412-范围索引类">4.1.2 范围索引类</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:eq(index)</td>
+<td>选择指定索引值元素</td>
+</tr>
+<tr>
+<td>:gt(index)</td>
+<td>选择大于给定索引值元素</td>
+</tr>
+<tr>
+<td>:lt(index)</td>
+<td>选择小于给定索引值元素</td>
+</tr>
+</tbody>
+</table>
+<p>注意索引从0开始,要与下面的:nth-child/:nth-last-child/:nth-of-type/:n-last-of-type区分.<br>
+html:</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;index0&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index3&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index5&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div&gt;p:eq(3)&quot;)
+$(&quot;div&gt;p:lt(2)&quot;)
+$(&quot;div&gt;p:gt(4)&quot;)
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200312105231149.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="413-奇偶类">4.1.3 奇偶类</h3>
+<p>选择索引值为奇/偶的元素,从0开始计数.</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:odd</td>
+<td>选择索引值为奇数的元素</td>
+</tr>
+<tr>
+<td>:even</td>
+<td>选择索引值为偶数的元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div&gt;p:odd&quot;)
+$(&quot;div&gt;p:even&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312104446666.png" alt="在这里插入图片描述" loading="lazy"><br>
+odd为什么是246?even为什么是135?<br>
+难道结果错了?</p>
+<p>并不是,下标从0开始计数,下标为0的&lt;p&gt;的id为p1,算进去偶数里了.<br>
+<img src="https://img-blog.csdnimg.cn/20200312104740554.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="414-其他">4.1.4 其他</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:header</td>
+<td>选择标题元素,如&lt;h1&gt;,&lt;h2&gt;</td>
+</tr>
+<tr>
+<td>:animated</td>
+<td>选择正在执行动画效果的元素</td>
+</tr>
+<tr>
+<td>:focus(1.6+)</td>
+<td>选择当前获取焦点的元素</td>
+</tr>
+<tr>
+<td>:root(1.9+)</td>
+<td>选择根元素,也就是&lt;html&gt;</td>
+</tr>
+<tr>
+<td>:target(1.9+)</td>
+<td>这个比较特殊,与URI有关,选择ID和特定标识符相匹配的元素<br>比如给定了URI http://xxx.com#ttt , $(&quot;p:ttt&quot;)会选择&lt;p id=&quot;ttt&quot;&gt;</td>
+</tr>
+<tr>
+<td>:lang(language)(1.9+)</td>
+<td>选择指定语言的所有元素</td>
+</tr>
+<tr>
+<td>:not(selector)</td>
+<td>反选器</td>
+</tr>
+</tbody>
+</table>
+<p>挑取一些简单演示,html:</p>
+<pre><code class="language-html">&lt;div lang=&quot;en&quot;&gt;
+    &lt;h1 id=&quot;h1&quot;&gt;&lt;/h1&gt;
+    &lt;h2 id=&quot;h2&quot;&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div lang=&quot;zh-CN&quot;&gt;&lt;/div&gt;
+&lt;div lang=&quot;en&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;:header&quot;)
+$(&quot;:root div&quot;)
+$(&quot;div:not(:lang(zh-CN))&quot;)
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200312110701888.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-内容过滤器">4.2 内容过滤器</h2>
+<p>四种:</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:contains(text)</td>
+<td>选择包含给定文本的元素</td>
+</tr>
+<tr>
+<td>:has(selector)</td>
+<td>选择含有过滤器所匹配的元素的元素</td>
+</tr>
+<tr>
+<td>:empty</td>
+<td>选择不包含子元素或文本为空的元素</td>
+</tr>
+<tr>
+<td>:parent</td>
+<td>选择含有子元素或文本为的元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;123&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;div id=&quot;div3&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div4&quot;&gt;123&lt;/div&gt;
+&lt;div id=&quot;div5&quot;&gt;&lt;/div&gt;
+&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;body *:contains(123)&quot;)
+$(&quot;body *:has(#div3)&quot;)
+$(&quot;body *:empty&quot;)
+$(&quot;div:parent&quot;)
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200312113250180.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="43-可见性过滤器">4.3 可见性过滤器</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:visible</td>
+<td>选择可见元素</td>
+</tr>
+<tr>
+<td>:hidden</td>
+<td>选择不可见元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;div2&quot; style=&quot;display: none;&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;body *:hidden&quot;);
+$(&quot;body *:visible&quot;);
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200312113649997.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="44-属性过滤器">4.4 属性过滤器</h2>
+<p>属性过滤器针对元素的属性进行过滤,包括有没有该属性,该属性的值,以某些值开头/结尾,包含某些值等,使用</p>
+<pre><code>[]
+</code></pre>
+<p>表示属性过滤器.</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[attr]</td>
+<td>选择包含attr属性的元素,常见的是[id],选择包含id属性的元素.</td>
+</tr>
+<tr>
+<td>[attr=value]</td>
+<td>选择attr属性为value的元素,如[name=123],[id=div1]</td>
+</tr>
+<tr>
+<td>[attr!=value]</td>
+<td><strong>选择不含有attr属性,或含有attr属性,但是值不为value的元素.等价于:not([attr=vale])</strong><br><br><strong>如果想要选择包含特定属性但是属性值不为value的元素请使用[attr]:not([attr=value])</strong></td>
+</tr>
+<tr>
+<td>[attr^=value]</td>
+<td>选择attr属性值是以value开始的元素</td>
+</tr>
+<tr>
+<td>[attr$=value]</td>
+<td>选择attr属性值是以value结尾的元素</td>
+</tr>
+<tr>
+<td>[attr*=value]</td>
+<td>选择attr属性值是包含value的元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;div2&quot; name=&quot;div2&quot;&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div id=&quot;div3&quot; name=&quot;div3&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;[id]&quot;)
+$(&quot;[id$=3]&quot;)
+$(&quot;body *[name!=div2]&quot;)
+$(&quot;body *[name*=div]&quot;)
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200312115227135.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="45-子元素过滤器">4.5 子元素过滤器</h2>
+<p>可以按照索引顺序(即第一个,倒数第几个等)或者按照类型或者按照唯一性对子元素进行过滤.</p>
+<h3 id="451-索引过滤器">4.5.1 索引过滤器</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:first-child</td>
+<td>选择第一个子元素,等价于:nth-child(1)</td>
+</tr>
+<tr>
+<td>:last-child</td>
+<td>选择最后一个子元素</td>
+</tr>
+<tr>
+<td>:nth-child</td>
+<td>选择第n个子元素</td>
+</tr>
+<tr>
+<td>:nth-last-child</td>
+<td>选择倒数第n个子元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4511-first-child与last-child">4.5.1.1 first-child与last-child</h4>
+<p>先来看看first-child与last-child:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div p:first-child&quot;)
+$(&quot;div p:last-child&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312141417731.png" alt="在这里插入图片描述" loading="lazy"><br>
+<strong>注意与:first/:last的区别,:first/:last只会选择整个父级元素的第一个/最后一个元素,但是:first-child/:last-child会选择每个父级元素的第一个/最后一个元素.<br>
+:first/:last把所有符合的元素看作一个整体,即使其中有并列的父级元素,而:first-child/:last-child把每个父级元素单独看待,选择每个父级元素的第一个/最后一个元素.</strong><br>
+<img src="https://img-blog.csdnimg.cn/20200312141942463.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="4512-nth-child与nth-last-child19">4.5.1.2 nth-child与nth-last-child(1.9+)</h4>
+<p>nth-child选择父元素下第n个元素,注意,<strong>从1开始计数</strong>.</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div p:nth-child(3)&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/2020031214274542.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意与:eq的区别,有点类似:first/:first-child的区别,:eq会把所有符合条件的元素看作一个整体,而且不要忘记:eq是<strong>从0开始计数</strong>.<br>
+<img src="https://img-blog.csdnimg.cn/2020031214285558.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一方面,nth-child支持奇偶与代数表达式,比如:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p id=&quot;p7&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p8&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p9&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p10&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p11&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div p:nth-child(odd)&quot;)
+$(&quot;div p:nth-child(even)&quot;)
+$(&quot;div p:nth-child(3n+1)&quot;)
+$(&quot;div p:nth-child(4n-3)&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312143318644.png" alt="在这里插入图片描述" loading="lazy"><br>
+计数也是从1开始.<br>
+nth-last-child与nth-child类似,需要1.9以上的版本,看名字就知道,是选择倒数第n个的,同样支持奇偶与代数表达式.</p>
+<pre><code class="language-js">$(&quot;div p:nth-last-child(2)&quot;)
+$(&quot;div p:nth-last-child(odd)&quot;)
+$(&quot;div p:nth-last-child(even)&quot;)
+$(&quot;div p:nth-last-child(3n+1)&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312143759526.png" alt="在这里插入图片描述" loading="lazy"><br>
+对于nth-last-child的odd/even/代数表达式来说,从最后一个符合条件的开始选择,但是按原来的顺序排列.</p>
+<h3 id="452-类型过滤器19">4.5.2 类型过滤器(1.9+)</h3>
+<p>有四种:</p>
+<ul>
+<li>:first-of-type</li>
+<li>:last-of-type</li>
+<li>:nth-of-type</li>
+<li>:nth-last-of-type</li>
+</ul>
+<p>first-of-type会选择符合条件的元素的父元素的第一个该类型的子元素.<br>
+例如,</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;p:first-of-type&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312144917586.png" alt="在这里插入图片描述" loading="lazy"><br>
+若使用id选择器:</p>
+<pre><code class="language-js">$(&quot;#p2:first-of-type&quot;)
+</code></pre>
+<p>则结果为空.<br>
+<img src="https://img-blog.csdnimg.cn/20200312145529893.png" alt="在这里插入图片描述" loading="lazy"><br>
+为什么?<br>
+因为此时选择的是id为p2的元素,但是这个</p>
+<pre><code class="language-html">&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>的前面有一个</p>
+<pre><code class="language-html">&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>也就是说</p>
+<pre><code class="language-html">&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>不是第一个孩子,因此选择为空,此时若把第一个孩子注释:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;!-- &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt; --&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>则</p>
+<pre><code class="language-js">$(&quot;#p2:first-of-type&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312145801254.png" alt="在这里插入图片描述" loading="lazy"><br>
+多个父级元素也是一样的道理:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p5&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;.a:first-of-type&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312150052381.png" alt="在这里插入图片描述" loading="lazy"><br>
+last-of-type/nth-of-child/nth-last-of-type类似,要注意的是nth-of-child/nth-last-of-type都支持奇偶与代数表达式,计数从1开始.</p>
+<h3 id="453-唯一过滤器">4.5.3 唯一过滤器</h3>
+<p>两种:</p>
+<ul>
+<li>only-child</li>
+<li>only-of-type(1.9+)</li>
+</ul>
+<p>如果某个元素是它父元素的唯一子元素,则only-child会选择该(子)元素.</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div p:only-child&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312150931231.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意文本并不会影响选择的结果,也就是说,改成</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+	456
+    &lt;p id=&quot;p3&quot;&gt;123&lt;/p&gt;
+    456
+&lt;/div&gt;
+</code></pre>
+<p>后,选择器不变,选择的结果只是p里面多了文字:<br>
+<img src="https://img-blog.csdnimg.cn/20200312151041648.png" alt="在这里插入图片描述" loading="lazy"><br>
+<strong>而如果某个元素的父元素只有唯一一个该元素类型的子元素,则only-of-type会选择该元素,注意是类型,不是数量.<br>
+上面的only-child指的是数量,也就是只有一个孩子,这里only-of-type指的是类型,只有一个这种类型的孩子,而不管孩子数量.</strong></p>
+<pre><code class="language-html">&lt;div&gt;
+   &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;div p:only-of-type&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312152126590.png" alt="在这里插入图片描述" loading="lazy"><br>
+而如果选择器换成only-child:</p>
+<pre><code class="language-js">$(&quot;div p:only-child&quot;)
+</code></pre>
+<p>则会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312152208985.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="46-表单对象属性过滤器">4.6 表单对象属性过滤器</h2>
+<p>选择以下三种状态的元素:</p>
+<ul>
+<li>可用</li>
+<li>不可用</li>
+<li>选中</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:enabled</td>
+<td>选择可用元素</td>
+</tr>
+<tr>
+<td>:disabled</td>
+<td>选择不可用元素</td>
+</tr>
+<tr>
+<td>:checked</td>
+<td>选择所有被选中的元素</td>
+</tr>
+<tr>
+<td>:selected</td>
+<td>选择所有被选中的option元素(针对&lt;select&gt;)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-html">&lt;input type=&quot;checkbox&quot; checked/&gt;
+&lt;input type=&quot;radio&quot; checked&gt;
+&lt;input type=&quot;radio&quot; id=&quot;disabled&quot; disabled/&gt;
+&lt;input type=&quot;checkbox&quot;&gt;
+&lt;select&gt;
+    &lt;option value=&quot;1&quot;&gt;&lt;/option&gt;
+    &lt;option value=&quot;2&quot; selected&gt;&lt;/option&gt;
+    &lt;option value=&quot;3&quot;&gt;&lt;/option&gt;
+&lt;/select&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;body *:enabled&quot;)
+$(&quot;:disabled&quot;)
+$(&quot;:selected&quot;)
+$(&quot;:checked&quot;)
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200312134635678.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-表单选择器">5 表单选择器</h1>
+<h2 id="51-文本框类">5.1 文本框类</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:text</td>
+<td>选择所有文本框</td>
+</tr>
+<tr>
+<td>:password</td>
+<td>选择所有密码框</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-选择框类">5.2 选择框类</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:radio</td>
+<td>选择所有单选框</td>
+</tr>
+<tr>
+<td>:checkbox</td>
+<td>选择所有多选框</td>
+</tr>
+</tbody>
+</table>
+<h2 id="53-按钮类">5.3 按钮类</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:submit</td>
+<td>选择所有提交按钮</td>
+</tr>
+<tr>
+<td>:reset</td>
+<td>选择所有重置按钮</td>
+</tr>
+<tr>
+<td>:button</td>
+<td>选择所有按钮</td>
+</tr>
+</tbody>
+</table>
+<h2 id="54-其他">5.4 其他</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:image</td>
+<td>选择所有图像域</td>
+</tr>
+<tr>
+<td>:file</td>
+<td>选择所有文件域</td>
+</tr>
+</tbody>
+</table>
+<h2 id="55-例子">5.5 例子</h2>
+<pre><code class="language-html">&lt;input type=&quot;text&quot; /&gt;
+&lt;input type=&quot;password&quot; /&gt;
+&lt;input type=&quot;radio&quot; /&gt;
+&lt;input type=&quot;checkbox&quot; /&gt;
+&lt;input type=&quot;submit&quot; /&gt;
+&lt;input type=&quot;reset&quot; /&gt;
+&lt;input type=&quot;button&quot; /&gt;
+&lt;input type=&quot;image&quot; /&gt;
+&lt;input type=&quot;file&quot; /&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;:text&quot;)
+$(&quot;:password&quot;)
+$(&quot;:radio&quot;)
+$(&quot;:checkbox&quot;)
+$(&quot;:submit&quot;)
+$(&quot;:reset&quot;)
+$(&quot;:button&quot;)
+$(&quot;:image&quot;)
+$(&quot;:file&quot;)
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200312135946749.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[android studio sync失败]]></title>
+        <id>https://2293736867.github.io/post/android-studio-sync-shi-bai/</id>
+        <link href="https://2293736867.github.io/post/android-studio-sync-shi-bai/">
+        </link>
+        <updated>2020-06-02T21:06:49.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-原因">1 原因</h1>
+<p>sync失败或gradle同步慢的原因基本上就是网络的问题,这里采用的办法是在Maven的设置文件添加国内镜像.</p>
+<h1 id="2-添加镜像">2 添加镜像</h1>
+<p>Maven的settings.xml中,在&lt;mirrors&gt;中添加:</p>
 <pre><code class="language-xml">&lt;mirror&gt;
-    &lt;id&gt;alimaven&lt;/id&gt;
-    &lt;name&gt;aliyun maven&lt;/name&gt;
-    &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
-    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+	&lt;id&gt;alimaven&lt;/id&gt;
+	&lt;name&gt;aliyun maven&lt;/name&gt;
+	&lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+	&lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
 &lt;/mirror&gt;
 
 &lt;mirror&gt;
@@ -740,606 +1606,636 @@ implementation 'org.conscrypt:conscrypt-android:2.2.1'
 &lt;mirror&gt;
     &lt;id&gt;nexus&lt;/id&gt;
     &lt;name&gt;internal nexus repository&lt;/name&gt;
-    &lt;!-- &lt;url&gt;http://192.168.1.100:8081/nexus/content/groups/public/&lt;/url&gt;--&gt;
     &lt;url&gt;http://repo.maven.apache.org/maven2&lt;/url&gt;
     &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
 &lt;/mirror&gt;
-
 </code></pre>
-<p>windows用户的话这个文件在</p>
-<pre><code class="language-bash">C:\Users\{username}\.m2\settings.xml
-</code></pre>
-<p>linux的话在</p>
-<pre><code class="language-bash">~/.m2/settings.xml
-</code></pre>
-<h2 id="42-处理上传文件">4.2 处理上传文件</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200128162502371.png" alt="在这里插入图片描述" loading="lazy"><br>
-首先对应的post映射路径为/upload,与android端的路径对应,然后需要一个表示文件的MultipartFile与一个表示文件名的String,判断这两个是否为空后,如果上传的文件夹不存在则先创建,存在的话直接进行复制,然后根据复制成功或失败返回布尔值.复制使用了Files.copy(),第一个InputStream为上传文件的输入流,第二个Path为存储文件的路径,resolve(filename)相当于在上传目录下的filename文件.输出的话建议使用日志代替.</p>
-<h2 id="43-处理下载文件">4.3 处理下载文件</h2>
-<p>下载的话可以选择使用get或post请求,这里选择了post请求,因为android端是post请求,需要对应.get请求的话可以从浏览器发起.<br>
-<img src="https://img-blog.csdnimg.cn/2020012803350758.png" alt="在这里插入图片描述" loading="lazy"><br>
-首先根据文件名获取对应文件,判断文件是否存在后返回一个ResponseEntity,需要设定content-type与body,content-type根据需要设置即可,这里是图片,默认.jpg或.png,body的话使用FileSystemResource,直接new一个放进body即可.<br>
-如果不存在相应的文件则返回null,这里需要注意一下前端的判断,不能直接判断ResponseBody是否为null.</p>
-<h1 id="5-测试">5 测试</h1>
-<h2 id="51-postman测试">5.1 postman测试</h2>
-<p>postman只能测试与后端的连接,上传等是否有问题,可以用来定位后端的问题.</p>
-<h3 id="511-上传测试">5.1.1 上传测试</h3>
-<p>再Headers中设置了Content-Type为multipart/form-data后:<br>
-<img src="https://img-blog.csdnimg.cn/20200128041048644.png" alt="在这里插入图片描述" loading="lazy"><br>
-在body添加一个叫file的文件与一个叫filename的字符串表示文件名:<br>
-<img src="https://img-blog.csdnimg.cn/20200128041026926.png" alt="在这里插入图片描述" loading="lazy"><br>
-发送,返回true.<br>
-<img src="https://img-blog.csdnimg.cn/2020012804134376.png" alt="在这里插入图片描述" loading="lazy"><br>
-服务器端有输出提示:<br>
-<img src="https://img-blog.csdnimg.cn/20200128041409533.png" alt="在这里插入图片描述" loading="lazy"><br>
-查看文件夹:<br>
-<img src="https://img-blog.csdnimg.cn/20200128041427428.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="512-下载测试">5.1.2 下载测试</h3>
-<p>把file参数关掉,保留filename,修改路径.<br>
-<img src="https://img-blog.csdnimg.cn/20200128041539668.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后发送,postman可以直接显示图片:<br>
-<img src="https://img-blog.csdnimg.cn/20200128041741395.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="52-android端测试">5.2 android端测试</h2>
-<h3 id="521-上传测试">5.2.1 上传测试</h3>
-<p><img src="https://img-blog.csdnimg.cn/20200128155806544.gif" alt="在这里插入图片描述" loading="lazy"><br>
-后端提示:<br>
-<img src="https://img-blog.csdnimg.cn/20200128155753985.png" alt="在这里插入图片描述" loading="lazy"><br>
-查看文件夹:<br>
-<img src="https://img-blog.csdnimg.cn/20200128155829103.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="522-下载测试">5.2.2 下载测试</h3>
-<p>输入文件名后直接下载:<br>
-<img src="https://img-blog.csdnimg.cn/20200128155933425.gif" alt="在这里插入图片描述" loading="lazy"><br>
-默认的话是放在这里,按需要更改位置即可,注意加上写权限:<br>
-<img src="https://img-blog.csdnimg.cn/20200128161027921.png" alt="在这里插入图片描述" loading="lazy"><br>
-若看不到文件选择synchronize即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200128153926242.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="6-部署到服务器">6 部署到服务器</h1>
-<p>服务器用的是tomcat,需要修改一些Spring Boot的部分.</p>
-<h2 id="61-部署">6.1 部署</h2>
-<h3 id="611-改变打包方式">6.1.1 改变打包方式</h3>
-<p>pom.xml中jar改成war.<br>
-<img src="https://img-blog.csdnimg.cn/20200128164613506.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="612-去除tomcat依赖">6.1.2 去除tomcat依赖</h3>
-<p>pom.xml加入:</p>
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h3 id="613-修改main">6.1.3 修改Main</h3>
-<p>修改Main类,让其继承SpringBootServletInitializer,重载configure(),同时main()保持不变.<br>
-修改前:<br>
-<img src="https://img-blog.csdnimg.cn/20200128165014319.png" alt="在这里插入图片描述" loading="lazy"><br>
-修改后:<br>
-<img src="https://img-blog.csdnimg.cn/20200128164908318.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="614-修改路径">6.1.4 修改路径</h3>
-<p>这个按需要修改即可,在这里不需要,注意就是@PostMapping,@GetMapping等都是相对于</p>
-<pre><code class="language-bash">tomcat/webapps/项目/
-</code></pre>
-<p>目录下的.</p>
-<h3 id="615-设置打包名字">6.1.5 设置打包名字</h3>
-<p>build加上&lt;finalName&gt;.<br>
-<img src="https://img-blog.csdnimg.cn/20200128165243261.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="616-打包">6.1.6 打包</h3>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020012816533874.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="617-上传到服务器">6.1.7 上传到服务器</h3>
-<p>打包后的文件放在target下,使用scp上传即可,这里是本地的tomcat,就这接移动war了.</p>
-<h3 id="618-运行">6.1.8 运行</h3>
-<p>开启tomcat,双击startup.bat即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200128165527920.png" alt="在这里插入图片描述" loading="lazy"><br>
-linux的话:</p>
-<pre><code class="language-bash">cd xxxx/tomcat/bin
-./startup.sh
-</code></pre>
-<h2 id="62-测试">6.2 测试</h2>
-<p>在测试前需要确保没有占用相应端口,默认8080,也就是说,如果不改端口的话,需要关闭IDEA运行中的SpringBoot应用.</p>
-<h3 id="621-postman测试">6.2.1 postman测试</h3>
-<p>上传测试,注意需要改路径,加上打包项目名,ip的话可以使用localhost或者内网ip.<br>
-<img src="https://img-blog.csdnimg.cn/20200128170329136.gif" alt="在这里插入图片描述" loading="lazy"><br>
-服务器这边收到了,因为上传路径只是直接写名字,因此会与startup.bat同一路径.<br>
-<img src="https://img-blog.csdnimg.cn/20200128170016425.png" alt="在这里插入图片描述" loading="lazy"><br>
-下载测试:<br>
-<img src="https://img-blog.csdnimg.cn/202001281706212.gif" alt="在这里插入图片描述" loading="lazy"><br>
-服务器的输出:<br>
-<img src="https://img-blog.csdnimg.cn/2020012817092774.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="622-android端测试">6.2.2 android端测试</h3>
-<p>android端需要修改路径即可,加上war打包的名字.<br>
-<img src="https://img-blog.csdnimg.cn/2020012817072767.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里打包的名字是kr,直接加上即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200128170759231.png" alt="在这里插入图片描述" loading="lazy"><br>
-上传那里也是要加上,然后:<br>
-<img src="https://img-blog.csdnimg.cn/20200128172216981.gif" alt="在这里插入图片描述" loading="lazy"><br>
-服务器的输出:<br>
-<img src="https://img-blog.csdnimg.cn/20200128172200484.png" alt="在这里插入图片描述" loading="lazy"><br>
-查看文件:<br>
-<img src="https://img-blog.csdnimg.cn/20200128172253701.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="7-最最最喜欢的-坑">7 <s>最最最喜欢的</s> 坑</h1>
-<h2 id="71-权限">7.1 权限</h2>
-<p>android需要读权限才能读取文件并上传,需要写权限才能保存从服务器返回的文件,在AndroidManifest.xml中加入:</p>
-<pre><code class="language-xml">&lt;manifest&gt;...
-&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot;/&gt;
-&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
-&lt;application&gt;...&lt;/application&gt;
-</code></pre>
-<p>这是外部设备的读写权限.当然,加入这个还不能访问,因为,android6.0以后还需要动态申请权限,所以:</p>
-<pre><code class="language-java">String [] permission = new String[]{
-	&quot;android.permission.READ_EXTERNAL_STORAGE&quot;,
-	&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;
-};
-if(
-	ActivityCompat.checkSelfPermission(this,permission[0]) != PackageManager.PERMISSION_GRANTED
-	||
-	ActivityCompat.checkSelfPermission(this,permission[1]) != PackageManager.PERMISSION_DENIED
-)
-{
-    ActivityCompat.requestPermissions(this,permission,1);
-}
-</code></pre>
-<h2 id="72-路径">7.2 路径</h2>
-<p>需要保证下面几个路径正确,还有可读,可写等:</p>
-<ul>
-<li>url路径不能错.</li>
-<li>前端上传文件的路径.</li>
-<li>后端接收前端上传文件的路径.</li>
-<li>后端发送前端需要下载的文件的路径.</li>
-<li>前端接收下载文件的路径.</li>
-</ul>
-<h2 id="73-有关http的问题">7.3 有关http的问题</h2>
-<h3 id="731-okhttp的stream关闭">7.3.1 okhttp的stream关闭</h3>
-<p><img src="https://img-blog.csdnimg.cn/20200128163649815.png" alt="在这里插入图片描述" loading="lazy"><br>
-若前端是这样写的,在工具类中返回了之后Response已经关闭,因此需要读取输入流之类的需要先读取再返回,而不是返回一个ResponseBody或InputStream进行读取,否则会提示&quot;closed&quot;.</p>
-<h3 id="732-http">7.3.2 http</h3>
-<p>Android P开始默认禁用http,因此可以使用https或者在AndroidManifest.xml中允许http连接:</p>
-<pre><code class="language-xml">&lt;application android:usesCleartextTraffic=&quot;true&quot;&gt;
-</code></pre>
-<h3 id="733-线程">7.3.3 线程</h3>
-<p>网络请求不能在主线程中,新开一个线程即可.</p>
-<h3 id="734-avd">7.3.4 AVD</h3>
-<p>若检查过了服务器与android端没问题,那么有可能是AVD的问题,解决方法很简单,卸载,重启AVD,注意一定要卸载再重启.</p>
-<h2 id="74-ip">7.4 ip</h2>
-<p>在本地测试的话后端可以直接localhost,在android端不能直接localhost,可以使用ipconfig或ifconfig查看内网ip,输入内网ip即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200128150557717.png" alt="在这里插入图片描述" loading="lazy"><br>
-若在服务器上测试直接使用服务器ip.</p>
-<h2 id="75-判空处理">7.5 判空处理</h2>
-<p>对于前端,应该判断存储路径是否为空,是否为null等,再传给后端,对于后端,要判断文件是否存在等,不存在就返回null,这时又需要前端进行判断返回的null,在下载文件时,虽然对不存在的文件后端返回null,但是,前端收到的是一个InputStream,不能直接判断是否为null,需要先读取一次,再进行剩下的读取:<br>
-<img src="https://img-blog.csdnimg.cn/20200128155640346.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="8-源码">8 源码</h1>
-<p><a href="https://github.com/2293736867/Android-SpringBoot-Upload-Download-file">github</a></p>
-<p><a href="https://gitee.com/imykr/Android-SpringBoot-Upload-Download-file">码云</a></p>
+<p>这样android studio同步的速度就会很快了.</p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[每天AC系列(四):四数之和]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-si-si-shu-zhi-he/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-si-si-shu-zhi-he/">
+        <title type="html"><![CDATA[jquery hello world]]></title>
+        <id>https://2293736867.github.io/post/jquery-hello-world/</id>
+        <link href="https://2293736867.github.io/post/jquery-hello-world/">
         </link>
-        <updated>2020-06-02T20:47:58.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/4sum/">Leetcode第18题</a>,给定一个数组与一个target,找出数组中的四个数之和为target的不重复的所有四个数.<br>
-<img src="https://img-blog.csdnimg.cn/20200126100609278.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-暴力">2 暴力</h1>
-<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
-if (nums.length == 4 &amp;&amp; nums[0] + nums[1] + nums[2] + nums[3] == target)
-    result.add(Arrays.asList(nums[0], nums[1], nums[2],nums[3]));
-else if (nums.length &gt; 4) 
-{
-    Arrays.sort(nums);
-    Set&lt;List&lt;Integer&gt;&gt; resultSet = new HashSet&lt;&gt;();
-    for(int i=0;i&lt;nums.length-3;++i)
-    {
-        for(int j=i+1;j&lt;nums.length-2;++j)
-        {
-            for(int k=j+1;k&lt;nums.length-1;++k)
+        <updated>2020-06-02T21:06:08.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-jquery">1 jQuery</h1>
+<p>jQuery是一个js库,一个js文件,极大地简化了编程,<a href="https://jquery.com/download/">官网链接</a>在这里,有compressed,uncompressed版本,使用时一样.</p>
+<h1 id="2-hello-world">2 hello world</h1>
+<pre><code class="language-html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;jquery hello world&lt;/title&gt;
+        &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-3.4.1.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            $(function()
             {
-                for(int m=k+1;m&lt;nums.length;++m)
-                {
-                    if(nums[i]+nums[j]+nums[k]+nums[m] == target)
-                        resultSet.add(Arrays.asList(nums[i],nums[j],nums[k],nums[m]));
-                }
-            }
-        }
-    }
-    result.addAll(resultSet);
-    Collections.sort(result,(t1,t2)-&gt;
-    {
-        if(t1.get(0) &gt; t2.get(0))
-            return 1;
-        if (t1.get(0) &lt; t2.get(0))
-            return -1;
-        if (t1.get(1) &gt; t2.get(1))
-            return 1;
-        if (t1.get(1) &lt; t2.get(1))
-            return -1;
-        if (t1.get(2) &gt; t2.get(2))
-            return 1;
-        if (t1.get(2) &lt; t2.get(2))
-            return -1;
-        if (t1.get(3) &gt; t2.get(3))
-            return 1;
-        if (t1.get(3) &lt; t2.get(3))
-            return -1;
-        return 0;
-    });
-}
-return result;
+                $(&quot;p&quot;).html(&quot;hello world&quot;);
+            });
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
 </code></pre>
-<p>判断长度,然后排序,直接上四个for,然后...<br>
-<img src="https://img-blog.csdnimg.cn/20200126100444693.png" alt="在这里插入图片描述" loading="lazy"><br>
-好! 惨败.</p>
-<h1 id="3-优化">3 优化</h1>
-<h2 id="31-去掉结果排序">3.1 去掉结果排序</h2>
-<p>首先最后的排序是不必要的,也就是后面的</p>
-<pre><code class="language-java">Collections.sort(result,(t1,t2)-&gt;
-{
-    if(t1.get(0) &gt; t2.get(0))
-        return 1;
-    if (t1.get(0) &lt; t2.get(0))
-        return -1;
-    if (t1.get(1) &gt; t2.get(1))
-        return 1;
-    if (t1.get(1) &lt; t2.get(1))
-        return -1;
-    if (t1.get(2) &gt; t2.get(2))
-        return 1;
-    if (t1.get(2) &lt; t2.get(2))
-        return -1;
-    if (t1.get(3) &gt; t2.get(3))
-        return 1;
-    if (t1.get(3) &lt; t2.get(3))
-        return -1;
-    return 0;
-});
+<p>jQuery使用时直接从官网引入文件即可,这里用的是3.4.1版本.</p>
+<pre><code class="language-js">$(function())
 </code></pre>
-<p>对结果进行排序不必要,虽然会在测试时与答案有差别,但是提交的话不需要排序.</p>
-<h2 id="32-stream去重">3.2 stream去重</h2>
-<p>之前的操作用的是HashSet进行去重,有一个符合的四元组就直接添加进集合中,现在采用了stream+distinct去重:</p>
-<pre><code class="language-java">return result.stream().distinct().collect(Collectors.toList());
+<p>是</p>
+<pre><code class="language-js">$(document).ready(function(){})
 </code></pre>
-<h2 id="33-双指针最大最小剪枝">3.3 双指针+最大最小剪枝</h2>
-<p>可以利用类似三数之和的思想,固定一个数,双指针分别指向两端的两个数,这里的话,四个数,选择固定两个数,计算它们的和并把它们看作一个数,即可利用双指针.</p>
-<pre><code class="language-java">for(int i=0;i&lt;nums.length-3;++i)
-{
-     for(int j=i+1;j&lt;nums.length-2;++j)
-     {
-         int m = nums[i] + nums[j];
-         int left = j+1;
-         int right = nums.length-1;
-         while(left &lt; right)
-         {
-             int temp = m + nums[left] + nums[right];
-             if(temp == target)
-             {
-                 result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
-                 --right;
-                 ++left;
-             }
-             else if(temp &gt; target)
-                 --right;
-             else
-                 ++left;
-         }
-     }
- }
+<p>的缩写,这个函数会在DOM加载完成后执行.</p>
+<pre><code class="language-js">$(&quot;p&quot;)
 </code></pre>
-<p>m为固定的数,left与right就是双指针,根据&quot;三数&quot;之和判断与目标值的大小移动双指针.<br>
-最小剪枝就是首先计算&quot;三数&quot;的最小值,若大于目标值就可以跳过,最大剪枝就是计算&quot;三数&quot;的最大值,若小于目标值则跳过,进入下一个循环:</p>
-<pre><code class="language-java">int m = nums[i] + nums[j];
-int left = j+1;
-int right = nums.length-1;
-if(m + nums[left] + nums[left+1] &gt; target)
-    continue;
-if (m + nums[right-1] + nums[right] &lt; target)
-    continue;
-</code></pre>
-<h2 id="34-提交">3.4 提交</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200126104700810.png" alt="在这里插入图片描述" loading="lazy"><br>
-呃...好了那么一点点吧.</p>
-<h1 id="4-来来来再快一点">4 来来来再快一点</h1>
-<h2 id="41-初始判断">4.1 初始判断</h2>
-<p>首先,初始的判断可以再简单一点,如果数组为空或长度小于4,直接返回.</p>
-<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
-if (nums == null &amp;&amp; nums.length &lt; 4)
-	return result;
-</code></pre>
-<h2 id="42-一次不够就再剪几次">4.2 一次不够,就再剪几次</h2>
-<p>上面的算法中,只是在两层for里面进行了一次最大最小剪枝,可以在没进入for之前剪一次:</p>
-<pre><code class="language-java">Arrays.sort(nums);
-int len = nums.length;
-if(
-	nums[0] + nums[1] + nums[2] + nums[3] &gt;  target 
-	|| 
-	nums[len-4] + nums[len-3] + nums[len-2] + nums[len-1] &lt; target
-)
-    return result;
-for(int i=0;i&lt;len-3;++i)   
-</code></pre>
-<p>注意要先排序,然后直接判断整个数组的最大最小值并与target判断.<br>
-然后在进入第一层for之后再剪一次:</p>
-<pre><code class="language-java">for(int i=0;i&lt;len-3;++i)
-{
-	if(nums[i] + nums[i+1] + nums[i+2] + nums[i+3] &gt; target)
-		break;
-    if(nums[i] + nums[len-3] + nums[len-2] + nums[len-1] &lt; target)
-		continue;
-    for(int j=i+1;j&lt;len-2;++j)
-}
-</code></pre>
-<p>因为数组是升序排序的,因此,&quot;最左边&quot;四个数肯定是最小值,若这个最小值大于target,可以直接break了,但是,最右边三个数与nums[i]相加不一定为最大值,因此判断之后若小于target只能continue.</p>
-<h2 id="43-去重">4.3 去重</h2>
-<h3 id="431-双指针去重">4.3.1 双指针去重</h3>
-<p>首先,在双指针的循环中,若发现了有四个数符合条件,可以尝试多次移动指针:</p>
-<pre><code class="language-java">result.add(Arrays.asList(nums[i], nums[j], nums[left++], nums[right--]));
-while(left &lt; right &amp;&amp; nums[left] == nums[left-1])
-    ++left;
-while(left &lt; right &amp;&amp; nums[right] == nums[right+1]) 
-    --right;
-</code></pre>
-<p>因为值一样的可以一次性移动指针,不需要再次进行和的判断.<br>
-呃,可以尝试提交了.<br>
-<img src="https://img-blog.csdnimg.cn/20200126112957623.png" alt="在这里插入图片描述" loading="lazy"><br>
-咦,不对啊,做了这么多,没快多少啊...<br>
-为啥呢...<br>
-...</p>
-<h3 id="432-外循环去重">4.3.2 外循环去重</h3>
-<p>找了很久,发现是这里的原因:</p>
-<pre><code class="language-java">return result.stream().distinct().collect(Collectors.toList());
-</code></pre>
-<p>这里去重的话,用是用的很舒服,一个stream(),一个distinct()就好了,问题是...还是很慢啊!!!<br>
-所以呢,需要手动去重,出现重复的原因就是数组中有重复的数,比如:</p>
-<pre><code class="language-java">[1,1,1,1,2,2,2,2],target=6
-</code></pre>
-<p>顺序判断时,会好几个</p>
-<pre><code class="language-java">[1,1,2,2]
-</code></pre>
-<p>因此,对于重复的数,进行跳过处理,在第一层for中,对重复过的进行跳过:</p>
-<pre><code class="language-java">for(int i=0;i&lt;len-2;++i)
-	if(i&gt;0 &amp;&amp; nums[i] == nums[i-1]) continue;
-</code></pre>
-<p>其次,在第二层for中,也对重复过的进行跳过:</p>
-<pre><code class="language-java">for(int j=i+1;j&lt;len-2;++j)
-	if(j &gt; i+1 &amp;&amp; nums[j] == nums[j-1]) continue;
-</code></pre>
-<p>这样的话,例如对于上面的(不同的1用字母区分)</p>
-<pre><code class="language-java">[1(a),1(b),1(c),1(d),2,2,2,2]
-</code></pre>
-<p>一开始是a处的1与b处的1,然后到了第二层循环,因为此时j=i+1,指向b处的1,因此不会跳过1,会进入双指针循环,第二次j指向c处的1,出现重复,j不断跳过直到j指向2.然后2结束后,到了i这层循环,因为1出现过,i不断跳过直到i指向2.</p>
-<p>没错,说了这么多,去重不需要什么HashSet,不需要什么stream,只需两行:</p>
-<pre><code class="language-java">if(i&gt;0 &amp;&amp; nums[i] == nums[i-1]) continue;
-if(j&gt;i + 1 &amp;&amp; nums[j] == nums[j-1]) continue;
-</code></pre>
-<h2 id="44-提交">4.4 提交</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200126125547527.png" alt="在这里插入图片描述" loading="lazy"><br>
-尽力了.</p>
-<h1 id="5-源码">5 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day4">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day4">码云</a></p>
+<p>表示选择页面的所有&lt;p&gt;元素,html()可以设置元素的内容.<br>
+<img src="https://img-blog.csdnimg.cn/20200311193454323.png" alt="在这里插入图片描述" loading="lazy"></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[@Scheduled注解]]></title>
-        <id>https://2293736867.github.io/post/scheduled-zhu-jie/</id>
-        <link href="https://2293736867.github.io/post/scheduled-zhu-jie/">
+        <title type="html"><![CDATA[MySQL数据类型全解析]]></title>
+        <id>https://2293736867.github.io/post/mysql-shu-ju-lei-xing-quan-jie-xi/</id>
+        <link href="https://2293736867.github.io/post/mysql-shu-ju-lei-xing-quan-jie-xi/">
         </link>
-        <updated>2020-06-02T20:47:28.000Z</updated>
+        <updated>2020-06-02T21:05:41.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>本文主要介绍了MySQL的各种数据类型,版本为8.x,<br>
+MySQL的数据类型可以分为六类:数值类型,日期时间类型,字符串类型,二进制类型,JSON类型与空间数据类型.</p>
+<h1 id="2-数值类型">2 数值类型</h1>
+<p>数值类型是最基本的类型,可以分为整数类型与浮点数类型.</p>
+<h2 id="21-整型">2.1 整型</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字节数</th>
+<th>无符号范围</th>
+<th>有符号范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYINT</td>
+<td>1</td>
+<td>[0,255]</td>
+<td>[-128,127]</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2</td>
+<td>[0,65535]</td>
+<td>[-32768,32767]</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3</td>
+<td>0-1677w</td>
+<td>+-838w</td>
+</tr>
+<tr>
+<td>INT/INTEGER</td>
+<td>4</td>
+<td>0-42e</td>
+<td>+-21e</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8</td>
+<td>0-18446744e</td>
+<td>+-9223372e</td>
+</tr>
+</tbody>
+</table>
+<p>没写出的具体的精确值无符号的范围计算公式如下:</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200309150453284.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>有符号的计算公式如下:</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200309150501675.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>所有整形如果允许NULL的话默认为NULL,不允许为NULL的需要手动设置默认值.</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200309151859330.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果插入或修改的数据范围不符合会提示操作失败,如上图提示列c_mediumint的数据超出范围.</p>
+<h2 id="22-浮点型">2.2 浮点型</h2>
+<p>可以用两种方式来表示小数,分别是浮点数类型与定点数类型.</p>
+<p>浮点数用于不需要太精确的小数场合,类型包括FLOAT与DOUBLE,定点数类型就是DECIMAL.</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字节数</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLOAT</td>
+<td>4</td>
+<td>+- 1.17e-38 - 3.4e+38 和 0</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>8</td>
+<td>+- 2.22e-308 - 1.79e+308 和 0</td>
+</tr>
+<tr>
+<td>DEC(M,D)/DECIMAL(M,D)</td>
+<td>取决于M与D</td>
+<td>取决于M与D</td>
+</tr>
+</tbody>
+</table>
+<p>下面是测试的待插入的数据:</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200309153655569.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入之后再查询:</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200309153711324.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到,float的精度最高为6位,后面的进行四舍五入,DOUBLE的最高精度为15位.</p>
+<p>下面来说一下DECIMAL.</p>
+<h2 id="23-decimal">2.3 DECIMAL</h2>
+<p>DECIMAL也可用DEC来表示,用于计算精确的小数值,DECIMAL通常如下表示:</p>
+<pre><code class="language-sql">DECIMAL(M,D)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>含义</th>
+<th>取值范围</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M</td>
+<td>十进制有效数字总个数</td>
+<td>1-65</td>
+<td>10</td>
+</tr>
+<tr>
+<td>D</td>
+<td>小数点后十进制数字个数</td>
+<td>0-30(D&lt;=M)</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>如果要计算所占用的字节数,需要分为整数与小数两部分,分开计算再相加,每部分又按照9位数字去拆分,计算规则如下:</p>
+<table>
+<thead>
+<tr>
+<th>位数</th>
+<th>占用字节数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3-4</td>
+<td>2</td>
+</tr>
+<tr>
+<td>5-6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>7-9</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p>也就是说对于</p>
+<pre><code class="language-sql">DECIMAL(24,8)
+</code></pre>
+<p>整数部分24-8=16位,小数部分8位,小数部分的8位根据规则所占用的字节数为4个,整数部分按每9位进行拆分,16=9+7,9位的部分占4个字节,7位的部分按照规则也占4个字节,所以整数部分占8个字节,加上小数部分的4个字节,总共占12个字节.</p>
+<p>至于NUMERIC,在MySQL中,NUMERIC被实现为DECIMAL:</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200310010544290.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-日期与时间类型">3 日期与时间类型</h1>
+<p>总共有五类:YEAR,TIME,DATE,DATETIME,TIMESTAMP.</p>
+<h2 id="31-日期">3.1 日期</h2>
+<p>日期有两种类型:YEAR与DATE,YEAR表示年,DATE表示日期.</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字节数</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>YEAR</td>
+<td>1</td>
+<td>[1901,2155]</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>3</td>
+<td>[1000-01-01,9999-12-31]</td>
+</tr>
+</tbody>
+</table>
+<p>DATE中的年月日插入时可以不分隔或者用各种符号进行分隔,比如</p>
+<pre><code>! @ # $ % ^ &amp; * ( ) - / \ [ ] { } : ; ' &quot; |  , . &lt; &gt; ?
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/2020030919130056.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>上图中的date都是合法的,插入之后MySQL都会统一用横杠代替:</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200309191403324.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>YEAR的话MySQL其实允许两位数的YEAR,其中00-69表示2000-2069,70-99表示1970-1999.</p>
+<p>其他插入方式的话可以用CURRENT_DATE,CURRENT_DATE(),CURDATE(),NOW(),CURTIME(),CURRENT_TIME,CURRENT_TIME():</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20200310103517135.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20200310103529133.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-时间">3.2 时间</h2>
+<p>时间就一种类型:TIME.</p>
+<p>TIME所占的字节数为3个字节,取值范围为:</p>
+<pre><code>[-838:59:59,838:59:59]
+</code></pre>
+<p>插入时时分秒可以不分隔或者必须以冒号分隔.</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200309192901773.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入后统一变为冒号分隔:</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200309192920996.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以使用CURRENT_TIME或CURRENT_TIME(),CURTIME()或NOW()插入:</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200310103949962.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200310104123855.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>甚至也可以使用CURDATE(),不过此时插入的是零值:</p>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200310104255682.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="33-日期时间">3.3 日期+时间</h2>
+<p>TIMESTAMP与DATETIME:</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字节数</th>
+<th>取值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DATETIME</td>
+<td>8</td>
+<td>[1000-01-01 00:00:00,9999-12-31 23:59:59]</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>4</td>
+<td>[19700101080001,20380119111407]</td>
+</tr>
+</tbody>
+</table>
+<p>DATETIME就是DATE与TIME的结合,先DATE再TIME,空格分隔.</p>
+<p>TIMESTAMP表示时间戳,表示当前时间到1970年1月1日0时0分0秒经过的秒数,中的写法是年月日时分秒,比如</p>
+<pre><code>19700101080001
+</code></pre>
+<p>表示</p>
+<pre><code>1970年1月1日8时0分01秒
+</code></pre>
+<p>这里之所以使用080001是因为中国的时区.</p>
+<pre><code>19700101000000
+</code></pre>
+<p>会报错,范围不允许.</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200310104801863.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<pre><code>19700101080000
+</code></pre>
+<p>也不行.</p>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200310104836434.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在插入时可以指定默认值,使用now()或CURRENT_TIMESTAMP:</p>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200309194103501.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入后DATETIME与TIMESTAMP存储的形式一致,横杠分隔日期,冒号分隔时间,时间与日期用空格隔开.</p>
+<p>也可以使用CURTIME()或CURDATE()插入,对于CURTIME(),日期采用当前日期,对于CURDATE(),时间采用</p>
+<pre><code class="language-bash">00:00:00
+</code></pre>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200310105052112.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20200310105103360.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200310105115368.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-字符串类型">4 字符串类型</h1>
+<h2 id="41-charvarchar">4.1 CHAR/VARCHAR</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>最大长度</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CHAR</td>
+<td>255个字符</td>
+<td>长度固定,CHAR(M)表明CHAR的长度为M个字符,所占用的字节数为字符个数*每个字符所占用字节数,也就是说与字符集有关,定长的效率较高,一般用于存储固定位数的数据或经常需要更新的数据,如电话号码,身份证,MD5值等.保存CHAR时,会在末尾填充空格用于对齐,查询时自动把空格删除</td>
+</tr>
+<tr>
+<td>VARCHAR</td>
+<td>65535字节,字符个数为(最大行大小-NULL标识-长度标识)/字符集单字符最大字节数,可以看<a href="https://learn.blog.csdn.net/article/details/103341778">这里</a></td>
+<td>长度不固定,实际占用的空间为字符串实际长度+1/2,也就是说需要额外的1或2个字节记录字符串的长度.相对来说VARCHAR比CHAR更节省空间,但是在UPDATE时可能会使行变得更长,需要做额外的工作.VARCHAR适合存储字段更新少,字符串平均长度不稳定的情况</td>
+</tr>
+</tbody>
+</table>
+<p>无论是CHAR还是VARCHAR,超过了创建时指定的长度便插入失败:</p>
+<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200309200811823.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200309200849689.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-text">4.2 TEXT</h2>
+<p>TEXT是一种专用于存储长文本的变长数据类型,包括TINYTEXT,TEXT,MEDIUMTEXT,LONGTEXT:</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>允许长度(字节)</th>
+<th>存储空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYTEXT</td>
+<td>[0,255]</td>
+<td>长度+2字节</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>[0,65535]</td>
+<td>长度+2字节</td>
+</tr>
+<tr>
+<td>MEDIUMTEXT</td>
+<td>0-1677w</td>
+<td>长度+3字节</td>
+</tr>
+<tr>
+<td>LONGTEXT</td>
+<td>0-42e</td>
+<td>长度+4字节</td>
+</tr>
+</tbody>
+</table>
+<p>TEXT在插入时超过最大允许长度会插入失败.</p>
+<h2 id="43-enum">4.3 ENUM</h2>
+<p>枚举类型,在创建表时enum的取值范围以列表的形式指定:</p>
+<pre><code class="language-sql">ENUM('value1','value2',...,'valuen')
+</code></pre>
+<p>ENUM占用1或2个字节,列表中最多能有65535个值,每个值末尾的空格都会被删除,列表中的每个值独有一个顺序排列的编号,MySQL会存入这个编号而不是对应的值.</p>
+<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200309210144560.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/20200309210013736.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>等价于</p>
+<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200309210104709.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>即取值列表的编号从1开始.</p>
+<h2 id="44-set">4.4 SET</h2>
+<p>SET占用1或2或3或4或8个字节,取决于里面元素的数量,最大数量为64.SET可以是一个或多个元素的组合,值后面多余的空格会被删除,取多个元素时,不同元素用逗号隔开.</p>
+<p>如:</p>
+<figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20200309220709295.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入前:</p>
+<figure data-type="image" tabindex="28"><img src="https://img-blog.csdnimg.cn/20200309220642491.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入后:</p>
+<figure data-type="image" tabindex="29"><img src="https://img-blog.csdnimg.cn/20200309220651250.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-二进制类型">5 二进制类型</h1>
+<h2 id="51-bit">5.1 BIT</h2>
+<p>BIT在创建时指定最大长度:</p>
+<pre><code>BIT(M)
+</code></pre>
+<p>M表示最大二进制数的位数,M取值1-64,默认1,插入数据时,如果数据在BIT允许的范围则插入成功,否则插入失败.</p>
+<p>插入时需要加上b前缀,后面跟的字符串由0与1组成:</p>
+<figure data-type="image" tabindex="30"><img src="https://img-blog.csdnimg.cn/20200309222955594.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>查询之后就变成了十进制:</p>
+<figure data-type="image" tabindex="31"><img src="https://img-blog.csdnimg.cn/20200309223004928.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="52-blob">5.2 BLOB</h2>
+<p>BLOB是特殊的二进制数据类型,用来保存数据量很大的二进制数据,如图片等,BLOB包括TINYBLOB,BLOB,MEDIUMBLOB,LONGBLOG,与TEXT类似:</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>允许长度(字节)</th>
+<th>存储空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYBLOB</td>
+<td>[0,255]</td>
+<td>长度+2字节</td>
+</tr>
+<tr>
+<td>BLOB</td>
+<td>[0,65535]</td>
+<td>长度+2字节</td>
+</tr>
+<tr>
+<td>MEDIUMBLOB</td>
+<td>0-1677w</td>
+<td>长度+3字节</td>
+</tr>
+<tr>
+<td>LONGBLOB</td>
+<td>0-42e</td>
+<td>长度+4字节</td>
+</tr>
+</tbody>
+</table>
+<h2 id="53-binaryvarbinary">5.3 BINARY/VARBINARY</h2>
+<p>BINARY(M)/VARBINARY(M)中的M指的是字节长度,由于BINARY/VARBINARY存储的是二进制字符串,因此没有字符集的概念.</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>最大长度</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BINARY</td>
+<td>255字节</td>
+<td>定长,允许长度0-M的二进制字符串,不足最大长度的空间由0x00补全,查询时不会截断后面的0x00,比较时所有字节都有效</td>
+</tr>
+<tr>
+<td>VARBINARY</td>
+<td>65535字节</td>
+<td>变长,不会在后面填充0x00.</td>
+</tr>
+</tbody>
+</table>
+<p>下面的例子演示了插入时填充0x00:</p>
+<figure data-type="image" tabindex="32"><img src="https://img-blog.csdnimg.cn/20200310115610953.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里的BINARY为3个字节,插入了a,等价是插入了</p>
+<pre><code class="language-sql">a\0\0
+</code></pre>
+<p>两个\0填充后面两个字节,因此,前面两个比较的结果都为0.</p>
+<p>比较时按照二进制值进行比较,这与CHAR/VARCHAR有很大不同.</p>
+<figure data-type="image" tabindex="33"><img src="https://img-blog.csdnimg.cn/2020031011452984.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>CHAR/VARCHAR比较的是字符值,忽略后面的空格,因此比较结果为1,但是BINARY比较的是二进制值,'a'的二进制值化为十六进制为61,'a '的二进制值化为十六进制为6120,因此比较结果为0.</p>
+<h1 id="6-json类型">6 JSON类型</h1>
+<p>JSON存储的数据不能是NULL,只能是JSON格式的数据,否则会报错,</p>
+<p>创建很简单,直接为JSON类型:</p>
+<figure data-type="image" tabindex="34"><img src="https://img-blog.csdnimg.cn/20200309231111993.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入时可以使用一个JSON对象或JSON数组,数组用方括号,一个对象用花括号:</p>
+<figure data-type="image" tabindex="35"><img src="https://img-blog.csdnimg.cn/20200309231123689.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>MySQL同时提供了一组操作JSON的函数,具体看<a href="https://dev.mysql.com/doc/refman/8.0/en/json-function-reference.html">这里</a>.</p>
+<p>这里演示了json_object函数,用来创建一个JSON对象:</p>
+<figure data-type="image" tabindex="36"><img src="https://img-blog.csdnimg.cn/20200310120504269.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入后:</p>
+<figure data-type="image" tabindex="37"><img src="https://img-blog.csdnimg.cn/20200310120513867.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-空间数据类型">7 空间数据类型</h1>
+<p>Spatial数据,又叫空间或几何数据,包含的数据类型有</p>
+<ul>
+<li>GEOMETRY</li>
+<li>POINT</li>
+<li>LINESTRING</li>
+<li>POLYGON</li>
+</ul>
+<p>其中GEOMETRY可用于存储任意几何类型.其他集合类型的空间数据类型如下:</p>
+<ul>
+<li>MULTIPOINT</li>
+<li>MULTILINESTRING</li>
+<li>MULTIPOLYGON</li>
+<li>GEOMETRYCOLLECTION</li>
+</ul>
+<p>其中GEOMETRYCOLLECTION可以存储任意类型的集合.</p>
+<p>下面仅对POINT的使用作简单介绍.</p>
+<figure data-type="image" tabindex="38"><img src="https://img-blog.csdnimg.cn/20200310004610365.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>插入数据使用st_geomfromtext()函数,参数是一个point(),里面的参数标识x,y坐标,空格分隔.</p>
+<p>查询时直接</p>
+<pre><code class="language-sql">SELECT * FROM
+</code></pre>
+<p>会返回BLOB数据,需要使用st_astext(),参数为列名.</p>
+<p>增加几行数据后,继续查询:</p>
+<figure data-type="image" tabindex="39"><img src="https://img-blog.csdnimg.cn/20200310004919534.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="40"><img src="https://img-blog.csdnimg.cn/20200310005104166.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>使用了st_x()与st_y()两个函数,分别取得point的x,y坐标.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Chrome/Chromium的实验性功能+扩展推荐，让你的Chrome/Chromium起飞!]]></title>
+        <id>https://2293736867.github.io/post/chromechromium-de-shi-yan-xing-gong-neng-kuo-zhan-tui-jian-rang-ni-de-chromechromium-qi-fei/</id>
+        <link href="https://2293736867.github.io/post/chromechromium-de-shi-yan-xing-gong-neng-kuo-zhan-tui-jian-rang-ni-de-chromechromium-qi-fei/">
+        </link>
+        <updated>2020-06-02T21:05:18.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-cron">2 cron</a>
+<li><a href="#1-%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%8A%9F%E8%83%BD">1 实验性功能</a>
 <ul>
-<li><a href="#21-cron%E9%80%9A%E9%85%8D%E7%AC%A6">2.1 cron通配符</a></li>
-<li><a href="#22-cron%E7%A4%BA%E4%BE%8B">2.2 cron示例</a></li>
+<li><a href="#11-%E5%B9%B3%E6%BB%91%E6%BB%9A%E5%8A%A8">1.1 平滑滚动</a></li>
+<li><a href="#12-%E6%82%AC%E5%81%9C%E6%A0%87%E7%AD%BE">1.2 悬停标签</a></li>
+<li><a href="#14-%E5%B9%B6%E8%A1%8C%E4%B8%8B%E8%BD%BD">1.4 并行下载</a></li>
+<li><a href="#15-%E5%BC%BA%E5%88%B6%E9%BB%91%E6%9A%97%E6%A8%A1%E5%BC%8F">1.5 强制黑暗模式</a></li>
+<li><a href="#16-%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F">1.6 阅读模式</a></li>
+<li><a href="#17-%E6%89%A9%E5%B1%95%E8%8F%9C%E5%8D%95%E6%A0%8F">1.7 扩展菜单栏</a></li>
+<li><a href="#18-%E6%B8%B2%E6%9F%93%E7%BA%A7%E5%88%AB%E6%95%B0%E6%8D%AE%E4%BC%98%E5%8C%96">1.8 渲染级别数据优化</a></li>
 </ul>
 </li>
-<li><a href="#3-fixedrate">3 fixedRate</a>
+<li><a href="#2-%E6%89%A9%E5%B1%95%E6%8E%A8%E8%8D%90">2 扩展推荐</a>
 <ul>
-<li><a href="#31-fixedrate">3.1 fixedRate</a></li>
-<li><a href="#32-fixedratestring">3.2 fixedRateString</a></li>
+<li><a href="#21-adguardublock">2.1 AdGuard/uBlock</a></li>
+<li><a href="#22-better-onetab">2.2 better-onetab</a></li>
+<li><a href="#23-dark-reader">2.3 Dark Reader</a></li>
+<li><a href="#24-extensions-manager">2.4 Extensions Manager</a></li>
+<li><a href="#25-imagus">2.5 Imagus</a></li>
+<li><a href="#26-infinity-pro">2.6 Infinity Pro</a></li>
+<li><a href="#27-minimal-scrollbar">2.7 Minimal Scrollbar</a></li>
+<li><a href="#28-similar-sites">2.8 Similar Sites</a></li>
+<li><a href="#29-tampermonkey">2.9 Tampermonkey</a></li>
+<li><a href="#210-vimuim">2.10 Vimuim</a></li>
 </ul>
 </li>
-<li><a href="#4-fixeddelay">4 fixedDelay</a>
-<ul>
-<li><a href="#41-fixeddelay">4.1 fixedDelay</a></li>
-<li><a href="#42-fixeddelaystring">4.2 fixedDelayString</a></li>
-</ul>
-</li>
-<li><a href="#5-initialdelay">5 initialDelay</a>
-<ul>
-<li><a href="#51-initialdelay">5.1 initialDelay</a></li>
-<li><a href="#52-initialdelaystring">5.2 initialDelayString</a></li>
-</ul>
-</li>
+<li><a href="#3-%E6%9C%80%E5%90%8E">3 最后</a></li>
 </ul>
 </p>
-<h1 id="1-概述">1 概述</h1>
-<p>@Scheduled注解是spring boot提供的用于定时任务控制的注解,主要用于控制任务在某个指定时间执行,或者每隔一段时间执行.注意需要配合@EnableScheduling使用,配置@Scheduled主要有三种配置执行时间的方式,cron,fixedRate,fixedDelay.</p>
-<h1 id="2-cron">2 cron</h1>
-<p>cron是@Scheduled的一个参数,是一个字符串,以5个空格隔开,只允许6个域(注意不是7个,7个直接会报错),分别表示秒,分,时,日,月,周.</p>
-<table>
-<thead>
-<tr>
-<th>单位</th>
-<th>允许值</th>
-<th>允许通配符</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>秒</td>
-<td>0-59</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>分</td>
-<td>0-59</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>时</td>
-<td>0-23</td>
-<td>, - * /</td>
-</tr>
-<tr>
-<td>日</td>
-<td>1-31</td>
-<td>, - * / ? L W</td>
-</tr>
-<tr>
-<td>月</td>
-<td>1-12 或 JAN-DEC(大小写均可)</td>
-<td>, - * / ?</td>
-</tr>
-<tr>
-<td>周</td>
-<td>1-7 或 SUN-SAT(大小写均可)</td>
-<td>, - * / ? L #</td>
-</tr>
-</tbody>
-</table>
-<h2 id="21-cron通配符">2.1 cron通配符</h2>
-<table>
-<thead>
-<tr>
-<th>符号</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>所有值.在秒字段上表示每秒执行,在月字段上表示每月执行</td>
-</tr>
-<tr>
-<td>?</td>
-<td>不指定值,不需要关系当前指定的字段的值,比如每天都执行但不需要关心周几,就可以把周的字段设为?</td>
-</tr>
-<tr>
-<td>-</td>
-<td>区间,如秒的0-2,表示0秒,1秒,2秒都会触发</td>
-</tr>
-<tr>
-<td>,</td>
-<td>多个值,比如在0秒,20秒,25秒触发,可以把秒的字段设为0,20,25</td>
-</tr>
-<tr>
-<td>/</td>
-<td>递增触发,比如秒的字段上设0/3,从第0秒开始,每隔3秒触发</td>
-</tr>
-<tr>
-<td>L</td>
-<td>最后,只允许在日字段或周字段上,在日字段上使用L表示当月最后一天,在周字段上使用3L表示该月最后一个周四</td>
-</tr>
-<tr>
-<td>W</td>
-<td>只允许用在日字段上,表示距离最近的该日的工作日.工作日指的是周一至周五</td>
-</tr>
-<tr>
-<td>#</td>
-<td>只允许在周字段上,表示每月的第几个周几,如2#3,每月的第3个周二</td>
-</tr>
-</tbody>
-</table>
-<h2 id="22-cron示例">2.2 cron示例</h2>
-<pre><code class="language-java">@Scheduled(cron = &quot;0 * * * 1 SAT&quot;) //每年的1月的所有周六的所有0秒时间执行
+<h1 id="1-实验性功能">1 实验性功能</h1>
+<p>Chrome/Chromium内置了一些很酷的实验性功能,打开</p>
+<pre><code class="language-bash">chrome://flags
 </code></pre>
-<pre><code class="language-java">@Scheduled(cron = &quot;0 0 0 1 Jan ?&quot;) //每年的1月的1日的0时0分0秒执行
+<p>即可访问.打开这些实验性功能后,浏览器的使用体验会更好,这里Chrome的版本为80.0.3987.132,<br>
+Chromium的版本为82.0.4080.0,不同的版本中有不同的实验性功能,具体每一项请打开上面的访问地址进行查看.</p>
+<h2 id="11-平滑滚动">1.1 平滑滚动</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200308230035381.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="12-悬停标签">1.2 悬停标签</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200308230138896.png" alt="在这里插入图片描述" loading="lazy"><br>
+鼠标悬停标签显示网址与网页缩略图.</p>
+<h2 id="14-并行下载">1.4 并行下载</h2>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200308230326521.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="15-强制黑暗模式">1.5 强制黑暗模式</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200308230416164.png" alt="在这里插入图片描述" loading="lazy"><br>
+对所有内容使用黑暗模式.</p>
+<h2 id="16-阅读模式">1.6 阅读模式</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200308231106685.png" alt="在这里插入图片描述" loading="lazy"><br>
+开启之后会在某些页面的地址栏的在最右边的收藏五角星符号旁边多一个阅读视图的符号。</p>
+<h2 id="17-扩展菜单栏">1.7 扩展菜单栏</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200308231407418.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样就不用每次都打开&quot;更多工具&quot;了.<br>
+<img src="https://img-blog.csdnimg.cn/20200308234541365.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="18-渲染级别数据优化">1.8 渲染级别数据优化</h2>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200308231942914.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="2-扩展推荐">2 扩展推荐</h1>
+<p>先来一张图，这是笔者自用的扩展：<br>
+<img src="https://img-blog.csdnimg.cn/20200309020220830.png" alt="在这里插入图片描述" loading="lazy"><br>
+扩展不在多而在精，原本是有20多个的，然后不断精简，优化，替换，就剩下了13个扩展。</p>
+<h2 id="21-adguardublock">2.1 AdGuard/uBlock</h2>
+<p>去广告的扩展，原本用的是什么广告终结者，AdBlock，后来就改成了这两个。</p>
+<h2 id="22-better-onetab">2.2 better-onetab</h2>
+<p>原本用的是onetab，onetab其实做的不错了，只是UI确实比better-onetab差。。。<br>
+这个扩展是用于标签管理的，最常见的功能是，需要关闭浏览器，但是目前开了很多个标签，想在下一次打开浏览器时恢复这些标签，但是又不想一个一个加进收藏夹，因为完全没必要而且大部分都是一次性使用，此时better-onetab便派上了用场，单击扩展存储全部标签即可。<br>
+<img src="https://img-blog.csdnimg.cn/20200309020837151.png" alt="在这里插入图片描述" loading="lazy"><br>
+由于这个可能经常使用，建议打开</p>
+<pre><code class="language-bash">chrome://extensions/shortcuts
 </code></pre>
-<p>cron支持占位符,若在配置文件中有</p>
-<pre><code class="language-java">cron = 2 2 2 2 2 ?
+<p>增加快捷键。<br>
+<img src="https://img-blog.csdnimg.cn/20200309021032966.png" alt="在这里插入图片描述" loading="lazy"><br>
+笔者这里加了两个，一个是显示扩展页面的，一个是存储所有标签的。</p>
+<h2 id="23-dark-reader">2.3 Dark Reader</h2>
+<p>这个嘛，看名字就知道了，黑暗模式，支持一键切换，支持不同站点，也支持亮度，对比度等的调节，非常实用，也建议加上快捷键。<br>
+<img src="https://img-blog.csdnimg.cn/2020030902121062.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200309021250493.png" alt="在这里插入图片描述" loading="lazy"><br>
+比如这里加的快捷键为alt+q，然后按一下就可以切换黑暗/正常模式了。</p>
+<h2 id="24-extensions-manager">2.4 Extensions Manager</h2>
+<p>扩展管理器，可以管理所有的扩展，一键开启/关闭，同时也支持不同环境下的快速切换扩展，常见的场景是一般浏览使用默认配置，然后开发环境使用另一套扩展，切换非常的简单，首先在设置里添加。<br>
+<img src="https://img-blog.csdnimg.cn/20200309021623523.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后单击该扩展就可以进行切换了：<br>
+<img src="https://img-blog.csdnimg.cn/202003090306061.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="25-imagus">2.5 Imagus</h2>
+<p>这个扩展主要用于预览图片，鼠标悬停可以放大预览图片，还可以对临时的预览图片进行缩放，旋转等功能。<br>
+<img src="https://img-blog.csdnimg.cn/20200309021834577.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200309022047462.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以打开设置修改默认的快捷键，默认q垂直翻转，w水平翻转，e逆时针旋转，r顺时针旋转，剩下的就不说了，按需要自定义。</p>
+<h2 id="26-infinity-pro">2.6 Infinity Pro</h2>
+<p>一个非常漂亮的新标签页扩展，建议注册一个账号去开启Pro功能，开启Pro后可以支持文件夹的创建，还可以把数据备份到云端，然后切换浏览器可以一键恢复数据。<br>
+<img src="https://img-blog.csdnimg.cn/20200309022517485.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以自定义的设置非常丰富，包括布局行列数，行宽，列宽，图标大小，阴影，圆角，透明度，字体大小，阴影，颜色，自定义/随机壁纸，搜索栏显隐等，自行体会。</p>
+<h2 id="27-minimal-scrollbar">2.7 Minimal Scrollbar</h2>
+<p>最小化滚动条，这个没啥好说的，自己对比一下安装扩展后的变化就好了。</p>
+<h2 id="28-similar-sites">2.8 Similar Sites</h2>
+<p>可以发现类似的网站，比如，打开csdn时，显示了github，stackoverflow，博客园等网站。<br>
+<img src="https://img-blog.csdnimg.cn/20200309023041551.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="29-tampermonkey">2.9 Tampermonkey</h2>
+<p>这个很出名啊，油猴，有一个类似的，叫暴力猴。油猴这个扩展主要是用来管理脚本的，也就是说，单单安装这个扩展啥用也没有，需要安装脚本，这里推荐这个网站：<a href="https://greasyfork.org/zh-CN">Greasy Fork</a>.<br>
+具体就不多说了，有些奥秘需要自己去探个究竟。</p>
+<h2 id="210-vimuim">2.10 Vimuim</h2>
+<p>这个压轴登场的扩展，是vim与chromium的结合体，换句话说，在浏览器中集成vim的操作。<br>
+比如hjkl是最常见的vim操作，对应页面的滚动，分别是左/下/上/右滚，f是页面跳转功能，比如一个页面按f前：<br>
+<img src="https://img-blog.csdnimg.cn/20200309024053284.png" alt="在这里插入图片描述" loading="lazy"><br>
+按了f后：<br>
+<img src="https://img-blog.csdnimg.cn/20200309024116944.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以看到多了很多字母对吧，如果此时再输入对应的字母，便会在当前页面跳转到目标页面，比如此时再输入le，便会跳转到“这份Android Studio快捷键大全....”这个页面，大写F实现的功能类似，不过是在新标签页打开。<br>
+另一个非常实用的功能是搜索框，按下o/O即可出现：<br>
+<img src="https://img-blog.csdnimg.cn/20200309024531165.png" alt="在这里插入图片描述" loading="lazy"><br>
+这个框可以直接输入链接跳转，或者输入字符进去搜索，可以在vimuim的设置里设置默认的搜索引擎：<br>
+<img src="https://img-blog.csdnimg.cn/20200309024658987.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里默认的搜索引擎是百度，下面的设置可以自定义搜索引擎，比如第一行为</p>
+<pre><code class="language-bash">g : https://www......
 </code></pre>
-<p>则</p>
-<pre><code class="language-java">@Scheduled(cron = &quot;${cron}&quot;)
+<p>冒号前面的g表示关键字，后面的搜索关键字用</p>
+<pre><code class="language-bash">%s
 </code></pre>
-<p>表示每年的二月二号的两时两分两秒执行.</p>
-<h1 id="3-fixedrate">3 fixedRate</h1>
-<h2 id="31-fixedrate">3.1 fixedRate</h2>
-<p>fixedRate表示自上一次执行时间之后多长时间执行,以ms为单位.<br>
-如</p>
-<pre><code class="language-java">@Scheduled(fixedRate = 1000 * 5)
-</code></pre>
-<p>自上次执行之后5秒再执行.</p>
-<h2 id="32-fixedratestring">3.2 fixedRateString</h2>
-<p>有一个类似的参数叫fixedRateString,是字符串的形式,支持占位符.<br>
-如</p>
-<pre><code class="language-java">@Scheduled(fixedRateString = &quot;1000&quot;)
-</code></pre>
-<p>自上次执行1秒再执行.<br>
-若在配置文件中有相应的属性,可以用占位符获取属性,如在application.properties中有</p>
-<pre><code class="language-xml">interval=2000
-</code></pre>
-<p>可以使用</p>
-<pre><code class="language-java">@Scheduled(fixedRateStirng=&quot;${interval}&quot;)
-</code></pre>
-<p>表示2秒间隔.</p>
-<h1 id="4-fixeddelay">4 fixedDelay</h1>
-<h2 id="41-fixeddelay">4.1 fixedDelay</h2>
-<p>fixedDelay与fixedRate有点类似,不过fixedRate是上一次开始之后计时,fixedDelay是上一次结束之后计时,也就是说,fixedDelay表示上一次执行完毕之后多长时间执行,单位也是ms.</p>
-<pre><code class="language-java">@Scheduled(fixedDelay = 1000 * 3600 * 12) //上一次执行完毕后半天后再次执行
-</code></pre>
-<h2 id="42-fixeddelaystring">4.2 fixedDelayString</h2>
-<p>与fixedRateString类似,也是支持占位符</p>
-<pre><code class="language-java">@Scheduled(fixedDelayString = &quot;${fixedDelay}&quot;)
-</code></pre>
-<h1 id="5-initialdelay">5 initialDelay</h1>
-<h2 id="51-initialdelay">5.1 initialDelay</h2>
-<p>initialDelay表示首次延迟多长时间后执行,单位ms,之后按照cron/fixedRate/fixedRateString/fixedDelay/fixedDelayString指定的规则执行,需要指定其中一个规则.</p>
-<pre><code class="language-java">@Scheduled(initialDelay=1000,fixedRate=1000) //首次运行延迟1s
-</code></pre>
-<h2 id="52-initialdelaystring">5.2 initialDelayString</h2>
-<p>与initialDelay类似,不过是字符串,支持占位符.</p>
-<pre><code class="language-java">@Scheduled(initialDelayString = &quot;${initialDelay}&quot;,cron = &quot;0 0 0 14 4 ?&quot;) 
-//按照配置文件initialDelay指定的时间首次延迟,并于每年4月14日0时0分0秒执行
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每天AC系列(三):电话号码的字母组合]]></title>
-        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-san-dian-hua-hao-ma-de-zi-mu-zu-he/</id>
-        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-san-dian-hua-hao-ma-de-zi-mu-zu-he/">
-        </link>
-        <updated>2020-06-02T20:46:56.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
-<p><a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/">Leetcode第17题。</a><br>
-数字2-9映射字母，给出一个包含字符串的数字，列出字母的所有组合。<br>
-<img src="https://img-blog.csdnimg.cn/20200125132943630.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-递归">2 递归</h1>
-<p>拿到这样的题目想到了递归实现，创建一个Map映射对应的字母，然后把它传给递归函数，同时创建一个临时变量temp，保存每一次添加字母的结果，递归的结束条件是数字串的长度为0.</p>
-<pre><code class="language-java">public void one(String digits,List&lt;String&gt; result,HashMap&lt;Integer,String&gt; ss,String temp)
-{
-    if(digits.length() &gt; 0)
-    {
-        String s = ss.get((int)(digits.charAt(0))-48);
-        for(int i=0;i&lt;s.length();++i)
-            one(digits.substring(1),result,ss,temp+s.charAt(i));
-    }
-    else
-        result.add(temp);
-}
-</code></pre>
-<h1 id="3-提交">3 提交</h1>
-<p>直接一次AC.</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200125133042554.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-优化">4 优化</h1>
-<p>其实可以不需要Map的，可以直接使用一个字符串数组，因为是数字到字符串的映射，对于数字可以用下标代替。其次，为了更快的速度可以使用StringBuilder代替String.</p>
-<p>还有就是用下标代替了截断digits，对于digits其实没必要使用截断，只需要一个下标表示范围即可，对于StringBuilder，因为没有像String这样的+，因此需要在使用append后对其进行删除处理。</p>
-<pre><code class="language-java">public void one(String digits,int index,StringBuilder temp)
-{
-    if(index &lt; digits.length())
-    {
-        String d = s[digits.charAt(index)-'0'];
-        for(int i=0;i&lt;d.length();++i)
-        {
-            one(digits,index+1,temp.append(d.charAt(i)));
-            temp.deleteCharAt(index);
-        }
-    }
-    else
-        result.add(temp.toString());
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200125140355421.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-源码">5 源码</h1>
-<p><a href="https://github.com/2293736867/ACEveryDay/tree/master/Day3">github</a></p>
-<p><a href="https://gitee.com/imykr/ACEveryDay/tree/master/Day3">码云</a></p>
+<p>代替，然后在搜索框中输入关键字+空格+字符就可以用该关键字对应的搜索引擎进去搜索了。<br>
+这里演示一下添加搜索引擎的方法，以github为例，打开github随便搜索123：<br>
+<img src="https://img-blog.csdnimg.cn/20200309025131406.png" alt="在这里插入图片描述" loading="lazy"><br>
+复制这个地址，加上关键字与替换123：<br>
+<img src="https://img-blog.csdnimg.cn/2020030902520092.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200309031239662.png" alt="在这里插入图片描述" loading="lazy"><br>
+别忘了底部的保存按钮。<br>
+<img src="https://img-blog.csdnimg.cn/2020030902522413.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后输入关键字+空格+搜索字符进行搜索即可。<br>
+<img src="https://img-blog.csdnimg.cn/20200309025308465.png" alt="在这里插入图片描述" loading="lazy"><br>
+再说一下书签功能，输入b/B可以直接访问书签（强大吧），比如笔者这里的书签有四个文件夹：<br>
+<img src="https://img-blog.csdnimg.cn/20200309025504765.png" alt="在这里插入图片描述" loading="lazy"><br>
+输入的标签以斜杠符号开始，后面加对应的文件夹以及对应的网站，这里不用担心输错，因为有自动显示的功能，输错的话下面没有书签显示：<br>
+<img src="https://img-blog.csdnimg.cn/20200309025704247.png" alt="在这里插入图片描述" loading="lazy"><br>
+还有很多功能就不逐一介绍了，可以输入?查看帮助：<br>
+<img src="https://img-blog.csdnimg.cn/2020030902581057.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-最后">3 最后</h1>
+<p>现在主流的Chrome已经很强大了，加上这些实验性功能与推荐的扩展，希望你们能有一个更舒服的上网冲浪的环境。</p>
 ]]></content>
     </entry>
 </feed>

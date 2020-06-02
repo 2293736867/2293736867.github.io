@@ -1,0 +1,1486 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一文吃透jQuery选择器! | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 jQuery选择器
+2 基本选择器
+
+2.1 id选择器
+2.2 元素选择器
+2.3 类选择器
+2.4 通配符选择器
+2.5 组合选择器
+
+
+3 层级选择器
+
+3.1 后代选择器
+3.2 子代选择器
+3.3 相邻选择器
+3.4 兄弟选..." />
+    <meta name="keywords" content="jQuery" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591132326815" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/yi-wen-chi-tou-jquery-xuan-ze-qi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/yi-wen-chi-tou-jquery-xuan-ze-qi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/yi-wen-chi-tou-jquery-xuan-ze-qi/"> </span>
+              </a>
+              <span id="/yi-wen-chi-tou-jquery-xuan-ze-qi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-0 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">一文吃透jQuery选择器!</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-jquery%E9%80%89%E6%8B%A9%E5%99%A8">1 jQuery选择器</a></li>
+<li><a href="#2-%E5%9F%BA%E6%9C%AC%E9%80%89%E6%8B%A9%E5%99%A8">2 基本选择器</a>
+<ul>
+<li><a href="#21-id%E9%80%89%E6%8B%A9%E5%99%A8">2.1 id选择器</a></li>
+<li><a href="#22-%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">2.2 元素选择器</a></li>
+<li><a href="#23-%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8">2.3 类选择器</a></li>
+<li><a href="#24-%E9%80%9A%E9%85%8D%E7%AC%A6%E9%80%89%E6%8B%A9%E5%99%A8">2.4 通配符选择器</a></li>
+<li><a href="#25-%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A8">2.5 组合选择器</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%B1%82%E7%BA%A7%E9%80%89%E6%8B%A9%E5%99%A8">3 层级选择器</a>
+<ul>
+<li><a href="#31-%E5%90%8E%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">3.1 后代选择器</a></li>
+<li><a href="#32-%E5%AD%90%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">3.2 子代选择器</a></li>
+<li><a href="#33-%E7%9B%B8%E9%82%BB%E9%80%89%E6%8B%A9%E5%99%A8">3.3 相邻选择器</a></li>
+<li><a href="#34-%E5%85%84%E5%BC%9F%E9%80%89%E6%8B%A9%E5%99%A8">3.4 兄弟选择器</a></li>
+</ul>
+</li>
+<li><a href="#4-%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">4 过滤选择器</a>
+<ul>
+<li><a href="#41-%E5%9F%BA%E6%9C%AC%E8%BF%87%E6%BB%A4%E5%99%A8">4.1 基本过滤器</a>
+<ul>
+<li><a href="#411-%E4%B8%A4%E7%AB%AF%E7%B1%BB">4.1.1 两端类</a></li>
+<li><a href="#412-%E8%8C%83%E5%9B%B4%E7%B4%A2%E5%BC%95%E7%B1%BB">4.1.2 范围索引类</a></li>
+<li><a href="#413-%E5%A5%87%E5%81%B6%E7%B1%BB">4.1.3 奇偶类</a></li>
+<li><a href="#414-%E5%85%B6%E4%BB%96">4.1.4 其他</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4%E5%99%A8">4.2 内容过滤器</a></li>
+<li><a href="#43-%E5%8F%AF%E8%A7%81%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.3 可见性过滤器</a></li>
+<li><a href="#44-%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.4 属性过滤器</a></li>
+<li><a href="#45-%E5%AD%90%E5%85%83%E7%B4%A0%E8%BF%87%E6%BB%A4%E5%99%A8">4.5 子元素过滤器</a>
+<ul>
+<li><a href="#451-%E7%B4%A2%E5%BC%95%E8%BF%87%E6%BB%A4%E5%99%A8">4.5.1 索引过滤器</a>
+<ul>
+<li><a href="#4511-first-child%E4%B8%8Elast-child">4.5.1.1 first-child与last-child</a></li>
+<li><a href="#4512-nth-child%E4%B8%8Enth-last-child19">4.5.1.2 nth-child与nth-last-child(1.9+)</a></li>
+</ul>
+</li>
+<li><a href="#452-%E7%B1%BB%E5%9E%8B%E8%BF%87%E6%BB%A4%E5%99%A819">4.5.2 类型过滤器(1.9+)</a></li>
+<li><a href="#453-%E5%94%AF%E4%B8%80%E8%BF%87%E6%BB%A4%E5%99%A8">4.5.3 唯一过滤器</a></li>
+</ul>
+</li>
+<li><a href="#46-%E8%A1%A8%E5%8D%95%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.6 表单对象属性过滤器</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%A1%A8%E5%8D%95%E9%80%89%E6%8B%A9%E5%99%A8">5 表单选择器</a>
+<ul>
+<li><a href="#51-%E6%96%87%E6%9C%AC%E6%A1%86%E7%B1%BB">5.1 文本框类</a></li>
+<li><a href="#52-%E9%80%89%E6%8B%A9%E6%A1%86%E7%B1%BB">5.2 选择框类</a></li>
+<li><a href="#53-%E6%8C%89%E9%92%AE%E7%B1%BB">5.3 按钮类</a></li>
+<li><a href="#54-%E5%85%B6%E4%BB%96">5.4 其他</a></li>
+<li><a href="#55-%E4%BE%8B%E5%AD%90">5.5 例子</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-jquery选择器">1 jQuery选择器</h1>
+<p>jQuery选择器用于选择DOM元素进行相应操作,允许通过多种方式选择,包括标签名,属性名,类名,id等对元素进行选择,基于CSS选择器.jQuery中所有的选择器都以$符号开头,后面加一对括号.<br>
+jQuery选择器可以分为基本选择器,层次选择器,过滤选择器与表单选择器.</p>
+<h1 id="2-基本选择器">2 基本选择器</h1>
+<p>基本选择器可以分成五个:</p>
+<ul>
+<li>id选择器</li>
+<li>元素选择器</li>
+<li>类选择器</li>
+<li>通配符选择器</li>
+<li>组合选择器</li>
+</ul>
+<h2 id="21-id选择器">2.1 id选择器</h2>
+<p>id选择器根据给定的id匹配一个元素,以</p>
+<pre><code>#
+</code></pre>
+<p>开头,如有:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>则选择器</p>
+<pre><code class="language-js">$(&quot;#div1&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312085650883.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果id中含有特殊字符,比如点:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1.1.1&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>则需要使用双反斜杠转义:</p>
+<pre><code class="language-js">$(&quot;#div1\\.1\\.1&quot;)
+</code></pre>
+<h2 id="22-元素选择器">2.2 元素选择器</h2>
+<p>根据元素的标签名查找所有符合的元素.假设有:</p>
+<pre><code class="language-html">&lt;div&gt;1&lt;/div&gt;
+&lt;div&gt;2&lt;/div&gt;
+&lt;div&gt;3&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div&quot;)
+</code></pre>
+<p>会选择所有div元素.<br>
+<img src="https://img-blog.csdnimg.cn/20200312090242302.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="23-类选择器">2.3 类选择器</h2>
+<p>根据给定的css类名匹配元素,以</p>
+<pre><code>.
+</code></pre>
+<p>开头.如有:</p>
+<pre><code class="language-html">&lt;div class=&quot;class1&quot;&gt;&lt;/div&gt;
+&lt;p class=&quot;class1&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;class2&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;.class1&quot;)
+</code></pre>
+<p>会选择:<br>
+<img src="https://img-blog.csdnimg.cn/20200312090622567.png" alt="在这里插入图片描述" loading="lazy"><br>
+选择器</p>
+<pre><code class="language-js">$(&quot;.class2&quot;)
+</code></pre>
+<p>会选择:<br>
+<img src="https://img-blog.csdnimg.cn/20200312090659823.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="24-通配符选择器">2.4 通配符选择器</h2>
+<p>选择所有的元素.</p>
+<pre><code class="language-html">&lt;div&gt;div&lt;/div&gt;
+&lt;p&gt;p&lt;/p&gt;
+&lt;span&gt;span&lt;/span&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;*&quot;)
+</code></pre>
+<p>会显示<br>
+<img src="https://img-blog.csdnimg.cn/20200312090926891.png" alt="在这里插入图片描述" loading="lazy"><br>
+也就是说整个&lt;html&gt;都在选择范围内,不仅仅是&lt;body&gt;.<br>
+若要选择&lt;body&gt;内的元素,可用</p>
+<pre><code class="language-js">$(&quot;body *&quot;)
+</code></pre>
+<h2 id="25-组合选择器">2.5 组合选择器</h2>
+<p>组合选择器就是多个选择器的组合,用</p>
+<pre><code>,
+</code></pre>
+<p>分隔每一个选择器,如有:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;class1&quot;&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;div class=&quot;class2&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;#div1,p,.class2&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312091320971.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-层级选择器">3 层级选择器</h1>
+<p>层级选择器共有四种:后代选择器,子代选择器,相邻选择器,兄弟选择器.</p>
+<h2 id="31-后代选择器">3.1 后代选择器</h2>
+<p>根据祖先元素选择所有的后代元素,使用空格分隔,如有</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;div id=&quot;div2&quot;&gt;
+        &lt;div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;div3&quot;&gt;
+        &lt;div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;#div1 div&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312093623872.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="32-子代选择器">3.2 子代选择器</h2>
+<p>选择给定父元素下的所有子元素,使用</p>
+<pre><code>&gt;
+</code></pre>
+<p>分隔,同样上面的例子:</p>
+<pre><code class="language-js">$(&quot;#div1&gt;div&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312093753914.png" alt="在这里插入图片描述" loading="lazy"><br>
+<strong>两者的区别在于后代选择器会选择所有的后代,不管里面有多少后代(层),而子选择器只会选择直接后代,也就是只选择&quot;一代&quot;后代(层).</strong></p>
+<h2 id="33-相邻选择器">3.3 相邻选择器</h2>
+<p>选择紧接在指定元素后面的元素,用</p>
+<pre><code>+
+</code></pre>
+<p>分隔,如有</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;div id=&quot;div2&quot;&gt;&lt;/div&gt;
+&lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;#div1+p&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312102652496.png" alt="在这里插入图片描述" loading="lazy"><br>
+可用</p>
+<pre><code class="language-js">.next()
+</code></pre>
+<p>代替,如上面的例子可以变为</p>
+<pre><code class="language-js">$(&quot;#div1&quot;).next()
+</code></pre>
+<h2 id="34-兄弟选择器">3.4 兄弟选择器</h2>
+<p>选择之后的所有兄弟元素,用</p>
+<pre><code>~
+</code></pre>
+<p>分隔,如有</p>
+<pre><code class="language-html">&lt;div&gt;
+	&lt;p&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>则</p>
+<pre><code class="language-js">$(&quot;div~p&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312094857604.png" alt="在这里插入图片描述" loading="lazy"><br>
+可用</p>
+<pre><code class="language-js">.nextAll()
+</code></pre>
+<p>代替,如上面的例子可以表示为:</p>
+<pre><code class="language-js">$(&quot;div&quot;).nextAll(&quot;p&quot;)
+</code></pre>
+<p>如果没有加上p选择器:</p>
+<pre><code class="language-js">$(&quot;div&quot;).nextAll()
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312095431456.png" alt="在这里插入图片描述" loading="lazy"><br>
+等价于</p>
+<pre><code class="language-js">$(&quot;div~*&quot;)
+</code></pre>
+<p><strong>与相邻选择器的区别:兄弟选择器会选择后面所有的兄弟,而相邻选择器只选择第一个兄弟.</strong></p>
+<h1 id="4-过滤选择器">4 过滤选择器</h1>
+<p>过滤选择器种类最多,可以分为:</p>
+<ul>
+<li>基本过滤器</li>
+<li>内容过滤器</li>
+<li>可见性过滤器</li>
+<li>属性过滤器</li>
+<li>子元素过滤器</li>
+<li>表单对象属性过滤器</li>
+</ul>
+<p>下面一个个进行说明.</p>
+<h2 id="41-基本过滤器">4.1 基本过滤器</h2>
+<p>根据某类过滤规则进行选择,以</p>
+<pre><code>:
+</code></pre>
+<p>开头.</p>
+<h3 id="411-两端类">4.1.1 两端类</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:first</td>
+<td>选择第一个元素</td>
+</tr>
+<tr>
+<td>:last</td>
+<td>选择最后一个元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div&gt;p:first&quot;)
+$(&quot;div&gt;p:last&quot;)
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200312104229381.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="412-范围索引类">4.1.2 范围索引类</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:eq(index)</td>
+<td>选择指定索引值元素</td>
+</tr>
+<tr>
+<td>:gt(index)</td>
+<td>选择大于给定索引值元素</td>
+</tr>
+<tr>
+<td>:lt(index)</td>
+<td>选择小于给定索引值元素</td>
+</tr>
+</tbody>
+</table>
+<p>注意索引从0开始,要与下面的:nth-child/:nth-last-child/:nth-of-type/:n-last-of-type区分.<br>
+html:</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;index0&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index3&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;index5&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div&gt;p:eq(3)&quot;)
+$(&quot;div&gt;p:lt(2)&quot;)
+$(&quot;div&gt;p:gt(4)&quot;)
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200312105231149.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="413-奇偶类">4.1.3 奇偶类</h3>
+<p>选择索引值为奇/偶的元素,从0开始计数.</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:odd</td>
+<td>选择索引值为奇数的元素</td>
+</tr>
+<tr>
+<td>:even</td>
+<td>选择索引值为偶数的元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div&gt;p:odd&quot;)
+$(&quot;div&gt;p:even&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312104446666.png" alt="在这里插入图片描述" loading="lazy"><br>
+odd为什么是246?even为什么是135?<br>
+难道结果错了?</p>
+<p>并不是,下标从0开始计数,下标为0的&lt;p&gt;的id为p1,算进去偶数里了.<br>
+<img src="https://img-blog.csdnimg.cn/20200312104740554.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="414-其他">4.1.4 其他</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:header</td>
+<td>选择标题元素,如&lt;h1&gt;,&lt;h2&gt;</td>
+</tr>
+<tr>
+<td>:animated</td>
+<td>选择正在执行动画效果的元素</td>
+</tr>
+<tr>
+<td>:focus(1.6+)</td>
+<td>选择当前获取焦点的元素</td>
+</tr>
+<tr>
+<td>:root(1.9+)</td>
+<td>选择根元素,也就是&lt;html&gt;</td>
+</tr>
+<tr>
+<td>:target(1.9+)</td>
+<td>这个比较特殊,与URI有关,选择ID和特定标识符相匹配的元素<br>比如给定了URI http://xxx.com#ttt , $(&quot;p:ttt&quot;)会选择&lt;p id=&quot;ttt&quot;&gt;</td>
+</tr>
+<tr>
+<td>:lang(language)(1.9+)</td>
+<td>选择指定语言的所有元素</td>
+</tr>
+<tr>
+<td>:not(selector)</td>
+<td>反选器</td>
+</tr>
+</tbody>
+</table>
+<p>挑取一些简单演示,html:</p>
+<pre><code class="language-html">&lt;div lang=&quot;en&quot;&gt;
+    &lt;h1 id=&quot;h1&quot;&gt;&lt;/h1&gt;
+    &lt;h2 id=&quot;h2&quot;&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div lang=&quot;zh-CN&quot;&gt;&lt;/div&gt;
+&lt;div lang=&quot;en&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;:header&quot;)
+$(&quot;:root div&quot;)
+$(&quot;div:not(:lang(zh-CN))&quot;)
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200312110701888.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-内容过滤器">4.2 内容过滤器</h2>
+<p>四种:</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:contains(text)</td>
+<td>选择包含给定文本的元素</td>
+</tr>
+<tr>
+<td>:has(selector)</td>
+<td>选择含有过滤器所匹配的元素的元素</td>
+</tr>
+<tr>
+<td>:empty</td>
+<td>选择不包含子元素或文本为空的元素</td>
+</tr>
+<tr>
+<td>:parent</td>
+<td>选择含有子元素或文本为的元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;123&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;div id=&quot;div3&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div4&quot;&gt;123&lt;/div&gt;
+&lt;div id=&quot;div5&quot;&gt;&lt;/div&gt;
+&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;body *:contains(123)&quot;)
+$(&quot;body *:has(#div3)&quot;)
+$(&quot;body *:empty&quot;)
+$(&quot;div:parent&quot;)
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200312113250180.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="43-可见性过滤器">4.3 可见性过滤器</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:visible</td>
+<td>选择可见元素</td>
+</tr>
+<tr>
+<td>:hidden</td>
+<td>选择不可见元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;div2&quot; style=&quot;display: none;&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;body *:hidden&quot;);
+$(&quot;body *:visible&quot;);
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200312113649997.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="44-属性过滤器">4.4 属性过滤器</h2>
+<p>属性过滤器针对元素的属性进行过滤,包括有没有该属性,该属性的值,以某些值开头/结尾,包含某些值等,使用</p>
+<pre><code>[]
+</code></pre>
+<p>表示属性过滤器.</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[attr]</td>
+<td>选择包含attr属性的元素,常见的是[id],选择包含id属性的元素.</td>
+</tr>
+<tr>
+<td>[attr=value]</td>
+<td>选择attr属性为value的元素,如[name=123],[id=div1]</td>
+</tr>
+<tr>
+<td>[attr!=value]</td>
+<td><strong>选择不含有attr属性,或含有attr属性,但是值不为value的元素.等价于:not([attr=vale])</strong><br><br><strong>如果想要选择包含特定属性但是属性值不为value的元素请使用[attr]:not([attr=value])</strong></td>
+</tr>
+<tr>
+<td>[attr^=value]</td>
+<td>选择attr属性值是以value开始的元素</td>
+</tr>
+<tr>
+<td>[attr$=value]</td>
+<td>选择attr属性值是以value结尾的元素</td>
+</tr>
+<tr>
+<td>[attr*=value]</td>
+<td>选择attr属性值是包含value的元素</td>
+</tr>
+</tbody>
+</table>
+<p>html:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;div2&quot; name=&quot;div2&quot;&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div id=&quot;div3&quot; name=&quot;div3&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;[id]&quot;)
+$(&quot;[id$=3]&quot;)
+$(&quot;body *[name!=div2]&quot;)
+$(&quot;body *[name*=div]&quot;)
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200312115227135.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="45-子元素过滤器">4.5 子元素过滤器</h2>
+<p>可以按照索引顺序(即第一个,倒数第几个等)或者按照类型或者按照唯一性对子元素进行过滤.</p>
+<h3 id="451-索引过滤器">4.5.1 索引过滤器</h3>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:first-child</td>
+<td>选择第一个子元素,等价于:nth-child(1)</td>
+</tr>
+<tr>
+<td>:last-child</td>
+<td>选择最后一个子元素</td>
+</tr>
+<tr>
+<td>:nth-child</td>
+<td>选择第n个子元素</td>
+</tr>
+<tr>
+<td>:nth-last-child</td>
+<td>选择倒数第n个子元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4511-first-child与last-child">4.5.1.1 first-child与last-child</h4>
+<p>先来看看first-child与last-child:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div p:first-child&quot;)
+$(&quot;div p:last-child&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312141417731.png" alt="在这里插入图片描述" loading="lazy"><br>
+<strong>注意与:first/:last的区别,:first/:last只会选择整个父级元素的第一个/最后一个元素,但是:first-child/:last-child会选择每个父级元素的第一个/最后一个元素.<br>
+:first/:last把所有符合的元素看作一个整体,即使其中有并列的父级元素,而:first-child/:last-child把每个父级元素单独看待,选择每个父级元素的第一个/最后一个元素.</strong><br>
+<img src="https://img-blog.csdnimg.cn/20200312141942463.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="4512-nth-child与nth-last-child19">4.5.1.2 nth-child与nth-last-child(1.9+)</h4>
+<p>nth-child选择父元素下第n个元素,注意,<strong>从1开始计数</strong>.</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div p:nth-child(3)&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/2020031214274542.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意与:eq的区别,有点类似:first/:first-child的区别,:eq会把所有符合条件的元素看作一个整体,而且不要忘记:eq是<strong>从0开始计数</strong>.<br>
+<img src="https://img-blog.csdnimg.cn/2020031214285558.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一方面,nth-child支持奇偶与代数表达式,比如:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p id=&quot;p7&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p8&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p9&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p10&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p11&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;div p:nth-child(odd)&quot;)
+$(&quot;div p:nth-child(even)&quot;)
+$(&quot;div p:nth-child(3n+1)&quot;)
+$(&quot;div p:nth-child(4n-3)&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312143318644.png" alt="在这里插入图片描述" loading="lazy"><br>
+计数也是从1开始.<br>
+nth-last-child与nth-child类似,需要1.9以上的版本,看名字就知道,是选择倒数第n个的,同样支持奇偶与代数表达式.</p>
+<pre><code class="language-js">$(&quot;div p:nth-last-child(2)&quot;)
+$(&quot;div p:nth-last-child(odd)&quot;)
+$(&quot;div p:nth-last-child(even)&quot;)
+$(&quot;div p:nth-last-child(3n+1)&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312143759526.png" alt="在这里插入图片描述" loading="lazy"><br>
+对于nth-last-child的odd/even/代数表达式来说,从最后一个符合条件的开始选择,但是按原来的顺序排列.</p>
+<h3 id="452-类型过滤器19">4.5.2 类型过滤器(1.9+)</h3>
+<p>有四种:</p>
+<ul>
+<li>:first-of-type</li>
+<li>:last-of-type</li>
+<li>:nth-of-type</li>
+<li>:nth-last-of-type</li>
+</ul>
+<p>first-of-type会选择符合条件的元素的父元素的第一个该类型的子元素.<br>
+例如,</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器:</p>
+<pre><code class="language-js">$(&quot;p:first-of-type&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312144917586.png" alt="在这里插入图片描述" loading="lazy"><br>
+若使用id选择器:</p>
+<pre><code class="language-js">$(&quot;#p2:first-of-type&quot;)
+</code></pre>
+<p>则结果为空.<br>
+<img src="https://img-blog.csdnimg.cn/20200312145529893.png" alt="在这里插入图片描述" loading="lazy"><br>
+为什么?<br>
+因为此时选择的是id为p2的元素,但是这个</p>
+<pre><code class="language-html">&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>的前面有一个</p>
+<pre><code class="language-html">&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>也就是说</p>
+<pre><code class="language-html">&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>不是第一个孩子,因此选择为空,此时若把第一个孩子注释:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;!-- &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt; --&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>则</p>
+<pre><code class="language-js">$(&quot;#p2:first-of-type&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312145801254.png" alt="在这里插入图片描述" loading="lazy"><br>
+多个父级元素也是一样的道理:</p>
+<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;div2&quot;&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;p class=&quot;a&quot; id=&quot;p5&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;.a:first-of-type&quot;)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200312150052381.png" alt="在这里插入图片描述" loading="lazy"><br>
+last-of-type/nth-of-child/nth-last-of-type类似,要注意的是nth-of-child/nth-last-of-type都支持奇偶与代数表达式,计数从1开始.</p>
+<h3 id="453-唯一过滤器">4.5.3 唯一过滤器</h3>
+<p>两种:</p>
+<ul>
+<li>only-child</li>
+<li>only-of-type(1.9+)</li>
+</ul>
+<p>如果某个元素是它父元素的唯一子元素,则only-child会选择该(子)元素.</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p>选择器</p>
+<pre><code class="language-js">$(&quot;div p:only-child&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312150931231.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意文本并不会影响选择的结果,也就是说,改成</p>
+<pre><code class="language-html">&lt;div&gt;
+    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+	456
+    &lt;p id=&quot;p3&quot;&gt;123&lt;/p&gt;
+    456
+&lt;/div&gt;
+</code></pre>
+<p>后,选择器不变,选择的结果只是p里面多了文字:<br>
+<img src="https://img-blog.csdnimg.cn/20200312151041648.png" alt="在这里插入图片描述" loading="lazy"><br>
+<strong>而如果某个元素的父元素只有唯一一个该元素类型的子元素,则only-of-type会选择该元素,注意是类型,不是数量.<br>
+上面的only-child指的是数量,也就是只有一个孩子,这里only-of-type指的是类型,只有一个这种类型的孩子,而不管孩子数量.</strong></p>
+<pre><code class="language-html">&lt;div&gt;
+   &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
+    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
+    &lt;div&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;div p:only-of-type&quot;)
+</code></pre>
+<p>会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312152126590.png" alt="在这里插入图片描述" loading="lazy"><br>
+而如果选择器换成only-child:</p>
+<pre><code class="language-js">$(&quot;div p:only-child&quot;)
+</code></pre>
+<p>则会选择<br>
+<img src="https://img-blog.csdnimg.cn/20200312152208985.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="46-表单对象属性过滤器">4.6 表单对象属性过滤器</h2>
+<p>选择以下三种状态的元素:</p>
+<ul>
+<li>可用</li>
+<li>不可用</li>
+<li>选中</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:enabled</td>
+<td>选择可用元素</td>
+</tr>
+<tr>
+<td>:disabled</td>
+<td>选择不可用元素</td>
+</tr>
+<tr>
+<td>:checked</td>
+<td>选择所有被选中的元素</td>
+</tr>
+<tr>
+<td>:selected</td>
+<td>选择所有被选中的option元素(针对&lt;select&gt;)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-html">&lt;input type=&quot;checkbox&quot; checked/&gt;
+&lt;input type=&quot;radio&quot; checked&gt;
+&lt;input type=&quot;radio&quot; id=&quot;disabled&quot; disabled/&gt;
+&lt;input type=&quot;checkbox&quot;&gt;
+&lt;select&gt;
+    &lt;option value=&quot;1&quot;&gt;&lt;/option&gt;
+    &lt;option value=&quot;2&quot; selected&gt;&lt;/option&gt;
+    &lt;option value=&quot;3&quot;&gt;&lt;/option&gt;
+&lt;/select&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;body *:enabled&quot;)
+$(&quot;:disabled&quot;)
+$(&quot;:selected&quot;)
+$(&quot;:checked&quot;)
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200312134635678.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-表单选择器">5 表单选择器</h1>
+<h2 id="51-文本框类">5.1 文本框类</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:text</td>
+<td>选择所有文本框</td>
+</tr>
+<tr>
+<td>:password</td>
+<td>选择所有密码框</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-选择框类">5.2 选择框类</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:radio</td>
+<td>选择所有单选框</td>
+</tr>
+<tr>
+<td>:checkbox</td>
+<td>选择所有多选框</td>
+</tr>
+</tbody>
+</table>
+<h2 id="53-按钮类">5.3 按钮类</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:submit</td>
+<td>选择所有提交按钮</td>
+</tr>
+<tr>
+<td>:reset</td>
+<td>选择所有重置按钮</td>
+</tr>
+<tr>
+<td>:button</td>
+<td>选择所有按钮</td>
+</tr>
+</tbody>
+</table>
+<h2 id="54-其他">5.4 其他</h2>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:image</td>
+<td>选择所有图像域</td>
+</tr>
+<tr>
+<td>:file</td>
+<td>选择所有文件域</td>
+</tr>
+</tbody>
+</table>
+<h2 id="55-例子">5.5 例子</h2>
+<pre><code class="language-html">&lt;input type=&quot;text&quot; /&gt;
+&lt;input type=&quot;password&quot; /&gt;
+&lt;input type=&quot;radio&quot; /&gt;
+&lt;input type=&quot;checkbox&quot; /&gt;
+&lt;input type=&quot;submit&quot; /&gt;
+&lt;input type=&quot;reset&quot; /&gt;
+&lt;input type=&quot;button&quot; /&gt;
+&lt;input type=&quot;image&quot; /&gt;
+&lt;input type=&quot;file&quot; /&gt;
+</code></pre>
+<pre><code class="language-js">$(&quot;:text&quot;)
+$(&quot;:password&quot;)
+$(&quot;:radio&quot;)
+$(&quot;:checkbox&quot;)
+$(&quot;:submit&quot;)
+$(&quot;:reset&quot;)
+$(&quot;:button&quot;)
+$(&quot;:image&quot;)
+$(&quot;:file&quot;)
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200312135946749.png" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/android-activity-jian-tiao-zhuan-yu-chuan-di-shu-ju.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/android-activity-jian-tiao-zhuan-yu-chuan-di-shu-ju/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Android Activity间跳转与传递数据</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/android-studio-sync-shi-bai.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/android-studio-sync-shi-bai/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">android studio sync失败</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/sshscp-ji-ben-shi-yong.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/">ssh+scp基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/post-images/nginxapache-acmesh-shi-xian-https-fang-wen.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/">Nginx/Apache + acme.sh 实现https访问</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/github-pagesgridea-da-jian-ge-ren-bo-ke.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/">Github Pages+Gridea搭建个人博客</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-0 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-1 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-2 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-3 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-4 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-5 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-6 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-7 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-8 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-9 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-10 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-12 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-13 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-14 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-15 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-16 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-17 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-18 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-19 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-20 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-21 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-22 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-23 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-24 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-25 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-26 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-27 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-28 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-29 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-30 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-31 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-32 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-33 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-34 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-35 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-36 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-37 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-38 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-39 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-40 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-41 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-42 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-43 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-44 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-45 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-46 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 82 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

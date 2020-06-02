@@ -1,0 +1,943 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nginx/Apache + acme.sh 实现https访问 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 准备工作
+
+2.1 域名与服务器
+2.2 域名解析
+2.2 端口
+
+
+3 Nginx
+
+3.1 编译安装的Nginx(1.17.9)
+
+3.1.1 安装Nginx
+3.1.2 证书处理
+3.1.3 Nginx配置
+3.1.4..." />
+    <meta name="keywords" content="Nginx,HTTPS,acme.sh,Apache" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591132326815" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('/post-images/nginxapache-acmesh-shi-xian-https-fang-wen.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/nginxapache-acmesh-shi-xian-https-fang-wen/"> </span>
+              </a>
+              <span id="/nginxapache-acmesh-shi-xian-https-fang-wen/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-0 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-1 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-2 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-3 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Nginx/Apache + acme.sh 实现https访问</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">2 准备工作</a>
+<ul>
+<li><a href="#21-%E5%9F%9F%E5%90%8D%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8">2.1 域名与服务器</a></li>
+<li><a href="#22-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90">2.2 域名解析</a></li>
+<li><a href="#22-%E7%AB%AF%E5%8F%A3">2.2 端口</a></li>
+</ul>
+</li>
+<li><a href="#3-nginx">3 Nginx</a>
+<ul>
+<li><a href="#31-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84nginx1179">3.1 编译安装的Nginx(1.17.9)</a>
+<ul>
+<li><a href="#311-%E5%AE%89%E8%A3%85nginx">3.1.1 安装Nginx</a></li>
+<li><a href="#312-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">3.1.2 证书处理</a></li>
+<li><a href="#313-nginx%E9%85%8D%E7%BD%AE">3.1.3 Nginx配置</a></li>
+<li><a href="#314-%E6%B5%8B%E8%AF%95">3.1.4 测试</a></li>
+</ul>
+</li>
+<li><a href="#32-%E4%BB%8E%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85nginx1161">3.2 从仓库安装Nginx(1.16.1)</a>
+<ul>
+<li><a href="#321-%E5%AE%89%E8%A3%85nginx">3.2.1 安装Nginx</a></li>
+<li><a href="#322-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">3.2.2 证书处理</a></li>
+<li><a href="#323-nginx%E9%85%8D%E7%BD%AE">3.2.3 Nginx配置</a></li>
+<li><a href="#324-%E6%B5%8B%E8%AF%95">3.2.4 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-apache">4 Apache</a>
+<ul>
+<li><a href="#41-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84apache2441">4.1 编译安装的Apache(2.4.41)</a>
+<ul>
+<li><a href="#411-%E5%AE%89%E8%A3%85apache">4.1.1 安装Apache</a></li>
+<li><a href="#412-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">4.1.2 证书处理</a></li>
+<li><a href="#413-apache%E9%85%8D%E7%BD%AE">4.1.3 Apache配置</a></li>
+<li><a href="#414-%E6%B5%8B%E8%AF%95">4.1.4 测试</a></li>
+</ul>
+</li>
+<li><a href="#42-%E4%BB%8E%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85%E7%9A%84apache246">4.2 从仓库安装的Apache(2.4.6)</a>
+<ul>
+<li><a href="#421-%E5%AE%89%E8%A3%85apache">4.2.1 安装Apache</a></li>
+<li><a href="#422-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">4.2.2 证书处理</a></li>
+<li><a href="#423-apache%E9%85%8D%E7%BD%AE">4.2.3 Apache配置</a></li>
+<li><a href="#424-%E6%B5%8B%E8%AF%95">4.2.4 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>acme.sh实现了acme协议，可以从Let‘s Encrypt生成免费的ssl证书用于实现https，本文介绍了常见的两种服务器Apache与Nginx上利用acme.sh配置https服务。<br>
+约定:</p>
+<pre><code class="language-bash">APACHE_INSTALL_DIR  ---   Apache安装目录
+NGINX_INSTALL_DIR   ---   Nginx安装目录
+www.test.com        ---   测试域名,请按需要换成自己的域名
+</code></pre>
+<h1 id="2-准备工作">2 准备工作</h1>
+<ul>
+<li>一个域名</li>
+<li>一台云服务器</li>
+</ul>
+<h2 id="21-域名与服务器">2.1 域名与服务器</h2>
+<p>域名与服务器直接买就好了，笔者的都是在阿里云上买的。</p>
+<h2 id="22-域名解析">2.2 域名解析</h2>
+<p>需要确保域名可以解析到对应的ip上面，一般的域名购买商会提供解析服务，按图形界面操作即可，以阿里云为例，选择域名进行解析：<br>
+<img src="https://img-blog.csdnimg.cn/20200317005748607.png" alt="在这里插入图片描述" loading="lazy"><br>
+主机记录填www，记录值填服务器公网ip.<br>
+<img src="https://img-blog.csdnimg.cn/20200317005817155.png" alt="在这里插入图片描述" loading="lazy"><br>
+间隔十分钟左右可以ping一下自己的域名，如果显示服务器ip则解析成功。</p>
+<h2 id="22-端口">2.2 端口</h2>
+<p>服务器要开启80与443端口，80用于HTTP测试，443用于HTTPS访问。以阿里云为例:<br>
+<img src="https://img-blog.csdnimg.cn/20200317135937646.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140139818.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140205495.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140231194.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317140246326.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-nginx">3 Nginx</h1>
+<p>Nginx有两种安装方式，一种是仓库形式安装，另一种是从源码编译安装。</p>
+<h2 id="31-编译安装的nginx1179">3.1 编译安装的Nginx(1.17.9)</h2>
+<h3 id="311-安装nginx">3.1.1 安装Nginx</h3>
+<p>先去<a href="http://nginx.org/en/download.html">下载源码</a>，上传到服务器，解压：</p>
+<pre><code class="language-bash">tar -zxvf nginx-1.17.9.tar.gz
+cd nginx-1.17.9
+</code></pre>
+<p>可以先使用</p>
+<pre><code class="language-bash">./configure --help
+</code></pre>
+<p>查看选项帮助，这里要注意一下pcre与openssl，是源码目录，不是安装目录，安装之后删了源码的，重新来<a href="https://sourceforge.net/projects/pcre/">这里下载pcre</a>与<a href="https://www.openssl.org/source/">这里下载openssl</a>，注意一定需要http_ssl_module这个模块，不要漏了。</p>
+<pre><code class="language-bash">./configure --prefix=/xxxxx --with-pcre=/xxxxx --with-openssl=/xxxx --with-http_ssl_module
+make
+sudo make install
+</code></pre>
+<p>好了之后进入安装目录下的sbin，启动服务。</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sin
+./nginx
+</code></pre>
+<p>然后可以在浏览器输入服务器公网ip测试一下：<br>
+<img src="https://img-blog.csdnimg.cn/20200317004956936.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="312-证书处理">3.1.2 证书处理</h3>
+<p>首先安装acme.sh</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317005319462.png" alt="在这里插入图片描述" loading="lazy"><br>
+生成证书</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot NGINX_INSTALL_DIR/html
+</code></pre>
+<p>webroot的话就直接使用Nginx的默认文档根目录。好了之后会看到这样的提示：<br>
+<img src="https://img-blog.csdnimg.cn/20200317010637741.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert \
+-d www.test.com \
+--keypath /xxxx/xxx.key \
+--fullchainpath /xxx/xxx.pem
+</code></pre>
+<p>路径与名字随便，后缀不能变。<br>
+<img src="https://img-blog.csdnimg.cn/2020031701091843.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="313-nginx配置">3.1.3 Nginx配置</h3>
+<p>修改Nginx配置文件：</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/conf
+cp nginx.conf nginx.conf.bak
+vim nginx.conf
+</code></pre>
+<p>找到HTTPS server这一行，这里是96行，把从server开始到最后一个花括号的代码全部去掉注释。<br>
+<img src="https://img-blog.csdnimg.cn/20200317011257305.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改这三行，server_name填域名，ssl_certificate填刚才的pem文件路径，ssl_certificate_key填刚才的key文件路径。路径建议绝对路径，可以不加双引号。<br>
+<img src="https://img-blog.csdnimg.cn/20200317011502176.png" alt="在这里插入图片描述" loading="lazy"><br>
+记得记得要加上一行ssl协议：<br>
+<img src="https://img-blog.csdnimg.cn/20200317014031227.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="314-测试">3.1.4 测试</h3>
+<p>可以先使用-t测试语法错误：</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sbin
+./nginx -t
+</code></pre>
+<p>ok的话，重启服务并输入域名测试：</p>
+<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sbin
+./nginx -s stop
+./nginx
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317014120675.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/2020031701405932.png" alt="在这里插入图片描述" loading="lazy"><br>
+成功！</p>
+<h2 id="32-从仓库安装nginx1161">3.2 从仓库安装Nginx(1.16.1)</h2>
+<h3 id="321-安装nginx">3.2.1 安装Nginx</h3>
+<p>从仓库安装就简单多了，一行就可以了，系统Centos，其他自行搜索：</p>
+<pre><code class="language-bash">yum install nginx
+</code></pre>
+<p>可以先测试一下，直接用</p>
+<pre><code class="language-bash">nginx
+</code></pre>
+<p>开启服务，然后浏览器输入公网ip：<br>
+<img src="https://img-blog.csdnimg.cn/20200317014949623.png" alt="在这里插入图片描述" loading="lazy"><br>
+（笔者有点怀疑是不是装了个假的Nginx，两个的主页居然不一样。。。。）</p>
+<h3 id="322-证书处理">3.2.2 证书处理</h3>
+<p>没安装acme.sh的先安装：</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p>申请证书：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot /usr/share/nginx/html
+</code></pre>
+<p>安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert \
+-d www.test.com \
+--keypath /xxxx/xxx.key \
+--fullchainpath /xxx/xxx.pem
+</code></pre>
+<h3 id="323-nginx配置">3.2.3 Nginx配置</h3>
+<p>同样先备份：</p>
+<pre><code class="language-bash">cd /etc/nginx
+cp nginx.conf nginx.conf.bak
+vim nginx.conf
+</code></pre>
+<p>这里的配置比编译安装的又多了不少，一样从server（61行）开始去掉注释：<br>
+<img src="https://img-blog.csdnimg.cn/20200317015539790.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改三行：<br>
+<img src="https://img-blog.csdnimg.cn/20200317015723131.png" alt="在这里插入图片描述" loading="lazy"><br>
+server_name填域名，ssl_certificate填pem文件，ssl_certificate_key填key文件。<br>
+最后增加一行ssl协议：<br>
+<img src="https://img-blog.csdnimg.cn/20200317025303324.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="324-测试">3.2.4 测试</h3>
+<p>可以先用-t测试语法错误：</p>
+<pre><code class="language-bash">nginx -t
+</code></pre>
+<p>ok的话重启服务：</p>
+<pre><code class="language-bash">nginx -s stop
+nginx
+</code></pre>
+<p>浏览器输入域名访问：<br>
+<img src="https://img-blog.csdnimg.cn/20200317025240627.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317025401531.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-apache">4 Apache</h1>
+<p>Apache也有两种安装方式，从源码编译安装与从仓库安装。</p>
+<h2 id="41-编译安装的apache2441">4.1 编译安装的Apache(2.4.41)</h2>
+<h3 id="411-安装apache">4.1.1 安装Apache</h3>
+<p>编译安装Apache比较麻烦，需要安装pcre，apr，apr-util，生成Makefile时需要指定以下几个选项：</p>
+<pre><code class="language-bash">--with-apr \
+--with-apr-util \
+--with-pcre \
+--enable-ssl \
+--with-ssl 
+</code></pre>
+<p>具体可以看<a href="https://blog.csdn.net/qq_27525611/article/details/104716600">这里</a>。<br>
+安装好了之后需要先确定ssl模块是否存在：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/modules
+ls | grep ssl
+</code></pre>
+<p>如果没有显示mod_ssl.so，则需要重新安装，确定生成Makefile时没有漏掉</p>
+<pre><code class="language-bash">--enable-ssl
+与
+--with-ssl
+</code></pre>
+<p>如果有ssl模块，直接修改配置文件测试一下。</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/conf
+vim httpd.conf
+</code></pre>
+<p>修改ServerName为</p>
+<pre><code class="language-bash">localhost:80
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317112929230.png" alt="在这里插入图片描述" loading="lazy"><br>
+启动服务输入localhost测试：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/bin
+./apachectl
+</code></pre>
+<p>页面只有一行It works!：<br>
+<img src="https://img-blog.csdnimg.cn/20200317113052882.png" alt="在这里插入图片描述" loading="lazy"><br>
+（话说这和仓库安装的Apache首页差距这么大。。。）</p>
+<h3 id="412-证书处理">4.1.2 证书处理</h3>
+<p>没安装acme.sh的先安装：</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p>申请证书：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot APACHE_INSTALL_DIR/htdocs
+</code></pre>
+<p>这里webroot为Apache默认的文档根目录.<br>
+安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert -d www.test.com \
+--key-file /xxxx/xxx.key \
+--cert-file /xxxx/xxxx.crt \
+--fullchain-file /xxx/xxxfullchain.crt 
+</code></pre>
+<p>路径与名字随便，后缀名不能变。</p>
+<h3 id="413-apache配置">4.1.3 Apache配置</h3>
+<p>首先修改conf/httpd.conf：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/conf
+cp httpd.conf httpd.conf.bak
+vim httpd.conf
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317133511616.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317132738142.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317132745841.png" alt="在这里插入图片描述" loading="lazy"><br>
+找到这三行，去掉注释。<br>
+然后修改httpd-ssl.conf:</p>
+<pre><code class="language-bash">cd extra
+cp http-ssl.conf http-ssl.conf.bak
+vim httpd-ssl.conf
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317133012729.png" alt="在这里插入图片描述" loading="lazy"><br>
+DocumentRoot可以默认，ServerName改成</p>
+<pre><code class="language-bash">www.test.com:443
+</code></pre>
+<p>然后修改这三行，把证书的文件相应填入。<br>
+<img src="https://img-blog.csdnimg.cn/20200317133145247.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="414-测试">4.1.4 测试</h3>
+<p>语法检查：</p>
+<pre><code class="language-bash">cd APACHE_INSTALL_DIR/bin
+./apachectl -t
+</code></pre>
+<p>没有错误之后重启服务：</p>
+<pre><code class="language-bash">./apachectl stop
+./apachectl
+</code></pre>
+<p>浏览器输入域名访问：<br>
+<img src="https://img-blog.csdnimg.cn/20200317133911280.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200317133855215.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="42-从仓库安装的apache246">4.2 从仓库安装的Apache(2.4.6)</h2>
+<h3 id="421-安装apache">4.2.1 安装Apache</h3>
+<pre><code class="language-bash">yum install httpd
+</code></pre>
+<p>修改配置文件并进行测试：</p>
+<pre><code class="language-bash">cd /etc/httpd/conf
+cp httpd.conf httpd.conf.bak
+vim httpd.conf
+</code></pre>
+<p>找到ServerName改成</p>
+<pre><code class="language-bash">localhost:80
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317030501258.png" alt="在这里插入图片描述" loading="lazy"><br>
+开启服务后输入localhost:80.</p>
+<pre><code class="language-bash">systemctl start httpd
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317030857326.png" alt="在这里插入图片描述" loading="lazy"><br>
+另外要确保ssl模块存在：</p>
+<pre><code class="language-bash">cd /etc/httpd/modules
+ls | grep ssl
+</code></pre>
+<p>如果没有输出的话，证明没有ssl模块，需要安装：</p>
+<pre><code class="language-bash">yum install mod_ssl
+</code></pre>
+<p>再一次grep：</p>
+<pre><code class="language-bash">ls | grep ssl
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200317031220343.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="422-证书处理">4.2.2 证书处理</h3>
+<p>没安装acme.sh的先安装：</p>
+<pre><code class="language-bash">curl https://get.acme.sh | sh
+. ~/.bashrc
+</code></pre>
+<p>申请证书：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot /var/www/html
+</code></pre>
+<p>其中/var/www/html为Apache默认文档根目录。<br>
+安装证书：</p>
+<pre><code class="language-bash">acme.sh --installcert -d www.test.com \
+--key-file /xxxx/xxx.key \
+--cert-file /xxxx/xxxx.crt \
+--fullchain-file /xxx/xxxfullchain.crt 
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200317032615967.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="423-apache配置">4.2.3 Apache配置</h3>
+<p>修改ssl.conf:</p>
+<pre><code class="language-bash">cd /etc/httpd/conf.d
+cp ssl.conf ssl.conf.bak
+vim ssl.conf
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200317034408977.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改ServerName与DocumentRoot，ServerName填域名，DocumentRoot直接去掉注释。接着修改以下三行，根据刚才生成的三个文件对应填入即可。<br>
+<img src="https://img-blog.csdnimg.cn/2020031703450263.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="424-测试">4.2.4 测试</h3>
+<pre><code class="language-bash">apachectl -t
+</code></pre>
+<p>没有语法错误就重启服务：</p>
+<pre><code class="language-bash">systemctl stop httpd
+systemctl start httpd
+</code></pre>
+<p>浏览器输入访问：<br>
+<img src="https://img-blog.csdnimg.cn/20200317034119940.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-总结">5 总结</h1>
+<p>其实这里采用了比较麻烦的方式手动安装证书，acme.sh其实还有更简单的不需要webroot的命令：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --apache
+acme.sh --issue -d www.test.com --nginx
+</code></pre>
+<p>另外还可以通过手动dns的方式：</p>
+<pre><code class="language-bash">acme.sh --issue -d www.test.com --dns dns_xxx
+</code></pre>
+<p>这种方式可以利用域名解析商提供的api自动添加记录完成认证，可以参考<a href="https://calfsoft.com/2018/12/06/Acme-Aliyun/#%E5%AE%89%E8%A3%85-acme-sh">这里</a>。<br>
+另外文章没有说到证书过期更新的问题，可以看官方中文说明，<a href="https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E">这里</a>。<br>
+除此之外还可以利用openssl使安全性的评分更高，<a href="https://www.ssllabs.com/ssltest/">测试网站这里</a>，<a href="https://www.jianshu.com/p/b6b172f69c14">修改配置这里</a>。<br>
+还有最后一个,现有云服务器厂商提供了免费的证书购买，如阿里云，可以直接购买免费证书然后利用文档安装到服务器上。</p>
+<p>祝你们早日有一个属于自己的https的网站。</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/sshscp-ji-ben-shi-yong.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">ssh+scp基本使用</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/github-pagesgridea-da-jian-ge-ren-bo-ke.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Github Pages+Gridea搭建个人博客</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/sshscp-ji-ben-shi-yong.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/">ssh+scp基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/post-images/nginxapache-acmesh-shi-xian-https-fang-wen.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/">Nginx/Apache + acme.sh 实现https访问</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/github-pagesgridea-da-jian-ge-ren-bo-ke.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/">Github Pages+Gridea搭建个人博客</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-0 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-1 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-2 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-3 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-4 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-5 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-6 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-7 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-8 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-9 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-10 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-12 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-13 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-14 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-15 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-16 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-17 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-18 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-19 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-20 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-21 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-22 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-23 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-24 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-25 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-26 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-27 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-28 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-29 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-30 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-31 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-32 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-33 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-34 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-35 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-36 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-37 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-38 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-39 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-40 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-41 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-42 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-43 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-44 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-45 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-46 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 82 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
