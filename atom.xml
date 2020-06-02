@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-02T20:16:03.244Z</updated>
+    <updated>2020-06-02T20:25:00.633Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -12,1929 +12,1766 @@
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[centos8搭建本地Web服务器]]></title>
-        <id>https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/</id>
-        <link href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/">
+        <title type="html"><![CDATA[自定义grub主题]]></title>
+        <id>https://2293736867.github.io/post/zi-ding-yi-grub-zhu-ti/</id>
+        <link href="https://2293736867.github.io/post/zi-ding-yi-grub-zhu-ti/">
         </link>
-        <updated>2020-06-02T20:15:38.000Z</updated>
+        <updated>2020-06-02T20:24:31.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85httpd">2 安装httpd</a></li>
-<li><a href="#3-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1">3 启动服务</a></li>
-<li><a href="#4-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">4 设置开机启动</a></li>
-<li><a href="#5-%E8%AE%BF%E9%97%AE">5 访问</a></li>
-<li><a href="#6-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E4%B8%BB%E9%A1%B5">6 修改默认主页</a></li>
+<li><a href="#2-%E4%B8%8B%E8%BD%BD%E4%B8%BB%E9%A2%98">2 下载主题</a></li>
+<li><a href="#3-%E8%A7%A3%E5%8E%8B">3 解压</a></li>
+<li><a href="#4-%E5%AE%89%E8%A3%85">4 安装</a></li>
+<li><a href="#5-%E6%95%88%E6%9E%9C">5 效果</a></li>
+<li><a href="#6-%E6%94%B9%E8%BF%9B">6 改进</a>
+<ul>
+<li><a href="#61-progress_bar">6.1 progress_bar</a></li>
+<li><a href="#62-boot_menu">6.2 boot_menu</a></li>
+<li><a href="#63-image">6.3 image</a></li>
+<li><a href="#64-etcdefaultgrub">6.4 /etc/default/grub</a></li>
+<li><a href="#65-bootgrubgrubcfg">6.5 /boot/grub/grub.cfg</a></li>
+<li><a href="#66-%E8%83%8C%E6%99%AF">6.6 背景</a></li>
+</ul>
+</li>
+<li><a href="#7-%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C">7 最终效果</a></li>
+<li><a href="#8-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">8 配置文件</a></li>
 </ul>
 </p>
 <h1 id="1-概述">1 概述</h1>
-<p>系统centos8,利用httpd搭建本地web服务器.</p>
-<h1 id="2-安装httpd">2 安装httpd</h1>
-<pre><code class="language-bash">sudo yum install -y httpd
+<p>自定义grub引导菜单的主题，笔者的linux是deepin，感觉默认的grub主题不太好看，嗯，没办法，就是想改了。<br>
+这篇文章主要是修改/boot/grub/grub.cfg以及/boot/grub/themes/.../theme.txt这两个文件，修改之前要备份，不要问为什么。</p>
+<h1 id="2-下载主题">2 下载主题</h1>
+<p><a href="https://www.gnome-look.org/browse/cat/109/order/latest/">到这里</a>下载自己喜欢的主题。这是笔者下载的<a href="https://www.gnome-look.org/p/1197062/">主题</a>。</p>
+<h1 id="3-解压">3 解压</h1>
+<pre><code class="language-bash">tar -zxvf xxxx.tar.gz
 </code></pre>
-<h1 id="3-启动服务">3 启动服务</h1>
-<pre><code class="language-bash">service httpd start
+<h1 id="4-安装">4 安装</h1>
+<p>直接在解压后的文件夹运行：</p>
+<pre><code class="language-bash">sudo ./install.sh
 </code></pre>
-<h1 id="4-设置开机启动">4 设置开机启动</h1>
-<p>先查看有没有设置开机启动:</p>
-<pre><code class="language-bash">systemctl list-unit-files | grep httpd
+<p>输入y：<br>
+<img src="https://img-blog.csdnimg.cn/20200123142024186.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-效果">5 效果</h1>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200123142733309.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-改进">6 改进</h1>
+<p>还不满意，嗯。。。</p>
+<h2 id="61-progress_bar">6.1 progress_bar</h2>
+<p>这个是进度条的设置，如果觉得进度条不满意可以直接去修改/boot/grub/themes/主题名/theme.txt下的progress_bar设置：<br>
+<img src="https://img-blog.csdnimg.cn/20200123143655826.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以修改（距离左边和顶部的）位置，宽度，高度，是否显示文本，设置文本等，还可以设置前景颜色（fg_color）与背景颜色（bg_color），还有进度条的风格，就是显示哪一些图片等。</p>
+<h2 id="62-boot_menu">6.2 boot_menu</h2>
+<p>这个是启动项菜单的设置，可以调整启动项的位置，字体大小，启动项高度，各个启动项之间的间隔，启动项前的图标大小等。<br>
+<img src="https://img-blog.csdnimg.cn/20200123143131832.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="63-image">6.3 image</h2>
+<p>笔者的这个theme.txt有一个image,用来显示KDElogo的，这个可以选择直接不要，删除全部即可，如果想更换成自己喜欢的图片，可以直接修改文件位置，或者再新建一个image:<br>
+<img src="https://img-blog.csdnimg.cn/20200123144744120.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果是自己的文件需要把图片放到与theme.txt同一个文件夹，其他宽度，高度之类的，设置合适就好了。</p>
+<h2 id="64-etcdefaultgrub">6.4 /etc/default/grub</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200123145607854.png" alt="在这里插入图片描述" loading="lazy"><br>
+一些系统相关的基本上不用改，经常改的是默认项，timeout这几个。</p>
+<ul>
+<li>GRUB_DEFAULT：设置默认启动项，按menuentry排序（menuentry顺序可以通过/boot/grub/grub.cfg查看），从0开始计数，从0开始计数，从0开始计数，重要的事再说一遍不是从1开始计数，若设为“saved”的话表示保存上次项，需要配合GRUB_SAVEDEFULT使用。</li>
+<li>GRUB_SAVEDEFAULT：当GRUB_DEFAULT设置为“saved”时这个选项才生效，默认为false，设为true的话默认的启动项是上次启动项。</li>
+<li>GRUB_TIMEOUT：进入默认项的等待时间，单位秒，有其他键被按下这个时间会取消，默认为5，设为0表示立即启动，不会显示启动项菜单，设为-1的话表示无限等待。</li>
+<li>GRUB_TIMEOUT_STYLE：默认为&quot;menu&quot;（不设置这个值与设为“menu”等价），表示显示启动项菜单，如果设为&quot;countdown&quot;，不会显示启动项菜单，会显示一行倒计时文字，若设为“hidden”，效果与“countdown”类似，不过不会显示倒计时文字，等待GRUB_TIMEOUT结束后启动默认启动项。若设为&quot;countdown&quot;或&quot;hidden&quot;，想要显示启动项菜单按Esc即可。</li>
+</ul>
+<p>不过这里其实有一个坑，就是只需要按Esc一次即可显示启动项菜单，一次即可，两次就会进入grub中的shell，这个要把握好时机，按快了的话没效果或者会进入grub，按慢了就直接启动默认启动项了，当然这个如果GRUB_TIMEOUT稍微大一点就无所谓，笔者说这个因为经历过把GRUB_TIMEOUT设为1，然后GRUB_TIMEOUT_STYLE设为了“hidden”这样的情形，然后就悲剧了。。。想进去启动菜单要重启好几次。。。。因此，GRUB_TIMEOUT_STYLE不太建议设为“countdown”或“hidden”，笔者“血的教训”。。。</p>
+<p>/etc/default/grub还有其他设置，不过一般不怎么用，需要的话可以来<a href="https://www.gnu.org/software/grub/manual/grub/grub.html">这里</a>看一下。</p>
+<h2 id="65-bootgrubgrubcfg">6.5 /boot/grub/grub.cfg</h2>
+<p>执行update-grub后会更新这个文件，手动修改这个文件是因为想修改启动项的文字，因为太长了，感觉没必要。<br>
+注意，如果手动修改过/etc/default/grub，也就是需要执行update-grub后使其生效后，需要重新修改/boot/grub/grub.cfg.</p>
+<pre><code class="language-bash">sudo vim /boot/grub/grub.cfg
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101122534629.png" alt="在这里插入图片描述" loading="lazy"><br>
-没有的话设置:</p>
-<pre><code class="language-bash">chkconfig httpd on
-</code></pre>
-<p>再确认一下:</p>
-<pre><code class="language-bash">systemctl list-unit-files | grep httpd
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200101122607986.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-访问">5 访问</h1>
-<p>再浏览器输入内网ip地址(内网ip可以通过ifconfig查看).若出现以下页面则表示成功.<br>
-<img src="https://img-blog.csdnimg.cn/20200101122706339.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="6-修改默认主页">6 修改默认主页</h1>
-<p>默认的网站根目录位于/var/www/html下,可以通过修改/etc/httpd/conf/httpd.conf修改.这里只是修改主页.在/var/www/html创建一个index.html:</p>
-<pre><code class="language-bash">cd /var/www/html
-sudo vim index.html
-</code></pre>
-<p>随便输入一点内容,然后刷新在浏览器即可.</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200101123148250.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>笔者只是想改文字，因此这里搜索找到menuentry直接修改：<br>
+<img src="https://img-blog.csdnimg.cn/20200123153323958.png" alt="在这里插入图片描述" loading="lazy"><br>
+改短一点就好了，submenu同理：<br>
+<img src="https://img-blog.csdnimg.cn/20200123153439487.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="66-背景">6.6 背景</h2>
+<p>这个比较简单，这接把想要的背景复制到/boot/grub/themes/主题名/下，重命名叫background.png即可，或者可以在theme.txt中修改：<br>
+<img src="https://img-blog.csdnimg.cn/20200123155728534.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-最终效果">7 最终效果</h1>
+<p>这是笔者的最终效果，主要就是加了一个头像，换个背景啥的。(手机问题。。。)<br>
+<img src="https://img-blog.csdnimg.cn/20200123164911424.jpg" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="8-配置文件">8 配置文件</h1>
+<p>这是需要的配置文件以及主题。<br>
+<a href="https://github.com/2293736867/GRUBconfig">github</a></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[CentOS8搭建FTP服务器]]></title>
-        <id>https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/</id>
-        <link href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/">
+        <title type="html"><![CDATA[每天AC系列(一):三数之和]]></title>
+        <id>https://2293736867.github.io/post/mei-tian-ac-xi-lie-yi-san-shu-zhi-he/</id>
+        <link href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-yi-san-shu-zhi-he/">
         </link>
-        <updated>2020-06-02T20:15:12.000Z</updated>
+        <updated>2020-06-02T20:24:02.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-题目">1 题目</h1>
+<p><a href="https://leetcode-cn.com/problems/3sum/">LeetCode第15题</a>,难度中等,题目描述:<br>
+给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。</p>
+<p>注意：答案中不可以包含重复的三元组。<br>
+<img src="https://img-blog.csdnimg.cn/20200122160536118.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-解法">2 解法</h1>
+<p>什么也不管先来个O(n3):</p>
+<pre><code class="language-java">for(int i=0;i&lt;nums.length;++i)
+{
+    for(int j=i+1;j&lt;nums.length;++j)
+    {
+        for(int k=j+1;k&lt;nums.length;++k)
+        {
+            if(nums[i]+nums[j]+nums[k] == 0)
+            {
+                ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();
+                arrayList.add(nums[i]);
+                arrayList.add(nums[j]);
+                arrayList.add(nums[k]);
+                result.add(arrayList);
+            }
+        }
+    }
+}
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200122160740540.png" alt="在这里插入图片描述" loading="lazy"><br>
+well.</p>
+<h1 id="3-优化">3 优化</h1>
+<p>上面暴力算法的思想就是单纯三个循环,优化的方法可以考虑降低一个循环,使用&quot;双指针&quot;的思想,首先对数组进行排序,然后一开始固定一个数,然后让两个指针一个指向这个数的右区间的起点,一个指向终点,不断计算这三个值的和,根据得出的和移动左指针或者右指针,一共三种情况:</p>
+<ul>
+<li>和等于0,同时移动左右指针,两者向中间方向移动.</li>
+<li>和大于0,说明取值过大,需要把右指针向左移动.</li>
+<li>和小于0,说明取值过小,需要把左指针向右移动.</li>
+</ul>
+<p>基于以上的三种情况,写出了如下代码:</p>
+<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+if (nums.length == 3 &amp;&amp; nums[0] + nums[1] + nums[2] == 0)
+    result.add(Arrays.asList(nums[0], nums[1], nums[2]));
+else if (nums.length &gt; 3) 
+{
+    Arrays.sort(nums);
+    Set&lt;List&lt;Integer&gt;&gt; resultSet = new HashSet&lt;&gt;();
+    for (int i = 0; i &lt; nums.length - 2 &amp;&amp; nums[i] &lt;= 0; ++i) 
+    {
+        int left = i + 1;
+        int right = nums.length - 1;
+        while (left &lt; right) 
+        {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (sum == 0) 
+            {
+                if (!resultSet.contains(Arrays.asList(nums[i], nums[left], nums[right]))) 
+                    resultSet.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                --right;
+                ++left;
+            } 
+            else if (sum &gt; 0)
+                --right;
+            else
+                ++left;
+        }
+    }
+    result.addAll(resultSet);
+}
+</code></pre>
+<p>首先判断数组的长度是否大于等于3,小于3的话直接返回一个空List,等于3判断是否这三个数之和为0,大于3的话,首先排序,接着需要确保被确定的相对不移动的数为负数,这样的话剩下两个数的和才有可能为正数,否则的话会造成全部都是正数还要进行判断的局面.接着计算left指针与right指针的值,一直判断直到两指针相遇.</p>
+<h1 id="4-提交">4 提交</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200123014120558.png" alt="在这里插入图片描述" loading="lazy"><br>
+AC!</p>
+<h1 id="5-完整代码">5 完整代码</h1>
+<p><a href="https://github.com/2293736867/ACEveryDay">github</a><br>
+<a href="https://gitee.com/imykr/ACEveryDay">码云</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java备份MySQL]]></title>
+        <id>https://2293736867.github.io/post/java-bei-fen-mysql/</id>
+        <link href="https://2293736867.github.io/post/java-bei-fen-mysql/">
+        </link>
+        <updated>2020-06-02T20:23:39.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85vsftpd">2 安装vsftpd</a></li>
-<li><a href="#3-%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1">3 开启服务</a></li>
-<li><a href="#4-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">4 设置开机启动</a></li>
-<li><a href="#5-%E4%BF%AE%E6%94%B9etcvsftpdvsftpdconf">5 修改/etc/vsftpd/vsftpd.conf</a></li>
-<li><a href="#6-%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6">6 创建测试文件</a></li>
-<li><a href="#7-%E6%B5%8B%E8%AF%95">7 测试</a>
-<ul>
-<li><a href="#71-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B5%8B%E8%AF%95">7.1 浏览器测试</a>
-<ul>
-<li><a href="#711-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.1.1 匿名测试</a></li>
-<li><a href="#712-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.1.2 用户登录测试</a></li>
-</ul>
-</li>
-<li><a href="#72-ftp%E5%91%BD%E4%BB%A4%E6%B5%8B%E8%AF%95">7.2 ftp命令测试</a>
-<ul>
-<li><a href="#721-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.2.1 匿名测试</a>
-<ul>
-<li><a href="#7211-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">7.2.1.1 上传测试</a></li>
-<li><a href="#7212-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">7.2.1.2 下载测试</a></li>
-</ul>
-</li>
-<li><a href="#722-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.2.2 用户登录测试</a>
-<ul>
-<li><a href="#7221-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">7.2.2.1 上传测试</a></li>
-<li><a href="#7222-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">7.2.2.2 下载测试</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#73-wget%E6%B5%8B%E8%AF%95">7.3 wget测试</a>
-<ul>
-<li><a href="#731-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.3.1 匿名测试</a></li>
-<li><a href="#732-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.3.2 用户登录测试</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BA%E5%A4%87%E4%BB%BD%E8%B7%AF%E5%BE%84">2 创建备份路径</a></li>
+<li><a href="#3-%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4">3 执行命令</a></li>
+<li><a href="#4-%E6%89%A7%E8%A1%8C">4 执行</a></li>
+<li><a href="#5-%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98">5 其他问题</a></li>
 </ul>
 </p>
 <h1 id="1-概述">1 概述</h1>
-<p>文章主要讲了CentOS8如何利用vsftpd搭建一个FTP服务器,然后进行简单的匿名上传/下载与用户上传/下载测试,还有使用了wget测试.</p>
-<h1 id="2-安装vsftpd">2 安装vsftpd</h1>
-<pre><code class="language-bash">yum install -y vsftpd
+<p>使用java备份mysql数据库,主要是使用mysqldump与Runtime().getRuntime().exec().</p>
+<h1 id="2-创建备份路径">2 创建备份路径</h1>
+<p>如果没有备份的存储路径首先创建路径.</p>
+<pre><code class="language-java">Path path = Paths.get(xxxx);
+try
+{
+	Files.createDirectories(path);
+}
+catch(IOException e)
+{
+	//xxxx
+}
 </code></pre>
-<h1 id="3-开启服务">3 开启服务</h1>
-<pre><code class="language-bash">service httpd start
+<h1 id="3-执行命令">3 执行命令</h1>
+<p>如果是直接用shell执行的话:</p>
+<pre><code class="language-bash">mysqldump -u user_name -p database_name &gt; xxxx\database_name.sql
 </code></pre>
-<h1 id="4-设置开机启动">4 设置开机启动</h1>
-<p>可以用</p>
-<pre><code class="language-bash">systemctl list-unit-files | grep vsftpd
-</code></pre>
-<p>查看是否开机启动.显示disabled.<br>
-<img src="https://img-blog.csdnimg.cn/20200101030147305.png" alt="在这里插入图片描述" loading="lazy"><br>
-通过</p>
-<pre><code class="language-bash">chkconfig vsftpd on
-</code></pre>
-<p>开启自启,再次执行systemctl,可以看到变成了enabled.</p>
-<h1 id="5-修改etcvsftpdvsftpdconf">5 修改/etc/vsftpd/vsftpd.conf</h1>
-<pre><code class="language-bash">sudo vim /etc/vsftpd/vsftpd.conf
-</code></pre>
-<p>首先修改<br>
-<img src="https://img-blog.csdnimg.cn/20200101030618606.png" alt="在这里插入图片描述" loading="lazy"><br>
-为YES.<br>
-再添加一行anon_upload_enable=YES<br>
-<img src="https://img-blog.csdnimg.cn/20200101030851708.png" alt="在这里插入图片描述" loading="lazy"><br>
-第一行的意思是允许匿名登录,第二行的意思是允许匿名上传.<br>
-重启服务.</p>
-<pre><code class="language-bash">service vsftpd restart
-</code></pre>
-<h1 id="6-创建测试文件">6 创建测试文件</h1>
-<pre><code class="language-bash">cd /var/ftp/pub
-sudo vim test
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200101031249233.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="7-测试">7 测试</h1>
-<h2 id="71-浏览器测试">7.1 浏览器测试</h2>
-<h3 id="711-匿名测试">7.1.1 匿名测试</h3>
-<p>ifconfig获取内网ip,在浏览器中输入ftp://ip.<br>
-<img src="https://img-blog.csdnimg.cn/20200101031730471.png" alt="在这里插入图片描述" loading="lazy"><br>
-可以看到有一个pub文件夹,里面有刚才新建的test文件.<br>
-<img src="https://img-blog.csdnimg.cn/20200101031838167.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101031849294.png" alt="在这里插入图片描述" loading="lazy"><br>
-右键保存即可下载文件.<br>
-<img src="https://img-blog.csdnimg.cn/20200101031948461.png" alt="在这里插入图片描述" loading="lazy"><br>
-下载完成.<br>
-<img src="https://img-blog.csdnimg.cn/20200101032047324.png" alt="在这里插入图片描述" loading="lazy"><br>
-去终端看看.<br>
-<img src="https://img-blog.csdnimg.cn/20200101032137819.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="712-用户登录测试">7.1.2 用户登录测试</h3>
-<p>输入</p>
-<pre><code class="language-bash">ftp://username@ip
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101032238241.png" alt="在这里插入图片描述" loading="lazy"><br>
-再输入用户密码.<br>
-默认访问的是用户根目录下的文件,这里显示出来了.<br>
-<img src="https://img-blog.csdnimg.cn/20200101032414278.png" alt="在这里插入图片描述" loading="lazy"><br>
-下载的话同上,右键选择即可.</p>
-<h2 id="72-ftp命令测试">7.2 ftp命令测试</h2>
-<p>首先安装ftp:</p>
-<pre><code class="language-bash">sudo yum install ftp
-</code></pre>
-<h3 id="721-匿名测试">7.2.1 匿名测试</h3>
-<pre><code class="language-bash">ftp ip
-</code></pre>
-<p>这里用户名选择ftp,密码为空,表示匿名登录.ftp为默认的匿名登录用户名,至于密码,可以在/etc/vsftpd/vsftpd.conf中设置一个</p>
-<pre><code>no_anon_password=YES
-</code></pre>
-<p>这样匿名用户可以不用密码登录.<br>
-<img src="https://img-blog.csdnimg.cn/20200101033958446.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h4 id="7211-上传测试">7.2.1.1 上传测试</h4>
-<p>直接使用put命令,后面接上文件,这里的upload.txt是执行ftp之前的所在文件夹下的upload.txt<br>
-<img src="https://img-blog.csdnimg.cn/20200101034153782.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里提示不能创建文件,是权限的原因,要确保/var/ftp/pub对&quot;other&quot;用户有写权限.<br>
-<img src="https://img-blog.csdnimg.cn/20200101034507850.png" alt="在这里插入图片描述" loading="lazy"><br>
-默认的/var/ftp/pub的权限是644,修改成647.</p>
-<pre><code class="language-bash">sudo chmod 647 /var/ftp/pub
-</code></pre>
-<p>同时修改上传文件的权限,允许other用户可读.</p>
-<pre><code class="language-bash">sudo chmod 644 /root/upload.txt
-</code></pre>
-<p>如果不行,使用selinux设置.</p>
-<pre><code class="language-bash">getsebool -a | grep ftp
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101041509763.png" alt="在这里插入图片描述" loading="lazy"><br>
-把ftpd_full_access开启:</p>
-<pre><code class="language-bash">setsebool ftpd_full_access on
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101041325973.png" alt="在这里插入图片描述" loading="lazy"><br>
-再进入upload.txt所在的文件夹,执行ftp,再次put.<br>
-<img src="https://img-blog.csdnimg.cn/20200101041756274.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功!<br>
-<img src="https://img-blog.csdnimg.cn/20200101041850446.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h4 id="7212-下载测试">7.2.1.2 下载测试</h4>
-<p>直接get文件即可,由于上面已经设置好了权限,所以不会出现问题.<br>
-<img src="https://img-blog.csdnimg.cn/20200101042052729.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101042158684.png" alt="在这里插入图片描述" loading="lazy"><br>
-若出现权限问题可从三方面入手:</p>
-<ul>
-<li>(1)<strong>/var/ftp/pub的对other用户的可读权限:因为是下载,而且匿名,所以只需要对other用户的可读权限</strong></li>
-<li>(2)<strong>被下载文件的对other用户的可读权限</strong></li>
-<li>(3)<strong>selinux的问题,设置ftpd_full_access为on</strong></li>
-</ul>
-<h3 id="722-用户登录测试">7.2.2 用户登录测试</h3>
-<p>执行ftp时用对应用户名与密码登录.<br>
-<img src="https://img-blog.csdnimg.cn/20200101042624970.png" alt="在这里插入图片描述" loading="lazy"><br>
-默认进入了用户根目录.</p>
-<h4 id="7221-上传测试">7.2.2.1 上传测试</h4>
-<p>直接put即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200101042824793.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101042907482.png" alt="在这里插入图片描述" loading="lazy"><br>
-若出现权限问题参照上面7.2.1.2的那三条方法.</p>
-<h4 id="7222-下载测试">7.2.2.2 下载测试</h4>
-<p>随便在用户根目录新建一个文件,这里是kr.<br>
-<img src="https://img-blog.csdnimg.cn/20200101043238911.png" alt="在这里插入图片描述" loading="lazy"><br>
-直接get即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200101043337444.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101043424416.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="73-wget测试">7.3 wget测试</h2>
-<p>wget用来下载文件,初始下载的目录与ftp登录时的目录一致,比如匿名登录ftp,登录的是/var/ftp目录,则wget会从这个/var/ftp目录下载文件,下载到执行wget命令所在的目录.使用用户&quot;kr&quot;登录ftp,则登录的是/home/kr目录,wget会从/home/kr下载文件.</p>
-<h3 id="731-匿名测试">7.3.1 匿名测试</h3>
-<p>注意,请确保被下载文件对other用户有可读权限.</p>
-<pre><code class="language-bash">sudo chmod o+w xxxxxx
-</code></pre>
-<p>然后使用wget</p>
-<pre><code class="language-bash">wget ftp://ip/pub/xxxx
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101044803421.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101044830152.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="732-用户登录测试">7.3.2 用户登录测试</h3>
-<p>使用--ftp-user,--ftp-password指定用户名与密码,其余同上.</p>
-<pre><code class="language-bash">wget ftp://ip/xxx --ftp-user=xxxx --ftp-password=xxxx
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101045316791.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功.</p>
-<h1 id="8-总结">8 总结</h1>
-<p>呃....简单来说,就是先安装好ftp与vsftpd,然后修改/etc/vsftpd/vsftpd.conf添加相应权限,对于不能上传与下载的原因,基本上都是权限的问题,主要就是三方面:</p>
-<ul>
-<li><strong>(1)ftp目录的权限:比如可以是/var/ftp/pub没有对应的写权限导致上传失败,没有对应读权限导致下载失败.</strong></li>
-<li><strong>(2)被上传文件的权限:比如上传的文件没有读权限导致上传失败.</strong></li>
-<li><strong>(3)selinux:使用setsebool设置为on.</strong></li>
-</ul>
-<p>解决权限问题后,基本就可以通过ftp或wget顺利地使用这个ftp服务器上传/下载文件了.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python基础(八)]]></title>
-        <id>https://2293736867.github.io/post/python-ji-chu-ba/</id>
-        <link href="https://2293736867.github.io/post/python-ji-chu-ba/">
-        </link>
-        <updated>2020-06-02T20:14:50.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A8%A1%E5%9D%97">1 模块</a>
-<ul>
-<li><a href="#11-%E6%A8%A1%E5%9D%97">1.1 模块</a></li>
-<li><a href="#12-%E6%A8%A1%E5%9D%97%E5%AD%98%E5%9C%A8%E5%BD%A2%E5%BC%8F">1.2 模块存在形式</a>
-<ul>
-<li><a href="#121-%E9%9D%9E%E5%86%85%E7%BD%AE%E6%A8%A1%E5%9D%97">1.2.1 非内置模块</a></li>
-<li><a href="#122-%E5%86%85%E7%BD%AE%E6%A8%A1%E5%9D%97">1.2.2 内置模块</a></li>
-</ul>
-</li>
-<li><a href="#13-%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8">1.3 模块使用</a>
-<ul>
-<li><a href="#131-%E5%AF%BC%E5%85%A5%E6%95%B4%E4%B8%AA%E6%A8%A1%E5%9D%97">1.3.1 导入整个模块</a></li>
-<li><a href="#132-%E5%AF%BC%E5%85%A5%E6%A8%A1%E5%9D%97%E4%B8%AD%E7%9A%84%E6%9F%90%E4%B8%AA%E5%87%BD%E6%95%B0">1.3.2 导入模块中的某个函数</a></li>
-</ul>
-</li>
-<li><a href="#14-%E6%9F%A5%E7%9C%8B%E5%86%85%E7%BD%AE%E6%A8%A1%E5%9D%97">1.4 查看内置模块</a></li>
-</ul>
-</li>
-<li><a href="#2-%E5%8C%85">2 包</a>
-<ul>
-<li><a href="#21-%E5%8C%85">2.1 包</a></li>
-<li><a href="#22-%E5%8C%85%E7%AE%A1%E7%90%86">2.2 包管理</a></li>
-<li><a href="#23-%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4">2.3 包管理命令</a>
-<ul>
-<li><a href="#231-%E5%88%97%E5%87%BA%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84%E5%8C%85">2.3.1 列出已安装的包</a></li>
-<li><a href="#232-%E6%9B%B4%E6%96%B0%E5%8C%85">2.3.2 更新包</a></li>
-<li><a href="#233-%E5%88%A0%E9%99%A4%E5%8C%85">2.3.3 删除包</a></li>
-<li><a href="#234-%E5%AE%89%E8%A3%85%E5%8C%85">2.3.4 安装包</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-模块">1 模块</h1>
-<h2 id="11-模块">1.1 模块</h2>
-<p>模块是一个python文件,其中包含对象定义与语句等.多个模块再加上__init__.py就变成了一个包.</p>
-<h2 id="12-模块存在形式">1.2 模块存在形式</h2>
-<p>模块可以分成两种:非内置模块与内置模块.</p>
-<h3 id="121-非内置模块">1.2.1 非内置模块</h3>
-<p>非内置模块以.py文件的形式存在,放在对应的包下.</p>
-<h3 id="122-内置模块">1.2.2 内置模块</h3>
-<p>内置模块就是内置到解释器中的模块,为了提高性能内置模块采用C语言而不是python编写.</p>
-<h2 id="13-模块使用">1.3 模块使用</h2>
-<p>先导入再调用里面的函数,可以一次导入整个模块,或者选择性导入其中的函数.</p>
-<h3 id="131-导入整个模块">1.3.1 导入整个模块</h3>
-<pre><code class="language-py">import math
-import cmath as cm
-</code></pre>
-<p>使用as设置模块别名.</p>
-<h3 id="132-导入模块中的某个函数">1.3.2 导入模块中的某个函数</h3>
-<pre><code class="language-py">from math import sin
-from cmath import sqrt as cs
-</code></pre>
-<p>使用as设置函数别名.</p>
-<h2 id="14-查看内置模块">1.4 查看内置模块</h2>
-<pre><code class="language-py">import sys
-sys.builtin_module_names
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2019123021420753.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="2-包">2 包</h1>
-<h2 id="21-包">2.1 包</h2>
-<p>包是含有一个特殊的__init__.py文件的文件夹,通常还含有其他.py文件,表示不同的模块.</p>
-<h2 id="22-包管理">2.2 包管理</h2>
-<p>包的下载,安装,更新,删除可通过包管理器进行操作,常用的包管理器为pip与conda.pip设计目的是仅管理Python语言的包,对应的包服务器为PyPI,Conda设计目的是管理多种语言的包,对应的包服务器为Conda.</p>
-<h2 id="23-包管理命令">2.3 包管理命令</h2>
-<h3 id="231-列出已安装的包">2.3.1 列出已安装的包</h3>
-<pre><code class="language-py">pip list
-conda list
-</code></pre>
-<h3 id="232-更新包">2.3.2 更新包</h3>
-<pre><code class="language-bash">pip install --upgrade package_name
-conda upgrade package_name
-</code></pre>
-<h3 id="233-删除包">2.3.3 删除包</h3>
-<pre><code class="language-bash">pip uninstall package_name
-conda uninstall package_name
-</code></pre>
-<h3 id="234-安装包">2.3.4 安装包</h3>
-<pre><code class="language-shell">pip install package_name
-conda install package_name
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python基础(七)]]></title>
-        <id>https://2293736867.github.io/post/python-ji-chu-qi/</id>
-        <link href="https://2293736867.github.io/post/python-ji-chu-qi/">
-        </link>
-        <updated>2020-06-02T20:14:26.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A8%A1%E5%9D%97%E5%87%BD%E6%95%B0">1 模块函数</a>
-<ul>
-<li><a href="#11-%E6%A8%A1%E5%9D%97%E5%87%BD%E6%95%B0">1.1 模块函数</a></li>
-<li><a href="#12-%E5%AF%BC%E5%85%A5">1.2 导入</a>
-<ul>
-<li><a href="#121-import-moudle">1.2.1 import moudle</a></li>
-<li><a href="#122-import-module-as-alias">1.2.2 import module as alias</a></li>
-<li><a href="#123-from-module-import-function">1.2.3 from module import function</a></li>
-<li><a href="#124-from-module-import-function-as-alias">1.2.4 from module import function as alias</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#2-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0">2 自定义函数</a>
-<ul>
-<li><a href="#21-%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0">2.1 定义函数</a></li>
-<li><a href="#22-%E8%AE%BE%E7%BD%AEdocstring">2.2 设置docstring</a></li>
-<li><a href="#23-%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8">2.3 函数调用</a></li>
-<li><a href="#24-%E8%BF%94%E5%9B%9E%E5%80%BC">2.4 返回值</a></li>
-<li><a href="#25-%E5%BD%A2%E5%8F%82">2.5 形参</a>
-<ul>
-<li><a href="#251-%E5%BD%A2%E5%8F%82%E5%88%86%E7%B1%BB">2.5.1 形参分类</a></li>
-<li><a href="#252-%E4%B8%8E">2.5.2 * 与 **</a></li>
-<li><a href="#253-%E5%91%BD%E5%90%8D%E5%85%B3%E9%94%AE%E5%AD%97%E5%8F%82%E6%95%B0">2.5.3 命名关键字参数</a></li>
-</ul>
-</li>
-<li><a href="#26-%E5%AE%9E%E5%8F%82">2.6 实参</a>
-<ul>
-<li><a href="#261-%E4%BD%8D%E7%BD%AE%E5%8F%82%E6%95%B0">2.6.1 位置参数</a></li>
-<li><a href="#262-%E5%85%B3%E9%94%AE%E5%AD%97%E5%8F%82%E6%95%B0">2.6.2 关键字参数</a></li>
-</ul>
-</li>
-<li><a href="#27-%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7">2.7 变量可见性</a>
-<ul>
-<li><a href="#271-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">2.7.1 局部变量</a></li>
-<li><a href="#272-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">2.7.2 全局变量</a></li>
-<li><a href="#273-%E9%9D%9E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">2.7.3 非局部变量</a></li>
-</ul>
-</li>
-<li><a href="#28-%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E8%A7%84%E5%88%99">2.8 参数传递规则</a>
-<ul>
-<li><a href="#281-%E5%80%BC%E4%BC%A0%E9%80%92">2.8.1 值传递</a></li>
-<li><a href="#282-%E5%9C%B0%E5%9D%80%E4%BC%A0%E9%80%92">2.8.2 地址传递</a></li>
-</ul>
-</li>
-<li><a href="#29-lambda%E5%87%BD%E6%95%B0">2.9 lambda函数</a>
-<ul>
-<li><a href="#291-%E5%AE%9A%E4%B9%89">2.9.1 定义</a></li>
-<li><a href="#292-%E8%B0%83%E7%94%A8">2.9.2 调用</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-模块函数">1 模块函数</h1>
-<h2 id="11-模块函数">1.1 模块函数</h2>
-<p>模块函数指的是模块中的函数,模块函数有三种:</p>
-<ul>
-<li>内置模块:又叫标准库.</li>
-<li>第三方开源模块:可以通过包管理工具进行安装.</li>
-<li>自定义模块.</li>
-</ul>
-<h2 id="12-导入">1.2 导入</h2>
-<p>导入方法主要有三种:</p>
-<h3 id="121-import-moudle">1.2.1 import moudle</h3>
-<pre><code class="language-py">import math
-math.e
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191230073425789.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="122-import-module-as-alias">1.2.2 import module as alias</h3>
-<p>alias表示别名.<br>
-<img src="https://img-blog.csdnimg.cn/20191230073558475.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="123-from-module-import-function">1.2.3 from module import function</h3>
-<p>从模块导入函数.<br>
-<img src="https://img-blog.csdnimg.cn/20191230073717961.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="124-from-module-import-function-as-alias">1.2.4 from module import function as alias</h3>
-<p>与上一种类似,加上了别名.<br>
-<img src="https://img-blog.csdnimg.cn/20191230073839933.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-自定义函数">2 自定义函数</h1>
-<h2 id="21-定义函数">2.1 定义函数</h2>
-<p>使用关键字def定义:</p>
-<pre><code class="language-py">def func():
-	print(1)
-</code></pre>
-<h2 id="22-设置docstring">2.2 设置docstring</h2>
-<p>docstring就是注释,描述了函数的功能,使用三个单引号或三个双引号,可以用help()获取函数的docstring.</p>
-<pre><code class="language-py">def func():
-	'''
-	func docstring
-	'''
-	print(1)
-help(func)
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2019123007484817.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="23-函数调用">2.3 函数调用</h2>
-<p>直接使用函数名即可,需要的话要加上参数.</p>
-<pre><code class="language-py">func()
-func(22)
-</code></pre>
-<h2 id="24-返回值">2.4 返回值</h2>
-<p>返回值在return里指定,可以返回多个值:</p>
-<pre><code class="language-py">def f():
-	return 1,2,3,4
-</code></pre>
-<p>相当于返回一个元组.若函数没有return,则返回None.</p>
-<h2 id="25-形参">2.5 形参</h2>
-<h3 id="251-形参分类">2.5.1 形参分类</h3>
-<p>形参就是函数定义时的参数列表里面的参数,可以分为:</p>
-<ul>
-<li>可选形参:给出默认值的形参.</li>
-<li>必选形参:没有给出默认的形参.</li>
-</ul>
-<pre><code class="language-py">def f(x1,x2,x3=3)
-</code></pre>
-<p>其中x1,x2必选形参,x3可选形参.</p>
-<h3 id="252-与">2.5.2 * 与 **</h3>
-<p>带一个 * 的形参表示该形参类型为元组,带两个 * 的形参表示该参数类型为字典.</p>
-<h3 id="253-命名关键字参数">2.5.3 命名关键字参数</h3>
-<p>出现在*后的参数.</p>
-<pre><code class="language-py">def f(x1,*x2,x3,x4)
-</code></pre>
-<p>x3与x4就是命名关键字参数,在调用时必须显式使用参数名.</p>
-<h2 id="26-实参">2.6 实参</h2>
-<p>python实参可以分为位置实参与关键字实参.</p>
-<h3 id="261-位置参数">2.6.1 位置参数</h3>
-<p>位置参数就是没有指定形参名字的实参,每个实参基于顺序关联到一个形参.</p>
-<h3 id="262-关键字参数">2.6.2 关键字参数</h3>
-<p>关键字参数就是指定了形参名字的实参,用键值对的形式指定,可以不按顺序调用.</p>
-<pre><code class="language-py">def f(x1,x2,x3):
-    print(x1,x2,x3)
-f(1,2,3)
-f(x3=999,x1=888,x2=999999)
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191230174558140.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="27-变量可见性">2.7 变量可见性</h2>
-<p>python变量的可见性有三种:全局变量,局部变量,非局部变量.</p>
-<h3 id="271-局部变量">2.7.1 局部变量</h3>
-<p>在函数内的变量为局部变量,因此,以下代码会输出9:</p>
-<pre><code class="language-py">x1 = 8
-def f():
-    x1 = 9
-    print(x1)
-f()
-</code></pre>
-<p>如果在x1之前输出呢?<br>
-<img src="https://img-blog.csdnimg.cn/20191230175118159.jpg" alt="在这里插入图片描述" loading="lazy"><br>
-直接提示没有定义x1,就是全局变量x1在函数内不可见,但笔者不死心,一定要运行一下.<br>
-<img src="https://img-blog.csdnimg.cn/20191230175227371.png" alt="在这里插入图片描述" loading="lazy"><br>
-它说局部变量x1没有被赋值,注意,是局部变量,因此,这也证明了全局变量在函数内不可见.</p>
-<h3 id="272-全局变量">2.7.2 全局变量</h3>
-<p>若要使全局变量在函数内可见,使用global:</p>
-<pre><code class="language-py">x1 = 8
-def f():
-    global x1
-    print(x1)
-    x1 = 9
-    print(x1)
-f()
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/2019123017580553.png" alt="在这里插入图片描述" loading="lazy"><br>
-global x1表示x1是一个全局变量,注意global x1需要单独占一行.</p>
-<h3 id="273-非局部变量">2.7.3 非局部变量</h3>
-<p>用于嵌套函数中,使用nonlocal声明,表示内层函数的这个变量是外层函数的.</p>
-<pre><code class="language-py">x1 = 8
-def f():
-    x1 = 9
-    print(x1)
-    def f1():
-        nonlocal x1
-        print(x1)
-        x1 = 10
-        print(x1)
-    return f1
-f()
-f()()
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20191230180030357.png" alt="在这里插入图片描述" loading="lazy"><br>
-第一个与第二个9都是f()中的print()输出的,第三个9是f1()中的print()输出的.</p>
-<h2 id="28-参数传递规则">2.8 参数传递规则</h2>
-<p>当实参传递给形参时,有两种传递规则,一是值传递,而是地址传递.</p>
-<h3 id="281-值传递">2.8.1 值传递</h3>
-<p>当实参为不可变对象时,采用值传递规则,常见的不可变对象类型包括int,float,str,bool,tuple.</p>
-<pre><code class="language-py">def f(x):
-    x = 1
-    print(x)
-x = 3
-print('-------int------')
-f(x)
-print(x)
-print()
-
-x = 'string'
-print('-------str------')
-f(x)
-print(x)
-print()
-
-x = (3,4,5)
-print('-------tuple------')
-f(x)
-print(x)
-print()
-
-x = 5.799
-print('-------float------')
-f(x)
-print(x)
-print()
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191230180537175.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="282-地址传递">2.8.2 地址传递</h3>
-<p>参数为可变对象时,采用地址传递规则,修改形参的值会同时改变实参的值.常见的可变对象类型包括list,set,dict.</p>
-<pre><code class="language-py">def f(x):
-    if type(x) == list:
-        x = x.reverse()
-    elif isinstance(x,set):
-        x.add(8)
-    else:
-        x['0'] = 3
-x = [1,2,3]
-print('-------list------')
-print(x)
-f(x)
-print(x)
-print()
-
-x = {4,5,6}
-print('-------set------')
-print(x)
-f(x)
-print(x)
-print()
-
-x = {'a':1,'b':2}
-print('-------dict------')
-print(x)
-f(x)
-print(x)
-print()
-</code></pre>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191230181450908.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="29-lambda函数">2.9 lambda函数</h2>
-<p>lambda是一种特殊的自定义函数,使用关键字lambda进行定义,是一种匿名函数,函数体一般很短.</p>
-<h3 id="291-定义">2.9.1 定义</h3>
-<p>以关键字lambda开头,后面是参数列表,参数列表结束后加一个冒号,后面是返回值.</p>
-<pre><code class="language-py">y = lambda x:x*3
-z = lambda x,y:x*y
-</code></pre>
-<h3 id="292-调用">2.9.2 调用</h3>
-<p>调用可以通过&quot;函数名&quot;调用,或者配合其他函数使用.<br>
-<img src="https://img-blog.csdnimg.cn/20191230182622632.png" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python基础(六)]]></title>
-        <id>https://2293736867.github.io/post/python-ji-chu-liu/</id>
-        <link href="https://2293736867.github.io/post/python-ji-chu-liu/">
-        </link>
-        <updated>2020-06-02T20:14:03.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%87%BD%E6%95%B0">1 函数</a>
-<ul>
-<li><a href="#11-%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%86%E7%B1%BB">1.1 函数的分类</a></li>
-<li><a href="#12-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95">1.2 函数与方法</a></li>
-<li><a href="#13-%E5%87%BD%E6%95%B0%E4%B9%9F%E6%98%AF%E5%AF%B9%E8%B1%A1">1.3 函数也是对象</a></li>
-<li><a href="#14-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">1.4 注意事项</a></li>
-</ul>
-</li>
-<li><a href="#2-%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0">2 内置函数</a>
-<ul>
-<li><a href="#21-%E6%9F%A5%E7%9C%8B%E5%B8%AE%E5%8A%A9">2.1 查看帮助</a></li>
-<li><a href="#22-%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0">2.2 数学函数</a>
-<ul>
-<li><a href="#221-abs">2.2.1 abs</a></li>
-<li><a href="#222-maxmin">2.2.2 max/min</a></li>
-<li><a href="#223-pow">2.2.3 pow</a></li>
-<li><a href="#224-round">2.2.4 round</a></li>
-</ul>
-</li>
-<li><a href="#23-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0">2.3 类型转换函数</a></li>
-<li><a href="#24-%E5%85%B6%E4%BB%96%E5%87%BD%E6%95%B0">2.4 其他函数</a>
-<ul>
-<li><a href="#241-type">2.4.1 type()</a></li>
-<li><a href="#242-isinstance">2.4.2 isinstance()</a></li>
-<li><a href="#243-dir">2.4.3 dir()</a></li>
-<li><a href="#244-len">2.4.4 len()</a></li>
-<li><a href="#245-range">2.4.5 range()</a></li>
-<li><a href="#246-callable">2.4.6 callable()</a></li>
-<li><a href="#247-bin">2.4.7 bin()</a></li>
-<li><a href="#248-oct">2.4.8 oct()</a></li>
-<li><a href="#249-hex">2.4.9 hex()</a></li>
-<li><a href="#2410-int">2.4.10 int()</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-函数">1 函数</h1>
-<h2 id="11-函数的分类">1.1 函数的分类</h2>
-<p>函数可以分成三种:</p>
-<ul>
-<li>内置函数(BIF):解释器中内置的函数,可以直接通过函数名调用,如len().</li>
-<li>模块函数:定义在模块中的函数,通过模块名调用,如math.sin().</li>
-<li>用户自定义函数.</li>
-</ul>
-<h2 id="12-函数与方法">1.2 函数与方法</h2>
-<p>函数是指在类外定义的,可以独立调用的一组语句集合,另外通过类去调用的语句,也叫函数而不是方法.<br>
-方法是指在类内定义的,需要通过对象与点调用的一组语句集合,方法中的self是隐式传递的.</p>
-<h2 id="13-函数也是对象">1.3 函数也是对象</h2>
-<p>在python中,函数也是对象,比如:</p>
-<pre><code class="language-py">def xx():
-    print(4)
-print(type(xx))
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191230024058760.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="14-注意事项">1.4 注意事项</h2>
-<p>函数的参数带一个 * 时,表示元组,带两个 * 时,表示字典.函数的返回值可以为迭代器,元组等,如果没有return,默认返回None.<br>
-另外就是docstring,docstring其实就是一堆注释,说明函数的作用,建议使用三引号.</p>
-<h1 id="2-内置函数">2 内置函数</h1>
-<p>内置函数就是内置在python解释器中的函数,可以直接通过函数名调用,不需要import.查看内置函数可以使用内置函数dir():</p>
-<pre><code class="language-py">dir(__builtins__)
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191230025011363.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="21-查看帮助">2.1 查看帮助</h2>
-<p>可以使用help查看函数的帮助.<br>
-<img src="https://img-blog.csdnimg.cn/20191230024805132.png" alt="在这里插入图片描述" loading="lazy"><br>
-一般给出简单的帮助信息,详细信息可以去官网查询.</p>
-<h2 id="22-数学函数">2.2 数学函数</h2>
-<h3 id="221-abs">2.2.1 abs</h3>
-<p>求绝对值.<br>
-<img src="https://img-blog.csdnimg.cn/20191230025159181.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="222-maxmin">2.2.2 max/min</h3>
-<p>求最大/小值,支持元组,列表,集合,字符串等.<br>
-<img src="https://img-blog.csdnimg.cn/20191230025307134.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="223-pow">2.2.3 pow</h3>
-<p>求次幂.<br>
-<img src="https://img-blog.csdnimg.cn/20191230025535473.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="224-round">2.2.4 round</h3>
-<p>四舍五入,两个参数,第一个参数是要四舍五入的数,第二个参数是保留的小数位数,第二个参数可以省略,省略的话相当于取整.</p>
-<p>若保留的小数位数为2则保留2位,保留的小数位数为1则保留1位,保留的小数位数为0则保留....0...呃...不是,保留1位,保留1位0.<br>
-<img src="https://img-blog.csdnimg.cn/20191230030010509.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="23-类型转换函数">2.3 类型转换函数</h2>
-<p>就是常用的int(),bool()等函数,这些也是内置函数.<br>
-<img src="https://img-blog.csdnimg.cn/20191230030538456.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="24-其他函数">2.4 其他函数</h2>
-<h3 id="241-type">2.4.1 type()</h3>
-<p>type()是查看类型的函数.<br>
-<img src="https://img-blog.csdnimg.cn/20191230030833387.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="242-isinstance">2.4.2 isinstance()</h3>
-<p>isinstance()判断一个的类型,与type()类似,但是isinstance()会考虑继承关系,而type()不会考虑.<br>
-<img src="https://img-blog.csdnimg.cn/20191230031046214.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-py">class a:
-    pass
-class b(a):
-    pass
-print('type(a()) == a is ',type(a()) == a)
-print('type(b()) == a is ',type(b()) == a)
-print('isinstance(a(),a) is ',isinstance(a(),a))
-print('isinstance(b(),a) is ',isinstance(b(),a))
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191230031357413.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="243-dir">2.4.3 dir()</h3>
-<p>dir()查看搜索的路径.</p>
-<h3 id="244-len">2.4.4 len()</h3>
-<p>求长度.</p>
-<h3 id="245-range">2.4.5 range()</h3>
-<p>快速生成序列,返回一个迭代器.<br>
-<img src="https://img-blog.csdnimg.cn/20191230031629532.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="246-callable">2.4.6 callable()</h3>
-<p>判断对象是否可以被调用,因为函数也是一个对象,所以可以通过callable()判断函数是否可以被调用.<br>
-<img src="https://img-blog.csdnimg.cn/20191230031858789.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="247-bin">2.4.7 bin()</h3>
-<p>十进制--&gt;二进制.<br>
-<img src="https://img-blog.csdnimg.cn/20191230032141960.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="248-oct">2.4.8 oct()</h3>
-<p>十进制--&gt;八进制.<br>
-<img src="https://img-blog.csdnimg.cn/20191230032517649.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="249-hex">2.4.9 hex()</h3>
-<p>十进制--&gt;十六进制.<br>
-<img src="https://img-blog.csdnimg.cn/20191230032553361.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="2410-int">2.4.10 int()</h3>
-<p>n进制--&gt;十进制.<br>
-<img src="https://img-blog.csdnimg.cn/20191230032807896.png" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[pom.xml详解]]></title>
-        <id>https://2293736867.github.io/post/pomxml-xiang-jie/</id>
-        <link href="https://2293736867.github.io/post/pomxml-xiang-jie/">
-        </link>
-        <updated>2020-06-02T20:13:39.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1pomxml%E6%98%AF%E4%BB%80%E4%B9%88">1.pom.xml是什么</a></li>
-<li><a href="#2%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">2.基本配置</a>
-<ul>
-<li><a href="#1project">(1)&lt;project&gt;</a></li>
-<li><a href="#2modelversion">(2)&lt;modelVersion&gt;</a></li>
-<li><a href="#3maven%E5%9D%90%E6%A0%87">(3)Maven坐标</a>
-<ul>
-<li><a href="#agroupid">A.&lt;groupId&gt;</a></li>
-<li><a href="#bartifactid">B.&lt;artifactId&gt;</a></li>
-<li><a href="#cversion">C.&lt;version&gt;</a></li>
-</ul>
-</li>
-<li><a href="#4packaging">(4)&lt;packaging&gt;</a></li>
-<li><a href="#5pom-%E5%85%B3%E7%B3%BB">(5)POM 关系</a>
-<ul>
-<li><a href="#a%E4%BE%9D%E8%B5%96">A.依赖</a>
-<ul>
-<li><a href="#agroupid%E4%B8%8Eartifactid">a.&lt;groupId&gt;与&lt;artifactId&gt;</a></li>
-<li><a href="#bversion">b.&lt;version&gt;</a></li>
-<li><a href="#cclassifier">c.&lt;classifier&gt;</a></li>
-<li><a href="#dtype">d.&lt;type&gt;</a></li>
-<li><a href="#escope">e.&lt;scope&gt;</a></li>
-<li><a href="#fsystempath">f.&lt;systemPath&gt;</a></li>
-<li><a href="#goptional">g.&lt;optional&gt;</a></li>
-<li><a href="#hexclusions">h.&lt;exclusions&gt;</a></li>
-</ul>
-</li>
-<li><a href="#b%E7%BB%A7%E6%89%BF">B.继承</a></li>
-<li><a href="#c%E8%81%9A%E5%90%88%E6%88%96%E5%A4%9A%E6%A8%A1%E5%9D%97">C.聚合(或多模块)</a></li>
-</ul>
-</li>
-<li><a href="#6%E5%B1%9E%E6%80%A7">(6)属性</a>
-<ul>
-<li><a href="#1envx">①env.x</a></li>
-<li><a href="#2projectx">②project.x</a></li>
-<li><a href="#3settingsx">③settings.x</a></li>
-<li><a href="#4javax">④java.x</a></li>
-<li><a href="#5x">⑤x</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#3%E6%9E%84%E5%BB%BA%E9%85%8D%E7%BD%AE">3.构建配置</a>
-<ul>
-<li><a href="#1basebuild%E5%85%83%E7%B4%A0">(1)BaseBuild元素</a>
-<ul>
-<li><a href="#adefaultgoal">A.&lt;defaultGoal&gt;</a></li>
-<li><a href="#bdirectory">B.&lt;directory&gt;</a></li>
-<li><a href="#cfinalname">C.&lt;finalName&gt;</a></li>
-<li><a href="#dfilters">D.&lt;filters&gt;</a></li>
-</ul>
-</li>
-<li><a href="#2%E8%B5%84%E6%BA%90">(2)资源</a>
-<ul>
-<li><a href="#aresource">A.&lt;resource&gt;</a></li>
-<li><a href="#btargetpath">B.&lt;targetPath&gt;</a></li>
-<li><a href="#cflitering">C.&lt;flitering&gt;</a></li>
-<li><a href="#ddirectory">D.&lt;directory&gt;</a></li>
-<li><a href="#einclude">E.&lt;include&gt;</a></li>
-<li><a href="#fexcludes">F.&lt;excludes&gt;</a></li>
-</ul>
-</li>
-<li><a href="#3%E6%8F%92%E4%BB%B6">(3)插件</a>
-<ul>
-<li><a href="#agroupid%E4%B8%8Eartifactid-2">A.&lt;groupId&gt;与&lt;artifactId&gt;</a></li>
-<li><a href="#bversion-2">B.&lt;version&gt;</a></li>
-<li><a href="#cextensions">C.&lt;extensions&gt;</a></li>
-<li><a href="#dinherited">D.&lt;inherited&gt;</a></li>
-<li><a href="#econfiguration">E.&lt;configuration&gt;</a></li>
-<li><a href="#fdependencies">F.&lt;dependencies&gt;</a></li>
-<li><a href="#gexecutions">G.&lt;executions&gt;</a></li>
-</ul>
-</li>
-<li><a href="#4%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86">(4)插件管理</a></li>
-<li><a href="#5%E7%9B%AE%E5%BD%95">(5)目录</a>
-<ul>
-<li><a href="#a%E9%A1%B9%E7%9B%AE%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95">A.项目源码目录</a></li>
-<li><a href="#b%E6%B5%8B%E8%AF%95%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95">B.测试源码目录</a></li>
-<li><a href="#cclass%E7%9B%AE%E5%BD%95">C.class目录</a></li>
-<li><a href="#d%E6%B5%8B%E8%AF%95class">D.测试class</a></li>
-</ul>
-</li>
-<li><a href="#6%E6%89%A9%E5%B1%95">(6)扩展</a></li>
-<li><a href="#7%E6%8A%A5%E8%A1%A8">(7)报表</a>
-<ul>
-<li><a href="#aexcludedefaults">A.&lt;excludeDefaults&gt;</a></li>
-<li><a href="#boutputdirectory">B.&lt;outputDirectory&gt;</a></li>
-<li><a href="#cplugins">C.&lt;plugins&gt;</a></li>
-<li><a href="#dreportsets">D.&lt;reportSets&gt;</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#4%E9%A1%B9%E7%9B%AE%E4%BF%A1%E6%81%AF">4.项目信息</a>
-<ul>
-<li><a href="#1%E8%AE%B8%E5%8F%AF%E8%AF%81">(1)许可证</a>
-<ul>
-<li><a href="#aname">A.&lt;name&gt;</a></li>
-<li><a href="#burl">B.&lt;url&gt;</a></li>
-<li><a href="#cdistribution">C.&lt;distribution&gt;</a></li>
-<li><a href="#dcomments">D.&lt;comments&gt;</a></li>
-</ul>
-</li>
-<li><a href="#2%E7%BB%84%E7%BB%87">(2)组织</a></li>
-<li><a href="#3%E5%BC%80%E5%8F%91%E8%80%85">(3)开发者</a>
-<ul>
-<li><a href="#aid">A.&lt;id&gt;</a></li>
-<li><a href="#bname">B.&lt;name&gt;</a></li>
-<li><a href="#cemail">C.&lt;email&gt;</a></li>
-<li><a href="#durl">D.&lt;url&gt;</a></li>
-<li><a href="#eorganization">E.&lt;organization&gt;</a></li>
-<li><a href="#forganizationurl">F.&lt;organizationUrl&gt;</a></li>
-<li><a href="#groles">G.&lt;roles&gt;</a></li>
-<li><a href="#htimezone">H.&lt;timeZone&gt;</a></li>
-<li><a href="#iproperties">I.&lt;properties&gt;</a></li>
-</ul>
-</li>
-<li><a href="#4%E8%B4%A1%E7%8C%AE%E8%80%85">(4)贡献者</a></li>
-</ul>
-</li>
-<li><a href="#5%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE">5.环境配置</a>
-<ul>
-<li><a href="#1%E9%97%AE%E9%A2%98%E7%AE%A1%E7%90%86">(1)问题管理</a></li>
-<li><a href="#2%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E7%AE%A1%E7%90%86">(2)持续集成管理</a>
-<ul>
-<li><a href="#asystem">A.&lt;system&gt;</a></li>
-<li><a href="#burl-2">B.&lt;url&gt;</a></li>
-<li><a href="#cnotifiers">C.&lt;notifiers&gt;</a>
-<ul>
-<li><a href="#atype">a.&lt;type&gt;</a></li>
-<li><a href="#bsendonerror">b.&lt;sendOnError&gt;</a></li>
-<li><a href="#csendonfailure">c.&lt;sendOnFailure&gt;</a></li>
-<li><a href="#dsendonsuccess">d.&lt;sendOnSuccess&gt;</a></li>
-<li><a href="#esendonwarning">e.&lt;sendOnWarning&gt;</a></li>
-<li><a href="#fconfiguration">f.&lt;configuration&gt;</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#3%E9%82%AE%E4%BB%B6%E5%88%97%E8%A1%A8">(3)邮件列表</a>
-<ul>
-<li><a href="#aname-2">A.&lt;name&gt;</a></li>
-<li><a href="#bsubscribe">B.&lt;subscribe&gt;</a></li>
-<li><a href="#cunsubscribe">C.&lt;unsubscribe&gt;</a></li>
-<li><a href="#dpost">D.&lt;post&gt;</a></li>
-<li><a href="#earchive">E.&lt;archive&gt;</a></li>
-</ul>
-</li>
-<li><a href="#4%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86scm">(4)软件配置管理(SCM)</a>
-<ul>
-<li><a href="#aconnection%E4%B8%8Edevelopconnection">A.&lt;connection&gt;与&lt;developConnection&gt;</a></li>
-<li><a href="#btag">B.&lt;tag&gt;</a></li>
-<li><a href="#curl">C.&lt;url&gt;</a></li>
-</ul>
-</li>
-<li><a href="#5%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6">(5)前提条件</a></li>
-<li><a href="#6%E4%BB%93%E5%BA%93">(6)仓库</a>
-<ul>
-<li><a href="#areleases">A.&lt;releases&gt;</a></li>
-<li><a href="#bsnapshots">B.&lt;snapshots&gt;</a></li>
-<li><a href="#cid">C.&lt;id&gt;</a></li>
-<li><a href="#dname">D.&lt;name&gt;</a></li>
-<li><a href="#eurl">E.&lt;url&gt;</a></li>
-<li><a href="#flayout">F.&lt;layout&gt;</a></li>
-</ul>
-</li>
-<li><a href="#7%E6%8F%92%E4%BB%B6%E4%BB%93%E5%BA%93">(7)插件仓库</a></li>
-<li><a href="#8%E5%88%86%E5%8F%91%E7%AE%A1%E7%90%86">(8)分发管理</a>
-<ul>
-<li><a href="#a%E4%BB%93%E5%BA%93">A.仓库</a></li>
-<li><a href="#b%E7%AB%99%E7%82%B9%E9%83%A8%E7%BD%B2">B.站点部署</a></li>
-<li><a href="#c%E9%87%8D%E5%AE%9A%E4%BD%8D">C.重定位</a></li>
-</ul>
-</li>
-<li><a href="#9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">(9)配置文件</a>
-<ul>
-<li><a href="#aactivebydefault">A.&lt;activeByDefault&gt;</a></li>
-<li><a href="#bjdk">B.&lt;jdk&gt;</a></li>
-<li><a href="#cos">C.&lt;os&gt;</a></li>
-<li><a href="#dproperty">D.&lt;property&gt;</a></li>
-<li><a href="#efile">E.&lt;file&gt;</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1pomxml是什么">1.pom.xml是什么</h1>
-<p>pom是Project Object Model(项目对象模型)的缩写,是Maven中的项目文件,可用于管理与配置依赖,组织信息,项目授权,远程仓库等等.一个Maven项目,可以没有任何代码,但不能没有pom.xml.</p>
-<h1 id="2基本配置">2.基本配置</h1>
-<h2 id="1project">(1)&lt;project&gt;</h2>
-<p>&lt;project&gt;是pom.xml的根元素,包含了一些约束信息.</p>
-<pre><code class="language-xml">&lt;project 
-xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; 
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-&lt;/project&gt;
-</code></pre>
-<h2 id="2modelversion">(2)&lt;modelVersion&gt;</h2>
-<pre><code class="language-xml">&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-</code></pre>
-<p>pom的版本,这是Maven 2&amp;3唯一支持的pom版本,而且不能忽略.</p>
-<h2 id="3maven坐标">(3)Maven坐标</h2>
-<p>&lt;groupId&gt;,&lt;artifactId&gt;与&lt;version&gt;标识了仓库中的一个特定位置,叫项目坐标.三个属性告诉了Maven项目中的一个特定版本,让Maven知道如何处理它们以及在生命周期内的哪一阶段需要它们.</p>
-<h3 id="agroupid">A.&lt;groupId&gt;</h3>
-<p>&lt;groupId&gt;表示项目所属的组,通常是一个公司或者组织的名称,如org.springframework.</p>
-<h3 id="bartifactid">B.&lt;artifactId&gt;</h3>
-<p>&lt;artifactId&gt;表示项目的唯一标识.</p>
-<h3 id="cversion">C.&lt;version&gt;</h3>
-<p>&lt;version&gt;表示项目的版本号,通常来说项目的版本号分成三段:<br>
-主版本号.次版本号.修订版本号</p>
-<ul>
-<li>主版本号:代表架构变动或者不兼容的实现.</li>
-<li>次版本号:兼容性修改,功能增强.</li>
-<li>修订版本号:bug修复.</li>
-</ul>
-<p>版本号的后缀意味着项目的不同阶段:</p>
-<ul>
-<li>SNAPSHOT:开发中的版本</li>
-<li>RELEASE:正式发布版</li>
-<li>M1,M2:M指里程碑,表示即将发布</li>
-<li>RC:Release Candidate,发布候选</li>
-<li>GA:General Availablity,基本可用版本</li>
-</ul>
-<h2 id="4packaging">(4)&lt;packaging&gt;</h2>
-<p>打包类型,没有提供的话默认值为jar,常见的有jar与war,也可以取值:</p>
-<ul>
-<li>maven-plugin</li>
-<li>pom</li>
-<li>ejb</li>
-<li>ear</li>
-<li>rar</li>
-</ul>
-<h2 id="5pom-关系">(5)POM 关系</h2>
-<p>Maven的一个强大之处是处理项目关系的方式,可以通过一个公共的本地仓库去解决问题.</p>
-<h3 id="a依赖">A.依赖</h3>
-<p>POM的基础就是依赖列表,Maven下载与在编译时链接依赖与其他所需要的目标,而且可以处理传递性依赖,使列表可以专注于项目所需的依赖.依赖放在&lt;dependencies&gt;里面,包含若干个&lt;dependency&gt;.</p>
-<pre><code class="language-xml">&lt;dependencies&gt;
-	&lt;dependency&gt;
-		....
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		....
-	&lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre>
-<p>一个&lt;dependency&gt;通常包含:</p>
-<h4 id="agroupid与artifactid">a.&lt;groupId&gt;与&lt;artifactId&gt;</h4>
-<p>对应项目坐标</p>
-<h4 id="bversion">b.&lt;version&gt;</h4>
-<p>版本</p>
-<h4 id="cclassifier">c.&lt;classifier&gt;</h4>
-<p>可用于配置不同jdk的&lt;depenency&gt;,比如让一个&lt;dependency&gt;同时支持jdk8与jdk11,可以选择使用哪一个&lt;classifier&gt;,方便在不同jdk中使用.</p>
-<h4 id="dtype">d.&lt;type&gt;</h4>
-<p>对应的依赖类型,默认为jar,通常对应与&lt;packaging&gt;.</p>
-<h4 id="escope">e.&lt;scope&gt;</h4>
-<p>scope表示类库与项目的关系,可以取以下5个值:</p>
-<ul>
-<li>compile:默认值,编译依赖使其在所有类路径中可用,而且这些依赖项会传递到其他依赖项目,在编译和打包时都需要此类库.</li>
-<li>provided:类似compile,但是期望JDK或一个容器会在运行时提供,仅在编译和测试类路径上可用,不可传递.</li>
-<li>runtime:在运行时与测试类路径中可用,在编译类路径中不可用.</li>
-<li>test:测试编译与执行阶段可用,不可传递.</li>
-<li>system:类似于provided,但必须显式提供jar包.</li>
-</ul>
-<h4 id="fsystempath">f.&lt;systemPath&gt;</h4>
-<p>当&lt;scope&gt;为system才需要这个,否则(当&lt;scope&gt;不为system时)会构建失败.路径必须为绝对路径.</p>
-<h4 id="goptional">g.&lt;optional&gt;</h4>
-<p>标记依赖的可选状态.</p>
-<h4 id="hexclusions">h.&lt;exclusions&gt;</h4>
-<p>排除不需要的依赖,包含子元素&lt;exclusion&gt;,每个&lt;exclusion&gt;都包含&lt;groupId&gt;与&lt;artifactId&gt;.</p>
-<h3 id="b继承">B.继承</h3>
-<p>使用&lt;parent&gt;指定需要继承的pom.</p>
-<pre><code class="language-xml">&lt;parent&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-    &lt;version&gt;2.2.1.RELEASE&lt;/version&gt;
-&lt;/parent&gt;
-</code></pre>
-<p>子pom会继承父pom的&lt;groupId&gt;,&lt;version&gt;,&lt;build&gt;等众多属性,具体包括:</p>
-<ul>
-<li>groupId</li>
-<li>version</li>
-<li>description</li>
-<li>url</li>
-<li>inceptionYear</li>
-<li>organization</li>
-<li>licenses</li>
-<li>developers</li>
-<li>contributors</li>
-<li>mailingLists</li>
-<li>scm</li>
-<li>issueManagement</li>
-<li>ciManagement</li>
-<li>properties</li>
-<li>dependencyManagement</li>
-<li>dependencies</li>
-<li>repositories</li>
-<li>pluginRepositories</li>
-<li>build</li>
-<li>reporting</li>
-<li>profiles</li>
-</ul>
-<p>但不能继承:</p>
-<ul>
-<li>artifactId</li>
-<li>name</li>
-<li>prerequisites</li>
-</ul>
-<p>另外,就像java中所有类都继承于java.lang.Object一样,所有POM都有一个&quot;Super POM&quot;,pom都从它继承而来,下面是Maven3.5.4的&quot;Super pom&quot;:</p>
-<pre><code class="language-xml">&lt;project&gt;
-  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
- 
-  &lt;repositories&gt;
-    &lt;repository&gt;
-      &lt;id&gt;central&lt;/id&gt;
-      &lt;name&gt;Central Repository&lt;/name&gt;
-      &lt;url&gt;https://repo.maven.apache.org/maven2&lt;/url&gt;
-      &lt;layout&gt;default&lt;/layout&gt;
-      &lt;snapshots&gt;
-        &lt;enabled&gt;false&lt;/enabled&gt;
-      &lt;/snapshots&gt;
-    &lt;/repository&gt;
-  &lt;/repositories&gt;
- 
-  &lt;pluginRepositories&gt;
-    &lt;pluginRepository&gt;
-      &lt;id&gt;central&lt;/id&gt;
-      &lt;name&gt;Central Repository&lt;/name&gt;
-      &lt;url&gt;https://repo.maven.apache.org/maven2&lt;/url&gt;
-      &lt;layout&gt;default&lt;/layout&gt;
-      &lt;snapshots&gt;
-        &lt;enabled&gt;false&lt;/enabled&gt;
-      &lt;/snapshots&gt;
-      &lt;releases&gt;
-        &lt;updatePolicy&gt;never&lt;/updatePolicy&gt;
-      &lt;/releases&gt;
-    &lt;/pluginRepository&gt;
-  &lt;/pluginRepositories&gt;
- 
-  &lt;build&gt;
-    &lt;directory&gt;${project.basedir}/target&lt;/directory&gt;
-    &lt;outputDirectory&gt;${project.build.directory}/classes&lt;/outputDirectory&gt;
-    &lt;finalName&gt;${project.artifactId}-${project.version}&lt;/finalName&gt;
-    &lt;testOutputDirectory&gt;${project.build.directory}/test-classes&lt;/testOutputDirectory&gt;
-    &lt;sourceDirectory&gt;${project.basedir}/src/main/java&lt;/sourceDirectory&gt;
-    &lt;scriptSourceDirectory&gt;${project.basedir}/src/main/scripts&lt;/scriptSourceDirectory&gt;
-    &lt;testSourceDirectory&gt;${project.basedir}/src/test/java&lt;/testSourceDirectory&gt;
-    &lt;resources&gt;
-      &lt;resource&gt;
-        &lt;directory&gt;${project.basedir}/src/main/resources&lt;/directory&gt;
-      &lt;/resource&gt;
-    &lt;/resources&gt;
-    &lt;testResources&gt;
-      &lt;testResource&gt;
-        &lt;directory&gt;${project.basedir}/src/test/resources&lt;/directory&gt;
-      &lt;/testResource&gt;
-    &lt;/testResources&gt;
-    &lt;pluginManagement&gt;
-      &lt;!-- NOTE: These plugins will be removed from future versions of the super POM --&gt;
-      &lt;!-- They are kept for the moment as they are very unlikely to conflict with lifecycle mappings (MNG-4453) --&gt;
-      &lt;plugins&gt;
-        &lt;plugin&gt;
-          &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
-          &lt;version&gt;1.3&lt;/version&gt;
-        &lt;/plugin&gt;
-        &lt;plugin&gt;
-          &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
-          &lt;version&gt;2.2-beta-5&lt;/version&gt;
-        &lt;/plugin&gt;
-        &lt;plugin&gt;
-          &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
-          &lt;version&gt;2.8&lt;/version&gt;
-        &lt;/plugin&gt;
-        &lt;plugin&gt;
-          &lt;artifactId&gt;maven-release-plugin&lt;/artifactId&gt;
-          &lt;version&gt;2.5.3&lt;/version&gt;
-        &lt;/plugin&gt;
-      &lt;/plugins&gt;
-    &lt;/pluginManagement&gt;
-  &lt;/build&gt;
- 
-  &lt;reporting&gt;
-    &lt;outputDirectory&gt;${project.build.directory}/site&lt;/outputDirectory&gt;
-  &lt;/reporting&gt;
- 
-  &lt;profiles&gt;
-    &lt;!-- NOTE: The release profile will be removed from future versions of the super POM --&gt;
-    &lt;profile&gt;
-      &lt;id&gt;release-profile&lt;/id&gt;
- 
-      &lt;activation&gt;
-        &lt;property&gt;
-          &lt;name&gt;performRelease&lt;/name&gt;
-          &lt;value&gt;true&lt;/value&gt;
-        &lt;/property&gt;
-      &lt;/activation&gt;
- 
-      &lt;build&gt;
-        &lt;plugins&gt;
-          &lt;plugin&gt;
-            &lt;inherited&gt;true&lt;/inherited&gt;
-            &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;
-            &lt;executions&gt;
-              &lt;execution&gt;
-                &lt;id&gt;attach-sources&lt;/id&gt;
-                &lt;goals&gt;
-                  &lt;goal&gt;jar-no-fork&lt;/goal&gt;
-                &lt;/goals&gt;
-              &lt;/execution&gt;
-            &lt;/executions&gt;
-          &lt;/plugin&gt;
-          &lt;plugin&gt;
-            &lt;inherited&gt;true&lt;/inherited&gt;
-            &lt;artifactId&gt;maven-javadoc-plugin&lt;/artifactId&gt;
-            &lt;executions&gt;
-              &lt;execution&gt;
-                &lt;id&gt;attach-javadocs&lt;/id&gt;
-                &lt;goals&gt;
-                  &lt;goal&gt;jar&lt;/goal&gt;
-                &lt;/goals&gt;
-              &lt;/execution&gt;
-            &lt;/executions&gt;
-          &lt;/plugin&gt;
-          &lt;plugin&gt;
-            &lt;inherited&gt;true&lt;/inherited&gt;
-            &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
-            &lt;configuration&gt;
-              &lt;updateReleaseInfo&gt;true&lt;/updateReleaseInfo&gt;
-            &lt;/configuration&gt;
-          &lt;/plugin&gt;
-        &lt;/plugins&gt;
-      &lt;/build&gt;
-    &lt;/profile&gt;
-  &lt;/profiles&gt;
-&lt;/project&gt;
-</code></pre>
-<h3 id="c聚合或多模块">C.聚合(或多模块)</h3>
-<p>模块是pom列出的项目,并作为一个组执行,每个模块通过pom文件或项目的相对路径进行列出.</p>
-<pre><code class="language-xml">&lt;modules&gt;
-    &lt;module&gt;my-project&lt;/module&gt;
-    &lt;module&gt;another-project&lt;/module&gt;
-    &lt;module&gt;third-project/pom-example.xml&lt;/module&gt;
-&lt;/modules&gt;
-</code></pre>
-<p>不需要考虑模块间的依赖关系,Maven会对其进行拓扑排序以便在依赖模块之前构建依赖关系.</p>
-<h2 id="6属性">(6)属性</h2>
-<p>属性是Maven中的值占位符,像Ant一样,可以以</p>
-<pre><code class="language-bash">${x}
-</code></pre>
-<p>这样的形式在pom.xml的任何位置访问一个值,也可以被用作默认值使用.<br>
-有5种形式使用值:</p>
-<h3 id="1envx">①env.x</h3>
-<p>env会使用当前shell的环境变量的值.<br>
-例如</p>
-<pre><code class="language-bash">${env.PATH}
-</code></pre>
-<h3 id="2projectx">②project.x</h3>
-<p>&lt;project&gt;下的x元素的值,如</p>
-<pre><code class="language-bash">${project.version}
-</code></pre>
-<h3 id="3settingsx">③settings.x</h3>
-<p>使用settings.xml中的元素的值</p>
-<pre><code class="language-bash">${settings.offline}
-</code></pre>
-<h3 id="4javax">④java.x</h3>
-<p>java系统属性值,通过java.lang.System.getProperties()获取,如</p>
-<pre><code class="language-bash">${java.home}
-</code></pre>
-<h3 id="5x">⑤x</h3>
-<p>直接使用x,用的是&lt;properties&gt;下的属性,比如</p>
-<pre><code class="language-xml">&lt;properties&gt;
-	&lt;aaa&gt;AAAAA&lt;/aaa&gt;
-&lt;/properties&gt;
-</code></pre>
-<pre><code class="language-bash">${aaa}
-</code></pre>
-<h1 id="3构建配置">3.构建配置</h1>
-<p>&lt;build&gt;,声明项目结构,管理插件等.</p>
-<h2 id="1basebuild元素">(1)BaseBuild元素</h2>
-<h3 id="adefaultgoal">A.&lt;defaultGoal&gt;</h3>
-<p>目标的默认值,可以取值install,copile</p>
-<h3 id="bdirectory">B.&lt;directory&gt;</h3>
-<p>构建产生的文件存放目录</p>
-<h3 id="cfinalname">C.&lt;finalName&gt;</h3>
-<p>构建最终产生的项目名字,但有可能会被更改.</p>
-<h3 id="dfilters">D.&lt;filters&gt;</h3>
-<p>定义一组&lt;filter&gt;,&lt;filter&gt;内是.properties文件,项目中的占位符如xxx.xxx会被.properties中的xxx=xxx的具体值替换掉.</p>
-<h2 id="2资源">(2)资源</h2>
-<p>&lt;resources&gt;,项目相关的资源文件的位置.</p>
-<h3 id="aresource">A.&lt;resource&gt;</h3>
-<p>描述每个资源的根元素.</p>
-<h3 id="btargetpath">B.&lt;targetPath&gt;</h3>
-<p>构建资源的位置,对于jar包放在META-INF里面.</p>
-<h3 id="cflitering">C.&lt;flitering&gt;</h3>
-<p>取值true或false,表示是否开启过滤</p>
-<h3 id="ddirectory">D.&lt;directory&gt;</h3>
-<p>资源位置.</p>
-<h3 id="einclude">E.&lt;include&gt;</h3>
-<p>指定要包含的资源,使用*作为通配符.</p>
-<h3 id="fexcludes">F.&lt;excludes&gt;</h3>
-<p>与include相反,要排除的资源列表.</p>
-<h2 id="3插件">(3)插件</h2>
-<p>&lt;plugins&gt;下包含了若干个&lt;plugin&gt;,表示插件,每个&lt;plugin&gt;有以下元素:</p>
-<h3 id="agroupid与artifactid-2">A.&lt;groupId&gt;与&lt;artifactId&gt;</h3>
-<p>与上面的&lt;groupId&gt;与&lt;artifactId&gt;一样.</p>
-<h3 id="bversion-2">B.&lt;version&gt;</h3>
-<p>与上面的&lt;version&gt;一样.</p>
-<h3 id="cextensions">C.&lt;extensions&gt;</h3>
-<p>取值true或false,表示是否加载扩展,默认为false.</p>
-<h3 id="dinherited">D.&lt;inherited&gt;</h3>
-<p>取值ture或false,是否应用pom的继承关系,默认true.</p>
-<h3 id="econfiguration">E.&lt;configuration&gt;</h3>
-<p>插件项的相关配置,可以配置&lt;finalName&gt;,&lt;appendAssemblyld&gt;,&lt;descriptor&gt;等.</p>
-<h3 id="fdependencies">F.&lt;dependencies&gt;</h3>
-<p>引入插件的依赖,与前面的&lt;dependencies&gt;类似.</p>
-<h3 id="gexecutions">G.&lt;executions&gt;</h3>
-<p>插件可能有多个目标,&lt;executions&gt;配置每一个&lt;execution&gt;作为插件的目标,在&lt;execution&gt;中,用&lt;id&gt;指定执行目标的标识符,用&lt;goals&gt;指定目标,&lt;goals&gt;包含一组&lt;goal&gt;,&lt;phase&gt;用于指定阶段,&lt;inherited&gt;用于指定是否启用继承关系.另外&lt;execution&gt;也可以包含&lt;configuration&gt;,与上面类似,用于配置特定的目标,而不是插件的所有目标.</p>
-<h2 id="4插件管理">(4)插件管理</h2>
-<p>&lt;pluginManagement&gt;,包含一组&lt;plugins&gt;,继承于此项目的子项目都可以使用,子项目可以覆盖修改&lt;pluginManagement&gt;.</p>
-<h2 id="5目录">(5)目录</h2>
-<p>可以为pom设置各种目录,比如</p>
-<h3 id="a项目源码目录">A.项目源码目录</h3>
-<pre><code class="language-xml">&lt;sourceDirectory&gt;&lt;/sourceDirectory&gt;
-</code></pre>
-<p>构建项目时会编译该目录的源码,是相对于pom.xml的相对路径.</p>
-<h3 id="b测试源码目录">B.测试源码目录</h3>
-<pre><code class="language-xml">&lt;testSourceDirectory&gt;&lt;/testSourceDirectory&gt;
-</code></pre>
-<p>测试时会编译其中的源码,也是相对于pom.xml的相对路径.</p>
-<h3 id="cclass目录">C.class目录</h3>
-<pre><code class="language-xml">&lt;outputDirectory&gt;&lt;/outputDirectory&gt;
-</code></pre>
-<p>这里存放被编译过的class文件.</p>
-<h3 id="d测试class">D.测试class</h3>
-<pre><code class="language-xml">&lt;testOutputDirectory&gt;&lt;/testOutputDirectory&gt;
-</code></pre>
-<p>存放测试文件编译后的class文件.</p>
-<h2 id="6扩展">(6)扩展</h2>
-<p>&lt;extensions&gt;,将包含在运行中的构建的类路径中,在构建过程中可以激活扩展.比如可以为,例如这是支持ftp的wagon-ftp插件:</p>
-<pre><code class="language-xml">&lt;build&gt;
-	&lt;extensions&gt;
-		&lt;extension&gt;
-			&lt;groupId&gt;org.apache.maven.wagon&lt;/groudId&gt;
-			&lt;artifactId&gt;wagon-ftp&lt;/artifactId&gt;
-			&lt;version&gt;3.3.4&lt;/version&gt;
-		&lt;/extension&gt;
-	&lt;/extensions&gt;
-&lt;/build&gt;
-</code></pre>
-<h2 id="7报表">(7)报表</h2>
-<p>&lt;reporting&gt;,描述产生报表的规范等,执行&quot;mvn site&quot;时报表就会运行.</p>
-<h3 id="aexcludedefaults">A.&lt;excludeDefaults&gt;</h3>
-<p>是否包含默认报表.</p>
-<h3 id="boutputdirectory">B.&lt;outputDirectory&gt;</h3>
-<p>报表存放位置.</p>
-<h3 id="cplugins">C.&lt;plugins&gt;</h3>
-<p>报表包含的插件以及配置.</p>
-<h3 id="dreportsets">D.&lt;reportSets&gt;</h3>
-<p>包含一组&lt;reportSet&gt;,与&lt;execution&gt;类似,配置多个目标,每个&lt;reportSet&gt;包含&lt;id&gt;,&lt;configuration&gt;,&lt;inherited&gt;,以及&lt;reports&gt;,&lt;id&gt;指定报表集合的标识符,&lt;configuration&gt;表示使用的报表配置,&lt;inherited&gt;表示是否继承到子pom,&lt;reports&gt;包含一组&lt;report&gt;,表示使用哪些报表.</p>
-<h1 id="4项目信息">4.项目信息</h1>
-<h2 id="1许可证">(1)许可证</h2>
-<p>&lt;licenses&gt;,包含一组&lt;license&gt;,每个&lt;license&gt;包含&lt;name&gt;,&lt;url&gt;,&lt;distribution&gt;,&lt;comments&gt;.</p>
-<h3 id="aname">A.&lt;name&gt;</h3>
-<p>名称.</p>
-<h3 id="burl">B.&lt;url&gt;</h3>
-<p>官方license页面的url.</p>
-<h3 id="cdistribution">C.&lt;distribution&gt;</h3>
-<p>项目分发的方式,可以选择</p>
-<ul>
-<li>repo:从Maven仓库下载.</li>
-<li>manual:手动安装.</li>
-</ul>
-<h3 id="dcomments">D.&lt;comments&gt;</h3>
-<p>一些补充信息.</p>
-<h2 id="2组织">(2)组织</h2>
-<p>&lt;organazation&gt;,包含&lt;name&gt;,&lt;url&gt;,与&lt;license&gt;的类似.</p>
-<h2 id="3开发者">(3)开发者</h2>
-<p>&lt;developers&gt;,包含一组&lt;developer&gt;,每个&lt;developer&gt;包含:</p>
-<h3 id="aid">A.&lt;id&gt;</h3>
-<p>开发者id.</p>
-<h3 id="bname">B.&lt;name&gt;</h3>
-<p>姓名.</p>
-<h3 id="cemail">C.&lt;email&gt;</h3>
-<p>邮箱.</p>
-<h3 id="durl">D.&lt;url&gt;</h3>
-<p>主页url.</p>
-<h3 id="eorganization">E.&lt;organization&gt;</h3>
-<p>所属组织.</p>
-<h3 id="forganizationurl">F.&lt;organizationUrl&gt;</h3>
-<p>所属组织的主页url.</p>
-<h3 id="groles">G.&lt;roles&gt;</h3>
-<p>角色,包含一组&lt;role&gt;,一个&lt;role&gt;描述一个角色.</p>
-<h3 id="htimezone">H.&lt;timeZone&gt;</h3>
-<p>时区,可以以America/New_York或Europe/Berlin这样的形式,或者设置一个整数,范围[-11,12].</p>
-<h3 id="iproperties">I.&lt;properties&gt;</h3>
-<p>开发者属性,如如何处理即时消息等.</p>
-<h2 id="4贡献者">(4)贡献者</h2>
-<p>&lt;contributors&gt;,包含一组&lt;contributor&gt;,类似于&lt;developer&gt;,包含&lt;name&gt;,&lt;email&gt;等元素.</p>
-<h1 id="5环境配置">5.环境配置</h1>
-<h2 id="1问题管理">(1)问题管理</h2>
-<p>&lt;issueManagement&gt;,定义缺陷跟踪系统,如Bugzilla,TestTrack,ClearQuest等,包含&lt;system&gt;与&lt;url&gt;元素,&lt;system&gt;指定系统名字,&lt;url&gt;指定问题管理系统的url.</p>
-<h2 id="2持续集成管理">(2)持续集成管理</h2>
-<p>&lt;ciManagement&gt;,使用了触发器,包含了:</p>
-<h3 id="asystem">A.&lt;system&gt;</h3>
-<p>持续集成系统的名称.</p>
-<h3 id="burl-2">B.&lt;url&gt;</h3>
-<p>持续集成系统的url.</p>
-<h3 id="cnotifiers">C.&lt;notifiers&gt;</h3>
-<p>包含一组&lt;notifier&gt;,用来配置触发器,每个&lt;notifier&gt;包含:</p>
-<h4 id="atype">a.&lt;type&gt;</h4>
-<p>如何发送通知,比如可以取值mail.</p>
-<h4 id="bsendonerror">b.&lt;sendOnError&gt;</h4>
-<p>取值true/false,错误时发送.</p>
-<h4 id="csendonfailure">c.&lt;sendOnFailure&gt;</h4>
-<p>取值true/false,失败时发送.</p>
-<h4 id="dsendonsuccess">d.&lt;sendOnSuccess&gt;</h4>
-<p>取值true/false,成功时发送.</p>
-<h4 id="esendonwarning">e.&lt;sendOnWarning&gt;</h4>
-<p>取值true/false,发生警告时发送.</p>
-<h4 id="fconfiguration">f.&lt;configuration&gt;</h4>
-<p>相关配置,例如可以添加&lt;address&gt;,发送的地址.</p>
-<h2 id="3邮件列表">(3)邮件列表</h2>
-<p>&lt;mailingLists&gt;,包含一组&lt;mailingList&gt;,表示邮件信息,包括:</p>
-<h3 id="aname-2">A.&lt;name&gt;</h3>
-<p>邮件名称.</p>
-<h3 id="bsubscribe">B.&lt;subscribe&gt;</h3>
-<p>订阅邮件地址或链接.</p>
-<h3 id="cunsubscribe">C.&lt;unsubscribe&gt;</h3>
-<p>取消订阅邮件或链接.</p>
-<h3 id="dpost">D.&lt;post&gt;</h3>
-<p>要发送的邮件地址.</p>
-<h3 id="earchive">E.&lt;archive&gt;</h3>
-<p>查看旧的邮件的url.</p>
-<h2 id="4软件配置管理scm">(4)软件配置管理(SCM)</h2>
-<p>&lt;scm&gt;,也叫Source Code/Control Management,允许配置代码库供web站点和其他插件使用.包含:</p>
-<h3 id="aconnection与developconnection">A.&lt;connection&gt;与&lt;developConnection&gt;</h3>
-<p>描述如何通过Maven连接到版本控制系统,其中connection需要读权限,developConnection需要写权限.</p>
-<h3 id="btag">B.&lt;tag&gt;</h3>
-<p>代码标签,默认为HEAD.</p>
-<h3 id="curl">C.&lt;url&gt;</h3>
-<p>公开的可浏览的仓库,例如ViewVC或Fisheye.</p>
-<h2 id="5前提条件">(5)前提条件</h2>
-<p>&lt;prerequisites&gt;,这是Maven2中的元素,只有一个子元素&lt;maven&gt;,指定maven的版本,且规定是2.x版本.Maven3中不需要&lt;prerequisites&gt;了,可以用:</p>
-<pre><code class="language-xml">&lt;build&gt;
-    &lt;plugins&gt;
-        &lt;plugin&gt;
-            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-            &lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;
-            &lt;version&gt;3.0.0-M3&lt;/version&gt;
-            &lt;executions&gt;
-                &lt;execution&gt;
-                &lt;id&gt;enforce-maven&lt;/id&gt;
-                &lt;goals&gt;
-                    &lt;goal&gt;enforce&lt;/goal&gt;
-                &lt;/goals&gt;
-                &lt;configuration&gt;
-                &lt;rules&gt;
-                    &lt;requireMavenVersion&gt;
-                        &lt;version&gt;3.0&lt;/version&gt;
-                    &lt;/requireMavenVersion&gt;
-                &lt;/rules&gt;    
-            &lt;/configuration&gt;
-        &lt;/execution&gt;
-      &lt;/executions&gt;
-    &lt;/plugin&gt;
-  &lt;/plugins&gt;
-&lt;/build&gt;
+<p>使用-u与-p分别指定用户与密码,最后重定向到文件.<br>
+但是,要注意再java中用exec()时,千万千万不能使用-p选项,-p是交互式输入密码的,使用了-p的话导出的文件是0KB的,需要使用</p>
+<pre><code class="language-bash">--password
 </code></pre>
 <p>代替.</p>
-<h2 id="6仓库">(6)仓库</h2>
-<p>&lt;repositories&gt;,包含一组&lt;repository&gt;,表示仓库的位置,每个&lt;repository&gt;包含:</p>
-<h3 id="areleases">A.&lt;releases&gt;</h3>
-<p>如何处理远征仓库的发布版本,包含:</p>
+<pre><code class="language-java">String command = &quot;mysqldump -u user --password=xxxx &gt; xxxx\\xxxx.sql&quot;
+</code></pre>
+<p>要注意一下路径问题,另外,在windows下,需要使用cmd:</p>
+<pre><code class="language-java">String command = &quot;cmd /c mysqldump -u user --password=xxxx &gt; xxxx\\xxxx.sql&quot;
+</code></pre>
+<p>这需要把</p>
+<pre><code>%MYSQL_HOME%/bin
+</code></pre>
+<p>加入到环境变量,如果没有加入的话输入绝对路径:</p>
+<pre><code class="language-java">String command = &quot;cmd /c C:\\Program Files\\mysql\\bin\\mysqldump -u user --password=xxxx &gt; xxxx\\xxxx.sql&quot;
+</code></pre>
+<h1 id="4-执行">4 执行</h1>
+<pre><code class="language-java">try
+{
+	Runtime.getRuntime().exec(command);
+}
+catch(IOException e)
+{
+	//xxxx
+}
+</code></pre>
+<h1 id="5-其他问题">5 其他问题</h1>
+<p>如果没有导出文件或者导出的文件为0KB,可能原因是:</p>
 <ul>
-<li>&lt;enabled&gt;<br>
-true/false,是否启用.</li>
-<li>&lt;updatePolicy&gt;<br>
-更新频率,Maven将本地pom的时间戳与远程进行比较,可以选择:always,daily(默认),interval:X(X是一个整数,表示X分钟),never.</li>
-<li>&lt;checksumPolicy&gt;<br>
-校验错误或校验失败时的策略,可以选择ignore,fail或warn.</li>
+<li>语法错误:命令的空格使用不当,路径设置错误,使用了错误的参数等.</li>
+<li>环境问题:如在windows下没有添加到环境变量,没有加上&quot;cmd /c&quot;.</li>
+<li>用户名/密码错误:这个....</li>
+<li>权限问题:用户没有相应权限,要登陆到mysql中授权.</li>
 </ul>
-<h3 id="bsnapshots">B.&lt;snapshots&gt;</h3>
-<p>如何处理远程仓库的快照版本,包含的元素与&lt;releases&gt;一样.</p>
-<h3 id="cid">C.&lt;id&gt;</h3>
-<p>远程仓库的标识符.</p>
-<h3 id="dname">D.&lt;name&gt;</h3>
-<p>远程仓库的名称.</p>
-<h3 id="eurl">E.&lt;url&gt;</h3>
-<p>远程仓库的url.</p>
-<h3 id="flayout">F.&lt;layout&gt;</h3>
-<p>仓库布局类型,可以是default或legacy,Maven2.x为仓库提供了默认布局.</p>
-<h2 id="7插件仓库">(7)插件仓库</h2>
-<p>&lt;pluginRepositories&gt;,插件的远程仓库列表,包含一组&lt;pluginRepository&gt;,与&lt;repositories&gt;中的&lt;repository&gt;类似.</p>
-<h2 id="8分发管理">(8)分发管理</h2>
-<p>&lt;distributeManagement&gt;,管理整个构建过程中的分发,可以把网站部署到远程服务器或者把构件部署到远程仓库.包含:</p>
-<h3 id="a仓库">A.仓库</h3>
-<p>&lt;repository&gt;,仓库信息,包含:</p>
-<ul>
-<li>&lt;uniqueVersion&gt;:唯一版本,取值true/false,表示是否生成一个唯一版本号或是使用部分地址作为版本号.</li>
-<li>&lt;name&gt;:仓库名字.</li>
-<li>&lt;id&gt;:仓库id.</li>
-<li>&lt;url&gt;:指定仓库位置.</li>
-<li>&lt;layout&gt;:布局,取值default或legacy.</li>
-</ul>
-<p>还有一个叫&lt;snapshotRepository&gt;的元素,与&lt;repository&gt;类似,表示快照仓库.</p>
-<h3 id="b站点部署">B.站点部署</h3>
-<p>&lt;site&gt;,定义了如何部署项目的站点与文档.包含:</p>
-<ul>
-<li>&lt;name&gt;:站点名称.</li>
-<li>&lt;id&gt;:站点id.</li>
-<li>&lt;url&gt;:站点url.</li>
-</ul>
-<h3 id="c重定位">C.重定位</h3>
-<p>&lt;relocation&gt;,表示项目的新位置.包含:</p>
-<ul>
-<li>&lt;groupId&gt;:新的&lt;groupId&gt;.</li>
-<li>&lt;artifactId&gt;:新的&lt;artifactId&gt;.</li>
-<li>&lt;version&gt;:新版本.</li>
-<li>&lt;message&gt;:提示信息.</li>
-</ul>
-<h2 id="9配置文件">(9)配置文件</h2>
-<p>&lt;profiles&gt;,包含一组&lt;profile&gt;,每个&lt;profile&gt;可以定义不同的配置,包含的元素有:</p>
-<ul>
-<li>&lt;id&gt;:配置文件的id,比如测试的可以叫test.</li>
-<li>&lt;build&gt;:相关构建信息.</li>
-<li>&lt;modules&gt;:模块信息.</li>
-<li>&lt;repositories&gt;:远程仓库信息.</li>
-<li>&lt;pluginRepositories&gt;:插件仓库信息.</li>
-<li>&lt;dependencies&gt;:依赖信息.</li>
-<li>&lt;reporting&gt;:报表信息.</li>
-<li>&lt;dependencyManagement&gt;:依赖管理信息.</li>
-<li>&lt;distributeManagement&gt;:分发管理</li>
-<li>&lt;activation&gt;:activation是profile的关键,profile的强大之处是某些情况下才可以修改基本pom,这些情况通过activation指定.</li>
-</ul>
-<p>&lt;activation&gt;包含以下元素:</p>
-<h3 id="aactivebydefault">A.&lt;activeByDefault&gt;</h3>
-<p>是否默认激活,true或false.</p>
-<h3 id="bjdk">B.&lt;jdk&gt;</h3>
-<p>指定jdk版本.</p>
-<h3 id="cos">C.&lt;os&gt;</h3>
-<p>&lt;os&gt;可以定义一些特定的操作系统属性,例如&lt;name&gt;,&lt;family&gt;,&lt;arch&gt;,&lt;version&gt;.</p>
-<h3 id="dproperty">D.&lt;property&gt;</h3>
-<p>若Maven检测到该属性就会激活该属性所在的配置文件,可以指定&lt;name&gt;与&lt;value&gt;.</p>
-<h3 id="efile">E.&lt;file&gt;</h3>
-<p>有&lt;exists&gt;与&lt;missing&gt;两个子元素,&lt;exists&gt;表示若存在&lt;exists&gt;元素中对应的文件,则激活此配置文件.&lt;miissing&gt;表示若不存在&lt;missing&gt;元素中对应的文件,则激活此配置文件.</p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Python基础(五)]]></title>
-        <id>https://2293736867.github.io/post/python-ji-chu-wu/</id>
-        <link href="https://2293736867.github.io/post/python-ji-chu-wu/">
+        <title type="html"><![CDATA[Python生成词云]]></title>
+        <id>https://2293736867.github.io/post/python-sheng-cheng-ci-yun/</id>
+        <link href="https://2293736867.github.io/post/python-sheng-cheng-ci-yun/">
         </link>
-        <updated>2020-06-02T20:13:16.000Z</updated>
+        <updated>2020-06-02T20:23:15.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1%E9%9B%86%E5%90%88">1.集合</a>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">2 准备工作</a>
 <ul>
-<li><a href="#1%E9%9B%86%E5%90%88-2">(1)集合</a></li>
-<li><a href="#2%E5%AE%9A%E4%B9%89">(2)定义</a></li>
-<li><a href="#3%E7%89%B9%E7%82%B9">(3)特点</a>
-<ul>
-<li><a href="#a%E7%A1%AE%E5%AE%9A%E6%80%A7">A.确定性</a></li>
-<li><a href="#b%E6%97%A0%E5%BA%8F%E6%80%A7">B.无序性</a></li>
-<li><a href="#c%E4%BA%92%E5%BC%82%E6%80%A7">C.互异性</a></li>
-<li><a href="#d%E6%94%AF%E6%8C%81%E9%9B%86%E5%90%88%E8%BF%90%E7%AE%97">D.支持集合运算</a></li>
-<li><a href="#e%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1">E.可变对象</a></li>
+<li><a href="#21-%E5%AE%89%E8%A3%85anaconda">2.1 安装anaconda</a></li>
+<li><a href="#22-%E5%AE%89%E8%A3%85cython">2.2 安装cython</a></li>
+<li><a href="#23-%E5%AE%89%E8%A3%85wordcloud">2.3 安装wordcloud</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#2%E5%AD%97%E5%85%B8">2.字典</a>
+<li><a href="#3-%E4%BD%BF%E7%94%A8">3 使用</a>
 <ul>
-<li><a href="#1%E5%AD%97%E5%85%B8">(1)字典</a></li>
-<li><a href="#2%E5%AE%9A%E4%B9%89-2">(2)定义</a></li>
-<li><a href="#3%E7%89%B9%E7%82%B9-2">(3)特点</a>
-<ul>
-<li><a href="#a%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E5%AF%B9%E5%BA%94%E7%9A%84key%E8%AE%BF%E9%97%AE%E5%AF%B9%E5%BA%94%E7%9A%84value">A.可以通过对应的key访问对应的value</a></li>
-<li><a href="#b%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1">B.可变对象</a></li>
-</ul>
-</li>
-<li><a href="#4%E7%94%A8%E4%BD%9C%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0">(4)用作函数参数</a></li>
-</ul>
-</li>
-<li><a href="#3%E8%BF%AD%E4%BB%A3%E5%99%A8">3.迭代器</a>
-<ul>
-<li><a href="#1%E8%BF%AD%E4%BB%A3%E5%99%A8">(1)迭代器</a></li>
-<li><a href="#2%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1">(2)可迭代对象</a></li>
-<li><a href="#3%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1%E8%BD%AC%E6%8D%A2%E4%B8%BA%E8%BF%AD%E4%BB%A3%E5%99%A8">(3)可迭代对象转换为迭代器</a></li>
-</ul>
-</li>
-<li><a href="#4%E7%94%9F%E6%88%90%E5%99%A8">4.生成器</a>
-<ul>
-<li><a href="#1%E7%94%9F%E6%88%90%E5%99%A8">(1)生成器</a></li>
-<li><a href="#2%E7%89%B9%E7%82%B9">(2)特点</a></li>
-<li><a href="#3%E4%BD%BF%E7%94%A8">(3)使用</a></li>
+<li><a href="#31-%E6%89%93%E5%BC%80jupyter">3.1 打开Jupyter</a></li>
+<li><a href="#32-%E5%88%9B%E5%BB%BA%E6%96%87%E5%AD%97%E5%BA%93">3.2 创建文字库</a></li>
+<li><a href="#33-%E7%94%9F%E6%88%90%E8%AF%8D%E4%BA%91">3.3 生成词云</a></li>
+<li><a href="#34-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">3.4 注意事项</a></li>
 </ul>
 </li>
 </ul>
 </p>
-<h1 id="1集合">1.集合</h1>
-<h2 id="1集合-2">(1)集合</h2>
-<p>集合是一种可变的无序的容器.</p>
-<h2 id="2定义">(2)定义</h2>
-<pre><code class="language-py">x = {1,2,3} #第一种方法,使用{}
-x = set([2,4,5]) #第二种方法,使用强制类型转换
+<h1 id="1-概述">1 概述</h1>
+<p>利用Python生成简单的词云,需要的工具是cython,wordcloud与anaconda.</p>
+<h1 id="2-准备工作">2 准备工作</h1>
+<p>包括安装cython,wordcloud与anaconda.</p>
+<h2 id="21-安装anaconda">2.1 安装anaconda</h2>
+<p><a href="https://www.anaconda.com/distribution/#download-section">下载官网</a><br>
+<img src="https://img-blog.csdnimg.cn/20200113190514642.png" alt="在这里插入图片描述" loading="lazy"><br>
+选择对应的版本下载即可.</p>
+<h2 id="22-安装cython">2.2 安装cython</h2>
+<p>cython是为了安装wordcloud准备的.</p>
+<pre><code class="language-bash">pip -m pip install --upgrade cython
 </code></pre>
-<h2 id="3特点">(3)特点</h2>
-<h3 id="a确定性">A.确定性</h3>
-<p>类似数学中的集合的确定性,集合描述得很清楚,不存在不能判断一个元素是否在一个集合中,具体来说就是in或not in运算符不会得不到确定的结果.</p>
-<h3 id="b无序性">B.无序性</h3>
-<p>因此不能通过下标访问.<br>
-<img src="https://img-blog.csdnimg.cn/20191229170050687.png" alt="在这里插入图片描述" loading="lazy"><br>
-subscriptable就是可以通过下标访问的.这里提示&quot;not subscriptable&quot;.</p>
-<h3 id="c互异性">C.互异性</h3>
-<p>没有重复元素.<br>
-<img src="https://img-blog.csdnimg.cn/20191229170159979.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="d支持集合运算">D.支持集合运算</h3>
-<p>包括==,!=,判断子集,真子集,超集,真超集,交集与并集,差集,对称差分.<br>
-<img src="https://img-blog.csdnimg.cn/20191229170455496.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="e可变对象">E.可变对象</h3>
-<p>可以通过add,remove改变集合本身.<br>
-<img src="https://img-blog.csdnimg.cn/20191229170610621.png" alt="在这里插入图片描述" loading="lazy"><br>
-另外有不可变集合frozenset:<br>
-<img src="https://img-blog.csdnimg.cn/201912291707188.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2字典">2.字典</h1>
-<h2 id="1字典">(1)字典</h2>
-<p>字典是一种可变的无序容器,每个值都有自己对应的键,是一个映射结构,本质上是一个以键为元素的集合.</p>
-<h2 id="2定义-2">(2)定义</h2>
-<p>使用{},键与值用:分隔,键值对用逗号分隔.</p>
-<pre><code class="language-py">x = {'aa':1,'bb':2,'cc':3}
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200113190715912.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="23-安装wordcloud">2.3 安装wordcloud</h2>
+<p>安装wordcloud前需要先安装Microsoft Visuall C++ 14.0.<br>
+<a href="https://545c.com/file/1445568-239446865">这里下载</a><br>
+安装好了以后重启,输入</p>
+<pre><code class="language-bash">python -m easy_install wordcloud
 </code></pre>
-<h2 id="3特点-2">(3)特点</h2>
-<h3 id="a可以通过对应的key访问对应的value">A.可以通过对应的key访问对应的value</h3>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191229171520402.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="b可变对象">B.可变对象</h3>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191229171613449.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="4用作函数参数">(4)用作函数参数</h2>
-<pre><code class="language-py">def func(arg1,**arg2):
-    print(arg1)
-    print(arg2)
-func('a',a=1,b=2,c=3,d=4)
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200113191153967.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-使用">3 使用</h1>
+<h2 id="31-打开jupyter">3.1 打开Jupyter</h2>
+<p>打开Jupyter Notebook.<br>
+<img src="https://img-blog.csdnimg.cn/20200113223651852.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后会在浏览器打开这个页面,新建一个notebook.<br>
+<img src="https://img-blog.csdnimg.cn/20200113223734330.png" alt="在这里插入图片描述" loading="lazy"><br>
+先把需要的库导入:</p>
+<pre><code class="language-python">from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191229172107745.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3迭代器">3.迭代器</h1>
-<h2 id="1迭代器">(1)迭代器</h2>
-<p>迭代器可以作为next()的参数被调用,不断返回下一个值.</p>
-<h2 id="2可迭代对象">(2)可迭代对象</h2>
-<p>可以直接作用与循环语句的对象,对于for循环是in后的对象.判断一个对象是否是可迭代对象可以利用isinstance()与Iterable.</p>
-<pre><code class="language-py">from collections import Iterable
-isinstance([1,2,3],Iterable)
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200113224045388.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-创建文字库">3.2 创建文字库</h2>
+<p>简单的文字库可以直接选择一个txt文件,复杂的话可以选择创建一个excel,导出为csv文件,然后利用pandas库的read_csv()读入文件.这里创建一个txt,空格分隔单词即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200113224749967.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后上传到Jupyter中:<br>
+<img src="https://img-blog.csdnimg.cn/20200113224830283.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="33-生成词云">3.3 生成词云</h2>
+<p>首先读入文件:</p>
+<pre><code class="language-python">text = open('1.txt').read()
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191229173559172.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="3可迭代对象转换为迭代器">(3)可迭代对象转换为迭代器</h2>
-<p>使用iter():<br>
-<img src="https://img-blog.csdnimg.cn/20191229174335998.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4生成器">4.生成器</h1>
-<h2 id="1生成器">(1)生成器</h2>
-<p>生成器是一个函数,不过相比起普通函数,返回的是迭代器.</p>
-<h2 id="2特点">(2)特点</h2>
-<p>生成器用的不是return,而是yield,另外生成器有惰性计算的特性,调用生成器时不会立即执行它,会在调用每个元素时才进行计算.</p>
-<h2 id="3使用">(3)使用</h2>
-<pre><code class="language-py">def gen():
-    x = range(-1,8)
-    for i in x:
-        yield i+2
-for x in gen():
-    print(x,end = ' ')
-print()
+<p>然后使用WordCloud().generate(text),在里面设置各种属性.</p>
+<pre><code class="language-python">wc=WordCloud(
+    width=800,
+    repeat=True,
+    height=800).generate(text)
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191229175118183.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里设置了高度与宽度,允许重复.</p>
+<pre><code class="language-python">plt.imshow(wc,interpolation=&quot;bilinear&quot;)
+plt.axis(&quot;off&quot;)
+plt.show()
+</code></pre>
+<p>显示词云,</p>
+<pre><code class="language-python">interpolation='bilinear'
+</code></pre>
+<p>会使显示平滑更加平滑,axis(&quot;off&quot;)表示不显示坐标轴.<br>
+下面是效果:<br>
+<img src="https://img-blog.csdnimg.cn/20200113230237645.jpg" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="34-注意事项">3.4 注意事项</h2>
+<p>如果含有汉字,首先在读取时设置编码:</p>
+<pre><code class="language-python">text = open('1.txt',encoding='utf-8')
+</code></pre>
+<p>然后再生成词云时设置字体:</p>
+<pre><code class="language-python">wc = WordCloud(font_path=r'C:\Windows\Fonts\simfang.ttf')
+</code></pre>
+<p>测试:<br>
+<img src="https://img-blog.csdnimg.cn/20200113231026766.png" alt="在这里插入图片描述" loading="lazy"></p>
+<pre><code class="language-python">text=open('1.txt',encoding='utf-8').read()
+wc=WordCloud(
+    width=1300,
+    repeat=True,
+    font_path=r'C:\Windows\Fonts\simfang.ttf',
+    height=1300).generate(text)
+plt.imshow(wc,interpolation=&quot;bilinear&quot;)
+plt.axis(&quot;off&quot;)
+plt.savefig('aaaa.jpg')
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/2020011323125091.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200113231307585.jpg" alt="在这里插入图片描述" loading="lazy"></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Python基础(四)]]></title>
-        <id>https://2293736867.github.io/post/python-ji-chu-si/</id>
-        <link href="https://2293736867.github.io/post/python-ji-chu-si/">
+        <title type="html"><![CDATA[git push时出现Permission denied(publickey)的解决]]></title>
+        <id>https://2293736867.github.io/post/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/</id>
+        <link href="https://2293736867.github.io/post/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/">
         </link>
-        <updated>2020-06-02T20:12:50.000Z</updated>
+        <updated>2020-06-02T20:22:51.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200113160239767.png" alt="在这里插入图片描述" loading="lazy"><br>
+push的时候出现上述错误,它说请确保有足够的权限和这个仓库存在,仓库不存在...这个估计不是,所以是权限的问题,准确来说是sshkey的问题.</p>
+<h1 id="2-重新生成ssh-key">2 重新生成ssh key</h1>
+<pre><code class="language-bash">ssh-key -t rsa -b 4096 -C xxxx@xxxxx
+</code></pre>
+<p>这是gitub推荐的生成新ssh key的方法.注意,请不要使用默认的名字,第一个就会提示输入名字,请使用自定义的名字.</p>
+<h1 id="3-修改~sshconfig">3 修改~/.ssh/config</h1>
+<p>移动公钥和私钥到~/.ssh下.</p>
+<pre><code>mv xxx xxx.pub ~/.ssh
+</code></pre>
+<p>修改~/.ssh/config:</p>
+<pre><code>vim ~/.ssh/config
+</code></pre>
+<p>输入</p>
+<pre><code>Host github.com
+HostName github.com
+User git
+IdentityFile ~/.ssh/name
+</code></pre>
+<p>其中name为上一步的自定义的key名字,是私钥,不是.pub结尾的公钥.</p>
+<h1 id="4-添加公钥到github">4 添加公钥到github</h1>
+<p>在github首页中,点击右上角头像进入设置.<br>
+<img src="https://img-blog.csdnimg.cn/20200113161704918.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200113161738893.png" alt="在这里插入图片描述" loading="lazy"><br>
+选择:<br>
+<img src="https://img-blog.csdnimg.cn/20200113161757536.png" alt="在这里插入图片描述" loading="lazy"><br>
+输入名字与公钥的内容,保存.<br>
+<img src="https://img-blog.csdnimg.cn/20200113161815741.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-push">5 push</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200113161919367.png" alt="在这里插入图片描述" loading="lazy"><br>
+成功!</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vim替换命令]]></title>
+        <id>https://2293736867.github.io/post/vim-ti-huan-ming-ling/</id>
+        <link href="https://2293736867.github.io/post/vim-ti-huan-ming-ling/">
+        </link>
+        <updated>2020-06-02T20:22:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-语法">1 语法</h1>
+<pre><code>:[range]s/source/target/[option]
+</code></pre>
+<h1 id="2-range">2 range</h1>
+<p>range表示要替换的范围,想要全局替换的话,可以使用一个百分号.</p>
+<pre><code>:%s/xxx/xxxx
+</code></pre>
+<p>另外,小数点表示当前行,美元符号表示最后一行,数字表示范围.</p>
+<pre><code>:1,.s     替换第一行到当前行
+:.,$s     替换当前行到最后一行
+:1,$s     替换第一行到最后一行,相当于 :%s
+</code></pre>
+<h1 id="3-source与target">3 source与target</h1>
+<p>表示源字符串与目标字符串,如</p>
+<pre><code>:1,.s/123/456
+</code></pre>
+<p>表示把第一行到当前行的首次出现的123替换成456,注意是首次出现,如果要替换某一行全部源字符串需要在后面加上</p>
+<pre><code>/g
+</code></pre>
+<p>另外,对于一些特殊字符比如小数点,斜杠,双引号等需要转义,方式是使用反斜杠,在需要转义的字符面前加一个反斜杠<br>
+如把</p>
+<pre><code>&quot;123//&quot;   
+</code></pre>
+<p>替换为</p>
+<pre><code>'123\\'
+</code></pre>
+<p>命令如下:</p>
+<pre><code>:s/\&quot;123\/\/\&quot;/\'123\\\\\'/g
+</code></pre>
+<p>因为</p>
+<pre><code>&quot;123//&quot; 中
+&quot;     转义为      \&quot;
+/     转义为      \/
+</code></pre>
+<pre><code>'123\\' 中
+'     转义为      \'
+\     转义为      \\
+</code></pre>
+<h1 id="4-option">4 option</h1>
+<p>选项如下:</p>
+<pre><code>/g  全局替换
+/c  确认
+/p  替换结果逐行显示
+</code></pre>
+<p>注意选项的组合结果是</p>
+<pre><code>/cg
+/pc
+</code></pre>
+<p>这样的形式,而不是</p>
+<pre><code>/c/g
+/g/p
+</code></pre>
+<p>这样的形式.</p>
+<h1 id="5-总结">5 总结</h1>
+<p>全局替换的话,使用</p>
+<pre><code>:%s/source/target/g
+</code></pre>
+<p>局部替换的话,使用</p>
+<pre><code>:n,ms/source/target
+</code></pre>
+<p>n,m为行数,表示要替换的范围.<br>
+注意如果字符串需要转义要加上反斜杠.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot上传文件+部署到Tomcat]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/">
+        </link>
+        <updated>2020-06-02T20:22:07.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1%E5%AD%97%E7%AC%A6%E4%B8%B2">1.字符串</a>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3 新建工程</a></li>
+<li><a href="#4-%E6%96%B0%E5%BB%BA%E5%8C%85">4 新建包</a></li>
+<li><a href="#5-exception">5 exception</a>
 <ul>
-<li><a href="#1%E5%AE%9A%E4%B9%89">(1)定义</a></li>
-<li><a href="#2%E7%89%B9%E6%80%A7">(2)特性</a></li>
-<li><a href="#3%E8%BD%AC%E4%B9%89">(3)转义</a></li>
-<li><a href="#4%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C">(4)常用操作</a>
+<li><a href="#51-storageexception">5.1 StorageException</a></li>
+<li><a href="#52-storagefilenotfoundexception">5.2 StorageFileNotFoundException</a></li>
+</ul>
+</li>
+<li><a href="#6-properties">6 properties</a></li>
+<li><a href="#7-service">7 service</a>
 <ul>
-<li><a href="#a%E6%8F%92%E5%85%A5%E8%BF%9E%E6%8E%A5">A.插入连接</a></li>
-<li><a href="#b%E5%8E%BB%E9%99%A4%E7%A9%BA%E7%99%BD">B.去除空白</a></li>
-<li><a href="#c%E9%95%BF%E5%BA%A6">C.长度</a></li>
-<li><a href="#dunicode%E7%BC%96%E7%A0%81">D.unicode编码</a></li>
+<li><a href="#71-init">7.1 init</a></li>
+<li><a href="#72-deleteall">7.2 deleteAll</a></li>
+<li><a href="#73-load">7.3 load</a></li>
+<li><a href="#74-loadall">7.4 loadAll</a></li>
+<li><a href="#75-loadasresource">7.5 loadAsResource</a></li>
+<li><a href="#76-store">7.6 store</a></li>
+</ul>
+</li>
+<li><a href="#8-controller">8 controller</a>
+<ul>
+<li><a href="#81-listuploadedfiles">8.1 listUploadedFiles</a>
+<ul>
+<li><a href="#811-requestmapping">8.1.1 RequestMapping</a></li>
+<li><a href="#812-model">8.1.2 Model</a></li>
+</ul>
+</li>
+<li><a href="#82-servefile">8.2 serveFile</a></li>
+<li><a href="#83-handlefileupload">8.3 handleFileUpload</a></li>
+<li><a href="#84-handlestoragefilenotfound">8.4 handleStorageFileNotFound</a></li>
+</ul>
+</li>
+<li><a href="#9-main">9 main</a></li>
+<li><a href="#10-applicationproperties">10 application.properties</a></li>
+<li><a href="#11-%E6%B5%8B%E8%AF%95">11 测试</a></li>
+<li><a href="#12-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0tomcat%E4%B8%8A">12 打包部署到Tomcat上</a>
+<ul>
+<li><a href="#121-%E6%94%B9%E5%8F%98%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F">12.1 改变打包方式</a></li>
+<li><a href="#122-%E5%8E%BB%E9%99%A4tomcat%E4%BE%9D%E8%B5%96">12.2 去除Tomcat依赖</a></li>
+<li><a href="#123-%E4%BF%AE%E6%94%B9main%E7%B1%BB">12.3 修改Main类</a></li>
+<li><a href="#124-%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98">12.4 路径问题</a>
+<ul>
+<li><a href="#1241-action">12.4.1 action</a></li>
+<li><a href="#1242-getmapping">12.4.2 @GetMapping</a></li>
+<li><a href="#1243-postmapping">12.4.3 @PostMapping</a></li>
+<li><a href="#1244-redirect">12.4.4 redirect</a></li>
+</ul>
+</li>
+<li><a href="#125-%E8%AE%BE%E7%BD%AE%E6%89%93%E5%8C%85%E5%90%8D%E5%AD%97">12.5 设置打包名字</a></li>
+<li><a href="#126-maven%E6%89%93%E5%8C%85">12.6 Maven打包</a></li>
+<li><a href="#127-%E6%89%93%E5%8C%85%E5%AE%8C%E6%88%90">12.7 打包完成</a></li>
+<li><a href="#128-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">12.8 上传到服务器</a></li>
+<li><a href="#129-%E5%BC%80%E5%90%AFtomcat">12.9 开启Tomcat</a></li>
+<li><a href="#1210-%E6%B5%8B%E8%AF%95">12.10 测试</a></li>
+</ul>
+</li>
+<li><a href="#13-%E6%BA%90%E7%A0%81">13 源码</a></li>
+<li><a href="#14-%E5%8F%82%E8%80%83">14 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>Spring Boot上传文件,根据<a href="https://spring.io/guides/gs/uploading-files/">官方uploadfile示例</a>修改的,可以打成war放到服务器上(笔者使用的是Tomcat).主要步骤是创建异常类,属性类,接口类与控制器类,最后进行少量修改打包部署到服务器上.</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>win10</li>
+<li>Tomcat 9.0.30</li>
+<li>IDEA 2019.03</li>
+<li>Spring boot 2.2.2 RELEASE</li>
+</ul>
+<h1 id="3-新建工程">3 新建工程</h1>
+<p>选择spring initializer:</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2019122510504427.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>改一下包名,打包选项这里可以jar可以war,选jar的话可以在build的时候再生成war.</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191225105131702.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里用的是模板引擎Thymeleaf,选择spring web与Thymeleaf.</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191225105310422.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191225105349122.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后点击finish.</p>
+<h1 id="4-新建包">4 新建包</h1>
+<p>4个包,service,properties,controller,exception.</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191225105559157.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-exception">5 exception</h1>
+<p>处理两个异常,分别是存储异常与存储文件找不到异常.</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2019122511011711.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="51-storageexception">5.1 StorageException</h2>
+<pre><code class="language-java">package kr.test.exception;
+
+public class StorageException extends RuntimeException
+{
+    public StorageException(String message)
+    {
+        super(message);
+    }
+
+    public StorageException(String message,Throwable cause)
+    {
+        super(message,cause);
+    }
+}
+</code></pre>
+<h2 id="52-storagefilenotfoundexception">5.2 StorageFileNotFoundException</h2>
+<pre><code class="language-java">package kr.test.exception;
+
+public class StorageFileNotFoundException extends StorageException
+{
+    public StorageFileNotFoundException(String message)
+    {
+        super(message);
+    }
+
+    public StorageFileNotFoundException(String message,Throwable cause)
+    {
+        super(message,cause);
+    }
+}
+</code></pre>
+<pre><code class="language-java">Exception(String message,Throwable cause);
+</code></pre>
+<p>这个构造函数中的cause是引起这个异常的异常,允许空值,如果是空值则表示这个引起这个异常的异常不存在或者未知.</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20191225110727222.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-properties">6 properties</h1>
+<p>新建StorageProperties.java,设定存储文件的位置,就是location的值,可以使用&quot;../../&quot;这样的值,什么也不加的话会在项目路径下新建文件夹,若有同名的文件夹会被删除再重新创建.</p>
+<p>注意一下权限的问题,后面部署到Tomcat上面时可能会因为没有写权限而不能写入文件,要确保文件夹拥有写权限.</p>
+<pre><code class="language-java">package kr.test.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(&quot;storage&quot;)
+public class StorageProperties {
+    private String location = &quot;upload_dir&quot;;
+    public String getLocation()
+    {
+        return location;
+    }
+    
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
+}
+
+</code></pre>
+<p>这里使用@ConfigurationProperties会报红,提示没有@EnableConfigurationProperties:</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20191225122451481.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以先不管,后面会在Main类中添加@EnableConfigurationProperties(StorageProperties.class).</p>
+<h1 id="7-service">7 service</h1>
+<p>先加一个StorageService接口:</p>
+<pre><code class="language-java">package kr.test.service;
+
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+public interface StorageService
+{
+    void init();
+    void store(MultipartFile file);
+    Stream&lt;Path&gt; loadAll();
+    Path load(String filename);
+    Resource loadAsResource(String filename);
+    void deleteAll();
+}
+
+</code></pre>
+<p>然后新建一个FileSystemStorageService实现该接口:</p>
+<pre><code class="language-java">package kr.test.service;
+
+import kr.test.exception.StorageException;
+import kr.test.exception.StorageFileNotFoundException;
+import kr.test.properties.StorageProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
+
+@Service
+public class FileSystemStroageService implements StorageService
+{
+    private final Path rootLocation;
+
+    @Autowired
+    public FileSystemStroageService(StorageProperties properties)
+    {
+        this.rootLocation = Paths.get(properties.getLocation());
+    }
+
+    @Override
+    public void init()
+    {
+        try {
+            Files.createDirectories(rootLocation);
+        }
+        catch (IOException e)
+        {
+            throw new StorageException(&quot;Could not initialize storage&quot;,e);
+        }
+    }
+
+    @Override
+    public void deleteAll()
+    {
+        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    }
+
+    @Override
+    public Path load(String filename)
+    {
+        return rootLocation.resolve(filename);
+    }
+
+    @Override
+    public Stream&lt;Path&gt; loadAll()
+    {
+        try
+        {
+            return Files.walk(rootLocation,1)
+                    .filter(path -&gt; !path.equals(rootLocation))
+                    .map(rootLocation::relativize);
+        }
+        catch (IOException e)
+        {
+            throw new StorageException(&quot;Failed to read stored file.&quot;,e);
+        }
+    }
+
+    @Override
+    public Resource loadAsResource(String filename)
+    {
+        try {
+            Path file = load(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if(resource.exists() || resource.isReadable())
+            {
+                return resource;
+            }
+            else {
+                throw new StorageFileNotFoundException(&quot;Could not read file: &quot;+filename);
+            }
+        }
+        catch (MalformedURLException e)
+        {
+            throw new StorageFileNotFoundException(&quot;Could not read file : &quot;+filename,e);
+        }
+    }
+
+    @Override
+    public void store(MultipartFile file)
+    {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        try {
+            if(file.isEmpty())
+            {
+                throw new StorageException(&quot;Failed to store empty file : &quot;+filename);
+            }
+            if(filename.contains(&quot;..&quot;))
+            {
+                throw new StorageException(&quot;Cannot store file with relative path outside current directory&quot;+filename);
+            }
+            try(InputStream inputStream = file.getInputStream())
+            {
+                Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new StorageException(&quot;Failed to store file : &quot;+ filename,e);
+        }
+    }
+}
+
+</code></pre>
+<h2 id="71-init">7.1 init</h2>
+<pre><code class="language-java">@Override
+public void init()
+{
+    try {
+        Files.createDirectories(rootLocation);
+    }
+    catch (IOException e)
+    {
+        throw new StorageException(&quot;Could not initialize storage&quot;,e);
+    }
+}
+</code></pre>
+<p>使用java.nio.file.Files.createDirectories()创建存储目录,可以建立多级目录.</p>
+<h2 id="72-deleteall">7.2 deleteAll</h2>
+<pre><code class="language-java">@Override
+public void deleteAll()
+{
+    FileSystemUtils.deleteRecursively(rootLocation.toFile());
+}
+</code></pre>
+<p>使用工具类FileSystemUtils的方法递归删除文件与文件夹.参数是一个File. 下面是方法源码:</p>
+<pre><code class="language-java">public static boolean deleteRecursively(File root) 
+{
+    if (root != null &amp;&amp; root.exists()) 
+    {
+        if (root.isDirectory()) 
+        {
+            File[] children = root.listFiles();
+            if (children != null) 
+            {
+                for (File child : children) 
+                {
+                    deleteRecursively(child);
+                }
+            }
+        }
+        return root.delete();
+    }
+    return false;
+}
+</code></pre>
+<p>首先判断根是否为空,不为空的话判断是否是目录,不是目录的话直接删除,是目录的话,利用listFiles()获取所有文件及文件夹,判断是否为空并进行递归删除.</p>
+<h2 id="73-load">7.3 load</h2>
+<pre><code class="language-java">@Override
+public Path load(String filename) {
+	return rootLocation.resolve(filename);
+}
+</code></pre>
+<p>Path.resolve(String)返回相对于this的路径,具体来说,等于执行</p>
+<pre><code class="language-bash">cd rootLocation
+cd filename
+pwd
+</code></pre>
+<p>返回pwd的值.</p>
+<h2 id="74-loadall">7.4 loadAll</h2>
+<pre><code class="language-java">@Override
+public Stream&lt;Path&gt; loadAll()
+{
+    try 
+    {
+        return Files.walk(rootLocation,1)
+                .filter(path -&gt; !path.equals(rootLocation))
+                .map(rootLocation::relativize);
+    }
+    catch (IOException e)
+    {
+        throw new StorageException(&quot;Failed to read stored file.&quot;,e);
+    }
+}
+</code></pre>
+<p>Files.walk遍历目录,返回一个Stream&lt;Path&gt;,返回的Stream包含打开的一个或多个目录的引用,会在Stream关闭时关闭,第二个参数1表示遍历的最大深度.</p>
+<p>然后对这个Stream进行filter过滤,这里是把与rootLocation不相等的Path留下,注意是不相等,就是留下filter()中条件为真的Path,不是把条件为真的Path给&quot;删去&quot;.</p>
+<p>最后进行map,relativize返回参数相对于调用者的路径,这里是返回Stream中的每个Path相对于rootLocation的路径.<br>
+对于relativize,无论什么情况下:</p>
+<pre><code class="language-java">Path a = xxxx;
+Path b = xxxx;
+</code></pre>
+<p>都有</p>
+<pre><code class="language-java">a.relativize(a.resolve(b)).equals(b)
+</code></pre>
+<p>为真.</p>
+<h2 id="75-loadasresource">7.5 loadAsResource</h2>
+<pre><code class="language-java">@Override
+public Resource loadAsResource(String filename)
+{
+    try {
+        Path file = load(filename);
+        Resource resource = new UrlResource(file.toUri());
+        if(resource.exists() || resource.isReadable())
+        {
+            return resource;
+        }
+        else {
+            throw new StorageFileNotFoundException(&quot;Could not read file: &quot;+filename);
+        }
+    }
+    catch (MalformedURLException e)
+    {
+        throw new StorageFileNotFoundException(&quot;Could not read file : &quot;+filename,e);
+    }
+}
+</code></pre>
+<p>这里的Resource是org.springframework.core.io.Resource,是一个接口,可以通过它访问各种资源,实现类有UrlResource,InputStreamResource等,这里利用Path.toUri()把file转换为Resource后,判断这个源是否存在或者是否可读并返回,否则抛出存储文件找不到异常.</p>
+<h2 id="76-store">7.6 store</h2>
+<pre><code class="language-java">@Override
+public void store(MultipartFile file)
+{
+    String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    try {
+        if(file.isEmpty())
+        {
+            throw new StorageException(&quot;Failed to store empty file : &quot;+filename);
+        }
+        if(filename.contains(&quot;..&quot;))
+        {
+            throw new StorageException(&quot;Cannot store file with relative path outside current directory&quot;+filename);
+        }
+        try(InputStream inputStream = file.getInputStream()) 
+        {
+            Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+    catch (IOException e)
+    {
+        throw new StorageException(&quot;Failed to store file : &quot;+ filename,e);
+    }
+</code></pre>
+<p>getOriginalFilename()获取文件原名字,然后通过StringUtils.cleanPath()将其标准化,.处理掉&quot;.&quot;与&quot;..&quot;,然后判断文件是否为空与是否包含相对路径,没有的话利用Files.copy()进行复制,resolve获取filename相对于rootLocation的值,复制选项是REPLACE_EXISTING.<br>
+StandardCopyOption有三个可选值:</p>
+<ul>
+<li>ATOMIC_MOVE:原子性的移动操作,一般在移动文件或目录时使用.</li>
+<li>COPY_ATTRIBUTES:复制属性,可以保留源文件或源目录的属性.</li>
+<li>REPLACE_EXISTING:替换已存在的文件.</li>
+</ul>
+<h1 id="8-controller">8 controller</h1>
+<p>新建FileUploadController.</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20191225212707860.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<pre><code class="language-java">package kr.test.controller;
+
+import kr.test.exception.StorageFileNotFoundException;
+import kr.test.service.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.stream.Collectors;
+
+@Controller
+public class FileUploadController {
+    private final StorageService storageService;
+
+    @Autowired
+    public FileUploadController(StorageService storageService)
+    {
+        this.storageService = storageService;
+    }
+
+    @GetMapping(&quot;/&quot;)
+    public String listUploadedFiles(Model model)
+    {
+        model.addAttribute(&quot;files&quot;,storageService.loadAll().map(
+                path -&gt; MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                &quot;serveFile&quot;,path.getFileName().toString()).build().toString())
+                .collect(Collectors.toList()));
+        return &quot;uploadForm&quot;;
+    }
+
+    @GetMapping(&quot;/files/{filename:.+}&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;Resource&gt; serveFile(@PathVariable String filename)
+    {
+        Resource file = storageService.loadAsResource(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;).body(file);
+    }
+
+    @PostMapping(&quot;/&quot;)
+    public String handleFileUpload(@RequestParam(&quot;file&quot;) MultipartFile file, RedirectAttributes redirectAttributes)
+    {
+        storageService.store(file);
+        redirectAttributes.addFlashAttribute(&quot;message&quot;,&quot;You successully uploaded &quot;+file.getOriginalFilename()+&quot;!&quot;);
+        return &quot;redirect:/&quot;;
+    }
+
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity&lt;?&gt; handleStorageFileNotFound(StorageFileNotFoundException e)
+    {
+        return ResponseEntity.notFound().build();
+    }
+}
+
+</code></pre>
+<h2 id="81-listuploadedfiles">8.1 listUploadedFiles</h2>
+<pre><code class="language-java">@GetMapping(&quot;/&quot;)
+public String listUploadedFiles(Model model)
+{
+    model.addAttribute(&quot;files&quot;,storageService.loadAll().map(
+            path -&gt; MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+            &quot;serveFile&quot;,path.getFileName().toString()).build().toString())
+            .collect(Collectors.toList()));
+    return &quot;uploadForm&quot;;
+}
+</code></pre>
+<p>@GetMapping是@RequestMapping(method = RequestMethod.GET)的简化写法,将HTTP GET路径映射到特定的处理方法上.<br>
+方法的参数是spring MVC中的Model,Model实质上是一个Map,添加的key可以在视图中用${key}获取值,比如,这里添加了&quot;files&quot;作为key,则在视图中可用 ${files}获取值.</p>
+<p>MvcUriComponentsBuilder可以为Controller指定uri,fromMethod简单地说就是会调用FileUploadController的serveFile(),参数是path.getFileName().toString(),由于serveFile()返回的是Stream&lt;Path&gt;,利用Stream的collect将其转换成List添加到model中,然后返回uploadForm,表示这是视图的名称,会到resource/templates下寻找.</p>
+<p>这里说一下RequestMapping与Model:</p>
+<h3 id="811-requestmapping">8.1.1 RequestMapping</h3>
+<p>可以用@RequestMapping()来映射URL,可以映射到某个类或某个具体方法.@RequestMapping常用的有以下属性:</p>
+<ul>
+<li>value:请求的URL路径,支持URL模板,正则表达式.</li>
+<li>method:HTTP请求方法,如GET,POST,PUT,DELTE等.</li>
+<li>consumes:允许的媒体类型,如consumes=&quot;application/json&quot;.对应于HTTP请求的Content-Type.</li>
+<li>produces:相应的媒体类型,如produces=&quot;application/json&quot;,对于HTTP请求的Accept.</li>
+<li>params:请求参数,如params=&quot;action=update&quot;.</li>
+<li>headers:请求头.</li>
+</ul>
+<p>Spring提供了简化的@RequestMapping,提供了新的注解来标识HTTP方法:</p>
+<ul>
+<li>@GetMapping</li>
+<li>@PostMapping</li>
+<li>@PutMapping</li>
+<li>...</li>
+</ul>
+<p>所以这里的@GetMapping是简化了的@RequestMapping.</p>
+<h3 id="812-model">8.1.2 Model</h3>
+<p>可以向Model添加视图所需要的变量,Model主要有以下方法:</p>
+<pre><code class="language-java">Model addAttribute(Object value);
+Model addAttribute(String name,Object value);
+Model addAllAttributes(Map attributes);
+Model addAllAttributes(Collection&lt;?&gt; attributes);
+Model mergeAttributes(Map attributes);
+boolean containAttribute(String name);
+</code></pre>
+<p>addAttribute()添加一个变量,对于两个参数的,使用name作为变量名称,后面的是值,对于只有一个Object的,变量的名字就是类名字首字母小写后转为的java变量.<br>
+addAttributes()添加多个变量,如果变量存在则覆盖,其中参数为Collection&lt;?&gt;的方法添加变量名时与addAttribute(Object)的命名规范类似.<br>
+mergeAttributes()也是添加多个变量,不过变量已存在的话会忽略.<br>
+containAttributte()判断是否存在变量.</p>
+<h2 id="82-servefile">8.2 serveFile</h2>
+<pre><code class="language-java">@GetMapping(&quot;/files/{filename:.+}&quot;)
+@ResponseBody
+public ResponseEntity&lt;Resource&gt; serveFile(@PathVariable String filename)
+{
+    Resource file = storageService.loadAsResource(filename);
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;).body(file);
+}
+</code></pre>
+<p>这里的@GetMapping用来表示显示的用来供下载的文件名,@ResponseBody表示直接返回内容而不是视图名,因为默认返回的是视图名称,@ResponseBody对于String直接返回,否则默认使用Jackson进行序列化.</p>
+<p>@PathVariable表示这是@GetMapping中的参数的值,可以省略,默认同名,就是形参的名字与GetMapping中的名字一样,从中取值赋给形参,通过filename加载资源后,作为ResponseEntity的请求体.<br>
+ResponseEntity从HttpEntity继承而来,ResponseEntity.ok()是一个静态方法,表示构建一个状态为&quot;ok&quot;的ResponseEntity,然后添加请求头.</p>
+<pre><code class="language-java">HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;
+</code></pre>
+<p>content_disposition表示文件是直接在浏览器打开还是下载,attachment表示是要下载,文件名为file.getFilename().</p>
+<h2 id="83-handlefileupload">8.3 handleFileUpload</h2>
+<pre><code class="language-java">@PostMapping(&quot;/&quot;)
+public String handleFileUpload(@RequestParam(&quot;file&quot;) MultipartFile file,RedirectAttributes redirectAttributes)
+{
+    storageService.store(file);
+    redirectAttributes.addFlashAttribute(&quot;message&quot;,&quot;You successully uploaded &quot;+file.getOriginalFilename()+&quot;!&quot;);
+    return &quot;redirect:/&quot;;
+}
+</code></pre>
+<p>@PostMapping()与@GetMapping()类似,只不过方法不是GET而是POST.@RequestParam表示请求参数,里面的是请求参数的名字,使用MultipartFile来处理文件上传.<br>
+RedirectAttributes是用于重定向使用的,可以附带参数,RedirectAttributes有两种带参的形式:</p>
+<pre><code class="language-java">addAttribute(String name,Object value);
+addFlashAttribute(String name,Object value);
+</code></pre>
+<p>addAttribute()相当于直接在重定向的地址添加</p>
+<pre><code class="language-java">name=value
+</code></pre>
+<p>这样的形式,会将参数暴露在重定向的地址上.</p>
+<p>而addFlashAttribute()隐藏了参数,只能在重定向的页面中获取参数的值,用到了session,session跳转到页面后就会删除对象.<br>
+handleFileUpload首先保存文件,然后添加一个保存成功的信息,由于Controller中重定向可以返回以&quot;redirect:&quot;或以&quot;forward:&quot;为前缀的URI,因此返回&quot;redirect:/&quot;,重定向到根.</p>
+<h2 id="84-handlestoragefilenotfound">8.4 handleStorageFileNotFound</h2>
+<pre><code class="language-java">@ExceptionHandler(StorageFileNotFoundException.class)
+public ResponseEntity&lt;?&gt; handleStorageFileNotFound(StorageFileNotFoundException e)
+{
+    return ResponseEntity.notFound().build();
+}
+</code></pre>
+<p>@ExceptionHandler()注解会处理Controller层抛出的所有StorageFileNotFoundException类及其子类的异常,ResponseEntity.notFound()相当于返回404标识码.</p>
+<h1 id="9-main">9 main</h1>
+<pre><code class="language-java">package kr.test;
+
+import kr.test.properties.StorageProperties;
+import kr.test.service.StorageService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
+public class TestApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestApplication.class, args);
+    }
+
+    @Bean
+    CommandLineRunner init(StorageService storageService)
+    {
+        return (args) -&gt;
+        {
+            storageService.deleteAll();
+            storageService.init();
+        };
+    }
+}
+</code></pre>
+<p>在原来的基础上添加</p>
+<pre><code class="language-java">@EnableConfigurationProperties(StorageProperties.class)
+</code></pre>
+<p>与</p>
+<pre><code class="language-java">@Bean
+CommandLineRunner init(StorageService storageService)
+{
+    return (args) -&gt;
+    {
+        storageService.deleteAll();
+        storageService.init();
+    };
+}
+</code></pre>
+<p>@EnableConfigurationProperties可以为带有@ConfigurationProperties注解的Bean提供有效的支持,将带有@Configuration注解的类注入为Spring的Bean,在这里是使StorageProperties的@ConfigurationProperties生效,如果没有这一行会报红:</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20191227074427818.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>@Bean标注在方法上,等价于spring的xml配置文件的&lt;bean&gt;,注册bean对象.<br>
+CommandLineRunner接口用于应用初始化后去执行一段代码逻辑,这段代码在整个应用周期只执行一次.</p>
+<h1 id="10-applicationproperties">10 application.properties</h1>
+<p>这里可以设置一些环境配置属性,Spring Boot允许准备多个配置文件,在部署时可以指定那个配置文件覆盖默认的application.properties.这里是有关上传文件的设置:</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200111132534787.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>默认如下:</p>
+<pre><code class="language-java">spring.servlet.multipart.enabled=true 
+spring.servlet.multipart.file-size-threshold=0
+spring.servlet.multipart.location=
+spring.servlet.multipart.max-file-size=1MB
+spring.servlet.multipart.max-request-size=10MB
+spring.servlet.multipart.resolve-lazily=false
+</code></pre>
+<p>enabled表示允许上传,file-size-threshold表示上传文件超过一定长度就先写入临时文件,单位MB或KB,location是临时文件存放目录,不设定的话使用web服务器提供的临时目录.max-file-size表示单个文件最大长度,默认1MB,max-request-size为单次HTTP请求上传的最大长度,默认10MB,resolve-lazily表示文件和参数被访问的时候再解析成文件.</p>
+<p>在这里只需把max-size调大一点即可.</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200111133100485.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="11-测试">11 测试</h1>
+<p>这是在本地进行的测试.直接在IDE上点击运行应用,然后打开浏览器输入:</p>
+<pre><code class="language-java">localhost:8080
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200111132132959.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="12-打包部署到tomcat上">12 打包部署到Tomcat上</h1>
+<p>Spring Boot通常打成jar包或war包,这里部署到Tomcat上的是打成war包.</p>
+<h2 id="121-改变打包方式">12.1 改变打包方式</h2>
+<p>pom.xml中,&lt;packaing&gt;改成war:</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200111072952169.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="122-去除tomcat依赖">12.2 去除Tomcat依赖</h2>
+<p>Spring Boot默认自带了一个嵌入式的Tomcat,需要把Tomcat依赖方式改为provided.<br>
+pom.xml中,在&lt;dependencies&gt;添加:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="123-修改main类">12.3 修改Main类</h2>
+<p>修改Main类,让其继承SpringBootServletInitializer,重载configure(),同时main()保持不变.</p>
+<pre><code class="language-java">@SpringBootApplication
+public class MainClass extends SpringBootServletInitializer
+{
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
+	{
+		return application.sources(MainClass.class);
+	}
+	//main()不变
+}
+</code></pre>
+<h2 id="124-路径问题">12.4 路径问题</h2>
+<p>这个很重要,设置不当的话就无法访问了,主要就是四个路径:</p>
+<ul>
+<li>action:</li>
+</ul>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200111144619164.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>@GetMapping</li>
+</ul>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200111144651888.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>@PostMapping</li>
+</ul>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200111144735284.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>redirect</li>
+</ul>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200111144808831.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="1241-action">12.4.1 action</h3>
+<p>这个是绝对路径,要加上/war项目名.</p>
+<pre><code>/war项目名/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200111145056680.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>比如这里war项目名是kr,上传路径名是upload.</p>
+<h3 id="1242-getmapping">12.4.2 @GetMapping</h3>
+<p>这个是相对路径,相对于当前项目的路径,不用加上/war项目名.</p>
+<pre><code>/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20200111145235205.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里是upload.</p>
+<h3 id="1243-postmapping">12.4.3 @PostMapping</h3>
+<p>与@GetMapping一样,上传路径名.</p>
+<pre><code>/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200111145438464.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="1244-redirect">12.4.4 redirect</h3>
+<p>这个是返回的重定向的路径名,相对路径,与上两个一样,也是上传路径名.</p>
+<pre><code>/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200111150534769.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="125-设置打包名字">12.5 设置打包名字</h2>
+<p>在&lt;build&gt;中添加&lt;finalName&gt;,指定打包出来的war名,注意这个要与上面的war项目名一样,这里设置的是kr.</p>
+<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200111140233480.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="126-maven打包">12.6 Maven打包</h2>
+<p>运行</p>
+<pre><code class="language-java">mvn package
+</code></pre>
+<p>即可打包,对于IDEA,可以在IDEA右侧栏的Maven中,打开Lifecycle,选择package:</p>
+<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200111074204520.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="127-打包完成">12.7 打包完成</h2>
+<p>打包后的war默认放在target下,名字默认为&lt;artifactId&gt;+&lt;version&gt;.</p>
+<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/2020011107431451.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200111074359386.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="128-上传到服务器">12.8 上传到服务器</h2>
+<p>上传的话笔者用的是密钥认证的scp:</p>
+<pre><code class="language-bash">scp -i xxxx\id_rsa kr.war username@ip:/usr/local/tomcat/webapps
+</code></pre>
+<p>放到服务器的Tomcat下的webapps目录.</p>
+<h2 id="129-开启tomcat">12.9 开启Tomcat</h2>
+<p>进入到Tomcat目录的bin下:</p>
+<pre><code class="language-bash">cd /usr/local/tomcat/bin
+./startup.sh
+</code></pre>
+<p>如果正在运行的话就不用启动了,因为会自动检测到webapps目录的变化,把新的war自动解包.</p>
+<h2 id="1210-测试">12.10 测试</h2>
+<p>略,与本地测试类似,不过要注意的是上传的文件夹是在tomcat/bin下,想要修改的话可以修改StorageProperties的location.</p>
+<h1 id="13-源码">13 源码</h1>
+<p><a href="https://github.com/2293736867/SpringBootUploadFileExample">github</a></p>
+<p><a href="https://gitee.com/imykr/SpringBootUploadFileExample">码云</a></p>
+<h1 id="14-参考">14 参考</h1>
+<p>1.<a href="https://blog.csdn.net/zknxx/article/details/79183698">ConfigurationProperties</a></p>
+<p>2.<a href="https://www.cnblogs.com/chenpi/p/9696310.html">CommandLineRunner</a></p>
+<p>3.<a href="https://zhuanlan.zhihu.com/p/21353217?refer=pengsong-java">RedirectAttribute</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[软件工程学习笔记(三):需求工程]]></title>
+        <id>https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-san-xu-qiu-gong-cheng/</id>
+        <link href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-san-xu-qiu-gong-cheng/">
+        </link>
+        <updated>2020-06-02T20:21:45.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E9%9C%80%E6%B1%82%E8%8E%B7%E5%8F%96">2 需求获取</a>
+<ul>
+<li><a href="#21-%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82">2.1 软件需求</a>
+<ul>
+<li><a href="#211-%E5%8A%9F%E8%83%BD%E9%9C%80%E6%B1%82">2.1.1 功能需求</a></li>
+<li><a href="#212-%E6%80%A7%E8%83%BD%E9%9C%80%E6%B1%82">2.1.2 性能需求</a></li>
+<li><a href="#213-%E7%94%A8%E6%88%B7%E6%88%96%E4%BA%BA%E7%9A%84%E5%9B%A0%E7%B4%A0">2.1.3 用户或人的因素</a></li>
+<li><a href="#214-%E7%8E%AF%E5%A2%83%E9%9C%80%E6%B1%82">2.1.4 环境需求</a></li>
+<li><a href="#215-%E7%95%8C%E9%9D%A2%E9%9C%80%E6%B1%82">2.1.5 界面需求</a></li>
+<li><a href="#216-%E6%96%87%E6%A1%A3%E9%9C%80%E6%B1%82">2.1.6 文档需求</a></li>
+<li><a href="#217-%E6%95%B0%E6%8D%AE%E9%9C%80%E6%B1%82">2.1.7 数据需求</a></li>
+<li><a href="#218-%E8%B5%84%E6%BA%90%E4%BD%BF%E7%94%A8%E9%9C%80%E6%B1%82">2.1.8 资源使用需求</a></li>
+<li><a href="#219-%E5%AE%89%E5%85%A8%E4%BF%9D%E5%AF%86%E9%9C%80%E6%B1%82">2.1.9 安全保密需求</a></li>
+<li><a href="#2110-%E5%8F%AF%E9%9D%A0%E6%80%A7%E9%9C%80%E6%B1%82">2.1.10 可靠性需求</a></li>
+<li><a href="#2111-%E8%BD%AF%E4%BB%B6%E6%88%90%E6%9C%AC%E6%B6%88%E8%80%97%E4%B8%8E%E5%BC%80%E5%8F%91%E8%BF%9B%E5%BA%A6%E9%9C%80%E6%B1%82">2.1.11 软件成本消耗与开发进度需求</a></li>
+<li><a href="#2112-%E5%85%B6%E4%BB%96%E9%9D%9E%E5%8A%9F%E8%83%BD%E6%80%A7%E9%9C%80%E6%B1%82">2.1.12 其他非功能性需求</a></li>
+</ul>
+</li>
+<li><a href="#22-%E9%9C%80%E6%B1%82%E8%8E%B7%E5%8F%96%E7%9A%84%E6%96%B9%E6%B3%95%E5%8D%B3%E7%AD%96%E7%95%A5">2.2 需求获取的方法即策略</a>
+<ul>
+<li><a href="#221-%E5%BB%BA%E7%AB%8B%E9%A1%BA%E7%95%85%E7%9A%84%E9%80%9A%E4%BF%A1%E9%80%94%E5%BE%84">2.2.1 建立顺畅的通信途径</a></li>
+<li><a href="#222-%E8%AE%BF%E8%B0%88%E4%B8%8E%E8%B0%83%E6%9F%A5">2.2.2 访谈与调查</a></li>
+<li><a href="#223-%E8%A7%82%E5%AF%9F%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B">2.2.3 观察用户操作流程</a></li>
+<li><a href="#224-%E6%88%90%E7%AB%8B%E8%81%94%E5%90%88%E5%B0%8F%E7%BB%84">2.2.4 成立联合小组</a></li>
+<li><a href="#225-%E7%94%A8%E5%86%B5">2.2.5 用况</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#2%E5%BA%8F%E5%88%97">2.序列</a>
+<li><a href="#3-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90">3 需求分析</a>
 <ul>
-<li><a href="#1%E5%BA%8F%E5%88%97">(1)序列</a></li>
-<li><a href="#2%E7%89%B9%E7%82%B9">(2)特点</a>
+<li><a href="#31-%E5%8E%9F%E5%88%99">3.1 原则</a></li>
+<li><a href="#32-%E4%BF%A1%E6%81%AF%E5%9F%9F">3.2 信息域</a>
 <ul>
-<li><a href="#a%E7%B4%A2%E5%BC%95">A.索引</a></li>
-<li><a href="#b%E5%88%87%E7%89%87">B.切片</a></li>
-<li><a href="#c%E8%BF%AD%E4%BB%A3">C.迭代</a></li>
-<li><a href="#d%E6%8B%86%E5%8C%85%E8%B5%8B%E5%80%BC">D.拆包赋值</a></li>
-<li><a href="#e%E9%87%8D%E5%A4%8D%E8%BF%90%E7%AE%97">E.重复运算</a></li>
+<li><a href="#321-%E4%BF%A1%E6%81%AF%E5%86%85%E5%AE%B9">3.2.1 信息内容</a></li>
+<li><a href="#322-%E4%BF%A1%E6%81%AF%E6%B5%81">3.2.2 信息流</a></li>
+<li><a href="#323-%E4%BF%A1%E6%81%AF%E7%BB%93%E6%9E%84">3.2.3 信息结构</a></li>
+</ul>
+</li>
+<li><a href="#33-%E9%9C%80%E6%B1%82%E5%8D%8F%E5%95%86">3.3 需求协商</a></li>
+<li><a href="#34-%E9%9C%80%E6%B1%82%E5%BB%BA%E6%A8%A1">3.4 需求建模</a></li>
+</ul>
+</li>
+<li><a href="#4-%E9%9C%80%E6%B1%82%E8%A7%84%E7%BA%A6">4 需求规约</a>
+<ul>
+<li><a href="#41-%E5%BC%95%E8%A8%80">4.1 引言</a></li>
+<li><a href="#42-%E4%BF%A1%E6%81%AF%E6%8F%8F%E8%BF%B0">4.2 信息描述</a></li>
+<li><a href="#43-%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0">4.3 功能描述</a></li>
+<li><a href="#44-%E8%A1%8C%E4%B8%BA%E6%8F%8F%E8%BF%B0">4.4 行为描述</a></li>
+<li><a href="#45-%E6%A3%80%E9%AA%8C%E6%A0%87%E5%87%86">4.5 检验标准</a></li>
+<li><a href="#46-%E5%8F%82%E8%80%83%E4%B9%A6%E7%9B%AE">4.6 参考书目</a></li>
+<li><a href="#47-%E9%99%84%E5%BD%95">4.7 附录</a></li>
+</ul>
+</li>
+<li><a href="#5-%E9%9C%80%E6%B1%82%E9%AA%8C%E8%AF%81">5 需求验证</a></li>
+<li><a href="#6-%E9%9C%80%E6%B1%82%E7%AE%A1%E7%90%86">6 需求管理</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>需求工程是应用已证实有效的技术与方法开展需求分析,确定客户需求,帮助分析人员理解问题,评估可行性,协商合理的解决方案,无歧义地规约方案,确认规约以及将规约转换到可运行系统时的需求管理.需求工程是一个不断反复的需求定义,文档记录,需求演进的过程,并最终在验证的基础上冻结需求.需求工程可以分为六个阶段:需求获取,需求分析与协商,系统建模,需求规约,需求验证,需求管理.</p>
+<h1 id="2-需求获取">2 需求获取</h1>
+<p>需求获取阶段分析人员通过与用户的交流,对现有系统的观察以及对任务进行分析,确定系统或产品范围的限制性描述,与系统或产品有关的人员及特征列表,系统的技术环境的描述,系统功能列表及应用于每个需求的领域限制,描述不同运行条件下系统或产品使用状况的应用场景等,为需求分析打下基础.</p>
+<h2 id="21-软件需求">2.1 软件需求</h2>
+<p>软件需求是指用户对目标软件系统在功能,行为,性能,设计约束等方面的期望,包括:</p>
+<h3 id="211-功能需求">2.1.1 功能需求</h3>
+<p>考虑系统要做什么,在何时做,在何时及如何修改或升级等.</p>
+<h3 id="212-性能需求">2.1.2 性能需求</h3>
+<p>考虑软件开发的技术性指标,例如,存储容量限制,执行速度,响应时间以及吞吐量.</p>
+<h3 id="213-用户或人的因素">2.1.3 用户或人的因素</h3>
+<p>考虑用户的类型,例如用户对使用计算机的熟练程度,需要接受的训练,用户理解,使用系统的难度,用户错误操纵系统的可能性等.</p>
+<h3 id="214-环境需求">2.1.4 环境需求</h3>
+<p>考虑未来软件应用的环境,包括硬件和软件,对硬件设备的需求包括机型,外设,接口,地点,分布,温度,湿度,磁场干扰等.对软件的需求包括操作系统,网络,数据库等.</p>
+<h3 id="215-界面需求">2.1.5 界面需求</h3>
+<p>考虑来自其他系统的输入,到其他系统的输出,对数据格式的特殊规定,对数据存储介质的规定.</p>
+<h3 id="216-文档需求">2.1.6 文档需求</h3>
+<p>考虑需要哪些文档,文档针对的读者.</p>
+<h3 id="217-数据需求">2.1.7 数据需求</h3>
+<p>考虑输入,输出数据的格式,接受,发送数据的频率,数据的准确度与精度,数据流量,数据需保持的时间等.</p>
+<h3 id="218-资源使用需求">2.1.8 资源使用需求</h3>
+<p>考虑软件运行时所需要的数据,其他软件,内存空间等资源.软件开发,维护所需的人力,支撑软件,开发设备等.</p>
+<h3 id="219-安全保密需求">2.1.9 安全保密需求</h3>
+<p>考虑是否需要对访问系统或系统信息加以控制,隔离用户数据与方法,用户程序如何与其他程序和操作系统隔离以及系统备份要求等等.</p>
+<h3 id="2110-可靠性需求">2.1.10 可靠性需求</h3>
+<p>考虑系统的可靠性技术,系统是否必须监测和隔离错误,出错后重启系统允许的时间等.</p>
+<h3 id="2111-软件成本消耗与开发进度需求">2.1.11 软件成本消耗与开发进度需求</h3>
+<p>考虑开发是否有规定的时间表,软硬件投资有无限制等.</p>
+<h3 id="2112-其他非功能性需求">2.1.12 其他非功能性需求</h3>
+<p>如采用某种开发模式,确定质量控制标准,里程碑和评审,验收标准,各种质量要求的优先级等,以及可维护性方面的需求.</p>
+<h2 id="22-需求获取的方法即策略">2.2 需求获取的方法即策略</h2>
+<h3 id="221-建立顺畅的通信途径">2.2.1 建立顺畅的通信途径</h3>
+<p>在用户,系统分析人员,软件开发小组,管理人员之间建立良好的沟通方式,以保证能顺利地对问题进行分析.</p>
+<h3 id="222-访谈与调查">2.2.2 访谈与调查</h3>
+<p>分析人员要从分析已经存在的同类的软件产品,或从行业标准,规则中提取初步需求,然后以个别访谈的形式或小组会议的形式开始与用户进行初步的沟通.除了进行面谈外,可以进行市场调查,了解市场对将开发的软件有什么样的要求,可以采取多种调查方式,指定调查提纲,向不同层次的用户发调查表,或访问用户和领域专家.</p>
+<h3 id="223-观察用户操作流程">2.2.3 观察用户操作流程</h3>
+<p>到用户的实际工作环境中对用户的工作流程进行观察,了解用户的实际操作环境,操作过程与操作要求,对照用户提交的问题陈述,对用户需求可以有更全面细致的认识.</p>
+<h3 id="224-成立联合小组">2.2.4 成立联合小组</h3>
+<p>采用一种叫FAST(facilitated application sepcification techniques)的技术用户与开发方成立一个联合小组,发挥各自的长处,共同负责项目的推进.FAST鼓励建立用户与开发者队伍之间的合作,共同工作来标识问题,提出解决方法的要素,商议不同的方法以及刻画初步的解决方案.</p>
+<p>它已经成为信息系统使用的主流技术,该技术为改善各种应用中的相互通信提供了潜在的可能.FAST团队由来自市场,软件与硬件工程以及制造方的代表组成,并选择外来人员作为协调者.该方法有一下基本原则:</p>
+<ul>
+<li>在中立的地点举行由开发者和用户出席的会议</li>
+<li>建立准备和参与会议的规则</li>
+<li>建立一个足够正式的议程以便可以进行自由的交流</li>
+<li>由一个&quot;协调者&quot;(用户,开发者,或其他人)来控制会议</li>
+<li>使用一种&quot;定义机制&quot;(工作表,图标等)</li>
+<li>目标是标识问题,提出解决方案的要素,商议不同的方法以及在有利于完成目标的氛围中刻画出初步的需求</li>
+</ul>
+<h3 id="225-用况">2.2.5 用况</h3>
+<p>用况常被称为用例,应该包含:</p>
+<ul>
+<li>执行者完成的主要任务或功能</li>
+<li>执行者将获取,生产或改变什么信息</li>
+<li>执行者是否必须通知系统关于外部环境的变化</li>
+<li>执行者希望从系统获得什么信息</li>
+<li>执行者是否希望被通知未预期的变化</li>
+</ul>
+<h1 id="3-需求分析">3 需求分析</h1>
+<h2 id="31-原则">3.1 原则</h2>
+<ul>
+<li>必须能够表示和理解问题的信息域</li>
+<li>必须能够定义软件将完成的功能</li>
+<li>必须能够表示软件的行为</li>
+<li>必须划分描述的数据,功能和行为的模型</li>
+<li>分析过程应该从要素信息移向细节信息</li>
+</ul>
+<h2 id="32-信息域">3.2 信息域</h2>
+<p>信息域包括信息内容,信息流以及信息结构.</p>
+<h3 id="321-信息内容">3.2.1 信息内容</h3>
+<p>信息内容表示了单个数据和控制对象,目标软件所有处理的信息集合由它们构成.</p>
+<h3 id="322-信息流">3.2.2 信息流</h3>
+<p>信息流表示了数据和控制在系统中流动时的变化方式,输入对象被变换为中间信息,然后进一步被变换为输出.</p>
+<h3 id="323-信息结构">3.2.3 信息结构</h3>
+<p>信息结构表示了各种数据和控制项的内部组织形式.</p>
+<h2 id="33-需求协商">3.3 需求协商</h2>
+<p>需求很容易出现冲突,这就需要进行协商,讨论需求冲突,通常会议是解决冲突最快的方式.</p>
+<h2 id="34-需求建模">3.4 需求建模</h2>
+<p>创建模型是需求分析的重要活动.模型以一种简洁,准确,结构清晰的方式系统地描述了软件需求,从而帮助分析员理解系统的信息,功能与行为,模型还将成为软件设计的基础,为设计者提供软件要素的表示视图.</p>
+<h1 id="4-需求规约">4 需求规约</h1>
+<p>需求规约是分析任务的最终产物,通过建立完整的信息描述,详细的功能和行为描述,性能需求和设计约束的说明,合适的验收标准,给出对目标软件的各种需求.软件需求规约的框架主要分为5部分:</p>
+<h2 id="41-引言">4.1 引言</h2>
+<p>引言陈述软件目标,在基于计算机的系统语境内进行描述,包括系统参考文献,整体描述,软件项目约束等.</p>
+<h2 id="42-信息描述">4.2 信息描述</h2>
+<p>信息描述给出软件必须解决的问题的详细描述,记录信息内容,信息流,信息结构.</p>
+<h2 id="43-功能描述">4.3 功能描述</h2>
+<p>功能描述用以描述解决问题所需要的每个功能,其中包括为每个功能说明一个处理过程,叙述设计约束,叙述性能特征,用一个或多个图形来形象地表示软件的整体结构和软件功能与其他元素间的相互影响.</p>
+<h2 id="44-行为描述">4.4 行为描述</h2>
+<p>行为描述用以描述作为外部事件和内部产生的控制特征的软件操作.</p>
+<h2 id="45-检验标准">4.5 检验标准</h2>
+<p>检验标准描述检验系统成功的标志,即对系统进行什么样的测试,得到什么样的结果,就表示系统已经成功实现了.检验标准是确认测试的基础.</p>
+<h2 id="46-参考书目">4.6 参考书目</h2>
+<p>对所有和该软件相关文档的引用,包括其他的软件工程的文档,技术参考文献,厂商文献和标准.</p>
+<h2 id="47-附录">4.7 附录</h2>
+<p>包含了规约的补充信息,表格数据,算法的详细描述,图表和其他材料.</p>
+<h1 id="5-需求验证">5 需求验证</h1>
+<p>需求验证的目的是检验是否能够反映用户的意愿,需要对需求文档中定义的需求执行多种检查,评审团队应该检查需求的有效性,一致性和作为一个整体的完备性.包括系统定义的目标是否与用户的要求一致,系统需求分析阶段提供的文档资料是否齐全,被开发的数据流与数据结构是否确定且充足,主要功能是否已包括在规定的软件范围之内,是否都已充分说明,设计的约束条件或限制条件是否符合实际,开发的技术风险是什么,是否详细制定了检验标准,它们能否对系统定义进行确认.</p>
+<h1 id="6-需求管理">6 需求管理</h1>
+<p>需求管理是一组用于帮助项目组在项目进展中的任何时候去标识,控制和跟踪需求的活动.在需求管理中,每个需求被赋予唯一的标识符,一旦标示出需求,就可以为需求建立跟踪表,每个跟踪表标示需求与其他需求或设计文档,代码,测试用例的不同版本间的关系.这些跟踪表可以用于需求跟踪,在整个开发过程中,进行需求跟踪的目的是为了建立和维护从用户需求开始到测试之间的一致性与完整性.确保所有的实现是以用户需求为基础,所有的输出符合用户需求,并且全面覆盖了用户需求.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[软件工程学习笔记(二):系统工程]]></title>
+        <id>https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-er-xi-tong-gong-cheng/</id>
+        <link href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-er-xi-tong-gong-cheng/">
+        </link>
+        <updated>2020-06-02T20:21:27.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B">1 系统工程</a></li>
+<li><a href="#2-%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B%E7%9A%84%E4%BB%BB%E5%8A%A1">2 系统工程的任务</a>
+<ul>
+<li><a href="#21-%E8%AF%86%E5%88%AB%E7%94%A8%E6%88%B7%E7%9A%84%E8%A6%81%E6%B1%82">2.1 识别用户的要求</a></li>
+<li><a href="#22-%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1%E4%B8%8E%E6%A8%A1%E6%8B%9F">2.2 系统建模与模拟</a>
+<ul>
+<li><a href="#221-%E7%A1%AC%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B">2.2.1 硬件系统模型</a></li>
+<li><a href="#222-%E8%BD%AF%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B">2.2.2 软件系统模型</a></li>
+<li><a href="#223-%E4%BA%BA%E6%9C%BA%E6%8E%A5%E5%8F%A3%E6%A8%A1%E5%9E%8B">2.2.3 人机接口模型</a></li>
+<li><a href="#224-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B">2.2.4 数据模型</a></li>
+</ul>
+</li>
+<li><a href="#23-%E6%88%90%E6%9C%AC%E4%BC%B0%E7%AE%97%E5%8F%8A%E8%BF%9B%E5%BA%A6%E5%AE%89%E6%8E%92">2.3 成本估算及进度安排</a></li>
+<li><a href="#24-%E5%8F%AF%E8%A1%8C%E6%80%A7%E5%88%86%E6%9E%90">2.4 可行性分析</a>
+<ul>
+<li><a href="#241-%E7%BB%8F%E6%B5%8E%E5%8F%AF%E8%A1%8C%E6%80%A7">2.4.1 经济可行性</a>
+<ul>
+<li><a href="#2411-%E6%88%90%E6%9C%AC">2.4.1.1 成本</a></li>
+<li><a href="#2412-%E6%95%88%E7%9B%8A">2.4.1.2 效益</a></li>
+<li><a href="#2413-%E8%B4%A7%E5%B8%81%E7%9A%84%E6%97%B6%E9%97%B4%E4%BB%B7%E5%80%BC">2.4.1.3 货币的时间价值</a></li>
+<li><a href="#2414-%E6%8A%95%E8%B5%84%E5%9B%9E%E6%94%B6%E6%9C%9F">2.4.1.4 投资回收期</a></li>
+<li><a href="#2415-%E7%BA%AF%E6%94%B6%E5%85%A5">2.4.1.5 纯收入</a></li>
+</ul>
+</li>
+<li><a href="#242-%E6%8A%80%E6%9C%AF%E5%8F%AF%E8%A1%8C%E6%80%A7">2.4.2 技术可行性</a>
+<ul>
+<li><a href="#2421-%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90">2.4.2.1 风险分析</a></li>
+<li><a href="#2422-%E8%B5%84%E6%BA%90%E5%88%86%E6%9E%90">2.4.2.2 资源分析</a></li>
+<li><a href="#2423-%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90">2.4.2.3 技术分析</a></li>
+</ul>
+</li>
+<li><a href="#243-%E6%B3%95%E5%BE%8B%E5%8F%AF%E8%A1%8C%E6%80%A7">2.4.3 法律可行性</a></li>
+</ul>
+</li>
+<li><a href="#25-%E7%94%9F%E6%88%90%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A0%BC%E8%AF%B4%E6%98%8E">2.5 生成系统规格说明</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-系统工程">1 系统工程</h1>
+<p>软件工程中的系统是指基于计算机的系统,而基于计算机的系统是指通过完成处理某些预定义目标而组织在一起的元素的集合或排列.系统工程过程依赖于应用领域而呈现不同的形式,当工作的语境集中于业务企业时,进行业务过程工程,当关注产品生产的过程时,称为产品工程.</p>
+<h1 id="2-系统工程的任务">2 系统工程的任务</h1>
+<p>系统工程主要包括以下5个方面的任务:</p>
+<h2 id="21-识别用户的要求">2.1 识别用户的要求</h2>
+<p>系统工程的第一步就是识别用户对基于计算机的系统的总体要求,标识系统的功能和性能范围,确定系统的功能,性能,约束和接口.</p>
+<h2 id="22-系统建模与模拟">2.2 系统建模与模拟</h2>
+<p>系统模型通常可用图形来描述,配合相应的文字说明,.必要时在系统建模后可构造原型,进行系统模拟,以分析所建的模型是否满足整个基于计算机的系统的要求.一个基于计算机的系统通常可以考虑一下的模型:</p>
+<h3 id="221-硬件系统模型">2.2.1 硬件系统模型</h3>
+<p>硬件系统模型描述基于计算机系统中的硬件配置,通信协议,拓扑结构,以及确保基于计算机系统的安全性,可靠性,性能等要求的措施.</p>
+<h3 id="222-软件系统模型">2.2.2 软件系统模型</h3>
+<p>基于计算机系统中的软件部分可以分为若干个子系统,软件系统模型描述各个子系统的功能,性能等要求,各软件子系统在硬件系统中的部署情况,以及软件子系统之间的交互.</p>
+<h3 id="223-人机接口模型">2.2.3 人机接口模型</h3>
+<p>人机接口模型描述人如何与基于计算机的系统进行交互,包括用户环境,用户的活动,人机交互的语法与语义等.</p>
+<h3 id="224-数据模型">2.2.4 数据模型</h3>
+<p>数据模型主要描述基于计算机的系统使用了哪些数据库管理系统,如果使用多个数据库管理系统还应描述它们之间的数据转换方式,必要时可给出主要的数据结构.</p>
+<h2 id="23-成本估算及进度安排">2.3 成本估算及进度安排</h2>
+<p>开发一个基于计算机的系统需要一定的资金投入和时间约束,因此在系统工程阶段对需开发的基于计算机的系统进行成本估算,并作出进度安排.</p>
+<h2 id="24-可行性分析">2.4 可行性分析</h2>
+<p>可行性分析主要从三方面进行:</p>
+<h3 id="241-经济可行性">2.4.1 经济可行性</h3>
+<p>主要进行成本效益分析,从经济角度确定系统是否值得开发.</p>
+<h4 id="2411-成本">2.4.1.1 成本</h4>
+<ul>
+<li>购置硬件,软件和设备的费用</li>
+<li>系统的开发费用</li>
+<li>系统安装,运行与维护费用</li>
+<li>人员培训费用</li>
+</ul>
+<h4 id="2412-效益">2.4.1.2 效益</h4>
+<p>效益可以分为社会效益与经济效益,经济效益包括使用基于计算机的系统后可增加的收入和可节省的运行费用.社会效益指使用基于计算机的系统后对社会产生的影响,通常社会效益只能定性地估计,经济效益通常可用货币的时间价值,投资回收期和纯收入来度量.</p>
+<h4 id="2413-货币的时间价值">2.4.1.3 货币的时间价值</h4>
+<p>通常可以利用年利率来衡量货币的时间价值,设银行储蓄的年利率为i,现存入钱P,在n年后可得到的钱F,则<br>
+<img src="https://img-blog.csdnimg.cn/20200105125125762.png" alt="在这里插入图片描述" loading="lazy"><br>
+因此,n年后得到的F,折合成现在的钱P的公式为:<br>
+<img src="https://img-blog.csdnimg.cn/20200105125239926.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="2414-投资回收期">2.4.1.4 投资回收期</h4>
+<p>投资回收期是指累计的经济效益正好等于投资成本所需的时间,投资回收期通常是用于评价开发一个工程的价值的重要经济指标.</p>
+<h4 id="2415-纯收入">2.4.1.5 纯收入</h4>
+<p>纯收入指出了若干年扣除成本后的实际收入: 纯收入 = 累计经济效益 - 成本.</p>
+<h3 id="242-技术可行性">2.4.2 技术可行性</h3>
+<p>技术可行性主要根据系统的功能,性能,约束条件等,分析在现有资源和技术条件系统下能否实现.主要包括:</p>
+<h4 id="2421-风险分析">2.4.2.1 风险分析</h4>
+<p>风险分析主要分析在给定的约束条件下设计和实现系统的风险,在可行性分析时,风险分析的目的是找出风险,评价风险的大小,分析能否有效地控制和缓解风险.</p>
+<h4 id="2422-资源分析">2.4.2.2 资源分析</h4>
+<p>资源分析主要论证是否具备系统开发所需的各类人员,软件,硬件等资源和相应的工作环境.</p>
+<h4 id="2423-技术分析">2.4.2.3 技术分析</h4>
+<p>技术分析主要分析当前的科学技术是否支持系统开发的各项活动.在技术分析过程中,分析员收集系统的性能,可靠性,可维护性和生产率方面的信息,分析实现系统功能,性能所需的技术,方法,算法或过程,从技术角度分析可能存在的风险,以及这些技术问题对成本的影响.</p>
+<h3 id="243-法律可行性">2.4.3 法律可行性</h3>
+<p>法律可行性主要研究系统开发过程中可能涉及到的合同,侵权,责任以及各种与法律相关抵触的问题.《中华人民共和国著作权法》与《计算机软件保护条例》是可行性分析的主要依据.</p>
+<h2 id="25-生成系统规格说明">2.5 生成系统规格说明</h2>
+<p>完成以上任务后应生成一份系统规格说明,作为以后开发基于计算机的系统的依据.系统规格说明描述基于计算机的系统的功能,性能与约束条件,描述系统的输入与输出控制信息给出各系统元素的模型,进行可行性分析,最后给出成本估算以及进度安排计划.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[软件工程学习笔记(一):软件工程]]></title>
+        <id>https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-yi-ruan-jian-gong-cheng/</id>
+        <link href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-yi-ruan-jian-gong-cheng/">
+        </link>
+        <updated>2020-06-02T20:21:02.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E4%BB%B6">1 计算机软件</a>
+<ul>
+<li><a href="#11-%E8%BD%AF%E4%BB%B6">1.1 软件</a></li>
+<li><a href="#12-%E8%BD%AF%E4%BB%B6%E7%89%B9%E7%82%B9">1.2 软件特点</a></li>
+<li><a href="#13-%E8%BD%AF%E4%BB%B6%E5%88%86%E7%B1%BB">1.3 软件分类</a>
+<ul>
+<li><a href="#131-%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6">1.3.1 系统软件</a></li>
+<li><a href="#132-%E6%94%AF%E6%92%91%E8%BD%AF%E4%BB%B6">1.3.2 支撑软件</a></li>
+<li><a href="#133-%E5%BA%94%E7%94%A8%E8%BD%AF%E4%BB%B6">1.3.3 应用软件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-%E8%BD%AF%E4%BB%B6%E8%AF%AD%E8%A8%80">2 软件语言</a>
+<ul>
+<li><a href="#21-%E9%9C%80%E6%B1%82%E5%AE%9A%E4%B9%89%E8%AF%AD%E8%A8%80">2.1 需求定义语言</a></li>
+<li><a href="#22-%E5%8A%9F%E8%83%BD%E6%80%A7%E8%AF%AD%E8%A8%80">2.2 功能性语言</a></li>
+<li><a href="#23-%E8%AE%BE%E8%AE%A1%E6%80%A7%E8%AF%AD%E8%A8%80">2.3 设计性语言</a></li>
+<li><a href="#24-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80">2.4 程序设计语言</a></li>
+<li><a href="#25-%E6%96%87%E6%A1%A3%E8%AF%AD%E8%A8%80">2.5 文档语言</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B">3 软件工程</a></li>
+<li><a href="#4-%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99">4 软件工程的基本原则</a>
+<ul>
+<li><a href="#41-%E9%80%82%E5%AE%9C%E7%9A%84%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83">4.1 适宜的开发规范</a></li>
+<li><a href="#42-%E5%90%88%E9%80%82%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%B3%95">4.2 合适的设计方法</a></li>
+<li><a href="#43-%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E5%B7%A5%E7%A8%8B%E6%94%AF%E6%8C%81">4.3 高质量的工程支持</a></li>
+<li><a href="#44-%E6%9C%89%E6%95%88%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86">4.4 有效的软件工程管理</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%BD%AF%E4%BB%B6%E7%94%9F%E5%AD%98%E5%91%A8%E6%9C%9F">5 软件生存周期</a>
+<ul>
+<li><a href="#51-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B">5.1 计算机系统工程</a></li>
+<li><a href="#52-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90">5.2 需求分析</a></li>
+<li><a href="#53-%E8%AE%BE%E8%AE%A1">5.3 设计</a></li>
+<li><a href="#54-%E7%BC%96%E7%A0%81">5.4 编码</a></li>
+<li><a href="#55-%E6%B5%8B%E8%AF%95">5.5 测试</a></li>
+<li><a href="#56-%E8%BF%90%E8%A1%8C%E4%B8%8E%E7%BB%B4%E6%8A%A4">5.6 运行与维护</a></li>
+</ul>
+</li>
+<li><a href="#6-cmm">6 CMM</a>
+<ul>
+<li><a href="#61-%E5%88%9D%E5%A7%8B%E7%BA%A7">6.1 初始级</a></li>
+<li><a href="#62-%E5%8F%AF%E9%87%8D%E5%A4%8D%E7%BA%A7">6.2 可重复级</a></li>
+<li><a href="#63-%E5%B7%B2%E5%AE%9A%E4%B9%89%E7%BA%A7">6.3 已定义级</a></li>
+<li><a href="#64-%E5%B7%B2%E7%AE%A1%E7%90%86%E7%BA%A7">6.4 已管理级</a></li>
+<li><a href="#65-%E4%BC%98%E5%8C%96%E7%BA%A7">6.5 优化级</a></li>
+</ul>
+</li>
+<li><a href="#7-cmmi">7 CMMI</a>
+<ul>
+<li><a href="#71-%E9%98%B6%E6%AE%B5%E5%BC%8F%E6%A8%A1%E5%9E%8B">7.1 阶段式模型</a>
+<ul>
+<li><a href="#711-%E5%88%9D%E5%A7%8B%E7%9A%84">7.1.1 初始的</a></li>
+<li><a href="#712-%E5%B7%B2%E7%AE%A1%E7%90%86%E7%9A%84">7.1.2 已管理的</a></li>
+<li><a href="#713-%E5%B7%B2%E5%AE%9A%E4%B9%89%E7%9A%84">7.1.3 已定义的</a></li>
+<li><a href="#714-%E5%AE%9A%E9%87%8F%E7%AE%A1%E7%90%86%E7%9A%84">7.1.4 定量管理的</a></li>
+<li><a href="#715-%E4%BC%98%E5%8C%96%E7%9A%84">7.1.5 优化的</a></li>
+</ul>
+</li>
+<li><a href="#72-%E8%BF%9E%E7%BB%AD%E5%BC%8F%E6%A8%A1%E5%9E%8B">7.2 连续式模型</a>
+<ul>
+<li><a href="#721-cl0">7.2.1 CL0</a></li>
+<li><a href="#722-cl1">7.2.2 CL1</a></li>
+<li><a href="#723-cl2">7.2.3 CL2</a></li>
+<li><a href="#724-cl3">7.2.4 CL3</a></li>
+<li><a href="#725-cl4">7.2.5 CL4</a></li>
+<li><a href="#726-cl5">7.2.6 CL5</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#8-%E8%BD%AF%E4%BB%B6%E8%BF%87%E7%A8%8B%E6%A8%A1%E5%9E%8B">8 软件过程模型</a>
+<ul>
+<li><a href="#81-%E7%80%91%E5%B8%83%E6%A8%A1%E5%9E%8B">8.1 瀑布模型</a>
+<ul>
+<li><a href="#811-%E4%BC%98%E7%82%B9">8.1.1 优点</a></li>
+<li><a href="#812-%E7%BC%BA%E7%82%B9">8.1.2 缺点</a></li>
+</ul>
+</li>
+<li><a href="#82-%E5%A2%9E%E9%87%8F%E6%A8%A1%E5%9E%8B">8.2 增量模型</a>
+<ul>
+<li><a href="#821-%E4%BC%98%E7%82%B9">8.2.1 优点</a></li>
+<li><a href="#822-%E7%BC%BA%E7%82%B9">8.2.2 缺点</a></li>
+</ul>
+</li>
+<li><a href="#83-%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B">8.3 原型模型</a>
+<ul>
+<li><a href="#831-%E4%BC%98%E7%82%B9">8.3.1 优点</a></li>
+<li><a href="#832-%E7%BC%BA%E7%82%B9">8.3.2 缺点</a></li>
+</ul>
+</li>
+<li><a href="#84-%E8%9E%BA%E6%97%8B%E6%A8%A1%E5%9E%8B">8.4 螺旋模型</a>
+<ul>
+<li><a href="#841-%E4%BC%98%E7%82%B9">8.4.1 优点</a></li>
+<li><a href="#842-%E7%BC%BA%E7%82%B9">8.4.2 缺点</a></li>
+</ul>
+</li>
+<li><a href="#85-%E5%96%B7%E6%B3%89%E6%A8%A1%E5%9E%8B">8.5 喷泉模型</a>
+<ul>
+<li><a href="#851-%E4%BC%98%E7%82%B9">8.5.1 优点</a></li>
+<li><a href="#852-%E7%BC%BA%E7%82%B9">8.5.2 缺点</a></li>
+</ul>
+</li>
+<li><a href="#86-%E5%9F%BA%E4%BA%8E%E6%9E%84%E4%BB%B6%E7%9A%84%E5%BC%80%E5%8F%91%E6%A8%A1%E5%9E%8B">8.6 基于构件的开发模型</a>
+<ul>
+<li><a href="#861-%E4%BC%98%E7%82%B9">8.6.1 优点</a></li>
+<li><a href="#862-%E7%BC%BA%E7%82%B9">8.6.2 缺点</a></li>
+</ul>
+</li>
+<li><a href="#87-%E5%BD%A2%E5%BC%8F%E5%8C%96%E6%96%B9%E6%B3%95%E6%A8%A1%E5%9E%8B">8.7 形式化方法模型</a>
+<ul>
+<li><a href="#871-%E4%BC%98%E7%82%B9">8.7.1 优点</a></li>
+<li><a href="#872-%E7%BC%BA%E7%82%B9">8.7.2 缺点</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </p>
-<h1 id="1字符串">1.字符串</h1>
-<h2 id="1定义">(1)定义</h2>
-<p>可以使用单引号,双引号,三引号定义字符串.</p>
-<pre><code class="language-py">x = '123'
-x = &quot;123&quot;
-x = '''123'''
-x = '''
-	123
-	456
-	'''
-</code></pre>
-<p>三引号可以跨行使用.</p>
-<h2 id="2特性">(2)特性</h2>
-<p>python中的字符串是不可变对象:<br>
-<img src="https://img-blog.csdnimg.cn/20191229113938247.png" alt="在这里插入图片描述" loading="lazy"><br>
-字符串也属于序列的一种,支持切片操作:<br>
-<img src="https://img-blog.csdnimg.cn/20191229114034752.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3转义">(3)转义</h2>
-<p>转义一般用于单引号,双引号,斜杠等特殊符号.</p>
-<pre><code class="language-py">x = '\\123'
-x = &quot;\&quot;123\&quot;&quot;
-</code></pre>
-<p>对于用单引号引起的字符串,若含有单引号,可以把外面的单引号改成双引号,对于双引号字符串也类似.<br>
-另一种可以不用转义的方法是在字符串前加一个r:<br>
-<img src="https://img-blog.csdnimg.cn/20191229113740255.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="4常用操作">(4)常用操作</h2>
-<h3 id="a插入连接">A.插入连接</h3>
-<p>使用x.join(a)表示把x插入到a中的每个字符中间:<br>
-<img src="https://img-blog.csdnimg.cn/20191229114407602.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="b去除空白">B.去除空白</h3>
-<p>strip(),去除左右空白字符,包括空格,换行,制表符.<br>
-<img src="https://img-blog.csdnimg.cn/2019122911455720.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="c长度">C.长度</h3>
-<p>计算字符串长度,len(x):<br>
-<img src="https://img-blog.csdnimg.cn/20191229114648444.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="dunicode编码">D.unicode编码</h3>
+<h1 id="1-计算机软件">1 计算机软件</h1>
+<h2 id="11-软件">1.1 软件</h2>
+<p>计算机软件是指计算机系统中的程序以及文档,程序是计算任务处理对象和处理规则的描述.</p>
+<h2 id="12-软件特点">1.2 软件特点</h2>
 <ul>
-<li>ord():计算unicode编码.</li>
-<li>chr():与ord()相反,解码.</li>
+<li>一种逻辑实体.</li>
+<li>维护工作量大.</li>
+<li>维护软件过程中会引入副作用.</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/20191229114819758.png" alt="在这里插入图片描述" loading="lazy"><br>
-注意参数是一个字符.</p>
-<h1 id="2序列">2.序列</h1>
-<h2 id="1序列">(1)序列</h2>
-<p>序列是列表,元组,字符串等元素之间具有顺序关系的数据类型的统称,不是一个独立的数据类型.</p>
-<h2 id="2特点">(2)特点</h2>
-<h3 id="a索引">A.索引</h3>
-<p>可以通过索引来获取元素的值:<br>
-<img src="https://img-blog.csdnimg.cn/20191229115412459.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="b切片">B.切片</h3>
-<p>形式为:</p>
-<pre><code class="language-css">[start:end:step]
-</code></pre>
-<p>start为起始位置,包含.end为结束位置,不包含,step为步长,默认为1,三者都可以省略.三者都可以为负数.<br>
-<img src="https://img-blog.csdnimg.cn/20191229115949240.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="c迭代">C.迭代</h3>
-<p>序列是支持迭代的,可以放在for循环的in后:</p>
-<pre><code class="language-py">x = '123888'
-for i in x:
-    print(i,end = ' ')
-print()
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191229120150370.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="d拆包赋值">D.拆包赋值</h3>
-<p>用逗号分隔等号左边的变量,等号右边为一个序列.<br>
-<img src="https://img-blog.csdnimg.cn/20191229120309430.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="e重复运算">E.重复运算</h3>
-<p>使用*表示重复n次.<br>
-<img src="https://img-blog.csdnimg.cn/20191229120503548.png" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python基础(三)]]></title>
-        <id>https://2293736867.github.io/post/python-ji-chu-san/</id>
-        <link href="https://2293736867.github.io/post/python-ji-chu-san/">
-        </link>
-        <updated>2020-06-02T20:12:32.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1list">1.list</a>
+<h2 id="13-软件分类">1.3 软件分类</h2>
+<h3 id="131-系统软件">1.3.1 系统软件</h3>
+<p>最靠近硬件的一层,比如操作系统.</p>
+<h3 id="132-支撑软件">1.3.2 支撑软件</h3>
+<p>软件开发,维护与运行的软件,比如各种IDE等.</p>
+<h3 id="133-应用软件">1.3.3 应用软件</h3>
+<p>应用于特定领域的软件.</p>
+<h1 id="2-软件语言">2 软件语言</h1>
+<p>软件语言主要包括需求定义语言,功能性语言,设计性语言,程序设计语言与文档语言.</p>
+<h2 id="21-需求定义语言">2.1 需求定义语言</h2>
+<p>用于书写软件需求定义的语言,包括功能需求与非功能需求.典型的语言有PSL.</p>
+<h2 id="22-功能性语言">2.2 功能性语言</h2>
+<p>书写软件功能规约的语言,描述软件做什么以及只做什么.典型语言有广谱语言,Z语言.</p>
+<h2 id="23-设计性语言">2.3 设计性语言</h2>
+<p>书写软件设计规约的语言,是软件设计的严格而完整的描述.典型语言有PDL.</p>
+<h2 id="24-程序设计语言">2.4 程序设计语言</h2>
+<p>即编程语言,可以分为低级语言与高级语言,过程式语言与非过程式语言,通用语言与专用语言,交互式语言与非交互式语言,顺序语言与并发语言与分布语言.</p>
+<h2 id="25-文档语言">2.5 文档语言</h2>
+<p>书写软件文档使用的语言,比如Z语言.</p>
+<h1 id="3-软件工程">3 软件工程</h1>
+<p>软件工程是建立和使用一套合理的工程原则,以便获得经济的软件,这种软件是可靠的,可以在实际机器上高效地运行.软件工程是应用计算机科学理论以及工程管理原则的方法,按预算与进度实现满足用户要求的软件产品的工程,或以此为研究对象的学科.</p>
+<h1 id="4-软件工程的基本原则">4 软件工程的基本原则</h1>
+<h2 id="41-适宜的开发规范">4.1 适宜的开发规范</h2>
+<p>选用适宜的开发规范,以保证软件开发的可持续性,并使最终的软件产品满足客户的需求.</p>
+<h2 id="42-合适的设计方法">4.2 合适的设计方法</h2>
+<p>要考虑软件的模块化,信息隐藏,局部化,一致性以及适应性等问题,采用合适的设计方法有助于支持问题的解决与实现.</p>
+<h2 id="43-高质量的工程支持">4.3 高质量的工程支持</h2>
+<p>需要提供高质量的工程支持,例如配置管理,质量保证等.</p>
+<h2 id="44-有效的软件工程管理">4.4 有效的软件工程管理</h2>
+<p>软件工程的管理直接影响可用资源的有效利用,以提高软件组织的生产能力.</p>
+<h1 id="5-软件生存周期">5 软件生存周期</h1>
+<p>软件生存周期分为6个阶段:</p>
+<h2 id="51-计算机系统工程">5.1 计算机系统工程</h2>
+<p>计算机系统工程的任务是确定待开发软件的总体要求与范围,以及该软件与其他计算机系统元素之间的关系,进行成本估算,作出进度安排,并进行可行性分析.</p>
+<h2 id="52-需求分析">5.2 需求分析</h2>
+<p>需求分析主要解决待开发软件要做什么的问题,确定软件的功能,性能,数据,界面等要求,生成软件需求规约.</p>
+<h2 id="53-设计">5.3 设计</h2>
+<p>软件设计主要解决待开发软件怎么做的问题,通常可以分为系统设计与详细设计,系统设计的任务是设计软件系统的体系结构,详细设计的任务是设计各个组成成分的实现细节.</p>
+<h2 id="54-编码">5.4 编码</h2>
+<p>利用程序设计语言进行编码.</p>
+<h2 id="55-测试">5.5 测试</h2>
+<p>发现并纠正软件中的错误与缺陷,包括单元测试,集成测试,确认测试与系统测试.</p>
+<h2 id="56-运行与维护">5.6 运行与维护</h2>
+<p>软件运行期间需要进行维护,对软件进行修改.</p>
+<h1 id="6-cmm">6 CMM</h1>
+<p>CMM是能力成熟度模型,定义了5个软件过程成熟度等级,包括初始级,可重复级,已定义级,已管理级,优化级.</p>
+<h2 id="61-初始级">6.1 初始级</h2>
+<p>软件过程的特点是无秩序的,甚至是混乱的,几乎没有什么过程是经过妥善定义的.</p>
+<h2 id="62-可重复级">6.2 可重复级</h2>
+<p>建立了基本的项目管理过程来跟踪成本,进度与功能特性.制定了必要的过程纪律,能重复早先类似应用项目取得的成功.</p>
+<h2 id="63-已定义级">6.3 已定义级</h2>
+<p>已将管理和工程活动两方面的软件过程文档化,标准化,并综合成该组织的标准软件过程.所有项目均使用经批准,剪裁的标准软件过程来开发与维护软件.</p>
+<h2 id="64-已管理级">6.4 已管理级</h2>
+<p>收集对软件过程和产品质量的详细度量值,对软件过程和产品都有定量的理解与控制.</p>
+<h2 id="65-优化级">6.5 优化级</h2>
+<p>过程的量化反馈和先进的新思想,新技术促使过程不断改进.</p>
+<h1 id="7-cmmi">7 CMMI</h1>
+<p>CMMI是若干过程模型的综合与改进,是支撑多个工程学科和领域的系统的,一致的过程改进框架,能适应现代工程的特点与需要,能提高过程的质量与工作效率.CMMI有两种表示法:阶段式模型与连续式模型.</p>
+<h2 id="71-阶段式模型">7.1 阶段式模型</h2>
+<p>阶段式模型的结构类似于CMM,分为5个成熟度等级:</p>
+<h3 id="711-初始的">7.1.1 初始的</h3>
+<p>过程不可预测且缺乏控制.</p>
+<h3 id="712-已管理的">7.1.2 已管理的</h3>
+<p>过程为项目服务.</p>
+<h3 id="713-已定义的">7.1.3 已定义的</h3>
+<p>过程为组织服务.</p>
+<h3 id="714-定量管理的">7.1.4 定量管理的</h3>
+<p>过程已度量和控制.</p>
+<h3 id="715-优化的">7.1.5 优化的</h3>
+<p>集中与过程改进.</p>
+<h2 id="72-连续式模型">7.2 连续式模型</h2>
+<p>连续式模型关注每个过程域的能力,一个组织对不同的过程域可以达到不同的过程域能力等级.<br>
+CMMI包含了6个过程域能力等级,等级号为0-5,能力等级表明了单个过程域中组织执行的好坏程度.能力等级包括共性目标及相关的共性实践,可以独立地应用于任何单独的过程域,各能力等级的含义:</p>
+<h3 id="721-cl0">7.2.1 CL0</h3>
+<p>未完成的,过程域未执行或未达到CL1中定义的所有目标.</p>
+<h3 id="722-cl1">7.2.2 CL1</h3>
+<p>已执行的,其共性目标是过程可以将标识的输入工作产品转换成可标识的输出工作产品,以实现支持过程域的特定目标.</p>
+<h3 id="723-cl2">7.2.3 CL2</h3>
+<p>已管理的,共性目标是集中于已管理的过程的制度化.根据组织政策规定过程的运作将使用哪个过程,项目遵循已文档化的计划和过程描述,所有正在工作的人都有权使用足够的资源,所有工作任务和工作产品都被监督,控制和评审.</p>
+<h3 id="724-cl3">7.2.4 CL3</h3>
+<p>已定义的,共性目标是集中于已定义的过程的制度化.过程是按照组织的剪裁指南从组织的标准过程集中剪裁得到的,还必须收集过程资产和过程的度量,并用于将来对该过程的改进上.</p>
+<h3 id="725-cl4">7.2.5 CL4</h3>
+<p>定量管理的,共性目标是集中于可定量管理的过程的制度化.使用测量与质量保证来控制和改进过程域,建立和使用关于质量和过程执行的定量目标作为管理准则.</p>
+<h3 id="726-cl5">7.2.6 CL5</h3>
+<p>优化的,使用量化手段改变和优化过程域,以应对客户的要求的改变与持续改进计划的过程域的功效.</p>
+<h1 id="8-软件过程模型">8 软件过程模型</h1>
+<p>软件过程模型习惯上也叫软件开发模型,是软件开发全部过程,活动和任务的结构框架.</p>
+<h2 id="81-瀑布模型">8.1 瀑布模型</h2>
+<p>1970年由W.Royce提出,给出了软件生存周期活动的固定顺序,上一阶段的活动完成后向下一阶段活动过渡,最终得到开发的软件产品.瀑布模型中上一阶段的活动完成并经过评审后才能开始下一阶段的活动,特征是:</p>
 <ul>
-<li><a href="#1%E5%AE%9A%E4%B9%89%E6%96%B9%E6%B3%95">(1)定义方法</a></li>
-<li><a href="#2%E4%B8%8B%E6%A0%87">(2)下标</a></li>
-<li><a href="#3%E5%88%87%E7%89%87">(3)切片</a></li>
-<li><a href="#4%E5%8F%8D%E5%90%91%E9%81%8D%E5%8E%86">(4)反向遍历</a>
+<li>接受上一阶段活动的结果作为本阶段活动的输入.</li>
+<li>依据上一阶段活动的结果实施本阶段应完成的活动.</li>
+<li>对本阶段的活动进行评审.</li>
+<li>将本阶段活动的结果作为输出,传递给下一阶段.</li>
+</ul>
+<h3 id="811-优点">8.1.1 优点</h3>
+<p>最早出现应用最广泛的模型,确保软件开发的顺利进行,对提高软件项目的质量和开发效率起到重要作用.</p>
+<h3 id="812-缺点">8.1.2 缺点</h3>
 <ul>
-<li><a href="#a-1">A.[::-1]</a></li>
-<li><a href="#b%E4%BD%BF%E7%94%A8%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0reversed">B.使用内置函数reversed()</a></li>
-<li><a href="#c%E4%BD%BF%E7%94%A8%E5%88%97%E8%A1%A8%E6%96%B9%E6%B3%95reverse">C.使用列表方法.reverse()</a></li>
+<li>用户难以清晰描述所有需求,开发过程中需求也有可能发生改变.</li>
+<li>发现错误时,为了改正错误要回到前一阶段,造成瀑布倒流.</li>
+<li>在测试完成后才可以看到可运行的软件,发现问题的修改代价极大.</li>
 </ul>
-</li>
-<li><a href="#5%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F">(5)列表推导式</a></li>
-<li><a href="#6%E5%88%97%E8%A1%A8%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0">(6)列表的常用函数</a>
+<h2 id="82-增量模型">8.2 增量模型</h2>
+<p>增量模型将软件的开发过程分成若干个日程时间交错的线性序列,每个线性序列产生一个可发布的增量版本,后一个版本是对前一个版本的修改和补充,重复增量发布的过程,直至产生最终的完善产品.</p>
+<h3 id="821-优点">8.2.1 优点</h3>
+<p>适用于需求经常发生变化的软件开发,以后的增量中可以逐渐加入需求,另外可以有计划地管理技术风险.</p>
+<h3 id="822-缺点">8.2.2 缺点</h3>
+<p>需要良好的架构设计,避免加入的构件破坏已构造好的系统部分,需要对系统有好的全盘分析,否则容易退化成边做边改模型.</p>
+<h2 id="83-原型模型">8.3 原型模型</h2>
+<p>原型是预期系统的一个可执行版本,反映了系统性质的一个选定的子集.一个原型不必满足目标软件的所有约束,目的是可以快速,低成本地构建原型.步骤是:</p>
+<pre><code class="language-mermaid">graph TB
+定义总体目标 --&gt; 标识需求 
+标识需求  --&gt; 指定原型开发计划
+ 指定原型开发计划 --&gt; 确定原型目标和范围
+ 确定原型目标和范围 --&gt; 快速设计建模
+ 快速设计建模 --&gt; 构建原型
+ 构建原型 --&gt; 交付使用
+ 交付使用 --&gt; 收集反馈意见
+ 收集反馈意见 --下一轮原型迭代开发--&gt; 定义总体目标
+</code></pre>
+<h3 id="831-优点">8.3.1 优点</h3>
+<p>用户与开发者在原型上达成一致,减少错误,缩短开发周期,加快进度,降低成本.</p>
+<h3 id="832-缺点">8.3.2 缺点</h3>
+<p>不利于原型系统作为最终产品,原型被建造仅仅是用户用来定义需求,之后便会被部分或全部抛弃,准确的原型设计比较困难,不利于开发人员创新.</p>
+<h2 id="84-螺旋模型">8.4 螺旋模型</h2>
+<p>螺旋模型将原型实现的迭代特征与瀑布模型中的控制的和系统化的方面结合起来,增加了风险分析.螺旋模型沿着螺线自内向外旋转,4个任务区域(4个象限)内分别完成以下任务:</p>
 <ul>
-<li><a href="#aextend">A.extend()</a></li>
-<li><a href="#bappend">B.append()</a></li>
-<li><a href="#cinsert">C.insert()</a></li>
-<li><a href="#dpop">D.pop()</a></li>
-<li><a href="#eremove">E.remove()</a></li>
-<li><a href="#flen">F.len()</a></li>
-<li><a href="#gsorted%E4%B8%8Esort">G.sorted()与sort()</a></li>
-<li><a href="#henumerate">H.enumerate()</a></li>
-<li><a href="#izip">I.zip()</a></li>
+<li>第一象限:风险分析,评价所选方案,识别风险,清楚风险.</li>
+<li>第二象限:制订计划,确定软件目标,选定实施方案,弄清项目开发的限制条件.</li>
+<li>第三象限:客户评估,评价开发工作,提出修正建议.</li>
+<li>第四象限:工程实施,实施软件开发,验证工作产品.</li>
 </ul>
-</li>
-</ul>
-</li>
-<li><a href="#2%E5%85%83%E7%BB%84">2.元组</a>
-<ul>
-<li><a href="#1%E5%AE%9A%E4%B9%89%E6%96%B9%E6%B3%95-2">(1)定义方法</a></li>
-<li><a href="#2%E7%89%B9%E7%82%B9">(2)特点</a></li>
-<li><a href="#3%E5%BA%94%E7%94%A8">(3)应用</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1list">1.list</h1>
-<p>list是一种可变的有序容器,每个元素都拥有自己的下标.列表使用[]定义.</p>
-<h2 id="1定义方法">(1)定义方法</h2>
-<pre><code class="language-py">x = [1,2,3] #第一种,使用[]
-y = x #第二种,赋值
-y = list({1,2,3}) #第三种,使用强制转换函数
-</code></pre>
-<h2 id="2下标">(2)下标</h2>
-<p>下标从0开始,允许负数作为下标,最后一个元素的下标为-1,第一个元素的下标为-n,第i个元素的下标为(i-1)或-(n-i+1).</p>
-<h2 id="3切片">(3)切片</h2>
-<p>设x是一个列表,则</p>
-<pre><code class="language-py">x[start:end:step]
-</code></pre>
-<p>为列表的一个切片,start为起始位置,包含,可以省略,end为结束位置,不包含,可以省略,step为步长,可以省略,默认为1.<br>
-三者都可以为负数.<br>
-<img src="https://img-blog.csdnimg.cn/2019122901445134.png" alt="在这里插入图片描述" loading="lazy"><br>
-三者都省略时为整个列表,反向遍历时可以省略start与end,步长设为-1:<br>
-<img src="https://img-blog.csdnimg.cn/20191229014602164.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="4反向遍历">(4)反向遍历</h2>
-<p>反向遍历有三种方法:</p>
-<h3 id="a-1">A.[::-1]</h3>
-<p>使用切片,像上面一样,步长设为-1</p>
-<h3 id="b使用内置函数reversed">B.使用内置函数reversed()</h3>
-<p>reversed()会返回一个迭代器,想要获取里面的内容可以转换为list().<br>
-<img src="https://img-blog.csdnimg.cn/20191229014905116.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="c使用列表方法reverse">C.使用列表方法.reverse()</h3>
-<p><img src="https://img-blog.csdnimg.cn/20191229014939786.png" alt="在这里插入图片描述" loading="lazy"><br>
-前两种方法不会改变列表,列表方法reverse()改变了列表.</p>
-<h2 id="5列表推导式">(5)列表推导式</h2>
-<p>列表推导式可用于快速生成有规律性的列表,比如生成包含10个2的列表:</p>
-<pre><code class="language-py">[2 for i in range(10)]
-</code></pre>
-<p>有点类似于把for循环的循环体提到前面.</p>
-<h2 id="6列表的常用函数">(6)列表的常用函数</h2>
-<h3 id="aextend">A.extend()</h3>
-<p><img src="https://img-blog.csdnimg.cn/20191229015314703.png" alt="在这里插入图片描述" loading="lazy"><br>
-extend()类似于直接使用+,但是+不会改变列表本身,而extend()会改变列表本身.</p>
-<h3 id="bappend">B.append()</h3>
-<p><img src="https://img-blog.csdnimg.cn/20191229015438924.png" alt="在这里插入图片描述" loading="lazy"><br>
-append()把参数作为一个元素直接追加到列表中.</p>
-<h3 id="cinsert">C.insert()</h3>
-<p>insert需要两个参数,分别表示插入的下标与插入的值.<br>
-<img src="https://img-blog.csdnimg.cn/20191229020539846.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="dpop">D.pop()</h3>
-<p>根据下标删除元素.<br>
-<img src="https://img-blog.csdnimg.cn/20191229020704542.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="eremove">E.remove()</h3>
-<p>根据值删除元素,删除第一个出现的元素,就是说对于重复元素仅删除第一次出现的元素.<br>
-<img src="https://img-blog.csdnimg.cn/20191229020809442.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="flen">F.len()</h3>
-<p>列表长度,注意这个不是列表的方法.<br>
-<img src="https://img-blog.csdnimg.cn/20191229021042322.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="gsorted与sort">G.sorted()与sort()</h3>
-<p>这两个都是排序的方法,sorted()不是列表的方法,把列表作为函数的参数传递,sort是列表的方法,会改变列表本身.<br>
-<img src="https://img-blog.csdnimg.cn/20191229021247951.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="henumerate">H.enumerate()</h3>
-<p>逐个显示对应的下标,返回的是一个迭代器.想要显示可以转换为列表.<br>
-<img src="https://img-blog.csdnimg.cn/20191229021549773.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="izip">I.zip()</h3>
-<p>列表的并行计算.<br>
-<img src="https://img-blog.csdnimg.cn/20191229021823839.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2元组">2.元组</h1>
-<p>元组是不可变的有序容器,用()表示.</p>
-<h2 id="1定义方法-2">(1)定义方法</h2>
-<pre><code class="language-py">x = (1,2,3,4,5) #第一种,使用()
-y = x #第二种,使用赋值
-x = tuple('kkkrrr') #第三种,使用tuple强制转换
-x = 1,2,3,4,5 #第四种,实质上还是第一种,省略了圆括号
-</code></pre>
-<h2 id="2特点">(2)特点</h2>
-<p>用逗号分隔的都是元组,是不可变对象,支持拆包式赋值.<br>
-<img src="https://img-blog.csdnimg.cn/20191229022517187.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3应用">(3)应用</h2>
-<p>交换两个变量:<br>
-<img src="https://img-blog.csdnimg.cn/20191229022747427.png" alt="在这里插入图片描述" loading="lazy"><br>
-函数的不定长参数:</p>
-<pre><code class="language-py">def fun(arg1,*arg2):
-    print(arg1)
-    if arg2 != ():
-        if len(arg2) == 1:
-            print(arg2[0])
-        else:
-            print(arg2)
-fun(1)
-fun(2,3)
-fun(4,5,6)
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191229023114186.png" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Maven简介]]></title>
-        <id>https://2293736867.github.io/post/maven-jian-jie/</id>
-        <link href="https://2293736867.github.io/post/maven-jian-jie/">
-        </link>
-        <updated>2020-06-02T20:12:12.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1maven%E4%BB%8B%E7%BB%8D">1.Maven介绍</a></li>
-<li><a href="#2%E5%AE%89%E8%A3%85maven">2.安装Maven</a></li>
-<li><a href="#3%E8%AE%BE%E7%BD%AEmaven">3.设置Maven</a></li>
-<li><a href="#4maven%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">4.Maven常用命令</a>
-<ul>
-<li><a href="#1%E7%BC%96%E8%AF%91">(1)编译</a></li>
-<li><a href="#2%E6%89%93%E5%8C%85">(2)打包</a></li>
-<li><a href="#3%E5%AE%89%E8%A3%85%E5%88%B0%E6%9C%AC%E5%9C%B0">(3)安装到本地</a></li>
-<li><a href="#4%E5%AE%89%E8%A3%85%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">(4)安装到远程仓库</a></li>
-<li><a href="#5%E6%B8%85%E7%90%86">(5)清理</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1maven介绍">1.Maven介绍</h1>
-<p>Maven最初用于代替Ant,用来简化项目的构建,Maven使构建项目变得容易,规定了源码总是放在src/main/java下,测试代码放在/src/test/java中,配置文件放在/src/main/resources中,通过使用pom.xml统一了描述项目的方式,可以自动解决库的依赖问题,只要声明了使用的库,会自动从中央仓库下载,并且可以自动管理冲突.</p>
-<h1 id="2安装maven">2.安装Maven</h1>
-<p><a href="http://maven.apache.org/index.html">官网这里.</a><br>
-<img src="https://img-blog.csdnimg.cn/20191228115358222.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择下载即可,作者用的是windows,选择zip.下一步是解压放到相应的位置.<br>
-然后添加环境变量MAVEN_HOME,是maven的解压位置.需要的话可以再配置一个环境变量M2_HOME,用来作为本地仓库的位置.<br>
-最后配置一个PATH,添加</p>
-<pre><code class="language-bash">%MAVEN_HOME%/bin
-</code></pre>
-<p>到path中.<br>
-在cmd中验证</p>
-<pre><code class="language-bash">mvn -version
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20191228115822554.png" alt="在这里插入图片描述" loading="lazy"><br>
-即表示成功安装.</p>
-<h1 id="3设置maven">3.设置Maven</h1>
-<p>因为中心仓库位于国外,一般下载时会很慢,因此可以设置为国内的镜像,这里选择阿里云的镜像.<br>
-打开Maven安装目录下的conf/setting.xml,编辑&lt;mirrors&gt;<br>
-<img src="https://img-blog.csdnimg.cn/20191228120350926.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-xml">&lt;mirror&gt;
-    &lt;id&gt;nexus-aliyun&lt;/id&gt;
-    &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
-    &lt;name&gt;Nexus aliyun&lt;/name&gt;
-    &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
-&lt;/mirror&gt;
-</code></pre>
-<p>另外也需要在IDE中设置一下Maven.这里以IDEA为例.</p>
-<p>打开settings--&gt;Build,Execution,Deployment--&gt;Build Tools--&gt;Maven,设置maven的位置.<br>
-<img src="https://img-blog.csdnimg.cn/20191228120546668.png" alt="在这里插入图片描述" loading="lazy"><br>
-另外也可以设置配置文件的位置与本地仓库的位置,配置文件默认是conf/settings.xml,本地仓库默认用户目录下的.m2文件夹.<br>
-<img src="https://img-blog.csdnimg.cn/20191228120706354.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4maven常用命令">4.Maven常用命令</h1>
-<h2 id="1编译">(1)编译</h2>
-<pre><code class="language-bash">mvn compile
-</code></pre>
-<p>编译Maven工程.</p>
-<h2 id="2打包">(2)打包</h2>
-<pre><code class="language-bash">mvn package
-</code></pre>
-<p>编译并打包工程,会根据pom.xml中的&lt;packaging&gt;打成jar或war包.</p>
-<h2 id="3安装到本地">(3)安装到本地</h2>
-<pre><code class="language-bash">mvn install
-</code></pre>
-<p>打包并安装到本地仓库,这样可以通过项目坐标引用.</p>
-<h2 id="4安装到远程仓库">(4)安装到远程仓库</h2>
-<pre><code class="language-bash">mvn deploy
-</code></pre>
-<p>打包并安装到远程仓库.Maven仓库有两大类:</p>
-<ul>
-<li>远程仓库,包括中心仓库与镜像仓库,还有利用nexus搭建的私服.</li>
-<li>本地仓库,默认位于用户目录的.m2目录.</li>
-</ul>
-<h2 id="5清理">(5)清理</h2>
-<pre><code class="language-bash">mvn clean
-</code></pre>
-<p>删除target目录.</p>
+<p><img src="https://img-blog.csdnimg.cn/20200104005230732.png" alt="在这里插入图片描述" loading="lazy"><br>
+(图片来源:https://www.itread01.com/content/1544588849.html)</p>
+<h3 id="841-优点">8.4.1 优点</h3>
+<p>设计灵活,成本计算容易,客户始终参加每个阶段的开发,可以进行有效的互动.</p>
+<h3 id="842-缺点">8.4.2 缺点</h3>
+<p>周期长,需要丰富的风险评估经验以及专门知识,如果未能及时标识风险,势必造成重大损失.</p>
+<h2 id="85-喷泉模型">8.5 喷泉模型</h2>
+<p>喷泉模型是一种支持面向对象开发的过程模型.喷泉体现了面向对象的迭代与无间隙特性.<br>
+<img src="https://img-blog.csdnimg.cn/2020010401573075.jpg" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="851-优点">8.5.1 优点</h3>
+<p>各个阶段没有明显的边界,开发人员可以进行同步开发,提高软件项目的开发效率,节省开发时间.</p>
+<h3 id="852-缺点">8.5.2 缺点</h3>
+<p>不利于项目管理,要求严格编写文档,审核难度大.</p>
+<h2 id="86-基于构件的开发模型">8.6 基于构件的开发模型</h2>
+<p>利用预先包装的构件来构造应用系统.构件可以是内部开发的构件,也可以是商业化的构件.</p>
+<h3 id="861-优点">8.6.1 优点</h3>
+<p>构件可重用,易于维护,对提高软件生产率,提高软件质量,降低成本有很大的帮助.</p>
+<h3 id="862-缺点">8.6.2 缺点</h3>
+<p>很难找到100%合适的构件,就是现有的构件不一定很适合使用,但基于已有构件构造出的构件未必经过100%的测试,难以保证质量.</p>
+<h2 id="87-形式化方法模型">8.7 形式化方法模型</h2>
+<p>形式化方法是建立在严格的数学基础上的一种软件开发方法,用严格的数学语言和语义描述功能规约与设计规约,通过数学的分析与推导,易于发现需求的歧义性,不完整性与不一致性,易于对分析模型,设计模型和程序进行验证.通过数学的演算,使得从形式化功能规约到形式化设计规约,以及从形式化设计规约到程序代码的转换成为可能.</p>
+<h3 id="871-优点">8.7.1 优点</h3>
+<p>用数学语言解决了规格说明的二义性问题,提高了精确性用数学提供了确认手段,使得证明与验证软件按程序满足用户和系统的需求成为可能,可以可视化地模拟/执行模型.</p>
+<h3 id="872-缺点">8.7.2 缺点</h3>
+<p>形式化的方法比其他技术的抽象级别要低,容易陷入细节,需要提早确定系统边界,通常限于正确一致的模型,但大多数情况下模型并非正确与一致.</p>
 ]]></content>
     </entry>
 </feed>

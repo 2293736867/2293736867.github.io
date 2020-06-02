@@ -1,0 +1,1226 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring Boot上传文件+部署到Tomcat | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 环境
+3 新建工程
+4 新建包
+5 exception
+
+5.1 StorageException
+5.2 StorageFileNotFoundException
+
+
+6 properties
+7 service
+
+7.1..." />
+    <meta name="keywords" content="Tomcat,Spring Boot" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591129493541" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">3 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/"> </span>
+              </a>
+              <span id="/spring-boot-shang-chuan-wen-jian-bu-shu-dao-tomcat/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-0 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-1 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Spring Boot上传文件+部署到Tomcat</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3 新建工程</a></li>
+<li><a href="#4-%E6%96%B0%E5%BB%BA%E5%8C%85">4 新建包</a></li>
+<li><a href="#5-exception">5 exception</a>
+<ul>
+<li><a href="#51-storageexception">5.1 StorageException</a></li>
+<li><a href="#52-storagefilenotfoundexception">5.2 StorageFileNotFoundException</a></li>
+</ul>
+</li>
+<li><a href="#6-properties">6 properties</a></li>
+<li><a href="#7-service">7 service</a>
+<ul>
+<li><a href="#71-init">7.1 init</a></li>
+<li><a href="#72-deleteall">7.2 deleteAll</a></li>
+<li><a href="#73-load">7.3 load</a></li>
+<li><a href="#74-loadall">7.4 loadAll</a></li>
+<li><a href="#75-loadasresource">7.5 loadAsResource</a></li>
+<li><a href="#76-store">7.6 store</a></li>
+</ul>
+</li>
+<li><a href="#8-controller">8 controller</a>
+<ul>
+<li><a href="#81-listuploadedfiles">8.1 listUploadedFiles</a>
+<ul>
+<li><a href="#811-requestmapping">8.1.1 RequestMapping</a></li>
+<li><a href="#812-model">8.1.2 Model</a></li>
+</ul>
+</li>
+<li><a href="#82-servefile">8.2 serveFile</a></li>
+<li><a href="#83-handlefileupload">8.3 handleFileUpload</a></li>
+<li><a href="#84-handlestoragefilenotfound">8.4 handleStorageFileNotFound</a></li>
+</ul>
+</li>
+<li><a href="#9-main">9 main</a></li>
+<li><a href="#10-applicationproperties">10 application.properties</a></li>
+<li><a href="#11-%E6%B5%8B%E8%AF%95">11 测试</a></li>
+<li><a href="#12-%E6%89%93%E5%8C%85%E9%83%A8%E7%BD%B2%E5%88%B0tomcat%E4%B8%8A">12 打包部署到Tomcat上</a>
+<ul>
+<li><a href="#121-%E6%94%B9%E5%8F%98%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F">12.1 改变打包方式</a></li>
+<li><a href="#122-%E5%8E%BB%E9%99%A4tomcat%E4%BE%9D%E8%B5%96">12.2 去除Tomcat依赖</a></li>
+<li><a href="#123-%E4%BF%AE%E6%94%B9main%E7%B1%BB">12.3 修改Main类</a></li>
+<li><a href="#124-%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98">12.4 路径问题</a>
+<ul>
+<li><a href="#1241-action">12.4.1 action</a></li>
+<li><a href="#1242-getmapping">12.4.2 @GetMapping</a></li>
+<li><a href="#1243-postmapping">12.4.3 @PostMapping</a></li>
+<li><a href="#1244-redirect">12.4.4 redirect</a></li>
+</ul>
+</li>
+<li><a href="#125-%E8%AE%BE%E7%BD%AE%E6%89%93%E5%8C%85%E5%90%8D%E5%AD%97">12.5 设置打包名字</a></li>
+<li><a href="#126-maven%E6%89%93%E5%8C%85">12.6 Maven打包</a></li>
+<li><a href="#127-%E6%89%93%E5%8C%85%E5%AE%8C%E6%88%90">12.7 打包完成</a></li>
+<li><a href="#128-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">12.8 上传到服务器</a></li>
+<li><a href="#129-%E5%BC%80%E5%90%AFtomcat">12.9 开启Tomcat</a></li>
+<li><a href="#1210-%E6%B5%8B%E8%AF%95">12.10 测试</a></li>
+</ul>
+</li>
+<li><a href="#13-%E6%BA%90%E7%A0%81">13 源码</a></li>
+<li><a href="#14-%E5%8F%82%E8%80%83">14 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>Spring Boot上传文件,根据<a href="https://spring.io/guides/gs/uploading-files/">官方uploadfile示例</a>修改的,可以打成war放到服务器上(笔者使用的是Tomcat).主要步骤是创建异常类,属性类,接口类与控制器类,最后进行少量修改打包部署到服务器上.</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>win10</li>
+<li>Tomcat 9.0.30</li>
+<li>IDEA 2019.03</li>
+<li>Spring boot 2.2.2 RELEASE</li>
+</ul>
+<h1 id="3-新建工程">3 新建工程</h1>
+<p>选择spring initializer:</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2019122510504427.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>改一下包名,打包选项这里可以jar可以war,选jar的话可以在build的时候再生成war.</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191225105131702.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里用的是模板引擎Thymeleaf,选择spring web与Thymeleaf.</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191225105310422.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191225105349122.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后点击finish.</p>
+<h1 id="4-新建包">4 新建包</h1>
+<p>4个包,service,properties,controller,exception.</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191225105559157.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-exception">5 exception</h1>
+<p>处理两个异常,分别是存储异常与存储文件找不到异常.</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2019122511011711.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="51-storageexception">5.1 StorageException</h2>
+<pre><code class="language-java">package kr.test.exception;
+
+public class StorageException extends RuntimeException
+{
+    public StorageException(String message)
+    {
+        super(message);
+    }
+
+    public StorageException(String message,Throwable cause)
+    {
+        super(message,cause);
+    }
+}
+</code></pre>
+<h2 id="52-storagefilenotfoundexception">5.2 StorageFileNotFoundException</h2>
+<pre><code class="language-java">package kr.test.exception;
+
+public class StorageFileNotFoundException extends StorageException
+{
+    public StorageFileNotFoundException(String message)
+    {
+        super(message);
+    }
+
+    public StorageFileNotFoundException(String message,Throwable cause)
+    {
+        super(message,cause);
+    }
+}
+</code></pre>
+<pre><code class="language-java">Exception(String message,Throwable cause);
+</code></pre>
+<p>这个构造函数中的cause是引起这个异常的异常,允许空值,如果是空值则表示这个引起这个异常的异常不存在或者未知.</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20191225110727222.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-properties">6 properties</h1>
+<p>新建StorageProperties.java,设定存储文件的位置,就是location的值,可以使用&quot;../../&quot;这样的值,什么也不加的话会在项目路径下新建文件夹,若有同名的文件夹会被删除再重新创建.</p>
+<p>注意一下权限的问题,后面部署到Tomcat上面时可能会因为没有写权限而不能写入文件,要确保文件夹拥有写权限.</p>
+<pre><code class="language-java">package kr.test.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(&quot;storage&quot;)
+public class StorageProperties {
+    private String location = &quot;upload_dir&quot;;
+    public String getLocation()
+    {
+        return location;
+    }
+    
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
+}
+
+</code></pre>
+<p>这里使用@ConfigurationProperties会报红,提示没有@EnableConfigurationProperties:</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20191225122451481.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以先不管,后面会在Main类中添加@EnableConfigurationProperties(StorageProperties.class).</p>
+<h1 id="7-service">7 service</h1>
+<p>先加一个StorageService接口:</p>
+<pre><code class="language-java">package kr.test.service;
+
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+public interface StorageService
+{
+    void init();
+    void store(MultipartFile file);
+    Stream&lt;Path&gt; loadAll();
+    Path load(String filename);
+    Resource loadAsResource(String filename);
+    void deleteAll();
+}
+
+</code></pre>
+<p>然后新建一个FileSystemStorageService实现该接口:</p>
+<pre><code class="language-java">package kr.test.service;
+
+import kr.test.exception.StorageException;
+import kr.test.exception.StorageFileNotFoundException;
+import kr.test.properties.StorageProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
+
+@Service
+public class FileSystemStroageService implements StorageService
+{
+    private final Path rootLocation;
+
+    @Autowired
+    public FileSystemStroageService(StorageProperties properties)
+    {
+        this.rootLocation = Paths.get(properties.getLocation());
+    }
+
+    @Override
+    public void init()
+    {
+        try {
+            Files.createDirectories(rootLocation);
+        }
+        catch (IOException e)
+        {
+            throw new StorageException(&quot;Could not initialize storage&quot;,e);
+        }
+    }
+
+    @Override
+    public void deleteAll()
+    {
+        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    }
+
+    @Override
+    public Path load(String filename)
+    {
+        return rootLocation.resolve(filename);
+    }
+
+    @Override
+    public Stream&lt;Path&gt; loadAll()
+    {
+        try
+        {
+            return Files.walk(rootLocation,1)
+                    .filter(path -&gt; !path.equals(rootLocation))
+                    .map(rootLocation::relativize);
+        }
+        catch (IOException e)
+        {
+            throw new StorageException(&quot;Failed to read stored file.&quot;,e);
+        }
+    }
+
+    @Override
+    public Resource loadAsResource(String filename)
+    {
+        try {
+            Path file = load(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if(resource.exists() || resource.isReadable())
+            {
+                return resource;
+            }
+            else {
+                throw new StorageFileNotFoundException(&quot;Could not read file: &quot;+filename);
+            }
+        }
+        catch (MalformedURLException e)
+        {
+            throw new StorageFileNotFoundException(&quot;Could not read file : &quot;+filename,e);
+        }
+    }
+
+    @Override
+    public void store(MultipartFile file)
+    {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        try {
+            if(file.isEmpty())
+            {
+                throw new StorageException(&quot;Failed to store empty file : &quot;+filename);
+            }
+            if(filename.contains(&quot;..&quot;))
+            {
+                throw new StorageException(&quot;Cannot store file with relative path outside current directory&quot;+filename);
+            }
+            try(InputStream inputStream = file.getInputStream())
+            {
+                Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new StorageException(&quot;Failed to store file : &quot;+ filename,e);
+        }
+    }
+}
+
+</code></pre>
+<h2 id="71-init">7.1 init</h2>
+<pre><code class="language-java">@Override
+public void init()
+{
+    try {
+        Files.createDirectories(rootLocation);
+    }
+    catch (IOException e)
+    {
+        throw new StorageException(&quot;Could not initialize storage&quot;,e);
+    }
+}
+</code></pre>
+<p>使用java.nio.file.Files.createDirectories()创建存储目录,可以建立多级目录.</p>
+<h2 id="72-deleteall">7.2 deleteAll</h2>
+<pre><code class="language-java">@Override
+public void deleteAll()
+{
+    FileSystemUtils.deleteRecursively(rootLocation.toFile());
+}
+</code></pre>
+<p>使用工具类FileSystemUtils的方法递归删除文件与文件夹.参数是一个File. 下面是方法源码:</p>
+<pre><code class="language-java">public static boolean deleteRecursively(File root) 
+{
+    if (root != null &amp;&amp; root.exists()) 
+    {
+        if (root.isDirectory()) 
+        {
+            File[] children = root.listFiles();
+            if (children != null) 
+            {
+                for (File child : children) 
+                {
+                    deleteRecursively(child);
+                }
+            }
+        }
+        return root.delete();
+    }
+    return false;
+}
+</code></pre>
+<p>首先判断根是否为空,不为空的话判断是否是目录,不是目录的话直接删除,是目录的话,利用listFiles()获取所有文件及文件夹,判断是否为空并进行递归删除.</p>
+<h2 id="73-load">7.3 load</h2>
+<pre><code class="language-java">@Override
+public Path load(String filename) {
+	return rootLocation.resolve(filename);
+}
+</code></pre>
+<p>Path.resolve(String)返回相对于this的路径,具体来说,等于执行</p>
+<pre><code class="language-bash">cd rootLocation
+cd filename
+pwd
+</code></pre>
+<p>返回pwd的值.</p>
+<h2 id="74-loadall">7.4 loadAll</h2>
+<pre><code class="language-java">@Override
+public Stream&lt;Path&gt; loadAll()
+{
+    try 
+    {
+        return Files.walk(rootLocation,1)
+                .filter(path -&gt; !path.equals(rootLocation))
+                .map(rootLocation::relativize);
+    }
+    catch (IOException e)
+    {
+        throw new StorageException(&quot;Failed to read stored file.&quot;,e);
+    }
+}
+</code></pre>
+<p>Files.walk遍历目录,返回一个Stream&lt;Path&gt;,返回的Stream包含打开的一个或多个目录的引用,会在Stream关闭时关闭,第二个参数1表示遍历的最大深度.</p>
+<p>然后对这个Stream进行filter过滤,这里是把与rootLocation不相等的Path留下,注意是不相等,就是留下filter()中条件为真的Path,不是把条件为真的Path给&quot;删去&quot;.</p>
+<p>最后进行map,relativize返回参数相对于调用者的路径,这里是返回Stream中的每个Path相对于rootLocation的路径.<br>
+对于relativize,无论什么情况下:</p>
+<pre><code class="language-java">Path a = xxxx;
+Path b = xxxx;
+</code></pre>
+<p>都有</p>
+<pre><code class="language-java">a.relativize(a.resolve(b)).equals(b)
+</code></pre>
+<p>为真.</p>
+<h2 id="75-loadasresource">7.5 loadAsResource</h2>
+<pre><code class="language-java">@Override
+public Resource loadAsResource(String filename)
+{
+    try {
+        Path file = load(filename);
+        Resource resource = new UrlResource(file.toUri());
+        if(resource.exists() || resource.isReadable())
+        {
+            return resource;
+        }
+        else {
+            throw new StorageFileNotFoundException(&quot;Could not read file: &quot;+filename);
+        }
+    }
+    catch (MalformedURLException e)
+    {
+        throw new StorageFileNotFoundException(&quot;Could not read file : &quot;+filename,e);
+    }
+}
+</code></pre>
+<p>这里的Resource是org.springframework.core.io.Resource,是一个接口,可以通过它访问各种资源,实现类有UrlResource,InputStreamResource等,这里利用Path.toUri()把file转换为Resource后,判断这个源是否存在或者是否可读并返回,否则抛出存储文件找不到异常.</p>
+<h2 id="76-store">7.6 store</h2>
+<pre><code class="language-java">@Override
+public void store(MultipartFile file)
+{
+    String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    try {
+        if(file.isEmpty())
+        {
+            throw new StorageException(&quot;Failed to store empty file : &quot;+filename);
+        }
+        if(filename.contains(&quot;..&quot;))
+        {
+            throw new StorageException(&quot;Cannot store file with relative path outside current directory&quot;+filename);
+        }
+        try(InputStream inputStream = file.getInputStream()) 
+        {
+            Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+    catch (IOException e)
+    {
+        throw new StorageException(&quot;Failed to store file : &quot;+ filename,e);
+    }
+</code></pre>
+<p>getOriginalFilename()获取文件原名字,然后通过StringUtils.cleanPath()将其标准化,.处理掉&quot;.&quot;与&quot;..&quot;,然后判断文件是否为空与是否包含相对路径,没有的话利用Files.copy()进行复制,resolve获取filename相对于rootLocation的值,复制选项是REPLACE_EXISTING.<br>
+StandardCopyOption有三个可选值:</p>
+<ul>
+<li>ATOMIC_MOVE:原子性的移动操作,一般在移动文件或目录时使用.</li>
+<li>COPY_ATTRIBUTES:复制属性,可以保留源文件或源目录的属性.</li>
+<li>REPLACE_EXISTING:替换已存在的文件.</li>
+</ul>
+<h1 id="8-controller">8 controller</h1>
+<p>新建FileUploadController.</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20191225212707860.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<pre><code class="language-java">package kr.test.controller;
+
+import kr.test.exception.StorageFileNotFoundException;
+import kr.test.service.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.stream.Collectors;
+
+@Controller
+public class FileUploadController {
+    private final StorageService storageService;
+
+    @Autowired
+    public FileUploadController(StorageService storageService)
+    {
+        this.storageService = storageService;
+    }
+
+    @GetMapping(&quot;/&quot;)
+    public String listUploadedFiles(Model model)
+    {
+        model.addAttribute(&quot;files&quot;,storageService.loadAll().map(
+                path -&gt; MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                &quot;serveFile&quot;,path.getFileName().toString()).build().toString())
+                .collect(Collectors.toList()));
+        return &quot;uploadForm&quot;;
+    }
+
+    @GetMapping(&quot;/files/{filename:.+}&quot;)
+    @ResponseBody
+    public ResponseEntity&lt;Resource&gt; serveFile(@PathVariable String filename)
+    {
+        Resource file = storageService.loadAsResource(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;).body(file);
+    }
+
+    @PostMapping(&quot;/&quot;)
+    public String handleFileUpload(@RequestParam(&quot;file&quot;) MultipartFile file, RedirectAttributes redirectAttributes)
+    {
+        storageService.store(file);
+        redirectAttributes.addFlashAttribute(&quot;message&quot;,&quot;You successully uploaded &quot;+file.getOriginalFilename()+&quot;!&quot;);
+        return &quot;redirect:/&quot;;
+    }
+
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity&lt;?&gt; handleStorageFileNotFound(StorageFileNotFoundException e)
+    {
+        return ResponseEntity.notFound().build();
+    }
+}
+
+</code></pre>
+<h2 id="81-listuploadedfiles">8.1 listUploadedFiles</h2>
+<pre><code class="language-java">@GetMapping(&quot;/&quot;)
+public String listUploadedFiles(Model model)
+{
+    model.addAttribute(&quot;files&quot;,storageService.loadAll().map(
+            path -&gt; MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+            &quot;serveFile&quot;,path.getFileName().toString()).build().toString())
+            .collect(Collectors.toList()));
+    return &quot;uploadForm&quot;;
+}
+</code></pre>
+<p>@GetMapping是@RequestMapping(method = RequestMethod.GET)的简化写法,将HTTP GET路径映射到特定的处理方法上.<br>
+方法的参数是spring MVC中的Model,Model实质上是一个Map,添加的key可以在视图中用${key}获取值,比如,这里添加了&quot;files&quot;作为key,则在视图中可用 ${files}获取值.</p>
+<p>MvcUriComponentsBuilder可以为Controller指定uri,fromMethod简单地说就是会调用FileUploadController的serveFile(),参数是path.getFileName().toString(),由于serveFile()返回的是Stream&lt;Path&gt;,利用Stream的collect将其转换成List添加到model中,然后返回uploadForm,表示这是视图的名称,会到resource/templates下寻找.</p>
+<p>这里说一下RequestMapping与Model:</p>
+<h3 id="811-requestmapping">8.1.1 RequestMapping</h3>
+<p>可以用@RequestMapping()来映射URL,可以映射到某个类或某个具体方法.@RequestMapping常用的有以下属性:</p>
+<ul>
+<li>value:请求的URL路径,支持URL模板,正则表达式.</li>
+<li>method:HTTP请求方法,如GET,POST,PUT,DELTE等.</li>
+<li>consumes:允许的媒体类型,如consumes=&quot;application/json&quot;.对应于HTTP请求的Content-Type.</li>
+<li>produces:相应的媒体类型,如produces=&quot;application/json&quot;,对于HTTP请求的Accept.</li>
+<li>params:请求参数,如params=&quot;action=update&quot;.</li>
+<li>headers:请求头.</li>
+</ul>
+<p>Spring提供了简化的@RequestMapping,提供了新的注解来标识HTTP方法:</p>
+<ul>
+<li>@GetMapping</li>
+<li>@PostMapping</li>
+<li>@PutMapping</li>
+<li>...</li>
+</ul>
+<p>所以这里的@GetMapping是简化了的@RequestMapping.</p>
+<h3 id="812-model">8.1.2 Model</h3>
+<p>可以向Model添加视图所需要的变量,Model主要有以下方法:</p>
+<pre><code class="language-java">Model addAttribute(Object value);
+Model addAttribute(String name,Object value);
+Model addAllAttributes(Map attributes);
+Model addAllAttributes(Collection&lt;?&gt; attributes);
+Model mergeAttributes(Map attributes);
+boolean containAttribute(String name);
+</code></pre>
+<p>addAttribute()添加一个变量,对于两个参数的,使用name作为变量名称,后面的是值,对于只有一个Object的,变量的名字就是类名字首字母小写后转为的java变量.<br>
+addAttributes()添加多个变量,如果变量存在则覆盖,其中参数为Collection&lt;?&gt;的方法添加变量名时与addAttribute(Object)的命名规范类似.<br>
+mergeAttributes()也是添加多个变量,不过变量已存在的话会忽略.<br>
+containAttributte()判断是否存在变量.</p>
+<h2 id="82-servefile">8.2 serveFile</h2>
+<pre><code class="language-java">@GetMapping(&quot;/files/{filename:.+}&quot;)
+@ResponseBody
+public ResponseEntity&lt;Resource&gt; serveFile(@PathVariable String filename)
+{
+    Resource file = storageService.loadAsResource(filename);
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;).body(file);
+}
+</code></pre>
+<p>这里的@GetMapping用来表示显示的用来供下载的文件名,@ResponseBody表示直接返回内容而不是视图名,因为默认返回的是视图名称,@ResponseBody对于String直接返回,否则默认使用Jackson进行序列化.</p>
+<p>@PathVariable表示这是@GetMapping中的参数的值,可以省略,默认同名,就是形参的名字与GetMapping中的名字一样,从中取值赋给形参,通过filename加载资源后,作为ResponseEntity的请求体.<br>
+ResponseEntity从HttpEntity继承而来,ResponseEntity.ok()是一个静态方法,表示构建一个状态为&quot;ok&quot;的ResponseEntity,然后添加请求头.</p>
+<pre><code class="language-java">HttpHeaders.CONTENT_DISPOSITION,&quot;attachment;filename=\&quot;&quot;+file.getFilename()+&quot;\&quot;&quot;
+</code></pre>
+<p>content_disposition表示文件是直接在浏览器打开还是下载,attachment表示是要下载,文件名为file.getFilename().</p>
+<h2 id="83-handlefileupload">8.3 handleFileUpload</h2>
+<pre><code class="language-java">@PostMapping(&quot;/&quot;)
+public String handleFileUpload(@RequestParam(&quot;file&quot;) MultipartFile file,RedirectAttributes redirectAttributes)
+{
+    storageService.store(file);
+    redirectAttributes.addFlashAttribute(&quot;message&quot;,&quot;You successully uploaded &quot;+file.getOriginalFilename()+&quot;!&quot;);
+    return &quot;redirect:/&quot;;
+}
+</code></pre>
+<p>@PostMapping()与@GetMapping()类似,只不过方法不是GET而是POST.@RequestParam表示请求参数,里面的是请求参数的名字,使用MultipartFile来处理文件上传.<br>
+RedirectAttributes是用于重定向使用的,可以附带参数,RedirectAttributes有两种带参的形式:</p>
+<pre><code class="language-java">addAttribute(String name,Object value);
+addFlashAttribute(String name,Object value);
+</code></pre>
+<p>addAttribute()相当于直接在重定向的地址添加</p>
+<pre><code class="language-java">name=value
+</code></pre>
+<p>这样的形式,会将参数暴露在重定向的地址上.</p>
+<p>而addFlashAttribute()隐藏了参数,只能在重定向的页面中获取参数的值,用到了session,session跳转到页面后就会删除对象.<br>
+handleFileUpload首先保存文件,然后添加一个保存成功的信息,由于Controller中重定向可以返回以&quot;redirect:&quot;或以&quot;forward:&quot;为前缀的URI,因此返回&quot;redirect:/&quot;,重定向到根.</p>
+<h2 id="84-handlestoragefilenotfound">8.4 handleStorageFileNotFound</h2>
+<pre><code class="language-java">@ExceptionHandler(StorageFileNotFoundException.class)
+public ResponseEntity&lt;?&gt; handleStorageFileNotFound(StorageFileNotFoundException e)
+{
+    return ResponseEntity.notFound().build();
+}
+</code></pre>
+<p>@ExceptionHandler()注解会处理Controller层抛出的所有StorageFileNotFoundException类及其子类的异常,ResponseEntity.notFound()相当于返回404标识码.</p>
+<h1 id="9-main">9 main</h1>
+<pre><code class="language-java">package kr.test;
+
+import kr.test.properties.StorageProperties;
+import kr.test.service.StorageService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
+public class TestApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestApplication.class, args);
+    }
+
+    @Bean
+    CommandLineRunner init(StorageService storageService)
+    {
+        return (args) -&gt;
+        {
+            storageService.deleteAll();
+            storageService.init();
+        };
+    }
+}
+</code></pre>
+<p>在原来的基础上添加</p>
+<pre><code class="language-java">@EnableConfigurationProperties(StorageProperties.class)
+</code></pre>
+<p>与</p>
+<pre><code class="language-java">@Bean
+CommandLineRunner init(StorageService storageService)
+{
+    return (args) -&gt;
+    {
+        storageService.deleteAll();
+        storageService.init();
+    };
+}
+</code></pre>
+<p>@EnableConfigurationProperties可以为带有@ConfigurationProperties注解的Bean提供有效的支持,将带有@Configuration注解的类注入为Spring的Bean,在这里是使StorageProperties的@ConfigurationProperties生效,如果没有这一行会报红:</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20191227074427818.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>@Bean标注在方法上,等价于spring的xml配置文件的&lt;bean&gt;,注册bean对象.<br>
+CommandLineRunner接口用于应用初始化后去执行一段代码逻辑,这段代码在整个应用周期只执行一次.</p>
+<h1 id="10-applicationproperties">10 application.properties</h1>
+<p>这里可以设置一些环境配置属性,Spring Boot允许准备多个配置文件,在部署时可以指定那个配置文件覆盖默认的application.properties.这里是有关上传文件的设置:</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200111132534787.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>默认如下:</p>
+<pre><code class="language-java">spring.servlet.multipart.enabled=true 
+spring.servlet.multipart.file-size-threshold=0
+spring.servlet.multipart.location=
+spring.servlet.multipart.max-file-size=1MB
+spring.servlet.multipart.max-request-size=10MB
+spring.servlet.multipart.resolve-lazily=false
+</code></pre>
+<p>enabled表示允许上传,file-size-threshold表示上传文件超过一定长度就先写入临时文件,单位MB或KB,location是临时文件存放目录,不设定的话使用web服务器提供的临时目录.max-file-size表示单个文件最大长度,默认1MB,max-request-size为单次HTTP请求上传的最大长度,默认10MB,resolve-lazily表示文件和参数被访问的时候再解析成文件.</p>
+<p>在这里只需把max-size调大一点即可.</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200111133100485.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="11-测试">11 测试</h1>
+<p>这是在本地进行的测试.直接在IDE上点击运行应用,然后打开浏览器输入:</p>
+<pre><code class="language-java">localhost:8080
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200111132132959.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="12-打包部署到tomcat上">12 打包部署到Tomcat上</h1>
+<p>Spring Boot通常打成jar包或war包,这里部署到Tomcat上的是打成war包.</p>
+<h2 id="121-改变打包方式">12.1 改变打包方式</h2>
+<p>pom.xml中,&lt;packaing&gt;改成war:</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200111072952169.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="122-去除tomcat依赖">12.2 去除Tomcat依赖</h2>
+<p>Spring Boot默认自带了一个嵌入式的Tomcat,需要把Tomcat依赖方式改为provided.<br>
+pom.xml中,在&lt;dependencies&gt;添加:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="123-修改main类">12.3 修改Main类</h2>
+<p>修改Main类,让其继承SpringBootServletInitializer,重载configure(),同时main()保持不变.</p>
+<pre><code class="language-java">@SpringBootApplication
+public class MainClass extends SpringBootServletInitializer
+{
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
+	{
+		return application.sources(MainClass.class);
+	}
+	//main()不变
+}
+</code></pre>
+<h2 id="124-路径问题">12.4 路径问题</h2>
+<p>这个很重要,设置不当的话就无法访问了,主要就是四个路径:</p>
+<ul>
+<li>action:</li>
+</ul>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200111144619164.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>@GetMapping</li>
+</ul>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200111144651888.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>@PostMapping</li>
+</ul>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200111144735284.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>redirect</li>
+</ul>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200111144808831.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="1241-action">12.4.1 action</h3>
+<p>这个是绝对路径,要加上/war项目名.</p>
+<pre><code>/war项目名/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200111145056680.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>比如这里war项目名是kr,上传路径名是upload.</p>
+<h3 id="1242-getmapping">12.4.2 @GetMapping</h3>
+<p>这个是相对路径,相对于当前项目的路径,不用加上/war项目名.</p>
+<pre><code>/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20200111145235205.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里是upload.</p>
+<h3 id="1243-postmapping">12.4.3 @PostMapping</h3>
+<p>与@GetMapping一样,上传路径名.</p>
+<pre><code>/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200111145438464.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="1244-redirect">12.4.4 redirect</h3>
+<p>这个是返回的重定向的路径名,相对路径,与上两个一样,也是上传路径名.</p>
+<pre><code>/上传路径名
+</code></pre>
+<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200111150534769.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="125-设置打包名字">12.5 设置打包名字</h2>
+<p>在&lt;build&gt;中添加&lt;finalName&gt;,指定打包出来的war名,注意这个要与上面的war项目名一样,这里设置的是kr.</p>
+<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200111140233480.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="126-maven打包">12.6 Maven打包</h2>
+<p>运行</p>
+<pre><code class="language-java">mvn package
+</code></pre>
+<p>即可打包,对于IDEA,可以在IDEA右侧栏的Maven中,打开Lifecycle,选择package:</p>
+<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200111074204520.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="127-打包完成">12.7 打包完成</h2>
+<p>打包后的war默认放在target下,名字默认为&lt;artifactId&gt;+&lt;version&gt;.</p>
+<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/2020011107431451.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200111074359386.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="128-上传到服务器">12.8 上传到服务器</h2>
+<p>上传的话笔者用的是密钥认证的scp:</p>
+<pre><code class="language-bash">scp -i xxxx\id_rsa kr.war username@ip:/usr/local/tomcat/webapps
+</code></pre>
+<p>放到服务器的Tomcat下的webapps目录.</p>
+<h2 id="129-开启tomcat">12.9 开启Tomcat</h2>
+<p>进入到Tomcat目录的bin下:</p>
+<pre><code class="language-bash">cd /usr/local/tomcat/bin
+./startup.sh
+</code></pre>
+<p>如果正在运行的话就不用启动了,因为会自动检测到webapps目录的变化,把新的war自动解包.</p>
+<h2 id="1210-测试">12.10 测试</h2>
+<p>略,与本地测试类似,不过要注意的是上传的文件夹是在tomcat/bin下,想要修改的话可以修改StorageProperties的location.</p>
+<h1 id="13-源码">13 源码</h1>
+<p><a href="https://github.com/2293736867/SpringBootUploadFileExample">github</a></p>
+<p><a href="https://gitee.com/imykr/SpringBootUploadFileExample">码云</a></p>
+<h1 id="14-参考">14 参考</h1>
+<p>1.<a href="https://blog.csdn.net/zknxx/article/details/79183698">ConfigurationProperties</a></p>
+<p>2.<a href="https://www.cnblogs.com/chenpi/p/9696310.html">CommandLineRunner</a></p>
+<p>3.<a href="https://zhuanlan.zhihu.com/p/21353217?refer=pengsong-java">RedirectAttribute</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/vim-ti-huan-ming-ling.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/vim-ti-huan-ming-ling/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">vim替换命令</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/ruan-jian-gong-cheng-xue-xi-bi-ji-san-xu-qiu-gong-cheng.png');"></div>
+                 <a href="https://2293736867.github.io/post/ruan-jian-gong-cheng-xue-xi-bi-ji-san-xu-qiu-gong-cheng/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">软件工程学习笔记(三):需求工程</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/zi-ding-yi-grub-zhu-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/zi-ding-yi-grub-zhu-ti.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/zi-ding-yi-grub-zhu-ti/">自定义grub主题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-yi-san-shu-zhi-he/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-tian-ac-xi-lie-yi-san-shu-zhi-he.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-tian-ac-xi-lie-yi-san-shu-zhi-he/">每天AC系列(一):三数之和</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/java-bei-fen-mysql/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java-bei-fen-mysql.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/java-bei-fen-mysql/">Java备份MySQL</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-0 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-1 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-2 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-3 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-4 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-5 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-6 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-7 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-8 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-9 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-10 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-11 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-12 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-13 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-14 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-15 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-16 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-17 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-18 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-19 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-20 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-21 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-22 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-23 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-24 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-25 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-26 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-27 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-28 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-29 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-30 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 48 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
