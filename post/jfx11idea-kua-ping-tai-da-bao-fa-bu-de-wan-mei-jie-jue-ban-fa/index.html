@@ -1,0 +1,781 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JFX11+IDEA跨平台打包发布的完美解决办法 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+IDEA2020.1的文档中提到只有JFX8的工程才支持打成jar包，并且，如果直接使用Build Artifacts的话，会如下提示：
+
+IDEA文档有提到这个的解决办法，是使用一些第三方工具。里面介绍了通过IDEA结合自身/M..." />
+    <meta name="keywords" content="JFX,IDEA" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591134096649" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">3 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/"> </span>
+              </a>
+              <span id="/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-0 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-1 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">JFX11+IDEA跨平台打包发布的完美解决办法</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p>IDEA2020.1的文档中提到只有JFX8的工程才支持打成jar包，并且，如果直接使用Build Artifacts的话，会如下提示：<br>
+<img src="https://img-blog.csdnimg.cn/2020053017384177.png" alt="在这里插入图片描述" loading="lazy"><br>
+<a href="https://www.jetbrains.com/help/idea/packaging-javafx-applications.html">IDEA文档</a>有提到这个的解决办法，是使用一些<a href="https://openjfx.io/openjfx-docs/#install-javafx">第三方工具</a>。里面介绍了通过IDEA结合自身/Maven/Gradle打包发布JFX11以上版本的方法。但是，不足的地方有：</p>
+<ul>
+<li>直接创建JFX工程默认只有一个src目录，不像Maven工程还带有resources与test，给管理资源文件以及外部依赖造成了困难，getClass().getResource()会出现空指针问题，但是好处是只需具备JDK环境，打包出来的文件能带上jmods能跨平台直接运行</li>
+<li>直接创建Maven项目虽然是管理依赖以及资源文件方便，但是无论是直接通过Maven打出的jar包还是通过JavaFX Maven Plugins打出来的jar包默认绑定了开发平台的JFX SDK，简单地说就是Linux开发的JFX程序不能直接跑在具有JDK环境的Win上，因为用的是Linux的JFX SDK而不是Win的JFX SDK</li>
+</ul>
+<p>因此，本文结合这两者的优点，参照Maven的目录管理，以JFX工程为基础，记录了从新建工程到发布跨平台JFX应用的过程。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>IDEA 2020.1</li>
+<li>OpenJDK 11</li>
+<li>OpenJFX 11 Linux SDK</li>
+<li>OpenJFX 11 Linux/Windows/Mac OS X jmods</li>
+</ul>
+<p>JDK安装就不说了，JFX直接下载然后在工程中通过外部库引入即可，三种jmods解压出来即可，用于最后生成可执行文件时添加的模块。<br>
+下载链接<a href="https://gluonhq.com/products/javafx/">戳这里</a>。</p>
+<h1 id="3-新建jfx工程">3 新建JFX工程</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200530175758622.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里的项目名为TestJFX，对应修改即可。<br>
+<img src="https://img-blog.csdnimg.cn/20200530175913541.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-添加jfx11-sdk">4 添加JFX11 SDK</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200530180127745.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加上一步下载的对应平台的JFX SDK。<br>
+<img src="https://img-blog.csdnimg.cn/20200530180205495.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-添加module-infojava">5 添加module-info.java</h1>
+<p>在src目录右键New-&gt;module-info.java，修改如下：</p>
+<pre><code class="language-ruby">module TestJFX {
+    requires javafx.fxml;
+    requires javafx.controls;
+    
+    opens sample to javafx.fxml;
+    exports sample;
+}
+</code></pre>
+<p>其中TestJFX为新建项目时的项目名，这个创建module-info.java时就默认加上了，sample为默认包，对应修改。</p>
+<h1 id="6-添加vm-options">6 添加VM Options</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200530181426399.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200531023450900.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加</p>
+<pre><code class="language-bash">--module-path /usr/local/jfx/lib:out/production
+</code></pre>
+<p>其中</p>
+<pre><code class="language-bash">/usr/local/jfx/lib
+</code></pre>
+<p>为下载的JFX JDK的lib目录，后面的out不需要更改，是默认的编译输出的目录。</p>
+<h1 id="7-运行">7 运行</h1>
+<p>这时候应该可以Shift+F10或者点击绿色小三角运行了：<br>
+<img src="https://img-blog.csdnimg.cn/20200530181814745.png" alt="在这里插入图片描述" loading="lazy"><br>
+当然内容是空的，因为什么也没有加。</p>
+<h1 id="8-添加资源文件">8 添加资源文件</h1>
+<p>默认的fxml是放在与Main类同一目录下的，getResource()也没有加路径直接写上文件名：<br>
+<img src="https://img-blog.csdnimg.cn/20200530195546612.png" alt="在这里插入图片描述" loading="lazy"><br>
+但是这是src文件夹，放个fxml还勉强可以接受，放张图片总不合适吧？所以，新建一个资源文件夹，把css，fxml什么的都放里面：<br>
+<img src="https://img-blog.csdnimg.cn/20200530195911419.png" alt="在这里插入图片描述" loading="lazy"><br>
+直接在IDEA中移动fxml文件，Main中的引用路径也自动更改，不得不说这个特性是真的好用，但遗憾的是，抛出了空指针异常。<br>
+因此采取绝对路径来进行读取文件，通过URL+System.getProperty()指定绝对路径：</p>
+<pre><code class="language-java">@Override
+public void start(Stage primaryStage) throws Exception{
+    String path = System.getProperty(&quot;user.dir&quot;);
+    URL fxmlUrl = new URL(&quot;file:&quot;+path+&quot;/resources/fxml/sample.fxml&quot;);
+    Parent root = FXMLLoader.load(fxmlUrl);
+    primaryStage.setTitle(&quot;Hello World&quot;);
+    Scene scene = new Scene(root);
+    scene.getStylesheets().add(new URL(&quot;file:&quot;+path+&quot;/resources/css/1.css&quot;).toString());
+    primaryStage.setScene(scene);
+    primaryStage.show();
+}
+</code></pre>
+<p>其中</p>
+<pre><code class="language-java">System.getProperty(&quot;user.dir&quot;)
+</code></pre>
+<p>获取项目路径，注意URL前面要加上“file:”，css的获取也同理，只不过是需要转换为String。</p>
+<h1 id="9-外部依赖">9 外部依赖</h1>
+<p>由于没有了Maven管理依赖，所以外部依赖的管理会相对麻烦一点，基本上是以jar包的形式手动添加，这里以添加Gson为例，<a href="https://mvnrepository.com/artifact/com.google.code.gson/gson">戳这里</a>下载jar包，然后在项目目录下新建一个lib文件夹，把jar包放进去：<br>
+<img src="https://img-blog.csdnimg.cn/20200531023924445.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着在项目结构中把整个lib文件夹添加到外部库：<br>
+<img src="https://img-blog.csdnimg.cn/20200531022019954.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后VM Options中添加lib路径，在上面的VM Options后面加一个冒号和lib就行：<br>
+<img src="https://img-blog.csdnimg.cn/20200531022600107.png" alt="在这里插入图片描述" loading="lazy"><br>
+但是，此时可以IDEA还不能进行补全，最后需要修改module-info.java：<br>
+<img src="https://img-blog.csdnimg.cn/20200531022743664.png" alt="在这里插入图片描述" loading="lazy"><br>
+加一行requires，此时IDEA能够进行补全了，每个jar包都不同，对应修改即可。</p>
+<h1 id="10-制作跨平台镜像">10 制作跨平台镜像</h1>
+<p>运行没问题之后就可以制作运行时镜像发布了，终端进入项目根路径：</p>
+<pre><code class="language-bash">jlink --module-path jmod/linux:out/production:lib --add-modules TestJFX --output linux
+linux/bin/java -m TestJFX/sample.Main
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200531030506500.png" alt="在这里插入图片描述" loading="lazy"><br>
+其中</p>
+<pre><code class="language-bash">jmod/linux
+</code></pre>
+<p>为开发平台jmod的路径，可以是绝对路径，也可以是相对与项目根目录的相对路径，out/production与上面的VM Options保持一致。</p>
+<pre><code class="language-bash">--add-modules
+</code></pre>
+<p>后面跟的是模块名，这是在生成module-info.java时指定的，为项目名。</p>
+<pre><code class="language-bash">--output
+</code></pre>
+<p>为输出目录。<br>
+后一条命令中-m指定模块名，后面跟包名+主类名。<br>
+这样linux平台的镜像就制作好了，Mac与Win的同理，只需要把jmod换成对应平台的jmod即可，但是注意语法有一些差别，Mac的语法同Linux，只需要把jmod路径换一下，但是注意需要整个工程在对应的平台进行jlink：</p>
+<pre><code class="language-bash">jlink --module-path xxxxx/{MAC_JMOD}:out/production:lib --add-modules TestJFX --output mac
+mac/bin/java -m TestJFX/sample.Main
+</code></pre>
+<p>Win的语法有些区别，一样需要在Win下进行jlink：</p>
+<pre><code class="language-bash">jlink --module-path &quot;xxxxx/{WIN_JMOD};out/production&quot; --add-modules TestJFX --output win
+win\bin\java -m TestJFX/sample.Main
+</code></pre>
+<p>下面是Win下的截图：<br>
+<img src="https://img-blog.csdnimg.cn/20200531025545467.PNG" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="11-demo">11 demo</h1>
+<p><a href="https://github.com/2293736867/JFX11-IDEA-Test-Project">github</a></p>
+<h1 id="12-参考">12 参考</h1>
+<p><a href="https://openjfx.io/openjfx-docs/#maven">Getting Started with JavaFX</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/jasypt-spring-boot-ti-shi-failed-to-bind-properties.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/jasypt-spring-boot-ti-shi-failed-to-bind-properties/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">jasypt-spring-boot提示Failed to bind properties</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/idea-tong-guo-maven-da-bao-javafx-gong-cheng-openjfx11.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/idea-tong-guo-maven-da-bao-javafx-gong-cheng-openjfx11/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">IDEA通过Maven打包JavaFX工程（OpenJFX11）</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/">JFX11+Maven+IDEA 发布跨平台应用的完美解决方案</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/">一个开源的跨平台音乐播放与音乐下载器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/javafx-huo-qu-ping-mu-chi-cun.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/">JavaFX获取屏幕尺寸</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-0 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-1 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-2 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-3 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-4 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-5 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-6 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-7 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-8 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-9 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-10 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-11 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-12 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-13 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-14 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-15 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-16 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-17 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-18 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-19 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-20 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-21 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-22 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-23 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-24 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-25 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-26 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-27 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-28 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-29 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-30 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-31 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-32 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-33 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-34 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-35 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-36 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-37 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-38 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-39 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-40 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-41 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-42 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-43 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-44 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-45 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-46 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-47 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-48 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-49 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-50 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-51 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-52 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-53 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-54 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-55 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-56 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-57 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-58 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-59 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-60 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 115 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

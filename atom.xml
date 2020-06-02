@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-02T21:30:50.297Z</updated>
+    <updated>2020-06-02T21:41:42.911Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -12,2124 +12,873 @@
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[Manjaro 蓝牙连接问题]]></title>
-        <id>https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/</id>
-        <link href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/">
+        <title type="html"><![CDATA[JFX11+Maven+IDEA 发布跨平台应用的完美解决方案]]></title>
+        <id>https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/</id>
+        <link href="https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/">
         </link>
-        <updated>2020-06-02T21:30:30.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>蓝牙不能连接，或者连接上了没有声音。</p>
-<h1 id="2-解决方案">2 解决方案</h1>
-<p>首先确保相应软件包存在：</p>
-<pre><code class="language-bash">sudo pacman -S bluez bluez-utils pulseaudio-bluetooth pavucontrol pulseaudio-alsa pulseaudio-bluetooth-a2dp-gdm-fix
+        <updated>2020-06-02T21:41:12.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>前几天写了两篇关于JFX+IDEA打包跨平台应用的文章，<a href="https://blog.csdn.net/qq_27525611/article/details/106444423">这篇</a>是使用IDEA自带功能打包的，<a href="https://blog.csdn.net/qq_27525611/article/details/106433723">这篇</a>是使用Maven进行打包的，但是效果不太满意，因为从JDK9开始实现模块化，同时JFX部分从JDK中独立出来了，也就是说需要默认JDK不再自带JFX。这意味着外部依赖需要手动处理module-info.java，这是一件非常麻烦的事情。</p>
+<h2 id="11-不使用maven">1.1 不使用Maven</h2>
+<p>其实不使用Maven也能打包发布跨平台JFX应用，但是没有使用Maven的话，虽然打包出来能直接运行无需jre环境，但是，管理依赖确实麻烦，在使用jlink打包一些外部的jar时，对于一些比较简单的jar还是比较舒服的，参照<a href="https://blog.csdn.net/weixin_44326589/article/details/86680972">这里</a>：<br>
+<img src="https://img-blog.csdnimg.cn/2020060121462236.png" alt="在这里插入图片描述" loading="lazy"><br>
+首先去下载jar，接着生成module-info.java，然后使用jdeps检查依赖，添加对应的jar到路径中，编译生成module-info.java接着更新原来的jar即可。看起来简单，但是笔者碰到了okhttp这种jar，依赖简直环环相扣导致笔者放弃了这种方式。</p>
+<h2 id="12-使用maven">1.2 使用Maven</h2>
+<p>使用Maven可以完美解决依赖问题，多亏与强大的pom.xml，几行&lt;dependency&gt;就可以解决依赖问题，但是，还是需要手动处理module-info.java，而且IDEA文档明确表明仅支持Java8的打包为jar：<br>
+<img src="https://img-blog.csdnimg.cn/20200601220006821.png" alt="在这里插入图片描述" loading="lazy"><br>
+因此，这篇文章采取一种最简单的方式利用Maven打包发布JFX11应用。</p>
+<h1 id="2-新建maven工程">2 新建Maven工程</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200601220303299.png" alt="在这里插入图片描述" loading="lazy"><br>
+默认即可，问题不大。<br>
+<img src="https://img-blog.csdnimg.cn/20200601220333213.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-添加依赖">3 添加依赖</h1>
+<pre><code class="language-xml">&lt;dependencies&gt;
+	&lt;dependency&gt;
+	    &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+	    &lt;artifactId&gt;javafx-base&lt;/artifactId&gt;
+	    &lt;version&gt;11&lt;/version&gt;
+	    &lt;classifier&gt;linux&lt;/classifier&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+	    &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+	    &lt;artifactId&gt;javafx-base&lt;/artifactId&gt;
+	    &lt;version&gt;11&lt;/version&gt;
+	    &lt;classifier&gt;win&lt;/classifier&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+	    &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+	    &lt;artifactId&gt;javafx-controls&lt;/artifactId&gt;
+	    &lt;version&gt;11&lt;/version&gt;
+	    &lt;classifier&gt;linux&lt;/classifier&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+	    &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+	    &lt;artifactId&gt;javafx-controls&lt;/artifactId&gt;
+	    &lt;version&gt;11&lt;/version&gt;
+	    &lt;classifier&gt;win&lt;/classifier&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+        &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+        &lt;artifactId&gt;javafx-fxml&lt;/artifactId&gt;
+        &lt;version&gt;11&lt;/version&gt;
+        &lt;classifier&gt;linux&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+        &lt;artifactId&gt;javafx-fxml&lt;/artifactId&gt;
+        &lt;version&gt;11&lt;/version&gt;
+        &lt;classifier&gt;win&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+        &lt;artifactId&gt;javafx-graphics&lt;/artifactId&gt;
+        &lt;version&gt;11&lt;/version&gt;
+        &lt;classifier&gt;linux&lt;/classifier&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+        &lt;artifactId&gt;javafx-graphics&lt;/artifactId&gt;
+        &lt;version&gt;11&lt;/version&gt;
+        &lt;classifier&gt;win&lt;/classifier&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
 </code></pre>
-<p>然后启动蓝牙以及pulseaudio服务：</p>
-<pre><code class="language-bash">systemctl enable bluetooth
-systemctl start bluetooth
-pulseaudio -k                   # 确保没有pulseaudio启动
-pulseaudio --start              # 启动pulseaudio服务
+<p>需要再哪个平台在classifier中指定即可。这里是linux与win。mac的话直接“mac”。<br>
+同时指定编码与JDK：</p>
+<pre><code class="language-xml">&lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;maven.compiler.source&gt;11&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;11&lt;/maven.compiler.target&gt;
+&lt;/properties&gt;
 </code></pre>
-<p>然后可以以图形化的方式或者命令行方式就可以连接蓝牙了，这里演示一下命令行方式：</p>
-<pre><code class="language-bash">bluetoothctl #连接交互命令
-power on #开启控制器电源，默认关闭
-devices #获取要配对设备的MAC
-agent on #打开代理
-pair MAC_ADDRESS #配对，输入MAC地址即可配对，建议使用Tab
-connect MAC_ADDRESS #连接，建议使用Tab
-</code></pre>
-<p>最后一步是指定蓝牙音频输出，也就是连接上了如果蓝牙没有声音可能是这一步没有设置，终端输入：</p>
-<pre><code class="language-bash">pavucontrol
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200517033422470.png" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IDEA使用JFX的相关问题]]></title>
-        <id>https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/</id>
-        <link href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/">
-        </link>
-        <updated>2020-06-02T21:29:59.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题概述">1 问题概述</h1>
-<p>首先是javafx找不到对应的类：<br>
-<img src="https://img-blog.csdnimg.cn/20200517023008663.png" alt="在这里插入图片描述" loading="lazy"><br>
-其次是</p>
-<pre><code class="language-bash">class com.sun.javafx.fxml.FXMLLoaderHelper (in unnamed module @0x50f36265) cannot access class com.sun.javafx.util.Utils (in module javafx.graphics) 
-because module javafx.graphics does not export com.sun.javafx.util to unnamed module @0x50f36265
-</code></pre>
-<p>这种问题。<br>
-或者是</p>
-<pre><code class="language-bash">Error: JavaFX runtime components are missing, and are required to run this application
-</code></pre>
-<p>这样的问题。</p>
-<h1 id="2-解决方案">2 解决方案</h1>
-<p>环境Manjaro+OpenJDK11，首先需要确保有OpenJFX，但是，不能直接使用pacman/yaourt安装：<br>
-<img src="https://img-blog.csdnimg.cn/20200517023504803.png" alt="在这里插入图片描述" loading="lazy"><br>
-虽然看上去没什么问题，OpenJDK使用的也是pacman安装的，想着JFX也可以这样，安装之后在</p>
-<pre><code class="language-bash">/usr/lib/jvm/java-11-openjdk/lib
-</code></pre>
-<p>下面确实有了JFX的文件，但是装了之后IDEA死活识别不出来，没办法，只能手动安装JFX。<br>
-手动安装的OpenJFX一加就马上识别出来了，所以，手动安装吧，也不难，<a href="https://gluonhq.com/products/javafx/">戳这里</a>下载所需要的版本，解压到对应的位置，然后在IDEA中的外部库添加其中的lib文件夹即可：<br>
-<img src="https://img-blog.csdnimg.cn/20200517023853618.png" alt="在这里插入图片描述" loading="lazy"><br>
-添加之后另一个问题是</p>
-<pre><code class="language-bash">class com.sun.javafx.fxml.FXMLLoaderHelper (in unnamed module @0x50f36265) cannot access class com.sun.javafx.util.Utils (in module javafx.graphics) 
-because module javafx.graphics does not export com.sun.javafx.util to unnamed module @0x50f36265
-</code></pre>
-<p>给出的最多的答案是修改VM Options：</p>
-<pre><code class="language-bash">--module-path=JFX_LIB_PATH --add-modules=javafx.controls,javafx.fxml
-</code></pre>
-<p>其中JFX_LIB_PATH是JFX下的lib目录路径，但是不行，另一个方案是在源文件目录下添加module-info.java：</p>
-<pre><code class="language-java">module javafx.graphics{
-	exports com.sun.javafx.util
-}
-</code></pre>
-<p>也不行，直接报错，然后又搜索到了另一个解决办法，额外添加一个类似启动类的java文件，比如叫App.java：</p>
-<pre><code class="language-java">import javafx.application.Application;
+<p>否则会如此报错：<br>
+<img src="https://img-blog.csdnimg.cn/20200601221410548.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-新建main">4 新建Main</h1>
+<p>新建一个包再新建Main.java，Launcher.java以及Main.fxml：<br>
+<img src="https://img-blog.csdnimg.cn/20200601221808669.png" alt="在这里插入图片描述" loading="lazy"><br>
+Main.java：</p>
+<pre><code class="language-java">package com.test;
 
-public class App {
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class Main extends Application {
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource(&quot;/Main.fxml&quot;));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle(&quot;Hello World&quot;);
+        stage.show();
+    }
+
     public static void main(String[] args) {
-        Application.launch(Main.class,args);
+        launch(args);
     }
 }
 </code></pre>
-<p>然后修改IDEA的运行配置，把主类修改为App。<br>
-这样笔者的问题就解决了，可以正常运行JFX程序了。</p>
-<h1 id="3-其他问题">3 其他问题</h1>
-<pre><code class="language-bash">Caused by: java.lang.NullPointerException: Location is required.
+<p>Launcher.java：</p>
+<pre><code class="language-java">package com.test;
+
+public class Launcher {
+    public static void main(String[] args) {
+        Main.main(args);
+    }
+}
 </code></pre>
-<p>其中一个可能的办法是：</p>
-<pre><code class="language-java">Parent root = FXMLLoader.load(getClass().getResource(&quot;xxx.fxml&quot;));
+<p>Main.fxml：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;?import javafx.scene.control.*?&gt;
+&lt;?import javafx.scene.layout.*?&gt;
+&lt;?import javafx.scene.text.*?&gt;
+
+
+&lt;AnchorPane prefHeight=&quot;400.0&quot; prefWidth=&quot;600.0&quot; xmlns=&quot;http://javafx.com/javafx/10.0.2-internal&quot;
+            xmlns:fx=&quot;http://javafx.com/fxml/1&quot; fx:controller=&quot;com.test.Main&quot;&gt;
+   &lt;Label layoutX=&quot;228.0&quot; layoutY=&quot;185.0&quot; text=&quot;Hello World&quot;&gt;
+      &lt;font&gt;
+         &lt;Font size=&quot;25.0&quot;/&gt;
+      &lt;/font&gt;
+   &lt;/Label&gt;
+&lt;/AnchorPane&gt;
 </code></pre>
-<p>改为：</p>
-<pre><code class="language-bash">Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;xxx.fxml&quot;));
+<p>注意getResource中的fxml路径，Main.fxml文件放在resources下，直接通过根路径读取：</p>
+<pre><code class="language-java">getResource(&quot;/Main.fxml&quot;);
 </code></pre>
-<p>笔者试过，这个方法不行，另一个解决的方法是，修改pom.xml：</p>
+<h1 id="5-添加运行配置">5 添加运行配置</h1>
+<p>此时应该是没有运行配置的状态，点击Add Configuration：<br>
+<img src="https://img-blog.csdnimg.cn/20200601222437737.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加Application：<br>
+<img src="https://img-blog.csdnimg.cn/2020060122253724.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加Launcher类作为Main class：<br>
+<img src="https://img-blog.csdnimg.cn/20200601222831910.png" alt="在这里插入图片描述" loading="lazy"><br>
+这时候run就没问题了：<br>
+<img src="https://img-blog.csdnimg.cn/2020060122292722.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="6-使用默认maven打包">6 使用默认Maven打包</h1>
+<p>虽然现在可以run了，但是，如果直接使用默认的Maven打包的话：<br>
+<img src="https://img-blog.csdnimg.cn/20200601223021660.png" alt="在这里插入图片描述" loading="lazy"><br>
+在target下有一个jar，直接右键运行：<br>
+<img src="https://img-blog.csdnimg.cn/20200601223318755.png" alt="在这里插入图片描述" loading="lazy"><br>
+会提示no main manifest attribute：<br>
+<img src="https://img-blog.csdnimg.cn/20200601223400146.png" alt="在这里插入图片描述" loading="lazy"><br>
+也就是找不到Manifest中入口类。<br>
+jar实际上是一个class的压缩包，与zip的区别是jar包含了一个MANIFEST.MF，MANIFEST.MF在META-INF下，一个示例文件如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200601224154485.png" alt="在这里插入图片描述" loading="lazy"><br>
+有点类似与键值对的格式，MANIFEST.MF包含了jar文件的内容描述，并在运行时向JVM提供应用程序信息。注意该文件有严格的格式限制，比如第一行不能为空，行与行之间不能存在空行。<br>
+一个暴力的解决办法是直接解压jar并修改里面的MANIFEST.MF，添加</p>
+<pre><code class="language-bash">Main-Class: com.test.Launcher
+</code></pre>
+<p>但是这样会报找不到Application类的异常：<br>
+<img src="https://img-blog.csdnimg.cn/20200602015847355.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-添加新的打包插件">7 添加新的打包插件</h1>
+<p>理论上来说，只需要jar包内的相同目录下提供了javafx的jar或者class文件就不会抛出异常了，但是，如果依赖很多需要一个一个添加，这是一个痛苦的过程。<br>
+所以，为了优雅地解决这个问题，引入一个叫maven-shade-plugin的插件即可：</p>
 <pre><code class="language-xml">&lt;build&gt;
-	&lt;resources&gt;
-		&lt;resource&gt;
-			&lt;directory&gt;src/main/java&lt;/directory&gt;
-				&lt;includes&gt;
-                    &lt;include&gt;**/*.fxml&lt;/include&gt;
-                &lt;/includes&gt;
-			&lt;filtering&gt;false&lt;/filtering&gt;
-		&lt;/resource&gt;
-	&lt;/resources&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+            &lt;version&gt;3.2.2&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;phase&gt;package&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;shade&lt;/goal&gt;
+                    &lt;/goals&gt;
+                    &lt;configuration&gt;
+                        &lt;transformers&gt;
+                            &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&quot;&gt;
+                                &lt;mainClass&gt;com.test.Launcher&lt;/mainClass&gt;
+                            &lt;/transformer&gt;
+                        &lt;/transformers&gt;
+                    &lt;/configuration&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
 &lt;/build&gt;
 </code></pre>
-<p>其中include中的两个星号指的是fxml的文件夹的位置。<br>
-笔者试过这个方法可行，若fxml文件在源码根目录，可以修改为：</p>
-<pre><code class="language-xml">&lt;include&gt;*.fxml&lt;/include&gt;
+<p>最新版本请到<a href="https://github.com/apache/maven-shade-plugin">官方github</a>查看，使用时只需要修改：</p>
+<pre><code class="language-xml">&lt;mainClass&gt;xxx.xxx.xxx&lt;/mainClass&gt;
+</code></pre>
+<p>修改为程序入口类。</p>
+<h1 id="8-打包">8 打包</h1>
+<p>此时再从右侧栏打包选中Maven，package即可：<br>
+<img src="https://img-blog.csdnimg.cn/2020060202062726.png" alt="在这里插入图片描述" loading="lazy"><br>
+但是会有警告：<br>
+<img src="https://img-blog.csdnimg.cn/20200602020908608.png" alt="在这里插入图片描述" loading="lazy"><br>
+因为一些class文件重复了，但是也提到了通常来说这是没有危害的并且可以跳过警告，或者修改pom.xml去手动排除某些依赖。</p>
+<h1 id="9-运行">9 运行</h1>
+<p>直接在IDEA中右键运行或者-jar运行，可以看到没有异常了：<br>
+<img src="https://img-blog.csdnimg.cn/20200602021739342.png" alt="在这里插入图片描述" loading="lazy"><br>
+相比起原来自带的Maven打包插件，主要是多了javafx的一些class以及对应平台所需要的一些动态库文件等，比如win上的.dll与linux上的.so文件。<br>
+<img src="https://img-blog.csdnimg.cn/20200602022014735.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样一个跨平台的JFX jar包就制作好了，只需</p>
+<pre><code class="language-bash">java -jar
+</code></pre>
+<p>即可跨平台运行。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[一个开源的跨平台音乐播放与音乐下载器]]></title>
+        <id>https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/</id>
+        <link href="https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/">
+        </link>
+        <updated>2020-06-02T21:40:45.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="跨平台的音乐播放器">跨平台的音乐播放器</h1>
+<p>目前国内的linux平台上的音乐播放器不多，除了网易云比较多人使用的。<br>
+当然<a href="http://listen1.github.io/listen1/">Listen1</a>也是一个不错的选择，真正的跨平台，包括Android/Mac/Win/Linux以及Chrome插件，目前尚在维护：<br>
+<img src="https://img-blog.csdnimg.cn/20200601210615418.png" alt="在这里插入图片描述" loading="lazy"><br>
+Listen1其实非常不错，支持歌单功能，可以方便的播放，但美中不足的是没有下载功能。<br>
+因此，这里推荐一个带下载以及播放功能的开源音乐软件：<a href="https://github.com/lyswhut/lx-music-desktop">洛雪音乐助手桌面版</a>。<br>
+一个基于 Electron + Vue 开发的音乐软件。<br>
+<img src="https://img-blog.csdnimg.cn/20200601211058633.png" alt="在这里插入图片描述" loading="lazy"><br>
+UI：<br>
+<img src="https://img-blog.csdnimg.cn/20200601211200149.png" alt="在这里插入图片描述" loading="lazy"><br>
+推荐歌单列表：<br>
+<img src="https://img-blog.csdnimg.cn/20200601211239373.png" alt="在这里插入图片描述" loading="lazy"><br>
+排行榜：<br>
+<img src="https://img-blog.csdnimg.cn/20200601211320388.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载功能：<br>
+<img src="https://img-blog.csdnimg.cn/20200601211354966.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200601211433744.png" alt="在这里插入图片描述" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JavaFX获取屏幕尺寸]]></title>
+        <id>https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/</id>
+        <link href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/">
+        </link>
+        <updated>2020-06-02T21:40:23.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-awt">1 awt</h1>
+<pre><code class="language-java">Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+double width = screenSize.getWidth();
+double height = screenSize.getHeight();
+</code></pre>
+<h1 id="2-javafx">2 javafx</h1>
+<pre><code class="language-java">Rectangle2D screenRectangle = Screen.getPrimary().getBounds();
+double width = screenRectangle.getWidth();
+double height = screenRectangle.getHeight();
 </code></pre>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[图片压缩脚本]]></title>
-        <id>https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/</id>
-        <link href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/">
+        <title type="html"><![CDATA[OkHttp:NoClassDefFoundError]]></title>
+        <id>https://2293736867.github.io/post/okhttpnoclassdeffounderror/</id>
+        <link href="https://2293736867.github.io/post/okhttpnoclassdeffounderror/">
         </link>
-        <updated>2020-06-02T21:29:32.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>使用convert命令做的小型图片压缩脚本，只需要一个参数指定压缩质量，会压缩当前文件夹的jpg/jpeg/png。</p>
-<pre><code class="language-bash">sh compress.sh 75
-</code></pre>
-<p>压缩完成后会显示最大最小以及平均压缩率。</p>
-<h1 id="2-主要流程">2 主要流程</h1>
-<p>先判断当前文件夹是否存在图片，以及获取图片数量：</p>
-<pre><code class="language-bash">picNums=`ls | grep -iE &quot;*.jpg|*.png|*.jpeg&quot; | grep -v &quot;_compress&quot; | wc -l`
-</code></pre>
-<p>接着计算原来文件大小，并分离文件名，得到主文件名与后缀名：</p>
-<pre><code class="language-bash">originalSize=`ls -l $i | awk '{print $5}'`
-basename=`basename $i`
-filename=&quot;${basename%.*}&quot;
-suffix=&quot;${basename##*.}&quot;
-compressFileName=&quot;$filename._compress.$suffix&quot;
-</code></pre>
-<p>再判断主文件名是否含compress（已压缩过的会添加compress，保留原文件），接着计算比率：</p>
-<pre><code class="language-bash">convert -quality $1 $i $compressFileName
-compressedSize=`ls -l $compressFileName | awk '{print $5}'`
-ratio=$(printf &quot;%.2f&quot; `echo &quot;scale=2;$compressedSize/$originalSize&quot;|bc`)
-if [[ `echo &quot;$ratio&lt;$minRatio&quot; | bc` == 1 ]]
-then
-	minRatio=$ratio
-fi
-if [[ `echo &quot;$ratio&gt;$maxRatio&quot; | bc` == 1 ]]
-then
-	maxRatio=$ratio
-fi
-totalRatio=`echo &quot;$totalRatio+$ratio&quot;|bc`
-</code></pre>
-<p>最后显示结果：<br>
-<img src="https://img-blog.csdnimg.cn/20200513163306305.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-完整脚本">3 完整脚本</h1>
-<p><a href="https://github.com/2293736867/ASmallPictureCompressScript">github.</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[真 ● 禁秘技 ● 奥义 ● 终端美化]]></title>
-        <id>https://2293736867.github.io/post/zhen-jin-mi-ji-ao-yi-zhong-duan-mei-hua/</id>
-        <link href="https://2293736867.github.io/post/zhen-jin-mi-ji-ao-yi-zhong-duan-mei-hua/">
-        </link>
-        <updated>2020-06-02T21:29:05.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
-<li><a href="#3-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3 准备工作</a>
-<ul>
-<li><a href="#31-zsh">3.1 zsh</a></li>
-<li><a href="#32-oh-my-zsh">3.2 oh-my-zsh</a></li>
-</ul>
-</li>
-<li><a href="#4-%E5%AE%89%E8%A3%85p9k">4 安装p9k</a>
-<ul>
-<li><a href="#41-%E5%AE%89%E8%A3%85%E5%AD%97%E4%BD%93">4.1 安装字体</a></li>
-<li><a href="#42-%E5%AE%89%E8%A3%85p9k">4.2 安装p9k</a></li>
-</ul>
-</li>
-<li><a href="#5-p9k%E9%85%8D%E7%BD%AE">5 p9k配置</a>
-<ul>
-<li><a href="#51-%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E6%8F%90%E7%A4%BA%E6%AE%B5">5.1 开启/关闭提示段</a>
-<ul>
-<li><a href="#511-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8">5.1.1 如何使用</a></li>
-<li><a href="#512-%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E6%95%B4%E4%B8%AA%E6%8F%90%E7%A4%BA%E6%AE%B5">5.1.2 开启/关闭整个提示段</a></li>
-<li><a href="#513-%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3">5.1.3 系统相关</a></li>
-<li><a href="#514-%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3">5.1.4 语言相关</a></li>
-<li><a href="#515-%E4%BA%91%E7%9B%B8%E5%85%B3">5.1.5 云相关</a></li>
-<li><a href="#516-%E5%85%B6%E4%BB%96">5.1.6 其他</a></li>
-</ul>
-</li>
-<li><a href="#52-%E4%BD%8D%E7%BD%AE">5.2 位置</a></li>
-<li><a href="#53-%E9%A2%9C%E8%89%B2">5.3 颜色</a></li>
-<li><a href="#54-%E5%9B%BE%E6%A0%87">5.4 图标</a></li>
-<li><a href="#55-%E5%85%B6%E4%BB%96">5.5 其他</a>
-<ul>
-<li><a href="#551-%E7%B2%98%E5%90%88">5.5.1 粘合</a></li>
-<li><a href="#552-%E6%B7%BB%E5%8A%A0%E6%96%B0%E8%A1%8C">5.5.2 添加新行</a></li>
-<li><a href="#553-%E6%9B%B4%E5%A4%9A">5.5.3 更多</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#6-p9k%E4%B8%8Ep10k">6 p9k与p10k</a>
-<ul>
-<li><a href="#61-%E4%B8%A4%E8%80%85%E5%85%B3%E7%B3%BB">6.1 两者关系</a></li>
-<li><a href="#62-%E6%8F%90%E7%A4%BA%E5%BB%B6%E8%BF%9F">6.2 提示延迟</a></li>
-<li><a href="#63-%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6">6.3 加载速度</a></li>
-<li><a href="#64-%E5%85%B6%E4%BB%96">6.4 其他</a></li>
-</ul>
-</li>
-<li><a href="#7-%E5%AE%89%E8%A3%85p10k">7 安装p10k</a>
-<ul>
-<li><a href="#71-%E5%AE%89%E8%A3%85%E5%AD%97%E4%BD%93">7.1 安装字体</a></li>
-<li><a href="#72-%E5%AE%89%E8%A3%85p10k">7.2 安装p10k</a></li>
-</ul>
-</li>
-<li><a href="#8-p10k%E9%85%8D%E7%BD%AE">8 p10k配置</a>
-<ul>
-<li><a href="#81-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">8.1 基本配置</a></li>
-<li><a href="#82-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE">8.2 自定义配置</a></li>
-</ul>
-</li>
-<li><a href="#9-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">9 配置文件</a>
-<ul>
-<li><a href="#91-p9k">9.1 p9k</a></li>
-<li><a href="#92-p10k">9.2 p10k</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>作为一个程序员，可以没钱，没车，没房，没老婆，没女朋友。<br>
-但是，一定要有一个漂亮骚气的终端。<br>
-<s>没错，大骚特骚。</s><br>
-<s>说什么大实话。</s><br>
-先来看看原生的终端：<br>
-<img src="https://img-blog.csdnimg.cn/20200512153727942.png" alt="在这里插入图片描述" loading="lazy"><br>
-<s>真漂亮啊。</s><br>
-再看看美化过的：<br>
-<img src="https://img-blog.csdnimg.cn/20200512133828301.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200512133937571.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200512133340522.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200512171351446.png" alt="在这里插入图片描述" loading="lazy"><br>
-<s>这才叫终端嘛。</s><br>
-美化过的就是不一样。<br>
-如果您也想要这样的终端，那这篇文章要仔细看，同时顺手点个赞。</p>
-<p>文章讲述了如何使用zsh+oh-my-zsh，配合主题Powerlevel9k/Powerlevel10k（以下简称p9k/p10k）进行终端美化的过程，不废话了，进入正题。</p>
-<h1 id="2-环境">2 环境</h1>
-<p>笔者环境：</p>
-<ul>
-<li>Manjaro 20.0</li>
-<li>Xfce</li>
-<li>自带的Xfce terminal</li>
-</ul>
-<p>其他linux基本适用，安装zsh+oh-my-zsh即可，mac用户可以通过homebrew安装zsh+p9k/p10k，至于win用户，自行搜索吧。</p>
-<h1 id="3-准备工作">3 准备工作</h1>
-<p>安装zsh+oh-my-zsh。</p>
-<h2 id="31-zsh">3.1 zsh</h2>
-<p>Manjaro/Arch：</p>
-<pre><code class="language-bash">sudo pacman -S zsh
-</code></pre>
-<p>Debian系：</p>
-<pre><code class="language-bash">sudo apt install zsh
-</code></pre>
-<p>RedHat系：</p>
-<pre><code class="language-bash">sudo yum install -y zsh
-</code></pre>
-<p>其他可以来到官方github安装，<a href="https://github.com/zsh-users/zsh">戳这里</a>。<br>
-设为默认shell：</p>
-<pre><code class="language-bash">chsh -s $(which zsh)
-</code></pre>
-<p>再把原来的别名复制到</p>
-<pre><code class="language-bash">~/.zshrc
-</code></pre>
-<h2 id="32-oh-my-zsh">3.2 oh-my-zsh</h2>
-<p>通过脚本安装即可，使用curl或wget：</p>
-<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
-#或
-sh -c &quot;$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
-</code></pre>
-<p>失败的话可以clone仓库安装，<a href="https://github.com/ohmyzsh/ohmyzsh">戳这里</a>。</p>
-<h1 id="4-安装p9k">4 安装p9k</h1>
-<h2 id="41-安装字体">4.1 安装字体</h2>
-<p>推荐使用Nerd-Fonts字体，能显示最全的图标。Nerd-Fonts包含了大量的“图标字体”，如下图（来源<a href="https://github.com/ryanoasis/nerd-fonts">官方github</a>）：<br>
-<img src="https://img-blog.csdnimg.cn/20200511091911917.png" alt="在这里插入图片描述" loading="lazy"><br>
-Manjaro/Arch用户：</p>
-<pre><code class="language-bash">sudo pacman -S ttf-nerd-fonts
-</code></pre>
-<p>其他用户可以<a href="https://github.com/ryanoasis/nerd-fonts">戳这里</a>clone下载安装。<br>
-p9k默认使用的是Powerline Font字体，Manjaro/Arch用户：</p>
-<pre><code class="language-bash">sudo pacman -S powerline-fonts
-</code></pre>
-<p>其他可以<a href="https://github.com/powerline/fonts">戳这里</a>clone下来安装。</p>
-<p>除此之外官方还建议使用Awesome-Powerline Fonts字体或一些程序员字体（如Source Code Pro等），但是图标可能会显示不全，建议还是使用Nerd-Fonts字体。<br>
-安装字体后，在设置p9k主题前，也就是在</p>
-<pre><code class="language-bash">~/.zshrc
-</code></pre>
-<p>设置</p>
-<pre><code class="language-bash">ZSH_THEME=&quot;powerlevel9k/powerlevel9k&quot;
-</code></pre>
-<p>之前，设置模式：</p>
-<pre><code class="language-bash">POWERLEVEL9K_MODE='nerdfont-complete'
-</code></pre>
-<p>如果用的是Powerline-Fonts可以不用设置，如果用的是Awesome-fonts，设置：</p>
-<pre><code class="language-bash">POWERLEVEL9K_MODE='awesome-fontconfig'
-#或
-POWERLEVEL9K_MODE='awesome-patched'
-</code></pre>
-<h2 id="42-安装p9k">4.2 安装p9k</h2>
-<p>Manjaro/Arch：</p>
-<pre><code class="language-bash">sudo pacman -S zsh-theme-powerlevel9k
-echo 'source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme' &gt;&gt; ~/.zshrc
-</code></pre>
-<p>其他：</p>
-<pre><code class="language-bash">git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
-# 修改~/.zshrc
-ZSH_THEME=&quot;powerlevel9k/powerlevel9k&quot;
-</code></pre>
-<h1 id="5-p9k配置">5 p9k配置</h1>
-<p>p9k配置的主要部分就是自定义提示段（Prompt Segments），包括开启/关闭，位置，颜色，图标等。</p>
-<h2 id="51-开启关闭提示段">5.1 开启/关闭提示段</h2>
-<h3 id="511-如何使用">5.1.1 如何使用</h3>
-<p>具体请看5.2 位置。</p>
-<h3 id="512-开启关闭整个提示段">5.1.2 开启/关闭整个提示段</h3>
-<p>关闭左边/右边整个提示段：</p>
-<pre><code class="language-bash">#左
-POWERLEVEL9K_DISABLE_PROMPT=true
-#右
-POWERLEVEL9K_DISABLE_RPROMPT=true
-</code></pre>
-<h3 id="513-系统相关">5.1.3 系统相关</h3>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>background_jobs</td>
-<td>后台任务</td>
-</tr>
-<tr>
-<td>battery</td>
-<td>电池状态</td>
-</tr>
-<tr>
-<td>context</td>
-<td>用户名+主机名，基于USER环境变量以及SSH状态</td>
-</tr>
-<tr>
-<td>date</td>
-<td>日期</td>
-</tr>
-<tr>
-<td>dir</td>
-<td>当前工作目录</td>
-</tr>
-<tr>
-<td>dir_writable</td>
-<td>目录可写状态，可写时为空，不可写时出现一个锁</td>
-</tr>
-<tr>
-<td>disk_usage</td>
-<td>当前分区的磁盘使用百分比</td>
-</tr>
-<tr>
-<td>history</td>
-<td>历史命令的记录数量</td>
-</tr>
-<tr>
-<td>host</td>
-<td>主机名</td>
-</tr>
-<tr>
-<td>ip</td>
-<td>内网ip</td>
-</tr>
-<tr>
-<td>vpn_ip</td>
-<td>vpn ip</td>
-</tr>
-<tr>
-<td>public_ip</td>
-<td>公网ip</td>
-</tr>
-<tr>
-<td>load</td>
-<td>机器的平均负载</td>
-</tr>
-<tr>
-<td>os_icon</td>
-<td>操作系统图标，支持的linux有Alpine，AOSC，Arch，CentOS，CoreOS，Debian，Devuan，Elementary，Fedora，Gentoo，Mageia，Manjaro，Mint，NixOS，OpenSUSE，Sabayon，Slackware，Ubuntu</td>
-</tr>
-<tr>
-<td>ram</td>
-<td>内存可用大小</td>
-</tr>
-<tr>
-<td>root_indicator</td>
-<td>拥有root权限的提示符</td>
-</tr>
-<tr>
-<td>status</td>
-<td>前一条命令的结果状态码</td>
-</tr>
-<tr>
-<td>swap</td>
-<td>交换分区使用情况</td>
-</tr>
-<tr>
-<td>time</td>
-<td>时间</td>
-</tr>
-<tr>
-<td>user</td>
-<td>当前用户</td>
-</tr>
-<tr>
-<td>vi_mode</td>
-<td>vi模式</td>
-</tr>
-<tr>
-<td>ssh</td>
-<td>ssh状态</td>
-</tr>
-</tbody>
-</table>
-<h3 id="514-语言相关">5.1.4 语言相关</h3>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>go_version</td>
-<td>Go版本</td>
-</tr>
-<tr>
-<td>node_version</td>
-<td>Node.js安装的版本</td>
-</tr>
-<tr>
-<td>nodeenv</td>
-<td>使用nodeenv显示Node版本</td>
-</tr>
-<tr>
-<td>nvm</td>
-<td>NVM显示Node版本</td>
-</tr>
-<tr>
-<td>php_version</td>
-<td>php版本</td>
-</tr>
-<tr>
-<td>laravel_version</td>
-<td>Laravel版本</td>
-</tr>
-<tr>
-<td>symfony2_test2</td>
-<td>Symfony2测试类与代码类的比率</td>
-</tr>
-<tr>
-<td>symfony2_version</td>
-<td>Symfony2版本</td>
-</tr>
-<tr>
-<td>virtualenv</td>
-<td>Python VirtualEnv环境</td>
-</tr>
-<tr>
-<td>anaconda</td>
-<td>Anaconda环境</td>
-</tr>
-<tr>
-<td>pyenv</td>
-<td>pyenv version显示的第一个单词，但是如果是system将不会显示</td>
-</tr>
-<tr>
-<td>chruby</td>
-<td>使用chruby的Ruby环境</td>
-</tr>
-<tr>
-<td>rbenv</td>
-<td>使用rbenv的Ruby环境</td>
-</tr>
-<tr>
-<td>rspec_stats</td>
-<td>RSpec中测试类与代码类的比率</td>
-</tr>
-<tr>
-<td>rvm</td>
-<td>使用GEM_HOME环境变量或者MY_RUBY_HOME环境变量显示的Ruby信息</td>
-</tr>
-<tr>
-<td>rust_version</td>
-<td>Rust版本</td>
-</tr>
-<tr>
-<td>swift_version</td>
-<td>Swift版本</td>
-</tr>
-<tr>
-<td>java_version</td>
-<td>Java版本</td>
-</tr>
-<tr>
-<td>openfoam</td>
-<td>OpenFOAM库版本</td>
-</tr>
-</tbody>
-</table>
-<h3 id="515-云相关">5.1.5 云相关</h3>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>aws</td>
-<td>当前的AWS配置</td>
-</tr>
-<tr>
-<td>aws_eb_env</td>
-<td>当前的Elastic Beanstalk环境</td>
-</tr>
-<tr>
-<td>docker_machine</td>
-<td>当前的Docker Machine</td>
-</tr>
-<tr>
-<td>docker_machine</td>
-<td>kubectl配置</td>
-</tr>
-<tr>
-<td>dropbox</td>
-<td>Dropbox目录以及使用dropbox-cli的同步状态</td>
-</tr>
-</tbody>
-</table>
-<h3 id="516-其他">5.1.6 其他</h3>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vcs</td>
-<td>git/hg仓库的信息</td>
-</tr>
-<tr>
-<td>command_execution_time</td>
-<td>命令执行时间</td>
-</tr>
-<tr>
-<td>todo</td>
-<td><a href="http://todotxt.org/">todo.txt</a>文件中任务数量</td>
-</tr>
-<tr>
-<td>detect_virt</td>
-<td>使用systemd进行虚拟化检测</td>
-</tr>
-<tr>
-<td>newline</td>
-<td>另起一行</td>
-</tr>
-<tr>
-<td>custom_command</td>
-<td>自定义命令，需要以custom_开头</td>
-</tr>
-</tbody>
-</table>
-<p>比如，利用</p>
-<pre><code class="language-bash">nmcli device wifi
-</code></pre>
-<p>显示wifi速率，首先添加一个函数：</p>
-<pre><code class="language-bash">wifi_rate(){
-	local rate=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $6}') #awk后面的数字可能每个人不同
-	echo &quot;\uf0e7 $rate Mbit/s&quot;
-}
-</code></pre>
-<p>其次添加自定义提示段（以custom开头）：</p>
-<pre><code class="language-bash">POWERLEVEL9K_CUSTOM_WIFI_RATE=&quot;wifi_rate&quot;
-</code></pre>
-<p>最后在</p>
-<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMENTS
-#或
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS
-</code></pre>
-<p>加上即可，演示效果：<br>
-<img src="https://img-blog.csdnimg.cn/20200512041033356.png" alt="在这里插入图片描述" loading="lazy"><br>
-需要的话，可以根据信号状态定义不同的颜色：<br>
-<img src="https://img-blog.csdnimg.cn/20200512041421959.png" alt="在这里插入图片描述" loading="lazy"><br>
-完整配置文件如下，加上了wifi名字：</p>
-<pre><code class="language-bash">set_wifi(){
-	wifi_signal=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $8}')
-
-	POWERLEVEL9K_CUSTOM_WIFI_NAME_FOREGROUND=&quot;black&quot;
-	POWERLEVEL9K_CUSTOM_WIFI_RATE_FOREGROUND=&quot;black&quot;
-	POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_FOREGROUND=&quot;black&quot;
-
-	POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;green&quot;
-	POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;green&quot;
-	POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;green&quot;
-
-	if [[ $wifi_signal -lt 50 ]] ; then
-		POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;red&quot;
-		POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;red&quot;
-		POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;red&quot;
-	elif [[ $wifi_signal -lt 75 ]] ; then
-		POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;yellow&quot;
-		POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;yellow&quot;
-		POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;yellow&quot;
-	fi
-}
-set_wifi
-
-wifi_name(){
-	local name=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $3}')
-	echo &quot;\uf502 $name&quot;
-}
-wifi_rate(){
-	local rate=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $6}')
-	echo &quot;\uf0e7 $rate Mbit/s&quot;
-}
-wifi_bars_and_signal(){
-	local bars=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $9}')
-	echo &quot;$bars $wifi_signal %%&quot;
-}
-
-POWERLEVEL9K_CUSTOM_WIFI_NAME=&quot;wifi_name&quot;
-POWERLEVEL9K_CUSTOM_WIFI_RATE=&quot;wifi_rate&quot;
-POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL=&quot;wifi_bars_and_signal&quot;
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-	custom_wifi_name custom_wifi_rate custom_wifi_bars_and_signal 
-)
-</code></pre>
-<h2 id="52-位置">5.2 位置</h2>
-<p>可以加上</p>
-<pre><code class="language-bash">POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-</code></pre>
-<p>使输入的命令显示在新的一行。</p>
-<pre><code class="language-bash">POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
-</code></pre>
-<p>让右边的提示段在新的一行。<br>
-在</p>
-<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMETS
-#或
-POWERLEVEL9K_RIGHT_PROMPT_ELEMETS
-</code></pre>
-<p>中，可以配合newline以及5.1中的提示段自定义位置，比如，笔者的：</p>
-<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-	os_icon date time newline 
-	custom_wifi_rate custom_wifi_bars_and_signal newline
-	background_jobs ram load swap disk_usage newline 
-	php_version java_version node_version newline 
-	dir dir_writable vcs 
-)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200512103824109.png" alt="在这里插入图片描述" loading="lazy"><br>
-当然这不是完整的配置文件，还修改了颜色，完整的配置文件在文末给出。</p>
-<h2 id="53-颜色">5.3 颜色</h2>
-<p>修改提示段的前景/背景，直接修改即可，一般的格式为：</p>
-<pre><code class="language-bash">POWERLEVEL9K_NAME_STATUS_BACKGROUND=
-POWERLEVEL9K_NAME_STATUS_FOREGROUND=
-</code></pre>
-<p>其中NAME为5.1中对应的提示段，比如可以修改：</p>
-<pre><code class="language-bash">POWERLEVEL9K_OS_ICON_FOREGROUND=&quot;green&quot;
-POWERLEVEL9K_PHP_VERSION_BACKGROUND=&quot;010&quot;
-</code></pre>
-<p>颜色可以使用一些常见的red/green等等，也可以使用序号，可以查看这张图：<br>
-<img src="https://img-blog.csdnimg.cn/20200512104645305.png" alt="在这里插入图片描述" loading="lazy"><br>
-也可以使用如下命令显示颜色：</p>
-<pre><code class="language-bash">for i in {0..255}; do print -Pn &quot;%K{$i}  %k%F{$i}${(l:3::0:)i}%f &quot; ${${(M)$((i%6)):#3}:+$'\n'}; done
-</code></pre>
-<p>STATUS不是每个提示段都有的，列表如下：</p>
-<table>
-<thead>
-<tr>
-<th>提示段</th>
-<th>状态</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>battery</td>
-<td>LOW,CHARGING,CHAGED,DISCONNECTED</td>
-</tr>
-<tr>
-<td>context</td>
-<td>DEFAULT,ROOT,SUDO,REMOTE,REMOTE_SUDO</td>
-</tr>
-<tr>
-<td>dir</td>
-<td>HOME,HOME_SUBFOLDER,DEFAULT,ETC,NOT_WRITABLE</td>
-</tr>
-<tr>
-<td>dir_writable</td>
-<td>FORBIDDEN</td>
-</tr>
-<tr>
-<td>disk_usage</td>
-<td>NORMAL,WARNING,CRITICAL</td>
-</tr>
-<tr>
-<td>host</td>
-<td>LOCAL,REMOTE</td>
-</tr>
-<tr>
-<td>load</td>
-<td>CRITICAL,WARNING,NORMAL</td>
-</tr>
-<tr>
-<td>rspec_stats</td>
-<td>STATS_GOOD,STATS_AVG,STATS_BAD</td>
-</tr>
-<tr>
-<td>symfony2_test</td>
-<td>TESTS_GOOD,TESTS_AVG,TESTS_BAD</td>
-</tr>
-<tr>
-<td>user</td>
-<td>DEFAULT,SUDO,ROOT</td>
-</tr>
-<tr>
-<td>vcs</td>
-<td>CLEAN,UNTRACKED,MODIFIED</td>
-</tr>
-<tr>
-<td>vi_mode</td>
-<td>NORMAL,INSERT,VISUAL</td>
-</tr>
-</tbody>
-</table>
-<p>大部分都可以很容易理解，这里以最简单的为例：</p>
-<pre><code class="language-bash">POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='166'
-POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='000'
-POWERLEVEL9K_DIR_ETC_BACKGROUND='226'
-POWERLEVEL9K_DIR_ETC_FOREGROUND='000'
-POWERLEVEL9K_DIR_HOME_BACKGROUND='044'
-POWERLEVEL9K_DIR_HOME_FOREGROUND='000'
-</code></pre>
-<p>设置home目录，etc目录以及默认目录的前景与背景。</p>
-<h2 id="54-图标">5.4 图标</h2>
-<p>使用</p>
-<pre><code class="language-bash">get_icon_names
-</code></pre>
-<p>可以查看内置的图标。<br>
-<img src="https://img-blog.csdnimg.cn/20200512110355831.png" alt="在这里插入图片描述" loading="lazy"><br>
-注意这个和字体有关，如果使用默认的PowerlineFonts或者使用AwesomeFonts可能不会完整显示所有图标，请使用Nerd-Fonts。</p>
-<p><a href="https://www.oschina.net/p/nerd-fonts">戳这里</a>查看Nerd-fonts的部分图标，<a href="https://www.nerdfonts.com/cheat-sheet">戳这里</a>搜索所有的图标。<br>
-官方的例子是自定义vcs的图标：</p>
-<pre><code class="language-bash">POWERLEVEL9K_VCS_BRANCH_ICON=$'\uF126'
-</code></pre>
-<p>F126可以通过上面的网站搜索得到，是一个分支的图标：<br>
-<img src="https://img-blog.csdnimg.cn/2020051211145535.png" alt="在这里插入图片描述" loading="lazy"><br>
-其他git相关图标：</p>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>图标字段</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Github</td>
-<td>VCS_GIT_GITHUB_ICON</td>
-</tr>
-<tr>
-<td>BitBucket</td>
-<td>VCS_GIT_BITBUCKET_ICON</td>
-</tr>
-<tr>
-<td>GitLab</td>
-<td>VCS_GIT_GITLAB_ICON</td>
-</tr>
-<tr>
-<td>其他</td>
-<td>VCS_GIT_ICON</td>
-</tr>
-</tbody>
-</table>
-<p>另外还可以修改提示段前的图标：</p>
-<pre><code class="language-bash">POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=&quot;↱&quot;
-POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=&quot;↳ &quot;
-POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX=&quot;xxx&quot;
-</code></pre>
-<p>还可以根据get_icon_names修改默认图标，比如，修改</p>
-<pre><code class="language-bash">POWERLEVEL9K_HOME_SUB_ICON=$'\uf74b'
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200512114150180.png" alt="在这里插入图片描述" loading="lazy"><br>
-但是直接改icon的话图标会显示得很小，可以在函数中像上面的wifi一样使用echo自定义。</p>
-<h2 id="55-其他">5.5 其他</h2>
-<h3 id="551-粘合">5.5.1 粘合</h3>
-<p>可以添加joined使提示段粘合在一起：</p>
-<pre><code class="language-bash">POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(history status_joined)
-</code></pre>
-<p>修改前：<br>
-<img src="https://img-blog.csdnimg.cn/20200512110052513.png" alt="在这里插入图片描述" loading="lazy"><br>
-修改后：<br>
-<img src="https://img-blog.csdnimg.cn/20200512110045321.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="552-添加新行">5.5.2 添加新行</h3>
-<pre><code class="language-bash">POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-</code></pre>
-<p>每次输入命令后添加一行空行，可以使用</p>
-<pre><code class="language-bash">POWERLEVEL9K_PROMPT_ADD_NEWLINE_COUNT
-</code></pre>
-<p>控制，默认为1。</p>
-<h3 id="553-更多">5.5.3 更多</h3>
-<p>更多请移步<a href="https://github.com/Powerlevel9k/powerlevel9k#customizing-prompt-segments">官方文档</a>，太多了，比如电池，自定义充电中或充完电或低电量状态的颜色以及显示状态：<br>
-<img src="https://img-blog.csdnimg.cn/20200512115707163.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200512115746970.png" alt="在这里插入图片描述" loading="lazy"><br>
-好了，p9k就到这里，下面看看p10k。</p>
-<h1 id="6-p9k与p10k">6 p9k与p10k</h1>
-<h2 id="61-两者关系">6.1 两者关系</h2>
-<p>p10k是2019年3月从p9k的仓库fork而来的。p9k已经是一个拥有大量用户的成熟的工程。p10k被分离出来，以更快的速度迭代更新，添加新特性以及改进性能。<br>
-p9k与p10k是独立的工程，只能安装其中一个，但是p10k会识别p9k的所有参数。<br>
-目前p9k已经不再维护更新，推荐使用p10k。<br>
-<img src="https://img-blog.csdnimg.cn/20200511095752966.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="62-提示延迟">6.2 提示延迟</h2>
-<p>p9k已有几个issue反映很慢：<br>
-<img src="https://img-blog.csdnimg.cn/20200511100009605.png" alt="在这里插入图片描述" loading="lazy"><br>
-具体内容请查看p9k官方issue，p10k改进了性能，p10k github有一个演示视频，展示了p10k的速度，在Intel i9-7900X+Ubuntu 18.04上，测试提示延迟如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200511100206835.png" alt="在这里插入图片描述" loading="lazy"><br>
-（来源官方测试）<br>
-相对来说，p9k具有可接受的延迟，如果只是需要当前目录而不需要截断或缩短，p9k可以17ms内渲染完成，p10k可以将其提高30倍的渲染速度，但实际上并不需要，因为延迟变得明显的阀值为50ms。官方建议必须小心使用p9k的配置，因为很容易使得提示变慢，但是p10k在任何配置中几乎都是即时的，可以保持远低于50ms。</p>
-<p>另外笔者的系统上也测试过，p9k确实要比p10k慢，添加了很多设置后，p9k在终端中连续按Enter，松手之后还在提示，甚至一个普通的ls也有明显的延迟，但是p10k没有这样的问题，很流畅。</p>
-<h2 id="63-加载速度">6.3 加载速度</h2>
-<p>p10k比p9k能更快加载，前提是，zsh版本5.4+。<br>
-官方建议使用下面的命令测试：</p>
-<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source ~/powerlevel10k/powerlevel10k.zsh-theme')
-</code></pre>
-<p>但是笔者没有这个文件，怀疑是位置给错了，修改如下：</p>
-<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k/powerlevel10k.zsh-theme')
-</code></pre>
-<p>笔者的系统上耗时如下：<br>
-<img src="https://img-blog.csdnimg.cn/2020051120031034.png" alt="在这里插入图片描述" loading="lazy"><br>
-换了p9k后：</p>
-<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme')
-</code></pre>
-<p>耗时如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200511201744364.png" alt="在这里插入图片描述" loading="lazy"><br>
-不过好像没快多少的样子，可能是zsh版本的问题，装的是目前最新的5.8，可能老一点的版本区别会明显一点。<br>
-官方的测试是p10k用了29s，比相同环境下的p9k master分支大约快6倍，比p9k next分支快17倍。笔者认为仅供参考吧，用p10k就对了，毕竟比p9k快。</p>
-<h2 id="64-其他">6.4 其他</h2>
-<ul>
-<li>p10k默认只开启vcs中git后端的支持，如果需要svn/hg，需要添加到POWERLEVEL9K_VCS_BACKENDS。但是p10k还没有针对svn/hg优化，所以添加的话会让提示变慢</li>
-<li>p10k不支持POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY=true</li>
-<li>p10k会兼容p9k的所有选项，因此，相同配置下如果p9k与p10k看到的图标不一样，可能是设置了POWERLEVEL9K_MODE的原因，请去掉POWERLEVEL9K_MODE</li>
-<li>p9k不识别ZLE_RPROMPT_INDENT，因此p10相比起p9k会有额外的空格。如果不想要可以设置ZLE_RPROMPT_INDENT=0<br>
-<img src="https://img-blog.csdnimg.cn/20200512145835247.png" alt="在这里插入图片描述" loading="lazy"></li>
-<li>p9k在图标附近有不一致的空格，在p10k已经不存在了，不过可以设置POWERLEVEL9K_LEGACY_ICON_SPACING=true显示与p9k中一样的空格<br>
-<img src="https://img-blog.csdnimg.cn/20200512145806760.png" alt="在这里插入图片描述" loading="lazy"></li>
-<li>p10k修正了p9k的许多bugs，除了修复空格问题等，最主要是极大地提高了速度</li>
-</ul>
-<h1 id="7-安装p10k">7 安装p10k</h1>
-<h2 id="71-安装字体">7.1 安装字体</h2>
-<p>Manjaro/Arch用户：</p>
-<pre><code class="language-bash">sudo pacman -S nerd-fonts-meslo-lg
-</code></pre>
-<p>或手动安装：</p>
-<ul>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf">MesloLGS NF Regular.ttf</a></li>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf">MesloLGS NF Bold.ttf</a></li>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf">MesloLGS NF Italic.ttf</a></li>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf">MesloLGS NF Bold Italic.ttf</a></li>
-</ul>
-<h2 id="72-安装p10k">7.2 安装p10k</h2>
-<p>Manjaro/Arch：</p>
-<pre><code class="language-bash">sudo pacman -S zsh-theme-powerlevel10k #如果先前安装了p9k这一步会提示冲突
-echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' &gt;&gt;! ~/.zshrc
-</code></pre>
-<p>其他：</p>
-<pre><code class="language-bash">git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' &gt;&gt;! ~/.zshrc
-</code></pre>
-<p>如果打开zsh时提示找不到powerlevel9k.zsh-theme这个文件，请在zshrc中把</p>
-<pre><code class="language-bash">#~/.zshrc
-source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
-</code></pre>
-<p>这一行删去。</p>
-<h1 id="8-p10k配置">8 p10k配置</h1>
-<h2 id="81-基本配置">8.1 基本配置</h2>
-<p>终端输入</p>
-<pre><code class="language-bash">p10k configure
-</code></pre>
-<p>就会出现图形化配置向导。首先会问几个问题：<br>
-<img src="https://img-blog.csdnimg.cn/20200511213925189.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/2020051121395215.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200511214010451.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200512135516854.png" alt="在这里插入图片描述" loading="lazy"><br>
-会问三个图标：钻石，锁与Debian，应该是测试有没有安装对应的字体，然后会问图标是否会重叠，接着有四种风格可以选择：<br>
-<img src="https://img-blog.csdnimg.cn/20200512141652442.png" alt="在这里插入图片描述" loading="lazy"><br>
-看个人了，笔者选的3 ，接着可以选择：</p>
-<ul>
-<li>编码（Unicode/ASCII，一般选Unicode）</li>
-<li>时间（不显示/12小时制/24小时制）</li>
-<li>分隔符（三角/垂直/斜线/圆角）</li>
-<li>提示段头部（三角/渐隐/斜线/垂直）</li>
-<li>提示段尾部（垂直/渐隐/三角/倾斜/圆角）</li>
-<li>高度（一行/两行）</li>
-<li>左右提示段连接方式（无/点状连接/实线连接）</li>
-<li>提示段旁的命令提示符（无/左/右/左+右）</li>
-<li>颜色（最亮/亮/暗/最暗）</li>
-<li>空格（稀疏/紧密）</li>
-<li>图标（少/多）</li>
-<li>流（简洁/流畅，针对时间等，流畅模式会多一个at与时钟的图标）</li>
-<li>临时提示（开启/关闭）</li>
-<li>即时提示模式（关闭/安静模式/啰嗦模式，关闭是已经尝试过即时提示模式，但是不兼容zsh配置，需要关闭，安静模式是zsh初始化时不会打印警告信息，啰嗦模式会在zsh初始化时打印警告信息）</li>
-<li>覆盖p10k配置文件（如果p10k配置文件已存在，会提示是否覆盖，不覆盖的话也就是相当于此次配置无效，需要覆盖才能生效），覆盖之前原文件会备份</li>
-</ul>
-<p>简单配置的效果：<br>
-<img src="https://img-blog.csdnimg.cn/20200512143546614.png" alt="在这里插入图片描述" loading="lazy"><br>
-确实比p9k流畅了很多。</p>
-<h2 id="82-自定义配置">8.2 自定义配置</h2>
-<p>自定义配置与p9k类似，配置文件位置为：</p>
-<pre><code class="language-bash">~/.p10k.zsh
-</code></pre>
-<p>由于大部分都是p9k的配置，这里就不重复了，图标，位置大体类似，颜色可以使用如下命令获取：</p>
-<pre><code class="language-bash">for i in {0..255}; do print -Pn &quot;%K{$i}  %k%F{$i}${(l:3::0:)i}%f &quot; ${${(M)$((i%6)):#3}:+$'\n'}; done
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/202005121532132.png" alt="在这里插入图片描述" loading="lazy"><br>
-使用时直接加上数字即可。<br>
-<img src="https://img-blog.csdnimg.cn/20200512153242387.png" alt="在这里插入图片描述" loading="lazy"><br>
-如果用的是彩虹风格，目录可能在提示段中很难看到，可以直接修改配置文件的颜色，或修改终端全局配置的颜色。<br>
-<img src="https://img-blog.csdnimg.cn/20200512170719170.png" alt="在这里插入图片描述" loading="lazy"><br>
-剩下的就个人慢慢摸索了，改颜色，改图标，改位置等等。<br>
-最后贴一张配置完成的图：<br>
-<img src="https://img-blog.csdnimg.cn/20200512171322832.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="9-配置文件">9 配置文件</h1>
-<p>笔者的配置文件，仅供参考。</p>
-<h2 id="91-p9k">9.1 p9k</h2>
-<ul>
-<li><a href="https://github.com/2293736867/BeatuifulP9kConfig">github</a></li>
-<li><a href="https://gitee.com/imykr/BeatuifulP9kConfig">码云</a></li>
-</ul>
-<h2 id="92-p10k">9.2 p10k</h2>
-<ul>
-<li><a href="https://github.com/2293736867/BeautifulP10KConfig">github</a></li>
-<li><a href="https://gitee.com/imykr/BeautifulP10KConfig">码云</a></li>
-</ul>
-<p>如果觉得文章好看，欢迎点赞。</p>
-<p>同时欢迎关注微信公众号：氷泠之路。</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200325170404220.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[unzip解压中文乱码]]></title>
-        <id>https://2293736867.github.io/post/unzip-jie-ya-zhong-wen-luan-ma/</id>
-        <link href="https://2293736867.github.io/post/unzip-jie-ya-zhong-wen-luan-ma/">
-        </link>
-        <updated>2020-06-02T21:28:25.000Z</updated>
+        <updated>2020-06-02T21:39:36.000Z</updated>
         <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>直接</p>
-<pre><code class="language-bash">unzip xxx.zip
+<p>使用OkHttp时报错：</p>
+<pre><code class="language-bash">Caused by: java.lang.NoClassDefFoundError: kotlin/jvm/internal/Intrinsics
+	at okhttp3@4.7.2/okhttp3.FormBody$Builder.add(FormBody.kt)
 </code></pre>
-<p>乱码，肯定是编码问题了不用问。但是unzip没有指定编码的选项：<br>
-<img src="https://img-blog.csdnimg.cn/20200511113616168.png" alt="在这里插入图片描述" loading="lazy"><br>
-网上的解决方案如下：</p>
-<pre><code class="language-bash">unzip -O GBK/GB18030CP936  xx.zip
+<h1 id="2-原因">2 原因</h1>
+<p>由于OkHttp依赖于okio，目前OkHttp最新的版本为4.7.2，使用Maven/Gradle导入的话不会出现该问题，原因应该是只是单纯把OkHttp的jar导入，还需要把okio一并导入，但是需要知道OkHttp对应的okio版本，可以通过Maven导入查看，比如4.7.2对应的是2.6.0。<br>
+<img src="https://img-blog.csdnimg.cn/20200531113523502.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果已经添加了okio则可以跳过，另外还需要添加kotlin-stdlib库，使用最新版本即可，目前最新版本为1.3.72。<br>
+下载链接<a href="https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib">戳这里</a>。</p>
+<h1 id="3-解决方案">3 解决方案</h1>
+<p>把对应版本的okio以及kotlin-stdlib添加到依赖库即可。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[jasypt-spring-boot提示Failed to bind properties]]></title>
+        <id>https://2293736867.github.io/post/jasypt-spring-boot-ti-shi-failed-to-bind-properties/</id>
+        <link href="https://2293736867.github.io/post/jasypt-spring-boot-ti-shi-failed-to-bind-properties/">
+        </link>
+        <updated>2020-06-02T21:39:09.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>在Spring Boot中使用jasypt-spring-boot进行加密，但是提示：</p>
+<pre><code class="language-bash">Description:
+
+Failed to bind properties under 'spring.datasource.password' to java.lang.String:
+
+    Reason: Failed to bind properties under 'spring.datasource.password' to java.lang.String
+
+Action:
+
+Update your application's configuration
 </code></pre>
-<p>但是没有-O选项啊。</p>
+<p>或提示</p>
+<pre><code class="language-bash">Description:
+
+Failed to bind properties under 'spring.datasource.url' to java.lang.String:
+
+    Reason: Failed to bind properties under 'spring.datasource.password' to java.lang.String
+
+Action:
+
+Update your application's configuration
+</code></pre>
+<p>最后的异常是这个：<br>
+<img src="https://img-blog.csdnimg.cn/20200531013232211.png" alt="在这里插入图片描述" loading="lazy"></p>
 <h1 id="2-解决办法">2 解决办法</h1>
-<p>解决办法是安装unzip-iconv，笔者系统为manjaro，直接安装会提示会与unzip冲突：<br>
-<img src="https://img-blog.csdnimg.cn/20200511113933835.png" alt="在这里插入图片描述" loading="lazy"><br>
-unzip-iconv是一个补丁，但是好像没被官方接纳，比如Ubuntu下的unzip是带-O的，Archlinux与CentOS下默认没带，安装unzip-iconv即可，也可以在保留unzip的基础上打上unzip-iconv补丁包，参照<a href="https://www.cnblogs.com/JesseTsou/p/10488435.html">这里</a>。<br>
-安装后，可以先指定编码列出看看：</p>
-<pre><code class="language-bash">unzip -O gbk -l xxx.zip
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200511114745665.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里编码可以用小写，有一个小的bug是，先写-O选项的话，后面的压缩包文件名补全不了，目前笔者还没有找到好的解决办法（不知道你们的会不会这样，反正笔者的补全不了），所以，先-l补全写上文件，再移动到前面加上-O选项。<br>
-列出文件没问题的话，解压就行了：</p>
-<pre><code class="language-bash">unzip -O gbk -d folder xxx.zip
-</code></pre>
-<p>-d指定解压目录，如果没加目录的话，直接unzip会把所有文件解压到当前目录。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[manjaro配置攻略]]></title>
-        <id>https://2293736867.github.io/post/manjaro-pei-zhi-gong-lue/</id>
-        <link href="https://2293736867.github.io/post/manjaro-pei-zhi-gong-lue/">
-        </link>
-        <updated>2020-06-02T21:28:06.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%BA%90">1 源</a></li>
-<li><a href="#2-%E8%BE%93%E5%85%A5%E6%B3%95">2 输入法</a></li>
-<li><a href="#3-aur%E5%8A%A9%E6%89%8B">3 AUR助手</a></li>
-<li><a href="#4-%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6">4 常用软件</a>
-<ul>
-<li><a href="#41-chromechromium">4.1 chrome/chromium</a></li>
-<li><a href="#42-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90">4.2 网易云音乐</a></li>
-<li><a href="#43-git">4.3 git</a></li>
-<li><a href="#44-vim">4.4 vim</a></li>
-<li><a href="#45-wps">4.5 wps</a></li>
-<li><a href="#46-vscode">4.6 VScode</a></li>
-<li><a href="#47-qq">4.7 qq</a></li>
-<li><a href="#48-%E5%BE%AE%E4%BF%A1">4.8 微信</a></li>
-<li><a href="#49-%E8%BF%85%E9%9B%B7">4.9 迅雷</a></li>
-<li><a href="#410-%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE">4.10 深度截图</a></li>
-<li><a href="#411-jetbrains">4.11 JetBrains</a></li>
-<li><a href="#412-web%E6%9C%8D%E5%8A%A1%E5%99%A8">4.12 web服务器</a></li>
-</ul>
-</li>
-<li><a href="#5-deepin-wine%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86">5 deepin-wine常见问题处理</a>
-<ul>
-<li><a href="#51-%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95">5.1 无法切换中文输入法</a></li>
-<li><a href="#52-%E5%AD%97%E4%BD%93%E5%8F%91%E8%99%9A">5.2 字体发虚</a></li>
-<li><a href="#53-%E9%98%B4%E5%BD%B1%E8%BE%B9%E6%A1%86">5.3 阴影边框</a></li>
-</ul>
-</li>
-<li><a href="#6-%E7%BB%88%E7%AB%AF%E7%BE%8E%E5%8C%96">6 终端美化</a>
-<ul>
-<li><a href="#61-%E5%AE%89%E8%A3%85zsh">6.1 安装zsh</a></li>
-<li><a href="#62-%E5%AE%89%E8%A3%85oh-my-zsh">6.2 安装oh-my-zsh</a></li>
-<li><a href="#63-%E5%AD%97%E4%BD%93">6.3 字体</a></li>
-<li><a href="#64-%E4%B8%BB%E9%A2%98">6.4 主题</a></li>
-<li><a href="#65-%E6%9B%BF%E6%8D%A2bash">6.5 替换bash</a></li>
-<li><a href="#66-%E5%88%AB%E5%90%8D">6.6 别名</a></li>
-<li><a href="#67-%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BF%AE%E6%94%B9">6.7 进一步修改</a></li>
-</ul>
-</li>
-<li><a href="#7-%E5%B8%B8%E7%94%A8%E5%88%AB%E5%90%8D%E4%B8%8E%E8%84%9A%E6%9C%AC">7 常用别名与脚本</a>
-<ul>
-<li><a href="#71-%E5%B8%B8%E7%94%A8%E5%88%AB%E5%90%8D">7.1 常用别名</a></li>
-<li><a href="#72-cd%E8%84%9A%E6%9C%AC">7.2 cd脚本</a></li>
-<li><a href="#73-rm%E8%84%9A%E6%9C%AC">7.3 rm脚本</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-源">1 源</h1>
-<p>排列中国镜像的速度，选择一个。</p>
-<pre><code class="language-bash">sudo pacman-mirrors -i -c China -m rank
-</code></pre>
-<p>/etc/pacman.conf加上：</p>
-<pre><code class="language-bash">[archlinuxcn]
-SigLevel=Optional TrustedOnly
-Server=https://mirrors.ustc.edu.cn/archlinuxcn/$arch
-</code></pre>
-<p>更新：</p>
-<pre><code class="language-bash">sudo pacman -Syy &amp;&amp; sudo pacman -S archlinuxcn-keyring
-</code></pre>
-<h1 id="2-输入法">2 输入法</h1>
-<pre><code class="language-bash">sudo pacman -S fcitx-im fcitx-configtool
-# 输入法看个人，这里装的是谷歌拼音
-sudo pacman -S fcitx-googlepinyin
-#搜狗
-#sudo pacman -S fcitx-sogoupinyin
-#rime
-#sudo pacman -S fctix-rime
-#更多输入法使用
-#pacman -Ss fcitx
-#查看
-</code></pre>
-<p>在</p>
-<pre><code class="language-bash">~/.profile
-</code></pre>
-<p>加上</p>
-<pre><code class="language-bash">export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=&quot;@im=fcitx&quot;
-</code></pre>
-<h1 id="3-aur助手">3 AUR助手</h1>
-<p>AUR是Arch User Repository的缩写，是Arch/Manjaro用户的社区驱动存储库，yay是用Go编写的Arch Linux AUR帮助工具，可以帮助以自动方式从PKGBUILD安装软件包。</p>
-<pre><code class="language-bash">sudo pacman -S yay
-</code></pre>
-<h1 id="4-常用软件">4 常用软件</h1>
-<h2 id="41-chromechromium">4.1 chrome/chromium</h2>
-<pre><code class="language-bash">sudo pacman -S google-chrome
-sudo pacman -S chromium
-</code></pre>
-<h2 id="42-网易云音乐">4.2 网易云音乐</h2>
-<pre><code class="language-bash">sudo pacman -S netease-cloud-music
-</code></pre>
-<h2 id="43-git">4.3 git</h2>
-<pre><code class="language-bash">sudo pacman -S git
-</code></pre>
-<h2 id="44-vim">4.4 vim</h2>
-<p>默认只有vi，没带vim。</p>
-<pre><code class="language-bash">sudo pacman -S vim
-</code></pre>
-<h2 id="45-wps">4.5 wps</h2>
-<pre><code class="language-bash">sudo pacman -S wps-office
-</code></pre>
-<h2 id="46-vscode">4.6 VScode</h2>
-<pre><code class="language-bash">sudo pacman -S visual-studio-code
-</code></pre>
-<h2 id="47-qq">4.7 qq</h2>
-<p>qq可以选择的版本比较多，可以选择wine版的qq，deepinwine版的qq，deepinwine版的tim。这里推荐使用deepinwine的qq或者tim。<br>
-直接使用yay或yaourt安装即可：</p>
-<pre><code class="language-bash">yay -S deepin-wine-qq
-yay -S deepin-wine-tim
-</code></pre>
-<p>若直接安装失败可以使用本地打包安装：</p>
-<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-tim-arch.git
-cd deepin-wine-tim-arch
-makepkg -si
-
-git clone https://github.com/countstarlight/deepin-wine-qq-arch.git
-cd deepin-wine-qq-arch  
-makepkg -si
-</code></pre>
-<h2 id="48-微信">4.8 微信</h2>
-<p>微信可以使用electronic-wechat或者deepinwine-wechat，推荐后者。</p>
-<pre><code class="language-bash">sudo pacman -S eletronic-wechat
-yay -S deepin-wine-wechat
-</code></pre>
-<p>若签名出现问题可以加上：</p>
-<pre><code class="language-bash">yay -S deepin-wine-wechat --mflags --skipinteg
-</code></pre>
-<p>若deepin-wine-wechat安装失败可以从本地打包安装</p>
-<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-wechat-arch.git
-cd deepin-wine-wechat-arch 
-makepkg -si
-</code></pre>
-<p>但目前从2.8.0.106-1以上的版本开始大图片发送失败，没办法发送压缩包，推荐使用2.7.1.88-1版本，并且关闭自动更新，戳<a href="https://github.com/countstarlight/deepin-wine-wechat-arch/releases/tag/v2.7.1.88-1">这里</a>下载，然后安装：</p>
-<pre><code class="language-bash">sudo pacman -U deepin-wine-wechat-2.7.1.88-1-x86_64.pkg.tar.xz
-</code></pre>
-<h2 id="49-迅雷">4.9 迅雷</h2>
-<pre><code class="language-bash">yaourt deepin-wine-thunderspeed
-</code></pre>
-<p>若失败的话可以从本地打包安装</p>
-<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-thunderspeed-arch.git
-cd deepin-wine-thunderspeed-arch
-makepkg -si
-</code></pre>
-<h2 id="410-深度截图">4.10 深度截图</h2>
-<pre><code class="language-bash">sudo pacman -S deepin-screenshot
-</code></pre>
-<h2 id="411-jetbrains">4.11 JetBrains</h2>
-<p>对于这种大型的IDE笔者喜欢从官网下载，以PyCharm为例，下载解压移动：</p>
-<pre><code class="language-bash">tar -zxvf pycharm-professional-2020.1.1.tar.gz
-sudo mv pycharm-2020.1.1/* /usr/local/pycharm
-</code></pre>
-<p>然后添加.desktop文件：</p>
-<pre><code class="language-bash">sudo vim /usr/share/applications/pycharm.desktop
-</code></pre>
-<p>加上</p>
-<pre><code class="language-bash">[Desktop Entry]
-Name=PyCharm
-Type=Application
-Exec=/usr/local/pycharm/bin/pycharm.sh
-Icon=/usr/local/pycharm/bin/pycharm.svg
-</code></pre>
-<h2 id="412-web服务器">4.12 web服务器</h2>
-<pre><code class="language-bash">sudo pacman -S tomcat9 apache nginx
-</code></pre>
-<h1 id="5-deepin-wine常见问题处理">5 deepin-wine常见问题处理</h1>
-<h2 id="51-无法切换中文输入法">5.1 无法切换中文输入法</h2>
-<p>在</p>
-<pre><code class="language-bash">~/.xinitrc
-</code></pre>
-<p>加上</p>
-<pre><code class="language-bash">export XMODIFIERS=@im=fcitx
-export QT_IM_MODULE=fcitx
-export GTK_IM_MODULE=fcitx
-</code></pre>
-<p>然后在对应的run.sh加上：</p>
-<pre><code class="language-bash">env locale=zh_CN
-export XIM=fcitx
-export XMODIFIERS=&quot;@im=fcitx&quot;
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-</code></pre>
-<p>这里的run.sh位于</p>
-<pre><code class="language-bash">/opt/deepinwine/apps/Deepin-xxx
-</code></pre>
-<p>下。</p>
-<pre><code class="language-bash"># QQ
-/opt/deepinwine/apps/Deepin-QQ/run.sh
-# WeChat
-/opt/deepinwine/apps/Deepin-WeChat/run.sh
-# Tim
-/opt/deepinwine/apps/Deepin-Tim/run.sh
-</code></pre>
-<h2 id="52-字体发虚">5.2 字体发虚</h2>
-<pre><code class="language-bash">env WINEPREFIX=&quot;$HOME/.deepinwine/Deepin-QQ&quot; winecfg
-env WINEPREFIX=&quot;$HOME/.deepinwine/Deepin-WeChat&quot; winecfg
-env WINEPREFIX=&quot;$HOME/.deepinwine/Deepin-Tim&quot; winecfg
-</code></pre>
-<p>执行其中一个命令，然后修改dpi：<br>
-<img src="https://img-blog.csdnimg.cn/20200508112803202.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="53-阴影边框">5.3 阴影边框</h2>
-<p>微信运行后，切换到其他窗口会有一个阴影边框。<br>
-对于v2.8.0.133-2之后的版本应该不会出现这个问题，因为自带了shadow.exe，但是不能传输文件与大图片（issue中已有反映，这是一个bug，建议使用2.7版本），对于之前的版本，参照<a href="https://blog.kangkang.org/index.php/archives/397">这里</a>的办法，把shadows.exe复制到对应目录：</p>
-<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-wechat-arch.git
-sudo cp deepin-wine-wechat-arch-master/shadow.exe ~/.deepinwine/Deepin-WeChat/drive_c/
-</code></pre>
-<p>然后修改run.sh：<br>
-<img src="https://img-blog.csdnimg.cn/20200509113254797.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-bash">#修改/opt/deepinwine/apps/Deepin-WeChat/run.sh，可以先备份一下
-#找到CallApp()，在env WINEDLLOVERRIDS这一行的末尾加上
-&amp;
-
-#同时在fi后面加上
-if [[ -z &quot;$(ps -e | grep -o 'shadow.exe')&quot; ]]; then
-	env WINEPREFIX=&quot;$WINEPREFIX&quot; WINEDEBUG=-msvcrt $WINE_CMD &quot;c:\\shadow.exe&quot; &amp;
-fi
-</code></pre>
-<h1 id="6-终端美化">6 终端美化</h1>
-<p>终端美化当然是用zsh+oh-my-zsh。</p>
-<h2 id="61-安装zsh">6.1 安装zsh</h2>
-<p>默认安装了，没安装的话：</p>
-<pre><code class="language-bash">sudo pacman -S zsh
-</code></pre>
-<h2 id="62-安装oh-my-zsh">6.2 安装oh-my-zsh</h2>
-<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;
-</code></pre>
-<h2 id="63-字体">6.3 字体</h2>
-<p>需要安装Powerline字体，不难，clone一下，直接安装就好了。</p>
-<pre><code class="language-bash">git clone https://github.com/powerline/fonts.git
-cd fonts
-./install.sh
-</code></pre>
-<h2 id="64-主题">6.4 主题</h2>
-<p>oh-my-zsh的配置文件如下：</p>
-<pre><code class="language-bash">~/.oh-my-zsh
-</code></pre>
-<p>其中的themes下有不少主题，具体效果可以来<a href="https://github.com/ohmyzsh/ohmyzsh/wiki/Themes">这里</a>查看。<br>
-这里推荐使用agnoster与powerlevel9k主题（当然还有一个powerlevel10k主题，感兴趣可以自行github），agnoster已自带，powerlevel9k需要安装：</p>
-<pre><code class="language-bash">sudo pacman -S zsh-theme-powerlevel9k
-git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
-</code></pre>
-<p>然后修改配置文件：</p>
-<pre><code class="language-bash">#修改~/.zshrc
-ZSH_THEME=&quot;agnoster&quot;
-ZSH_THEME=&quot;powerlevel9k/powerlevel9k&quot;
-</code></pre>
-<h2 id="65-替换bash">6.5 替换bash</h2>
-<p>zsh替换默认bash：</p>
-<pre><code class="language-bash">chsh -s `which zsh`
-</code></pre>
-<h2 id="66-别名">6.6 别名</h2>
-<p>原来bash的别名在zsh需要重新配置一下，直接在</p>
-<pre><code class="language-bash">～/.zshrc
-</code></pre>
-<p>加上原来的alias即可。</p>
-<h2 id="67-进一步修改">6.7 进一步修改</h2>
-<p>笔者用的主题是agnoster，直接使用的话效果不怎么样：<br>
-<img src="https://img-blog.csdnimg.cn/20200508154027748.png" alt="在这里插入图片描述" loading="lazy"><br>
-忍不住了，直接去修改配置文件（themes/agnoster-zsh.thene），agnoster的核心函数是这个：<br>
-<img src="https://img-blog.csdnimg.cn/20200508154142748.png" alt="在这里插入图片描述" loading="lazy"><br>
-其中prompt_context是用户名与主机名的部分，注释后就不会显示用户名与主机名了，其他也类似，比如prompt_dir是当前工作目录，定位后：<br>
-<img src="https://img-blog.csdnimg.cn/20200508154426601.png" alt="在这里插入图片描述" loading="lazy"><br>
-prompt_segment接受两个参数，一个背景，一个前景，其中blue就是上图的那个不怎么好看的深蓝色，CURRENT_FG是前景色，这里是黑色，也就是文字颜色。<br>
-经过一番摸索 ，发现能支持十六进制RGB，<s>真香：</s><br>
-<img src="https://img-blog.csdnimg.cn/20200508154705827.png" alt="在这里插入图片描述" loading="lazy"><br>
-于是就没有深蓝色的背景啦：<br>
-<img src="https://img-blog.csdnimg.cn/20200508154839101.png" alt="在这里插入图片描述" loading="lazy"><br>
-终端为XFCE Terminal，在系统设置中根据个人需要修改背景壁纸，修改文字颜色等：<br>
-<img src="https://img-blog.csdnimg.cn/20200508154950814.png" alt="在这里插入图片描述" loading="lazy"><br>
-整体效果：<br>
-<img src="https://img-blog.csdnimg.cn/20200508155342581.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="7-常用别名与脚本">7 常用别名与脚本</h1>
-<h2 id="71-常用别名">7.1 常用别名</h2>
-<p>仅供参考，一些常用别名：</p>
-<pre><code class="language-bash">#.bashrc加上
-alias m='sudo mkdir -p' #新建文件夹
-alias d='cd ~/Desktop &amp;&amp; ls'
-alias rrr='shutdown -r now'
-alias sss='shutdown now'
-</code></pre>
-<h2 id="72-cd脚本">7.2 cd脚本</h2>
-<p>使用c代替常用的cd，同时执行完之后自动ls一次：</p>
-<pre><code class="language-bash">if [ $# -eq 0 ] ; then
-	cd .. &amp;&amp; ls
-else
-	cd $1 &amp;&amp; ls
-fi
-</code></pre>
-<p>如果只是输入一个c，回到上层目录并ls，如果带目录参数，切换到对应目录并且ls。需要加上别名使用：</p>
-<pre><code class="language-bash">alias c='source ~/.cd.sh' #脚本文件名为.cd.sh，位于～下
-</code></pre>
-<h2 id="73-rm脚本">7.3 rm脚本</h2>
-<p>使用r代替rm，无需加上rf参数，使用回收站机制，也就是直接移动。</p>
-<pre><code class="language-bash">for i in $*; do
-	mv $i /home/YOUR_USER_NAME/.Trash/`basename $i`_`date +%Y_%m_%d__%H_%M_%S`
-done
-</code></pre>
-<p>移动的文件名后面加上了时间，回收站位置为用户目录下的.Trash，同时加上别名：</p>
-<pre><code class="language-bash">alias r='sudo sh ~/.rm.sh' # 脚本名字为.rm.sh，用户目录下
-alias trash='cd ~/.Trash &amp;&amp; ls'
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[manjaro 手动调节屏幕亮度]]></title>
-        <id>https://2293736867.github.io/post/manjaro-shou-dong-diao-jie-ping-mu-liang-du/</id>
-        <link href="https://2293736867.github.io/post/manjaro-shou-dong-diao-jie-ping-mu-liang-du/">
-        </link>
-        <updated>2020-06-02T21:27:42.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>manjaro版本20.0，桌面XFCE，设置之类的地方没有屏幕亮度调节的功能。</p>
-<h1 id="2-解决方案">2 解决方案</h1>
-<p>解决方案来自arch wiki。<br>
-亮度由ACPI内核模块控制，这个模块的接口在以下位置：</p>
-<pre><code class="language-bash">/sys/class/backlight
-</code></pre>
-<p>笔者的设备上显示：<br>
-<img src="https://img-blog.csdnimg.cn/20200507235105382.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后使用root进入这个文件夹，其中max_brightness表示亮度的最大值，笔者的设备显示为120000：<br>
-<img src="https://img-blog.csdnimg.cn/20200507235240113.png" alt="在这里插入图片描述" loading="lazy"><br>
-想要修改亮度的话直接修改brightness即可：</p>
-<pre><code class="language-bash">echo xxxxx &gt; brightness
-</code></pre>
-<p>其中xxxxx为亮度数值，注意一定要root用户。<br>
-<img src="https://img-blog.csdnimg.cn/20200507235437612.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-使用脚本加别名">3 使用脚本加别名</h1>
-<p>可以使用一个简单的脚本来完成：</p>
-<pre><code class="language-bash">#!/usr/bin/bash
-sudo su&lt;&lt;EOF
-	echo $1 &gt; /sys/class/backlight/intel_backlight/brightness
-EOF
-</code></pre>
-<p>其中intel_backlight请对应修改。<br>
-假设文件名为a.sh，放在用户目录下，加上别名：</p>
-<pre><code class="language-bash">alias changeBrightness='sh ~/a.sh ' 
-</code></pre>
-<p>加一个亮度参数，再输入用户密码就可以修改了：<br>
-<img src="https://img-blog.csdnimg.cn/20200508011245412.png" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[manjaro找不到默认键盘布局]]></title>
-        <id>https://2293736867.github.io/post/manjaro-zhao-bu-dao-mo-ren-jian-pan-bu-ju/</id>
-        <link href="https://2293736867.github.io/post/manjaro-zhao-bu-dao-mo-ren-jian-pan-bu-ju/">
-        </link>
-        <updated>2020-06-02T21:27:16.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>manjaro安装fcitx后，没有默认的键盘布局，不是这样：<br>
-<img src="https://img-blog.csdnimg.cn/20200508012058359.png" alt="在这里插入图片描述" loading="lazy"><br>
-而是：<br>
-<img src="https://img-blog.csdnimg.cn/20200508012218214.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-解决方案">2 解决方案</h1>
-<p>解决方案在启动fcitx时就已经有提示了：<br>
-<img src="https://img-blog.csdnimg.cn/20200508012358840.png" alt="在这里插入图片描述" loading="lazy"><br>
-缺少了libjson-c这个库，直接使用pacman搜索安装不行：<br>
-<img src="https://img-blog.csdnimg.cn/20200508012507974.png" alt="在这里插入图片描述" loading="lazy"><br>
-因为只有32位的，笔者manjaro版本为20.0，没办法使用32位的库，因此需要进行编译安装。<br>
-json-c，Github<a href="https://github.com/json-c/json-c">戳这里</a>。</p>
-<pre><code class="language-bash">git clone https://github.com/json-c/json-c.git
-mkdir json-c-build
-cd json-c-build
-cmake ../json-c # 可以使用cmake .. -LH 查看参数，建议默认即可
-make -j n #n为cpu核数
-sudo make install
-</code></pre>
-<p>这样就能解决缺失默认键盘布局的问题了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[源码编译安装MySQL8.0.20]]></title>
-        <id>https://2293736867.github.io/post/yuan-ma-bian-yi-an-zhuang-mysql8020/</id>
-        <link href="https://2293736867.github.io/post/yuan-ma-bian-yi-an-zhuang-mysql8020/">
-        </link>
-        <updated>2020-06-02T21:26:43.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">2 源码编译安装的相关知识</a>
-<ul>
-<li><a href="#21-make%E4%B8%8Econfigure">2.1 make与configure</a></li>
-<li><a href="#22-tarball%E6%96%87%E4%BB%B6">2.2 Tarball文件</a></li>
-<li><a href="#23-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6">2.3 源码编译安装相关组件</a>
-<ul>
-<li><a href="#231-%E7%BC%96%E8%AF%91%E5%99%A8">2.3.1 编译器</a></li>
-<li><a href="#232-makeautoconfig">2.3.2 make+autoconfig</a></li>
-<li><a href="#233-%E5%87%BD%E6%95%B0%E5%BA%93">2.3.3 函数库</a></li>
-</ul>
-</li>
-<li><a href="#24-%E9%9D%99%E6%80%81%E5%BA%93%E4%B8%8E%E5%8A%A8%E6%80%81%E5%BA%93">2.4 静态库与动态库</a>
-<ul>
-<li><a href="#241-%E9%9D%99%E6%80%81%E5%BA%93">2.4.1 静态库</a></li>
-<li><a href="#242-%E5%8A%A8%E6%80%81%E5%BA%93">2.4.2 动态库</a></li>
-</ul>
-</li>
-<li><a href="#25-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84%E4%B8%80%E8%88%AC%E6%AD%A5%E9%AA%A4">2.5 编译安装的一般步骤</a></li>
-<li><a href="#26-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E5%89%8D%E7%9A%84%E5%BF%83%E7%90%86%E5%87%86%E5%A4%87">2.6 编译安装前的心理准备</a></li>
-</ul>
-</li>
-<li><a href="#3-%E5%AE%89%E8%A3%85mysql">3 安装MySQL</a>
-<ul>
-<li><a href="#31-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">3.1 安装依赖</a></li>
-<li><a href="#32-%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85">3.2 包管理器安装</a></li>
-<li><a href="#32-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">3.2 编译安装</a>
-<ul>
-<li><a href="#321-%E5%AE%89%E8%A3%85cmake">3.2.1 安装cmake</a></li>
-<li><a href="#322-%E5%AE%89%E8%A3%85make">3.2.2 安装make</a></li>
-<li><a href="#323-%E5%AE%89%E8%A3%85gcc">3.2.3 安装gcc</a></li>
-<li><a href="#324-%E5%AE%89%E8%A3%85openssl">3.2.4 安装openssl</a></li>
-<li><a href="#325-%E4%B8%8B%E8%BD%BDboost">3.2.5 下载boost</a></li>
-<li><a href="#326-%E5%AE%89%E8%A3%85ncurses">3.2.6 安装ncurses</a></li>
-<li><a href="#327-%E5%AE%89%E8%A3%85bison">3.2.7 安装bison</a></li>
-<li><a href="#328-%E5%AE%89%E8%A3%85git">3.2.8 安装git</a></li>
-<li><a href="#329-%E5%90%8E%E7%BB%AD%E5%A4%84%E7%90%86">3.2.9 后续处理</a></li>
-</ul>
-</li>
-<li><a href="#33-%E4%B8%8B%E8%BD%BDmysql%E7%A4%BE%E5%8C%BA%E7%89%88">3.3 下载MySQL社区版</a></li>
-<li><a href="#34-%E7%94%9F%E6%88%90makefile">3.4 生成Makefile</a></li>
-<li><a href="#35-%E7%BC%96%E8%AF%91%E4%B8%8E%E5%AE%89%E8%A3%85">3.5 编译与安装</a></li>
-<li><a href="#36-%E5%90%8E%E7%BB%AD%E9%85%8D%E7%BD%AE">3.6 后续配置</a>
-<ul>
-<li><a href="#361-%E7%94%A8%E6%88%B7%E7%BB%84%E4%B8%8E%E7%94%A8%E6%88%B7">3.6.1 用户组与用户</a></li>
-<li><a href="#362-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">3.6.2 配置文件</a></li>
-</ul>
-</li>
-<li><a href="#37-%E5%88%9D%E5%A7%8B%E5%8C%96">3.7 初始化</a></li>
-<li><a href="#38-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">3.8 修改密码</a></li>
-<li><a href="#39-%E6%B5%8B%E8%AF%95">3.9 测试</a></li>
-<li><a href="#310-%E6%94%B6%E5%B0%BE%E5%B7%A5%E4%BD%9C">3.10 收尾工作</a>
-<ul>
-<li><a href="#3101-%E5%88%AB%E5%90%8D">3.10.1 别名</a></li>
-<li><a href="#3102-%E5%AE%89%E8%A3%85mycli">3.10.2 安装Mycli</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#4-%E5%8F%82%E8%80%83">4 参考</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>本文章主要讲述了如何从源码编译安装MySQL社区版8.0.20，首先会介绍一些编译安装的相关知识，然后开始编译安装</p>
-<h1 id="2-源码编译安装的相关知识">2 源码编译安装的相关知识</h1>
-<h2 id="21-make与configure">2.1 make与configure</h2>
-<p>make是一个编译的命令，会在当前的目录下寻找Makefile这个文件，Makefile文件记录了源代码如何编译的详细信息。而configure是由软件开发商编写的一个检测程序检测用户的开发环境，检测完毕后生成Makefile文件。通常，configure会检测如下内容：</p>
-<ul>
-<li>是否具有合适的编译器</li>
-<li>是否具有所需函数库以及其他依赖</li>
-<li>是否兼容本系统</li>
-<li>是否存在内核头文件</li>
-</ul>
-<h2 id="22-tarball文件">2.2 Tarball文件</h2>
-<p>Tarball文件其实就是将源代码以tar打后压缩的文件。通常使用gzip进行压缩，一般扩展名为.tar.gz或.tgz，不过由于bzip2以及xz等技术压缩效果比gzip好，因此文件名也会变成扩展名也会变成.tar.bz2或.tar.xz之类的。通常一个Tarball文件有：</p>
-<ul>
-<li>源码</li>
-<li>检测文件（configure/config）</li>
-<li>说明（README/INSTALL）</li>
-</ul>
-<h2 id="23-源码编译安装相关组件">2.3 源码编译安装相关组件</h2>
-<h3 id="231-编译器">2.3.1 编译器</h3>
-<p>需要有编译器才能进行编译操作，通常使用的是gcc。</p>
-<h3 id="232-makeautoconfig">2.3.2 make+autoconfig</h3>
-<p>以Tarball形式发布的软件，为了简化编译流程，通常需要make来根据目标文件文件的依赖性进行编译，但是由于make需要Makefile，因此需要autoconfig生成Makefile。</p>
-<h3 id="233-函数库">2.3.3 函数库</h3>
-<p>需要内核提供的库以及相关的include文件。</p>
-<h2 id="24-静态库与动态库">2.4 静态库与动态库</h2>
-<p>函数库分为动态库与静态库两种类型，绝大部分放在/lib与/lib64中。</p>
-<h3 id="241-静态库">2.4.1 静态库</h3>
-<p>扩展名为.a，编译时会直接整合到执行程序中，所以利用静态库生成的文件会比较大一些，编译后的可执行文件可以直接运行，无需依赖外部函数库。另外升级难度较大，因为是直接整合进程序中，升级了静态库的话需要重新编译。</p>
-<h3 id="242-动态库">2.4.2 动态库</h3>
-<p>扩展名为.so，在编译时不像静态库一样，动态库在程序中只有一个指针，当可执行程序需要用到函数库的功能时，才会读取函数库来使用，生成的可执行文件会比较小一点，但是不能独立执行编译出来的程序。另外升级比较方便，不需要重新编译，因为执行文件会直接指向新的函数库文件。</p>
-<h2 id="25-编译安装的一般步骤">2.5 编译安装的一般步骤</h2>
-<ul>
-<li>（1）获取源码：一般使用wget或curl或从浏览器下载。</li>
-<li>（2）查看帮助文件：解压后查看INSTALL或README等文件相关内容</li>
-<li>（3）安装依赖：根据官网文档或上一步中得到的信息安装依赖</li>
-<li>（4）生成Makefile：一般使用configure/config进行配置，检测操作环境，指定安装位置，开启/关闭对应的功能，指定相关库位置等，确定依赖关系等，一般需要使用--help获取选项帮助，指定对应选项后配置并生成Makefile</li>
-<li>（5）编译：实际编译步骤，一个简单的make命令，实际包含了头文件预编译，预处理，编译与连接步骤</li>
-<li>（6）安装：make install，这一步实际进行安装与操作系统连接两个步骤</li>
-</ul>
-<p>注意，以上步骤都是有顺序的，而且前一个步骤执行失败则后一个步骤也不能执行，也就是说需要前一个步骤执行成功才能进行下一步的操作。完成以上六步就能编译安装了，一般需要进行一些后续处理，比如，添加可执行文件路径到PATH，添加头文件与库文件到/usr/include与/etc/ld.so.conf.d中，添加联机帮助文件到/etc/man_db.conf中。</p>
-<h2 id="26-编译安装前的心理准备">2.6 编译安装前的心理准备</h2>
-<p>这里是最后的提示了，未安装之前还可以ctrl+w关闭本页面，避免无数的痛苦。<br>
-编译安装最常见的问题就是版本与依赖的问题，版本问题容易处理，可以通过包管理器进行升级或者手动升级，至于依赖问题，包管理器安装的话很容易，编译安装的话会非常头疼，因为不知道某个依赖下面还需要安装多少个依赖。<br>
-所以，需要准备充足的时间，还有充分的耐心，去解决无数的问题，才能成功进行编译安装MySQL与Workbench这种大型软件。<br>
-不废话了，开始吧。</p>
-<h1 id="3-安装mysql">3 安装MySQL</h1>
-<h2 id="31-安装依赖">3.1 安装依赖</h2>
-<p>MySQL所需依赖如下：</p>
-<ul>
-<li>cmake</li>
-<li>make（推荐3.75以上）</li>
-<li>编译器（GCC5.3+或Clang4.0+或XCode9+或Developer Studio12.6+或Visual Studio2017）</li>
-<li>SSL库（默认使用系统的OpenSSL）</li>
-<li>Boost C++库，需要用来构建但不需要使用，无需安装，源码即可</li>
-<li>ncurses库</li>
-<li>bison2.1+</li>
-<li>git</li>
-</ul>
-<h2 id="32-包管理器安装">3.2 包管理器安装</h2>
-<p>笔者的Debian系，使用apt即可：</p>
-<pre><code class="language-bash">sudo apt-get install -y bison git hostname libncurses-dev libssl-dev make openssl pkg-config doxygen cmake make
-</code></pre>
-<p>RedHat8.x：</p>
-<pre><code class="language-bash">sudo yum install -y bison bzip2 git hostname ncurses-devel openssl openssl-devel pkgconfig tar wget zlib-devel doxygen diffutils rpcgen make libtirpc-devel cmake gcc
-</code></pre>
-<p>RedHat7.x：</p>
-<pre><code class="language-bash">sudo yum install -y bison bzip2 git hostname ncurses-devel openssl openssl-devel pkgconfig tar wget zlib-devel doxygen cmake gcc
-</code></pre>
-<p>其他自行搜索。</p>
-<h2 id="32-编译安装">3.2 编译安装</h2>
-<p>若不想用包管理器安装，可以使用编译安装的方式。<br>
-<s>欢迎来折腾。</s></p>
-<h3 id="321-安装cmake">3.2.1 安装cmake</h3>
-<pre><code class="language-bash">tar -zxvf cmake-3.17.2.tar.gz
-cd cmake-3.17.2
-./bootstrap --prefix=/usr/local/cmake
-make clean 
-make -j 6 #6为CPU核数，自定义修改，若失败请使用make
-make test
-sudo make install
-</code></pre>
-<h3 id="322-安装make">3.2.2 安装make</h3>
-<p>没有编译器的情况下无法编译安装，使用软件包安装即可，笔者的Debian系，直接使用apt：</p>
-<pre><code class="language-bash">sudo apt install make
-</code></pre>
-<h3 id="323-安装gcc">3.2.3 安装gcc</h3>
-<pre><code class="language-bash">tar -xvf gcc-9.3.0.tar.xz
-cd gcc-9.3.0
-./contrib/download_prerequisites
-mkdir build
-cd build
-../configure --prefix=/usr/local/gcc -enable-checking=release -disable-multilib 
-make clean 
-make -j 6
-make test
-sudo make install
-sudo ln -sv /usr/local/gcc/include /usr/include/gcc
-#/etc/ld.so.conf.d/gcc.conf加入以下内容
-/usr/local/gcc/lib
-/usr/local/gcc/lib64
-</code></pre>
-<h3 id="324-安装openssl">3.2.4 安装openssl</h3>
-<pre><code class="language-bash">tar -zxvf openssl-1.1.1g.tar.gz
-cd openssl-1.1.1g
-./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl/ssl
-#prefix为安装位置，默认/usr/local
-#openssldir为配置文件位置，同时存放证书与密钥对
-make clean 
-make -j 6
-make test
-sudo make install
-sudo ln -sv /usr/local/openssl/include /usr/include/openssl
-#/etc/ld.so.conf.d/openssl.conf加上以下内容
-/usr/local/openssl/lib
-</code></pre>
-<h3 id="325-下载boost">3.2.5 下载boost</h3>
-<p>官网<a href="https://www.boost.org/users/history/">戳这里</a>。<br>
-需要的版本为1.70.0。目前最新的版本为1.73.0,理论上来说更新的版本应该可以，这里下载的是1.70.0。如果不手动下载boost库的话可以在使用cmake生成Makefile时设置DDOWNLOAD_BOOST为1进行下载。<br>
-<img src="https://img-blog.csdnimg.cn/20200504143205474.png" alt="在这里插入图片描述" loading="lazy"><br>
-下载后解压既可。</p>
-<pre><code class="language-bash">tar -xvf boost_1_70_0.tar.bz2
-</code></pre>
-<h3 id="326-安装ncurses">3.2.6 安装ncurses</h3>
-<pre><code class="language-bash">tar -zxvf ncurses-6.2.tar.gz
-cd ncurses-6.2
-./configure --prefix=/usr/local/ncurses
-make -j 6
-sudo make install
-
-sudo ln -sv /usr/local/ncurses/include /usr/include/ncurses
-#/etc/ld.so.conf.d/ncurses.conf加入
-/usr/local/ncurses/lib
-</code></pre>
-<h3 id="327-安装bison">3.2.7 安装bison</h3>
-<pre><code class="language-bash">tar -xvf bison-3.4.tar.xz
-cd bison-3.4
-./configure --prefix=/usr/local/bison
-make -j 6
-sudo make install
-#/etc/ld.so.conf.d/bison.conf加入
-/usr/local/bison/lib
-</code></pre>
-<h3 id="328-安装git">3.2.8 安装git</h3>
-<pre><code class="language-bash">tar -xvf git-2.26.2.tar.xz
-cd git-2.26.2
-./configure --prefix=/usr/local/git \
---with-openssl=/usr/local/openssl \
---with-libpcre2=/usr/local/pcre2 \
---with-curl=/usr/local/curl \
---with-expat=/usr/local/expat \
---with-iconv=/usr/local/iconv \
---with-editor=/usr/bin/vim \
---with-zlib=/usr/local/zlib \
---with-tcltk=/usr/local/tcl
-make all doc info
-sudo make install install-doc install-html install-info
-</code></pre>
-<h3 id="329-后续处理">3.2.9 后续处理</h3>
-<p>修改PATH：</p>
-<pre><code class="language-bash">#在~/.bash_profile 或 ~/.bashrc加入
-export PATH=$PATH:\
-/usr/local/cmake/bin:\
-/usr/local/gcc/bin:\
-/usr/local/openssl/bin:\
-/usr/local/bison/bin:\
-/usr/local/ncurses/bin:\
-/usr/local/git/bin:\
-</code></pre>
-<p>使动态库生效：</p>
-<pre><code class="language-bash">ldconfig
-</code></pre>
-<p>权限不足请加sudo。</p>
-<h2 id="33-下载mysql社区版">3.3 下载MySQL社区版</h2>
-<p>官网<a href="https://dev.mysql.com/downloads/mysql/">这里</a>。<br>
-<img src="https://img-blog.csdnimg.cn/20200505120345793.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里不知道第一个与第二个有什么区别，因为笔者两个都试过都能编译安装成功。虽然上面写着第二个带Boost头，但是貌似没什么用。这里用的是第一个。<br>
-校验（可选）：</p>
-<pre><code class="language-bash">md5sum mysql-boost-8.0.20.tar.gz
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020050512084471.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="34-生成makefile">3.4 生成Makefile</h2>
-<pre><code class="language-bash">sudo cmake .. \
--DDEFAULT_CHARSET=utf8mb4 \
--DDEFAULT_COLLATION=utf8mb4_unicode_ci \ #
--DENABLED_LOCAL_INFILE=ON \
--DWITH_SSL=system \
--DCMAKE_INSTALL_PREFIX=/usr/local/mysql/server \
--DMYSQL_DATADIR=/usr/local/mysql/data \
--DMYSQL_TCP_PORT=3306 \
--DDOWNLOAD_BOOST=0 \
--DWITH_BOOST=~/Desktop/boost
-</code></pre>
-<ul>
-<li>DDEFAULT_CHARSET：指定默认字符集为utf8mb4，因为历史遗留问题，MySQL中的utf8不是真正的utf8，而是阉割版的，最长只有三个字节，当遇到四个字节的utf8编码时，会导致存储异常。从5.5.3开始，使用utf8mb4实现完整的utf8。</li>
-<li>DDEFAULT_COLLATION：排序规则，默认为utf8mb4_0900_ai_ci，属于utf8mb4_unicode_ci的一种。0900指的是Unicode校对算法版本，ai是指口音不敏感（as表示敏感），ci指不区分大小写（cs表示区分）。utf8mb4_unicode_ci表示基于标准的的Unicode来排序和比较，能够在各种语言之间精确排序，而utf8mb4_general_ci遇到某些特殊的字符集时排序结果可能不一致，准确性较差，但是性能较好，比较和排序时候更快。</li>
-<li>DENABLED_LOCAL_INFILE表示能否使用load data命令。</li>
-<li>DWITH_SSL表示使用系统的SSL库，若不使用系统的请自定义路径。</li>
-<li>DCMAKE_INSTALL_PREFIX：MySQL安装目录。</li>
-<li>DMYSQL_DATADIR：MySQL数据目录，初始时为空。</li>
-<li>DMYSQL_TCP_PORT：端口，默认3306。</li>
-<li>DDOWNLOAD_BOOST：取值0或1，是否下载Boost库。</li>
-<li>DWITH_BOOST：若不下载Boost库的话，是本地Boost库的位置，若下载Boost表示下载位置。</li>
-</ul>
-<p>其他更多参数请使用</p>
-<pre><code class="language-bash">sudo cmake .. -LH
-</code></pre>
-<p>查看。</p>
-<h2 id="35-编译与安装">3.5 编译与安装</h2>
-<pre><code class="language-bash">sudo make
-</code></pre>
-<p>或</p>
-<pre><code class="language-bash">sudo make -j n
-</code></pre>
-<p>笔者试过了make -j 6，失败，无奈换成了make。<br>
-make的速度和make -j还是很大差距的。<br>
-编译好之后，建议测试一下：</p>
-<pre><code class="language-bash">make test
-</code></pre>
-<p>然后安装：</p>
-<pre><code class="language-bash">sudo make install
-</code></pre>
-<h2 id="36-后续配置">3.6 后续配置</h2>
-<h3 id="361-用户组与用户">3.6.1 用户组与用户</h3>
-<p>新建用户组与用户，同时修改用户数据目录权限：</p>
-<pre><code class="language-bash">sudo groupadd mysql
-sudo useradd -r -g mysql -s /bin/false mysql
-sudo chown mysql:mysql /usr/local/mysql/data
-sudo chmod 750 /usr/local/mysql/data
-</code></pre>
-<p>数据目录根据需要修改，若后面出现不可写错误请把权限改为777。</p>
-<h3 id="362-配置文件">3.6.2 配置文件</h3>
-<p>配置文件为my.cnf，可以放在</p>
-<pre><code class="language-bash">/etc/
-/etc/mysql/
-安装目录/etc/
-~/
-</code></pre>
-<p>下，读取顺序从上到下。笔者安装后默认在/etc/mysql/my.cnf，这个是全局配置，~/.my.cnf是用户特定配置，这里直接修改/etc/mysql/my.cnf：</p>
-<pre><code class="language-xml">[client-server]
-
-# Import all .cnf files from configuration directory
-!includedir /etc/mysql/conf.d/
-!includedir /etc/mysql/mariadb.conf.d/
-
-[mysqld]
-port=3306
-basedir=/usr/local/mysql/server
-datadir=/usr/local/mysql/data
-character-set-server=utf8mb4
-[mysql]
-default-character-set=utf8mb4
-[client]
-port=3306
-default-character-set=utf8mb4
-</code></pre>
-<p>其中[mysqld]下面是新添加的字段，数据目录自行修改。<br>
-建议字符集改为utf8mb4，因为utf8在MySQL中指的是utf8mb3，支持的utf8编码最大字符长度为3字节，如果遇到4字节的宽字符就会插入异常。三字节的utf8最大能编码的Unicode字符为0xffffff，也就是基本多文种平面，Emoji和很多不常用的汉字都不能存储。而utf8mb4是5.5.3之后才支持的，为了兼容性考虑应该统一使用utf8mb4。</p>
-<h2 id="37-初始化">3.7 初始化</h2>
-<p>修改环境变量：</p>
-<pre><code class="language-bash">#.bashrc或.bash_profile加上
-export PATH=$PATH:/usr/local/mysql/server/bin
-</code></pre>
-<p>使用</p>
-<pre><code class="language-bash">mysqld --initialize --user=mysql
-</code></pre>
-<p>或</p>
-<pre><code class="language-bash">mysqld --initialize-insecure --user=mysql
-</code></pre>
-<p>然后开启ssl与rsa支持（可选）：</p>
-<pre><code class="language-bash">mysql_ssl_rsa_setup
-</code></pre>
-<p>最后开启服务：</p>
-<pre><code class="language-bash">mysqld_safe --user=mysql &amp;
-</code></pre>
-<h2 id="38-修改密码">3.8 修改密码</h2>
-<p>使用root登录，如果使用insecure初始化：</p>
-<pre><code class="language-bash">mysql -u --skip-password
-</code></pre>
-<p>使用initialize初始化：</p>
-<pre><code class="language-bash">mysql -u root -p
-</code></pre>
-<p>输入初始化出现的密码即可。<br>
-然后修改密码：</p>
-<pre><code class="language-bash">alter user root@localhost identified by 'xxx';
-</code></pre>
-<h2 id="39-测试">3.9 测试</h2>
-<p>使用自带的mysqlshow与mysqladmin：</p>
-<pre><code class="language-bash">mysqladmin -u root -p version
-mysqlshow -u root -p
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020050511120113.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="310-收尾工作">3.10 收尾工作</h2>
-<h3 id="3101-别名">3.10.1 别名</h3>
-<pre><code class="language-bash">alias md='mysqld -u mysql &amp;'
-</code></pre>
-<p>这样输入md就可以启动MySQL服务了。</p>
-<h3 id="3102-安装mycli">3.10.2 安装Mycli</h3>
-<p>Mycli是一个MySQL命令行客户端工具，具有自动补全和语法高亮的功能。<br>
-使用pip安装即可，python2请使用</p>
-<pre><code class="language-bash">pip install mycli
-</code></pre>
-<p>python3请使用</p>
-<pre><code class="language-bash">pip3 install mycli
-</code></pre>
-<p>找不到pip请安装：</p>
-<pre><code class="language-bash">sudo apt install python-pip#python2
-sudo apt install python3-pip
-</code></pre>
-<p>然后使用mycli进入数据库：</p>
-<pre><code class="language-bash">mycli -u root
-</code></pre>
-<p>愉快地使用补全吧！</p>
-<h1 id="4-参考">4 参考</h1>
-<p>1.<a href="https://blog.csdn.net/u012501054/article/details/77880139">CSDN-Linux下源码编译安装详解</a><br>
-2.<a href="https://blog.csdn.net/kikajack/article/details/84668924">CSDN-utf8 与 utf8mb4，utf8mb4_unicode_ci 与 utf8mb4_general_ci</a><br>
-3.<a href="https://dev.mysql.com/doc/refman/8.0/en/source-installation.html">MySQL-官网安装文档</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[如果你的application.properties中还存在明文密码----加密Spring Boot中的application.properties]]></title>
-        <id>https://2293736867.github.io/post/ru-guo-ni-de-applicationproperties-zhong-huan-cun-zai-ming-wen-mi-ma-jia-mi-spring-boot-zhong-de-applicationproperties/</id>
-        <link href="https://2293736867.github.io/post/ru-guo-ni-de-applicationproperties-zhong-huan-cun-zai-ming-wen-mi-ma-jia-mi-spring-boot-zhong-de-applicationproperties/">
-        </link>
-        <updated>2020-06-02T21:26:22.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E7%AE%80%E5%8D%95%E5%8A%A0%E5%AF%86">2 简单加密</a>
-<ul>
-<li><a href="#21-%E4%BE%9D%E8%B5%96">2.1 依赖</a></li>
-<li><a href="#22-%E5%8A%A0%E5%AF%86%E5%8F%A3%E4%BB%A4">2.2 加密口令</a></li>
-<li><a href="#23-%E8%BE%93%E5%87%BA%E5%AF%86%E6%96%87">2.3 输出密文</a></li>
-<li><a href="#24-%E6%9B%BF%E6%8D%A2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">2.4 替换配置文件</a></li>
-</ul>
-</li>
-<li><a href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E5%AF%86">3 自定义加密</a>
-<ul>
-<li><a href="#31-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E5%AF%86%E5%89%8D%E5%90%8E%E7%BC%80">3.1 自定义加密前后缀</a></li>
-<li><a href="#32-%E5%8F%A3%E4%BB%A4%E5%8F%82%E6%95%B0%E5%8C%96">3.2 口令参数化</a></li>
-<li><a href="#33-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E5%AF%86%E7%B1%BB">3.3 自定义加密类</a></li>
-</ul>
-</li>
-<li><a href="#4-%E9%83%A8%E7%BD%B2">4 部署</a>
-<ul>
-<li><a href="#41-jar%E9%83%A8%E7%BD%B2">4.1 jar部署</a>
-<ul>
-<li><a href="#411-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E6%96%B9%E5%BC%8F">4.1.1 命令行参数方式</a></li>
-<li><a href="#412-%E5%BA%94%E7%94%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.1.2 应用环境变量方式</a></li>
-<li><a href="#413-%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.1.3 系统环境变量方式</a></li>
-</ul>
-</li>
-<li><a href="#42-war%E9%83%A8%E7%BD%B2">4.2 war部署</a>
-<ul>
-<li><a href="#421-jar-war%E8%BD%AC%E6%8D%A2">4.2.1 jar-war转换</a></li>
-<li><a href="#422-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E6%96%B9%E5%BC%8F">4.2.2 命令行参数方式</a></li>
-<li><a href="#423-%E5%BA%94%E7%94%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.2.3 应用环境变量方式</a></li>
-<li><a href="#424-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.2.4 环境变量方式</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#5-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86">5 非对称加密</a>
-<ul>
-<li><a href="#51-%E5%8A%A0%E5%AF%86">5.1 加密</a></li>
-<li><a href="#52-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.2 修改配置文件</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>什么?都2020年了还在Spring Boot的配置文件中写明文密码?<br>
-<s>虽然是小项目,明文也没人看.<br>
-明文简单快捷方便啊!!!<br>
-你看直接用户名root密码123456多么简单!!!</s><br>
-...<br>
-不废话了,这篇文章主要讲了如何使用jasypt-spring-boot这个开源组件来进行配置文件的加密,包括简单加密以及非对称加密,同时也介绍了使用jar/war部署时如何输入加密口令.</p>
-<h1 id="2-简单加密">2 简单加密</h1>
-<p>jasypt简单加密就是直接把加密口令写死在文件中.(<s>好吧这样就差不多大概跟没加密一样...</s> )</p>
-<h2 id="21-依赖">2.1 依赖</h2>
-<p>目前最新版本为3.0.2,具体请查看官方github(<a href="https://github.com/ulisesbocchio/jasypt-spring-boot">戳这里</a>).</p>
+<p>查阅了相关<a href="https://github.com/ulisesbocchio/jasypt-spring-boot/issues/154">issue</a>，发现是3.0.2更改了默认的加密算法，最后的办法是把版本降到2.1.2：<br>
+<img src="https://img-blog.csdnimg.cn/20200531014007872.png" alt="在这里插入图片描述" loading="lazy"></p>
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;
     &lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;3.0.2&lt;/version&gt;
+    &lt;version&gt;2.1.2&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<h2 id="22-加密口令">2.2 加密口令</h2>
-<p>在application.properties中加上:</p>
-<pre><code class="language-xml">jasypt.encryptor.password=xxx
+<p>接着重新加密配置，但是2.1.2不支持使用环境变量作为加密的口令，在IDEA中测试的时候需要在运行配置加上</p>
+<pre><code class="language-bash">-Djasypt.encryptor.password=xxxx
 </code></pre>
-<p>xxx为对称加密的口令.<br>
-默认使用PBE算法进行加密,PBE其实并没有包含真正的加密与解密算法,而是将已有的消息摘要算法(如MD5,SHA等)与对称加密算法(如AES,DES,RC2等)进行了组合,默认组合的是HCMA消息认证算法,SHA512消息摘要算法以及AES256对称加密算法.PBE使用口令与随机生成的盐去生成对应的对称加密密钥,再用密钥去进行对称加密.</p>
-<h2 id="23-输出密文">2.3 输出密文</h2>
-<p>这里在配置文件中加一个测试字段password与密钥test进行测试:<br>
-<img src="https://img-blog.csdnimg.cn/20200427195934892.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里为了方便就在run里面测试:</p>
-<pre><code class="language-java">@SpringBootApplication
-@EnableEncryptableProperties
-public class DemoApplication implements CommandLineRunner {
-    private static final Logger l = LoggerFactory.getLogger(DemoApplication.class);
-
-    @Autowired
-    private StringEncryptor stringEncryptor;
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        Environment environment = applicationContext.getEnvironment();
-        l.info(stringEncryptor.encrypt(environment.getProperty(&quot;password&quot;)));
-    }
-}
+<p>部署到Tomcat时添加环境变量：</p>
+<pre><code class="language-bash">export JAVA_OPTS=&quot;-Djasypt.encryptor.password=xxxx&quot;
 </code></pre>
-<p>注意使用@Autowired进行StringEncryptor的自动装配时,官方文档说加上</p>
-<pre><code class="language-java">@Configuration
-@EnableEncryptableProperties
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200427230001749.png" alt="在这里插入图片描述" loading="lazy"><br>
-由于</p>
-<pre><code class="language-bash">@SpringBootApplication
-</code></pre>
-<p>包含了</p>
-<pre><code class="language-bash">@Configuration
-</code></pre>
-<p>因此这里只需要后一个.<br>
-运行后获取密文输出:<br>
-<img src="https://img-blog.csdnimg.cn/20200427200115611.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="24-替换配置文件">2.4 替换配置文件</h2>
-<p>把上面的密文替换到原配置文件,加上前缀ENC(与后缀):<br>
-<img src="https://img-blog.csdnimg.cn/2020042720012975.png" alt="在这里插入图片描述" loading="lazy"><br>
-这样就加密成功了,直接获取属性可以看到明文:<br>
-<img src="https://img-blog.csdnimg.cn/20200427200308779.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-自定义加密">3 自定义加密</h1>
-<p>当然,上面的简单加密不能满足实际使用需求,因此,这里需要进行自定义加密.</p>
-<h2 id="31-自定义加密前后缀">3.1 自定义加密前后缀</h2>
-<p>需要使用一个前后缀区分需要加密与不需加密的字段,默认前缀为</p>
-<pre><code class="language-bash">ENC(
-</code></pre>
-<p>后缀为:</p>
-<pre><code class="language-bash">)
-</code></pre>
-<p>因此加密时需要加上ENC(与).<br>
-自定义前后缀指定两个属性就可以了:<br>
-<img src="https://img-blog.csdnimg.cn/20200427200623296.png" alt="在这里插入图片描述" loading="lazy"><br>
-密码字段需要对应修改.</p>
-<h2 id="32-口令参数化">3.2 口令参数化</h2>
-<p>其实就是在启动的时候加上命令行参数或者应用环境变量,或者通过系统环境变量读取口令,详细使用方式请看第4点部署.<br>
-命令行参数:</p>
-<pre><code class="language-bash">java -jar xxx.jar --jasypt.encryptor.password=xxx
-</code></pre>
-<p>应用环境变量:</p>
-<pre><code class="language-bash">java -Djasypt.encryptor.password=xxx -jar xxx.jar
-</code></pre>
-<p>系统环境变量:</p>
-<pre><code class="language-bash">jasypt.encryptor.password=${TEST}
-</code></pre>
-<p>前提是已经设置好对应系统变量.</p>
-<h2 id="33-自定义加密类">3.3 自定义加密类</h2>
-<p>可以实现StringEncryptor接口,重写里面的encrypt与decrypt方法,再定义一个加密配置类,指定加密类的名字:</p>
-<pre><code class="language-java">@Configuration
-@EnableEncryptableProperties
-public class MyEncryptorConfiguration {
-    @Bean(&quot;MyEncryptor&quot;)
-    public StringEncryptor getStringEncryptor()
-    {
-        return new StringEncryptor() {
-            @Override
-            public String encrypt(String s) {
-                return &quot;111&quot;;
-            }
-
-            @Override
-            public String decrypt(String s) {
-                return &quot;222&quot;;
-            }
-        };
-    }
-}
-</code></pre>
-<p>这里是一个很简单的例子,加密直接返回111,解密直接返回222,具体加解密算法直接替换函数体即可.<br>
-注意需要在配置文件中写上Bean的名字:</p>
-<pre><code class="language-java">jasypt.encryptor.bean=codeSheepEncryptorBean
-</code></pre>
-<p>使用构造函数注入(Autowired也可以):</p>
-<pre><code class="language-java">private final StringEncryptor stringEncryptor;
-public DemoApplication(MyEncryptorConfiguration encryptorConfiguration)
-{
-	stringEncryptor = encryptorConfiguration.getStringEncryptor();
-}
-</code></pre>
-<p>测试:</p>
-<pre><code class="language-java">@Override
-public void run(String... args) throws Exception {
-	Environment environment = applicationContext.getEnvironment();
-	l.info(stringEncryptor.encrypt(environment.getProperty(&quot;password&quot;)));
-	l.info(stringEncryptor.decrypt(environment.getProperty(&quot;password&quot;)));
-}
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200428002416775.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-部署">4 部署</h1>
-<h2 id="41-jar部署">4.1 jar部署</h2>
-<h3 id="411-命令行参数方式">4.1.1 命令行参数方式</h3>
-<p>这种方式的话先把配置文件中的jasypt.encryptor.password去掉,然后修改在Spring Boot的运行配置,进行本地测试:<br>
-<img src="https://img-blog.csdnimg.cn/20200427201930643.png" alt="在这里插入图片描述" loading="lazy"><br>
-打包时,如果测试的话需要设置Maven的参数,不测试的话直接勾选Skip Tests:<br>
-<img src="https://img-blog.csdnimg.cn/20200427202236607.png" alt="在这里插入图片描述" loading="lazy"><br>
-打包后(右侧Maven-&gt;package)加上参数运行就可以了:<br>
-<img src="https://img-blog.csdnimg.cn/20200427202533381.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="412-应用环境变量方式">4.1.2 应用环境变量方式</h3>
-<p>其实和第一种方式差不多,也是把jasypt.encryptor.password去掉,在VM options中设置参数,Spring Boot运行配置如下:<br>
-<img src="https://img-blog.csdnimg.cn/20200427202648116.png" alt="在这里插入图片描述" loading="lazy"><br>
-Maven设置(当然也可以跳过测试):<br>
-<img src="https://img-blog.csdnimg.cn/20200427202821966.png" alt="在这里插入图片描述" loading="lazy"><br>
-不过遗憾的是笔者测试失败了:<br>
-<img src="https://img-blog.csdnimg.cn/20200427203630350.png" alt="在这里插入图片描述" loading="lazy"><br>
-<s>没理由啊,那为什么Spring Boot那里就这样设置就可以....</s><br>
-(有大佬知道为什么会失败的话可以留言,感激不尽.)<br>
-这里就直接跳过测试了.<br>
-<img src="https://img-blog.csdnimg.cn/20200427203744263.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后就可以愉快地运行了(笔者的win下需要加两个单引号):<br>
-<img src="https://img-blog.csdnimg.cn/20200427204023824.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="413-系统环境变量方式">4.1.3 系统环境变量方式</h3>
-<p>设置环境变量这个应该不用怎么说了,直接去设置就行,然后修改一下jasypt.encryptor.password,两个花括号中间是对应的环境变量名:<br>
-<img src="https://img-blog.csdnimg.cn/20200427204110263.png" alt="在这里插入图片描述" loading="lazy"><br>
-Spring Boot运行配置:<br>
-<img src="https://img-blog.csdnimg.cn/20200427204145113.png" alt="在这里插入图片描述" loading="lazy"><br>
-Maven:<br>
-<img src="https://img-blog.csdnimg.cn/20200427204236199.png" alt="在这里插入图片描述" loading="lazy"><br>
-这次Maven测试就没问题了.<br>
-<s>真是奇了怪了.</s><br>
-运行(还是这个舒服,直接-jar):<br>
-<img src="https://img-blog.csdnimg.cn/20200427204523667.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="42-war部署">4.2 war部署</h2>
-<h3 id="421-jar-war转换">4.2.1 jar-war转换</h3>
-<p>原来的是jar打包,换成war时,需要修改pom.xml中的&lt;packaging&gt;为war,同时加上tomcat依赖:</p>
-<pre><code class="language-xml">&lt;packaging&gt;war&lt;/packaging&gt;
-...
-&lt;dependency&gt;
-	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-	&lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
-	&lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>再添加一个ServletInitializer:</p>
-<pre><code class="language-java">public class ServletInitializer extends SpringBootServletInitializer {
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder)
-    {
-        return builder.sources(DemoApplication.class);
-    }
-}
-</code></pre>
-<p>其中DemoApplication为main函数所在的类.<br>
-war转为jar时进行对应的相反操作就可以了.</p>
-<h3 id="422-命令行参数方式">4.2.2 命令行参数方式</h3>
-<p>Maven设置就不说了,像上面一样,打包之后...<br>
-笔者找不到设置Tomcat命令行参数的方式,所以,就跳过这个了...<br>
-(欢迎大佬找到的留言补充,感激不尽!!!)<br>
-<s>笔者太菜了,害.</s></p>
-<h3 id="423-应用环境变量方式">4.2.3 应用环境变量方式</h3>
-<p>win下可以直接修改catalina.bat或者进入tomcat9w.exe(tomcat9,tomcat8是tomcat8w.exe)进行图形化修改,这里选择修改catalina.bat的方式,找到setlocal,后面加上</p>
-<pre><code class="language-bash">set &quot;JAVA_OPTS=-Djasypt.encryptor.password=test&quot;
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200427213521174.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后把war放到webapps下就可以了.</p>
-<h3 id="424-环境变量方式">4.2.4 环境变量方式</h3>
-<p>这种方式最简单,设置好了环境变量,修改配置文件:<br>
-<img src="https://img-blog.csdnimg.cn/20200427213713883.png" alt="在这里插入图片描述" loading="lazy"><br>
-直接war打包部署就行.</p>
-<h1 id="5-非对称加密">5 非对称加密</h1>
-<p>Spring Boot2.2.1之后支持非对称加密,密钥对的格式可以为PEM/DER.</p>
-<h2 id="51-加密">5.1 加密</h2>
-<p>这里使用的一位大佬的RSA自定义位数加密工具类(<a href="https://leanote.zzzmh.cn/blog/post/5d1c661416199b0683002dc8">戳这里</a>),无需额外依赖,仅自带JDK实现(JDK8+).</p>
-<pre><code class="language-java">import java.util.Base64;
-import javax.crypto.Cipher;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
-import java.util.Map;
-/**
- * Java RSA 加密工具类
- * 参考： https://blog.csdn.net/qy20115549/article/details/83105736
- */
-public class Test {
-    /**
-     * 密钥长度 于原文长度对应 以及越长速度越慢
-     */
-    private final static int KEY_SIZE = 2048;
-    /**
-     * 用于封装随机产生的公钥与私钥
-     */
-    private static Map&lt;Integer, String&gt; keyMap = new HashMap&lt;Integer, String&gt;();
-    /**
-     * 随机生成密钥对
-     */
-    public static void genKeyPair() throws NoSuchAlgorithmException {
-        // KeyPairGenerator类用于生成公钥和私钥对，基于RSA算法生成对象
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(&quot;RSA&quot;);
-        // 初始化密钥对生成器
-        keyPairGen.initialize(KEY_SIZE, new SecureRandom());
-        // 生成一个密钥对，保存在keyPair中
-        KeyPair keyPair = keyPairGen.generateKeyPair();
-        // 得到私钥
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        // 得到公钥
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-        // 得到私钥字符串
-        String privateKeyString = Base64.getEncoder().encodeToString(privateKey.getEncoded());
-        // 将公钥和私钥保存到Map
-        //0表示公钥
-        keyMap.put(0, publicKeyString);
-        //1表示私钥
-        keyMap.put(1, privateKeyString);
-    }
-    /**
-     * RSA公钥加密
-     *
-     * @param str       加密字符串
-     * @param publicKey 公钥
-     * @return 密文
-     * @throws Exception 加密过程中的异常信息
-     */
-    public static String encrypt(String str, String publicKey) throws Exception {
-        //base64编码的公钥
-        byte[] decoded = Base64.getDecoder().decode(publicKey);
-        RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance(&quot;RSA&quot;).generatePublic(new X509EncodedKeySpec(decoded));
-        //RSA加密
-        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);
-        cipher.init(Cipher.ENCRYPT_MODE, pubKey);
-        String outStr = Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(&quot;UTF-8&quot;)));
-        return outStr;
-    }
-    /**
-     * RSA私钥解密
-     *
-     * @param str        加密字符串
-     * @param privateKey 私钥
-     * @return 明文
-     * @throws Exception 解密过程中的异常信息
-     */
-    public static String decrypt(String str, String privateKey) throws Exception {
-        //64位解码加密后的字符串
-        byte[] inputByte = Base64.getDecoder().decode(str);
-        //base64编码的私钥
-        byte[] decoded = Base64.getDecoder().decode(privateKey);
-        RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance(&quot;RSA&quot;).generatePrivate(new PKCS8EncodedKeySpec(decoded));
-        //RSA解密
-        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);
-        cipher.init(Cipher.DECRYPT_MODE, priKey);
-        String outStr = new String(cipher.doFinal(inputByte));
-        return outStr;
-    }
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JFX11+IDEA跨平台打包发布的完美解决办法]]></title>
+        <id>https://2293736867.github.io/post/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/</id>
+        <link href="https://2293736867.github.io/post/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/">
+        </link>
+        <updated>2020-06-02T21:38:45.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>IDEA2020.1的文档中提到只有JFX8的工程才支持打成jar包，并且，如果直接使用Build Artifacts的话，会如下提示：<br>
+<img src="https://img-blog.csdnimg.cn/2020053017384177.png" alt="在这里插入图片描述" loading="lazy"><br>
+<a href="https://www.jetbrains.com/help/idea/packaging-javafx-applications.html">IDEA文档</a>有提到这个的解决办法，是使用一些<a href="https://openjfx.io/openjfx-docs/#install-javafx">第三方工具</a>。里面介绍了通过IDEA结合自身/Maven/Gradle打包发布JFX11以上版本的方法。但是，不足的地方有：</p>
+<ul>
+<li>直接创建JFX工程默认只有一个src目录，不像Maven工程还带有resources与test，给管理资源文件以及外部依赖造成了困难，getClass().getResource()会出现空指针问题，但是好处是只需具备JDK环境，打包出来的文件能带上jmods能跨平台直接运行</li>
+<li>直接创建Maven项目虽然是管理依赖以及资源文件方便，但是无论是直接通过Maven打出的jar包还是通过JavaFX Maven Plugins打出来的jar包默认绑定了开发平台的JFX SDK，简单地说就是Linux开发的JFX程序不能直接跑在具有JDK环境的Win上，因为用的是Linux的JFX SDK而不是Win的JFX SDK</li>
+</ul>
+<p>因此，本文结合这两者的优点，参照Maven的目录管理，以JFX工程为基础，记录了从新建工程到发布跨平台JFX应用的过程。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>IDEA 2020.1</li>
+<li>OpenJDK 11</li>
+<li>OpenJFX 11 Linux SDK</li>
+<li>OpenJFX 11 Linux/Windows/Mac OS X jmods</li>
+</ul>
+<p>JDK安装就不说了，JFX直接下载然后在工程中通过外部库引入即可，三种jmods解压出来即可，用于最后生成可执行文件时添加的模块。<br>
+下载链接<a href="https://gluonhq.com/products/javafx/">戳这里</a>。</p>
+<h1 id="3-新建jfx工程">3 新建JFX工程</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200530175758622.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里的项目名为TestJFX，对应修改即可。<br>
+<img src="https://img-blog.csdnimg.cn/20200530175913541.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-添加jfx11-sdk">4 添加JFX11 SDK</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200530180127745.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加上一步下载的对应平台的JFX SDK。<br>
+<img src="https://img-blog.csdnimg.cn/20200530180205495.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-添加module-infojava">5 添加module-info.java</h1>
+<p>在src目录右键New-&gt;module-info.java，修改如下：</p>
+<pre><code class="language-ruby">module TestJFX {
+    requires javafx.fxml;
+    requires javafx.controls;
     
-    public static void main(String[] args) throws Exception {
-        long temp = System.currentTimeMillis();
-        //生成公钥和私钥
-        genKeyPair();
-        //加密字符串
-        System.out.println(&quot;公钥:&quot; + keyMap.get(0));
-        System.out.println(&quot;私钥:&quot; + keyMap.get(1));
-        System.out.println(&quot;生成密钥消耗时间:&quot; + (System.currentTimeMillis() - temp) / 1000.0 + &quot;秒&quot;);
-        // String message = &quot;RSA测试ABCD~!@#$&quot;;
-        String message = &quot;test&quot;;
-        System.out.println(&quot;原文:&quot; + message);
-        temp = System.currentTimeMillis();
-        String messageEn = encrypt(message, keyMap.get(0));
-        System.out.println(&quot;密文:&quot; + messageEn);
-        System.out.println(&quot;加密消耗时间:&quot; + (System.currentTimeMillis() - temp) / 1000.0 + &quot;秒&quot;);
-        temp = System.currentTimeMillis();
-        String messageDe = decrypt(messageEn, keyMap.get(1));
-        System.out.println(&quot;解密:&quot; + messageDe);
-        System.out.println(&quot;解密消耗时间:&quot; + (System.currentTimeMillis() - temp) / 1000.0 + &quot;秒&quot;);
-    }
+    opens sample to javafx.fxml;
+    exports sample;
 }
 </code></pre>
-<h2 id="52-修改配置文件">5.2 修改配置文件</h2>
-<p>把明文输入,得到密文与私钥后,替换原来的配置文件:<br>
-<img src="https://img-blog.csdnimg.cn/20200427224758917.png" alt="在这里插入图片描述" loading="lazy"><br>
-密文复制到对应加密字段,加上前后缀,同时私钥格式选择der,把私钥复制过去:<br>
-<img src="https://img-blog.csdnimg.cn/20200427225047658.png" alt="在这里插入图片描述" loading="lazy"><br>
-运行测试没问题就可以了.</p>
+<p>其中TestJFX为新建项目时的项目名，这个创建module-info.java时就默认加上了，sample为默认包，对应修改。</p>
+<h1 id="6-添加vm-options">6 添加VM Options</h1>
+<p><img src="https://img-blog.csdnimg.cn/20200530181426399.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200531023450900.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加</p>
+<pre><code class="language-bash">--module-path /usr/local/jfx/lib:out/production
+</code></pre>
+<p>其中</p>
+<pre><code class="language-bash">/usr/local/jfx/lib
+</code></pre>
+<p>为下载的JFX JDK的lib目录，后面的out不需要更改，是默认的编译输出的目录。</p>
+<h1 id="7-运行">7 运行</h1>
+<p>这时候应该可以Shift+F10或者点击绿色小三角运行了：<br>
+<img src="https://img-blog.csdnimg.cn/20200530181814745.png" alt="在这里插入图片描述" loading="lazy"><br>
+当然内容是空的，因为什么也没有加。</p>
+<h1 id="8-添加资源文件">8 添加资源文件</h1>
+<p>默认的fxml是放在与Main类同一目录下的，getResource()也没有加路径直接写上文件名：<br>
+<img src="https://img-blog.csdnimg.cn/20200530195546612.png" alt="在这里插入图片描述" loading="lazy"><br>
+但是这是src文件夹，放个fxml还勉强可以接受，放张图片总不合适吧？所以，新建一个资源文件夹，把css，fxml什么的都放里面：<br>
+<img src="https://img-blog.csdnimg.cn/20200530195911419.png" alt="在这里插入图片描述" loading="lazy"><br>
+直接在IDEA中移动fxml文件，Main中的引用路径也自动更改，不得不说这个特性是真的好用，但遗憾的是，抛出了空指针异常。<br>
+因此采取绝对路径来进行读取文件，通过URL+System.getProperty()指定绝对路径：</p>
+<pre><code class="language-java">@Override
+public void start(Stage primaryStage) throws Exception{
+    String path = System.getProperty(&quot;user.dir&quot;);
+    URL fxmlUrl = new URL(&quot;file:&quot;+path+&quot;/resources/fxml/sample.fxml&quot;);
+    Parent root = FXMLLoader.load(fxmlUrl);
+    primaryStage.setTitle(&quot;Hello World&quot;);
+    Scene scene = new Scene(root);
+    scene.getStylesheets().add(new URL(&quot;file:&quot;+path+&quot;/resources/css/1.css&quot;).toString());
+    primaryStage.setScene(scene);
+    primaryStage.show();
+}
+</code></pre>
+<p>其中</p>
+<pre><code class="language-java">System.getProperty(&quot;user.dir&quot;)
+</code></pre>
+<p>获取项目路径，注意URL前面要加上“file:”，css的获取也同理，只不过是需要转换为String。</p>
+<h1 id="9-外部依赖">9 外部依赖</h1>
+<p>由于没有了Maven管理依赖，所以外部依赖的管理会相对麻烦一点，基本上是以jar包的形式手动添加，这里以添加Gson为例，<a href="https://mvnrepository.com/artifact/com.google.code.gson/gson">戳这里</a>下载jar包，然后在项目目录下新建一个lib文件夹，把jar包放进去：<br>
+<img src="https://img-blog.csdnimg.cn/20200531023924445.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着在项目结构中把整个lib文件夹添加到外部库：<br>
+<img src="https://img-blog.csdnimg.cn/20200531022019954.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后VM Options中添加lib路径，在上面的VM Options后面加一个冒号和lib就行：<br>
+<img src="https://img-blog.csdnimg.cn/20200531022600107.png" alt="在这里插入图片描述" loading="lazy"><br>
+但是，此时可以IDEA还不能进行补全，最后需要修改module-info.java：<br>
+<img src="https://img-blog.csdnimg.cn/20200531022743664.png" alt="在这里插入图片描述" loading="lazy"><br>
+加一行requires，此时IDEA能够进行补全了，每个jar包都不同，对应修改即可。</p>
+<h1 id="10-制作跨平台镜像">10 制作跨平台镜像</h1>
+<p>运行没问题之后就可以制作运行时镜像发布了，终端进入项目根路径：</p>
+<pre><code class="language-bash">jlink --module-path jmod/linux:out/production:lib --add-modules TestJFX --output linux
+linux/bin/java -m TestJFX/sample.Main
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200531030506500.png" alt="在这里插入图片描述" loading="lazy"><br>
+其中</p>
+<pre><code class="language-bash">jmod/linux
+</code></pre>
+<p>为开发平台jmod的路径，可以是绝对路径，也可以是相对与项目根目录的相对路径，out/production与上面的VM Options保持一致。</p>
+<pre><code class="language-bash">--add-modules
+</code></pre>
+<p>后面跟的是模块名，这是在生成module-info.java时指定的，为项目名。</p>
+<pre><code class="language-bash">--output
+</code></pre>
+<p>为输出目录。<br>
+后一条命令中-m指定模块名，后面跟包名+主类名。<br>
+这样linux平台的镜像就制作好了，Mac与Win的同理，只需要把jmod换成对应平台的jmod即可，但是注意语法有一些差别，Mac的语法同Linux，只需要把jmod路径换一下，但是注意需要整个工程在对应的平台进行jlink：</p>
+<pre><code class="language-bash">jlink --module-path xxxxx/{MAC_JMOD}:out/production:lib --add-modules TestJFX --output mac
+mac/bin/java -m TestJFX/sample.Main
+</code></pre>
+<p>Win的语法有些区别，一样需要在Win下进行jlink：</p>
+<pre><code class="language-bash">jlink --module-path &quot;xxxxx/{WIN_JMOD};out/production&quot; --add-modules TestJFX --output win
+win\bin\java -m TestJFX/sample.Main
+</code></pre>
+<p>下面是Win下的截图：<br>
+<img src="https://img-blog.csdnimg.cn/20200531025545467.PNG" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="11-demo">11 demo</h1>
+<p><a href="https://github.com/2293736867/JFX11-IDEA-Test-Project">github</a></p>
+<h1 id="12-参考">12 参考</h1>
+<p><a href="https://openjfx.io/openjfx-docs/#maven">Getting Started with JavaFX</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[IDEA通过Maven打包JavaFX工程（OpenJFX11）]]></title>
+        <id>https://2293736867.github.io/post/idea-tong-guo-maven-da-bao-javafx-gong-cheng-openjfx11/</id>
+        <link href="https://2293736867.github.io/post/idea-tong-guo-maven-da-bao-javafx-gong-cheng-openjfx11/">
+        </link>
+        <updated>2020-06-02T21:38:19.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>最近研究JFX，写出来了但是打包不了，这。。。尴尬。。。<br>
+<a href="https://www.jetbrains.com/help/idea/packaging-javafx-applications.html#">IDEA的文档</a>说只支持Java8打成jar包：<br>
+<img src="https://img-blog.csdnimg.cn/20200529220753361.png" alt="在这里插入图片描述" loading="lazy"><br>
+尝试过直接使用Maven插件的package，不行，也尝试过Build Artifacts，也不行，各种奇奇怪怪的问题。包括下图中的</p>
+<pre><code class="language-bash">Error....fx:deploy is not available in this JDK
+</code></pre>
+<p>不过幸好文档末尾提到可以使用一些<a href="https://openjfx.io/openjfx-docs/#maven">第三方工具</a>：<br>
+<img src="https://img-blog.csdnimg.cn/20200529220849122.png" alt="在这里插入图片描述" loading="lazy"><br>
+因此记录一下使用IDEA打包JFX11工程的过程。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>IDEA 2020.1</li>
+<li>OpenJDK 11</li>
+<li>OpenJFX 11</li>
+</ul>
+<p>只需安装IDEA与JDK即可，JFX可以在pom.xml中引入。</p>
+<h1 id="3-创建工程">3 创建工程</h1>
+<p>选择Maven，选择Create from archetype，然后Add Archetype并填上GroupId：</p>
+<pre><code class="language-bash">org.openjfx
+</code></pre>
+<p>与ArtifactId：</p>
+<pre><code class="language-bash">javafx-maven-archetypes
+</code></pre>
+<p>还有version：</p>
+<pre><code class="language-bash">0.0.1
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200529222351159.png" alt="在这里插入图片描述" loading="lazy"><br>
+下一步自定义，这里为了方便就直接默认了。<br>
+<img src="https://img-blog.csdnimg.cn/20200529222436539.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改archetypeArtifactId为</p>
+<pre><code class="language-bash">javafx-archetype-fxml
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200529223233339.png" alt="在这里插入图片描述" loading="lazy"><br>
+完成即可。</p>
+<h1 id="4-检查文件">4 检查文件</h1>
+<p>Maven同步完后，检查项目目录下的module-info.java与pom.xml，其中pom.xml不应该是下图这样的：<br>
+<img src="https://img-blog.csdnimg.cn/20200529222717282.png" alt="在这里插入图片描述" loading="lazy"><br>
+而应该是这样的，包含了javafx.controls与javafx.fxml依赖，还有javafx-maven-plugin插件：<br>
+<img src="https://img-blog.csdnimg.cn/20200529223421120.png" alt="在这里插入图片描述" loading="lazy"><br>
+同时src下的module-info.java应该长这样：<br>
+<img src="https://img-blog.csdnimg.cn/20200529223524571.png" alt="在这里插入图片描述" loading="lazy"><br>
+module-info.java包含了所需要的javafx.controls与javafx.fxml这两个模块。</p>
+<h1 id="5-修改插件依赖">5 修改插件依赖</h1>
+<p>默认的javafx-maven-plugin版本应该为0.0.1：<br>
+<img src="https://img-blog.csdnimg.cn/20200529223713794.png" alt="在这里插入图片描述" loading="lazy"><br>
+整个去掉，修改为：</p>
+<pre><code class="language-xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
+    &lt;artifactId&gt;javafx-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;0.0.4&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;stripDebug&gt;true&lt;/stripDebug&gt;
+        &lt;compress&gt;2&lt;/compress&gt;
+        &lt;noHeaderFiles&gt;true&lt;/noHeaderFiles&gt;
+        &lt;noManPages&gt;true&lt;/noManPages&gt;
+        &lt;launcher&gt;launcher&lt;/launcher&gt;
+        &lt;jlinkImageName&gt;output&lt;/jlinkImageName&gt;
+        &lt;jlinkZipName&gt;outputzip&lt;/jlinkZipName&gt;
+        &lt;mainClass&gt;org.openjfx.App&lt;/mainClass&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+<p>其中launcher为可执行文件名，jlinkImageName为Image输出目录名，jlinkZipName为zip文件名，mainClass为主类。</p>
+<h1 id="6-运行并打包">6 运行并打包</h1>
+<p>从右侧栏的Maven通过javafx插件运行并打包：<br>
+<img src="https://img-blog.csdnimg.cn/20200529224201517.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200529224909134.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-测试">7 测试</h1>
+<p>根据修改插件时的目录，进入对应的target下的子目录直接运行即可：</p>
+<pre><code class="language-bash">项目目录/target/output/bin/launcher
+</code></pre>
+<p>注意这个是跨平台的，只需具备JDK11环境即可，发布只需要把zip文件发布。</p>
+<h1 id="8-demo">8 demo</h1>
+<ul>
+<li><a href="https://github.com/2293736867/IDEA-JFX-Project-Example">github</a></li>
+<li><a href="https://gitee.com/imykr/IDEA-JFX-Project-Example">码云</a></li>
+</ul>
+<h1 id="9-扩展阅读">9 扩展阅读</h1>
+<p>这篇文章是OpenJFX的文档，主要介绍了：</p>
+<ul>
+<li>通过三种方式（JFX+Maven+Gradle）运行Hello World</li>
+<li>构建运行镜像（CLI+Maven+Gradle+自定义镜像）</li>
+<li>IntelliJ/NetBeans/Eclipse通过三种方式（IDE自身+Maven+Gradle）运行与打包JFX</li>
+</ul>
+<p>链接<a href="https://openjfx.io/openjfx-docs/#introduction">戳这里</a>。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[IDEA 配置文件位置]]></title>
+        <id>https://2293736867.github.io/post/idea-pei-zhi-wen-jian-wei-zhi/</id>
+        <link href="https://2293736867.github.io/post/idea-pei-zhi-wen-jian-wei-zhi/">
+        </link>
+        <updated>2020-06-02T21:37:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-idea-20201-以上">1 IDEA 2020.1 以上</h1>
+<h2 id="11-win">1.1 Win</h2>
+<p>语法：</p>
+<pre><code class="language-bash">%APPDATA%\JetBrains\&lt;product&gt;&lt;version&gt;
+</code></pre>
+<p>Win上的APPDATA默认位置如下：</p>
+<pre><code class="language-bash">C:\Users\用户名\AppData\Roaming
+</code></pre>
+<p>例子：</p>
+<pre><code class="language-bash">C:\Users\用户名\AppData\Roaming\JetBrains\IntelliJIdea2020.1
+</code></pre>
+<h2 id="12-macos">1.2 MacOS</h2>
+<p>语法：</p>
+<pre><code class="language-bash">~/Library/Application Support/JetBrains/&lt;product&gt;&lt;version&gt;
+</code></pre>
+<p>例子：</p>
+<pre><code class="language-bash">~/Library/Application Support/JetBrains/IntelliJIdea2020.1
+</code></pre>
+<h2 id="13-linux">1.3 Linux</h2>
+<p>语法：</p>
+<pre><code class="language-bash">~/.config/JetBrains/&lt;product&gt;&lt;version&gt;
+</code></pre>
+<p>例子：</p>
+<pre><code class="language-bash">~/.config/JetBrains/IntelliJIdea2020.1
+</code></pre>
+<h1 id="2-idea-20193x以下">2 IDEA 2019.3.x以下</h1>
+<h2 id="21-win">2.1 Win</h2>
+<p>语法：</p>
+<pre><code class="language-bash">%HOMEPATH%\\.&lt;product&gt;&lt;version&gt;\config
+</code></pre>
+<p>Win的HOMEPATH默认为：</p>
+<pre><code class="language-bash">\Users\用户名
+</code></pre>
+<p>注意，无盘符。<br>
+例子：</p>
+<pre><code class="language-bash">C:\Users\用户名\.IntelliJIdea2019.3\config
+</code></pre>
+<h2 id="22-macos">2.2 MacOS</h2>
+<p>语法：</p>
+<pre><code class="language-bash">~/Library/Preferences/&lt;product&gt;&lt;version&gt;
+</code></pre>
+<p>例子：</p>
+<pre><code class="language-bash">~/Library/Preferences/IntelliJIdea2019.3
+</code></pre>
+<h2 id="23-linux">2.3 Linux</h2>
+<p>语法：</p>
+<pre><code class="language-bash">~/.&lt;product&gt;&lt;version&gt;/config
+</code></pre>
+<p>例子：</p>
+<pre><code class="language-bash">~/.IntelliJIdea2019.3/config
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vim与系统剪贴版的交互]]></title>
+        <id>https://2293736867.github.io/post/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/</id>
+        <link href="https://2293736867.github.io/post/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/">
+        </link>
+        <updated>2020-06-02T21:37:22.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>vim中的复制，删除，替换（d，r，s，x，y等）的内容都会被保存到默认的未命名的寄存器中，之后可以通过p进行粘贴，但是，这个寄存器不是系统的剪贴版，很多时候需要vim与系统剪贴版的交互，那么，具体怎么做呢？</p>
+<h1 id="2-暴力解决">2 暴力解决</h1>
+<p>系统剪贴版复制vim时，新建一个文件，直接ctrl+v复制过去然后vim打开。<br>
+vim中的内容复制到系统剪贴版，使用cat+grep，在终端ctrl+c复制即可。<br>
+这是最简单也是比较通用的方法，不会受到什么vim不支持剪贴版之类的影响。<br>
+<s>没错就是简单粗暴。</s></p>
+<h1 id="3-优雅的方案">3 优雅的方案</h1>
+<p>当然上面的方法想必也不是您想要的，因此，这里介绍一种优雅一点的方法。</p>
+<h2 id="31-查看剪贴板支持">3.1 查看剪贴板支持</h2>
+<p>首先需要知道vim是否支持剪贴版：</p>
+<pre><code class="language-bash">vim --version | grep clipboard
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/2020052710391175.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果有</p>
+<pre><code class="language-bash">+clipboard
+</code></pre>
+<p>就表示支持，没有的话比如笔者这个就不支持，需要安装。<br>
+笔者的Manjaro，可以使用yay安装，不过提示过期了：<br>
+<img src="https://img-blog.csdnimg.cn/20200527104442825.png" alt="在这里插入图片描述" loading="lazy"><br>
+也可以选择安装gvim，另外，Debian系的可以安装vim-gtk：</p>
+<pre><code class="language-bash">sudo apt install vim-gtk
+</code></pre>
+<p>Redhat系的需要安装vim-X11以及vim-enhanced，然后加个别名：</p>
+<pre><code class="language-bash">alias vi='vimx'
+alias vim='vimx'
+</code></pre>
+<p>MacOS：</p>
+<pre><code class="language-bash">sudo brew install vim
+</code></pre>
+<h2 id="32-系统剪贴板复制到vim">3.2 系统剪贴板复制到vim</h2>
+<p>很简单，使用</p>
+<pre><code class="language-bash">&quot;+p
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">&quot;*p
+</code></pre>
+<p>即可，vim提供了</p>
+<pre><code class="language-bash">+ *
+</code></pre>
+<p>这两个寄存器与系统剪贴板进行交互，大多数系统上这两个系统一样，但在某些linux上可能不等价，以下是<a href="https://vim.fandom.com/wiki/Accessing_the_system_clipboard">官方文档</a>：<br>
+<img src="https://img-blog.csdnimg.cn/2020052710535542.png" alt="在这里插入图片描述" loading="lazy"></p>
+<pre><code class="language-bash">+
+</code></pre>
+<p>对应ctrl+c，ctrl+v使用的系统剪贴板，</p>
+<pre><code class="language-bash">*
+</code></pre>
+<p>对应的是鼠标选择的内容，可以使用中间粘贴。<br>
+当然高版本的vim还有一种很简单的解决办法：Shift+Insert能直接粘贴。</p>
+<h2 id="33-vim寄存器复制到系统剪贴板">3.3 vim寄存器复制到系统剪贴板</h2>
+<p>在vim中使用y进行复制，但是是复制到默认的未命名寄存器的，想要复制到系统剪贴版只需要把y改为</p>
+<pre><code class="language-bash">&quot;+y
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">&quot;*y
+</code></pre>
+<p>即可。</p>
+<h2 id="34-偷懒方法">3.4 偷懒方法</h2>
+<p>所谓的偷懒方法就是把默认的未命名寄存器与系统剪贴板关联上，使用</p>
+<pre><code class="language-bash">set clipboard=unnamed
+</code></pre>
+<p>即可。vim7.3.74以上的版本可以使用：</p>
+<pre><code class="language-bash">set clipboard=unnamedplus
+</code></pre>
+<p>这样y，d，s，x等操作就和系统剪贴版关联上了。</p>
+<h1 id="4-寄存器相关知识">4 寄存器相关知识</h1>
+<p>vim中的y，d，c，x，s等的操作的内容会复制到寄存器中，可以使用</p>
+<pre><code class="language-bash">:reg 
+</code></pre>
+<p>查看寄存器的内容，使用</p>
+<pre><code class="language-bash">:help registers
+</code></pre>
+<p>查看帮助，另外，寄存器的常用操作包括：</p>
+<pre><code class="language-java">&quot;{register}y 复制到寄存器，默认register为未命名寄存器
+&quot;{register}p 粘贴寄存器的内容
+</code></pre>
+<p>比如</p>
+<pre><code class="language-java">&quot;a4yy
+&quot;+p
+</code></pre>
+<p>vim中提供了多种多样的寄存器，具体来说可以分为10种共48个寄存器。</p>
+<h2 id="41-未命名寄存器">4.1 未命名寄存器</h2>
+<pre><code class="language-bash">&quot;&quot;
+</code></pre>
+<p>也叫匿名寄存器，使用d，c，x等删除的字符会存放进匿名寄存器，换句话说，最近一次删除，修改，复制的内容都存放在这里，会覆盖。</p>
+<h2 id="42-编号寄存器">4.2 编号寄存器</h2>
+<pre><code class="language-bash">&quot;0
+&quot;1
+...
+&quot;9
+</code></pre>
+<p>从0到9共10个，可以细分为复制专用寄存器与删除专用寄存器，因为</p>
+<pre><code class="language-bash">&quot;0
+</code></pre>
+<p>保存着最近一次y复制的内容，而</p>
+<pre><code class="language-bash">&quot;1
+...
+&quot;9
+</code></pre>
+<p>这9个寄存器保存着最近一次删除（d，c，s，x等）的内容。上一次删除的内容被存放在</p>
+<pre><code class="language-bash">&quot;1
+</code></pre>
+<p>上上次的被存放在</p>
+<pre><code class="language-bash">&quot;2
+</code></pre>
+<p>以此类推。</p>
+<p><strong>注意，只有整行的删除，和通过段落级别的移动指令的删除才会放进</strong></p>
+<pre><code class="language-bash">&quot;1
+</code></pre>
+<p><strong>另外当指定寄存器后，比如</strong></p>
+<pre><code class="language-bash">&quot;ayy
+</code></pre>
+<p><strong>不会写入到</strong></p>
+<pre><code class="language-bash">&quot;0
+</code></pre>
+<p><strong>中，但是</strong></p>
+<pre><code class="language-bash">&quot;add
+</code></pre>
+<p><strong>会写入到</strong></p>
+<pre><code class="language-bash">&quot;1
+</code></pre>
+<p><strong>中，也就是说，指定寄存器后复制内容不会写入0寄存器，但是删除内容会写入1寄存器。</strong></p>
+<h2 id="43-小删除寄存器">4.3 小删除寄存器</h2>
+<pre><code class="language-bash">&quot;-
+</code></pre>
+<p>不足一行的小删除会被放进去，包括s，d，c，x。与</p>
+<pre><code class="language-bash">&quot;0
+</code></pre>
+<p>类似，用户指定寄存器后不会被写入。</p>
+<h2 id="44-命名寄存器">4.4 命名寄存器</h2>
+<pre><code class="language-bash">&quot;a
+&quot;b
+...
+</code></pre>
+<p>小写字母组成的26个寄存器，一般用来录制键盘宏，比如有如下内容：</p>
+<pre><code class="language-cpp">iostream
+string
+cmath
+</code></pre>
+<p>可以把位置定位到第一行，然后</p>
+<pre><code class="language-java">qaI#include&lt;{ESC}A&gt;{ESC}jq
+</code></pre>
+<p>其中</p>
+<pre><code class="language-bash">{ESC}
+</code></pre>
+<p>表示按下ESC键，这样第一行就加上include了，同时把宏记录到了寄存器a，接下来，使用</p>
+<pre><code class="language-bash">2@a
+</code></pre>
+<p>即可在剩余两行加上include。<br>
+另外，小写对应的大写字母的寄存器用于追加内容，比如：</p>
+<pre><code class="language-bash">&quot;Ayy
+</code></pre>
+<p>可以向</p>
+<pre><code class="language-bash">&quot;a
+</code></pre>
+<p>追加内容。</p>
+<h2 id="45-只读寄存器">4.5 只读寄存器</h2>
+<pre><code class="language-java">&quot;. 上一次insert插入的内容
+&quot;% 当前文件名，从vim的工作目录到该文件的路径
+&quot;: 上次命令模式下键入的命令，使用@:执行上次命令， .只能进行一些简单的重复，一些复杂的命令比如替换，需要使用@:
+</code></pre>
+<p>共三个，只读。</p>
+<h2 id="46-交替文件寄存器">4.6 交替文件寄存器</h2>
+<pre><code class="language-bash">&quot;#
+</code></pre>
+<p>保存着当前窗口的交替文件。<br>
+交替文件是缓冲区（Buffer）上的一个文件，而缓冲区其实时vim中打开文件编辑时占用的那部分内存，编辑文件时，只是编辑缓冲区中的文件，当使用</p>
+<pre><code class="language-bash">:w
+</code></pre>
+<p>时，会把缓冲区的文件写入磁盘。</p>
+<h2 id="47-表达式寄存器">4.7 表达式寄存器</h2>
+<pre><code class="language-bash">&quot;=
+</code></pre>
+<p>计算vim脚本的返回值，输入后会跳转到命令行，此时若输入3+2，回车并p，会粘贴5。</p>
+<h2 id="48-选择拖放寄存器">4.8 选择拖放寄存器</h2>
+<p>上面已经介绍了两个：</p>
+<pre><code class="language-java">&quot;+
+&quot;*
+</code></pre>
+<p>还有一个是</p>
+<pre><code class="language-bash">&quot;~
+</code></pre>
+<p>其中</p>
+<pre><code class="language-java">&quot;+
+&quot;*
+</code></pre>
+<p>在Mac与Windows上指的是系统剪贴板，在大多数X11，也就是带桌面环境的Linux发行版中是有区别的，上面也提到了一点：</p>
+<pre><code class="language-java">&quot;+ 系统剪贴板
+&quot;* 鼠标选中区域，可以中键粘贴
+</code></pre>
+<p>有文本拖拽到vim时，被存放在</p>
+<pre><code class="language-java">&quot;~
+</code></pre>
+<p>中，默认会将其中的内容插入到光标位置。</p>
+<h2 id="49-黑洞寄存器">4.9 黑洞寄存器</h2>
+<pre><code class="language-java">&quot;_
+</code></pre>
+<p>所有进入到里面的内容会消失，通常用于脚本中。</p>
+<h2 id="410-搜索寄存器">4.10 搜索寄存器</h2>
+<pre><code class="language-java">&quot;/
+</code></pre>
+<p>存储上一次搜索的关键词。可写，通过</p>
+<pre><code class="language-java">:let @/ = &quot;123&quot;
+</code></pre>
+<p>下一次搜索可直接</p>
+<pre><code class="language-java">/
+</code></pre>
+<p>不输入关键词回车即可。<br>
+注意不存在</p>
+<pre><code class="language-java">&quot;?
+</code></pre>
+<p>寄存器。</p>
+<h1 id="5-参考">5 参考</h1>
+<p>1.<a href="https://harttle.land/2016/07/25/vim-registers.html#header-12">Vim 寄存器完全手册</a></p>
+<p>2.<a href="https://vim.fandom.com/wiki/Buffers">Vim官方文档-1</a></p>
+<p>3.<a href="https://vim.fandom.com/wiki/Pasting_registers">Vim官方文档-2</a></p>
+<p>4.<a href="https://www.zhihu.com/question/19863631">知乎-如何将 Vim 剪贴板里面的东西粘贴到 Vim 之外的地方</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[ERROR]: gitstatus failed to initialize.]]></title>
+        <id>https://2293736867.github.io/post/error-gitstatus-failed-to-initialize/</id>
+        <link href="https://2293736867.github.io/post/error-gitstatus-failed-to-initialize/">
+        </link>
+        <updated>2020-06-02T21:36:08.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>Manjaro升级后，zsh的主题p10k出现的问题。</p>
+<pre><code class="language-bash">Your git prompt may disappear or become slow.
+Run the following command to retry with extra diagnostics:
+GITSTATUS_ENABLE_LOGGING=1 gitstatus_start -s 1 -u 1 -d 1 -m -1 POWERLEVEL9K
+
+OUTPUT:
+
+[ERROR]: gitstatus failed to initialize.
+......
+</code></pre>
+<h1 id="2-解决方法">2 解决方法</h1>
+<p>来自gitstatus官方issue，<a href="https://github.com/romkatv/gitstatus/issues/36">戳这里</a>，其实就是把p10k主题更新到最新版本就好了，用</p>
+<pre><code class="language-bash">pacman -Qi zsh-theme-powerlevel10k
+</code></pre>
+<p>查看版本，若不是最新版本，不要使用自带的软件包升级：</p>
+<pre><code class="language-bash">pcaman -S zsh-theme-powerlevel10k
+</code></pre>
+<p>官方说这是旧的，不要使用：<br>
+<img src="https://img-blog.csdnimg.cn/2020052311011054.png" alt="在这里插入图片描述" loading="lazy"><br>
+因此先把配置文件备份：</p>
+<pre><code class="language-bash">sudo cp ~/.p10k.zsh ~/Desktop
+</code></pre>
+<p>再卸载掉，然后clone安装：</p>
+<pre><code class="language-bash">pacman -R zsh-theme-powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+# 或使用码云上的镜像
+# git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+</code></pre>
+<p>在</p>
+<pre><code class="language-bash">~/.zshrc
+</code></pre>
+<p>修改主题：</p>
+<pre><code class="language-bash">ZSH_THEME=&quot;powerlevel10k/powerlevel10k&quot;
+</code></pre>
+<p>最后把配置文件覆盖：</p>
+<pre><code class="language-bash">sudo cp ~/.p10k.zsh ~/.p10k.zsh.bak
+sudo cp ~/Desktop/.p10k.zsh ~/.p10k.zsh
+</code></pre>
 ]]></content>
     </entry>
 </feed>

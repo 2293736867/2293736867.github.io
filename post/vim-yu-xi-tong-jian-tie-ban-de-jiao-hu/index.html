@@ -1,0 +1,881 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vim与系统剪贴版的交互 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+vim中的复制，删除，替换（d，r，s，x，y等）的内容都会被保存到默认的未命名的寄存器中，之后可以通过p进行粘贴，但是，这个寄存器不是系统的剪贴版，很多时候需要vim与系统剪贴版的交互，那么，具体怎么做呢？
+2 暴力解决
+系统剪..." />
+    <meta name="keywords" content="Vim" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591134096649" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/"> </span>
+              </a>
+              <span id="/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-0 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">vim与系统剪贴版的交互</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p>vim中的复制，删除，替换（d，r，s，x，y等）的内容都会被保存到默认的未命名的寄存器中，之后可以通过p进行粘贴，但是，这个寄存器不是系统的剪贴版，很多时候需要vim与系统剪贴版的交互，那么，具体怎么做呢？</p>
+<h1 id="2-暴力解决">2 暴力解决</h1>
+<p>系统剪贴版复制vim时，新建一个文件，直接ctrl+v复制过去然后vim打开。<br>
+vim中的内容复制到系统剪贴版，使用cat+grep，在终端ctrl+c复制即可。<br>
+这是最简单也是比较通用的方法，不会受到什么vim不支持剪贴版之类的影响。<br>
+<s>没错就是简单粗暴。</s></p>
+<h1 id="3-优雅的方案">3 优雅的方案</h1>
+<p>当然上面的方法想必也不是您想要的，因此，这里介绍一种优雅一点的方法。</p>
+<h2 id="31-查看剪贴板支持">3.1 查看剪贴板支持</h2>
+<p>首先需要知道vim是否支持剪贴版：</p>
+<pre><code class="language-bash">vim --version | grep clipboard
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/2020052710391175.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果有</p>
+<pre><code class="language-bash">+clipboard
+</code></pre>
+<p>就表示支持，没有的话比如笔者这个就不支持，需要安装。<br>
+笔者的Manjaro，可以使用yay安装，不过提示过期了：<br>
+<img src="https://img-blog.csdnimg.cn/20200527104442825.png" alt="在这里插入图片描述" loading="lazy"><br>
+也可以选择安装gvim，另外，Debian系的可以安装vim-gtk：</p>
+<pre><code class="language-bash">sudo apt install vim-gtk
+</code></pre>
+<p>Redhat系的需要安装vim-X11以及vim-enhanced，然后加个别名：</p>
+<pre><code class="language-bash">alias vi='vimx'
+alias vim='vimx'
+</code></pre>
+<p>MacOS：</p>
+<pre><code class="language-bash">sudo brew install vim
+</code></pre>
+<h2 id="32-系统剪贴板复制到vim">3.2 系统剪贴板复制到vim</h2>
+<p>很简单，使用</p>
+<pre><code class="language-bash">&quot;+p
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">&quot;*p
+</code></pre>
+<p>即可，vim提供了</p>
+<pre><code class="language-bash">+ *
+</code></pre>
+<p>这两个寄存器与系统剪贴板进行交互，大多数系统上这两个系统一样，但在某些linux上可能不等价，以下是<a href="https://vim.fandom.com/wiki/Accessing_the_system_clipboard">官方文档</a>：<br>
+<img src="https://img-blog.csdnimg.cn/2020052710535542.png" alt="在这里插入图片描述" loading="lazy"></p>
+<pre><code class="language-bash">+
+</code></pre>
+<p>对应ctrl+c，ctrl+v使用的系统剪贴板，</p>
+<pre><code class="language-bash">*
+</code></pre>
+<p>对应的是鼠标选择的内容，可以使用中间粘贴。<br>
+当然高版本的vim还有一种很简单的解决办法：Shift+Insert能直接粘贴。</p>
+<h2 id="33-vim寄存器复制到系统剪贴板">3.3 vim寄存器复制到系统剪贴板</h2>
+<p>在vim中使用y进行复制，但是是复制到默认的未命名寄存器的，想要复制到系统剪贴版只需要把y改为</p>
+<pre><code class="language-bash">&quot;+y
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">&quot;*y
+</code></pre>
+<p>即可。</p>
+<h2 id="34-偷懒方法">3.4 偷懒方法</h2>
+<p>所谓的偷懒方法就是把默认的未命名寄存器与系统剪贴板关联上，使用</p>
+<pre><code class="language-bash">set clipboard=unnamed
+</code></pre>
+<p>即可。vim7.3.74以上的版本可以使用：</p>
+<pre><code class="language-bash">set clipboard=unnamedplus
+</code></pre>
+<p>这样y，d，s，x等操作就和系统剪贴版关联上了。</p>
+<h1 id="4-寄存器相关知识">4 寄存器相关知识</h1>
+<p>vim中的y，d，c，x，s等的操作的内容会复制到寄存器中，可以使用</p>
+<pre><code class="language-bash">:reg 
+</code></pre>
+<p>查看寄存器的内容，使用</p>
+<pre><code class="language-bash">:help registers
+</code></pre>
+<p>查看帮助，另外，寄存器的常用操作包括：</p>
+<pre><code class="language-java">&quot;{register}y 复制到寄存器，默认register为未命名寄存器
+&quot;{register}p 粘贴寄存器的内容
+</code></pre>
+<p>比如</p>
+<pre><code class="language-java">&quot;a4yy
+&quot;+p
+</code></pre>
+<p>vim中提供了多种多样的寄存器，具体来说可以分为10种共48个寄存器。</p>
+<h2 id="41-未命名寄存器">4.1 未命名寄存器</h2>
+<pre><code class="language-bash">&quot;&quot;
+</code></pre>
+<p>也叫匿名寄存器，使用d，c，x等删除的字符会存放进匿名寄存器，换句话说，最近一次删除，修改，复制的内容都存放在这里，会覆盖。</p>
+<h2 id="42-编号寄存器">4.2 编号寄存器</h2>
+<pre><code class="language-bash">&quot;0
+&quot;1
+...
+&quot;9
+</code></pre>
+<p>从0到9共10个，可以细分为复制专用寄存器与删除专用寄存器，因为</p>
+<pre><code class="language-bash">&quot;0
+</code></pre>
+<p>保存着最近一次y复制的内容，而</p>
+<pre><code class="language-bash">&quot;1
+...
+&quot;9
+</code></pre>
+<p>这9个寄存器保存着最近一次删除（d，c，s，x等）的内容。上一次删除的内容被存放在</p>
+<pre><code class="language-bash">&quot;1
+</code></pre>
+<p>上上次的被存放在</p>
+<pre><code class="language-bash">&quot;2
+</code></pre>
+<p>以此类推。</p>
+<p><strong>注意，只有整行的删除，和通过段落级别的移动指令的删除才会放进</strong></p>
+<pre><code class="language-bash">&quot;1
+</code></pre>
+<p><strong>另外当指定寄存器后，比如</strong></p>
+<pre><code class="language-bash">&quot;ayy
+</code></pre>
+<p><strong>不会写入到</strong></p>
+<pre><code class="language-bash">&quot;0
+</code></pre>
+<p><strong>中，但是</strong></p>
+<pre><code class="language-bash">&quot;add
+</code></pre>
+<p><strong>会写入到</strong></p>
+<pre><code class="language-bash">&quot;1
+</code></pre>
+<p><strong>中，也就是说，指定寄存器后复制内容不会写入0寄存器，但是删除内容会写入1寄存器。</strong></p>
+<h2 id="43-小删除寄存器">4.3 小删除寄存器</h2>
+<pre><code class="language-bash">&quot;-
+</code></pre>
+<p>不足一行的小删除会被放进去，包括s，d，c，x。与</p>
+<pre><code class="language-bash">&quot;0
+</code></pre>
+<p>类似，用户指定寄存器后不会被写入。</p>
+<h2 id="44-命名寄存器">4.4 命名寄存器</h2>
+<pre><code class="language-bash">&quot;a
+&quot;b
+...
+</code></pre>
+<p>小写字母组成的26个寄存器，一般用来录制键盘宏，比如有如下内容：</p>
+<pre><code class="language-cpp">iostream
+string
+cmath
+</code></pre>
+<p>可以把位置定位到第一行，然后</p>
+<pre><code class="language-java">qaI#include&lt;{ESC}A&gt;{ESC}jq
+</code></pre>
+<p>其中</p>
+<pre><code class="language-bash">{ESC}
+</code></pre>
+<p>表示按下ESC键，这样第一行就加上include了，同时把宏记录到了寄存器a，接下来，使用</p>
+<pre><code class="language-bash">2@a
+</code></pre>
+<p>即可在剩余两行加上include。<br>
+另外，小写对应的大写字母的寄存器用于追加内容，比如：</p>
+<pre><code class="language-bash">&quot;Ayy
+</code></pre>
+<p>可以向</p>
+<pre><code class="language-bash">&quot;a
+</code></pre>
+<p>追加内容。</p>
+<h2 id="45-只读寄存器">4.5 只读寄存器</h2>
+<pre><code class="language-java">&quot;. 上一次insert插入的内容
+&quot;% 当前文件名，从vim的工作目录到该文件的路径
+&quot;: 上次命令模式下键入的命令，使用@:执行上次命令， .只能进行一些简单的重复，一些复杂的命令比如替换，需要使用@:
+</code></pre>
+<p>共三个，只读。</p>
+<h2 id="46-交替文件寄存器">4.6 交替文件寄存器</h2>
+<pre><code class="language-bash">&quot;#
+</code></pre>
+<p>保存着当前窗口的交替文件。<br>
+交替文件是缓冲区（Buffer）上的一个文件，而缓冲区其实时vim中打开文件编辑时占用的那部分内存，编辑文件时，只是编辑缓冲区中的文件，当使用</p>
+<pre><code class="language-bash">:w
+</code></pre>
+<p>时，会把缓冲区的文件写入磁盘。</p>
+<h2 id="47-表达式寄存器">4.7 表达式寄存器</h2>
+<pre><code class="language-bash">&quot;=
+</code></pre>
+<p>计算vim脚本的返回值，输入后会跳转到命令行，此时若输入3+2，回车并p，会粘贴5。</p>
+<h2 id="48-选择拖放寄存器">4.8 选择拖放寄存器</h2>
+<p>上面已经介绍了两个：</p>
+<pre><code class="language-java">&quot;+
+&quot;*
+</code></pre>
+<p>还有一个是</p>
+<pre><code class="language-bash">&quot;~
+</code></pre>
+<p>其中</p>
+<pre><code class="language-java">&quot;+
+&quot;*
+</code></pre>
+<p>在Mac与Windows上指的是系统剪贴板，在大多数X11，也就是带桌面环境的Linux发行版中是有区别的，上面也提到了一点：</p>
+<pre><code class="language-java">&quot;+ 系统剪贴板
+&quot;* 鼠标选中区域，可以中键粘贴
+</code></pre>
+<p>有文本拖拽到vim时，被存放在</p>
+<pre><code class="language-java">&quot;~
+</code></pre>
+<p>中，默认会将其中的内容插入到光标位置。</p>
+<h2 id="49-黑洞寄存器">4.9 黑洞寄存器</h2>
+<pre><code class="language-java">&quot;_
+</code></pre>
+<p>所有进入到里面的内容会消失，通常用于脚本中。</p>
+<h2 id="410-搜索寄存器">4.10 搜索寄存器</h2>
+<pre><code class="language-java">&quot;/
+</code></pre>
+<p>存储上一次搜索的关键词。可写，通过</p>
+<pre><code class="language-java">:let @/ = &quot;123&quot;
+</code></pre>
+<p>下一次搜索可直接</p>
+<pre><code class="language-java">/
+</code></pre>
+<p>不输入关键词回车即可。<br>
+注意不存在</p>
+<pre><code class="language-java">&quot;?
+</code></pre>
+<p>寄存器。</p>
+<h1 id="5-参考">5 参考</h1>
+<p>1.<a href="https://harttle.land/2016/07/25/vim-registers.html#header-12">Vim 寄存器完全手册</a></p>
+<p>2.<a href="https://vim.fandom.com/wiki/Buffers">Vim官方文档-1</a></p>
+<p>3.<a href="https://vim.fandom.com/wiki/Pasting_registers">Vim官方文档-2</a></p>
+<p>4.<a href="https://www.zhihu.com/question/19863631">知乎-如何将 Vim 剪贴板里面的东西粘贴到 Vim 之外的地方</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/idea-pei-zhi-wen-jian-wei-zhi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/idea-pei-zhi-wen-jian-wei-zhi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">IDEA 配置文件位置</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/error-gitstatus-failed-to-initialize.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/error-gitstatus-failed-to-initialize/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">[ERROR]: gitstatus failed to initialize.</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/">JFX11+Maven+IDEA 发布跨平台应用的完美解决方案</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/">一个开源的跨平台音乐播放与音乐下载器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/javafx-huo-qu-ping-mu-chi-cun.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/">JavaFX获取屏幕尺寸</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-0 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-1 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-2 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-3 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-4 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-5 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-6 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-7 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-8 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-9 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-10 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-11 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-12 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-13 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-14 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-15 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-16 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-17 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-18 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-19 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-20 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-21 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-22 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-23 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-24 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-25 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-26 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-27 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-28 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-29 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-30 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-31 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-32 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-33 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-34 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-35 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-36 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-37 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-38 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-39 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-40 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-41 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-42 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-43 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-44 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-45 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-46 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-47 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-48 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-49 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-50 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-51 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-52 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-53 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-54 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-55 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-56 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-57 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-58 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-59 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-60 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 115 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
