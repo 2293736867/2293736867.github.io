@@ -1,0 +1,1181 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>pom.xml详解 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.pom.xml是什么
+2.基本配置
+
+(1)&lt;project&gt;
+(2)&lt;modelVersion&gt;
+(3)Maven坐标
+
+A.&lt;groupId&gt;
+B.&lt;artifactId&gt;
+C.&l..." />
+    <meta name="keywords" content="Maven" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591128958873" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/pomxml-xiang-jie.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/pomxml-xiang-jie/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/pomxml-xiang-jie/"> </span>
+              </a>
+              <span id="/pomxml-xiang-jie/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-0 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">pom.xml详解</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1pomxml%E6%98%AF%E4%BB%80%E4%B9%88">1.pom.xml是什么</a></li>
+<li><a href="#2%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">2.基本配置</a>
+<ul>
+<li><a href="#1project">(1)&lt;project&gt;</a></li>
+<li><a href="#2modelversion">(2)&lt;modelVersion&gt;</a></li>
+<li><a href="#3maven%E5%9D%90%E6%A0%87">(3)Maven坐标</a>
+<ul>
+<li><a href="#agroupid">A.&lt;groupId&gt;</a></li>
+<li><a href="#bartifactid">B.&lt;artifactId&gt;</a></li>
+<li><a href="#cversion">C.&lt;version&gt;</a></li>
+</ul>
+</li>
+<li><a href="#4packaging">(4)&lt;packaging&gt;</a></li>
+<li><a href="#5pom-%E5%85%B3%E7%B3%BB">(5)POM 关系</a>
+<ul>
+<li><a href="#a%E4%BE%9D%E8%B5%96">A.依赖</a>
+<ul>
+<li><a href="#agroupid%E4%B8%8Eartifactid">a.&lt;groupId&gt;与&lt;artifactId&gt;</a></li>
+<li><a href="#bversion">b.&lt;version&gt;</a></li>
+<li><a href="#cclassifier">c.&lt;classifier&gt;</a></li>
+<li><a href="#dtype">d.&lt;type&gt;</a></li>
+<li><a href="#escope">e.&lt;scope&gt;</a></li>
+<li><a href="#fsystempath">f.&lt;systemPath&gt;</a></li>
+<li><a href="#goptional">g.&lt;optional&gt;</a></li>
+<li><a href="#hexclusions">h.&lt;exclusions&gt;</a></li>
+</ul>
+</li>
+<li><a href="#b%E7%BB%A7%E6%89%BF">B.继承</a></li>
+<li><a href="#c%E8%81%9A%E5%90%88%E6%88%96%E5%A4%9A%E6%A8%A1%E5%9D%97">C.聚合(或多模块)</a></li>
+</ul>
+</li>
+<li><a href="#6%E5%B1%9E%E6%80%A7">(6)属性</a>
+<ul>
+<li><a href="#1envx">①env.x</a></li>
+<li><a href="#2projectx">②project.x</a></li>
+<li><a href="#3settingsx">③settings.x</a></li>
+<li><a href="#4javax">④java.x</a></li>
+<li><a href="#5x">⑤x</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3%E6%9E%84%E5%BB%BA%E9%85%8D%E7%BD%AE">3.构建配置</a>
+<ul>
+<li><a href="#1basebuild%E5%85%83%E7%B4%A0">(1)BaseBuild元素</a>
+<ul>
+<li><a href="#adefaultgoal">A.&lt;defaultGoal&gt;</a></li>
+<li><a href="#bdirectory">B.&lt;directory&gt;</a></li>
+<li><a href="#cfinalname">C.&lt;finalName&gt;</a></li>
+<li><a href="#dfilters">D.&lt;filters&gt;</a></li>
+</ul>
+</li>
+<li><a href="#2%E8%B5%84%E6%BA%90">(2)资源</a>
+<ul>
+<li><a href="#aresource">A.&lt;resource&gt;</a></li>
+<li><a href="#btargetpath">B.&lt;targetPath&gt;</a></li>
+<li><a href="#cflitering">C.&lt;flitering&gt;</a></li>
+<li><a href="#ddirectory">D.&lt;directory&gt;</a></li>
+<li><a href="#einclude">E.&lt;include&gt;</a></li>
+<li><a href="#fexcludes">F.&lt;excludes&gt;</a></li>
+</ul>
+</li>
+<li><a href="#3%E6%8F%92%E4%BB%B6">(3)插件</a>
+<ul>
+<li><a href="#agroupid%E4%B8%8Eartifactid-2">A.&lt;groupId&gt;与&lt;artifactId&gt;</a></li>
+<li><a href="#bversion-2">B.&lt;version&gt;</a></li>
+<li><a href="#cextensions">C.&lt;extensions&gt;</a></li>
+<li><a href="#dinherited">D.&lt;inherited&gt;</a></li>
+<li><a href="#econfiguration">E.&lt;configuration&gt;</a></li>
+<li><a href="#fdependencies">F.&lt;dependencies&gt;</a></li>
+<li><a href="#gexecutions">G.&lt;executions&gt;</a></li>
+</ul>
+</li>
+<li><a href="#4%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86">(4)插件管理</a></li>
+<li><a href="#5%E7%9B%AE%E5%BD%95">(5)目录</a>
+<ul>
+<li><a href="#a%E9%A1%B9%E7%9B%AE%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95">A.项目源码目录</a></li>
+<li><a href="#b%E6%B5%8B%E8%AF%95%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95">B.测试源码目录</a></li>
+<li><a href="#cclass%E7%9B%AE%E5%BD%95">C.class目录</a></li>
+<li><a href="#d%E6%B5%8B%E8%AF%95class">D.测试class</a></li>
+</ul>
+</li>
+<li><a href="#6%E6%89%A9%E5%B1%95">(6)扩展</a></li>
+<li><a href="#7%E6%8A%A5%E8%A1%A8">(7)报表</a>
+<ul>
+<li><a href="#aexcludedefaults">A.&lt;excludeDefaults&gt;</a></li>
+<li><a href="#boutputdirectory">B.&lt;outputDirectory&gt;</a></li>
+<li><a href="#cplugins">C.&lt;plugins&gt;</a></li>
+<li><a href="#dreportsets">D.&lt;reportSets&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4%E9%A1%B9%E7%9B%AE%E4%BF%A1%E6%81%AF">4.项目信息</a>
+<ul>
+<li><a href="#1%E8%AE%B8%E5%8F%AF%E8%AF%81">(1)许可证</a>
+<ul>
+<li><a href="#aname">A.&lt;name&gt;</a></li>
+<li><a href="#burl">B.&lt;url&gt;</a></li>
+<li><a href="#cdistribution">C.&lt;distribution&gt;</a></li>
+<li><a href="#dcomments">D.&lt;comments&gt;</a></li>
+</ul>
+</li>
+<li><a href="#2%E7%BB%84%E7%BB%87">(2)组织</a></li>
+<li><a href="#3%E5%BC%80%E5%8F%91%E8%80%85">(3)开发者</a>
+<ul>
+<li><a href="#aid">A.&lt;id&gt;</a></li>
+<li><a href="#bname">B.&lt;name&gt;</a></li>
+<li><a href="#cemail">C.&lt;email&gt;</a></li>
+<li><a href="#durl">D.&lt;url&gt;</a></li>
+<li><a href="#eorganization">E.&lt;organization&gt;</a></li>
+<li><a href="#forganizationurl">F.&lt;organizationUrl&gt;</a></li>
+<li><a href="#groles">G.&lt;roles&gt;</a></li>
+<li><a href="#htimezone">H.&lt;timeZone&gt;</a></li>
+<li><a href="#iproperties">I.&lt;properties&gt;</a></li>
+</ul>
+</li>
+<li><a href="#4%E8%B4%A1%E7%8C%AE%E8%80%85">(4)贡献者</a></li>
+</ul>
+</li>
+<li><a href="#5%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE">5.环境配置</a>
+<ul>
+<li><a href="#1%E9%97%AE%E9%A2%98%E7%AE%A1%E7%90%86">(1)问题管理</a></li>
+<li><a href="#2%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E7%AE%A1%E7%90%86">(2)持续集成管理</a>
+<ul>
+<li><a href="#asystem">A.&lt;system&gt;</a></li>
+<li><a href="#burl-2">B.&lt;url&gt;</a></li>
+<li><a href="#cnotifiers">C.&lt;notifiers&gt;</a>
+<ul>
+<li><a href="#atype">a.&lt;type&gt;</a></li>
+<li><a href="#bsendonerror">b.&lt;sendOnError&gt;</a></li>
+<li><a href="#csendonfailure">c.&lt;sendOnFailure&gt;</a></li>
+<li><a href="#dsendonsuccess">d.&lt;sendOnSuccess&gt;</a></li>
+<li><a href="#esendonwarning">e.&lt;sendOnWarning&gt;</a></li>
+<li><a href="#fconfiguration">f.&lt;configuration&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3%E9%82%AE%E4%BB%B6%E5%88%97%E8%A1%A8">(3)邮件列表</a>
+<ul>
+<li><a href="#aname-2">A.&lt;name&gt;</a></li>
+<li><a href="#bsubscribe">B.&lt;subscribe&gt;</a></li>
+<li><a href="#cunsubscribe">C.&lt;unsubscribe&gt;</a></li>
+<li><a href="#dpost">D.&lt;post&gt;</a></li>
+<li><a href="#earchive">E.&lt;archive&gt;</a></li>
+</ul>
+</li>
+<li><a href="#4%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86scm">(4)软件配置管理(SCM)</a>
+<ul>
+<li><a href="#aconnection%E4%B8%8Edevelopconnection">A.&lt;connection&gt;与&lt;developConnection&gt;</a></li>
+<li><a href="#btag">B.&lt;tag&gt;</a></li>
+<li><a href="#curl">C.&lt;url&gt;</a></li>
+</ul>
+</li>
+<li><a href="#5%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6">(5)前提条件</a></li>
+<li><a href="#6%E4%BB%93%E5%BA%93">(6)仓库</a>
+<ul>
+<li><a href="#areleases">A.&lt;releases&gt;</a></li>
+<li><a href="#bsnapshots">B.&lt;snapshots&gt;</a></li>
+<li><a href="#cid">C.&lt;id&gt;</a></li>
+<li><a href="#dname">D.&lt;name&gt;</a></li>
+<li><a href="#eurl">E.&lt;url&gt;</a></li>
+<li><a href="#flayout">F.&lt;layout&gt;</a></li>
+</ul>
+</li>
+<li><a href="#7%E6%8F%92%E4%BB%B6%E4%BB%93%E5%BA%93">(7)插件仓库</a></li>
+<li><a href="#8%E5%88%86%E5%8F%91%E7%AE%A1%E7%90%86">(8)分发管理</a>
+<ul>
+<li><a href="#a%E4%BB%93%E5%BA%93">A.仓库</a></li>
+<li><a href="#b%E7%AB%99%E7%82%B9%E9%83%A8%E7%BD%B2">B.站点部署</a></li>
+<li><a href="#c%E9%87%8D%E5%AE%9A%E4%BD%8D">C.重定位</a></li>
+</ul>
+</li>
+<li><a href="#9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">(9)配置文件</a>
+<ul>
+<li><a href="#aactivebydefault">A.&lt;activeByDefault&gt;</a></li>
+<li><a href="#bjdk">B.&lt;jdk&gt;</a></li>
+<li><a href="#cos">C.&lt;os&gt;</a></li>
+<li><a href="#dproperty">D.&lt;property&gt;</a></li>
+<li><a href="#efile">E.&lt;file&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1pomxml是什么">1.pom.xml是什么</h1>
+<p>pom是Project Object Model(项目对象模型)的缩写,是Maven中的项目文件,可用于管理与配置依赖,组织信息,项目授权,远程仓库等等.一个Maven项目,可以没有任何代码,但不能没有pom.xml.</p>
+<h1 id="2基本配置">2.基本配置</h1>
+<h2 id="1project">(1)&lt;project&gt;</h2>
+<p>&lt;project&gt;是pom.xml的根元素,包含了一些约束信息.</p>
+<pre><code class="language-xml">&lt;project 
+xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; 
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+&lt;/project&gt;
+</code></pre>
+<h2 id="2modelversion">(2)&lt;modelVersion&gt;</h2>
+<pre><code class="language-xml">&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+</code></pre>
+<p>pom的版本,这是Maven 2&amp;3唯一支持的pom版本,而且不能忽略.</p>
+<h2 id="3maven坐标">(3)Maven坐标</h2>
+<p>&lt;groupId&gt;,&lt;artifactId&gt;与&lt;version&gt;标识了仓库中的一个特定位置,叫项目坐标.三个属性告诉了Maven项目中的一个特定版本,让Maven知道如何处理它们以及在生命周期内的哪一阶段需要它们.</p>
+<h3 id="agroupid">A.&lt;groupId&gt;</h3>
+<p>&lt;groupId&gt;表示项目所属的组,通常是一个公司或者组织的名称,如org.springframework.</p>
+<h3 id="bartifactid">B.&lt;artifactId&gt;</h3>
+<p>&lt;artifactId&gt;表示项目的唯一标识.</p>
+<h3 id="cversion">C.&lt;version&gt;</h3>
+<p>&lt;version&gt;表示项目的版本号,通常来说项目的版本号分成三段:<br>
+主版本号.次版本号.修订版本号</p>
+<ul>
+<li>主版本号:代表架构变动或者不兼容的实现.</li>
+<li>次版本号:兼容性修改,功能增强.</li>
+<li>修订版本号:bug修复.</li>
+</ul>
+<p>版本号的后缀意味着项目的不同阶段:</p>
+<ul>
+<li>SNAPSHOT:开发中的版本</li>
+<li>RELEASE:正式发布版</li>
+<li>M1,M2:M指里程碑,表示即将发布</li>
+<li>RC:Release Candidate,发布候选</li>
+<li>GA:General Availablity,基本可用版本</li>
+</ul>
+<h2 id="4packaging">(4)&lt;packaging&gt;</h2>
+<p>打包类型,没有提供的话默认值为jar,常见的有jar与war,也可以取值:</p>
+<ul>
+<li>maven-plugin</li>
+<li>pom</li>
+<li>ejb</li>
+<li>ear</li>
+<li>rar</li>
+</ul>
+<h2 id="5pom-关系">(5)POM 关系</h2>
+<p>Maven的一个强大之处是处理项目关系的方式,可以通过一个公共的本地仓库去解决问题.</p>
+<h3 id="a依赖">A.依赖</h3>
+<p>POM的基础就是依赖列表,Maven下载与在编译时链接依赖与其他所需要的目标,而且可以处理传递性依赖,使列表可以专注于项目所需的依赖.依赖放在&lt;dependencies&gt;里面,包含若干个&lt;dependency&gt;.</p>
+<pre><code class="language-xml">&lt;dependencies&gt;
+	&lt;dependency&gt;
+		....
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		....
+	&lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<p>一个&lt;dependency&gt;通常包含:</p>
+<h4 id="agroupid与artifactid">a.&lt;groupId&gt;与&lt;artifactId&gt;</h4>
+<p>对应项目坐标</p>
+<h4 id="bversion">b.&lt;version&gt;</h4>
+<p>版本</p>
+<h4 id="cclassifier">c.&lt;classifier&gt;</h4>
+<p>可用于配置不同jdk的&lt;depenency&gt;,比如让一个&lt;dependency&gt;同时支持jdk8与jdk11,可以选择使用哪一个&lt;classifier&gt;,方便在不同jdk中使用.</p>
+<h4 id="dtype">d.&lt;type&gt;</h4>
+<p>对应的依赖类型,默认为jar,通常对应与&lt;packaging&gt;.</p>
+<h4 id="escope">e.&lt;scope&gt;</h4>
+<p>scope表示类库与项目的关系,可以取以下5个值:</p>
+<ul>
+<li>compile:默认值,编译依赖使其在所有类路径中可用,而且这些依赖项会传递到其他依赖项目,在编译和打包时都需要此类库.</li>
+<li>provided:类似compile,但是期望JDK或一个容器会在运行时提供,仅在编译和测试类路径上可用,不可传递.</li>
+<li>runtime:在运行时与测试类路径中可用,在编译类路径中不可用.</li>
+<li>test:测试编译与执行阶段可用,不可传递.</li>
+<li>system:类似于provided,但必须显式提供jar包.</li>
+</ul>
+<h4 id="fsystempath">f.&lt;systemPath&gt;</h4>
+<p>当&lt;scope&gt;为system才需要这个,否则(当&lt;scope&gt;不为system时)会构建失败.路径必须为绝对路径.</p>
+<h4 id="goptional">g.&lt;optional&gt;</h4>
+<p>标记依赖的可选状态.</p>
+<h4 id="hexclusions">h.&lt;exclusions&gt;</h4>
+<p>排除不需要的依赖,包含子元素&lt;exclusion&gt;,每个&lt;exclusion&gt;都包含&lt;groupId&gt;与&lt;artifactId&gt;.</p>
+<h3 id="b继承">B.继承</h3>
+<p>使用&lt;parent&gt;指定需要继承的pom.</p>
+<pre><code class="language-xml">&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;2.2.1.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
+</code></pre>
+<p>子pom会继承父pom的&lt;groupId&gt;,&lt;version&gt;,&lt;build&gt;等众多属性,具体包括:</p>
+<ul>
+<li>groupId</li>
+<li>version</li>
+<li>description</li>
+<li>url</li>
+<li>inceptionYear</li>
+<li>organization</li>
+<li>licenses</li>
+<li>developers</li>
+<li>contributors</li>
+<li>mailingLists</li>
+<li>scm</li>
+<li>issueManagement</li>
+<li>ciManagement</li>
+<li>properties</li>
+<li>dependencyManagement</li>
+<li>dependencies</li>
+<li>repositories</li>
+<li>pluginRepositories</li>
+<li>build</li>
+<li>reporting</li>
+<li>profiles</li>
+</ul>
+<p>但不能继承:</p>
+<ul>
+<li>artifactId</li>
+<li>name</li>
+<li>prerequisites</li>
+</ul>
+<p>另外,就像java中所有类都继承于java.lang.Object一样,所有POM都有一个&quot;Super POM&quot;,pom都从它继承而来,下面是Maven3.5.4的&quot;Super pom&quot;:</p>
+<pre><code class="language-xml">&lt;project&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+ 
+  &lt;repositories&gt;
+    &lt;repository&gt;
+      &lt;id&gt;central&lt;/id&gt;
+      &lt;name&gt;Central Repository&lt;/name&gt;
+      &lt;url&gt;https://repo.maven.apache.org/maven2&lt;/url&gt;
+      &lt;layout&gt;default&lt;/layout&gt;
+      &lt;snapshots&gt;
+        &lt;enabled&gt;false&lt;/enabled&gt;
+      &lt;/snapshots&gt;
+    &lt;/repository&gt;
+  &lt;/repositories&gt;
+ 
+  &lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+      &lt;id&gt;central&lt;/id&gt;
+      &lt;name&gt;Central Repository&lt;/name&gt;
+      &lt;url&gt;https://repo.maven.apache.org/maven2&lt;/url&gt;
+      &lt;layout&gt;default&lt;/layout&gt;
+      &lt;snapshots&gt;
+        &lt;enabled&gt;false&lt;/enabled&gt;
+      &lt;/snapshots&gt;
+      &lt;releases&gt;
+        &lt;updatePolicy&gt;never&lt;/updatePolicy&gt;
+      &lt;/releases&gt;
+    &lt;/pluginRepository&gt;
+  &lt;/pluginRepositories&gt;
+ 
+  &lt;build&gt;
+    &lt;directory&gt;${project.basedir}/target&lt;/directory&gt;
+    &lt;outputDirectory&gt;${project.build.directory}/classes&lt;/outputDirectory&gt;
+    &lt;finalName&gt;${project.artifactId}-${project.version}&lt;/finalName&gt;
+    &lt;testOutputDirectory&gt;${project.build.directory}/test-classes&lt;/testOutputDirectory&gt;
+    &lt;sourceDirectory&gt;${project.basedir}/src/main/java&lt;/sourceDirectory&gt;
+    &lt;scriptSourceDirectory&gt;${project.basedir}/src/main/scripts&lt;/scriptSourceDirectory&gt;
+    &lt;testSourceDirectory&gt;${project.basedir}/src/test/java&lt;/testSourceDirectory&gt;
+    &lt;resources&gt;
+      &lt;resource&gt;
+        &lt;directory&gt;${project.basedir}/src/main/resources&lt;/directory&gt;
+      &lt;/resource&gt;
+    &lt;/resources&gt;
+    &lt;testResources&gt;
+      &lt;testResource&gt;
+        &lt;directory&gt;${project.basedir}/src/test/resources&lt;/directory&gt;
+      &lt;/testResource&gt;
+    &lt;/testResources&gt;
+    &lt;pluginManagement&gt;
+      &lt;!-- NOTE: These plugins will be removed from future versions of the super POM --&gt;
+      &lt;!-- They are kept for the moment as they are very unlikely to conflict with lifecycle mappings (MNG-4453) --&gt;
+      &lt;plugins&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+          &lt;version&gt;1.3&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.2-beta-5&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.8&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-release-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.5.3&lt;/version&gt;
+        &lt;/plugin&gt;
+      &lt;/plugins&gt;
+    &lt;/pluginManagement&gt;
+  &lt;/build&gt;
+ 
+  &lt;reporting&gt;
+    &lt;outputDirectory&gt;${project.build.directory}/site&lt;/outputDirectory&gt;
+  &lt;/reporting&gt;
+ 
+  &lt;profiles&gt;
+    &lt;!-- NOTE: The release profile will be removed from future versions of the super POM --&gt;
+    &lt;profile&gt;
+      &lt;id&gt;release-profile&lt;/id&gt;
+ 
+      &lt;activation&gt;
+        &lt;property&gt;
+          &lt;name&gt;performRelease&lt;/name&gt;
+          &lt;value&gt;true&lt;/value&gt;
+        &lt;/property&gt;
+      &lt;/activation&gt;
+ 
+      &lt;build&gt;
+        &lt;plugins&gt;
+          &lt;plugin&gt;
+            &lt;inherited&gt;true&lt;/inherited&gt;
+            &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;
+            &lt;executions&gt;
+              &lt;execution&gt;
+                &lt;id&gt;attach-sources&lt;/id&gt;
+                &lt;goals&gt;
+                  &lt;goal&gt;jar-no-fork&lt;/goal&gt;
+                &lt;/goals&gt;
+              &lt;/execution&gt;
+            &lt;/executions&gt;
+          &lt;/plugin&gt;
+          &lt;plugin&gt;
+            &lt;inherited&gt;true&lt;/inherited&gt;
+            &lt;artifactId&gt;maven-javadoc-plugin&lt;/artifactId&gt;
+            &lt;executions&gt;
+              &lt;execution&gt;
+                &lt;id&gt;attach-javadocs&lt;/id&gt;
+                &lt;goals&gt;
+                  &lt;goal&gt;jar&lt;/goal&gt;
+                &lt;/goals&gt;
+              &lt;/execution&gt;
+            &lt;/executions&gt;
+          &lt;/plugin&gt;
+          &lt;plugin&gt;
+            &lt;inherited&gt;true&lt;/inherited&gt;
+            &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
+            &lt;configuration&gt;
+              &lt;updateReleaseInfo&gt;true&lt;/updateReleaseInfo&gt;
+            &lt;/configuration&gt;
+          &lt;/plugin&gt;
+        &lt;/plugins&gt;
+      &lt;/build&gt;
+    &lt;/profile&gt;
+  &lt;/profiles&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="c聚合或多模块">C.聚合(或多模块)</h3>
+<p>模块是pom列出的项目,并作为一个组执行,每个模块通过pom文件或项目的相对路径进行列出.</p>
+<pre><code class="language-xml">&lt;modules&gt;
+    &lt;module&gt;my-project&lt;/module&gt;
+    &lt;module&gt;another-project&lt;/module&gt;
+    &lt;module&gt;third-project/pom-example.xml&lt;/module&gt;
+&lt;/modules&gt;
+</code></pre>
+<p>不需要考虑模块间的依赖关系,Maven会对其进行拓扑排序以便在依赖模块之前构建依赖关系.</p>
+<h2 id="6属性">(6)属性</h2>
+<p>属性是Maven中的值占位符,像Ant一样,可以以</p>
+<pre><code class="language-bash">${x}
+</code></pre>
+<p>这样的形式在pom.xml的任何位置访问一个值,也可以被用作默认值使用.<br>
+有5种形式使用值:</p>
+<h3 id="1envx">①env.x</h3>
+<p>env会使用当前shell的环境变量的值.<br>
+例如</p>
+<pre><code class="language-bash">${env.PATH}
+</code></pre>
+<h3 id="2projectx">②project.x</h3>
+<p>&lt;project&gt;下的x元素的值,如</p>
+<pre><code class="language-bash">${project.version}
+</code></pre>
+<h3 id="3settingsx">③settings.x</h3>
+<p>使用settings.xml中的元素的值</p>
+<pre><code class="language-bash">${settings.offline}
+</code></pre>
+<h3 id="4javax">④java.x</h3>
+<p>java系统属性值,通过java.lang.System.getProperties()获取,如</p>
+<pre><code class="language-bash">${java.home}
+</code></pre>
+<h3 id="5x">⑤x</h3>
+<p>直接使用x,用的是&lt;properties&gt;下的属性,比如</p>
+<pre><code class="language-xml">&lt;properties&gt;
+	&lt;aaa&gt;AAAAA&lt;/aaa&gt;
+&lt;/properties&gt;
+</code></pre>
+<pre><code class="language-bash">${aaa}
+</code></pre>
+<h1 id="3构建配置">3.构建配置</h1>
+<p>&lt;build&gt;,声明项目结构,管理插件等.</p>
+<h2 id="1basebuild元素">(1)BaseBuild元素</h2>
+<h3 id="adefaultgoal">A.&lt;defaultGoal&gt;</h3>
+<p>目标的默认值,可以取值install,copile</p>
+<h3 id="bdirectory">B.&lt;directory&gt;</h3>
+<p>构建产生的文件存放目录</p>
+<h3 id="cfinalname">C.&lt;finalName&gt;</h3>
+<p>构建最终产生的项目名字,但有可能会被更改.</p>
+<h3 id="dfilters">D.&lt;filters&gt;</h3>
+<p>定义一组&lt;filter&gt;,&lt;filter&gt;内是.properties文件,项目中的占位符如xxx.xxx会被.properties中的xxx=xxx的具体值替换掉.</p>
+<h2 id="2资源">(2)资源</h2>
+<p>&lt;resources&gt;,项目相关的资源文件的位置.</p>
+<h3 id="aresource">A.&lt;resource&gt;</h3>
+<p>描述每个资源的根元素.</p>
+<h3 id="btargetpath">B.&lt;targetPath&gt;</h3>
+<p>构建资源的位置,对于jar包放在META-INF里面.</p>
+<h3 id="cflitering">C.&lt;flitering&gt;</h3>
+<p>取值true或false,表示是否开启过滤</p>
+<h3 id="ddirectory">D.&lt;directory&gt;</h3>
+<p>资源位置.</p>
+<h3 id="einclude">E.&lt;include&gt;</h3>
+<p>指定要包含的资源,使用*作为通配符.</p>
+<h3 id="fexcludes">F.&lt;excludes&gt;</h3>
+<p>与include相反,要排除的资源列表.</p>
+<h2 id="3插件">(3)插件</h2>
+<p>&lt;plugins&gt;下包含了若干个&lt;plugin&gt;,表示插件,每个&lt;plugin&gt;有以下元素:</p>
+<h3 id="agroupid与artifactid-2">A.&lt;groupId&gt;与&lt;artifactId&gt;</h3>
+<p>与上面的&lt;groupId&gt;与&lt;artifactId&gt;一样.</p>
+<h3 id="bversion-2">B.&lt;version&gt;</h3>
+<p>与上面的&lt;version&gt;一样.</p>
+<h3 id="cextensions">C.&lt;extensions&gt;</h3>
+<p>取值true或false,表示是否加载扩展,默认为false.</p>
+<h3 id="dinherited">D.&lt;inherited&gt;</h3>
+<p>取值ture或false,是否应用pom的继承关系,默认true.</p>
+<h3 id="econfiguration">E.&lt;configuration&gt;</h3>
+<p>插件项的相关配置,可以配置&lt;finalName&gt;,&lt;appendAssemblyld&gt;,&lt;descriptor&gt;等.</p>
+<h3 id="fdependencies">F.&lt;dependencies&gt;</h3>
+<p>引入插件的依赖,与前面的&lt;dependencies&gt;类似.</p>
+<h3 id="gexecutions">G.&lt;executions&gt;</h3>
+<p>插件可能有多个目标,&lt;executions&gt;配置每一个&lt;execution&gt;作为插件的目标,在&lt;execution&gt;中,用&lt;id&gt;指定执行目标的标识符,用&lt;goals&gt;指定目标,&lt;goals&gt;包含一组&lt;goal&gt;,&lt;phase&gt;用于指定阶段,&lt;inherited&gt;用于指定是否启用继承关系.另外&lt;execution&gt;也可以包含&lt;configuration&gt;,与上面类似,用于配置特定的目标,而不是插件的所有目标.</p>
+<h2 id="4插件管理">(4)插件管理</h2>
+<p>&lt;pluginManagement&gt;,包含一组&lt;plugins&gt;,继承于此项目的子项目都可以使用,子项目可以覆盖修改&lt;pluginManagement&gt;.</p>
+<h2 id="5目录">(5)目录</h2>
+<p>可以为pom设置各种目录,比如</p>
+<h3 id="a项目源码目录">A.项目源码目录</h3>
+<pre><code class="language-xml">&lt;sourceDirectory&gt;&lt;/sourceDirectory&gt;
+</code></pre>
+<p>构建项目时会编译该目录的源码,是相对于pom.xml的相对路径.</p>
+<h3 id="b测试源码目录">B.测试源码目录</h3>
+<pre><code class="language-xml">&lt;testSourceDirectory&gt;&lt;/testSourceDirectory&gt;
+</code></pre>
+<p>测试时会编译其中的源码,也是相对于pom.xml的相对路径.</p>
+<h3 id="cclass目录">C.class目录</h3>
+<pre><code class="language-xml">&lt;outputDirectory&gt;&lt;/outputDirectory&gt;
+</code></pre>
+<p>这里存放被编译过的class文件.</p>
+<h3 id="d测试class">D.测试class</h3>
+<pre><code class="language-xml">&lt;testOutputDirectory&gt;&lt;/testOutputDirectory&gt;
+</code></pre>
+<p>存放测试文件编译后的class文件.</p>
+<h2 id="6扩展">(6)扩展</h2>
+<p>&lt;extensions&gt;,将包含在运行中的构建的类路径中,在构建过程中可以激活扩展.比如可以为,例如这是支持ftp的wagon-ftp插件:</p>
+<pre><code class="language-xml">&lt;build&gt;
+	&lt;extensions&gt;
+		&lt;extension&gt;
+			&lt;groupId&gt;org.apache.maven.wagon&lt;/groudId&gt;
+			&lt;artifactId&gt;wagon-ftp&lt;/artifactId&gt;
+			&lt;version&gt;3.3.4&lt;/version&gt;
+		&lt;/extension&gt;
+	&lt;/extensions&gt;
+&lt;/build&gt;
+</code></pre>
+<h2 id="7报表">(7)报表</h2>
+<p>&lt;reporting&gt;,描述产生报表的规范等,执行&quot;mvn site&quot;时报表就会运行.</p>
+<h3 id="aexcludedefaults">A.&lt;excludeDefaults&gt;</h3>
+<p>是否包含默认报表.</p>
+<h3 id="boutputdirectory">B.&lt;outputDirectory&gt;</h3>
+<p>报表存放位置.</p>
+<h3 id="cplugins">C.&lt;plugins&gt;</h3>
+<p>报表包含的插件以及配置.</p>
+<h3 id="dreportsets">D.&lt;reportSets&gt;</h3>
+<p>包含一组&lt;reportSet&gt;,与&lt;execution&gt;类似,配置多个目标,每个&lt;reportSet&gt;包含&lt;id&gt;,&lt;configuration&gt;,&lt;inherited&gt;,以及&lt;reports&gt;,&lt;id&gt;指定报表集合的标识符,&lt;configuration&gt;表示使用的报表配置,&lt;inherited&gt;表示是否继承到子pom,&lt;reports&gt;包含一组&lt;report&gt;,表示使用哪些报表.</p>
+<h1 id="4项目信息">4.项目信息</h1>
+<h2 id="1许可证">(1)许可证</h2>
+<p>&lt;licenses&gt;,包含一组&lt;license&gt;,每个&lt;license&gt;包含&lt;name&gt;,&lt;url&gt;,&lt;distribution&gt;,&lt;comments&gt;.</p>
+<h3 id="aname">A.&lt;name&gt;</h3>
+<p>名称.</p>
+<h3 id="burl">B.&lt;url&gt;</h3>
+<p>官方license页面的url.</p>
+<h3 id="cdistribution">C.&lt;distribution&gt;</h3>
+<p>项目分发的方式,可以选择</p>
+<ul>
+<li>repo:从Maven仓库下载.</li>
+<li>manual:手动安装.</li>
+</ul>
+<h3 id="dcomments">D.&lt;comments&gt;</h3>
+<p>一些补充信息.</p>
+<h2 id="2组织">(2)组织</h2>
+<p>&lt;organazation&gt;,包含&lt;name&gt;,&lt;url&gt;,与&lt;license&gt;的类似.</p>
+<h2 id="3开发者">(3)开发者</h2>
+<p>&lt;developers&gt;,包含一组&lt;developer&gt;,每个&lt;developer&gt;包含:</p>
+<h3 id="aid">A.&lt;id&gt;</h3>
+<p>开发者id.</p>
+<h3 id="bname">B.&lt;name&gt;</h3>
+<p>姓名.</p>
+<h3 id="cemail">C.&lt;email&gt;</h3>
+<p>邮箱.</p>
+<h3 id="durl">D.&lt;url&gt;</h3>
+<p>主页url.</p>
+<h3 id="eorganization">E.&lt;organization&gt;</h3>
+<p>所属组织.</p>
+<h3 id="forganizationurl">F.&lt;organizationUrl&gt;</h3>
+<p>所属组织的主页url.</p>
+<h3 id="groles">G.&lt;roles&gt;</h3>
+<p>角色,包含一组&lt;role&gt;,一个&lt;role&gt;描述一个角色.</p>
+<h3 id="htimezone">H.&lt;timeZone&gt;</h3>
+<p>时区,可以以America/New_York或Europe/Berlin这样的形式,或者设置一个整数,范围[-11,12].</p>
+<h3 id="iproperties">I.&lt;properties&gt;</h3>
+<p>开发者属性,如如何处理即时消息等.</p>
+<h2 id="4贡献者">(4)贡献者</h2>
+<p>&lt;contributors&gt;,包含一组&lt;contributor&gt;,类似于&lt;developer&gt;,包含&lt;name&gt;,&lt;email&gt;等元素.</p>
+<h1 id="5环境配置">5.环境配置</h1>
+<h2 id="1问题管理">(1)问题管理</h2>
+<p>&lt;issueManagement&gt;,定义缺陷跟踪系统,如Bugzilla,TestTrack,ClearQuest等,包含&lt;system&gt;与&lt;url&gt;元素,&lt;system&gt;指定系统名字,&lt;url&gt;指定问题管理系统的url.</p>
+<h2 id="2持续集成管理">(2)持续集成管理</h2>
+<p>&lt;ciManagement&gt;,使用了触发器,包含了:</p>
+<h3 id="asystem">A.&lt;system&gt;</h3>
+<p>持续集成系统的名称.</p>
+<h3 id="burl-2">B.&lt;url&gt;</h3>
+<p>持续集成系统的url.</p>
+<h3 id="cnotifiers">C.&lt;notifiers&gt;</h3>
+<p>包含一组&lt;notifier&gt;,用来配置触发器,每个&lt;notifier&gt;包含:</p>
+<h4 id="atype">a.&lt;type&gt;</h4>
+<p>如何发送通知,比如可以取值mail.</p>
+<h4 id="bsendonerror">b.&lt;sendOnError&gt;</h4>
+<p>取值true/false,错误时发送.</p>
+<h4 id="csendonfailure">c.&lt;sendOnFailure&gt;</h4>
+<p>取值true/false,失败时发送.</p>
+<h4 id="dsendonsuccess">d.&lt;sendOnSuccess&gt;</h4>
+<p>取值true/false,成功时发送.</p>
+<h4 id="esendonwarning">e.&lt;sendOnWarning&gt;</h4>
+<p>取值true/false,发生警告时发送.</p>
+<h4 id="fconfiguration">f.&lt;configuration&gt;</h4>
+<p>相关配置,例如可以添加&lt;address&gt;,发送的地址.</p>
+<h2 id="3邮件列表">(3)邮件列表</h2>
+<p>&lt;mailingLists&gt;,包含一组&lt;mailingList&gt;,表示邮件信息,包括:</p>
+<h3 id="aname-2">A.&lt;name&gt;</h3>
+<p>邮件名称.</p>
+<h3 id="bsubscribe">B.&lt;subscribe&gt;</h3>
+<p>订阅邮件地址或链接.</p>
+<h3 id="cunsubscribe">C.&lt;unsubscribe&gt;</h3>
+<p>取消订阅邮件或链接.</p>
+<h3 id="dpost">D.&lt;post&gt;</h3>
+<p>要发送的邮件地址.</p>
+<h3 id="earchive">E.&lt;archive&gt;</h3>
+<p>查看旧的邮件的url.</p>
+<h2 id="4软件配置管理scm">(4)软件配置管理(SCM)</h2>
+<p>&lt;scm&gt;,也叫Source Code/Control Management,允许配置代码库供web站点和其他插件使用.包含:</p>
+<h3 id="aconnection与developconnection">A.&lt;connection&gt;与&lt;developConnection&gt;</h3>
+<p>描述如何通过Maven连接到版本控制系统,其中connection需要读权限,developConnection需要写权限.</p>
+<h3 id="btag">B.&lt;tag&gt;</h3>
+<p>代码标签,默认为HEAD.</p>
+<h3 id="curl">C.&lt;url&gt;</h3>
+<p>公开的可浏览的仓库,例如ViewVC或Fisheye.</p>
+<h2 id="5前提条件">(5)前提条件</h2>
+<p>&lt;prerequisites&gt;,这是Maven2中的元素,只有一个子元素&lt;maven&gt;,指定maven的版本,且规定是2.x版本.Maven3中不需要&lt;prerequisites&gt;了,可以用:</p>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;
+            &lt;version&gt;3.0.0-M3&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                &lt;id&gt;enforce-maven&lt;/id&gt;
+                &lt;goals&gt;
+                    &lt;goal&gt;enforce&lt;/goal&gt;
+                &lt;/goals&gt;
+                &lt;configuration&gt;
+                &lt;rules&gt;
+                    &lt;requireMavenVersion&gt;
+                        &lt;version&gt;3.0&lt;/version&gt;
+                    &lt;/requireMavenVersion&gt;
+                &lt;/rules&gt;    
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+      &lt;/executions&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<p>代替.</p>
+<h2 id="6仓库">(6)仓库</h2>
+<p>&lt;repositories&gt;,包含一组&lt;repository&gt;,表示仓库的位置,每个&lt;repository&gt;包含:</p>
+<h3 id="areleases">A.&lt;releases&gt;</h3>
+<p>如何处理远征仓库的发布版本,包含:</p>
+<ul>
+<li>&lt;enabled&gt;<br>
+true/false,是否启用.</li>
+<li>&lt;updatePolicy&gt;<br>
+更新频率,Maven将本地pom的时间戳与远程进行比较,可以选择:always,daily(默认),interval:X(X是一个整数,表示X分钟),never.</li>
+<li>&lt;checksumPolicy&gt;<br>
+校验错误或校验失败时的策略,可以选择ignore,fail或warn.</li>
+</ul>
+<h3 id="bsnapshots">B.&lt;snapshots&gt;</h3>
+<p>如何处理远程仓库的快照版本,包含的元素与&lt;releases&gt;一样.</p>
+<h3 id="cid">C.&lt;id&gt;</h3>
+<p>远程仓库的标识符.</p>
+<h3 id="dname">D.&lt;name&gt;</h3>
+<p>远程仓库的名称.</p>
+<h3 id="eurl">E.&lt;url&gt;</h3>
+<p>远程仓库的url.</p>
+<h3 id="flayout">F.&lt;layout&gt;</h3>
+<p>仓库布局类型,可以是default或legacy,Maven2.x为仓库提供了默认布局.</p>
+<h2 id="7插件仓库">(7)插件仓库</h2>
+<p>&lt;pluginRepositories&gt;,插件的远程仓库列表,包含一组&lt;pluginRepository&gt;,与&lt;repositories&gt;中的&lt;repository&gt;类似.</p>
+<h2 id="8分发管理">(8)分发管理</h2>
+<p>&lt;distributeManagement&gt;,管理整个构建过程中的分发,可以把网站部署到远程服务器或者把构件部署到远程仓库.包含:</p>
+<h3 id="a仓库">A.仓库</h3>
+<p>&lt;repository&gt;,仓库信息,包含:</p>
+<ul>
+<li>&lt;uniqueVersion&gt;:唯一版本,取值true/false,表示是否生成一个唯一版本号或是使用部分地址作为版本号.</li>
+<li>&lt;name&gt;:仓库名字.</li>
+<li>&lt;id&gt;:仓库id.</li>
+<li>&lt;url&gt;:指定仓库位置.</li>
+<li>&lt;layout&gt;:布局,取值default或legacy.</li>
+</ul>
+<p>还有一个叫&lt;snapshotRepository&gt;的元素,与&lt;repository&gt;类似,表示快照仓库.</p>
+<h3 id="b站点部署">B.站点部署</h3>
+<p>&lt;site&gt;,定义了如何部署项目的站点与文档.包含:</p>
+<ul>
+<li>&lt;name&gt;:站点名称.</li>
+<li>&lt;id&gt;:站点id.</li>
+<li>&lt;url&gt;:站点url.</li>
+</ul>
+<h3 id="c重定位">C.重定位</h3>
+<p>&lt;relocation&gt;,表示项目的新位置.包含:</p>
+<ul>
+<li>&lt;groupId&gt;:新的&lt;groupId&gt;.</li>
+<li>&lt;artifactId&gt;:新的&lt;artifactId&gt;.</li>
+<li>&lt;version&gt;:新版本.</li>
+<li>&lt;message&gt;:提示信息.</li>
+</ul>
+<h2 id="9配置文件">(9)配置文件</h2>
+<p>&lt;profiles&gt;,包含一组&lt;profile&gt;,每个&lt;profile&gt;可以定义不同的配置,包含的元素有:</p>
+<ul>
+<li>&lt;id&gt;:配置文件的id,比如测试的可以叫test.</li>
+<li>&lt;build&gt;:相关构建信息.</li>
+<li>&lt;modules&gt;:模块信息.</li>
+<li>&lt;repositories&gt;:远程仓库信息.</li>
+<li>&lt;pluginRepositories&gt;:插件仓库信息.</li>
+<li>&lt;dependencies&gt;:依赖信息.</li>
+<li>&lt;reporting&gt;:报表信息.</li>
+<li>&lt;dependencyManagement&gt;:依赖管理信息.</li>
+<li>&lt;distributeManagement&gt;:分发管理</li>
+<li>&lt;activation&gt;:activation是profile的关键,profile的强大之处是某些情况下才可以修改基本pom,这些情况通过activation指定.</li>
+</ul>
+<p>&lt;activation&gt;包含以下元素:</p>
+<h3 id="aactivebydefault">A.&lt;activeByDefault&gt;</h3>
+<p>是否默认激活,true或false.</p>
+<h3 id="bjdk">B.&lt;jdk&gt;</h3>
+<p>指定jdk版本.</p>
+<h3 id="cos">C.&lt;os&gt;</h3>
+<p>&lt;os&gt;可以定义一些特定的操作系统属性,例如&lt;name&gt;,&lt;family&gt;,&lt;arch&gt;,&lt;version&gt;.</p>
+<h3 id="dproperty">D.&lt;property&gt;</h3>
+<p>若Maven检测到该属性就会激活该属性所在的配置文件,可以指定&lt;name&gt;与&lt;value&gt;.</p>
+<h3 id="efile">E.&lt;file&gt;</h3>
+<p>有&lt;exists&gt;与&lt;missing&gt;两个子元素,&lt;exists&gt;表示若存在&lt;exists&gt;元素中对应的文件,则激活此配置文件.&lt;miissing&gt;表示若不存在&lt;missing&gt;元素中对应的文件,则激活此配置文件.</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/python-ji-chu-liu.png');"></div>
+                 <a href="https://2293736867.github.io/post/python-ji-chu-liu/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Python基础(六)</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/python-ji-chu-wu.png');"></div>
+                 <a href="https://2293736867.github.io/post/python-ji-chu-wu/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Python基础(五)</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ben-di-web-fu-wu-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/">centos8搭建本地Web服务器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ftp-fu-wu-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/">CentOS8搭建FTP服务器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/python-ji-chu-ba/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/python-ji-chu-ba.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/python-ji-chu-ba/">Python基础(八)</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-0 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-1 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-2 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-3 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-4 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-5 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-7 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-8 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-9 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-10 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-12 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-13 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-14 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-15 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-16 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-17 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-18 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-19 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-20 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-21 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-22 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 35 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

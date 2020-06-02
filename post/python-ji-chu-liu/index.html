@@ -1,0 +1,567 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python基础(六) | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 函数
+
+1.1 函数的分类
+1.2 函数与方法
+1.3 函数也是对象
+1.4 注意事项
+
+
+2 内置函数
+
+2.1 查看帮助
+2.2 数学函数
+
+2.2.1 abs
+2.2.2 max/min
+2.2.3 pow
+2.2.4 roun..." />
+    <meta name="keywords" content="Python" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591128958873" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/python-ji-chu-liu.png');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/python-ji-chu-liu/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/python-ji-chu-liu/"> </span>
+              </a>
+              <span id="/python-ji-chu-liu/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-0 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Python基础(六)</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E5%87%BD%E6%95%B0">1 函数</a>
+<ul>
+<li><a href="#11-%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%86%E7%B1%BB">1.1 函数的分类</a></li>
+<li><a href="#12-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95">1.2 函数与方法</a></li>
+<li><a href="#13-%E5%87%BD%E6%95%B0%E4%B9%9F%E6%98%AF%E5%AF%B9%E8%B1%A1">1.3 函数也是对象</a></li>
+<li><a href="#14-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">1.4 注意事项</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0">2 内置函数</a>
+<ul>
+<li><a href="#21-%E6%9F%A5%E7%9C%8B%E5%B8%AE%E5%8A%A9">2.1 查看帮助</a></li>
+<li><a href="#22-%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0">2.2 数学函数</a>
+<ul>
+<li><a href="#221-abs">2.2.1 abs</a></li>
+<li><a href="#222-maxmin">2.2.2 max/min</a></li>
+<li><a href="#223-pow">2.2.3 pow</a></li>
+<li><a href="#224-round">2.2.4 round</a></li>
+</ul>
+</li>
+<li><a href="#23-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0">2.3 类型转换函数</a></li>
+<li><a href="#24-%E5%85%B6%E4%BB%96%E5%87%BD%E6%95%B0">2.4 其他函数</a>
+<ul>
+<li><a href="#241-type">2.4.1 type()</a></li>
+<li><a href="#242-isinstance">2.4.2 isinstance()</a></li>
+<li><a href="#243-dir">2.4.3 dir()</a></li>
+<li><a href="#244-len">2.4.4 len()</a></li>
+<li><a href="#245-range">2.4.5 range()</a></li>
+<li><a href="#246-callable">2.4.6 callable()</a></li>
+<li><a href="#247-bin">2.4.7 bin()</a></li>
+<li><a href="#248-oct">2.4.8 oct()</a></li>
+<li><a href="#249-hex">2.4.9 hex()</a></li>
+<li><a href="#2410-int">2.4.10 int()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-函数">1 函数</h1>
+<h2 id="11-函数的分类">1.1 函数的分类</h2>
+<p>函数可以分成三种:</p>
+<ul>
+<li>内置函数(BIF):解释器中内置的函数,可以直接通过函数名调用,如len().</li>
+<li>模块函数:定义在模块中的函数,通过模块名调用,如math.sin().</li>
+<li>用户自定义函数.</li>
+</ul>
+<h2 id="12-函数与方法">1.2 函数与方法</h2>
+<p>函数是指在类外定义的,可以独立调用的一组语句集合,另外通过类去调用的语句,也叫函数而不是方法.<br>
+方法是指在类内定义的,需要通过对象与点调用的一组语句集合,方法中的self是隐式传递的.</p>
+<h2 id="13-函数也是对象">1.3 函数也是对象</h2>
+<p>在python中,函数也是对象,比如:</p>
+<pre><code class="language-py">def xx():
+    print(4)
+print(type(xx))
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191230024058760.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-注意事项">1.4 注意事项</h2>
+<p>函数的参数带一个 * 时,表示元组,带两个 * 时,表示字典.函数的返回值可以为迭代器,元组等,如果没有return,默认返回None.<br>
+另外就是docstring,docstring其实就是一堆注释,说明函数的作用,建议使用三引号.</p>
+<h1 id="2-内置函数">2 内置函数</h1>
+<p>内置函数就是内置在python解释器中的函数,可以直接通过函数名调用,不需要import.查看内置函数可以使用内置函数dir():</p>
+<pre><code class="language-py">dir(__builtins__)
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191230025011363.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="21-查看帮助">2.1 查看帮助</h2>
+<p>可以使用help查看函数的帮助.<br>
+<img src="https://img-blog.csdnimg.cn/20191230024805132.png" alt="在这里插入图片描述" loading="lazy"><br>
+一般给出简单的帮助信息,详细信息可以去官网查询.</p>
+<h2 id="22-数学函数">2.2 数学函数</h2>
+<h3 id="221-abs">2.2.1 abs</h3>
+<p>求绝对值.<br>
+<img src="https://img-blog.csdnimg.cn/20191230025159181.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="222-maxmin">2.2.2 max/min</h3>
+<p>求最大/小值,支持元组,列表,集合,字符串等.<br>
+<img src="https://img-blog.csdnimg.cn/20191230025307134.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="223-pow">2.2.3 pow</h3>
+<p>求次幂.<br>
+<img src="https://img-blog.csdnimg.cn/20191230025535473.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="224-round">2.2.4 round</h3>
+<p>四舍五入,两个参数,第一个参数是要四舍五入的数,第二个参数是保留的小数位数,第二个参数可以省略,省略的话相当于取整.</p>
+<p>若保留的小数位数为2则保留2位,保留的小数位数为1则保留1位,保留的小数位数为0则保留....0...呃...不是,保留1位,保留1位0.<br>
+<img src="https://img-blog.csdnimg.cn/20191230030010509.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="23-类型转换函数">2.3 类型转换函数</h2>
+<p>就是常用的int(),bool()等函数,这些也是内置函数.<br>
+<img src="https://img-blog.csdnimg.cn/20191230030538456.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="24-其他函数">2.4 其他函数</h2>
+<h3 id="241-type">2.4.1 type()</h3>
+<p>type()是查看类型的函数.<br>
+<img src="https://img-blog.csdnimg.cn/20191230030833387.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="242-isinstance">2.4.2 isinstance()</h3>
+<p>isinstance()判断一个的类型,与type()类似,但是isinstance()会考虑继承关系,而type()不会考虑.<br>
+<img src="https://img-blog.csdnimg.cn/20191230031046214.png" alt="在这里插入图片描述" loading="lazy"></p>
+<pre><code class="language-py">class a:
+    pass
+class b(a):
+    pass
+print('type(a()) == a is ',type(a()) == a)
+print('type(b()) == a is ',type(b()) == a)
+print('isinstance(a(),a) is ',isinstance(a(),a))
+print('isinstance(b(),a) is ',isinstance(b(),a))
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191230031357413.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="243-dir">2.4.3 dir()</h3>
+<p>dir()查看搜索的路径.</p>
+<h3 id="244-len">2.4.4 len()</h3>
+<p>求长度.</p>
+<h3 id="245-range">2.4.5 range()</h3>
+<p>快速生成序列,返回一个迭代器.<br>
+<img src="https://img-blog.csdnimg.cn/20191230031629532.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="246-callable">2.4.6 callable()</h3>
+<p>判断对象是否可以被调用,因为函数也是一个对象,所以可以通过callable()判断函数是否可以被调用.<br>
+<img src="https://img-blog.csdnimg.cn/20191230031858789.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="247-bin">2.4.7 bin()</h3>
+<p>十进制--&gt;二进制.<br>
+<img src="https://img-blog.csdnimg.cn/20191230032141960.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="248-oct">2.4.8 oct()</h3>
+<p>十进制--&gt;八进制.<br>
+<img src="https://img-blog.csdnimg.cn/20191230032517649.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="249-hex">2.4.9 hex()</h3>
+<p>十进制--&gt;十六进制.<br>
+<img src="https://img-blog.csdnimg.cn/20191230032553361.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="2410-int">2.4.10 int()</h3>
+<p>n进制--&gt;十进制.<br>
+<img src="https://img-blog.csdnimg.cn/20191230032807896.png" alt="在这里插入图片描述" loading="lazy"></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/python-ji-chu-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/python-ji-chu-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Python基础(七)</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/pomxml-xiang-jie.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/pomxml-xiang-jie/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">pom.xml详解</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ben-di-web-fu-wu-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/">centos8搭建本地Web服务器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ftp-fu-wu-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/">CentOS8搭建FTP服务器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/python-ji-chu-ba/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/python-ji-chu-ba.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/python-ji-chu-ba/">Python基础(八)</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-0 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-1 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-2 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-3 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-4 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-5 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-7 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-8 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-9 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-10 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-12 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-13 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-14 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-15 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-16 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-17 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-18 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-19 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-20 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-21 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-22 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 35 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

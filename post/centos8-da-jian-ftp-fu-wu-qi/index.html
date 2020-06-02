@@ -1,0 +1,627 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CentOS8搭建FTP服务器 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 安装vsftpd
+3 开启服务
+4 设置开机启动
+5 修改/etc/vsftpd/vsftpd.conf
+6 创建测试文件
+7 测试
+
+7.1 浏览器测试
+
+7.1.1 匿名测试
+7.1.2 用户登录测试
+
+
+7.2 ftp..." />
+    <meta name="keywords" content="CentOS,FTP" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591128958873" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ftp-fu-wu-qi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/centos8-da-jian-ftp-fu-wu-qi/"> </span>
+              </a>
+              <span id="/centos8-da-jian-ftp-fu-wu-qi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-0 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-1 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">CentOS8搭建FTP服务器</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85vsftpd">2 安装vsftpd</a></li>
+<li><a href="#3-%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1">3 开启服务</a></li>
+<li><a href="#4-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">4 设置开机启动</a></li>
+<li><a href="#5-%E4%BF%AE%E6%94%B9etcvsftpdvsftpdconf">5 修改/etc/vsftpd/vsftpd.conf</a></li>
+<li><a href="#6-%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6">6 创建测试文件</a></li>
+<li><a href="#7-%E6%B5%8B%E8%AF%95">7 测试</a>
+<ul>
+<li><a href="#71-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B5%8B%E8%AF%95">7.1 浏览器测试</a>
+<ul>
+<li><a href="#711-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.1.1 匿名测试</a></li>
+<li><a href="#712-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.1.2 用户登录测试</a></li>
+</ul>
+</li>
+<li><a href="#72-ftp%E5%91%BD%E4%BB%A4%E6%B5%8B%E8%AF%95">7.2 ftp命令测试</a>
+<ul>
+<li><a href="#721-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.2.1 匿名测试</a>
+<ul>
+<li><a href="#7211-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">7.2.1.1 上传测试</a></li>
+<li><a href="#7212-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">7.2.1.2 下载测试</a></li>
+</ul>
+</li>
+<li><a href="#722-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.2.2 用户登录测试</a>
+<ul>
+<li><a href="#7221-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">7.2.2.1 上传测试</a></li>
+<li><a href="#7222-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">7.2.2.2 下载测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#73-wget%E6%B5%8B%E8%AF%95">7.3 wget测试</a>
+<ul>
+<li><a href="#731-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.3.1 匿名测试</a></li>
+<li><a href="#732-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.3.2 用户登录测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>文章主要讲了CentOS8如何利用vsftpd搭建一个FTP服务器,然后进行简单的匿名上传/下载与用户上传/下载测试,还有使用了wget测试.</p>
+<h1 id="2-安装vsftpd">2 安装vsftpd</h1>
+<pre><code class="language-bash">yum install -y vsftpd
+</code></pre>
+<h1 id="3-开启服务">3 开启服务</h1>
+<pre><code class="language-bash">service httpd start
+</code></pre>
+<h1 id="4-设置开机启动">4 设置开机启动</h1>
+<p>可以用</p>
+<pre><code class="language-bash">systemctl list-unit-files | grep vsftpd
+</code></pre>
+<p>查看是否开机启动.显示disabled.<br>
+<img src="https://img-blog.csdnimg.cn/20200101030147305.png" alt="在这里插入图片描述" loading="lazy"><br>
+通过</p>
+<pre><code class="language-bash">chkconfig vsftpd on
+</code></pre>
+<p>开启自启,再次执行systemctl,可以看到变成了enabled.</p>
+<h1 id="5-修改etcvsftpdvsftpdconf">5 修改/etc/vsftpd/vsftpd.conf</h1>
+<pre><code class="language-bash">sudo vim /etc/vsftpd/vsftpd.conf
+</code></pre>
+<p>首先修改<br>
+<img src="https://img-blog.csdnimg.cn/20200101030618606.png" alt="在这里插入图片描述" loading="lazy"><br>
+为YES.<br>
+再添加一行anon_upload_enable=YES<br>
+<img src="https://img-blog.csdnimg.cn/20200101030851708.png" alt="在这里插入图片描述" loading="lazy"><br>
+第一行的意思是允许匿名登录,第二行的意思是允许匿名上传.<br>
+重启服务.</p>
+<pre><code class="language-bash">service vsftpd restart
+</code></pre>
+<h1 id="6-创建测试文件">6 创建测试文件</h1>
+<pre><code class="language-bash">cd /var/ftp/pub
+sudo vim test
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200101031249233.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-测试">7 测试</h1>
+<h2 id="71-浏览器测试">7.1 浏览器测试</h2>
+<h3 id="711-匿名测试">7.1.1 匿名测试</h3>
+<p>ifconfig获取内网ip,在浏览器中输入ftp://ip.<br>
+<img src="https://img-blog.csdnimg.cn/20200101031730471.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以看到有一个pub文件夹,里面有刚才新建的test文件.<br>
+<img src="https://img-blog.csdnimg.cn/20200101031838167.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200101031849294.png" alt="在这里插入图片描述" loading="lazy"><br>
+右键保存即可下载文件.<br>
+<img src="https://img-blog.csdnimg.cn/20200101031948461.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载完成.<br>
+<img src="https://img-blog.csdnimg.cn/20200101032047324.png" alt="在这里插入图片描述" loading="lazy"><br>
+去终端看看.<br>
+<img src="https://img-blog.csdnimg.cn/20200101032137819.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="712-用户登录测试">7.1.2 用户登录测试</h3>
+<p>输入</p>
+<pre><code class="language-bash">ftp://username@ip
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200101032238241.png" alt="在这里插入图片描述" loading="lazy"><br>
+再输入用户密码.<br>
+默认访问的是用户根目录下的文件,这里显示出来了.<br>
+<img src="https://img-blog.csdnimg.cn/20200101032414278.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载的话同上,右键选择即可.</p>
+<h2 id="72-ftp命令测试">7.2 ftp命令测试</h2>
+<p>首先安装ftp:</p>
+<pre><code class="language-bash">sudo yum install ftp
+</code></pre>
+<h3 id="721-匿名测试">7.2.1 匿名测试</h3>
+<pre><code class="language-bash">ftp ip
+</code></pre>
+<p>这里用户名选择ftp,密码为空,表示匿名登录.ftp为默认的匿名登录用户名,至于密码,可以在/etc/vsftpd/vsftpd.conf中设置一个</p>
+<pre><code>no_anon_password=YES
+</code></pre>
+<p>这样匿名用户可以不用密码登录.<br>
+<img src="https://img-blog.csdnimg.cn/20200101033958446.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="7211-上传测试">7.2.1.1 上传测试</h4>
+<p>直接使用put命令,后面接上文件,这里的upload.txt是执行ftp之前的所在文件夹下的upload.txt<br>
+<img src="https://img-blog.csdnimg.cn/20200101034153782.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里提示不能创建文件,是权限的原因,要确保/var/ftp/pub对&quot;other&quot;用户有写权限.<br>
+<img src="https://img-blog.csdnimg.cn/20200101034507850.png" alt="在这里插入图片描述" loading="lazy"><br>
+默认的/var/ftp/pub的权限是644,修改成647.</p>
+<pre><code class="language-bash">sudo chmod 647 /var/ftp/pub
+</code></pre>
+<p>同时修改上传文件的权限,允许other用户可读.</p>
+<pre><code class="language-bash">sudo chmod 644 /root/upload.txt
+</code></pre>
+<p>如果不行,使用selinux设置.</p>
+<pre><code class="language-bash">getsebool -a | grep ftp
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200101041509763.png" alt="在这里插入图片描述" loading="lazy"><br>
+把ftpd_full_access开启:</p>
+<pre><code class="language-bash">setsebool ftpd_full_access on
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200101041325973.png" alt="在这里插入图片描述" loading="lazy"><br>
+再进入upload.txt所在的文件夹,执行ftp,再次put.<br>
+<img src="https://img-blog.csdnimg.cn/20200101041756274.png" alt="在这里插入图片描述" loading="lazy"><br>
+成功!<br>
+<img src="https://img-blog.csdnimg.cn/20200101041850446.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="7212-下载测试">7.2.1.2 下载测试</h4>
+<p>直接get文件即可,由于上面已经设置好了权限,所以不会出现问题.<br>
+<img src="https://img-blog.csdnimg.cn/20200101042052729.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200101042158684.png" alt="在这里插入图片描述" loading="lazy"><br>
+若出现权限问题可从三方面入手:</p>
+<ul>
+<li>(1)<strong>/var/ftp/pub的对other用户的可读权限:因为是下载,而且匿名,所以只需要对other用户的可读权限</strong></li>
+<li>(2)<strong>被下载文件的对other用户的可读权限</strong></li>
+<li>(3)<strong>selinux的问题,设置ftpd_full_access为on</strong></li>
+</ul>
+<h3 id="722-用户登录测试">7.2.2 用户登录测试</h3>
+<p>执行ftp时用对应用户名与密码登录.<br>
+<img src="https://img-blog.csdnimg.cn/20200101042624970.png" alt="在这里插入图片描述" loading="lazy"><br>
+默认进入了用户根目录.</p>
+<h4 id="7221-上传测试">7.2.2.1 上传测试</h4>
+<p>直接put即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200101042824793.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200101042907482.png" alt="在这里插入图片描述" loading="lazy"><br>
+若出现权限问题参照上面7.2.1.2的那三条方法.</p>
+<h4 id="7222-下载测试">7.2.2.2 下载测试</h4>
+<p>随便在用户根目录新建一个文件,这里是kr.<br>
+<img src="https://img-blog.csdnimg.cn/20200101043238911.png" alt="在这里插入图片描述" loading="lazy"><br>
+直接get即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200101043337444.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200101043424416.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="73-wget测试">7.3 wget测试</h2>
+<p>wget用来下载文件,初始下载的目录与ftp登录时的目录一致,比如匿名登录ftp,登录的是/var/ftp目录,则wget会从这个/var/ftp目录下载文件,下载到执行wget命令所在的目录.使用用户&quot;kr&quot;登录ftp,则登录的是/home/kr目录,wget会从/home/kr下载文件.</p>
+<h3 id="731-匿名测试">7.3.1 匿名测试</h3>
+<p>注意,请确保被下载文件对other用户有可读权限.</p>
+<pre><code class="language-bash">sudo chmod o+w xxxxxx
+</code></pre>
+<p>然后使用wget</p>
+<pre><code class="language-bash">wget ftp://ip/pub/xxxx
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200101044803421.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200101044830152.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="732-用户登录测试">7.3.2 用户登录测试</h3>
+<p>使用--ftp-user,--ftp-password指定用户名与密码,其余同上.</p>
+<pre><code class="language-bash">wget ftp://ip/xxx --ftp-user=xxxx --ftp-password=xxxx
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200101045316791.png" alt="在这里插入图片描述" loading="lazy"><br>
+成功.</p>
+<h1 id="8-总结">8 总结</h1>
+<p>呃....简单来说,就是先安装好ftp与vsftpd,然后修改/etc/vsftpd/vsftpd.conf添加相应权限,对于不能上传与下载的原因,基本上都是权限的问题,主要就是三方面:</p>
+<ul>
+<li><strong>(1)ftp目录的权限:比如可以是/var/ftp/pub没有对应的写权限导致上传失败,没有对应读权限导致下载失败.</strong></li>
+<li><strong>(2)被上传文件的权限:比如上传的文件没有读权限导致上传失败.</strong></li>
+<li><strong>(3)selinux:使用setsebool设置为on.</strong></li>
+</ul>
+<p>解决权限问题后,基本就可以通过ftp或wget顺利地使用这个ftp服务器上传/下载文件了.</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ben-di-web-fu-wu-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">centos8搭建本地Web服务器</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/python-ji-chu-ba.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/python-ji-chu-ba/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Python基础(八)</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ben-di-web-fu-wu-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/centos8-da-jian-ben-di-web-fu-wu-qi/">centos8搭建本地Web服务器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/centos8-da-jian-ftp-fu-wu-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/centos8-da-jian-ftp-fu-wu-qi/">CentOS8搭建FTP服务器</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/python-ji-chu-ba/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/python-ji-chu-ba.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/python-ji-chu-ba/">Python基础(八)</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-0 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-1 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-2 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-3 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-4 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-5 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-7 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-8 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-9 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-10 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-12 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-13 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-14 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-15 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-16 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-17 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-18 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-19 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-20 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-21 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-22 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 35 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
