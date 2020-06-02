@@ -1,0 +1,963 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IDEA/JRebel实现内部/外部/远程Tomcat热部署Spring Boot | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 环境
+3 IDEA热部署
+
+3.1 工程部分
+
+3.1.1 新建工程
+3.1.2 测试文件
+
+
+3.2 内部Tomcat热部署
+
+3.2.1 IDEA设置
+3.2.2 测试
+
+
+3.3 外部Tomcat热部署
+
+3.3.1 ..." />
+    <meta name="keywords" content="IDEA,JRebel,Tomcat,Spring Boot" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591133446012" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/ideajrebel-shi-xian-nei-bu-wai-bu-yuan-cheng-tomcat-re-bu-shu-spring-boot.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">7 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/ideajrebel-shi-xian-nei-bu-wai-bu-yuan-cheng-tomcat-re-bu-shu-spring-boot/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/ideajrebel-shi-xian-nei-bu-wai-bu-yuan-cheng-tomcat-re-bu-shu-spring-boot/"> </span>
+              </a>
+              <span id="/ideajrebel-shi-xian-nei-bu-wai-bu-yuan-cheng-tomcat-re-bu-shu-spring-boot/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-0 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-1 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-2 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">IDEA/JRebel实现内部/外部/远程Tomcat热部署Spring Boot</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-idea%E7%83%AD%E9%83%A8%E7%BD%B2">3 IDEA热部署</a>
+<ul>
+<li><a href="#31-%E5%B7%A5%E7%A8%8B%E9%83%A8%E5%88%86">3.1 工程部分</a>
+<ul>
+<li><a href="#311-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">3.1.1 新建工程</a></li>
+<li><a href="#312-%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6">3.1.2 测试文件</a></li>
+</ul>
+</li>
+<li><a href="#32-%E5%86%85%E9%83%A8tomcat%E7%83%AD%E9%83%A8%E7%BD%B2">3.2 内部Tomcat热部署</a>
+<ul>
+<li><a href="#321-idea%E8%AE%BE%E7%BD%AE">3.2.1 IDEA设置</a></li>
+<li><a href="#322-%E6%B5%8B%E8%AF%95">3.2.2 测试</a></li>
+</ul>
+</li>
+<li><a href="#33-%E5%A4%96%E9%83%A8tomcat%E7%83%AD%E9%83%A8%E7%BD%B2">3.3 外部Tomcat热部署</a>
+<ul>
+<li><a href="#331-%E5%A4%96%E9%83%A8tomcat%E9%85%8D%E7%BD%AE">3.3.1 外部Tomcat配置</a></li>
+<li><a href="#332-%E6%B5%8B%E8%AF%95">3.3.2 测试</a></li>
+</ul>
+</li>
+<li><a href="#34-%E8%BF%9C%E7%A8%8Btomcat%E7%83%AD%E9%83%A8%E7%BD%B2">3.4 远程Tomcat热部署</a>
+<ul>
+<li><a href="#341-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84tomcat%E8%AE%BE%E7%BD%AE">3.4.1 服务器的Tomcat设置</a></li>
+<li><a href="#342-idea%E4%B8%AD%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E7%BD%AE">3.4.2 IDEA中的服务器设置</a></li>
+<li><a href="#343-idea%E4%B8%AD%E7%9A%84tomcat%E8%AE%BE%E7%BD%AE">3.4.3  IDEA中的Tomcat设置</a></li>
+<li><a href="#344-%E6%B5%8B%E8%AF%95">3.4.4 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-jrebel%E7%83%AD%E9%83%A8%E7%BD%B2">4 JRebel热部署</a>
+<ul>
+<li><a href="#41-jrebel%E7%AE%80%E4%BB%8B">4.1 JRebel简介</a></li>
+<li><a href="#42-%E5%AE%89%E8%A3%85">4.2 安装</a></li>
+<li><a href="#43-%E5%86%85%E9%83%A8tomcat%E7%83%AD%E9%83%A8%E7%BD%B2">4.3 内部Tomcat热部署</a></li>
+<li><a href="#44-%E5%A4%96%E9%83%A8tomcat%E7%83%AD%E9%83%A8%E7%BD%B2">4.4 外部Tomcat热部署</a></li>
+<li><a href="#45-%E8%BF%9C%E7%A8%8Btomcat%E7%83%AD%E9%83%A8%E7%BD%B2">4.5 远程Tomcat热部署</a>
+<ul>
+<li><a href="#451-%E6%89%93%E5%8C%85%E4%B8%8A%E4%BC%A0">4.5.1 打包上传</a></li>
+<li><a href="#452-%E6%96%B0%E5%BB%BA%E8%84%9A%E6%9C%AC">4.5.2 新建脚本</a></li>
+<li><a href="#453-%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8">4.5.3 添加远程服务器</a></li>
+<li><a href="#454-%E6%B5%8B%E8%AF%95">4.5.4 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-%E9%99%84%E5%BD%95jar%E6%89%93%E5%8C%85">5 附录:jar打包</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>所谓热部署,对于Java应用程序来说,就是在运行时更新Java类文件.IDEA可以使用自带的Spring Boot热部署的方式进行本地/远程热部署,或者使用JRebel进行本地/远程热部署,不过需要安装JRebel and XRebel for IntelliJ这个插件.本文将会介绍这两种方式来进行热部署,这应该是网上能找到的最详细的IDEA热部署的文章,相信在看完之后,开发效率会大大提升,不再需要像以前那样手动打jar/war包然后上传到服务器等一系列繁琐操作.</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>IDE:IntelliJ IDEA 2019.3.1</li>
+<li>本地Tomcat:9.0.30</li>
+<li>JRebel and XRebel for IntelliJ:2020.2.0</li>
+<li>服务器:CentOS 8.1.1911</li>
+<li>服务器Tomcat:9.0.33</li>
+</ul>
+<h1 id="3-idea热部署">3 IDEA热部署</h1>
+<h2 id="31-工程部分">3.1 工程部分</h2>
+<h3 id="311-新建工程">3.1.1 新建工程</h3>
+<p>这里新建一个Spring Boot工程来进行热部署的测试.<br>
+<img src="https://img-blog.csdnimg.cn/20200421214003333.png" alt="在这里插入图片描述" loading="lazy"><br>
+打包方式改为war,因为后面要使用外部Tomcat:<br>
+勾上热部署工具Spring Boot DevTools与使用内嵌Tomcat的Spring Web.<br>
+<img src="https://img-blog.csdnimg.cn/20200421214358270.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/2020042121444012.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="312-测试文件">3.1.2 测试文件</h3>
+<p>新建一个响应Get请求的Controller:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215316771.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里添加了一个控制台信息方便查看.</p>
+<h2 id="32-内部tomcat热部署">3.2 内部Tomcat热部署</h2>
+<p>Spring Boot内嵌了一个Tomcat,可以直接使用其进行热部署.</p>
+<h3 id="321-idea设置">3.2.1 IDEA设置</h3>
+<p>首先需要开启Compiler中的Build project automatically:<br>
+<img src="https://img-blog.csdnimg.cn/20200421213638493.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后按两下shift,切换到Action,搜索Registry:<br>
+<img src="https://img-blog.csdnimg.cn/20200421213802284.png" alt="在这里插入图片描述" loading="lazy"><br>
+把compiler.automake.allow.when.app.running开启:<br>
+<img src="https://img-blog.csdnimg.cn/20200421213852790.png" alt="在这里插入图片描述" loading="lazy"><br>
+最后编辑运行设置:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215444506.png" alt="在这里插入图片描述" loading="lazy"><br>
+以下两项选择Update classed and resources:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215519820.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="322-测试">3.2.2 测试</h3>
+<p>IDEA自带了一个HTTP client(其实是一个插件,不需要可以关闭),可以发送HTTP请求,新建一个HTTP Request:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215732568.png" alt="在这里插入图片描述" loading="lazy"><br>
+名字随便:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215756673.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加一个GET请求:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215816130.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改路径与端口,注意路径对应:<br>
+<img src="https://img-blog.csdnimg.cn/20200421215924250.png" alt="在这里插入图片描述" loading="lazy"><br>
+切换回Spring Boot的运行设置,shift+F10运行:<br>
+<img src="https://img-blog.csdnimg.cn/20200421220003890.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后就可以发送HTTP请求了,点击一下绿色的小三角:<br>
+<img src="https://img-blog.csdnimg.cn/20200421220129948.png" alt="在这里插入图片描述" loading="lazy"><br>
+返回了对应信息,控制台也有对应输出:<br>
+<img src="https://img-blog.csdnimg.cn/20200421220213116.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/202004212202513.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改Controller里面的test,改为test1:<br>
+<img src="https://img-blog.csdnimg.cn/20200421221248528.png" alt="在这里插入图片描述" loading="lazy"><br>
+不用重新运行项目,切换一下窗口让IDEA进行Update操作:<br>
+<img src="https://img-blog.csdnimg.cn/20200421221009513.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200421221202899.png" alt="在这里插入图片描述" loading="lazy"><br>
+控制台会重新打印Spring字样,Messages中会看到Build completed successfully的信息,表示Update操作成功.<br>
+重新发送原来的HTTP请求,报错:<br>
+<img src="https://img-blog.csdnimg.cn/20200421220627696.png" alt="在这里插入图片描述" loading="lazy"><br>
+因为此时已经没有响应localhost:8080/test的方法了,改为test1后:<br>
+<img src="https://img-blog.csdnimg.cn/20200421220852551.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200421221121370.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="33-外部tomcat热部署">3.3 外部Tomcat热部署</h2>
+<p>由于已经配置好了IDEA的相关设置,这里就不重复了,没配置的按上面的方式配置,然后需要增加一个外部的Tomcat配置.</p>
+<h3 id="331-外部tomcat配置">3.3.1 外部Tomcat配置</h3>
+<p>需要增加一个外部Tomcat的运行配置:<br>
+<img src="https://img-blog.csdnimg.cn/2020042122144337.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加Tomcat,选择local:<br>
+<img src="https://img-blog.csdnimg.cn/20200421221549398.png" alt="在这里插入图片描述" loading="lazy"><br>
+没有显示Tomcat的话在more items这里.<br>
+改个名字,Configure选择本地Tomcat的路径,同时把下面的Build去掉.<br>
+<img src="https://img-blog.csdnimg.cn/20200421221709899.png" alt="在这里插入图片描述" loading="lazy"><br>
+部署这里要选择exploded的:<br>
+<img src="https://img-blog.csdnimg.cn/20200421221755977.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200421221848128.png" alt="在这里插入图片描述" loading="lazy"><br>
+改回根路径:<br>
+<img src="https://img-blog.csdnimg.cn/20200421221904252.png" alt="在这里插入图片描述" loading="lazy"><br>
+回到Server选项卡,修改以下两项为Update classed and resources:<br>
+<img src="https://img-blog.csdnimg.cn/20200421222652280.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="332-测试">3.3.2 测试</h3>
+<p>注意外部的Tomcat热部署不能使用Run运行,不能像内部的一样直接Shift+F10,要使用Debug运行,Shift+F9:<br>
+<img src="https://img-blog.csdnimg.cn/20200421222152768.png" alt="在这里插入图片描述" loading="lazy"><br>
+需要确保默认的8080端口不被占用,先把刚才的Spring Boot应用暂停,在run这里,Tomcat在services这里.<br>
+<img src="https://img-blog.csdnimg.cn/20200421222329537.png" alt="在这里插入图片描述" loading="lazy"><br>
+测试文件还是刚才的test1,发送请求:<br>
+<img src="https://img-blog.csdnimg.cn/20200421222542968.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后修改test1的方法体:<br>
+<img src="https://img-blog.csdnimg.cn/20200421223035704.png" alt="在这里插入图片描述" loading="lazy"><br>
+切换窗口后会提示class reloaded:<br>
+<img src="https://img-blog.csdnimg.cn/20200421222900966.png" alt="在这里插入图片描述" loading="lazy"><br>
+再次发送刚才的HTTP请求:<br>
+<img src="https://img-blog.csdnimg.cn/20200421223055645.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200421223111678.png" alt="在这里插入图片描述" loading="lazy"><br>
+成功!<br>
+不过,这种热部署只能修改方法体,如果增加了一个方法或者修改了原来的方法名等,会提示热交换失败,虚拟机不支持该操作:<br>
+<img src="https://img-blog.csdnimg.cn/20200421223219638.png" alt="在这里插入图片描述" loading="lazy"><br>
+去万能的百度查了一下:<br>
+<img src="https://img-blog.csdnimg.cn/20200421224851108.png" alt="在这里插入图片描述" loading="lazy"><br>
+说是Java HotSwap的限制,HotSwap是一个JVM补丁,这里就略过了.同时后面提到一些类似JRebel的第三方工具可以支持这种类型的修改,当然,下面会有详细介绍.</p>
+<h2 id="34-远程tomcat热部署">3.4 远程Tomcat热部署</h2>
+<p>远程Tomcat热部署比较麻烦,细节很多,一个端口错误就一堆异常,所以请耐心细看.需要三个步骤:设置服务器的Tomcat,设置IDEA的服务器配置,设置IDEA的Tomcat运行配置.最后进行测试.</p>
+<h3 id="341-服务器的tomcat设置">3.4.1 服务器的Tomcat设置</h3>
+<p>需要处理四个端口:Tomcat的HTTP端口,JMX端口,RMI端口与调试端口.<br>
+其中HTTP端口就是常说的Tomcat端口,浏览器输入http://ip:port就可以访问到Tomcat的默认首页,在server.xml中设置,这里的是在69行的位置,使用默认的8080.<br>
+<img src="https://img-blog.csdnimg.cn/20200422102159428.png" alt="在这里插入图片描述" loading="lazy"><br>
+在Tomcat的bin目录下新建一个setenv.sh:</p>
+<pre><code class="language-bash">CATALINA_OPTS=&quot;-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8888 
+-Dcom.sun.management.jmxremote.rmi.port=8888
+-Dcom.sun.management.jmxremote.ssl=false 
+-Dcom.sun.management.jmxremote.authenticate=false 
+-Djava.rmi.server.hostname=ip
+-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:12345,suspend=n,server=y&quot;
+</code></pre>
+<p>其中JMX与RMI端口设为一致,只要没有占用随便取即可,address后面的12345是调试端口,根据需要设置即可.ip是服务器的ip地址</p>
+<pre><code class="language-bash">-Dcom.sun.management.jmxremote.ssl=false 
+-Dcom.sun.management.jmxremote.authenticate=false 
+</code></pre>
+<p>这两行表示不使用ssl连接与使用JMX客户端连接到Tomcat时不需要认证.<br>
+注意要加上</p>
+<pre><code class="language-bash">-Dcom.sun.management.jmxremote.rmi.port=8888
+</code></pre>
+<p>这个RMI端口,很多文章都没有加上这个导致部署失败.<br>
+最后修改执行权限并启动tomcat:</p>
+<pre><code class="language-bash">chmod 750 setenv.sh
+./startup.sh
+</code></pre>
+<p>可以查看一下端口监听:</p>
+<pre><code class="language-bash">netstart -ano | grep -E &quot;8080|8888|12345&quot;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200422103500252.png" alt="在这里插入图片描述" loading="lazy"><br>
+三个端口都监听到了,表示配置成功,若没有监听到这三个端口,请检查Tomcat日志.<br>
+同时注意防火墙与安全组的问题,如果开启了防火墙请允许这三个端口通过,安全组也要开启对应端口规则.</p>
+<h3 id="342-idea中的服务器设置">3.4.2 IDEA中的服务器设置</h3>
+<p>新建一个SFTP部署:<br>
+<img src="https://img-blog.csdnimg.cn/2020042209530913.png" alt="在这里插入图片描述" loading="lazy"><br>
+ip为服务器ip,port为ssh端口,认证方式可以密码或者密钥,按需要选择,Root path设为tomcat的webapps路径,如果有乱码问题把下面的高级选项的编码改为utf-8.<br>
+<img src="https://img-blog.csdnimg.cn/20200422095619301.png" alt="在这里插入图片描述" loading="lazy"><br>
+设置好了以后测试一下.<br>
+<img src="https://img-blog.csdnimg.cn/20200422095801847.png" alt="在这里插入图片描述" loading="lazy"><br>
+映射:下面有完整的说明,Local path是本地的项目路径,Deployment path是相对与webapps的路径(上面设置了Root path为webapps),Web path是相对与url的路径.<br>
+<img src="https://img-blog.csdnimg.cn/20200422095859283.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="343-idea中的tomcat设置">3.4.3  IDEA中的Tomcat设置</h3>
+<p>新建一个Tomcat Remote:<br>
+<img src="https://img-blog.csdnimg.cn/20200422095059105.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200422095029688.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里是最重要的设置,设置JMX端口(这里是上面3.4.1设置的8888),Host选择上一步创建的服务器,Path from root为根路径,Mapped as为webapps路径,Host下面的端口为TomcatHTTP端口(这里使用默认的8080,3.4.1中的配置有详细说明).<br>
+<img src="https://img-blog.csdnimg.cn/20200422104251750.png" alt="在这里插入图片描述" loading="lazy"><br>
+部署这里选择exploded的war包,Application context选择根路径.<br>
+<img src="https://img-blog.csdnimg.cn/20200422104558588.png" alt="在这里插入图片描述" loading="lazy"><br>
+Debug这里修改3.4.1中设置的端口:<br>
+<img src="https://img-blog.csdnimg.cn/20200422104649274.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="344-测试">3.4.4 测试</h3>
+<p>需要以Debug模式(Shift+F9)运行,不能直接Run(Shift+F10):<br>
+<img src="https://img-blog.csdnimg.cn/20200422104832273.png" alt="在这里插入图片描述" loading="lazy"><br>
+首先会提示连接到服务器和虚拟机:<br>
+<img src="https://img-blog.csdnimg.cn/20200422113230322.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后提示成功部署:<br>
+<img src="https://img-blog.csdnimg.cn/20200422113245474.png" alt="在这里插入图片描述" loading="lazy"><br>
+这时候应该会自动打开浏览器,因为这里设置了运行后打开该URL:<br>
+<img src="https://img-blog.csdnimg.cn/20200422113855490.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改方法体后按Ctrl+F9,提示重新加载类:<br>
+<img src="https://img-blog.csdnimg.cn/20200422113353545.png" alt="在这里插入图片描述" loading="lazy"><br>
+Debug信息提示已重新加载类:<br>
+<img src="https://img-blog.csdnimg.cn/20200422113422294.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样就热部署成功了.<br>
+当然,像上面的使用外部Tomcat一样,如果修改方法名或者增加方法,会提示虚拟机不支持操作(解决方法是使用下面的JRebel):<br>
+<img src="https://img-blog.csdnimg.cn/20200422113503966.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-jrebel热部署">4 JRebel热部署</h1>
+<h2 id="41-jrebel简介">4.1 JRebel简介</h2>
+<p><img src="https://img-blog.csdnimg.cn/20200421225208693.png" alt="在这里插入图片描述" loading="lazy"><br>
+JRebel是一个集成了应用服务器的JVM代理,可以使用现有的类加载器重新加载类.只有修改后的类会在运行中的应用程序被重新编译和即时重新加载.</p>
+<h2 id="42-安装">4.2 安装</h2>
+<p>从设置中的Plugins安装,搜索即可:<br>
+<img src="https://img-blog.csdnimg.cn/20200422013535380.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果速度慢的话可以从官网(<a href="https://plugins.jetbrains.com/">戳这里</a>)去下载,然后从本地安装:<br>
+<img src="https://img-blog.csdnimg.cn/20200422013650928.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="43-内部tomcat热部署">4.3 内部Tomcat热部署</h2>
+<p>内部Tocmat热部署非常简单,选中SpringBoot的运行配置以后,直接点击Rebel Run即可:<br>
+<img src="https://img-blog.csdnimg.cn/20200422013813453.png" alt="在这里插入图片描述" loading="lazy"><br>
+控制台提示重新加载类并且重新配置bean,表示成功.<br>
+<img src="https://img-blog.csdnimg.cn/20200422013902489.png" alt="在这里插入图片描述" loading="lazy"><br>
+当然这样做的前提是默认的Spring Boot配置已经像上面的3.2一样配置好,比如如果修改为:<br>
+<img src="https://img-blog.csdnimg.cn/20200422014140954.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样JRebel就会没有效果.</p>
+<h2 id="44-外部tomcat热部署">4.4 外部Tomcat热部署</h2>
+<p>像上面的3.3一样配置好外部Tomcat后,也是直接一键Rebel Run即可.<br>
+注意保证端口不被占用.<br>
+<img src="https://img-blog.csdnimg.cn/20200422014440989.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里与默认的热部署相比,最大的不同是允许增加与改变方法,而不仅仅是修改方法体(不然的话也不会出现3.3的那个问题).<br>
+下面是原来的Controller中的方法:<br>
+<img src="https://img-blog.csdnimg.cn/20200422014630655.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加一个方法后:<br>
+<img src="https://img-blog.csdnimg.cn/20200422014742254.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200422014728178.png" alt="在这里插入图片描述" loading="lazy"><br>
+提示已重新加载,表示成功,而不是提示Operation not supported by VM.</p>
+<h2 id="45-远程tomcat热部署">4.5 远程Tomcat热部署</h2>
+<p>使用JRebel进行的远程Tomcat热部署需要先打包上传,然后才能热部署.</p>
+<h3 id="451-打包上传">4.5.1 打包上传</h3>
+<p>热部署之前,需要先手动打包:<br>
+<img src="https://img-blog.csdnimg.cn/20200422023952311.png" alt="在这里插入图片描述" loading="lazy"><br>
+上传到服务器的Tomcat的webapps下.</p>
+<h3 id="452-新建脚本">4.5.2 新建脚本</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200422022120473.png" alt="在这里插入图片描述" loading="lazy"><br>
+选择运行在远程服务器或虚拟机,然后选择Tomcat:<br>
+<img src="https://img-blog.csdnimg.cn/20200422022159170.png" alt="在这里插入图片描述" loading="lazy"><br>
+按提示新建脚本:<br>
+<img src="https://img-blog.csdnimg.cn/20200422022216890.png" alt="在这里插入图片描述" loading="lazy"><br>
+实测还需要修改脚本权限,750:<br>
+<img src="https://img-blog.csdnimg.cn/20200422022252235.png" alt="在这里插入图片描述" loading="lazy"><br>
+启动之后可以看到JRebel的输出:JRebel started in remote server mode:<br>
+<img src="https://img-blog.csdnimg.cn/20200422024845410.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200422024958848.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样就能成功监控到变化了.</p>
+<h3 id="453-添加远程服务器">4.5.3 添加远程服务器</h3>
+<p><img src="https://img-blog.csdnimg.cn/20200422022336398.png" alt="在这里插入图片描述" loading="lazy"><br>
+服务器名字随便,URL为ip+端口(注意服务器的防火墙还有安全组规则开放端口),如果设置了服务器认证(通过</p>
+<pre><code class="language-bash">java -jar xxx.jar -set-remote-password PASSWORD
+</code></pre>
+<p>设置),则需要勾选Server authentication并填上密码.<br>
+如果Tomcat设置了访问密码(设置方法<a href="https://blog.csdn.net/duanchaoxuan/article/details/103940717">这里查看</a>),则需要勾选HTTP Basic authentication,并填上用户名与密码:<br>
+<img src="https://img-blog.csdnimg.cn/20200422022444299.png" alt="在这里插入图片描述" loading="lazy"><br>
+测试一下连接:<br>
+<img src="https://img-blog.csdnimg.cn/20200422022852461.png" alt="在这里插入图片描述" loading="lazy"><br>
+没问题就下一步.</p>
+<h3 id="454-测试">4.5.4 测试</h3>
+<p>然后,打开JRebel,选择部署的项目:<br>
+<img src="https://img-blog.csdnimg.cn/20200422023053212.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200422023106519.png" alt="在这里插入图片描述" loading="lazy"><br>
+下面是打包时的Controller方法,只有一个test:<br>
+<img src="https://img-blog.csdnimg.cn/20200422025056204.png" alt="在这里插入图片描述" loading="lazy"><br>
+测试(注意test前的路径为打包的名字,要对应):<br>
+<img src="https://img-blog.csdnimg.cn/20200422025149701.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200422025237551.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后加上test1方法,ctrl+F9,构建:<br>
+<img src="https://img-blog.csdnimg.cn/20200422025313177.png" alt="在这里插入图片描述" loading="lazy"><br>
+服务器端提示重新加载类:<br>
+<img src="https://img-blog.csdnimg.cn/20200422025424856.png" alt="在这里插入图片描述" loading="lazy"><br>
+再次输入test1:<br>
+<img src="https://img-blog.csdnimg.cn/2020042202550657.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样就远程热部署成功了!</p>
+<h1 id="5-附录jar打包">5 附录:jar打包</h1>
+<p>由于Spring Boot内嵌了Tomcat,可以打成jar包的形式使用内嵌的Tomcat,这样,可以避免一系列的包括目录映射,端口等繁琐的Tomcat配置.在原来的war打包形式的基础上,修改pom.xml中的&lt;packing&gt;:<br>
+<img src="https://img-blog.csdnimg.cn/20200422114912424.png" alt="在这里插入图片描述" loading="lazy"><br>
+加上maven插件(默认已加上):<br>
+<img src="https://img-blog.csdnimg.cn/20200422114925908.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以把原来的ServletInitializer删去:<br>
+<img src="https://img-blog.csdnimg.cn/20200422115003831.png" alt="在这里插入图片描述" loading="lazy"><br>
+使用Maven打包:<br>
+<img src="https://img-blog.csdnimg.cn/20200422115039118.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以先在本地测试一下:</p>
+<pre><code class="language-java">java -jar demo.jar
+</code></pre>
+<p>没问题的话就可以上传到服务器了,或者直接使用热部署,注意Tomcat与JRebel需要修改相应的配置,具体就不详细说了.</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/php-unable-to-load-dynamic-library-pdo_firebird-and-pdo_oci.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/php-unable-to-load-dynamic-library-pdo_firebird-and-pdo_oci/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">PHP :Unable to load dynamic library &#39;pdo_firebird&#39; and &#39;pdo_oci&#39;</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/ru-he-kuai-su-huo-qu-yi-ge-mian-fei-you-hao-kan-de-ge-ren-bo-ke-wang-zhan-kan-zhe-li.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/ru-he-kuai-su-huo-qu-yi-ge-mian-fei-you-hao-kan-de-ge-ren-bo-ke-wang-zhan-kan-zhe-li/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">如何快速获取一个免费又好看的个人博客网站?看这里!</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/manjaro-lan-ya-lian-jie-wen-ti.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/">Manjaro 蓝牙连接问题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/idea-shi-yong-jfx-de-xiang-guan-wen-ti.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/">IDEA使用JFX的相关问题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/tu-pian-ya-suo-jiao-ben.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/">图片压缩脚本</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-0 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-1 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-2 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-3 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-4 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-5 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-7 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-8 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-9 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-10 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-11 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-12 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-13 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-14 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-15 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-16 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-17 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-18 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-19 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-20 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-21 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-22 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-23 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-24 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-25 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-26 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-27 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-28 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-29 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-30 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-31 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-32 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-33 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-34 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-35 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-36 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-37 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-38 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-39 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-40 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-41 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-42 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-43 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-44 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-45 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-46 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-47 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-48 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-49 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-50 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-51 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-52 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-53 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-54 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-55 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-56 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-57 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 103 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

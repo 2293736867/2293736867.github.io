@@ -1,0 +1,1024 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>源码编译安装MySQL8.0.20 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 源码编译安装的相关知识
+
+2.1 make与configure
+2.2 Tarball文件
+2.3 源码编译安装相关组件
+
+2.3.1 编译器
+2.3.2 make+autoconfig
+2.3.3 函数库
+
+
+2.4 静态..." />
+    <meta name="keywords" content="MySQL" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591133446012" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/yuan-ma-bian-yi-an-zhuang-mysql8020.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/yuan-ma-bian-yi-an-zhuang-mysql8020/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/yuan-ma-bian-yi-an-zhuang-mysql8020/"> </span>
+              </a>
+              <span id="/yuan-ma-bian-yi-an-zhuang-mysql8020/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-0 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">源码编译安装MySQL8.0.20</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">2 源码编译安装的相关知识</a>
+<ul>
+<li><a href="#21-make%E4%B8%8Econfigure">2.1 make与configure</a></li>
+<li><a href="#22-tarball%E6%96%87%E4%BB%B6">2.2 Tarball文件</a></li>
+<li><a href="#23-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6">2.3 源码编译安装相关组件</a>
+<ul>
+<li><a href="#231-%E7%BC%96%E8%AF%91%E5%99%A8">2.3.1 编译器</a></li>
+<li><a href="#232-makeautoconfig">2.3.2 make+autoconfig</a></li>
+<li><a href="#233-%E5%87%BD%E6%95%B0%E5%BA%93">2.3.3 函数库</a></li>
+</ul>
+</li>
+<li><a href="#24-%E9%9D%99%E6%80%81%E5%BA%93%E4%B8%8E%E5%8A%A8%E6%80%81%E5%BA%93">2.4 静态库与动态库</a>
+<ul>
+<li><a href="#241-%E9%9D%99%E6%80%81%E5%BA%93">2.4.1 静态库</a></li>
+<li><a href="#242-%E5%8A%A8%E6%80%81%E5%BA%93">2.4.2 动态库</a></li>
+</ul>
+</li>
+<li><a href="#25-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84%E4%B8%80%E8%88%AC%E6%AD%A5%E9%AA%A4">2.5 编译安装的一般步骤</a></li>
+<li><a href="#26-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E5%89%8D%E7%9A%84%E5%BF%83%E7%90%86%E5%87%86%E5%A4%87">2.6 编译安装前的心理准备</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%89%E8%A3%85mysql">3 安装MySQL</a>
+<ul>
+<li><a href="#31-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">3.1 安装依赖</a></li>
+<li><a href="#32-%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85">3.2 包管理器安装</a></li>
+<li><a href="#32-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">3.2 编译安装</a>
+<ul>
+<li><a href="#321-%E5%AE%89%E8%A3%85cmake">3.2.1 安装cmake</a></li>
+<li><a href="#322-%E5%AE%89%E8%A3%85make">3.2.2 安装make</a></li>
+<li><a href="#323-%E5%AE%89%E8%A3%85gcc">3.2.3 安装gcc</a></li>
+<li><a href="#324-%E5%AE%89%E8%A3%85openssl">3.2.4 安装openssl</a></li>
+<li><a href="#325-%E4%B8%8B%E8%BD%BDboost">3.2.5 下载boost</a></li>
+<li><a href="#326-%E5%AE%89%E8%A3%85ncurses">3.2.6 安装ncurses</a></li>
+<li><a href="#327-%E5%AE%89%E8%A3%85bison">3.2.7 安装bison</a></li>
+<li><a href="#328-%E5%AE%89%E8%A3%85git">3.2.8 安装git</a></li>
+<li><a href="#329-%E5%90%8E%E7%BB%AD%E5%A4%84%E7%90%86">3.2.9 后续处理</a></li>
+</ul>
+</li>
+<li><a href="#33-%E4%B8%8B%E8%BD%BDmysql%E7%A4%BE%E5%8C%BA%E7%89%88">3.3 下载MySQL社区版</a></li>
+<li><a href="#34-%E7%94%9F%E6%88%90makefile">3.4 生成Makefile</a></li>
+<li><a href="#35-%E7%BC%96%E8%AF%91%E4%B8%8E%E5%AE%89%E8%A3%85">3.5 编译与安装</a></li>
+<li><a href="#36-%E5%90%8E%E7%BB%AD%E9%85%8D%E7%BD%AE">3.6 后续配置</a>
+<ul>
+<li><a href="#361-%E7%94%A8%E6%88%B7%E7%BB%84%E4%B8%8E%E7%94%A8%E6%88%B7">3.6.1 用户组与用户</a></li>
+<li><a href="#362-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">3.6.2 配置文件</a></li>
+</ul>
+</li>
+<li><a href="#37-%E5%88%9D%E5%A7%8B%E5%8C%96">3.7 初始化</a></li>
+<li><a href="#38-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">3.8 修改密码</a></li>
+<li><a href="#39-%E6%B5%8B%E8%AF%95">3.9 测试</a></li>
+<li><a href="#310-%E6%94%B6%E5%B0%BE%E5%B7%A5%E4%BD%9C">3.10 收尾工作</a>
+<ul>
+<li><a href="#3101-%E5%88%AB%E5%90%8D">3.10.1 别名</a></li>
+<li><a href="#3102-%E5%AE%89%E8%A3%85mycli">3.10.2 安装Mycli</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E5%8F%82%E8%80%83">4 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文章主要讲述了如何从源码编译安装MySQL社区版8.0.20，首先会介绍一些编译安装的相关知识，然后开始编译安装</p>
+<h1 id="2-源码编译安装的相关知识">2 源码编译安装的相关知识</h1>
+<h2 id="21-make与configure">2.1 make与configure</h2>
+<p>make是一个编译的命令，会在当前的目录下寻找Makefile这个文件，Makefile文件记录了源代码如何编译的详细信息。而configure是由软件开发商编写的一个检测程序检测用户的开发环境，检测完毕后生成Makefile文件。通常，configure会检测如下内容：</p>
+<ul>
+<li>是否具有合适的编译器</li>
+<li>是否具有所需函数库以及其他依赖</li>
+<li>是否兼容本系统</li>
+<li>是否存在内核头文件</li>
+</ul>
+<h2 id="22-tarball文件">2.2 Tarball文件</h2>
+<p>Tarball文件其实就是将源代码以tar打后压缩的文件。通常使用gzip进行压缩，一般扩展名为.tar.gz或.tgz，不过由于bzip2以及xz等技术压缩效果比gzip好，因此文件名也会变成扩展名也会变成.tar.bz2或.tar.xz之类的。通常一个Tarball文件有：</p>
+<ul>
+<li>源码</li>
+<li>检测文件（configure/config）</li>
+<li>说明（README/INSTALL）</li>
+</ul>
+<h2 id="23-源码编译安装相关组件">2.3 源码编译安装相关组件</h2>
+<h3 id="231-编译器">2.3.1 编译器</h3>
+<p>需要有编译器才能进行编译操作，通常使用的是gcc。</p>
+<h3 id="232-makeautoconfig">2.3.2 make+autoconfig</h3>
+<p>以Tarball形式发布的软件，为了简化编译流程，通常需要make来根据目标文件文件的依赖性进行编译，但是由于make需要Makefile，因此需要autoconfig生成Makefile。</p>
+<h3 id="233-函数库">2.3.3 函数库</h3>
+<p>需要内核提供的库以及相关的include文件。</p>
+<h2 id="24-静态库与动态库">2.4 静态库与动态库</h2>
+<p>函数库分为动态库与静态库两种类型，绝大部分放在/lib与/lib64中。</p>
+<h3 id="241-静态库">2.4.1 静态库</h3>
+<p>扩展名为.a，编译时会直接整合到执行程序中，所以利用静态库生成的文件会比较大一些，编译后的可执行文件可以直接运行，无需依赖外部函数库。另外升级难度较大，因为是直接整合进程序中，升级了静态库的话需要重新编译。</p>
+<h3 id="242-动态库">2.4.2 动态库</h3>
+<p>扩展名为.so，在编译时不像静态库一样，动态库在程序中只有一个指针，当可执行程序需要用到函数库的功能时，才会读取函数库来使用，生成的可执行文件会比较小一点，但是不能独立执行编译出来的程序。另外升级比较方便，不需要重新编译，因为执行文件会直接指向新的函数库文件。</p>
+<h2 id="25-编译安装的一般步骤">2.5 编译安装的一般步骤</h2>
+<ul>
+<li>（1）获取源码：一般使用wget或curl或从浏览器下载。</li>
+<li>（2）查看帮助文件：解压后查看INSTALL或README等文件相关内容</li>
+<li>（3）安装依赖：根据官网文档或上一步中得到的信息安装依赖</li>
+<li>（4）生成Makefile：一般使用configure/config进行配置，检测操作环境，指定安装位置，开启/关闭对应的功能，指定相关库位置等，确定依赖关系等，一般需要使用--help获取选项帮助，指定对应选项后配置并生成Makefile</li>
+<li>（5）编译：实际编译步骤，一个简单的make命令，实际包含了头文件预编译，预处理，编译与连接步骤</li>
+<li>（6）安装：make install，这一步实际进行安装与操作系统连接两个步骤</li>
+</ul>
+<p>注意，以上步骤都是有顺序的，而且前一个步骤执行失败则后一个步骤也不能执行，也就是说需要前一个步骤执行成功才能进行下一步的操作。完成以上六步就能编译安装了，一般需要进行一些后续处理，比如，添加可执行文件路径到PATH，添加头文件与库文件到/usr/include与/etc/ld.so.conf.d中，添加联机帮助文件到/etc/man_db.conf中。</p>
+<h2 id="26-编译安装前的心理准备">2.6 编译安装前的心理准备</h2>
+<p>这里是最后的提示了，未安装之前还可以ctrl+w关闭本页面，避免无数的痛苦。<br>
+编译安装最常见的问题就是版本与依赖的问题，版本问题容易处理，可以通过包管理器进行升级或者手动升级，至于依赖问题，包管理器安装的话很容易，编译安装的话会非常头疼，因为不知道某个依赖下面还需要安装多少个依赖。<br>
+所以，需要准备充足的时间，还有充分的耐心，去解决无数的问题，才能成功进行编译安装MySQL与Workbench这种大型软件。<br>
+不废话了，开始吧。</p>
+<h1 id="3-安装mysql">3 安装MySQL</h1>
+<h2 id="31-安装依赖">3.1 安装依赖</h2>
+<p>MySQL所需依赖如下：</p>
+<ul>
+<li>cmake</li>
+<li>make（推荐3.75以上）</li>
+<li>编译器（GCC5.3+或Clang4.0+或XCode9+或Developer Studio12.6+或Visual Studio2017）</li>
+<li>SSL库（默认使用系统的OpenSSL）</li>
+<li>Boost C++库，需要用来构建但不需要使用，无需安装，源码即可</li>
+<li>ncurses库</li>
+<li>bison2.1+</li>
+<li>git</li>
+</ul>
+<h2 id="32-包管理器安装">3.2 包管理器安装</h2>
+<p>笔者的Debian系，使用apt即可：</p>
+<pre><code class="language-bash">sudo apt-get install -y bison git hostname libncurses-dev libssl-dev make openssl pkg-config doxygen cmake make
+</code></pre>
+<p>RedHat8.x：</p>
+<pre><code class="language-bash">sudo yum install -y bison bzip2 git hostname ncurses-devel openssl openssl-devel pkgconfig tar wget zlib-devel doxygen diffutils rpcgen make libtirpc-devel cmake gcc
+</code></pre>
+<p>RedHat7.x：</p>
+<pre><code class="language-bash">sudo yum install -y bison bzip2 git hostname ncurses-devel openssl openssl-devel pkgconfig tar wget zlib-devel doxygen cmake gcc
+</code></pre>
+<p>其他自行搜索。</p>
+<h2 id="32-编译安装">3.2 编译安装</h2>
+<p>若不想用包管理器安装，可以使用编译安装的方式。<br>
+<s>欢迎来折腾。</s></p>
+<h3 id="321-安装cmake">3.2.1 安装cmake</h3>
+<pre><code class="language-bash">tar -zxvf cmake-3.17.2.tar.gz
+cd cmake-3.17.2
+./bootstrap --prefix=/usr/local/cmake
+make clean 
+make -j 6 #6为CPU核数，自定义修改，若失败请使用make
+make test
+sudo make install
+</code></pre>
+<h3 id="322-安装make">3.2.2 安装make</h3>
+<p>没有编译器的情况下无法编译安装，使用软件包安装即可，笔者的Debian系，直接使用apt：</p>
+<pre><code class="language-bash">sudo apt install make
+</code></pre>
+<h3 id="323-安装gcc">3.2.3 安装gcc</h3>
+<pre><code class="language-bash">tar -xvf gcc-9.3.0.tar.xz
+cd gcc-9.3.0
+./contrib/download_prerequisites
+mkdir build
+cd build
+../configure --prefix=/usr/local/gcc -enable-checking=release -disable-multilib 
+make clean 
+make -j 6
+make test
+sudo make install
+sudo ln -sv /usr/local/gcc/include /usr/include/gcc
+#/etc/ld.so.conf.d/gcc.conf加入以下内容
+/usr/local/gcc/lib
+/usr/local/gcc/lib64
+</code></pre>
+<h3 id="324-安装openssl">3.2.4 安装openssl</h3>
+<pre><code class="language-bash">tar -zxvf openssl-1.1.1g.tar.gz
+cd openssl-1.1.1g
+./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl/ssl
+#prefix为安装位置，默认/usr/local
+#openssldir为配置文件位置，同时存放证书与密钥对
+make clean 
+make -j 6
+make test
+sudo make install
+sudo ln -sv /usr/local/openssl/include /usr/include/openssl
+#/etc/ld.so.conf.d/openssl.conf加上以下内容
+/usr/local/openssl/lib
+</code></pre>
+<h3 id="325-下载boost">3.2.5 下载boost</h3>
+<p>官网<a href="https://www.boost.org/users/history/">戳这里</a>。<br>
+需要的版本为1.70.0。目前最新的版本为1.73.0,理论上来说更新的版本应该可以，这里下载的是1.70.0。如果不手动下载boost库的话可以在使用cmake生成Makefile时设置DDOWNLOAD_BOOST为1进行下载。<br>
+<img src="https://img-blog.csdnimg.cn/20200504143205474.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载后解压既可。</p>
+<pre><code class="language-bash">tar -xvf boost_1_70_0.tar.bz2
+</code></pre>
+<h3 id="326-安装ncurses">3.2.6 安装ncurses</h3>
+<pre><code class="language-bash">tar -zxvf ncurses-6.2.tar.gz
+cd ncurses-6.2
+./configure --prefix=/usr/local/ncurses
+make -j 6
+sudo make install
+
+sudo ln -sv /usr/local/ncurses/include /usr/include/ncurses
+#/etc/ld.so.conf.d/ncurses.conf加入
+/usr/local/ncurses/lib
+</code></pre>
+<h3 id="327-安装bison">3.2.7 安装bison</h3>
+<pre><code class="language-bash">tar -xvf bison-3.4.tar.xz
+cd bison-3.4
+./configure --prefix=/usr/local/bison
+make -j 6
+sudo make install
+#/etc/ld.so.conf.d/bison.conf加入
+/usr/local/bison/lib
+</code></pre>
+<h3 id="328-安装git">3.2.8 安装git</h3>
+<pre><code class="language-bash">tar -xvf git-2.26.2.tar.xz
+cd git-2.26.2
+./configure --prefix=/usr/local/git \
+--with-openssl=/usr/local/openssl \
+--with-libpcre2=/usr/local/pcre2 \
+--with-curl=/usr/local/curl \
+--with-expat=/usr/local/expat \
+--with-iconv=/usr/local/iconv \
+--with-editor=/usr/bin/vim \
+--with-zlib=/usr/local/zlib \
+--with-tcltk=/usr/local/tcl
+make all doc info
+sudo make install install-doc install-html install-info
+</code></pre>
+<h3 id="329-后续处理">3.2.9 后续处理</h3>
+<p>修改PATH：</p>
+<pre><code class="language-bash">#在~/.bash_profile 或 ~/.bashrc加入
+export PATH=$PATH:\
+/usr/local/cmake/bin:\
+/usr/local/gcc/bin:\
+/usr/local/openssl/bin:\
+/usr/local/bison/bin:\
+/usr/local/ncurses/bin:\
+/usr/local/git/bin:\
+</code></pre>
+<p>使动态库生效：</p>
+<pre><code class="language-bash">ldconfig
+</code></pre>
+<p>权限不足请加sudo。</p>
+<h2 id="33-下载mysql社区版">3.3 下载MySQL社区版</h2>
+<p>官网<a href="https://dev.mysql.com/downloads/mysql/">这里</a>。<br>
+<img src="https://img-blog.csdnimg.cn/20200505120345793.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里不知道第一个与第二个有什么区别，因为笔者两个都试过都能编译安装成功。虽然上面写着第二个带Boost头，但是貌似没什么用。这里用的是第一个。<br>
+校验（可选）：</p>
+<pre><code class="language-bash">md5sum mysql-boost-8.0.20.tar.gz
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020050512084471.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="34-生成makefile">3.4 生成Makefile</h2>
+<pre><code class="language-bash">sudo cmake .. \
+-DDEFAULT_CHARSET=utf8mb4 \
+-DDEFAULT_COLLATION=utf8mb4_unicode_ci \ #
+-DENABLED_LOCAL_INFILE=ON \
+-DWITH_SSL=system \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql/server \
+-DMYSQL_DATADIR=/usr/local/mysql/data \
+-DMYSQL_TCP_PORT=3306 \
+-DDOWNLOAD_BOOST=0 \
+-DWITH_BOOST=~/Desktop/boost
+</code></pre>
+<ul>
+<li>DDEFAULT_CHARSET：指定默认字符集为utf8mb4，因为历史遗留问题，MySQL中的utf8不是真正的utf8，而是阉割版的，最长只有三个字节，当遇到四个字节的utf8编码时，会导致存储异常。从5.5.3开始，使用utf8mb4实现完整的utf8。</li>
+<li>DDEFAULT_COLLATION：排序规则，默认为utf8mb4_0900_ai_ci，属于utf8mb4_unicode_ci的一种。0900指的是Unicode校对算法版本，ai是指口音不敏感（as表示敏感），ci指不区分大小写（cs表示区分）。utf8mb4_unicode_ci表示基于标准的的Unicode来排序和比较，能够在各种语言之间精确排序，而utf8mb4_general_ci遇到某些特殊的字符集时排序结果可能不一致，准确性较差，但是性能较好，比较和排序时候更快。</li>
+<li>DENABLED_LOCAL_INFILE表示能否使用load data命令。</li>
+<li>DWITH_SSL表示使用系统的SSL库，若不使用系统的请自定义路径。</li>
+<li>DCMAKE_INSTALL_PREFIX：MySQL安装目录。</li>
+<li>DMYSQL_DATADIR：MySQL数据目录，初始时为空。</li>
+<li>DMYSQL_TCP_PORT：端口，默认3306。</li>
+<li>DDOWNLOAD_BOOST：取值0或1，是否下载Boost库。</li>
+<li>DWITH_BOOST：若不下载Boost库的话，是本地Boost库的位置，若下载Boost表示下载位置。</li>
+</ul>
+<p>其他更多参数请使用</p>
+<pre><code class="language-bash">sudo cmake .. -LH
+</code></pre>
+<p>查看。</p>
+<h2 id="35-编译与安装">3.5 编译与安装</h2>
+<pre><code class="language-bash">sudo make
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">sudo make -j n
+</code></pre>
+<p>笔者试过了make -j 6，失败，无奈换成了make。<br>
+make的速度和make -j还是很大差距的。<br>
+编译好之后，建议测试一下：</p>
+<pre><code class="language-bash">make test
+</code></pre>
+<p>然后安装：</p>
+<pre><code class="language-bash">sudo make install
+</code></pre>
+<h2 id="36-后续配置">3.6 后续配置</h2>
+<h3 id="361-用户组与用户">3.6.1 用户组与用户</h3>
+<p>新建用户组与用户，同时修改用户数据目录权限：</p>
+<pre><code class="language-bash">sudo groupadd mysql
+sudo useradd -r -g mysql -s /bin/false mysql
+sudo chown mysql:mysql /usr/local/mysql/data
+sudo chmod 750 /usr/local/mysql/data
+</code></pre>
+<p>数据目录根据需要修改，若后面出现不可写错误请把权限改为777。</p>
+<h3 id="362-配置文件">3.6.2 配置文件</h3>
+<p>配置文件为my.cnf，可以放在</p>
+<pre><code class="language-bash">/etc/
+/etc/mysql/
+安装目录/etc/
+~/
+</code></pre>
+<p>下，读取顺序从上到下。笔者安装后默认在/etc/mysql/my.cnf，这个是全局配置，~/.my.cnf是用户特定配置，这里直接修改/etc/mysql/my.cnf：</p>
+<pre><code class="language-xml">[client-server]
+
+# Import all .cnf files from configuration directory
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mariadb.conf.d/
+
+[mysqld]
+port=3306
+basedir=/usr/local/mysql/server
+datadir=/usr/local/mysql/data
+character-set-server=utf8mb4
+[mysql]
+default-character-set=utf8mb4
+[client]
+port=3306
+default-character-set=utf8mb4
+</code></pre>
+<p>其中[mysqld]下面是新添加的字段，数据目录自行修改。<br>
+建议字符集改为utf8mb4，因为utf8在MySQL中指的是utf8mb3，支持的utf8编码最大字符长度为3字节，如果遇到4字节的宽字符就会插入异常。三字节的utf8最大能编码的Unicode字符为0xffffff，也就是基本多文种平面，Emoji和很多不常用的汉字都不能存储。而utf8mb4是5.5.3之后才支持的，为了兼容性考虑应该统一使用utf8mb4。</p>
+<h2 id="37-初始化">3.7 初始化</h2>
+<p>修改环境变量：</p>
+<pre><code class="language-bash">#.bashrc或.bash_profile加上
+export PATH=$PATH:/usr/local/mysql/server/bin
+</code></pre>
+<p>使用</p>
+<pre><code class="language-bash">mysqld --initialize --user=mysql
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">mysqld --initialize-insecure --user=mysql
+</code></pre>
+<p>然后开启ssl与rsa支持（可选）：</p>
+<pre><code class="language-bash">mysql_ssl_rsa_setup
+</code></pre>
+<p>最后开启服务：</p>
+<pre><code class="language-bash">mysqld_safe --user=mysql &amp;
+</code></pre>
+<h2 id="38-修改密码">3.8 修改密码</h2>
+<p>使用root登录，如果使用insecure初始化：</p>
+<pre><code class="language-bash">mysql -u --skip-password
+</code></pre>
+<p>使用initialize初始化：</p>
+<pre><code class="language-bash">mysql -u root -p
+</code></pre>
+<p>输入初始化出现的密码即可。<br>
+然后修改密码：</p>
+<pre><code class="language-bash">alter user root@localhost identified by 'xxx';
+</code></pre>
+<h2 id="39-测试">3.9 测试</h2>
+<p>使用自带的mysqlshow与mysqladmin：</p>
+<pre><code class="language-bash">mysqladmin -u root -p version
+mysqlshow -u root -p
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020050511120113.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="310-收尾工作">3.10 收尾工作</h2>
+<h3 id="3101-别名">3.10.1 别名</h3>
+<pre><code class="language-bash">alias md='mysqld -u mysql &amp;'
+</code></pre>
+<p>这样输入md就可以启动MySQL服务了。</p>
+<h3 id="3102-安装mycli">3.10.2 安装Mycli</h3>
+<p>Mycli是一个MySQL命令行客户端工具，具有自动补全和语法高亮的功能。<br>
+使用pip安装即可，python2请使用</p>
+<pre><code class="language-bash">pip install mycli
+</code></pre>
+<p>python3请使用</p>
+<pre><code class="language-bash">pip3 install mycli
+</code></pre>
+<p>找不到pip请安装：</p>
+<pre><code class="language-bash">sudo apt install python-pip#python2
+sudo apt install python3-pip
+</code></pre>
+<p>然后使用mycli进入数据库：</p>
+<pre><code class="language-bash">mycli -u root
+</code></pre>
+<p>愉快地使用补全吧！</p>
+<h1 id="4-参考">4 参考</h1>
+<p>1.<a href="https://blog.csdn.net/u012501054/article/details/77880139">CSDN-Linux下源码编译安装详解</a><br>
+2.<a href="https://blog.csdn.net/kikajack/article/details/84668924">CSDN-utf8 与 utf8mb4，utf8mb4_unicode_ci 与 utf8mb4_general_ci</a><br>
+3.<a href="https://dev.mysql.com/doc/refman/8.0/en/source-installation.html">MySQL-官网安装文档</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/manjaro-zhao-bu-dao-mo-ren-jian-pan-bu-ju.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/manjaro-zhao-bu-dao-mo-ren-jian-pan-bu-ju/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">manjaro找不到默认键盘布局</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/ru-guo-ni-de-applicationproperties-zhong-huan-cun-zai-ming-wen-mi-ma-jia-mi-spring-boot-zhong-de-applicationproperties.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/ru-guo-ni-de-applicationproperties-zhong-huan-cun-zai-ming-wen-mi-ma-jia-mi-spring-boot-zhong-de-applicationproperties/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">如果你的application.properties中还存在明文密码----加密Spring Boot中的application.properties</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/manjaro-lan-ya-lian-jie-wen-ti.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/">Manjaro 蓝牙连接问题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/idea-shi-yong-jfx-de-xiang-guan-wen-ti.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/">IDEA使用JFX的相关问题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/tu-pian-ya-suo-jiao-ben.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/">图片压缩脚本</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-0 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-1 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-2 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-3 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-4 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-5 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-7 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-8 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-9 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-10 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-11 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-12 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-13 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-14 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-15 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-16 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-17 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-18 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-19 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-20 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-21 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-22 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-23 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-24 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-25 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-26 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-27 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-28 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-29 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-30 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-31 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-32 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-33 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-34 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-35 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-36 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-37 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-38 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-39 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-40 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-41 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-42 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-43 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-44 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-45 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-46 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-47 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-48 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-49 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-50 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-51 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-52 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-53 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-54 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-55 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-56 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-57 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 103 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

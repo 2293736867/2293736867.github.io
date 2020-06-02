@@ -1,0 +1,910 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OkHttp配置HTTPS访问+服务器部署 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 OkHttp介绍
+3 准备工作
+4 OkHttp部分
+
+4.1 暴力方案
+4.2 推荐方案
+
+4.2.1 HostnameVerifier
+4.2.2 X509TrustManager
+
+
+
+
+5 服务器部署
+
+5.1 上传..." />
+    <meta name="keywords" content="OkHttp,HTTPS,Tomcat" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591133446012" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('/post-images/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">10 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu/"> </span>
+              </a>
+              <span id="/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-0 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-1 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-2 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">OkHttp配置HTTPS访问+服务器部署</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-okhttp%E4%BB%8B%E7%BB%8D">2 OkHttp介绍</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3 准备工作</a></li>
+<li><a href="#4-okhttp%E9%83%A8%E5%88%86">4 OkHttp部分</a>
+<ul>
+<li><a href="#41-%E6%9A%B4%E5%8A%9B%E6%96%B9%E6%A1%88">4.1 暴力方案</a></li>
+<li><a href="#42-%E6%8E%A8%E8%8D%90%E6%96%B9%E6%A1%88">4.2 推荐方案</a>
+<ul>
+<li><a href="#421-hostnameverifier">4.2.1 HostnameVerifier</a></li>
+<li><a href="#422-x509trustmanager">4.2.2 X509TrustManager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2">5 服务器部署</a>
+<ul>
+<li><a href="#51-%E4%B8%8A%E4%BC%A0%E5%B7%A5%E7%A8%8B">5.1 上传工程</a></li>
+<li><a href="#52-tomcat%E9%85%8D%E7%BD%AE">5.2 Tomcat配置</a></li>
+</ul>
+</li>
+<li><a href="#6-%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%BA%90%E7%A0%81">6 验证与源码</a></li>
+<li><a href="#7-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">7 常见问题</a>
+<ul>
+<li><a href="#71-tomcat-https%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE">7.1 Tomcat HTTPS无法访问</a></li>
+<li><a href="#72-okhttp-https%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE">7.2 OkHttp HTTPS无法访问</a></li>
+</ul>
+</li>
+<li><a href="#8-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">8 参考链接</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>OkHttp配置HTTPS访问,核心为以下三个部分:</p>
+<ul>
+<li>sslSocketFactory()</li>
+<li>HostnameVerifier</li>
+<li>X509TrustManager</li>
+</ul>
+<p>第一个是ssl套接字工厂,第二个用来验证主机名,第三个是证书信任器管理类.通过OkHttp实现HTTPS访问需要自己实现以上三部分.另外还简单提及了服务器端的部署,用的是Tomcat9,最后是一些常见问题的可能解决方案.</p>
+<h1 id="2-okhttp介绍">2 OkHttp介绍</h1>
+<p>OkHttp是一款开源的处理网络请求的轻量级框架,有Square公司贡献,用于替代HttpUrlConnection与Apache HttpClient,目前Github上有36.4k的star.优点有</p>
+<ul>
+<li>共享socket,HTTP/2支持所有连接到同一个主机的请求共享socket</li>
+<li>连接池可以减少请求延迟</li>
+<li>缓存响应数据减少重复的网络请求</li>
+<li>自动处理gzip压缩</li>
+</ul>
+<p>总的来说OkHttp是一款支持get/post请求,支持文件上传/下载的优秀的HTTP框架.</p>
+<h1 id="3-准备工作">3 准备工作</h1>
+<ul>
+<li>一台服务器</li>
+<li>一个域名</li>
+<li>一个证书</li>
+</ul>
+<p>什么?都没有?买!<br>
+当然证书可以不用买,可以使用openssl之类的工具生成,不过自签名的证书后面验证的时候会有点麻烦,建议还是购买.</p>
+<h1 id="4-okhttp部分">4 OkHttp部分</h1>
+<h2 id="41-暴力方案">4.1 暴力方案</h2>
+<pre><code class="language-java">public static String test() {
+	OkHttpClient client = new OkHttpClient.Builder()
+        .sslSocketFactory(createSSLSocketFactory(), new TrustAllCerts())
+        .hostnameVerifier(new TrustAllHostnameVerifier()).build();
+
+	String url = &quot;https://xxxxxxx&quot;;   //修改成自己的url
+    Request request = new Request.Builder().url(url).build();
+    Call call = build.newCall(request);
+    Response response = call.execute();
+    if(response.body() != null)
+    {
+        String result = response.body().string();
+        //处理result
+    }
+}
+
+private static class TrustAllCerts implements X509TrustManager {
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+    public X509Certificate[] getAcceptedIssuers() {return new X509Certificate[0];}
+}
+
+private static class TrustAllHostnameVerifier implements HostnameVerifier {
+    public boolean verify(String hostname, SSLSession session) { return true; }
+}
+
+private static SSLSocketFactory createSSLSocketFactory() {
+    SSLSocketFactory ssfFactory = null;
+    try {
+        SSLContext sc = SSLContext.getInstance(&quot;TLS&quot;);
+        sc.init(null, new TrustManager[]{new TrustAllCerts()}, new SecureRandom());
+        ssfFactory = sc.getSocketFactory();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return ssfFactory;
+}
+</code></pre>
+<p>这是一种暴力的方案,看类名就知道了,信任所有的证书与主机:</p>
+<pre><code class="language-java">public boolean verify(String hostname, SSLSession session) { return true; }
+</code></pre>
+<p>这个方法直接返回true,也就是信任所有的主机.</p>
+<pre><code class="language-java">public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+</code></pre>
+<p>这里两个check函数没有做任何的工作,表示接受任意的客户端与服务端的证书.这样写的话相当于是使用了一个没用的TrustManager,这样还不如不加密,不推荐使用.</p>
+<h2 id="42-推荐方案">4.2 推荐方案</h2>
+<p>从两方面入手修改,一是从X509TrustManager入手,二是从HostnameVerifier入手.</p>
+<h3 id="421-hostnameverifier">4.2.1 HostnameVerifier</h3>
+<p>先说个简单的,这里主要是验证主机名,简单的话,可以如下实现:</p>
+<pre><code class="language-java">HostnameVerifier hnv = new HostnameVerifier() {
+	@Override
+	public boolean verify(String hostname, SSLSession session) {
+	    if(&quot;www.test.com&quot;.equals(hostname)){  
+			return true;  
+	    } 
+	    else {  
+			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+			return hv.verify(hostname, session);
+		}
+	}
+};
+</code></pre>
+<p>这里验证主机名是www.test.com就返回true,实现得比较简单,业务复杂的话可以结合配置中心,黑/白名单等动态校验.</p>
+<h3 id="422-x509trustmanager">4.2.2 X509TrustManager</h3>
+<p>这里其实有两种方式,一种是以流的方式添加信任证书:</p>
+<pre><code class="language-java">private static X509TrustManager trustManagerForCertificates(InputStream in)
+        throws GeneralSecurityException
+{
+    CertificateFactory certificateFactory = CertificateFactory.getInstance(&quot;X.509&quot;);
+    Collection&lt;? extends Certificate&gt; certificates = certificateFactory.generateCertificates(in);
+    if (certificates.isEmpty()) {
+        throw new IllegalArgumentException(&quot;expected non-empty set of trusted certificates&quot;);
+    }
+
+    char[] password = &quot;password&quot;.toCharArray(); // 这里可以使用任意密码
+    KeyStore keyStore = newEmptyKeyStore(password);
+    int index = 0;
+    for (Certificate certificate : certificates) {
+        String certificateAlias = Integer.toString(index++);
+        keyStore.setCertificateEntry(certificateAlias, certificate);
+    }
+
+    // Use it to build an X509 trust manager.
+    KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
+            KeyManagerFactory.getDefaultAlgorithm());
+    keyManagerFactory.init(keyStore, password);
+    TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+            TrustManagerFactory.getDefaultAlgorithm());
+    trustManagerFactory.init(keyStore);
+    TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+    if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager))
+    {
+        throw new IllegalStateException(&quot;Unexpected default trust managers:&quot; + Arrays.toString(trustManagers));
+    }
+    return (X509TrustManager) trustManagers[0];
+}
+</code></pre>
+<p>完整代码见文末.这里把工具类的方法实现成了静态,调用时可以直接:</p>
+<pre><code class="language-java">OKHTTP.send(&quot;https://xxxxx&quot;);
+</code></pre>
+<p>另一种方式是直接自定义一个TrustManager,重写里面的三个方法:</p>
+<pre><code class="language-java">SSLContext context = SSLContext.getInstance(&quot;TLS&quot;);
+context.init(null, new TrustManager[]{
+    new X509TrustManager() {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain,String authType) throws CertificateException {}
+        
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain,String authType) throws CertificateException {
+            for (X509Certificate cert : chain) {
+                // Make sure that it hasn't expired.
+                cert.checkValidity();
+                // Verify the certificate's public key chain.
+                try {
+                    cert.verify(((X509Certificate) ca).getPublicKey());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (NoSuchProviderException e) {
+                    e.printStackTrace();
+                } catch (SignatureException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    }
+}, null);
+</code></pre>
+<p>第一个方法为</p>
+<pre><code class="language-java">@Override
+public void checkClientTrusted(X509Certificate[] chain,String authType) throws CertificateException {}
+</code></pre>
+<p>该方法检查客户端的证书,由于不需要对客户端进行认证,默认即可.<br>
+第二个方法为</p>
+<pre><code class="language-java">@Override
+public void checkServerTrusted(X509Certificate[] chain,String authType)
+</code></pre>
+<p>该方法检查服务器的证书,若不信任该证书则抛出异常,通过自己实现该方法可以信任任何自己指定的证书,不做任何处理的话,不会抛出任何异常,相当于信任所有证书.这里检查了证书是否过期以及证书的签名是否匹配.<br>
+第三个方法为</p>
+<pre><code class="language-java">@Override
+public X509Certificate[] getAcceptedIssuers() {
+    return new X509Certificate[0];
+}
+</code></pre>
+<p>返回受信任的X509证书数组.</p>
+<p>这种方法笔者没有试过,仅供参考.</p>
+<h1 id="5-服务器部署">5 服务器部署</h1>
+<p>服务器用的是Tomcat,简单介绍一下部署.</p>
+<h2 id="51-上传工程">5.1 上传工程</h2>
+<p>后端处理用的Spring Boot的工程,就不演示了,使用IDEA打成war包后上传到webapps下即可.</p>
+<h2 id="52-tomcat配置">5.2 Tomcat配置</h2>
+<p>重点说一下Tomcat的配置,首先需要一个域名,修改conf/server.xml文件,找到默认的名叫localhost的Host:<br>
+<img src="https://img-blog.csdnimg.cn/20200330012338899.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后直接复制Host标签,把name修改成自己的域名即可.<br>
+<img src="https://img-blog.csdnimg.cn/20200330012446941.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后是证书的配置,笔者的证书在某某云上购买的,这里提供了几种格式的证书下载:<br>
+<img src="https://img-blog.csdnimg.cn/20200330012635198.png" alt="在这里插入图片描述" loading="lazy"><br>
+Tomcat的是两个文件,一个是pfx文件,一个是密码文件,把pfx文件上传到服务器的Tomcat后,继续修改server.xml,大约87行左右的位置(Tomcat版本9.0.33):<br>
+<img src="https://img-blog.csdnimg.cn/20200330012945701.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改如下:<br>
+<img src="https://img-blog.csdnimg.cn/20200330012834456.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加了scheme,secure,keystoreFile,keystoreType,keystorePass,clientAuth,sslProtocol配置,同时去掉里面的&lt;SSLHostConfig&gt;,keystoreFile是刚才的pfx文件,采用绝对路径,keystorePass是密码.<br>
+另外默认的端口为8443,这里修改成了8123.<br>
+重启Tomcat后输入</p>
+<pre><code class="language-bash">https://www.test.com:port
+</code></pre>
+<p>进行测试<br>
+<img src="https://img-blog.csdnimg.cn/20200330013358932.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样就成功了.</p>
+<h1 id="6-验证与源码">6 验证与源码</h1>
+<p>这个因为没有完整的Demo很难做验证,具体来说前端用的OkHttp核心都介绍了,后端的话服务器Tomcat也介绍了,用Spring Boot做个Demo应该不难.<br>
+这里只给出了工具类OKHTTP的源码:<br>
+<a href="https://github.com/2293736867/OkHttp-HTTPS-demo">github</a></p>
+<h1 id="7-常见问题">7 常见问题</h1>
+<h2 id="71-tomcat-https无法访问">7.1 Tomcat HTTPS无法访问</h2>
+<ul>
+<li>证书文件错误,不过这个可能性比较少.</li>
+<li>配置错误,请检查配置文件是否正确,可以ps -ef | grep tomcat查看Tomcat是否开启以及查看logs/catalina.out日志.</li>
+<li>端口错误,访问的端口需要与&lt;Connector&gt;中的端口对应(Tomcat默认的HTTPS端口为8443,笔者居然看成了8433,然后netstat 无数次都没有看到被监听...)</li>
+<li>安全组/防火墙问题,云服务器的话需要在安全组配置中开启相应端口,同时应查看有没有把某个ip列入黑名单导致无法访问.防火墙的话这里主要指iptables,如果没有开启的话不需要理会,如果开启的话需要开放对应端口.</li>
+</ul>
+<h2 id="72-okhttp-https无法访问">7.2 OkHttp HTTPS无法访问</h2>
+<ul>
+<li>无法读取证书文件:需要把证书文件放在工程对应路径下读取,比如AS中放在assets下然后使用getAssets().open(&quot;xxx.xxx&quot;)获取,Maven工程的话放在resources下直接使用FileInputStream获取.</li>
+<li>singed fields invalid:<br>
+<img src="https://img-blog.csdnimg.cn/20200330015552425.png" alt="在这里插入图片描述" loading="lazy"><br>
+证书文件格式错误,使用.crt/.pem等证书.</li>
+<li>Signature does not match:这个有可能是使用openssl自生成证书在验证的时候出现的异常,可能的解决办法是转换证书的格式,如果不行就重新生成一次证书.</li>
+</ul>
+<h1 id="8-参考链接">8 参考链接</h1>
+<p>1.<a href="http://pingguohe.net/2016/02/26/Android-App-secure-ssl.html">苹果核 - Android App 安全的HTTPS 通信</a><br>
+2.<a href="https://blog.csdn.net/guiying712/article/details/56301736">Android OkHttp实现HTTPS访问,支持Android 4.X系统HTTPS访问</a><br>
+3.<a href="https://www.jianshu.com/p/475c0dc5c366">Android使用OkHttp请求自签名的https网站</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/apache-pei-zhi-xu-ni-mu-lu-zend-studio-fang-wen.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/apache-pei-zhi-xu-ni-mu-lu-zend-studio-fang-wen/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Apache配置虚拟目录+Zend Studio访问</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/applicationproperties-ti-shi-cannot-resolve-configuration-property-xxxx.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/applicationproperties-ti-shi-cannot-resolve-configuration-property-xxxx/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">application.properties提示Cannot resolve configuration property &#39;xxxx&#39;</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/manjaro-lan-ya-lian-jie-wen-ti.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/">Manjaro 蓝牙连接问题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/idea-shi-yong-jfx-de-xiang-guan-wen-ti.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/">IDEA使用JFX的相关问题</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/tu-pian-ya-suo-jiao-ben.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/">图片压缩脚本</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-0 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-1 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-2 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-3 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-4 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-5 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-7 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-8 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-9 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-10 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-11 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-12 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-13 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-14 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-15 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-16 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-17 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-18 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-19 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-20 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-21 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-22 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-23 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-24 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-25 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-26 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-27 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-28 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-29 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-30 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-31 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-32 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-33 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-34 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-35 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-36 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-37 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-38 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-39 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-40 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-41 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-42 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-43 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-44 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-45 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-46 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-47 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-48 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-49 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-50 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-51 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-52 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-53 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-54 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-55 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-56 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-57 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 103 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-02T21:12:19.438Z</updated>
+    <updated>2020-06-02T21:30:50.297Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -12,2230 +12,2124 @@
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[ssh+scp基本使用]]></title>
-        <id>https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/</id>
-        <link href="https://2293736867.github.io/post/sshscp-ji-ben-shi-yong/">
+        <title type="html"><![CDATA[Manjaro 蓝牙连接问题]]></title>
+        <id>https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/</id>
+        <link href="https://2293736867.github.io/post/manjaro-lan-ya-lian-jie-wen-ti/">
         </link>
-        <updated>2020-06-02T21:10:51.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-ssh">1 ssh</h1>
-<p>ssh一般用于连接服务器，可以使用密码认证与密钥认证的方式。</p>
-<h2 id="11-密码认证">1.1 密码认证</h2>
-<p>直接使用ssh即可：</p>
-<pre><code class="language-bash">ssh username@xxx.xxx.xxx.xxx
+        <updated>2020-06-02T21:30:30.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>蓝牙不能连接，或者连接上了没有声音。</p>
+<h1 id="2-解决方案">2 解决方案</h1>
+<p>首先确保相应软件包存在：</p>
+<pre><code class="language-bash">sudo pacman -S bluez bluez-utils pulseaudio-bluetooth pavucontrol pulseaudio-alsa pulseaudio-bluetooth-a2dp-gdm-fix
 </code></pre>
-<p>username为用户名，后面为公网ip.<br>
-若需要使用特定端口登录，加上p参数，比如使用12345端口：</p>
-<pre><code class="language-bash">ssh -p 12345 username@xxx.xxx.xxx.xxx
+<p>然后启动蓝牙以及pulseaudio服务：</p>
+<pre><code class="language-bash">systemctl enable bluetooth
+systemctl start bluetooth
+pulseaudio -k                   # 确保没有pulseaudio启动
+pulseaudio --start              # 启动pulseaudio服务
 </code></pre>
-<h2 id="12-密钥认证">1.2 密钥认证</h2>
-<p>密钥认证需要先生成密钥，然后把公钥使用scp上传到服务器，接着修改服务器的ssh配置文件。</p>
-<h3 id="121-生成密钥">1.2.1 生成密钥</h3>
-<pre><code class="language-bash">ssh-keygen -t rsa -b 4096 -C &quot;email&quot; -f /xxx/id_rsa
+<p>然后可以以图形化的方式或者命令行方式就可以连接蓝牙了，这里演示一下命令行方式：</p>
+<pre><code class="language-bash">bluetoothctl #连接交互命令
+power on #开启控制器电源，默认关闭
+devices #获取要配对设备的MAC
+agent on #打开代理
+pair MAC_ADDRESS #配对，输入MAC地址即可配对，建议使用Tab
+connect MAC_ADDRESS #连接，建议使用Tab
 </code></pre>
-<p>t表示加密算法，b指定位数，C表示注释，识别这个密钥，一般用邮箱即可。f表示生成的私钥文件位置（需要加上文件名），公钥会放在同一文件夹下。<br>
-<img src="https://img-blog.csdnimg.cn/20200322150759345.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="122-上传公钥">1.2.2 上传公钥</h3>
-<p>使用scp上传公钥到服务器，注意是公钥，ssh-keygen会生成一个公钥与私钥，pub结尾的文件就是公钥，默认叫id_rsa.pub .</p>
-<pre><code class="language-bash">scp /xxxx/id_rsa.pub username@xxx.xxx.xxx.xxx:/root/
+<p>最后一步是指定蓝牙音频输出，也就是连接上了如果蓝牙没有声音可能是这一步没有设置，终端输入：</p>
+<pre><code class="language-bash">pavucontrol
 </code></pre>
-<p>这里就直接放到服务器上的/root下。</p>
-<h3 id="123-修改ssh配置文件">1.2.3 修改ssh配置文件</h3>
-<p>先使用ssh密码认证的方式登录服务器，然后修改/etc/ssh/sshd_config：</p>
-<pre><code class="language-bash">cd /etc/ssh
-cp sshd_config sshd_config.bak
-vim sshd_config
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200517033422470.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[IDEA使用JFX的相关问题]]></title>
+        <id>https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/</id>
+        <link href="https://2293736867.github.io/post/idea-shi-yong-jfx-de-xiang-guan-wen-ti/">
+        </link>
+        <updated>2020-06-02T21:29:59.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题概述">1 问题概述</h1>
+<p>首先是javafx找不到对应的类：<br>
+<img src="https://img-blog.csdnimg.cn/20200517023008663.png" alt="在这里插入图片描述" loading="lazy"><br>
+其次是</p>
+<pre><code class="language-bash">class com.sun.javafx.fxml.FXMLLoaderHelper (in unnamed module @0x50f36265) cannot access class com.sun.javafx.util.Utils (in module javafx.graphics) 
+because module javafx.graphics does not export com.sun.javafx.util to unnamed module @0x50f36265
 </code></pre>
-<p>找到PubKeyAuthentication这一行，修改如下：<br>
-<img src="https://img-blog.csdnimg.cn/2020032215152956.png" alt="在这里插入图片描述" loading="lazy"><br>
-如果需要修改端口的，搜索Port，直接修改：<br>
-<img src="https://img-blog.csdnimg.cn/20200322151709569.png" alt="在这里插入图片描述" loading="lazy"><br>
-接着重启sshd服务：</p>
-<pre><code class="language-bash">systemctl restart sshd
+<p>这种问题。<br>
+或者是</p>
+<pre><code class="language-bash">Error: JavaFX runtime components are missing, and are required to run this application
 </code></pre>
-<h3 id="124-测试连接">1.2.4 测试连接</h3>
-<pre><code class="language-bash">ssh -i /xxx/id_rsa -p port username@xxx.xxx.xxx.xxx
+<p>这样的问题。</p>
+<h1 id="2-解决方案">2 解决方案</h1>
+<p>环境Manjaro+OpenJDK11，首先需要确保有OpenJFX，但是，不能直接使用pacman/yaourt安装：<br>
+<img src="https://img-blog.csdnimg.cn/20200517023504803.png" alt="在这里插入图片描述" loading="lazy"><br>
+虽然看上去没什么问题，OpenJDK使用的也是pacman安装的，想着JFX也可以这样，安装之后在</p>
+<pre><code class="language-bash">/usr/lib/jvm/java-11-openjdk/lib
 </code></pre>
-<p>其中i后为私钥的位置，p参数如果修改了默认的端口（22）则需要加上自定义端口。<br>
-如果在windows上生成的私钥，可能会有如下问题：<br>
-<img src="https://img-blog.csdnimg.cn/20200322151915913.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里提示私钥的权限是755，也就是其他用户可读，需要修改为600：</p>
-<pre><code class="language-bash">chmod 600 /xxx/id_rsa
+<p>下面确实有了JFX的文件，但是装了之后IDEA死活识别不出来，没办法，只能手动安装JFX。<br>
+手动安装的OpenJFX一加就马上识别出来了，所以，手动安装吧，也不难，<a href="https://gluonhq.com/products/javafx/">戳这里</a>下载所需要的版本，解压到对应的位置，然后在IDEA中的外部库添加其中的lib文件夹即可：<br>
+<img src="https://img-blog.csdnimg.cn/20200517023853618.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加之后另一个问题是</p>
+<pre><code class="language-bash">class com.sun.javafx.fxml.FXMLLoaderHelper (in unnamed module @0x50f36265) cannot access class com.sun.javafx.util.Utils (in module javafx.graphics) 
+because module javafx.graphics does not export com.sun.javafx.util to unnamed module @0x50f36265
 </code></pre>
-<p>如果用的是wsl可能会修改失败，需要加上wsl的配置，修改/etc/wsl.conf（如果没有就新建）</p>
-<pre><code class="language-bash">vim /etc/wsl.conf
+<p>给出的最多的答案是修改VM Options：</p>
+<pre><code class="language-bash">--module-path=JFX_LIB_PATH --add-modules=javafx.controls,javafx.fxml
 </code></pre>
-<p>输入：</p>
-<pre><code class="language-bash">[automount]
-enabled = true
-options = &quot;metadata,umask=22,fmask=11&quot;
-mountFsTab = false
+<p>其中JFX_LIB_PATH是JFX下的lib目录路径，但是不行，另一个方案是在源文件目录下添加module-info.java：</p>
+<pre><code class="language-java">module javafx.graphics{
+	exports com.sun.javafx.util
+}
 </code></pre>
-<p>退出wsl重启，然后再修改权限，应该就没问题了。</p>
-<h1 id="2-scp">2 scp</h1>
-<p>scp是secure copy的缩写，一般用于从服务器下载文件或上传文件到服务器，与ssh类似，可以使用密码认证或密钥认证或指定端口。</p>
-<h2 id="21-上传文件夹到服务器">2.1 上传文件（夹）到服务器</h2>
-<pre><code class="language-bash">scp localFile username@xxx.xxx.xxx.xxx:/xxxx
-scp -r localDir username@xxx.xxx.xxx.xxx:/xxx
+<p>也不行，直接报错，然后又搜索到了另一个解决办法，额外添加一个类似启动类的java文件，比如叫App.java：</p>
+<pre><code class="language-java">import javafx.application.Application;
+
+public class App {
+    public static void main(String[] args) {
+        Application.launch(Main.class,args);
+    }
+}
 </code></pre>
-<p>上面是密码认证的方式，密钥认证请加上i参数，指定私钥位置：</p>
-<pre><code class="language-bash">scp localFile username@xxx.xxx.xxx.xxx:/xxx
-scp -i /xxx/id_rsa -r localDir username@xxx.xxx.xxx.xxx:/xxxx
+<p>然后修改IDEA的运行配置，把主类修改为App。<br>
+这样笔者的问题就解决了，可以正常运行JFX程序了。</p>
+<h1 id="3-其他问题">3 其他问题</h1>
+<pre><code class="language-bash">Caused by: java.lang.NullPointerException: Location is required.
 </code></pre>
-<p>需要特定端口请加上P参数（注意是大写，不是ssh的小写p端口参数）</p>
-<pre><code class="language-bash">scp -i /xxx/id_rsa -P xx localFile username@xxx.xxx.xxx.xxx
+<p>其中一个可能的办法是：</p>
+<pre><code class="language-java">Parent root = FXMLLoader.load(getClass().getResource(&quot;xxx.fxml&quot;));
 </code></pre>
-<h2 id="22-从服务器下载文件夹">2.2 从服务器下载文件（夹）</h2>
-<pre><code class="language-bash">scp username@xxx.xxx.xxx.xxx:/xxx   /localDir
-scp -r username@xxx.xxx.xxx:/xxx  /localDir
+<p>改为：</p>
+<pre><code class="language-bash">Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;xxx.fxml&quot;));
 </code></pre>
-<p>第一个是下载文件，第二个是下载文件夹，需要加上r参数。<br>
-同理，密钥认证加i参数，端口加P参数：</p>
-<pre><code class="language-bash">scp -i /xxx/id_rsa -P xx username@xxx.xxx.xxx.xxx:/xxx  /localDir
-scp -i /xxx/id_rsa -P xx -r username@xxx.xxx.xxx.xxx:/xxx  /localDir
+<p>笔者试过，这个方法不行，另一个解决的方法是，修改pom.xml：</p>
+<pre><code class="language-xml">&lt;build&gt;
+	&lt;resources&gt;
+		&lt;resource&gt;
+			&lt;directory&gt;src/main/java&lt;/directory&gt;
+				&lt;includes&gt;
+                    &lt;include&gt;**/*.fxml&lt;/include&gt;
+                &lt;/includes&gt;
+			&lt;filtering&gt;false&lt;/filtering&gt;
+		&lt;/resource&gt;
+	&lt;/resources&gt;
+&lt;/build&gt;
+</code></pre>
+<p>其中include中的两个星号指的是fxml的文件夹的位置。<br>
+笔者试过这个方法可行，若fxml文件在源码根目录，可以修改为：</p>
+<pre><code class="language-xml">&lt;include&gt;*.fxml&lt;/include&gt;
 </code></pre>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Nginx/Apache + acme.sh 实现https访问]]></title>
-        <id>https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/</id>
-        <link href="https://2293736867.github.io/post/nginxapache-acmesh-shi-xian-https-fang-wen/">
+        <title type="html"><![CDATA[图片压缩脚本]]></title>
+        <id>https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/</id>
+        <link href="https://2293736867.github.io/post/tu-pian-ya-suo-jiao-ben/">
         </link>
-        <updated>2020-06-02T21:10:03.000Z</updated>
+        <updated>2020-06-02T21:29:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>使用convert命令做的小型图片压缩脚本，只需要一个参数指定压缩质量，会压缩当前文件夹的jpg/jpeg/png。</p>
+<pre><code class="language-bash">sh compress.sh 75
+</code></pre>
+<p>压缩完成后会显示最大最小以及平均压缩率。</p>
+<h1 id="2-主要流程">2 主要流程</h1>
+<p>先判断当前文件夹是否存在图片，以及获取图片数量：</p>
+<pre><code class="language-bash">picNums=`ls | grep -iE &quot;*.jpg|*.png|*.jpeg&quot; | grep -v &quot;_compress&quot; | wc -l`
+</code></pre>
+<p>接着计算原来文件大小，并分离文件名，得到主文件名与后缀名：</p>
+<pre><code class="language-bash">originalSize=`ls -l $i | awk '{print $5}'`
+basename=`basename $i`
+filename=&quot;${basename%.*}&quot;
+suffix=&quot;${basename##*.}&quot;
+compressFileName=&quot;$filename._compress.$suffix&quot;
+</code></pre>
+<p>再判断主文件名是否含compress（已压缩过的会添加compress，保留原文件），接着计算比率：</p>
+<pre><code class="language-bash">convert -quality $1 $i $compressFileName
+compressedSize=`ls -l $compressFileName | awk '{print $5}'`
+ratio=$(printf &quot;%.2f&quot; `echo &quot;scale=2;$compressedSize/$originalSize&quot;|bc`)
+if [[ `echo &quot;$ratio&lt;$minRatio&quot; | bc` == 1 ]]
+then
+	minRatio=$ratio
+fi
+if [[ `echo &quot;$ratio&gt;$maxRatio&quot; | bc` == 1 ]]
+then
+	maxRatio=$ratio
+fi
+totalRatio=`echo &quot;$totalRatio+$ratio&quot;|bc`
+</code></pre>
+<p>最后显示结果：<br>
+<img src="https://img-blog.csdnimg.cn/20200513163306305.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-完整脚本">3 完整脚本</h1>
+<p><a href="https://github.com/2293736867/ASmallPictureCompressScript">github.</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[真 ● 禁秘技 ● 奥义 ● 终端美化]]></title>
+        <id>https://2293736867.github.io/post/zhen-jin-mi-ji-ao-yi-zhong-duan-mei-hua/</id>
+        <link href="https://2293736867.github.io/post/zhen-jin-mi-ji-ao-yi-zhong-duan-mei-hua/">
+        </link>
+        <updated>2020-06-02T21:29:05.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">2 准备工作</a>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3 准备工作</a>
 <ul>
-<li><a href="#21-%E5%9F%9F%E5%90%8D%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8">2.1 域名与服务器</a></li>
-<li><a href="#22-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90">2.2 域名解析</a></li>
-<li><a href="#22-%E7%AB%AF%E5%8F%A3">2.2 端口</a></li>
+<li><a href="#31-zsh">3.1 zsh</a></li>
+<li><a href="#32-oh-my-zsh">3.2 oh-my-zsh</a></li>
 </ul>
 </li>
-<li><a href="#3-nginx">3 Nginx</a>
+<li><a href="#4-%E5%AE%89%E8%A3%85p9k">4 安装p9k</a>
 <ul>
-<li><a href="#31-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84nginx1179">3.1 编译安装的Nginx(1.17.9)</a>
-<ul>
-<li><a href="#311-%E5%AE%89%E8%A3%85nginx">3.1.1 安装Nginx</a></li>
-<li><a href="#312-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">3.1.2 证书处理</a></li>
-<li><a href="#313-nginx%E9%85%8D%E7%BD%AE">3.1.3 Nginx配置</a></li>
-<li><a href="#314-%E6%B5%8B%E8%AF%95">3.1.4 测试</a></li>
+<li><a href="#41-%E5%AE%89%E8%A3%85%E5%AD%97%E4%BD%93">4.1 安装字体</a></li>
+<li><a href="#42-%E5%AE%89%E8%A3%85p9k">4.2 安装p9k</a></li>
 </ul>
 </li>
-<li><a href="#32-%E4%BB%8E%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85nginx1161">3.2 从仓库安装Nginx(1.16.1)</a>
+<li><a href="#5-p9k%E9%85%8D%E7%BD%AE">5 p9k配置</a>
 <ul>
-<li><a href="#321-%E5%AE%89%E8%A3%85nginx">3.2.1 安装Nginx</a></li>
-<li><a href="#322-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">3.2.2 证书处理</a></li>
-<li><a href="#323-nginx%E9%85%8D%E7%BD%AE">3.2.3 Nginx配置</a></li>
-<li><a href="#324-%E6%B5%8B%E8%AF%95">3.2.4 测试</a></li>
+<li><a href="#51-%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E6%8F%90%E7%A4%BA%E6%AE%B5">5.1 开启/关闭提示段</a>
+<ul>
+<li><a href="#511-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8">5.1.1 如何使用</a></li>
+<li><a href="#512-%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E6%95%B4%E4%B8%AA%E6%8F%90%E7%A4%BA%E6%AE%B5">5.1.2 开启/关闭整个提示段</a></li>
+<li><a href="#513-%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3">5.1.3 系统相关</a></li>
+<li><a href="#514-%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3">5.1.4 语言相关</a></li>
+<li><a href="#515-%E4%BA%91%E7%9B%B8%E5%85%B3">5.1.5 云相关</a></li>
+<li><a href="#516-%E5%85%B6%E4%BB%96">5.1.6 其他</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#4-apache">4 Apache</a>
+<li><a href="#52-%E4%BD%8D%E7%BD%AE">5.2 位置</a></li>
+<li><a href="#53-%E9%A2%9C%E8%89%B2">5.3 颜色</a></li>
+<li><a href="#54-%E5%9B%BE%E6%A0%87">5.4 图标</a></li>
+<li><a href="#55-%E5%85%B6%E4%BB%96">5.5 其他</a>
 <ul>
-<li><a href="#41-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84apache2441">4.1 编译安装的Apache(2.4.41)</a>
-<ul>
-<li><a href="#411-%E5%AE%89%E8%A3%85apache">4.1.1 安装Apache</a></li>
-<li><a href="#412-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">4.1.2 证书处理</a></li>
-<li><a href="#413-apache%E9%85%8D%E7%BD%AE">4.1.3 Apache配置</a></li>
-<li><a href="#414-%E6%B5%8B%E8%AF%95">4.1.4 测试</a></li>
-</ul>
-</li>
-<li><a href="#42-%E4%BB%8E%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85%E7%9A%84apache246">4.2 从仓库安装的Apache(2.4.6)</a>
-<ul>
-<li><a href="#421-%E5%AE%89%E8%A3%85apache">4.2.1 安装Apache</a></li>
-<li><a href="#422-%E8%AF%81%E4%B9%A6%E5%A4%84%E7%90%86">4.2.2 证书处理</a></li>
-<li><a href="#423-apache%E9%85%8D%E7%BD%AE">4.2.3 Apache配置</a></li>
-<li><a href="#424-%E6%B5%8B%E8%AF%95">4.2.4 测试</a></li>
+<li><a href="#551-%E7%B2%98%E5%90%88">5.5.1 粘合</a></li>
+<li><a href="#552-%E6%B7%BB%E5%8A%A0%E6%96%B0%E8%A1%8C">5.5.2 添加新行</a></li>
+<li><a href="#553-%E6%9B%B4%E5%A4%9A">5.5.3 更多</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#5-%E6%80%BB%E7%BB%93">5 总结</a></li>
+<li><a href="#6-p9k%E4%B8%8Ep10k">6 p9k与p10k</a>
+<ul>
+<li><a href="#61-%E4%B8%A4%E8%80%85%E5%85%B3%E7%B3%BB">6.1 两者关系</a></li>
+<li><a href="#62-%E6%8F%90%E7%A4%BA%E5%BB%B6%E8%BF%9F">6.2 提示延迟</a></li>
+<li><a href="#63-%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6">6.3 加载速度</a></li>
+<li><a href="#64-%E5%85%B6%E4%BB%96">6.4 其他</a></li>
+</ul>
+</li>
+<li><a href="#7-%E5%AE%89%E8%A3%85p10k">7 安装p10k</a>
+<ul>
+<li><a href="#71-%E5%AE%89%E8%A3%85%E5%AD%97%E4%BD%93">7.1 安装字体</a></li>
+<li><a href="#72-%E5%AE%89%E8%A3%85p10k">7.2 安装p10k</a></li>
+</ul>
+</li>
+<li><a href="#8-p10k%E9%85%8D%E7%BD%AE">8 p10k配置</a>
+<ul>
+<li><a href="#81-%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">8.1 基本配置</a></li>
+<li><a href="#82-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE">8.2 自定义配置</a></li>
+</ul>
+</li>
+<li><a href="#9-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">9 配置文件</a>
+<ul>
+<li><a href="#91-p9k">9.1 p9k</a></li>
+<li><a href="#92-p10k">9.2 p10k</a></li>
+</ul>
+</li>
 </ul>
 </p>
 <h1 id="1-概述">1 概述</h1>
-<p>acme.sh实现了acme协议，可以从Let‘s Encrypt生成免费的ssl证书用于实现https，本文介绍了常见的两种服务器Apache与Nginx上利用acme.sh配置https服务。<br>
-约定:</p>
-<pre><code class="language-bash">APACHE_INSTALL_DIR  ---   Apache安装目录
-NGINX_INSTALL_DIR   ---   Nginx安装目录
-www.test.com        ---   测试域名,请按需要换成自己的域名
-</code></pre>
-<h1 id="2-准备工作">2 准备工作</h1>
+<p>作为一个程序员，可以没钱，没车，没房，没老婆，没女朋友。<br>
+但是，一定要有一个漂亮骚气的终端。<br>
+<s>没错，大骚特骚。</s><br>
+<s>说什么大实话。</s><br>
+先来看看原生的终端：<br>
+<img src="https://img-blog.csdnimg.cn/20200512153727942.png" alt="在这里插入图片描述" loading="lazy"><br>
+<s>真漂亮啊。</s><br>
+再看看美化过的：<br>
+<img src="https://img-blog.csdnimg.cn/20200512133828301.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200512133937571.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200512133340522.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200512171351446.png" alt="在这里插入图片描述" loading="lazy"><br>
+<s>这才叫终端嘛。</s><br>
+美化过的就是不一样。<br>
+如果您也想要这样的终端，那这篇文章要仔细看，同时顺手点个赞。</p>
+<p>文章讲述了如何使用zsh+oh-my-zsh，配合主题Powerlevel9k/Powerlevel10k（以下简称p9k/p10k）进行终端美化的过程，不废话了，进入正题。</p>
+<h1 id="2-环境">2 环境</h1>
+<p>笔者环境：</p>
 <ul>
-<li>一个域名</li>
-<li>一台云服务器</li>
+<li>Manjaro 20.0</li>
+<li>Xfce</li>
+<li>自带的Xfce terminal</li>
 </ul>
-<h2 id="21-域名与服务器">2.1 域名与服务器</h2>
-<p>域名与服务器直接买就好了，笔者的都是在阿里云上买的。</p>
-<h2 id="22-域名解析">2.2 域名解析</h2>
-<p>需要确保域名可以解析到对应的ip上面，一般的域名购买商会提供解析服务，按图形界面操作即可，以阿里云为例，选择域名进行解析：<br>
-<img src="https://img-blog.csdnimg.cn/20200317005748607.png" alt="在这里插入图片描述" loading="lazy"><br>
-主机记录填www，记录值填服务器公网ip.<br>
-<img src="https://img-blog.csdnimg.cn/20200317005817155.png" alt="在这里插入图片描述" loading="lazy"><br>
-间隔十分钟左右可以ping一下自己的域名，如果显示服务器ip则解析成功。</p>
-<h2 id="22-端口">2.2 端口</h2>
-<p>服务器要开启80与443端口，80用于HTTP测试，443用于HTTPS访问。以阿里云为例:<br>
-<img src="https://img-blog.csdnimg.cn/20200317135937646.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317140139818.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317140205495.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317140231194.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317140246326.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-nginx">3 Nginx</h1>
-<p>Nginx有两种安装方式，一种是仓库形式安装，另一种是从源码编译安装。</p>
-<h2 id="31-编译安装的nginx1179">3.1 编译安装的Nginx(1.17.9)</h2>
-<h3 id="311-安装nginx">3.1.1 安装Nginx</h3>
-<p>先去<a href="http://nginx.org/en/download.html">下载源码</a>，上传到服务器，解压：</p>
-<pre><code class="language-bash">tar -zxvf nginx-1.17.9.tar.gz
-cd nginx-1.17.9
+<p>其他linux基本适用，安装zsh+oh-my-zsh即可，mac用户可以通过homebrew安装zsh+p9k/p10k，至于win用户，自行搜索吧。</p>
+<h1 id="3-准备工作">3 准备工作</h1>
+<p>安装zsh+oh-my-zsh。</p>
+<h2 id="31-zsh">3.1 zsh</h2>
+<p>Manjaro/Arch：</p>
+<pre><code class="language-bash">sudo pacman -S zsh
 </code></pre>
-<p>可以先使用</p>
-<pre><code class="language-bash">./configure --help
+<p>Debian系：</p>
+<pre><code class="language-bash">sudo apt install zsh
 </code></pre>
-<p>查看选项帮助，这里要注意一下pcre与openssl，是源码目录，不是安装目录，安装之后删了源码的，重新来<a href="https://sourceforge.net/projects/pcre/">这里下载pcre</a>与<a href="https://www.openssl.org/source/">这里下载openssl</a>，注意一定需要http_ssl_module这个模块，不要漏了。</p>
-<pre><code class="language-bash">./configure --prefix=/xxxxx --with-pcre=/xxxxx --with-openssl=/xxxx --with-http_ssl_module
-make
+<p>RedHat系：</p>
+<pre><code class="language-bash">sudo yum install -y zsh
+</code></pre>
+<p>其他可以来到官方github安装，<a href="https://github.com/zsh-users/zsh">戳这里</a>。<br>
+设为默认shell：</p>
+<pre><code class="language-bash">chsh -s $(which zsh)
+</code></pre>
+<p>再把原来的别名复制到</p>
+<pre><code class="language-bash">~/.zshrc
+</code></pre>
+<h2 id="32-oh-my-zsh">3.2 oh-my-zsh</h2>
+<p>通过脚本安装即可，使用curl或wget：</p>
+<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
+#或
+sh -c &quot;$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
+</code></pre>
+<p>失败的话可以clone仓库安装，<a href="https://github.com/ohmyzsh/ohmyzsh">戳这里</a>。</p>
+<h1 id="4-安装p9k">4 安装p9k</h1>
+<h2 id="41-安装字体">4.1 安装字体</h2>
+<p>推荐使用Nerd-Fonts字体，能显示最全的图标。Nerd-Fonts包含了大量的“图标字体”，如下图（来源<a href="https://github.com/ryanoasis/nerd-fonts">官方github</a>）：<br>
+<img src="https://img-blog.csdnimg.cn/20200511091911917.png" alt="在这里插入图片描述" loading="lazy"><br>
+Manjaro/Arch用户：</p>
+<pre><code class="language-bash">sudo pacman -S ttf-nerd-fonts
+</code></pre>
+<p>其他用户可以<a href="https://github.com/ryanoasis/nerd-fonts">戳这里</a>clone下载安装。<br>
+p9k默认使用的是Powerline Font字体，Manjaro/Arch用户：</p>
+<pre><code class="language-bash">sudo pacman -S powerline-fonts
+</code></pre>
+<p>其他可以<a href="https://github.com/powerline/fonts">戳这里</a>clone下来安装。</p>
+<p>除此之外官方还建议使用Awesome-Powerline Fonts字体或一些程序员字体（如Source Code Pro等），但是图标可能会显示不全，建议还是使用Nerd-Fonts字体。<br>
+安装字体后，在设置p9k主题前，也就是在</p>
+<pre><code class="language-bash">~/.zshrc
+</code></pre>
+<p>设置</p>
+<pre><code class="language-bash">ZSH_THEME=&quot;powerlevel9k/powerlevel9k&quot;
+</code></pre>
+<p>之前，设置模式：</p>
+<pre><code class="language-bash">POWERLEVEL9K_MODE='nerdfont-complete'
+</code></pre>
+<p>如果用的是Powerline-Fonts可以不用设置，如果用的是Awesome-fonts，设置：</p>
+<pre><code class="language-bash">POWERLEVEL9K_MODE='awesome-fontconfig'
+#或
+POWERLEVEL9K_MODE='awesome-patched'
+</code></pre>
+<h2 id="42-安装p9k">4.2 安装p9k</h2>
+<p>Manjaro/Arch：</p>
+<pre><code class="language-bash">sudo pacman -S zsh-theme-powerlevel9k
+echo 'source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme' &gt;&gt; ~/.zshrc
+</code></pre>
+<p>其他：</p>
+<pre><code class="language-bash">git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+# 修改~/.zshrc
+ZSH_THEME=&quot;powerlevel9k/powerlevel9k&quot;
+</code></pre>
+<h1 id="5-p9k配置">5 p9k配置</h1>
+<p>p9k配置的主要部分就是自定义提示段（Prompt Segments），包括开启/关闭，位置，颜色，图标等。</p>
+<h2 id="51-开启关闭提示段">5.1 开启/关闭提示段</h2>
+<h3 id="511-如何使用">5.1.1 如何使用</h3>
+<p>具体请看5.2 位置。</p>
+<h3 id="512-开启关闭整个提示段">5.1.2 开启/关闭整个提示段</h3>
+<p>关闭左边/右边整个提示段：</p>
+<pre><code class="language-bash">#左
+POWERLEVEL9K_DISABLE_PROMPT=true
+#右
+POWERLEVEL9K_DISABLE_RPROMPT=true
+</code></pre>
+<h3 id="513-系统相关">5.1.3 系统相关</h3>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>background_jobs</td>
+<td>后台任务</td>
+</tr>
+<tr>
+<td>battery</td>
+<td>电池状态</td>
+</tr>
+<tr>
+<td>context</td>
+<td>用户名+主机名，基于USER环境变量以及SSH状态</td>
+</tr>
+<tr>
+<td>date</td>
+<td>日期</td>
+</tr>
+<tr>
+<td>dir</td>
+<td>当前工作目录</td>
+</tr>
+<tr>
+<td>dir_writable</td>
+<td>目录可写状态，可写时为空，不可写时出现一个锁</td>
+</tr>
+<tr>
+<td>disk_usage</td>
+<td>当前分区的磁盘使用百分比</td>
+</tr>
+<tr>
+<td>history</td>
+<td>历史命令的记录数量</td>
+</tr>
+<tr>
+<td>host</td>
+<td>主机名</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>内网ip</td>
+</tr>
+<tr>
+<td>vpn_ip</td>
+<td>vpn ip</td>
+</tr>
+<tr>
+<td>public_ip</td>
+<td>公网ip</td>
+</tr>
+<tr>
+<td>load</td>
+<td>机器的平均负载</td>
+</tr>
+<tr>
+<td>os_icon</td>
+<td>操作系统图标，支持的linux有Alpine，AOSC，Arch，CentOS，CoreOS，Debian，Devuan，Elementary，Fedora，Gentoo，Mageia，Manjaro，Mint，NixOS，OpenSUSE，Sabayon，Slackware，Ubuntu</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>内存可用大小</td>
+</tr>
+<tr>
+<td>root_indicator</td>
+<td>拥有root权限的提示符</td>
+</tr>
+<tr>
+<td>status</td>
+<td>前一条命令的结果状态码</td>
+</tr>
+<tr>
+<td>swap</td>
+<td>交换分区使用情况</td>
+</tr>
+<tr>
+<td>time</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>user</td>
+<td>当前用户</td>
+</tr>
+<tr>
+<td>vi_mode</td>
+<td>vi模式</td>
+</tr>
+<tr>
+<td>ssh</td>
+<td>ssh状态</td>
+</tr>
+</tbody>
+</table>
+<h3 id="514-语言相关">5.1.4 语言相关</h3>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>go_version</td>
+<td>Go版本</td>
+</tr>
+<tr>
+<td>node_version</td>
+<td>Node.js安装的版本</td>
+</tr>
+<tr>
+<td>nodeenv</td>
+<td>使用nodeenv显示Node版本</td>
+</tr>
+<tr>
+<td>nvm</td>
+<td>NVM显示Node版本</td>
+</tr>
+<tr>
+<td>php_version</td>
+<td>php版本</td>
+</tr>
+<tr>
+<td>laravel_version</td>
+<td>Laravel版本</td>
+</tr>
+<tr>
+<td>symfony2_test2</td>
+<td>Symfony2测试类与代码类的比率</td>
+</tr>
+<tr>
+<td>symfony2_version</td>
+<td>Symfony2版本</td>
+</tr>
+<tr>
+<td>virtualenv</td>
+<td>Python VirtualEnv环境</td>
+</tr>
+<tr>
+<td>anaconda</td>
+<td>Anaconda环境</td>
+</tr>
+<tr>
+<td>pyenv</td>
+<td>pyenv version显示的第一个单词，但是如果是system将不会显示</td>
+</tr>
+<tr>
+<td>chruby</td>
+<td>使用chruby的Ruby环境</td>
+</tr>
+<tr>
+<td>rbenv</td>
+<td>使用rbenv的Ruby环境</td>
+</tr>
+<tr>
+<td>rspec_stats</td>
+<td>RSpec中测试类与代码类的比率</td>
+</tr>
+<tr>
+<td>rvm</td>
+<td>使用GEM_HOME环境变量或者MY_RUBY_HOME环境变量显示的Ruby信息</td>
+</tr>
+<tr>
+<td>rust_version</td>
+<td>Rust版本</td>
+</tr>
+<tr>
+<td>swift_version</td>
+<td>Swift版本</td>
+</tr>
+<tr>
+<td>java_version</td>
+<td>Java版本</td>
+</tr>
+<tr>
+<td>openfoam</td>
+<td>OpenFOAM库版本</td>
+</tr>
+</tbody>
+</table>
+<h3 id="515-云相关">5.1.5 云相关</h3>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aws</td>
+<td>当前的AWS配置</td>
+</tr>
+<tr>
+<td>aws_eb_env</td>
+<td>当前的Elastic Beanstalk环境</td>
+</tr>
+<tr>
+<td>docker_machine</td>
+<td>当前的Docker Machine</td>
+</tr>
+<tr>
+<td>docker_machine</td>
+<td>kubectl配置</td>
+</tr>
+<tr>
+<td>dropbox</td>
+<td>Dropbox目录以及使用dropbox-cli的同步状态</td>
+</tr>
+</tbody>
+</table>
+<h3 id="516-其他">5.1.6 其他</h3>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vcs</td>
+<td>git/hg仓库的信息</td>
+</tr>
+<tr>
+<td>command_execution_time</td>
+<td>命令执行时间</td>
+</tr>
+<tr>
+<td>todo</td>
+<td><a href="http://todotxt.org/">todo.txt</a>文件中任务数量</td>
+</tr>
+<tr>
+<td>detect_virt</td>
+<td>使用systemd进行虚拟化检测</td>
+</tr>
+<tr>
+<td>newline</td>
+<td>另起一行</td>
+</tr>
+<tr>
+<td>custom_command</td>
+<td>自定义命令，需要以custom_开头</td>
+</tr>
+</tbody>
+</table>
+<p>比如，利用</p>
+<pre><code class="language-bash">nmcli device wifi
+</code></pre>
+<p>显示wifi速率，首先添加一个函数：</p>
+<pre><code class="language-bash">wifi_rate(){
+	local rate=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $6}') #awk后面的数字可能每个人不同
+	echo &quot;\uf0e7 $rate Mbit/s&quot;
+}
+</code></pre>
+<p>其次添加自定义提示段（以custom开头）：</p>
+<pre><code class="language-bash">POWERLEVEL9K_CUSTOM_WIFI_RATE=&quot;wifi_rate&quot;
+</code></pre>
+<p>最后在</p>
+<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMENTS
+#或
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS
+</code></pre>
+<p>加上即可，演示效果：<br>
+<img src="https://img-blog.csdnimg.cn/20200512041033356.png" alt="在这里插入图片描述" loading="lazy"><br>
+需要的话，可以根据信号状态定义不同的颜色：<br>
+<img src="https://img-blog.csdnimg.cn/20200512041421959.png" alt="在这里插入图片描述" loading="lazy"><br>
+完整配置文件如下，加上了wifi名字：</p>
+<pre><code class="language-bash">set_wifi(){
+	wifi_signal=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $8}')
+
+	POWERLEVEL9K_CUSTOM_WIFI_NAME_FOREGROUND=&quot;black&quot;
+	POWERLEVEL9K_CUSTOM_WIFI_RATE_FOREGROUND=&quot;black&quot;
+	POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_FOREGROUND=&quot;black&quot;
+
+	POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;green&quot;
+	POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;green&quot;
+	POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;green&quot;
+
+	if [[ $wifi_signal -lt 50 ]] ; then
+		POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;red&quot;
+		POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;red&quot;
+		POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;red&quot;
+	elif [[ $wifi_signal -lt 75 ]] ; then
+		POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;yellow&quot;
+		POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;yellow&quot;
+		POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;yellow&quot;
+	fi
+}
+set_wifi
+
+wifi_name(){
+	local name=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $3}')
+	echo &quot;\uf502 $name&quot;
+}
+wifi_rate(){
+	local rate=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $6}')
+	echo &quot;\uf0e7 $rate Mbit/s&quot;
+}
+wifi_bars_and_signal(){
+	local bars=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $9}')
+	echo &quot;$bars $wifi_signal %%&quot;
+}
+
+POWERLEVEL9K_CUSTOM_WIFI_NAME=&quot;wifi_name&quot;
+POWERLEVEL9K_CUSTOM_WIFI_RATE=&quot;wifi_rate&quot;
+POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL=&quot;wifi_bars_and_signal&quot;
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+	custom_wifi_name custom_wifi_rate custom_wifi_bars_and_signal 
+)
+</code></pre>
+<h2 id="52-位置">5.2 位置</h2>
+<p>可以加上</p>
+<pre><code class="language-bash">POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+</code></pre>
+<p>使输入的命令显示在新的一行。</p>
+<pre><code class="language-bash">POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
+</code></pre>
+<p>让右边的提示段在新的一行。<br>
+在</p>
+<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMETS
+#或
+POWERLEVEL9K_RIGHT_PROMPT_ELEMETS
+</code></pre>
+<p>中，可以配合newline以及5.1中的提示段自定义位置，比如，笔者的：</p>
+<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+	os_icon date time newline 
+	custom_wifi_rate custom_wifi_bars_and_signal newline
+	background_jobs ram load swap disk_usage newline 
+	php_version java_version node_version newline 
+	dir dir_writable vcs 
+)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200512103824109.png" alt="在这里插入图片描述" loading="lazy"><br>
+当然这不是完整的配置文件，还修改了颜色，完整的配置文件在文末给出。</p>
+<h2 id="53-颜色">5.3 颜色</h2>
+<p>修改提示段的前景/背景，直接修改即可，一般的格式为：</p>
+<pre><code class="language-bash">POWERLEVEL9K_NAME_STATUS_BACKGROUND=
+POWERLEVEL9K_NAME_STATUS_FOREGROUND=
+</code></pre>
+<p>其中NAME为5.1中对应的提示段，比如可以修改：</p>
+<pre><code class="language-bash">POWERLEVEL9K_OS_ICON_FOREGROUND=&quot;green&quot;
+POWERLEVEL9K_PHP_VERSION_BACKGROUND=&quot;010&quot;
+</code></pre>
+<p>颜色可以使用一些常见的red/green等等，也可以使用序号，可以查看这张图：<br>
+<img src="https://img-blog.csdnimg.cn/20200512104645305.png" alt="在这里插入图片描述" loading="lazy"><br>
+也可以使用如下命令显示颜色：</p>
+<pre><code class="language-bash">for i in {0..255}; do print -Pn &quot;%K{$i}  %k%F{$i}${(l:3::0:)i}%f &quot; ${${(M)$((i%6)):#3}:+$'\n'}; done
+</code></pre>
+<p>STATUS不是每个提示段都有的，列表如下：</p>
+<table>
+<thead>
+<tr>
+<th>提示段</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>battery</td>
+<td>LOW,CHARGING,CHAGED,DISCONNECTED</td>
+</tr>
+<tr>
+<td>context</td>
+<td>DEFAULT,ROOT,SUDO,REMOTE,REMOTE_SUDO</td>
+</tr>
+<tr>
+<td>dir</td>
+<td>HOME,HOME_SUBFOLDER,DEFAULT,ETC,NOT_WRITABLE</td>
+</tr>
+<tr>
+<td>dir_writable</td>
+<td>FORBIDDEN</td>
+</tr>
+<tr>
+<td>disk_usage</td>
+<td>NORMAL,WARNING,CRITICAL</td>
+</tr>
+<tr>
+<td>host</td>
+<td>LOCAL,REMOTE</td>
+</tr>
+<tr>
+<td>load</td>
+<td>CRITICAL,WARNING,NORMAL</td>
+</tr>
+<tr>
+<td>rspec_stats</td>
+<td>STATS_GOOD,STATS_AVG,STATS_BAD</td>
+</tr>
+<tr>
+<td>symfony2_test</td>
+<td>TESTS_GOOD,TESTS_AVG,TESTS_BAD</td>
+</tr>
+<tr>
+<td>user</td>
+<td>DEFAULT,SUDO,ROOT</td>
+</tr>
+<tr>
+<td>vcs</td>
+<td>CLEAN,UNTRACKED,MODIFIED</td>
+</tr>
+<tr>
+<td>vi_mode</td>
+<td>NORMAL,INSERT,VISUAL</td>
+</tr>
+</tbody>
+</table>
+<p>大部分都可以很容易理解，这里以最简单的为例：</p>
+<pre><code class="language-bash">POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='166'
+POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='000'
+POWERLEVEL9K_DIR_ETC_BACKGROUND='226'
+POWERLEVEL9K_DIR_ETC_FOREGROUND='000'
+POWERLEVEL9K_DIR_HOME_BACKGROUND='044'
+POWERLEVEL9K_DIR_HOME_FOREGROUND='000'
+</code></pre>
+<p>设置home目录，etc目录以及默认目录的前景与背景。</p>
+<h2 id="54-图标">5.4 图标</h2>
+<p>使用</p>
+<pre><code class="language-bash">get_icon_names
+</code></pre>
+<p>可以查看内置的图标。<br>
+<img src="https://img-blog.csdnimg.cn/20200512110355831.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意这个和字体有关，如果使用默认的PowerlineFonts或者使用AwesomeFonts可能不会完整显示所有图标，请使用Nerd-Fonts。</p>
+<p><a href="https://www.oschina.net/p/nerd-fonts">戳这里</a>查看Nerd-fonts的部分图标，<a href="https://www.nerdfonts.com/cheat-sheet">戳这里</a>搜索所有的图标。<br>
+官方的例子是自定义vcs的图标：</p>
+<pre><code class="language-bash">POWERLEVEL9K_VCS_BRANCH_ICON=$'\uF126'
+</code></pre>
+<p>F126可以通过上面的网站搜索得到，是一个分支的图标：<br>
+<img src="https://img-blog.csdnimg.cn/2020051211145535.png" alt="在这里插入图片描述" loading="lazy"><br>
+其他git相关图标：</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>图标字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Github</td>
+<td>VCS_GIT_GITHUB_ICON</td>
+</tr>
+<tr>
+<td>BitBucket</td>
+<td>VCS_GIT_BITBUCKET_ICON</td>
+</tr>
+<tr>
+<td>GitLab</td>
+<td>VCS_GIT_GITLAB_ICON</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>VCS_GIT_ICON</td>
+</tr>
+</tbody>
+</table>
+<p>另外还可以修改提示段前的图标：</p>
+<pre><code class="language-bash">POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=&quot;↱&quot;
+POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=&quot;↳ &quot;
+POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX=&quot;xxx&quot;
+</code></pre>
+<p>还可以根据get_icon_names修改默认图标，比如，修改</p>
+<pre><code class="language-bash">POWERLEVEL9K_HOME_SUB_ICON=$'\uf74b'
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200512114150180.png" alt="在这里插入图片描述" loading="lazy"><br>
+但是直接改icon的话图标会显示得很小，可以在函数中像上面的wifi一样使用echo自定义。</p>
+<h2 id="55-其他">5.5 其他</h2>
+<h3 id="551-粘合">5.5.1 粘合</h3>
+<p>可以添加joined使提示段粘合在一起：</p>
+<pre><code class="language-bash">POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(history status_joined)
+</code></pre>
+<p>修改前：<br>
+<img src="https://img-blog.csdnimg.cn/20200512110052513.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改后：<br>
+<img src="https://img-blog.csdnimg.cn/20200512110045321.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="552-添加新行">5.5.2 添加新行</h3>
+<pre><code class="language-bash">POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+</code></pre>
+<p>每次输入命令后添加一行空行，可以使用</p>
+<pre><code class="language-bash">POWERLEVEL9K_PROMPT_ADD_NEWLINE_COUNT
+</code></pre>
+<p>控制，默认为1。</p>
+<h3 id="553-更多">5.5.3 更多</h3>
+<p>更多请移步<a href="https://github.com/Powerlevel9k/powerlevel9k#customizing-prompt-segments">官方文档</a>，太多了，比如电池，自定义充电中或充完电或低电量状态的颜色以及显示状态：<br>
+<img src="https://img-blog.csdnimg.cn/20200512115707163.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200512115746970.png" alt="在这里插入图片描述" loading="lazy"><br>
+好了，p9k就到这里，下面看看p10k。</p>
+<h1 id="6-p9k与p10k">6 p9k与p10k</h1>
+<h2 id="61-两者关系">6.1 两者关系</h2>
+<p>p10k是2019年3月从p9k的仓库fork而来的。p9k已经是一个拥有大量用户的成熟的工程。p10k被分离出来，以更快的速度迭代更新，添加新特性以及改进性能。<br>
+p9k与p10k是独立的工程，只能安装其中一个，但是p10k会识别p9k的所有参数。<br>
+目前p9k已经不再维护更新，推荐使用p10k。<br>
+<img src="https://img-blog.csdnimg.cn/20200511095752966.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="62-提示延迟">6.2 提示延迟</h2>
+<p>p9k已有几个issue反映很慢：<br>
+<img src="https://img-blog.csdnimg.cn/20200511100009605.png" alt="在这里插入图片描述" loading="lazy"><br>
+具体内容请查看p9k官方issue，p10k改进了性能，p10k github有一个演示视频，展示了p10k的速度，在Intel i9-7900X+Ubuntu 18.04上，测试提示延迟如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200511100206835.png" alt="在这里插入图片描述" loading="lazy"><br>
+（来源官方测试）<br>
+相对来说，p9k具有可接受的延迟，如果只是需要当前目录而不需要截断或缩短，p9k可以17ms内渲染完成，p10k可以将其提高30倍的渲染速度，但实际上并不需要，因为延迟变得明显的阀值为50ms。官方建议必须小心使用p9k的配置，因为很容易使得提示变慢，但是p10k在任何配置中几乎都是即时的，可以保持远低于50ms。</p>
+<p>另外笔者的系统上也测试过，p9k确实要比p10k慢，添加了很多设置后，p9k在终端中连续按Enter，松手之后还在提示，甚至一个普通的ls也有明显的延迟，但是p10k没有这样的问题，很流畅。</p>
+<h2 id="63-加载速度">6.3 加载速度</h2>
+<p>p10k比p9k能更快加载，前提是，zsh版本5.4+。<br>
+官方建议使用下面的命令测试：</p>
+<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source ~/powerlevel10k/powerlevel10k.zsh-theme')
+</code></pre>
+<p>但是笔者没有这个文件，怀疑是位置给错了，修改如下：</p>
+<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k/powerlevel10k.zsh-theme')
+</code></pre>
+<p>笔者的系统上耗时如下：<br>
+<img src="https://img-blog.csdnimg.cn/2020051120031034.png" alt="在这里插入图片描述" loading="lazy"><br>
+换了p9k后：</p>
+<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme')
+</code></pre>
+<p>耗时如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200511201744364.png" alt="在这里插入图片描述" loading="lazy"><br>
+不过好像没快多少的样子，可能是zsh版本的问题，装的是目前最新的5.8，可能老一点的版本区别会明显一点。<br>
+官方的测试是p10k用了29s，比相同环境下的p9k master分支大约快6倍，比p9k next分支快17倍。笔者认为仅供参考吧，用p10k就对了，毕竟比p9k快。</p>
+<h2 id="64-其他">6.4 其他</h2>
+<ul>
+<li>p10k默认只开启vcs中git后端的支持，如果需要svn/hg，需要添加到POWERLEVEL9K_VCS_BACKENDS。但是p10k还没有针对svn/hg优化，所以添加的话会让提示变慢</li>
+<li>p10k不支持POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY=true</li>
+<li>p10k会兼容p9k的所有选项，因此，相同配置下如果p9k与p10k看到的图标不一样，可能是设置了POWERLEVEL9K_MODE的原因，请去掉POWERLEVEL9K_MODE</li>
+<li>p9k不识别ZLE_RPROMPT_INDENT，因此p10相比起p9k会有额外的空格。如果不想要可以设置ZLE_RPROMPT_INDENT=0<br>
+<img src="https://img-blog.csdnimg.cn/20200512145835247.png" alt="在这里插入图片描述" loading="lazy"></li>
+<li>p9k在图标附近有不一致的空格，在p10k已经不存在了，不过可以设置POWERLEVEL9K_LEGACY_ICON_SPACING=true显示与p9k中一样的空格<br>
+<img src="https://img-blog.csdnimg.cn/20200512145806760.png" alt="在这里插入图片描述" loading="lazy"></li>
+<li>p10k修正了p9k的许多bugs，除了修复空格问题等，最主要是极大地提高了速度</li>
+</ul>
+<h1 id="7-安装p10k">7 安装p10k</h1>
+<h2 id="71-安装字体">7.1 安装字体</h2>
+<p>Manjaro/Arch用户：</p>
+<pre><code class="language-bash">sudo pacman -S nerd-fonts-meslo-lg
+</code></pre>
+<p>或手动安装：</p>
+<ul>
+<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf">MesloLGS NF Regular.ttf</a></li>
+<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf">MesloLGS NF Bold.ttf</a></li>
+<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf">MesloLGS NF Italic.ttf</a></li>
+<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf">MesloLGS NF Bold Italic.ttf</a></li>
+</ul>
+<h2 id="72-安装p10k">7.2 安装p10k</h2>
+<p>Manjaro/Arch：</p>
+<pre><code class="language-bash">sudo pacman -S zsh-theme-powerlevel10k #如果先前安装了p9k这一步会提示冲突
+echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' &gt;&gt;! ~/.zshrc
+</code></pre>
+<p>其他：</p>
+<pre><code class="language-bash">git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' &gt;&gt;! ~/.zshrc
+</code></pre>
+<p>如果打开zsh时提示找不到powerlevel9k.zsh-theme这个文件，请在zshrc中把</p>
+<pre><code class="language-bash">#~/.zshrc
+source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
+</code></pre>
+<p>这一行删去。</p>
+<h1 id="8-p10k配置">8 p10k配置</h1>
+<h2 id="81-基本配置">8.1 基本配置</h2>
+<p>终端输入</p>
+<pre><code class="language-bash">p10k configure
+</code></pre>
+<p>就会出现图形化配置向导。首先会问几个问题：<br>
+<img src="https://img-blog.csdnimg.cn/20200511213925189.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/2020051121395215.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200511214010451.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200512135516854.png" alt="在这里插入图片描述" loading="lazy"><br>
+会问三个图标：钻石，锁与Debian，应该是测试有没有安装对应的字体，然后会问图标是否会重叠，接着有四种风格可以选择：<br>
+<img src="https://img-blog.csdnimg.cn/20200512141652442.png" alt="在这里插入图片描述" loading="lazy"><br>
+看个人了，笔者选的3 ，接着可以选择：</p>
+<ul>
+<li>编码（Unicode/ASCII，一般选Unicode）</li>
+<li>时间（不显示/12小时制/24小时制）</li>
+<li>分隔符（三角/垂直/斜线/圆角）</li>
+<li>提示段头部（三角/渐隐/斜线/垂直）</li>
+<li>提示段尾部（垂直/渐隐/三角/倾斜/圆角）</li>
+<li>高度（一行/两行）</li>
+<li>左右提示段连接方式（无/点状连接/实线连接）</li>
+<li>提示段旁的命令提示符（无/左/右/左+右）</li>
+<li>颜色（最亮/亮/暗/最暗）</li>
+<li>空格（稀疏/紧密）</li>
+<li>图标（少/多）</li>
+<li>流（简洁/流畅，针对时间等，流畅模式会多一个at与时钟的图标）</li>
+<li>临时提示（开启/关闭）</li>
+<li>即时提示模式（关闭/安静模式/啰嗦模式，关闭是已经尝试过即时提示模式，但是不兼容zsh配置，需要关闭，安静模式是zsh初始化时不会打印警告信息，啰嗦模式会在zsh初始化时打印警告信息）</li>
+<li>覆盖p10k配置文件（如果p10k配置文件已存在，会提示是否覆盖，不覆盖的话也就是相当于此次配置无效，需要覆盖才能生效），覆盖之前原文件会备份</li>
+</ul>
+<p>简单配置的效果：<br>
+<img src="https://img-blog.csdnimg.cn/20200512143546614.png" alt="在这里插入图片描述" loading="lazy"><br>
+确实比p9k流畅了很多。</p>
+<h2 id="82-自定义配置">8.2 自定义配置</h2>
+<p>自定义配置与p9k类似，配置文件位置为：</p>
+<pre><code class="language-bash">~/.p10k.zsh
+</code></pre>
+<p>由于大部分都是p9k的配置，这里就不重复了，图标，位置大体类似，颜色可以使用如下命令获取：</p>
+<pre><code class="language-bash">for i in {0..255}; do print -Pn &quot;%K{$i}  %k%F{$i}${(l:3::0:)i}%f &quot; ${${(M)$((i%6)):#3}:+$'\n'}; done
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/202005121532132.png" alt="在这里插入图片描述" loading="lazy"><br>
+使用时直接加上数字即可。<br>
+<img src="https://img-blog.csdnimg.cn/20200512153242387.png" alt="在这里插入图片描述" loading="lazy"><br>
+如果用的是彩虹风格，目录可能在提示段中很难看到，可以直接修改配置文件的颜色，或修改终端全局配置的颜色。<br>
+<img src="https://img-blog.csdnimg.cn/20200512170719170.png" alt="在这里插入图片描述" loading="lazy"><br>
+剩下的就个人慢慢摸索了，改颜色，改图标，改位置等等。<br>
+最后贴一张配置完成的图：<br>
+<img src="https://img-blog.csdnimg.cn/20200512171322832.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="9-配置文件">9 配置文件</h1>
+<p>笔者的配置文件，仅供参考。</p>
+<h2 id="91-p9k">9.1 p9k</h2>
+<ul>
+<li><a href="https://github.com/2293736867/BeatuifulP9kConfig">github</a></li>
+<li><a href="https://gitee.com/imykr/BeatuifulP9kConfig">码云</a></li>
+</ul>
+<h2 id="92-p10k">9.2 p10k</h2>
+<ul>
+<li><a href="https://github.com/2293736867/BeautifulP10KConfig">github</a></li>
+<li><a href="https://gitee.com/imykr/BeautifulP10KConfig">码云</a></li>
+</ul>
+<p>如果觉得文章好看，欢迎点赞。</p>
+<p>同时欢迎关注微信公众号：氷泠之路。</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200325170404220.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[unzip解压中文乱码]]></title>
+        <id>https://2293736867.github.io/post/unzip-jie-ya-zhong-wen-luan-ma/</id>
+        <link href="https://2293736867.github.io/post/unzip-jie-ya-zhong-wen-luan-ma/">
+        </link>
+        <updated>2020-06-02T21:28:25.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>直接</p>
+<pre><code class="language-bash">unzip xxx.zip
+</code></pre>
+<p>乱码，肯定是编码问题了不用问。但是unzip没有指定编码的选项：<br>
+<img src="https://img-blog.csdnimg.cn/20200511113616168.png" alt="在这里插入图片描述" loading="lazy"><br>
+网上的解决方案如下：</p>
+<pre><code class="language-bash">unzip -O GBK/GB18030CP936  xx.zip
+</code></pre>
+<p>但是没有-O选项啊。</p>
+<h1 id="2-解决办法">2 解决办法</h1>
+<p>解决办法是安装unzip-iconv，笔者系统为manjaro，直接安装会提示会与unzip冲突：<br>
+<img src="https://img-blog.csdnimg.cn/20200511113933835.png" alt="在这里插入图片描述" loading="lazy"><br>
+unzip-iconv是一个补丁，但是好像没被官方接纳，比如Ubuntu下的unzip是带-O的，Archlinux与CentOS下默认没带，安装unzip-iconv即可，也可以在保留unzip的基础上打上unzip-iconv补丁包，参照<a href="https://www.cnblogs.com/JesseTsou/p/10488435.html">这里</a>。<br>
+安装后，可以先指定编码列出看看：</p>
+<pre><code class="language-bash">unzip -O gbk -l xxx.zip
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200511114745665.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里编码可以用小写，有一个小的bug是，先写-O选项的话，后面的压缩包文件名补全不了，目前笔者还没有找到好的解决办法（不知道你们的会不会这样，反正笔者的补全不了），所以，先-l补全写上文件，再移动到前面加上-O选项。<br>
+列出文件没问题的话，解压就行了：</p>
+<pre><code class="language-bash">unzip -O gbk -d folder xxx.zip
+</code></pre>
+<p>-d指定解压目录，如果没加目录的话，直接unzip会把所有文件解压到当前目录。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[manjaro配置攻略]]></title>
+        <id>https://2293736867.github.io/post/manjaro-pei-zhi-gong-lue/</id>
+        <link href="https://2293736867.github.io/post/manjaro-pei-zhi-gong-lue/">
+        </link>
+        <updated>2020-06-02T21:28:06.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%BA%90">1 源</a></li>
+<li><a href="#2-%E8%BE%93%E5%85%A5%E6%B3%95">2 输入法</a></li>
+<li><a href="#3-aur%E5%8A%A9%E6%89%8B">3 AUR助手</a></li>
+<li><a href="#4-%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6">4 常用软件</a>
+<ul>
+<li><a href="#41-chromechromium">4.1 chrome/chromium</a></li>
+<li><a href="#42-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90">4.2 网易云音乐</a></li>
+<li><a href="#43-git">4.3 git</a></li>
+<li><a href="#44-vim">4.4 vim</a></li>
+<li><a href="#45-wps">4.5 wps</a></li>
+<li><a href="#46-vscode">4.6 VScode</a></li>
+<li><a href="#47-qq">4.7 qq</a></li>
+<li><a href="#48-%E5%BE%AE%E4%BF%A1">4.8 微信</a></li>
+<li><a href="#49-%E8%BF%85%E9%9B%B7">4.9 迅雷</a></li>
+<li><a href="#410-%E6%B7%B1%E5%BA%A6%E6%88%AA%E5%9B%BE">4.10 深度截图</a></li>
+<li><a href="#411-jetbrains">4.11 JetBrains</a></li>
+<li><a href="#412-web%E6%9C%8D%E5%8A%A1%E5%99%A8">4.12 web服务器</a></li>
+</ul>
+</li>
+<li><a href="#5-deepin-wine%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86">5 deepin-wine常见问题处理</a>
+<ul>
+<li><a href="#51-%E6%97%A0%E6%B3%95%E5%88%87%E6%8D%A2%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95">5.1 无法切换中文输入法</a></li>
+<li><a href="#52-%E5%AD%97%E4%BD%93%E5%8F%91%E8%99%9A">5.2 字体发虚</a></li>
+<li><a href="#53-%E9%98%B4%E5%BD%B1%E8%BE%B9%E6%A1%86">5.3 阴影边框</a></li>
+</ul>
+</li>
+<li><a href="#6-%E7%BB%88%E7%AB%AF%E7%BE%8E%E5%8C%96">6 终端美化</a>
+<ul>
+<li><a href="#61-%E5%AE%89%E8%A3%85zsh">6.1 安装zsh</a></li>
+<li><a href="#62-%E5%AE%89%E8%A3%85oh-my-zsh">6.2 安装oh-my-zsh</a></li>
+<li><a href="#63-%E5%AD%97%E4%BD%93">6.3 字体</a></li>
+<li><a href="#64-%E4%B8%BB%E9%A2%98">6.4 主题</a></li>
+<li><a href="#65-%E6%9B%BF%E6%8D%A2bash">6.5 替换bash</a></li>
+<li><a href="#66-%E5%88%AB%E5%90%8D">6.6 别名</a></li>
+<li><a href="#67-%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BF%AE%E6%94%B9">6.7 进一步修改</a></li>
+</ul>
+</li>
+<li><a href="#7-%E5%B8%B8%E7%94%A8%E5%88%AB%E5%90%8D%E4%B8%8E%E8%84%9A%E6%9C%AC">7 常用别名与脚本</a>
+<ul>
+<li><a href="#71-%E5%B8%B8%E7%94%A8%E5%88%AB%E5%90%8D">7.1 常用别名</a></li>
+<li><a href="#72-cd%E8%84%9A%E6%9C%AC">7.2 cd脚本</a></li>
+<li><a href="#73-rm%E8%84%9A%E6%9C%AC">7.3 rm脚本</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-源">1 源</h1>
+<p>排列中国镜像的速度，选择一个。</p>
+<pre><code class="language-bash">sudo pacman-mirrors -i -c China -m rank
+</code></pre>
+<p>/etc/pacman.conf加上：</p>
+<pre><code class="language-bash">[archlinuxcn]
+SigLevel=Optional TrustedOnly
+Server=https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+</code></pre>
+<p>更新：</p>
+<pre><code class="language-bash">sudo pacman -Syy &amp;&amp; sudo pacman -S archlinuxcn-keyring
+</code></pre>
+<h1 id="2-输入法">2 输入法</h1>
+<pre><code class="language-bash">sudo pacman -S fcitx-im fcitx-configtool
+# 输入法看个人，这里装的是谷歌拼音
+sudo pacman -S fcitx-googlepinyin
+#搜狗
+#sudo pacman -S fcitx-sogoupinyin
+#rime
+#sudo pacman -S fctix-rime
+#更多输入法使用
+#pacman -Ss fcitx
+#查看
+</code></pre>
+<p>在</p>
+<pre><code class="language-bash">~/.profile
+</code></pre>
+<p>加上</p>
+<pre><code class="language-bash">export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=&quot;@im=fcitx&quot;
+</code></pre>
+<h1 id="3-aur助手">3 AUR助手</h1>
+<p>AUR是Arch User Repository的缩写，是Arch/Manjaro用户的社区驱动存储库，yay是用Go编写的Arch Linux AUR帮助工具，可以帮助以自动方式从PKGBUILD安装软件包。</p>
+<pre><code class="language-bash">sudo pacman -S yay
+</code></pre>
+<h1 id="4-常用软件">4 常用软件</h1>
+<h2 id="41-chromechromium">4.1 chrome/chromium</h2>
+<pre><code class="language-bash">sudo pacman -S google-chrome
+sudo pacman -S chromium
+</code></pre>
+<h2 id="42-网易云音乐">4.2 网易云音乐</h2>
+<pre><code class="language-bash">sudo pacman -S netease-cloud-music
+</code></pre>
+<h2 id="43-git">4.3 git</h2>
+<pre><code class="language-bash">sudo pacman -S git
+</code></pre>
+<h2 id="44-vim">4.4 vim</h2>
+<p>默认只有vi，没带vim。</p>
+<pre><code class="language-bash">sudo pacman -S vim
+</code></pre>
+<h2 id="45-wps">4.5 wps</h2>
+<pre><code class="language-bash">sudo pacman -S wps-office
+</code></pre>
+<h2 id="46-vscode">4.6 VScode</h2>
+<pre><code class="language-bash">sudo pacman -S visual-studio-code
+</code></pre>
+<h2 id="47-qq">4.7 qq</h2>
+<p>qq可以选择的版本比较多，可以选择wine版的qq，deepinwine版的qq，deepinwine版的tim。这里推荐使用deepinwine的qq或者tim。<br>
+直接使用yay或yaourt安装即可：</p>
+<pre><code class="language-bash">yay -S deepin-wine-qq
+yay -S deepin-wine-tim
+</code></pre>
+<p>若直接安装失败可以使用本地打包安装：</p>
+<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-tim-arch.git
+cd deepin-wine-tim-arch
+makepkg -si
+
+git clone https://github.com/countstarlight/deepin-wine-qq-arch.git
+cd deepin-wine-qq-arch  
+makepkg -si
+</code></pre>
+<h2 id="48-微信">4.8 微信</h2>
+<p>微信可以使用electronic-wechat或者deepinwine-wechat，推荐后者。</p>
+<pre><code class="language-bash">sudo pacman -S eletronic-wechat
+yay -S deepin-wine-wechat
+</code></pre>
+<p>若签名出现问题可以加上：</p>
+<pre><code class="language-bash">yay -S deepin-wine-wechat --mflags --skipinteg
+</code></pre>
+<p>若deepin-wine-wechat安装失败可以从本地打包安装</p>
+<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-wechat-arch.git
+cd deepin-wine-wechat-arch 
+makepkg -si
+</code></pre>
+<p>但目前从2.8.0.106-1以上的版本开始大图片发送失败，没办法发送压缩包，推荐使用2.7.1.88-1版本，并且关闭自动更新，戳<a href="https://github.com/countstarlight/deepin-wine-wechat-arch/releases/tag/v2.7.1.88-1">这里</a>下载，然后安装：</p>
+<pre><code class="language-bash">sudo pacman -U deepin-wine-wechat-2.7.1.88-1-x86_64.pkg.tar.xz
+</code></pre>
+<h2 id="49-迅雷">4.9 迅雷</h2>
+<pre><code class="language-bash">yaourt deepin-wine-thunderspeed
+</code></pre>
+<p>若失败的话可以从本地打包安装</p>
+<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-thunderspeed-arch.git
+cd deepin-wine-thunderspeed-arch
+makepkg -si
+</code></pre>
+<h2 id="410-深度截图">4.10 深度截图</h2>
+<pre><code class="language-bash">sudo pacman -S deepin-screenshot
+</code></pre>
+<h2 id="411-jetbrains">4.11 JetBrains</h2>
+<p>对于这种大型的IDE笔者喜欢从官网下载，以PyCharm为例，下载解压移动：</p>
+<pre><code class="language-bash">tar -zxvf pycharm-professional-2020.1.1.tar.gz
+sudo mv pycharm-2020.1.1/* /usr/local/pycharm
+</code></pre>
+<p>然后添加.desktop文件：</p>
+<pre><code class="language-bash">sudo vim /usr/share/applications/pycharm.desktop
+</code></pre>
+<p>加上</p>
+<pre><code class="language-bash">[Desktop Entry]
+Name=PyCharm
+Type=Application
+Exec=/usr/local/pycharm/bin/pycharm.sh
+Icon=/usr/local/pycharm/bin/pycharm.svg
+</code></pre>
+<h2 id="412-web服务器">4.12 web服务器</h2>
+<pre><code class="language-bash">sudo pacman -S tomcat9 apache nginx
+</code></pre>
+<h1 id="5-deepin-wine常见问题处理">5 deepin-wine常见问题处理</h1>
+<h2 id="51-无法切换中文输入法">5.1 无法切换中文输入法</h2>
+<p>在</p>
+<pre><code class="language-bash">~/.xinitrc
+</code></pre>
+<p>加上</p>
+<pre><code class="language-bash">export XMODIFIERS=@im=fcitx
+export QT_IM_MODULE=fcitx
+export GTK_IM_MODULE=fcitx
+</code></pre>
+<p>然后在对应的run.sh加上：</p>
+<pre><code class="language-bash">env locale=zh_CN
+export XIM=fcitx
+export XMODIFIERS=&quot;@im=fcitx&quot;
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+</code></pre>
+<p>这里的run.sh位于</p>
+<pre><code class="language-bash">/opt/deepinwine/apps/Deepin-xxx
+</code></pre>
+<p>下。</p>
+<pre><code class="language-bash"># QQ
+/opt/deepinwine/apps/Deepin-QQ/run.sh
+# WeChat
+/opt/deepinwine/apps/Deepin-WeChat/run.sh
+# Tim
+/opt/deepinwine/apps/Deepin-Tim/run.sh
+</code></pre>
+<h2 id="52-字体发虚">5.2 字体发虚</h2>
+<pre><code class="language-bash">env WINEPREFIX=&quot;$HOME/.deepinwine/Deepin-QQ&quot; winecfg
+env WINEPREFIX=&quot;$HOME/.deepinwine/Deepin-WeChat&quot; winecfg
+env WINEPREFIX=&quot;$HOME/.deepinwine/Deepin-Tim&quot; winecfg
+</code></pre>
+<p>执行其中一个命令，然后修改dpi：<br>
+<img src="https://img-blog.csdnimg.cn/20200508112803202.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="53-阴影边框">5.3 阴影边框</h2>
+<p>微信运行后，切换到其他窗口会有一个阴影边框。<br>
+对于v2.8.0.133-2之后的版本应该不会出现这个问题，因为自带了shadow.exe，但是不能传输文件与大图片（issue中已有反映，这是一个bug，建议使用2.7版本），对于之前的版本，参照<a href="https://blog.kangkang.org/index.php/archives/397">这里</a>的办法，把shadows.exe复制到对应目录：</p>
+<pre><code class="language-bash">git clone https://github.com/countstarlight/deepin-wine-wechat-arch.git
+sudo cp deepin-wine-wechat-arch-master/shadow.exe ~/.deepinwine/Deepin-WeChat/drive_c/
+</code></pre>
+<p>然后修改run.sh：<br>
+<img src="https://img-blog.csdnimg.cn/20200509113254797.png" alt="在这里插入图片描述" loading="lazy"></p>
+<pre><code class="language-bash">#修改/opt/deepinwine/apps/Deepin-WeChat/run.sh，可以先备份一下
+#找到CallApp()，在env WINEDLLOVERRIDS这一行的末尾加上
+&amp;
+
+#同时在fi后面加上
+if [[ -z &quot;$(ps -e | grep -o 'shadow.exe')&quot; ]]; then
+	env WINEPREFIX=&quot;$WINEPREFIX&quot; WINEDEBUG=-msvcrt $WINE_CMD &quot;c:\\shadow.exe&quot; &amp;
+fi
+</code></pre>
+<h1 id="6-终端美化">6 终端美化</h1>
+<p>终端美化当然是用zsh+oh-my-zsh。</p>
+<h2 id="61-安装zsh">6.1 安装zsh</h2>
+<p>默认安装了，没安装的话：</p>
+<pre><code class="language-bash">sudo pacman -S zsh
+</code></pre>
+<h2 id="62-安装oh-my-zsh">6.2 安装oh-my-zsh</h2>
+<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;
+</code></pre>
+<h2 id="63-字体">6.3 字体</h2>
+<p>需要安装Powerline字体，不难，clone一下，直接安装就好了。</p>
+<pre><code class="language-bash">git clone https://github.com/powerline/fonts.git
+cd fonts
+./install.sh
+</code></pre>
+<h2 id="64-主题">6.4 主题</h2>
+<p>oh-my-zsh的配置文件如下：</p>
+<pre><code class="language-bash">~/.oh-my-zsh
+</code></pre>
+<p>其中的themes下有不少主题，具体效果可以来<a href="https://github.com/ohmyzsh/ohmyzsh/wiki/Themes">这里</a>查看。<br>
+这里推荐使用agnoster与powerlevel9k主题（当然还有一个powerlevel10k主题，感兴趣可以自行github），agnoster已自带，powerlevel9k需要安装：</p>
+<pre><code class="language-bash">sudo pacman -S zsh-theme-powerlevel9k
+git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+</code></pre>
+<p>然后修改配置文件：</p>
+<pre><code class="language-bash">#修改~/.zshrc
+ZSH_THEME=&quot;agnoster&quot;
+ZSH_THEME=&quot;powerlevel9k/powerlevel9k&quot;
+</code></pre>
+<h2 id="65-替换bash">6.5 替换bash</h2>
+<p>zsh替换默认bash：</p>
+<pre><code class="language-bash">chsh -s `which zsh`
+</code></pre>
+<h2 id="66-别名">6.6 别名</h2>
+<p>原来bash的别名在zsh需要重新配置一下，直接在</p>
+<pre><code class="language-bash">～/.zshrc
+</code></pre>
+<p>加上原来的alias即可。</p>
+<h2 id="67-进一步修改">6.7 进一步修改</h2>
+<p>笔者用的主题是agnoster，直接使用的话效果不怎么样：<br>
+<img src="https://img-blog.csdnimg.cn/20200508154027748.png" alt="在这里插入图片描述" loading="lazy"><br>
+忍不住了，直接去修改配置文件（themes/agnoster-zsh.thene），agnoster的核心函数是这个：<br>
+<img src="https://img-blog.csdnimg.cn/20200508154142748.png" alt="在这里插入图片描述" loading="lazy"><br>
+其中prompt_context是用户名与主机名的部分，注释后就不会显示用户名与主机名了，其他也类似，比如prompt_dir是当前工作目录，定位后：<br>
+<img src="https://img-blog.csdnimg.cn/20200508154426601.png" alt="在这里插入图片描述" loading="lazy"><br>
+prompt_segment接受两个参数，一个背景，一个前景，其中blue就是上图的那个不怎么好看的深蓝色，CURRENT_FG是前景色，这里是黑色，也就是文字颜色。<br>
+经过一番摸索 ，发现能支持十六进制RGB，<s>真香：</s><br>
+<img src="https://img-blog.csdnimg.cn/20200508154705827.png" alt="在这里插入图片描述" loading="lazy"><br>
+于是就没有深蓝色的背景啦：<br>
+<img src="https://img-blog.csdnimg.cn/20200508154839101.png" alt="在这里插入图片描述" loading="lazy"><br>
+终端为XFCE Terminal，在系统设置中根据个人需要修改背景壁纸，修改文字颜色等：<br>
+<img src="https://img-blog.csdnimg.cn/20200508154950814.png" alt="在这里插入图片描述" loading="lazy"><br>
+整体效果：<br>
+<img src="https://img-blog.csdnimg.cn/20200508155342581.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-常用别名与脚本">7 常用别名与脚本</h1>
+<h2 id="71-常用别名">7.1 常用别名</h2>
+<p>仅供参考，一些常用别名：</p>
+<pre><code class="language-bash">#.bashrc加上
+alias m='sudo mkdir -p' #新建文件夹
+alias d='cd ~/Desktop &amp;&amp; ls'
+alias rrr='shutdown -r now'
+alias sss='shutdown now'
+</code></pre>
+<h2 id="72-cd脚本">7.2 cd脚本</h2>
+<p>使用c代替常用的cd，同时执行完之后自动ls一次：</p>
+<pre><code class="language-bash">if [ $# -eq 0 ] ; then
+	cd .. &amp;&amp; ls
+else
+	cd $1 &amp;&amp; ls
+fi
+</code></pre>
+<p>如果只是输入一个c，回到上层目录并ls，如果带目录参数，切换到对应目录并且ls。需要加上别名使用：</p>
+<pre><code class="language-bash">alias c='source ~/.cd.sh' #脚本文件名为.cd.sh，位于～下
+</code></pre>
+<h2 id="73-rm脚本">7.3 rm脚本</h2>
+<p>使用r代替rm，无需加上rf参数，使用回收站机制，也就是直接移动。</p>
+<pre><code class="language-bash">for i in $*; do
+	mv $i /home/YOUR_USER_NAME/.Trash/`basename $i`_`date +%Y_%m_%d__%H_%M_%S`
+done
+</code></pre>
+<p>移动的文件名后面加上了时间，回收站位置为用户目录下的.Trash，同时加上别名：</p>
+<pre><code class="language-bash">alias r='sudo sh ~/.rm.sh' # 脚本名字为.rm.sh，用户目录下
+alias trash='cd ~/.Trash &amp;&amp; ls'
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[manjaro 手动调节屏幕亮度]]></title>
+        <id>https://2293736867.github.io/post/manjaro-shou-dong-diao-jie-ping-mu-liang-du/</id>
+        <link href="https://2293736867.github.io/post/manjaro-shou-dong-diao-jie-ping-mu-liang-du/">
+        </link>
+        <updated>2020-06-02T21:27:42.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>manjaro版本20.0，桌面XFCE，设置之类的地方没有屏幕亮度调节的功能。</p>
+<h1 id="2-解决方案">2 解决方案</h1>
+<p>解决方案来自arch wiki。<br>
+亮度由ACPI内核模块控制，这个模块的接口在以下位置：</p>
+<pre><code class="language-bash">/sys/class/backlight
+</code></pre>
+<p>笔者的设备上显示：<br>
+<img src="https://img-blog.csdnimg.cn/20200507235105382.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后使用root进入这个文件夹，其中max_brightness表示亮度的最大值，笔者的设备显示为120000：<br>
+<img src="https://img-blog.csdnimg.cn/20200507235240113.png" alt="在这里插入图片描述" loading="lazy"><br>
+想要修改亮度的话直接修改brightness即可：</p>
+<pre><code class="language-bash">echo xxxxx &gt; brightness
+</code></pre>
+<p>其中xxxxx为亮度数值，注意一定要root用户。<br>
+<img src="https://img-blog.csdnimg.cn/20200507235437612.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-使用脚本加别名">3 使用脚本加别名</h1>
+<p>可以使用一个简单的脚本来完成：</p>
+<pre><code class="language-bash">#!/usr/bin/bash
+sudo su&lt;&lt;EOF
+	echo $1 &gt; /sys/class/backlight/intel_backlight/brightness
+EOF
+</code></pre>
+<p>其中intel_backlight请对应修改。<br>
+假设文件名为a.sh，放在用户目录下，加上别名：</p>
+<pre><code class="language-bash">alias changeBrightness='sh ~/a.sh ' 
+</code></pre>
+<p>加一个亮度参数，再输入用户密码就可以修改了：<br>
+<img src="https://img-blog.csdnimg.cn/20200508011245412.png" alt="在这里插入图片描述" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[manjaro找不到默认键盘布局]]></title>
+        <id>https://2293736867.github.io/post/manjaro-zhao-bu-dao-mo-ren-jian-pan-bu-ju/</id>
+        <link href="https://2293736867.github.io/post/manjaro-zhao-bu-dao-mo-ren-jian-pan-bu-ju/">
+        </link>
+        <updated>2020-06-02T21:27:16.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>manjaro安装fcitx后，没有默认的键盘布局，不是这样：<br>
+<img src="https://img-blog.csdnimg.cn/20200508012058359.png" alt="在这里插入图片描述" loading="lazy"><br>
+而是：<br>
+<img src="https://img-blog.csdnimg.cn/20200508012218214.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-解决方案">2 解决方案</h1>
+<p>解决方案在启动fcitx时就已经有提示了：<br>
+<img src="https://img-blog.csdnimg.cn/20200508012358840.png" alt="在这里插入图片描述" loading="lazy"><br>
+缺少了libjson-c这个库，直接使用pacman搜索安装不行：<br>
+<img src="https://img-blog.csdnimg.cn/20200508012507974.png" alt="在这里插入图片描述" loading="lazy"><br>
+因为只有32位的，笔者manjaro版本为20.0，没办法使用32位的库，因此需要进行编译安装。<br>
+json-c，Github<a href="https://github.com/json-c/json-c">戳这里</a>。</p>
+<pre><code class="language-bash">git clone https://github.com/json-c/json-c.git
+mkdir json-c-build
+cd json-c-build
+cmake ../json-c # 可以使用cmake .. -LH 查看参数，建议默认即可
+make -j n #n为cpu核数
 sudo make install
 </code></pre>
-<p>好了之后进入安装目录下的sbin，启动服务。</p>
-<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sin
-./nginx
-</code></pre>
-<p>然后可以在浏览器输入服务器公网ip测试一下：<br>
-<img src="https://img-blog.csdnimg.cn/20200317004956936.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="312-证书处理">3.1.2 证书处理</h3>
-<p>首先安装acme.sh</p>
-<pre><code class="language-bash">curl https://get.acme.sh | sh
-. ~/.bashrc
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317005319462.png" alt="在这里插入图片描述" loading="lazy"><br>
-生成证书</p>
-<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot NGINX_INSTALL_DIR/html
-</code></pre>
-<p>webroot的话就直接使用Nginx的默认文档根目录。好了之后会看到这样的提示：<br>
-<img src="https://img-blog.csdnimg.cn/20200317010637741.png" alt="在这里插入图片描述" loading="lazy"><br>
-接着安装证书：</p>
-<pre><code class="language-bash">acme.sh --installcert \
--d www.test.com \
---keypath /xxxx/xxx.key \
---fullchainpath /xxx/xxx.pem
-</code></pre>
-<p>路径与名字随便，后缀不能变。<br>
-<img src="https://img-blog.csdnimg.cn/2020031701091843.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="313-nginx配置">3.1.3 Nginx配置</h3>
-<p>修改Nginx配置文件：</p>
-<pre><code class="language-bash">cd NGINX_INSTALL_DIR/conf
-cp nginx.conf nginx.conf.bak
-vim nginx.conf
-</code></pre>
-<p>找到HTTPS server这一行，这里是96行，把从server开始到最后一个花括号的代码全部去掉注释。<br>
-<img src="https://img-blog.csdnimg.cn/20200317011257305.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后修改这三行，server_name填域名，ssl_certificate填刚才的pem文件路径，ssl_certificate_key填刚才的key文件路径。路径建议绝对路径，可以不加双引号。<br>
-<img src="https://img-blog.csdnimg.cn/20200317011502176.png" alt="在这里插入图片描述" loading="lazy"><br>
-记得记得要加上一行ssl协议：<br>
-<img src="https://img-blog.csdnimg.cn/20200317014031227.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="314-测试">3.1.4 测试</h3>
-<p>可以先使用-t测试语法错误：</p>
-<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sbin
-./nginx -t
-</code></pre>
-<p>ok的话，重启服务并输入域名测试：</p>
-<pre><code class="language-bash">cd NGINX_INSTALL_DIR/sbin
-./nginx -s stop
-./nginx
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317014120675.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/2020031701405932.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功！</p>
-<h2 id="32-从仓库安装nginx1161">3.2 从仓库安装Nginx(1.16.1)</h2>
-<h3 id="321-安装nginx">3.2.1 安装Nginx</h3>
-<p>从仓库安装就简单多了，一行就可以了，系统Centos，其他自行搜索：</p>
-<pre><code class="language-bash">yum install nginx
-</code></pre>
-<p>可以先测试一下，直接用</p>
-<pre><code class="language-bash">nginx
-</code></pre>
-<p>开启服务，然后浏览器输入公网ip：<br>
-<img src="https://img-blog.csdnimg.cn/20200317014949623.png" alt="在这里插入图片描述" loading="lazy"><br>
-（笔者有点怀疑是不是装了个假的Nginx，两个的主页居然不一样。。。。）</p>
-<h3 id="322-证书处理">3.2.2 证书处理</h3>
-<p>没安装acme.sh的先安装：</p>
-<pre><code class="language-bash">curl https://get.acme.sh | sh
-. ~/.bashrc
-</code></pre>
-<p>申请证书：</p>
-<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot /usr/share/nginx/html
-</code></pre>
-<p>安装证书：</p>
-<pre><code class="language-bash">acme.sh --installcert \
--d www.test.com \
---keypath /xxxx/xxx.key \
---fullchainpath /xxx/xxx.pem
-</code></pre>
-<h3 id="323-nginx配置">3.2.3 Nginx配置</h3>
-<p>同样先备份：</p>
-<pre><code class="language-bash">cd /etc/nginx
-cp nginx.conf nginx.conf.bak
-vim nginx.conf
-</code></pre>
-<p>这里的配置比编译安装的又多了不少，一样从server（61行）开始去掉注释：<br>
-<img src="https://img-blog.csdnimg.cn/20200317015539790.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后修改三行：<br>
-<img src="https://img-blog.csdnimg.cn/20200317015723131.png" alt="在这里插入图片描述" loading="lazy"><br>
-server_name填域名，ssl_certificate填pem文件，ssl_certificate_key填key文件。<br>
-最后增加一行ssl协议：<br>
-<img src="https://img-blog.csdnimg.cn/20200317025303324.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="324-测试">3.2.4 测试</h3>
-<p>可以先用-t测试语法错误：</p>
-<pre><code class="language-bash">nginx -t
-</code></pre>
-<p>ok的话重启服务：</p>
-<pre><code class="language-bash">nginx -s stop
-nginx
-</code></pre>
-<p>浏览器输入域名访问：<br>
-<img src="https://img-blog.csdnimg.cn/20200317025240627.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317025401531.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4-apache">4 Apache</h1>
-<p>Apache也有两种安装方式，从源码编译安装与从仓库安装。</p>
-<h2 id="41-编译安装的apache2441">4.1 编译安装的Apache(2.4.41)</h2>
-<h3 id="411-安装apache">4.1.1 安装Apache</h3>
-<p>编译安装Apache比较麻烦，需要安装pcre，apr，apr-util，生成Makefile时需要指定以下几个选项：</p>
-<pre><code class="language-bash">--with-apr \
---with-apr-util \
---with-pcre \
---enable-ssl \
---with-ssl 
-</code></pre>
-<p>具体可以看<a href="https://blog.csdn.net/qq_27525611/article/details/104716600">这里</a>。<br>
-安装好了之后需要先确定ssl模块是否存在：</p>
-<pre><code class="language-bash">cd APACHE_INSTALL_DIR/modules
-ls | grep ssl
-</code></pre>
-<p>如果没有显示mod_ssl.so，则需要重新安装，确定生成Makefile时没有漏掉</p>
-<pre><code class="language-bash">--enable-ssl
-与
---with-ssl
-</code></pre>
-<p>如果有ssl模块，直接修改配置文件测试一下。</p>
-<pre><code class="language-bash">cd APACHE_INSTALL_DIR/conf
-vim httpd.conf
-</code></pre>
-<p>修改ServerName为</p>
-<pre><code class="language-bash">localhost:80
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317112929230.png" alt="在这里插入图片描述" loading="lazy"><br>
-启动服务输入localhost测试：</p>
-<pre><code class="language-bash">cd APACHE_INSTALL_DIR/bin
-./apachectl
-</code></pre>
-<p>页面只有一行It works!：<br>
-<img src="https://img-blog.csdnimg.cn/20200317113052882.png" alt="在这里插入图片描述" loading="lazy"><br>
-（话说这和仓库安装的Apache首页差距这么大。。。）</p>
-<h3 id="412-证书处理">4.1.2 证书处理</h3>
-<p>没安装acme.sh的先安装：</p>
-<pre><code class="language-bash">curl https://get.acme.sh | sh
-. ~/.bashrc
-</code></pre>
-<p>申请证书：</p>
-<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot APACHE_INSTALL_DIR/htdocs
-</code></pre>
-<p>这里webroot为Apache默认的文档根目录.<br>
-安装证书：</p>
-<pre><code class="language-bash">acme.sh --installcert -d www.test.com \
---key-file /xxxx/xxx.key \
---cert-file /xxxx/xxxx.crt \
---fullchain-file /xxx/xxxfullchain.crt 
-</code></pre>
-<p>路径与名字随便，后缀名不能变。</p>
-<h3 id="413-apache配置">4.1.3 Apache配置</h3>
-<p>首先修改conf/httpd.conf：</p>
-<pre><code class="language-bash">cd APACHE_INSTALL_DIR/conf
-cp httpd.conf httpd.conf.bak
-vim httpd.conf
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317133511616.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317132738142.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317132745841.png" alt="在这里插入图片描述" loading="lazy"><br>
-找到这三行，去掉注释。<br>
-然后修改httpd-ssl.conf:</p>
-<pre><code class="language-bash">cd extra
-cp http-ssl.conf http-ssl.conf.bak
-vim httpd-ssl.conf
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317133012729.png" alt="在这里插入图片描述" loading="lazy"><br>
-DocumentRoot可以默认，ServerName改成</p>
-<pre><code class="language-bash">www.test.com:443
-</code></pre>
-<p>然后修改这三行，把证书的文件相应填入。<br>
-<img src="https://img-blog.csdnimg.cn/20200317133145247.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="414-测试">4.1.4 测试</h3>
-<p>语法检查：</p>
-<pre><code class="language-bash">cd APACHE_INSTALL_DIR/bin
-./apachectl -t
-</code></pre>
-<p>没有错误之后重启服务：</p>
-<pre><code class="language-bash">./apachectl stop
-./apachectl
-</code></pre>
-<p>浏览器输入域名访问：<br>
-<img src="https://img-blog.csdnimg.cn/20200317133911280.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200317133855215.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="42-从仓库安装的apache246">4.2 从仓库安装的Apache(2.4.6)</h2>
-<h3 id="421-安装apache">4.2.1 安装Apache</h3>
-<pre><code class="language-bash">yum install httpd
-</code></pre>
-<p>修改配置文件并进行测试：</p>
-<pre><code class="language-bash">cd /etc/httpd/conf
-cp httpd.conf httpd.conf.bak
-vim httpd.conf
-</code></pre>
-<p>找到ServerName改成</p>
-<pre><code class="language-bash">localhost:80
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317030501258.png" alt="在这里插入图片描述" loading="lazy"><br>
-开启服务后输入localhost:80.</p>
-<pre><code class="language-bash">systemctl start httpd
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317030857326.png" alt="在这里插入图片描述" loading="lazy"><br>
-另外要确保ssl模块存在：</p>
-<pre><code class="language-bash">cd /etc/httpd/modules
-ls | grep ssl
-</code></pre>
-<p>如果没有输出的话，证明没有ssl模块，需要安装：</p>
-<pre><code class="language-bash">yum install mod_ssl
-</code></pre>
-<p>再一次grep：</p>
-<pre><code class="language-bash">ls | grep ssl
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200317031220343.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="422-证书处理">4.2.2 证书处理</h3>
-<p>没安装acme.sh的先安装：</p>
-<pre><code class="language-bash">curl https://get.acme.sh | sh
-. ~/.bashrc
-</code></pre>
-<p>申请证书：</p>
-<pre><code class="language-bash">acme.sh --issue -d www.test.com --webroot /var/www/html
-</code></pre>
-<p>其中/var/www/html为Apache默认文档根目录。<br>
-安装证书：</p>
-<pre><code class="language-bash">acme.sh --installcert -d www.test.com \
---key-file /xxxx/xxx.key \
---cert-file /xxxx/xxxx.crt \
---fullchain-file /xxx/xxxfullchain.crt 
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200317032615967.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="423-apache配置">4.2.3 Apache配置</h3>
-<p>修改ssl.conf:</p>
-<pre><code class="language-bash">cd /etc/httpd/conf.d
-cp ssl.conf ssl.conf.bak
-vim ssl.conf
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200317034408977.png" alt="在这里插入图片描述" loading="lazy"><br>
-修改ServerName与DocumentRoot，ServerName填域名，DocumentRoot直接去掉注释。接着修改以下三行，根据刚才生成的三个文件对应填入即可。<br>
-<img src="https://img-blog.csdnimg.cn/2020031703450263.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="424-测试">4.2.4 测试</h3>
-<pre><code class="language-bash">apachectl -t
-</code></pre>
-<p>没有语法错误就重启服务：</p>
-<pre><code class="language-bash">systemctl stop httpd
-systemctl start httpd
-</code></pre>
-<p>浏览器输入访问：<br>
-<img src="https://img-blog.csdnimg.cn/20200317034119940.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5-总结">5 总结</h1>
-<p>其实这里采用了比较麻烦的方式手动安装证书，acme.sh其实还有更简单的不需要webroot的命令：</p>
-<pre><code class="language-bash">acme.sh --issue -d www.test.com --apache
-acme.sh --issue -d www.test.com --nginx
-</code></pre>
-<p>另外还可以通过手动dns的方式：</p>
-<pre><code class="language-bash">acme.sh --issue -d www.test.com --dns dns_xxx
-</code></pre>
-<p>这种方式可以利用域名解析商提供的api自动添加记录完成认证，可以参考<a href="https://calfsoft.com/2018/12/06/Acme-Aliyun/#%E5%AE%89%E8%A3%85-acme-sh">这里</a>。<br>
-另外文章没有说到证书过期更新的问题，可以看官方中文说明，<a href="https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E">这里</a>。<br>
-除此之外还可以利用openssl使安全性的评分更高，<a href="https://www.ssllabs.com/ssltest/">测试网站这里</a>，<a href="https://www.jianshu.com/p/b6b172f69c14">修改配置这里</a>。<br>
-还有最后一个,现有云服务器厂商提供了免费的证书购买，如阿里云，可以直接购买免费证书然后利用文档安装到服务器上。</p>
-<p>祝你们早日有一个属于自己的https的网站。</p>
+<p>这样就能解决缺失默认键盘布局的问题了。</p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Github Pages+Gridea搭建个人博客]]></title>
-        <id>https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/</id>
-        <link href="https://2293736867.github.io/post/github-pagesgridea-da-jian-ge-ren-bo-ke/">
+        <title type="html"><![CDATA[源码编译安装MySQL8.0.20]]></title>
+        <id>https://2293736867.github.io/post/yuan-ma-bian-yi-an-zhuang-mysql8020/</id>
+        <link href="https://2293736867.github.io/post/yuan-ma-bian-yi-an-zhuang-mysql8020/">
         </link>
-        <updated>2020-06-02T21:09:32.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>Github Pages可以用来托管个人网站，静态的，便于用来实现博客，可以在一个仓库的settings中开启：<br>
-<img src="https://img-blog.csdnimg.cn/2020031520214830.png" alt="在这里插入图片描述" loading="lazy"><br>
-Gridea是一个静态博客写作客户端，所有文件都在本地，没有数据库，实现简单，支持Markdown。<br>
-<img src="https://img-blog.csdnimg.cn/20200315202345239.png" alt="在这里插入图片描述" loading="lazy"><br>
-好了不多说开始动手。</p>
-<h1 id="2-准备工作">2 准备工作</h1>
-<ul>
-<li>一个Gthub账号</li>
-<li>一个Github Pages的仓库</li>
-<li>一个Gridea客户端（支持Mac，Windows，Linux）</li>
-<li>（可选）一个域名</li>
-</ul>
-<h1 id="3-github-pages">3 Github Pages</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200315203349869.png" alt="在这里插入图片描述" loading="lazy"><br>
-仓库名是:</p>
-<pre><code>用户名.github.io
-</code></pre>
-<p>需要公开仓库与一个REDAME文件,然后创建.<br>
-<img src="https://img-blog.csdnimg.cn/20200315203610218.png" alt="在这里插入图片描述" loading="lazy"><br>
-进入设置开启Github Pages:<br>
-<img src="https://img-blog.csdnimg.cn/20200315203501765.png" alt="在这里插入图片描述" loading="lazy"><br>
-下拉找到Github Pages:<br>
-<img src="https://img-blog.csdnimg.cn/20200315203715972.png" alt="在这里插入图片描述" loading="lazy"><br>
-默认使用master分支,可以选择主题.<br>
-<img src="https://img-blog.csdnimg.cn/20200315203800731.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后在浏览器输入刚才创建的仓库名就可以访问了.<br>
-<img src="https://img-blog.csdnimg.cn/20200315203855310.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4-gridea">4 Gridea</h1>
-<p>理论上来说这样就完成了,但是如果想更好看和更方便管理一些,就要用Gridea.<br>
-先去下载,<a href="https://gridea.dev/">官网这里</a>.<br>
-下载之后直接打开,进入设置:<br>
-<img src="https://img-blog.csdnimg.cn/2020031520443512.png" alt="在这里插入图片描述" loading="lazy"><br>
-域名与仓库名一样,分支填master,email自己填,这里说一下Token.打开设置中的开发者设置:<br>
-<img src="https://img-blog.csdnimg.cn/20200315204535121.png" alt="在这里插入图片描述" loading="lazy"><br>
-新建一个Token:<br>
-<img src="https://img-blog.csdnimg.cn/20200315204615866.png" alt="在这里插入图片描述" loading="lazy"><br>
-只需要勾选仓库相关的权限,名字可以随便.<br>
-<img src="https://img-blog.csdnimg.cn/20200315204643285.png" alt="在这里插入图片描述" loading="lazy"><br>
-复制填入.<br>
-<img src="https://img-blog.csdnimg.cn/2020031520472566.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后可以测试一下连接:<br>
-<img src="https://img-blog.csdnimg.cn/20200315205359751.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200315205343447.png" alt="在这里插入图片描述" loading="lazy"><br>
-若失败请返回前几步看看哪里出错.<br>
-设置好了之后可以设置主题等,自定义美化.<br>
-<img src="https://img-blog.csdnimg.cn/20200315205847245.png" alt="在这里插入图片描述" loading="lazy"><br>
-设置好了之后可以先预览再同步.<br>
-<img src="https://img-blog.csdnimg.cn/20200315210305371.png" alt="在这里插入图片描述" loading="lazy"><br>
-同步完成后就可以在浏览器输入</p>
-<pre><code class="language-bash">用户名.github.io
-</code></pre>
-<p>进行访问了.</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200315234157577.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-绑定域名可选">5 绑定域名(可选)</h1>
-<p>如果购买了域名的话,可以绑定到自己的域名上面,笔者的域名是阿里云上购买的,因此这里以阿里云的为例,进入域名的解析页面,添加两个记录:<br>
-<img src="https://img-blog.csdnimg.cn/20200316000331100.png" alt="在这里插入图片描述" loading="lazy"><br>
-第一个记录类型是CNAME,主机记录是www,记录值为仓库的名字.<br>
-第二个记录类型是A,主机记录是@,记录值为ping仓库名字得到的ip.<br>
-若成功的话会这样显示:<br>
-<img src="https://img-blog.csdnimg.cn/20200316000551553.png" alt="在这里插入图片描述" loading="lazy"><br>
-添加之后在Gridea的客户端中设置的CNAME添加域名:<br>
-<img src="https://img-blog.csdnimg.cn/20200316000202462.png" alt="在这里插入图片描述" loading="lazy"><br>
-使用左下角的按钮测试一下,测试通过之后就可以通过域名访问了.<br>
-如果想通过https访问,直接在Github Pages中设置Enforce HTTPS即可(解析域名之后需要一定时间才可以勾选).<br>
-<img src="https://img-blog.csdnimg.cn/20200316143452174.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200316143701802.png" alt="在这里插入图片描述" loading="lazy"><br>
-之后就可以通过https访问了.<br>
-<img src="https://img-blog.csdnimg.cn/20200316145611495.png" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[编译安装Apache遇到的缺少expat.h与undefined reference to `XML_GetErrorCode'错误]]></title>
-        <id>https://2293736867.github.io/post/bian-yi-an-zhuang-apache-yu-dao-de-que-shao-expath-yu-undefined-reference-to-xml_geterrorcodecuo-wu/</id>
-        <link href="https://2293736867.github.io/post/bian-yi-an-zhuang-apache-yu-dao-de-que-shao-expath-yu-undefined-reference-to-xml_geterrorcodecuo-wu/">
-        </link>
-        <updated>2020-06-02T21:09:07.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-缺少expath">1 缺少expat.h</h1>
-<p>编译安装Apache需要apr-util，而在编译安装apr-util时提示说缺少expat.h，此时直接安装expat库即可（centos）：</p>
-<pre><code class="language-bash">yum install expat-devel
-</code></pre>
-<h1 id="2-undefined-reference-to-xml_geterrorcode">2 undefined reference to `XML_GetErrorCode'</h1>
-<p>首先安装libxml2-devel包：</p>
-<pre><code class="language-bash">yum install libxml2-devel
-</code></pre>
-<p>接着删除apr-util安装目录并重新编译安装：</p>
-<pre><code class="language-bash">sudo rm -rf /usr/local/apr-util
-cd apr-util
-make clean
-./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
-make
-make install
-</code></pre>
-<p>目录的话根据需要修改，最后重新编译安装apache：</p>
-<pre><code class="language-bash">cd httpd-xxxxx
-make clean
-./configure \
---prefix=/usr/local/apache \
---with-apr=/usr/local/apr \
---with-apr-util=/usr/local/apr-util \
---with-pcre=/usr/local/pcre
-</code></pre>
-<p>同样目录按需修改。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Android Activity间跳转与传递数据]]></title>
-        <id>https://2293736867.github.io/post/android-activity-jian-tiao-zhuan-yu-chuan-di-shu-ju/</id>
-        <link href="https://2293736867.github.io/post/android-activity-jian-tiao-zhuan-yu-chuan-di-shu-ju/">
-        </link>
-        <updated>2020-06-02T21:08:41.000Z</updated>
+        <updated>2020-06-02T21:26:43.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-activity%E9%97%B4%E8%B7%B3%E8%BD%AC">2 Activity间跳转</a>
+<li><a href="#2-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">2 源码编译安装的相关知识</a>
 <ul>
-<li><a href="#21-%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC">2.1 直接跳转</a></li>
-<li><a href="#22-%E5%9B%9E%E8%B0%83">2.2 回调</a></li>
+<li><a href="#21-make%E4%B8%8Econfigure">2.1 make与configure</a></li>
+<li><a href="#22-tarball%E6%96%87%E4%BB%B6">2.2 Tarball文件</a></li>
+<li><a href="#23-%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6">2.3 源码编译安装相关组件</a>
+<ul>
+<li><a href="#231-%E7%BC%96%E8%AF%91%E5%99%A8">2.3.1 编译器</a></li>
+<li><a href="#232-makeautoconfig">2.3.2 make+autoconfig</a></li>
+<li><a href="#233-%E5%87%BD%E6%95%B0%E5%BA%93">2.3.3 函数库</a></li>
 </ul>
 </li>
-<li><a href="#3-activity%E9%97%B4%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE">3 Activity间传递数据</a>
+<li><a href="#24-%E9%9D%99%E6%80%81%E5%BA%93%E4%B8%8E%E5%8A%A8%E6%80%81%E5%BA%93">2.4 静态库与动态库</a>
 <ul>
-<li><a href="#31-%E4%BC%A0%E9%80%92%E6%99%AE%E9%80%9A%E6%95%B0%E6%8D%AE">3.1 传递普通数据</a></li>
-<li><a href="#32-%E4%BC%A0%E9%80%92%E4%B8%80%E7%BB%84%E6%95%B0%E6%8D%AE">3.2 传递一组数据</a></li>
-<li><a href="#33-%E4%BC%A0%E9%80%92%E5%AF%B9%E8%B1%A1">3.3 传递对象</a></li>
+<li><a href="#241-%E9%9D%99%E6%80%81%E5%BA%93">2.4.1 静态库</a></li>
+<li><a href="#242-%E5%8A%A8%E6%80%81%E5%BA%93">2.4.2 动态库</a></li>
 </ul>
 </li>
-<li><a href="#4-%E6%BA%90%E7%A0%81">4 源码</a></li>
+<li><a href="#25-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E7%9A%84%E4%B8%80%E8%88%AC%E6%AD%A5%E9%AA%A4">2.5 编译安装的一般步骤</a></li>
+<li><a href="#26-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E5%89%8D%E7%9A%84%E5%BF%83%E7%90%86%E5%87%86%E5%A4%87">2.6 编译安装前的心理准备</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%89%E8%A3%85mysql">3 安装MySQL</a>
+<ul>
+<li><a href="#31-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">3.1 安装依赖</a></li>
+<li><a href="#32-%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85">3.2 包管理器安装</a></li>
+<li><a href="#32-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85">3.2 编译安装</a>
+<ul>
+<li><a href="#321-%E5%AE%89%E8%A3%85cmake">3.2.1 安装cmake</a></li>
+<li><a href="#322-%E5%AE%89%E8%A3%85make">3.2.2 安装make</a></li>
+<li><a href="#323-%E5%AE%89%E8%A3%85gcc">3.2.3 安装gcc</a></li>
+<li><a href="#324-%E5%AE%89%E8%A3%85openssl">3.2.4 安装openssl</a></li>
+<li><a href="#325-%E4%B8%8B%E8%BD%BDboost">3.2.5 下载boost</a></li>
+<li><a href="#326-%E5%AE%89%E8%A3%85ncurses">3.2.6 安装ncurses</a></li>
+<li><a href="#327-%E5%AE%89%E8%A3%85bison">3.2.7 安装bison</a></li>
+<li><a href="#328-%E5%AE%89%E8%A3%85git">3.2.8 安装git</a></li>
+<li><a href="#329-%E5%90%8E%E7%BB%AD%E5%A4%84%E7%90%86">3.2.9 后续处理</a></li>
+</ul>
+</li>
+<li><a href="#33-%E4%B8%8B%E8%BD%BDmysql%E7%A4%BE%E5%8C%BA%E7%89%88">3.3 下载MySQL社区版</a></li>
+<li><a href="#34-%E7%94%9F%E6%88%90makefile">3.4 生成Makefile</a></li>
+<li><a href="#35-%E7%BC%96%E8%AF%91%E4%B8%8E%E5%AE%89%E8%A3%85">3.5 编译与安装</a></li>
+<li><a href="#36-%E5%90%8E%E7%BB%AD%E9%85%8D%E7%BD%AE">3.6 后续配置</a>
+<ul>
+<li><a href="#361-%E7%94%A8%E6%88%B7%E7%BB%84%E4%B8%8E%E7%94%A8%E6%88%B7">3.6.1 用户组与用户</a></li>
+<li><a href="#362-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">3.6.2 配置文件</a></li>
+</ul>
+</li>
+<li><a href="#37-%E5%88%9D%E5%A7%8B%E5%8C%96">3.7 初始化</a></li>
+<li><a href="#38-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">3.8 修改密码</a></li>
+<li><a href="#39-%E6%B5%8B%E8%AF%95">3.9 测试</a></li>
+<li><a href="#310-%E6%94%B6%E5%B0%BE%E5%B7%A5%E4%BD%9C">3.10 收尾工作</a>
+<ul>
+<li><a href="#3101-%E5%88%AB%E5%90%8D">3.10.1 别名</a></li>
+<li><a href="#3102-%E5%AE%89%E8%A3%85mycli">3.10.2 安装Mycli</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E5%8F%82%E8%80%83">4 参考</a></li>
 </ul>
 </p>
 <h1 id="1-概述">1 概述</h1>
-<p>Activity之间的跳转主要使用</p>
-<pre><code class="language-java">startActivity(Intent intent);
-startActivityForResult(Intent intent,int requestCode);
+<p>本文章主要讲述了如何从源码编译安装MySQL社区版8.0.20，首先会介绍一些编译安装的相关知识，然后开始编译安装</p>
+<h1 id="2-源码编译安装的相关知识">2 源码编译安装的相关知识</h1>
+<h2 id="21-make与configure">2.1 make与configure</h2>
+<p>make是一个编译的命令，会在当前的目录下寻找Makefile这个文件，Makefile文件记录了源代码如何编译的详细信息。而configure是由软件开发商编写的一个检测程序检测用户的开发环境，检测完毕后生成Makefile文件。通常，configure会检测如下内容：</p>
+<ul>
+<li>是否具有合适的编译器</li>
+<li>是否具有所需函数库以及其他依赖</li>
+<li>是否兼容本系统</li>
+<li>是否存在内核头文件</li>
+</ul>
+<h2 id="22-tarball文件">2.2 Tarball文件</h2>
+<p>Tarball文件其实就是将源代码以tar打后压缩的文件。通常使用gzip进行压缩，一般扩展名为.tar.gz或.tgz，不过由于bzip2以及xz等技术压缩效果比gzip好，因此文件名也会变成扩展名也会变成.tar.bz2或.tar.xz之类的。通常一个Tarball文件有：</p>
+<ul>
+<li>源码</li>
+<li>检测文件（configure/config）</li>
+<li>说明（README/INSTALL）</li>
+</ul>
+<h2 id="23-源码编译安装相关组件">2.3 源码编译安装相关组件</h2>
+<h3 id="231-编译器">2.3.1 编译器</h3>
+<p>需要有编译器才能进行编译操作，通常使用的是gcc。</p>
+<h3 id="232-makeautoconfig">2.3.2 make+autoconfig</h3>
+<p>以Tarball形式发布的软件，为了简化编译流程，通常需要make来根据目标文件文件的依赖性进行编译，但是由于make需要Makefile，因此需要autoconfig生成Makefile。</p>
+<h3 id="233-函数库">2.3.3 函数库</h3>
+<p>需要内核提供的库以及相关的include文件。</p>
+<h2 id="24-静态库与动态库">2.4 静态库与动态库</h2>
+<p>函数库分为动态库与静态库两种类型，绝大部分放在/lib与/lib64中。</p>
+<h3 id="241-静态库">2.4.1 静态库</h3>
+<p>扩展名为.a，编译时会直接整合到执行程序中，所以利用静态库生成的文件会比较大一些，编译后的可执行文件可以直接运行，无需依赖外部函数库。另外升级难度较大，因为是直接整合进程序中，升级了静态库的话需要重新编译。</p>
+<h3 id="242-动态库">2.4.2 动态库</h3>
+<p>扩展名为.so，在编译时不像静态库一样，动态库在程序中只有一个指针，当可执行程序需要用到函数库的功能时，才会读取函数库来使用，生成的可执行文件会比较小一点，但是不能独立执行编译出来的程序。另外升级比较方便，不需要重新编译，因为执行文件会直接指向新的函数库文件。</p>
+<h2 id="25-编译安装的一般步骤">2.5 编译安装的一般步骤</h2>
+<ul>
+<li>（1）获取源码：一般使用wget或curl或从浏览器下载。</li>
+<li>（2）查看帮助文件：解压后查看INSTALL或README等文件相关内容</li>
+<li>（3）安装依赖：根据官网文档或上一步中得到的信息安装依赖</li>
+<li>（4）生成Makefile：一般使用configure/config进行配置，检测操作环境，指定安装位置，开启/关闭对应的功能，指定相关库位置等，确定依赖关系等，一般需要使用--help获取选项帮助，指定对应选项后配置并生成Makefile</li>
+<li>（5）编译：实际编译步骤，一个简单的make命令，实际包含了头文件预编译，预处理，编译与连接步骤</li>
+<li>（6）安装：make install，这一步实际进行安装与操作系统连接两个步骤</li>
+</ul>
+<p>注意，以上步骤都是有顺序的，而且前一个步骤执行失败则后一个步骤也不能执行，也就是说需要前一个步骤执行成功才能进行下一步的操作。完成以上六步就能编译安装了，一般需要进行一些后续处理，比如，添加可执行文件路径到PATH，添加头文件与库文件到/usr/include与/etc/ld.so.conf.d中，添加联机帮助文件到/etc/man_db.conf中。</p>
+<h2 id="26-编译安装前的心理准备">2.6 编译安装前的心理准备</h2>
+<p>这里是最后的提示了，未安装之前还可以ctrl+w关闭本页面，避免无数的痛苦。<br>
+编译安装最常见的问题就是版本与依赖的问题，版本问题容易处理，可以通过包管理器进行升级或者手动升级，至于依赖问题，包管理器安装的话很容易，编译安装的话会非常头疼，因为不知道某个依赖下面还需要安装多少个依赖。<br>
+所以，需要准备充足的时间，还有充分的耐心，去解决无数的问题，才能成功进行编译安装MySQL与Workbench这种大型软件。<br>
+不废话了，开始吧。</p>
+<h1 id="3-安装mysql">3 安装MySQL</h1>
+<h2 id="31-安装依赖">3.1 安装依赖</h2>
+<p>MySQL所需依赖如下：</p>
+<ul>
+<li>cmake</li>
+<li>make（推荐3.75以上）</li>
+<li>编译器（GCC5.3+或Clang4.0+或XCode9+或Developer Studio12.6+或Visual Studio2017）</li>
+<li>SSL库（默认使用系统的OpenSSL）</li>
+<li>Boost C++库，需要用来构建但不需要使用，无需安装，源码即可</li>
+<li>ncurses库</li>
+<li>bison2.1+</li>
+<li>git</li>
+</ul>
+<h2 id="32-包管理器安装">3.2 包管理器安装</h2>
+<p>笔者的Debian系，使用apt即可：</p>
+<pre><code class="language-bash">sudo apt-get install -y bison git hostname libncurses-dev libssl-dev make openssl pkg-config doxygen cmake make
 </code></pre>
-<p>这两个函数,传递数据的话利用Intent进行传递,负责数据需要配合Bundle使用.这篇文章讲述了如何利用这两个函数在Activity之间的跳转以及传递数据.</p>
-<h1 id="2-activity间跳转">2 Activity间跳转</h1>
-<h2 id="21-直接跳转">2.1 直接跳转</h2>
-<p>这里有两个Activity:FirstActivity与SecondActivity,从FirstActivity中跳转到SecondActivity中只需要一个startActivity()即可:</p>
-<pre><code class="language-java">startActivity(new Intent(this,SecondActivity.class));
+<p>RedHat8.x：</p>
+<pre><code class="language-bash">sudo yum install -y bison bzip2 git hostname ncurses-devel openssl openssl-devel pkgconfig tar wget zlib-devel doxygen diffutils rpcgen make libtirpc-devel cmake gcc
 </code></pre>
-<p>一般需要在SecondActivity中加上finish()函数,表示这个Activity结束,比如这里直接在SecondActivity的按钮事件里面加上了finish():<br>
-<img src="https://img-blog.csdnimg.cn/20200313175708560.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200313175544752.gif" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="22-回调">2.2 回调</h2>
-<p>很多情况下需要在FirstActivity跳转到SecondActivity后,在SecondActivity进行相应的操作,如更新数据之类,然后返回FirstActivity,通知FirstActivity执行某些操作,这时候就需要使用startActivityForResult().<br>
-startActivityForResult有两个参数,一个是Intent,表示将要跳转的Activity,一个是requestCode(int类型),表示请求码,用于调用Activity的onActivityResult()函数.<br>
-如FirstActivity中:</p>
-<pre><code class="language-java">startActivityForResult(new Intent(this,SecondActivity.class),11);
+<p>RedHat7.x：</p>
+<pre><code class="language-bash">sudo yum install -y bison bzip2 git hostname ncurses-devel openssl openssl-devel pkgconfig tar wget zlib-devel doxygen cmake gcc
 </code></pre>
-<p>这里11就是请求码,然后在SecondActivity中,使用setResult()函数:</p>
-<pre><code class="language-java">setResult(22,new Intent().putExtra(&quot;str&quot;,&quot;from second activity&quot;));
+<p>其他自行搜索。</p>
+<h2 id="32-编译安装">3.2 编译安装</h2>
+<p>若不想用包管理器安装，可以使用编译安装的方式。<br>
+<s>欢迎来折腾。</s></p>
+<h3 id="321-安装cmake">3.2.1 安装cmake</h3>
+<pre><code class="language-bash">tar -zxvf cmake-3.17.2.tar.gz
+cd cmake-3.17.2
+./bootstrap --prefix=/usr/local/cmake
+make clean 
+make -j 6 #6为CPU核数，自定义修改，若失败请使用make
+make test
+sudo make install
 </code></pre>
-<p>setResult()接受两个参数,第一个参数表示resultCode,从这个SecondActivity返回的结果码,另一个Intent,表示要返回给FirstActivity的数据.<br>
-最后在FirstActivity中重载onActivityResult():<br>
-<img src="https://img-blog.csdnimg.cn/20200313181120869.png" alt="在这里插入图片描述" loading="lazy"><br>
-onActivityResult中判断请求码与结果码后进行相应操作.<br>
-<img src="https://img-blog.csdnimg.cn/2020031319241029.gif" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-activity间传递数据">3 Activity间传递数据</h1>
-<h2 id="31-传递普通数据">3.1 传递普通数据</h2>
-<p>传递普通类型的数据直接使用Intent的putExtra()即可,putExtra接受两个参数,第一个是一个String,表示键,第二个是值,类型可以是byte,char,short,long等基本类型与这些基本类型组成的数组,当然String也可以.<br>
-<img src="https://img-blog.csdnimg.cn/20200313192606644.png" alt="在这里插入图片描述" loading="lazy"><br>
-比如在FirstActivity中,传递数据给SecondActivity:<br>
-<img src="https://img-blog.csdnimg.cn/20200313194509387.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后在SecondActivity中使用getIntent()获取Intent后,再从里面获取数据:<br>
-<img src="https://img-blog.csdnimg.cn/20200313193039193.png" alt="在这里插入图片描述" loading="lazy"><br>
-如果想从SecondActivity中返回数据给FirstActivity,也就是从被调用的Activity中返回数据,可以使用前面介绍过的setResult()方法.<br>
-其中第二个参数是一个用于存储数据的Intent,把数据put进去即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200313194352444.png" alt="在这里插入图片描述" loading="lazy"><br>
-最后记得在onActivityResult做相应的判断处理:<br>
-<img src="https://img-blog.csdnimg.cn/20200313194455707.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200313194804122.gif" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="32-传递一组数据">3.2 传递一组数据</h2>
-<p>当数据的种类变多时,比如混合了int,String,byte,char等,可以对逐个类型使用putExtra(),但更好的方法是使用Bundle.<br>
-Bundle的使用与Intent类似,也是对于不同的类型采用键值对的添加方法,直接putXXX:<br>
-<img src="https://img-blog.csdnimg.cn/20200313193559947.png" alt="在这里插入图片描述" loading="lazy"><br>
-数据添加完毕之后,在intent中使用putExtras(bundle):<br>
-<img src="https://img-blog.csdnimg.cn/20200313193640307.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后就可以在SecondActivity中接收数据了.<br>
-首先需要使用getIntent().getExtras()获取Bundle,再获取里面的数据.<br>
-<img src="https://img-blog.csdnimg.cn/20200313193854303.png" alt="在这里插入图片描述" loading="lazy"><br>
-注意一下获取到的Bundle有可能为null,取数据前需要判断一下.<br>
-<img src="https://img-blog.csdnimg.cn/20200313194206415.gif" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="33-传递对象">3.3 传递对象</h2>
-<p>如果想要传递的数据是一个对象怎么办?难道对每一个属性都使用getter再放进去吗?<br>
-并不是,Bundle提供了一个处理序列化对象的方法:<br>
-<img src="https://img-blog.csdnimg.cn/20200313195006276.png" alt="在这里插入图片描述" loading="lazy"><br>
-只要对象实现了Serializable,就可以被Bundle处理,比如这里有一个测试类Student:<br>
-<img src="https://img-blog.csdnimg.cn/20200313195514596.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后在FirstActivity中直接new一个,并使用Bundle的putSerializable即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200313195505432.png" alt="在这里插入图片描述" loading="lazy"><br>
-接着再SecondActivity中通过Intent取出Bundle后,使用其中的getSerializable()取出对象,最后使用强制类型转换:<br>
-<img src="https://img-blog.csdnimg.cn/20200313200439154.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200313200747507.gif" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4-源码">4 源码</h1>
-<p><a href="https://github.com/2293736867/AndroidActivityJump">github</a><br>
-<a href="https://gitee.com/imykr/AndroidActivityJump">码云</a></p>
+<h3 id="322-安装make">3.2.2 安装make</h3>
+<p>没有编译器的情况下无法编译安装，使用软件包安装即可，笔者的Debian系，直接使用apt：</p>
+<pre><code class="language-bash">sudo apt install make
+</code></pre>
+<h3 id="323-安装gcc">3.2.3 安装gcc</h3>
+<pre><code class="language-bash">tar -xvf gcc-9.3.0.tar.xz
+cd gcc-9.3.0
+./contrib/download_prerequisites
+mkdir build
+cd build
+../configure --prefix=/usr/local/gcc -enable-checking=release -disable-multilib 
+make clean 
+make -j 6
+make test
+sudo make install
+sudo ln -sv /usr/local/gcc/include /usr/include/gcc
+#/etc/ld.so.conf.d/gcc.conf加入以下内容
+/usr/local/gcc/lib
+/usr/local/gcc/lib64
+</code></pre>
+<h3 id="324-安装openssl">3.2.4 安装openssl</h3>
+<pre><code class="language-bash">tar -zxvf openssl-1.1.1g.tar.gz
+cd openssl-1.1.1g
+./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl/ssl
+#prefix为安装位置，默认/usr/local
+#openssldir为配置文件位置，同时存放证书与密钥对
+make clean 
+make -j 6
+make test
+sudo make install
+sudo ln -sv /usr/local/openssl/include /usr/include/openssl
+#/etc/ld.so.conf.d/openssl.conf加上以下内容
+/usr/local/openssl/lib
+</code></pre>
+<h3 id="325-下载boost">3.2.5 下载boost</h3>
+<p>官网<a href="https://www.boost.org/users/history/">戳这里</a>。<br>
+需要的版本为1.70.0。目前最新的版本为1.73.0,理论上来说更新的版本应该可以，这里下载的是1.70.0。如果不手动下载boost库的话可以在使用cmake生成Makefile时设置DDOWNLOAD_BOOST为1进行下载。<br>
+<img src="https://img-blog.csdnimg.cn/20200504143205474.png" alt="在这里插入图片描述" loading="lazy"><br>
+下载后解压既可。</p>
+<pre><code class="language-bash">tar -xvf boost_1_70_0.tar.bz2
+</code></pre>
+<h3 id="326-安装ncurses">3.2.6 安装ncurses</h3>
+<pre><code class="language-bash">tar -zxvf ncurses-6.2.tar.gz
+cd ncurses-6.2
+./configure --prefix=/usr/local/ncurses
+make -j 6
+sudo make install
+
+sudo ln -sv /usr/local/ncurses/include /usr/include/ncurses
+#/etc/ld.so.conf.d/ncurses.conf加入
+/usr/local/ncurses/lib
+</code></pre>
+<h3 id="327-安装bison">3.2.7 安装bison</h3>
+<pre><code class="language-bash">tar -xvf bison-3.4.tar.xz
+cd bison-3.4
+./configure --prefix=/usr/local/bison
+make -j 6
+sudo make install
+#/etc/ld.so.conf.d/bison.conf加入
+/usr/local/bison/lib
+</code></pre>
+<h3 id="328-安装git">3.2.8 安装git</h3>
+<pre><code class="language-bash">tar -xvf git-2.26.2.tar.xz
+cd git-2.26.2
+./configure --prefix=/usr/local/git \
+--with-openssl=/usr/local/openssl \
+--with-libpcre2=/usr/local/pcre2 \
+--with-curl=/usr/local/curl \
+--with-expat=/usr/local/expat \
+--with-iconv=/usr/local/iconv \
+--with-editor=/usr/bin/vim \
+--with-zlib=/usr/local/zlib \
+--with-tcltk=/usr/local/tcl
+make all doc info
+sudo make install install-doc install-html install-info
+</code></pre>
+<h3 id="329-后续处理">3.2.9 后续处理</h3>
+<p>修改PATH：</p>
+<pre><code class="language-bash">#在~/.bash_profile 或 ~/.bashrc加入
+export PATH=$PATH:\
+/usr/local/cmake/bin:\
+/usr/local/gcc/bin:\
+/usr/local/openssl/bin:\
+/usr/local/bison/bin:\
+/usr/local/ncurses/bin:\
+/usr/local/git/bin:\
+</code></pre>
+<p>使动态库生效：</p>
+<pre><code class="language-bash">ldconfig
+</code></pre>
+<p>权限不足请加sudo。</p>
+<h2 id="33-下载mysql社区版">3.3 下载MySQL社区版</h2>
+<p>官网<a href="https://dev.mysql.com/downloads/mysql/">这里</a>。<br>
+<img src="https://img-blog.csdnimg.cn/20200505120345793.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里不知道第一个与第二个有什么区别，因为笔者两个都试过都能编译安装成功。虽然上面写着第二个带Boost头，但是貌似没什么用。这里用的是第一个。<br>
+校验（可选）：</p>
+<pre><code class="language-bash">md5sum mysql-boost-8.0.20.tar.gz
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020050512084471.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="34-生成makefile">3.4 生成Makefile</h2>
+<pre><code class="language-bash">sudo cmake .. \
+-DDEFAULT_CHARSET=utf8mb4 \
+-DDEFAULT_COLLATION=utf8mb4_unicode_ci \ #
+-DENABLED_LOCAL_INFILE=ON \
+-DWITH_SSL=system \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql/server \
+-DMYSQL_DATADIR=/usr/local/mysql/data \
+-DMYSQL_TCP_PORT=3306 \
+-DDOWNLOAD_BOOST=0 \
+-DWITH_BOOST=~/Desktop/boost
+</code></pre>
+<ul>
+<li>DDEFAULT_CHARSET：指定默认字符集为utf8mb4，因为历史遗留问题，MySQL中的utf8不是真正的utf8，而是阉割版的，最长只有三个字节，当遇到四个字节的utf8编码时，会导致存储异常。从5.5.3开始，使用utf8mb4实现完整的utf8。</li>
+<li>DDEFAULT_COLLATION：排序规则，默认为utf8mb4_0900_ai_ci，属于utf8mb4_unicode_ci的一种。0900指的是Unicode校对算法版本，ai是指口音不敏感（as表示敏感），ci指不区分大小写（cs表示区分）。utf8mb4_unicode_ci表示基于标准的的Unicode来排序和比较，能够在各种语言之间精确排序，而utf8mb4_general_ci遇到某些特殊的字符集时排序结果可能不一致，准确性较差，但是性能较好，比较和排序时候更快。</li>
+<li>DENABLED_LOCAL_INFILE表示能否使用load data命令。</li>
+<li>DWITH_SSL表示使用系统的SSL库，若不使用系统的请自定义路径。</li>
+<li>DCMAKE_INSTALL_PREFIX：MySQL安装目录。</li>
+<li>DMYSQL_DATADIR：MySQL数据目录，初始时为空。</li>
+<li>DMYSQL_TCP_PORT：端口，默认3306。</li>
+<li>DDOWNLOAD_BOOST：取值0或1，是否下载Boost库。</li>
+<li>DWITH_BOOST：若不下载Boost库的话，是本地Boost库的位置，若下载Boost表示下载位置。</li>
+</ul>
+<p>其他更多参数请使用</p>
+<pre><code class="language-bash">sudo cmake .. -LH
+</code></pre>
+<p>查看。</p>
+<h2 id="35-编译与安装">3.5 编译与安装</h2>
+<pre><code class="language-bash">sudo make
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">sudo make -j n
+</code></pre>
+<p>笔者试过了make -j 6，失败，无奈换成了make。<br>
+make的速度和make -j还是很大差距的。<br>
+编译好之后，建议测试一下：</p>
+<pre><code class="language-bash">make test
+</code></pre>
+<p>然后安装：</p>
+<pre><code class="language-bash">sudo make install
+</code></pre>
+<h2 id="36-后续配置">3.6 后续配置</h2>
+<h3 id="361-用户组与用户">3.6.1 用户组与用户</h3>
+<p>新建用户组与用户，同时修改用户数据目录权限：</p>
+<pre><code class="language-bash">sudo groupadd mysql
+sudo useradd -r -g mysql -s /bin/false mysql
+sudo chown mysql:mysql /usr/local/mysql/data
+sudo chmod 750 /usr/local/mysql/data
+</code></pre>
+<p>数据目录根据需要修改，若后面出现不可写错误请把权限改为777。</p>
+<h3 id="362-配置文件">3.6.2 配置文件</h3>
+<p>配置文件为my.cnf，可以放在</p>
+<pre><code class="language-bash">/etc/
+/etc/mysql/
+安装目录/etc/
+~/
+</code></pre>
+<p>下，读取顺序从上到下。笔者安装后默认在/etc/mysql/my.cnf，这个是全局配置，~/.my.cnf是用户特定配置，这里直接修改/etc/mysql/my.cnf：</p>
+<pre><code class="language-xml">[client-server]
+
+# Import all .cnf files from configuration directory
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mariadb.conf.d/
+
+[mysqld]
+port=3306
+basedir=/usr/local/mysql/server
+datadir=/usr/local/mysql/data
+character-set-server=utf8mb4
+[mysql]
+default-character-set=utf8mb4
+[client]
+port=3306
+default-character-set=utf8mb4
+</code></pre>
+<p>其中[mysqld]下面是新添加的字段，数据目录自行修改。<br>
+建议字符集改为utf8mb4，因为utf8在MySQL中指的是utf8mb3，支持的utf8编码最大字符长度为3字节，如果遇到4字节的宽字符就会插入异常。三字节的utf8最大能编码的Unicode字符为0xffffff，也就是基本多文种平面，Emoji和很多不常用的汉字都不能存储。而utf8mb4是5.5.3之后才支持的，为了兼容性考虑应该统一使用utf8mb4。</p>
+<h2 id="37-初始化">3.7 初始化</h2>
+<p>修改环境变量：</p>
+<pre><code class="language-bash">#.bashrc或.bash_profile加上
+export PATH=$PATH:/usr/local/mysql/server/bin
+</code></pre>
+<p>使用</p>
+<pre><code class="language-bash">mysqld --initialize --user=mysql
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">mysqld --initialize-insecure --user=mysql
+</code></pre>
+<p>然后开启ssl与rsa支持（可选）：</p>
+<pre><code class="language-bash">mysql_ssl_rsa_setup
+</code></pre>
+<p>最后开启服务：</p>
+<pre><code class="language-bash">mysqld_safe --user=mysql &amp;
+</code></pre>
+<h2 id="38-修改密码">3.8 修改密码</h2>
+<p>使用root登录，如果使用insecure初始化：</p>
+<pre><code class="language-bash">mysql -u --skip-password
+</code></pre>
+<p>使用initialize初始化：</p>
+<pre><code class="language-bash">mysql -u root -p
+</code></pre>
+<p>输入初始化出现的密码即可。<br>
+然后修改密码：</p>
+<pre><code class="language-bash">alter user root@localhost identified by 'xxx';
+</code></pre>
+<h2 id="39-测试">3.9 测试</h2>
+<p>使用自带的mysqlshow与mysqladmin：</p>
+<pre><code class="language-bash">mysqladmin -u root -p version
+mysqlshow -u root -p
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020050511120113.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="310-收尾工作">3.10 收尾工作</h2>
+<h3 id="3101-别名">3.10.1 别名</h3>
+<pre><code class="language-bash">alias md='mysqld -u mysql &amp;'
+</code></pre>
+<p>这样输入md就可以启动MySQL服务了。</p>
+<h3 id="3102-安装mycli">3.10.2 安装Mycli</h3>
+<p>Mycli是一个MySQL命令行客户端工具，具有自动补全和语法高亮的功能。<br>
+使用pip安装即可，python2请使用</p>
+<pre><code class="language-bash">pip install mycli
+</code></pre>
+<p>python3请使用</p>
+<pre><code class="language-bash">pip3 install mycli
+</code></pre>
+<p>找不到pip请安装：</p>
+<pre><code class="language-bash">sudo apt install python-pip#python2
+sudo apt install python3-pip
+</code></pre>
+<p>然后使用mycli进入数据库：</p>
+<pre><code class="language-bash">mycli -u root
+</code></pre>
+<p>愉快地使用补全吧！</p>
+<h1 id="4-参考">4 参考</h1>
+<p>1.<a href="https://blog.csdn.net/u012501054/article/details/77880139">CSDN-Linux下源码编译安装详解</a><br>
+2.<a href="https://blog.csdn.net/kikajack/article/details/84668924">CSDN-utf8 与 utf8mb4，utf8mb4_unicode_ci 与 utf8mb4_general_ci</a><br>
+3.<a href="https://dev.mysql.com/doc/refman/8.0/en/source-installation.html">MySQL-官网安装文档</a></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[一文吃透jQuery选择器!]]></title>
-        <id>https://2293736867.github.io/post/yi-wen-chi-tou-jquery-xuan-ze-qi/</id>
-        <link href="https://2293736867.github.io/post/yi-wen-chi-tou-jquery-xuan-ze-qi/">
+        <title type="html"><![CDATA[如果你的application.properties中还存在明文密码----加密Spring Boot中的application.properties]]></title>
+        <id>https://2293736867.github.io/post/ru-guo-ni-de-applicationproperties-zhong-huan-cun-zai-ming-wen-mi-ma-jia-mi-spring-boot-zhong-de-applicationproperties/</id>
+        <link href="https://2293736867.github.io/post/ru-guo-ni-de-applicationproperties-zhong-huan-cun-zai-ming-wen-mi-ma-jia-mi-spring-boot-zhong-de-applicationproperties/">
         </link>
-        <updated>2020-06-02T21:08:22.000Z</updated>
+        <updated>2020-06-02T21:26:22.000Z</updated>
         <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-jquery%E9%80%89%E6%8B%A9%E5%99%A8">1 jQuery选择器</a></li>
-<li><a href="#2-%E5%9F%BA%E6%9C%AC%E9%80%89%E6%8B%A9%E5%99%A8">2 基本选择器</a>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%AE%80%E5%8D%95%E5%8A%A0%E5%AF%86">2 简单加密</a>
 <ul>
-<li><a href="#21-id%E9%80%89%E6%8B%A9%E5%99%A8">2.1 id选择器</a></li>
-<li><a href="#22-%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">2.2 元素选择器</a></li>
-<li><a href="#23-%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8">2.3 类选择器</a></li>
-<li><a href="#24-%E9%80%9A%E9%85%8D%E7%AC%A6%E9%80%89%E6%8B%A9%E5%99%A8">2.4 通配符选择器</a></li>
-<li><a href="#25-%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A8">2.5 组合选择器</a></li>
+<li><a href="#21-%E4%BE%9D%E8%B5%96">2.1 依赖</a></li>
+<li><a href="#22-%E5%8A%A0%E5%AF%86%E5%8F%A3%E4%BB%A4">2.2 加密口令</a></li>
+<li><a href="#23-%E8%BE%93%E5%87%BA%E5%AF%86%E6%96%87">2.3 输出密文</a></li>
+<li><a href="#24-%E6%9B%BF%E6%8D%A2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">2.4 替换配置文件</a></li>
 </ul>
 </li>
-<li><a href="#3-%E5%B1%82%E7%BA%A7%E9%80%89%E6%8B%A9%E5%99%A8">3 层级选择器</a>
+<li><a href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E5%AF%86">3 自定义加密</a>
 <ul>
-<li><a href="#31-%E5%90%8E%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">3.1 后代选择器</a></li>
-<li><a href="#32-%E5%AD%90%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">3.2 子代选择器</a></li>
-<li><a href="#33-%E7%9B%B8%E9%82%BB%E9%80%89%E6%8B%A9%E5%99%A8">3.3 相邻选择器</a></li>
-<li><a href="#34-%E5%85%84%E5%BC%9F%E9%80%89%E6%8B%A9%E5%99%A8">3.4 兄弟选择器</a></li>
+<li><a href="#31-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E5%AF%86%E5%89%8D%E5%90%8E%E7%BC%80">3.1 自定义加密前后缀</a></li>
+<li><a href="#32-%E5%8F%A3%E4%BB%A4%E5%8F%82%E6%95%B0%E5%8C%96">3.2 口令参数化</a></li>
+<li><a href="#33-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E5%AF%86%E7%B1%BB">3.3 自定义加密类</a></li>
 </ul>
 </li>
-<li><a href="#4-%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">4 过滤选择器</a>
+<li><a href="#4-%E9%83%A8%E7%BD%B2">4 部署</a>
 <ul>
-<li><a href="#41-%E5%9F%BA%E6%9C%AC%E8%BF%87%E6%BB%A4%E5%99%A8">4.1 基本过滤器</a>
+<li><a href="#41-jar%E9%83%A8%E7%BD%B2">4.1 jar部署</a>
 <ul>
-<li><a href="#411-%E4%B8%A4%E7%AB%AF%E7%B1%BB">4.1.1 两端类</a></li>
-<li><a href="#412-%E8%8C%83%E5%9B%B4%E7%B4%A2%E5%BC%95%E7%B1%BB">4.1.2 范围索引类</a></li>
-<li><a href="#413-%E5%A5%87%E5%81%B6%E7%B1%BB">4.1.3 奇偶类</a></li>
-<li><a href="#414-%E5%85%B6%E4%BB%96">4.1.4 其他</a></li>
+<li><a href="#411-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E6%96%B9%E5%BC%8F">4.1.1 命令行参数方式</a></li>
+<li><a href="#412-%E5%BA%94%E7%94%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.1.2 应用环境变量方式</a></li>
+<li><a href="#413-%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.1.3 系统环境变量方式</a></li>
 </ul>
 </li>
-<li><a href="#42-%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4%E5%99%A8">4.2 内容过滤器</a></li>
-<li><a href="#43-%E5%8F%AF%E8%A7%81%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.3 可见性过滤器</a></li>
-<li><a href="#44-%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.4 属性过滤器</a></li>
-<li><a href="#45-%E5%AD%90%E5%85%83%E7%B4%A0%E8%BF%87%E6%BB%A4%E5%99%A8">4.5 子元素过滤器</a>
+<li><a href="#42-war%E9%83%A8%E7%BD%B2">4.2 war部署</a>
 <ul>
-<li><a href="#451-%E7%B4%A2%E5%BC%95%E8%BF%87%E6%BB%A4%E5%99%A8">4.5.1 索引过滤器</a>
-<ul>
-<li><a href="#4511-first-child%E4%B8%8Elast-child">4.5.1.1 first-child与last-child</a></li>
-<li><a href="#4512-nth-child%E4%B8%8Enth-last-child19">4.5.1.2 nth-child与nth-last-child(1.9+)</a></li>
+<li><a href="#421-jar-war%E8%BD%AC%E6%8D%A2">4.2.1 jar-war转换</a></li>
+<li><a href="#422-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E6%96%B9%E5%BC%8F">4.2.2 命令行参数方式</a></li>
+<li><a href="#423-%E5%BA%94%E7%94%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.2.3 应用环境变量方式</a></li>
+<li><a href="#424-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%B9%E5%BC%8F">4.2.4 环境变量方式</a></li>
 </ul>
 </li>
-<li><a href="#452-%E7%B1%BB%E5%9E%8B%E8%BF%87%E6%BB%A4%E5%99%A819">4.5.2 类型过滤器(1.9+)</a></li>
-<li><a href="#453-%E5%94%AF%E4%B8%80%E8%BF%87%E6%BB%A4%E5%99%A8">4.5.3 唯一过滤器</a></li>
 </ul>
 </li>
-<li><a href="#46-%E8%A1%A8%E5%8D%95%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E5%99%A8">4.6 表单对象属性过滤器</a></li>
-</ul>
-</li>
-<li><a href="#5-%E8%A1%A8%E5%8D%95%E9%80%89%E6%8B%A9%E5%99%A8">5 表单选择器</a>
+<li><a href="#5-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86">5 非对称加密</a>
 <ul>
-<li><a href="#51-%E6%96%87%E6%9C%AC%E6%A1%86%E7%B1%BB">5.1 文本框类</a></li>
-<li><a href="#52-%E9%80%89%E6%8B%A9%E6%A1%86%E7%B1%BB">5.2 选择框类</a></li>
-<li><a href="#53-%E6%8C%89%E9%92%AE%E7%B1%BB">5.3 按钮类</a></li>
-<li><a href="#54-%E5%85%B6%E4%BB%96">5.4 其他</a></li>
-<li><a href="#55-%E4%BE%8B%E5%AD%90">5.5 例子</a></li>
+<li><a href="#51-%E5%8A%A0%E5%AF%86">5.1 加密</a></li>
+<li><a href="#52-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.2 修改配置文件</a></li>
 </ul>
 </li>
 </ul>
 </p>
-<h1 id="1-jquery选择器">1 jQuery选择器</h1>
-<p>jQuery选择器用于选择DOM元素进行相应操作,允许通过多种方式选择,包括标签名,属性名,类名,id等对元素进行选择,基于CSS选择器.jQuery中所有的选择器都以$符号开头,后面加一对括号.<br>
-jQuery选择器可以分为基本选择器,层次选择器,过滤选择器与表单选择器.</p>
-<h1 id="2-基本选择器">2 基本选择器</h1>
-<p>基本选择器可以分成五个:</p>
-<ul>
-<li>id选择器</li>
-<li>元素选择器</li>
-<li>类选择器</li>
-<li>通配符选择器</li>
-<li>组合选择器</li>
-</ul>
-<h2 id="21-id选择器">2.1 id选择器</h2>
-<p>id选择器根据给定的id匹配一个元素,以</p>
-<pre><code>#
-</code></pre>
-<p>开头,如有:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>则选择器</p>
-<pre><code class="language-js">$(&quot;#div1&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312085650883.png" alt="在这里插入图片描述" loading="lazy"><br>
-如果id中含有特殊字符,比如点:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1.1.1&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>则需要使用双反斜杠转义:</p>
-<pre><code class="language-js">$(&quot;#div1\\.1\\.1&quot;)
-</code></pre>
-<h2 id="22-元素选择器">2.2 元素选择器</h2>
-<p>根据元素的标签名查找所有符合的元素.假设有:</p>
-<pre><code class="language-html">&lt;div&gt;1&lt;/div&gt;
-&lt;div&gt;2&lt;/div&gt;
-&lt;div&gt;3&lt;/div&gt;
-</code></pre>
-<p>选择器</p>
-<pre><code class="language-js">$(&quot;div&quot;)
-</code></pre>
-<p>会选择所有div元素.<br>
-<img src="https://img-blog.csdnimg.cn/20200312090242302.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="23-类选择器">2.3 类选择器</h2>
-<p>根据给定的css类名匹配元素,以</p>
-<pre><code>.
-</code></pre>
-<p>开头.如有:</p>
-<pre><code class="language-html">&lt;div class=&quot;class1&quot;&gt;&lt;/div&gt;
-&lt;p class=&quot;class1&quot;&gt;&lt;/p&gt;
-&lt;div class=&quot;class2&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>选择器</p>
-<pre><code class="language-js">$(&quot;.class1&quot;)
-</code></pre>
-<p>会选择:<br>
-<img src="https://img-blog.csdnimg.cn/20200312090622567.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择器</p>
-<pre><code class="language-js">$(&quot;.class2&quot;)
-</code></pre>
-<p>会选择:<br>
-<img src="https://img-blog.csdnimg.cn/20200312090659823.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="24-通配符选择器">2.4 通配符选择器</h2>
-<p>选择所有的元素.</p>
-<pre><code class="language-html">&lt;div&gt;div&lt;/div&gt;
-&lt;p&gt;p&lt;/p&gt;
-&lt;span&gt;span&lt;/span&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;*&quot;)
-</code></pre>
-<p>会显示<br>
-<img src="https://img-blog.csdnimg.cn/20200312090926891.png" alt="在这里插入图片描述" loading="lazy"><br>
-也就是说整个&lt;html&gt;都在选择范围内,不仅仅是&lt;body&gt;.<br>
-若要选择&lt;body&gt;内的元素,可用</p>
-<pre><code class="language-js">$(&quot;body *&quot;)
-</code></pre>
-<h2 id="25-组合选择器">2.5 组合选择器</h2>
-<p>组合选择器就是多个选择器的组合,用</p>
-<pre><code>,
-</code></pre>
-<p>分隔每一个选择器,如有:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
-&lt;div class=&quot;class1&quot;&gt;&lt;/div&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;div class=&quot;class2&quot;&gt;&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;#div1,p,.class2&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312091320971.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-层级选择器">3 层级选择器</h1>
-<p>层级选择器共有四种:后代选择器,子代选择器,相邻选择器,兄弟选择器.</p>
-<h2 id="31-后代选择器">3.1 后代选择器</h2>
-<p>根据祖先元素选择所有的后代元素,使用空格分隔,如有</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;div id=&quot;div2&quot;&gt;
-        &lt;div&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div id=&quot;div3&quot;&gt;
-        &lt;div&gt;&lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;#div1 div&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312093623872.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="32-子代选择器">3.2 子代选择器</h2>
-<p>选择给定父元素下的所有子元素,使用</p>
-<pre><code>&gt;
-</code></pre>
-<p>分隔,同样上面的例子:</p>
-<pre><code class="language-js">$(&quot;#div1&gt;div&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312093753914.png" alt="在这里插入图片描述" loading="lazy"><br>
-<strong>两者的区别在于后代选择器会选择所有的后代,不管里面有多少后代(层),而子选择器只会选择直接后代,也就是只选择&quot;一代&quot;后代(层).</strong></p>
-<h2 id="33-相邻选择器">3.3 相邻选择器</h2>
-<p>选择紧接在指定元素后面的元素,用</p>
-<pre><code>+
-</code></pre>
-<p>分隔,如有</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;p&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-&lt;div id=&quot;div2&quot;&gt;&lt;/div&gt;
-&lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;#div1+p&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312102652496.png" alt="在这里插入图片描述" loading="lazy"><br>
-可用</p>
-<pre><code class="language-js">.next()
-</code></pre>
-<p>代替,如上面的例子可以变为</p>
-<pre><code class="language-js">$(&quot;#div1&quot;).next()
-</code></pre>
-<h2 id="34-兄弟选择器">3.4 兄弟选择器</h2>
-<p>选择之后的所有兄弟元素,用</p>
-<pre><code>~
-</code></pre>
-<p>分隔,如有</p>
-<pre><code class="language-html">&lt;div&gt;
-	&lt;p&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-&lt;div&gt;&lt;/div&gt;
-&lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-</code></pre>
-<p>则</p>
-<pre><code class="language-js">$(&quot;div~p&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312094857604.png" alt="在这里插入图片描述" loading="lazy"><br>
-可用</p>
-<pre><code class="language-js">.nextAll()
-</code></pre>
-<p>代替,如上面的例子可以表示为:</p>
-<pre><code class="language-js">$(&quot;div&quot;).nextAll(&quot;p&quot;)
-</code></pre>
-<p>如果没有加上p选择器:</p>
-<pre><code class="language-js">$(&quot;div&quot;).nextAll()
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312095431456.png" alt="在这里插入图片描述" loading="lazy"><br>
-等价于</p>
-<pre><code class="language-js">$(&quot;div~*&quot;)
-</code></pre>
-<p><strong>与相邻选择器的区别:兄弟选择器会选择后面所有的兄弟,而相邻选择器只选择第一个兄弟.</strong></p>
-<h1 id="4-过滤选择器">4 过滤选择器</h1>
-<p>过滤选择器种类最多,可以分为:</p>
-<ul>
-<li>基本过滤器</li>
-<li>内容过滤器</li>
-<li>可见性过滤器</li>
-<li>属性过滤器</li>
-<li>子元素过滤器</li>
-<li>表单对象属性过滤器</li>
-</ul>
-<p>下面一个个进行说明.</p>
-<h2 id="41-基本过滤器">4.1 基本过滤器</h2>
-<p>根据某类过滤规则进行选择,以</p>
-<pre><code>:
-</code></pre>
-<p>开头.</p>
-<h3 id="411-两端类">4.1.1 两端类</h3>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:first</td>
-<td>选择第一个元素</td>
-</tr>
-<tr>
-<td>:last</td>
-<td>选择最后一个元素</td>
-</tr>
-</tbody>
-</table>
-<p>html:</p>
-<pre><code class="language-html">&lt;div&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器</p>
-<pre><code class="language-js">$(&quot;div&gt;p:first&quot;)
-$(&quot;div&gt;p:last&quot;)
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200312104229381.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="412-范围索引类">4.1.2 范围索引类</h3>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:eq(index)</td>
-<td>选择指定索引值元素</td>
-</tr>
-<tr>
-<td>:gt(index)</td>
-<td>选择大于给定索引值元素</td>
-</tr>
-<tr>
-<td>:lt(index)</td>
-<td>选择小于给定索引值元素</td>
-</tr>
-</tbody>
-</table>
-<p>注意索引从0开始,要与下面的:nth-child/:nth-last-child/:nth-of-type/:n-last-of-type区分.<br>
-html:</p>
-<pre><code class="language-html">&lt;div&gt;
-    &lt;p id=&quot;index0&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;index1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;index2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;index3&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;index4&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;index5&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器</p>
-<pre><code class="language-js">$(&quot;div&gt;p:eq(3)&quot;)
-$(&quot;div&gt;p:lt(2)&quot;)
-$(&quot;div&gt;p:gt(4)&quot;)
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200312105231149.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h3 id="413-奇偶类">4.1.3 奇偶类</h3>
-<p>选择索引值为奇/偶的元素,从0开始计数.</p>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:odd</td>
-<td>选择索引值为奇数的元素</td>
-</tr>
-<tr>
-<td>:even</td>
-<td>选择索引值为偶数的元素</td>
-</tr>
-</tbody>
-</table>
-<p>html:</p>
-<pre><code class="language-html">&lt;div&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;div&gt;p:odd&quot;)
-$(&quot;div&gt;p:even&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200312104446666.png" alt="在这里插入图片描述" loading="lazy"><br>
-odd为什么是246?even为什么是135?<br>
-难道结果错了?</p>
-<p>并不是,下标从0开始计数,下标为0的&lt;p&gt;的id为p1,算进去偶数里了.<br>
-<img src="https://img-blog.csdnimg.cn/20200312104740554.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="414-其他">4.1.4 其他</h3>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:header</td>
-<td>选择标题元素,如&lt;h1&gt;,&lt;h2&gt;</td>
-</tr>
-<tr>
-<td>:animated</td>
-<td>选择正在执行动画效果的元素</td>
-</tr>
-<tr>
-<td>:focus(1.6+)</td>
-<td>选择当前获取焦点的元素</td>
-</tr>
-<tr>
-<td>:root(1.9+)</td>
-<td>选择根元素,也就是&lt;html&gt;</td>
-</tr>
-<tr>
-<td>:target(1.9+)</td>
-<td>这个比较特殊,与URI有关,选择ID和特定标识符相匹配的元素<br>比如给定了URI http://xxx.com#ttt , $(&quot;p:ttt&quot;)会选择&lt;p id=&quot;ttt&quot;&gt;</td>
-</tr>
-<tr>
-<td>:lang(language)(1.9+)</td>
-<td>选择指定语言的所有元素</td>
-</tr>
-<tr>
-<td>:not(selector)</td>
-<td>反选器</td>
-</tr>
-</tbody>
-</table>
-<p>挑取一些简单演示,html:</p>
-<pre><code class="language-html">&lt;div lang=&quot;en&quot;&gt;
-    &lt;h1 id=&quot;h1&quot;&gt;&lt;/h1&gt;
-    &lt;h2 id=&quot;h2&quot;&gt;&lt;/h2&gt;
-&lt;/div&gt;
-&lt;div lang=&quot;zh-CN&quot;&gt;&lt;/div&gt;
-&lt;div lang=&quot;en&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;:header&quot;)
-$(&quot;:root div&quot;)
-$(&quot;div:not(:lang(zh-CN))&quot;)
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200312110701888.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="42-内容过滤器">4.2 内容过滤器</h2>
-<p>四种:</p>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:contains(text)</td>
-<td>选择包含给定文本的元素</td>
-</tr>
-<tr>
-<td>:has(selector)</td>
-<td>选择含有过滤器所匹配的元素的元素</td>
-</tr>
-<tr>
-<td>:empty</td>
-<td>选择不包含子元素或文本为空的元素</td>
-</tr>
-<tr>
-<td>:parent</td>
-<td>选择含有子元素或文本为的元素</td>
-</tr>
-</tbody>
-</table>
-<p>html:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;123&lt;/div&gt;
-&lt;div id=&quot;div2&quot;&gt;
-    &lt;div id=&quot;div3&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&quot;div4&quot;&gt;123&lt;/div&gt;
-&lt;div id=&quot;div5&quot;&gt;&lt;/div&gt;
-&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;body *:contains(123)&quot;)
-$(&quot;body *:has(#div3)&quot;)
-$(&quot;body *:empty&quot;)
-$(&quot;div:parent&quot;)
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200312113250180.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="43-可见性过滤器">4.3 可见性过滤器</h2>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:visible</td>
-<td>选择可见元素</td>
-</tr>
-<tr>
-<td>:hidden</td>
-<td>选择不可见元素</td>
-</tr>
-</tbody>
-</table>
-<p>html:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
-&lt;div id=&quot;div2&quot; style=&quot;display: none;&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;body *:hidden&quot;);
-$(&quot;body *:visible&quot;);
-</code></pre>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200312113649997.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="44-属性过滤器">4.4 属性过滤器</h2>
-<p>属性过滤器针对元素的属性进行过滤,包括有没有该属性,该属性的值,以某些值开头/结尾,包含某些值等,使用</p>
-<pre><code>[]
-</code></pre>
-<p>表示属性过滤器.</p>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[attr]</td>
-<td>选择包含attr属性的元素,常见的是[id],选择包含id属性的元素.</td>
-</tr>
-<tr>
-<td>[attr=value]</td>
-<td>选择attr属性为value的元素,如[name=123],[id=div1]</td>
-</tr>
-<tr>
-<td>[attr!=value]</td>
-<td><strong>选择不含有attr属性,或含有attr属性,但是值不为value的元素.等价于:not([attr=vale])</strong><br><br><strong>如果想要选择包含特定属性但是属性值不为value的元素请使用[attr]:not([attr=value])</strong></td>
-</tr>
-<tr>
-<td>[attr^=value]</td>
-<td>选择attr属性值是以value开始的元素</td>
-</tr>
-<tr>
-<td>[attr$=value]</td>
-<td>选择attr属性值是以value结尾的元素</td>
-</tr>
-<tr>
-<td>[attr*=value]</td>
-<td>选择attr属性值是包含value的元素</td>
-</tr>
-</tbody>
-</table>
-<p>html:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
-&lt;div id=&quot;div2&quot; name=&quot;div2&quot;&gt;&lt;/div&gt;
-&lt;div&gt;&lt;/div&gt;
-&lt;div id=&quot;div3&quot; name=&quot;div3&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;[id]&quot;)
-$(&quot;[id$=3]&quot;)
-$(&quot;body *[name!=div2]&quot;)
-$(&quot;body *[name*=div]&quot;)
-</code></pre>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200312115227135.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="45-子元素过滤器">4.5 子元素过滤器</h2>
-<p>可以按照索引顺序(即第一个,倒数第几个等)或者按照类型或者按照唯一性对子元素进行过滤.</p>
-<h3 id="451-索引过滤器">4.5.1 索引过滤器</h3>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:first-child</td>
-<td>选择第一个子元素,等价于:nth-child(1)</td>
-</tr>
-<tr>
-<td>:last-child</td>
-<td>选择最后一个子元素</td>
-</tr>
-<tr>
-<td>:nth-child</td>
-<td>选择第n个子元素</td>
-</tr>
-<tr>
-<td>:nth-last-child</td>
-<td>选择倒数第n个子元素</td>
-</tr>
-</tbody>
-</table>
-<h4 id="4511-first-child与last-child">4.5.1.1 first-child与last-child</h4>
-<p>先来看看first-child与last-child:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;div2&quot;&gt;
-    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;div p:first-child&quot;)
-$(&quot;div p:last-child&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200312141417731.png" alt="在这里插入图片描述" loading="lazy"><br>
-<strong>注意与:first/:last的区别,:first/:last只会选择整个父级元素的第一个/最后一个元素,但是:first-child/:last-child会选择每个父级元素的第一个/最后一个元素.<br>
-:first/:last把所有符合的元素看作一个整体,即使其中有并列的父级元素,而:first-child/:last-child把每个父级元素单独看待,选择每个父级元素的第一个/最后一个元素.</strong><br>
-<img src="https://img-blog.csdnimg.cn/20200312141942463.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h4 id="4512-nth-child与nth-last-child19">4.5.1.2 nth-child与nth-last-child(1.9+)</h4>
-<p>nth-child选择父元素下第n个元素,注意,<strong>从1开始计数</strong>.</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;div2&quot;&gt;
-    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;div p:nth-child(3)&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/2020031214274542.png" alt="在这里插入图片描述" loading="lazy"><br>
-注意与:eq的区别,有点类似:first/:first-child的区别,:eq会把所有符合条件的元素看作一个整体,而且不要忘记:eq是<strong>从0开始计数</strong>.<br>
-<img src="https://img-blog.csdnimg.cn/2020031214285558.png" alt="在这里插入图片描述" loading="lazy"><br>
-另一方面,nth-child支持奇偶与代数表达式,比如:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p5&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p6&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;div2&quot;&gt;
-    &lt;p id=&quot;p7&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p8&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p9&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p10&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p11&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;div p:nth-child(odd)&quot;)
-$(&quot;div p:nth-child(even)&quot;)
-$(&quot;div p:nth-child(3n+1)&quot;)
-$(&quot;div p:nth-child(4n-3)&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200312143318644.png" alt="在这里插入图片描述" loading="lazy"><br>
-计数也是从1开始.<br>
-nth-last-child与nth-child类似,需要1.9以上的版本,看名字就知道,是选择倒数第n个的,同样支持奇偶与代数表达式.</p>
-<pre><code class="language-js">$(&quot;div p:nth-last-child(2)&quot;)
-$(&quot;div p:nth-last-child(odd)&quot;)
-$(&quot;div p:nth-last-child(even)&quot;)
-$(&quot;div p:nth-last-child(3n+1)&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200312143759526.png" alt="在这里插入图片描述" loading="lazy"><br>
-对于nth-last-child的odd/even/代数表达式来说,从最后一个符合条件的开始选择,但是按原来的顺序排列.</p>
-<h3 id="452-类型过滤器19">4.5.2 类型过滤器(1.9+)</h3>
-<p>有四种:</p>
-<ul>
-<li>:first-of-type</li>
-<li>:last-of-type</li>
-<li>:nth-of-type</li>
-<li>:nth-last-of-type</li>
-</ul>
-<p>first-of-type会选择符合条件的元素的父元素的第一个该类型的子元素.<br>
-例如,</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器:</p>
-<pre><code class="language-js">$(&quot;p:first-of-type&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200312144917586.png" alt="在这里插入图片描述" loading="lazy"><br>
-若使用id选择器:</p>
-<pre><code class="language-js">$(&quot;#p2:first-of-type&quot;)
-</code></pre>
-<p>则结果为空.<br>
-<img src="https://img-blog.csdnimg.cn/20200312145529893.png" alt="在这里插入图片描述" loading="lazy"><br>
-为什么?<br>
-因为此时选择的是id为p2的元素,但是这个</p>
-<pre><code class="language-html">&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-</code></pre>
-<p>的前面有一个</p>
-<pre><code class="language-html">&lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-</code></pre>
-<p>也就是说</p>
-<pre><code class="language-html">&lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-</code></pre>
-<p>不是第一个孩子,因此选择为空,此时若把第一个孩子注释:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;!-- &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt; --&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>则</p>
-<pre><code class="language-js">$(&quot;#p2:first-of-type&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312145801254.png" alt="在这里插入图片描述" loading="lazy"><br>
-多个父级元素也是一样的道理:</p>
-<pre><code class="language-html">&lt;div id=&quot;div1&quot;&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p class=&quot;a&quot; id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p class=&quot;a&quot; id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;div2&quot;&gt;
-    &lt;p class=&quot;a&quot; id=&quot;p4&quot;&gt;&lt;/p&gt;
-    &lt;p class=&quot;a&quot; id=&quot;p5&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;.a:first-of-type&quot;)
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200312150052381.png" alt="在这里插入图片描述" loading="lazy"><br>
-last-of-type/nth-of-child/nth-last-of-type类似,要注意的是nth-of-child/nth-last-of-type都支持奇偶与代数表达式,计数从1开始.</p>
-<h3 id="453-唯一过滤器">4.5.3 唯一过滤器</h3>
-<p>两种:</p>
-<ul>
-<li>only-child</li>
-<li>only-of-type(1.9+)</li>
-</ul>
-<p>如果某个元素是它父元素的唯一子元素,则only-child会选择该(子)元素.</p>
-<pre><code class="language-html">&lt;div&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p>选择器</p>
-<pre><code class="language-js">$(&quot;div p:only-child&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312150931231.png" alt="在这里插入图片描述" loading="lazy"><br>
-注意文本并不会影响选择的结果,也就是说,改成</p>
-<pre><code class="language-html">&lt;div&gt;
-    &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-	456
-    &lt;p id=&quot;p3&quot;&gt;123&lt;/p&gt;
-    456
-&lt;/div&gt;
-</code></pre>
-<p>后,选择器不变,选择的结果只是p里面多了文字:<br>
-<img src="https://img-blog.csdnimg.cn/20200312151041648.png" alt="在这里插入图片描述" loading="lazy"><br>
-<strong>而如果某个元素的父元素只有唯一一个该元素类型的子元素,则only-of-type会选择该元素,注意是类型,不是数量.<br>
-上面的only-child指的是数量,也就是只有一个孩子,这里only-of-type指的是类型,只有一个这种类型的孩子,而不管孩子数量.</strong></p>
-<pre><code class="language-html">&lt;div&gt;
-   &lt;p id=&quot;p1&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-    &lt;p id=&quot;p2&quot;&gt;&lt;/p&gt;
-    &lt;p id=&quot;p3&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div&gt;
-    &lt;p id=&quot;p4&quot;&gt;&lt;/p&gt;
-    &lt;div&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;div p:only-of-type&quot;)
-</code></pre>
-<p>会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312152126590.png" alt="在这里插入图片描述" loading="lazy"><br>
-而如果选择器换成only-child:</p>
-<pre><code class="language-js">$(&quot;div p:only-child&quot;)
-</code></pre>
-<p>则会选择<br>
-<img src="https://img-blog.csdnimg.cn/20200312152208985.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="46-表单对象属性过滤器">4.6 表单对象属性过滤器</h2>
-<p>选择以下三种状态的元素:</p>
-<ul>
-<li>可用</li>
-<li>不可用</li>
-<li>选中</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:enabled</td>
-<td>选择可用元素</td>
-</tr>
-<tr>
-<td>:disabled</td>
-<td>选择不可用元素</td>
-</tr>
-<tr>
-<td>:checked</td>
-<td>选择所有被选中的元素</td>
-</tr>
-<tr>
-<td>:selected</td>
-<td>选择所有被选中的option元素(针对&lt;select&gt;)</td>
-</tr>
-</tbody>
-</table>
-<pre><code class="language-html">&lt;input type=&quot;checkbox&quot; checked/&gt;
-&lt;input type=&quot;radio&quot; checked&gt;
-&lt;input type=&quot;radio&quot; id=&quot;disabled&quot; disabled/&gt;
-&lt;input type=&quot;checkbox&quot;&gt;
-&lt;select&gt;
-    &lt;option value=&quot;1&quot;&gt;&lt;/option&gt;
-    &lt;option value=&quot;2&quot; selected&gt;&lt;/option&gt;
-    &lt;option value=&quot;3&quot;&gt;&lt;/option&gt;
-&lt;/select&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;body *:enabled&quot;)
-$(&quot;:disabled&quot;)
-$(&quot;:selected&quot;)
-$(&quot;:checked&quot;)
-</code></pre>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200312134635678.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-表单选择器">5 表单选择器</h1>
-<h2 id="51-文本框类">5.1 文本框类</h2>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:text</td>
-<td>选择所有文本框</td>
-</tr>
-<tr>
-<td>:password</td>
-<td>选择所有密码框</td>
-</tr>
-</tbody>
-</table>
-<h2 id="52-选择框类">5.2 选择框类</h2>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:radio</td>
-<td>选择所有单选框</td>
-</tr>
-<tr>
-<td>:checkbox</td>
-<td>选择所有多选框</td>
-</tr>
-</tbody>
-</table>
-<h2 id="53-按钮类">5.3 按钮类</h2>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:submit</td>
-<td>选择所有提交按钮</td>
-</tr>
-<tr>
-<td>:reset</td>
-<td>选择所有重置按钮</td>
-</tr>
-<tr>
-<td>:button</td>
-<td>选择所有按钮</td>
-</tr>
-</tbody>
-</table>
-<h2 id="54-其他">5.4 其他</h2>
-<table>
-<thead>
-<tr>
-<th>过滤器</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:image</td>
-<td>选择所有图像域</td>
-</tr>
-<tr>
-<td>:file</td>
-<td>选择所有文件域</td>
-</tr>
-</tbody>
-</table>
-<h2 id="55-例子">5.5 例子</h2>
-<pre><code class="language-html">&lt;input type=&quot;text&quot; /&gt;
-&lt;input type=&quot;password&quot; /&gt;
-&lt;input type=&quot;radio&quot; /&gt;
-&lt;input type=&quot;checkbox&quot; /&gt;
-&lt;input type=&quot;submit&quot; /&gt;
-&lt;input type=&quot;reset&quot; /&gt;
-&lt;input type=&quot;button&quot; /&gt;
-&lt;input type=&quot;image&quot; /&gt;
-&lt;input type=&quot;file&quot; /&gt;
-</code></pre>
-<pre><code class="language-js">$(&quot;:text&quot;)
-$(&quot;:password&quot;)
-$(&quot;:radio&quot;)
-$(&quot;:checkbox&quot;)
-$(&quot;:submit&quot;)
-$(&quot;:reset&quot;)
-$(&quot;:button&quot;)
-$(&quot;:image&quot;)
-$(&quot;:file&quot;)
-</code></pre>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200312135946749.png" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[android studio sync失败]]></title>
-        <id>https://2293736867.github.io/post/android-studio-sync-shi-bai/</id>
-        <link href="https://2293736867.github.io/post/android-studio-sync-shi-bai/">
-        </link>
-        <updated>2020-06-02T21:06:49.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-原因">1 原因</h1>
-<p>sync失败或gradle同步慢的原因基本上就是网络的问题,这里采用的办法是在Maven的设置文件添加国内镜像.</p>
-<h1 id="2-添加镜像">2 添加镜像</h1>
-<p>Maven的settings.xml中,在&lt;mirrors&gt;中添加:</p>
-<pre><code class="language-xml">&lt;mirror&gt;
-	&lt;id&gt;alimaven&lt;/id&gt;
-	&lt;name&gt;aliyun maven&lt;/name&gt;
-	&lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
-	&lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
-&lt;/mirror&gt;
+<h1 id="1-概述">1 概述</h1>
+<p>什么?都2020年了还在Spring Boot的配置文件中写明文密码?<br>
+<s>虽然是小项目,明文也没人看.<br>
+明文简单快捷方便啊!!!<br>
+你看直接用户名root密码123456多么简单!!!</s><br>
+...<br>
+不废话了,这篇文章主要讲了如何使用jasypt-spring-boot这个开源组件来进行配置文件的加密,包括简单加密以及非对称加密,同时也介绍了使用jar/war部署时如何输入加密口令.</p>
+<h1 id="2-简单加密">2 简单加密</h1>
+<p>jasypt简单加密就是直接把加密口令写死在文件中.(<s>好吧这样就差不多大概跟没加密一样...</s> )</p>
+<h2 id="21-依赖">2.1 依赖</h2>
+<p>目前最新版本为3.0.2,具体请查看官方github(<a href="https://github.com/ulisesbocchio/jasypt-spring-boot">戳这里</a>).</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;
+    &lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.0.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="22-加密口令">2.2 加密口令</h2>
+<p>在application.properties中加上:</p>
+<pre><code class="language-xml">jasypt.encryptor.password=xxx
+</code></pre>
+<p>xxx为对称加密的口令.<br>
+默认使用PBE算法进行加密,PBE其实并没有包含真正的加密与解密算法,而是将已有的消息摘要算法(如MD5,SHA等)与对称加密算法(如AES,DES,RC2等)进行了组合,默认组合的是HCMA消息认证算法,SHA512消息摘要算法以及AES256对称加密算法.PBE使用口令与随机生成的盐去生成对应的对称加密密钥,再用密钥去进行对称加密.</p>
+<h2 id="23-输出密文">2.3 输出密文</h2>
+<p>这里在配置文件中加一个测试字段password与密钥test进行测试:<br>
+<img src="https://img-blog.csdnimg.cn/20200427195934892.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里为了方便就在run里面测试:</p>
+<pre><code class="language-java">@SpringBootApplication
+@EnableEncryptableProperties
+public class DemoApplication implements CommandLineRunner {
+    private static final Logger l = LoggerFactory.getLogger(DemoApplication.class);
 
-&lt;mirror&gt;
-    &lt;id&gt;uk&lt;/id&gt;
-    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
-    &lt;name&gt;Human Readable Name for this Mirror.&lt;/name&gt;
-    &lt;url&gt;http://uk.maven.org/maven2/&lt;/url&gt;
-&lt;/mirror&gt;
+    @Autowired
+    private StringEncryptor stringEncryptor;
 
-&lt;mirror&gt;
-    &lt;id&gt;CN&lt;/id&gt;
-    &lt;name&gt;OSChina Central&lt;/name&gt;
-    &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
-    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
-&lt;/mirror&gt;
+    @Autowired
+    private ApplicationContext applicationContext;
 
-&lt;mirror&gt;
-    &lt;id&gt;nexus&lt;/id&gt;
-    &lt;name&gt;internal nexus repository&lt;/name&gt;
-    &lt;url&gt;http://repo.maven.apache.org/maven2&lt;/url&gt;
-    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
-&lt;/mirror&gt;
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        Environment environment = applicationContext.getEnvironment();
+        l.info(stringEncryptor.encrypt(environment.getProperty(&quot;password&quot;)));
+    }
+}
 </code></pre>
-<p>这样android studio同步的速度就会很快了.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[jquery hello world]]></title>
-        <id>https://2293736867.github.io/post/jquery-hello-world/</id>
-        <link href="https://2293736867.github.io/post/jquery-hello-world/">
-        </link>
-        <updated>2020-06-02T21:06:08.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-jquery">1 jQuery</h1>
-<p>jQuery是一个js库,一个js文件,极大地简化了编程,<a href="https://jquery.com/download/">官网链接</a>在这里,有compressed,uncompressed版本,使用时一样.</p>
-<h1 id="2-hello-world">2 hello world</h1>
-<pre><code class="language-html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;jquery hello world&lt;/title&gt;
-        &lt;script type=&quot;text/javascript&quot; src=&quot;https://code.jquery.com/jquery-3.4.1.min.js&quot;&gt;&lt;/script&gt;
-        &lt;script type=&quot;text/javascript&quot;&gt;
-            $(function()
-            {
-                $(&quot;p&quot;).html(&quot;hello world&quot;);
-            });
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
+<p>注意使用@Autowired进行StringEncryptor的自动装配时,官方文档说加上</p>
+<pre><code class="language-java">@Configuration
+@EnableEncryptableProperties
 </code></pre>
-<p>jQuery使用时直接从官网引入文件即可,这里用的是3.4.1版本.</p>
-<pre><code class="language-js">$(function())
+<p><img src="https://img-blog.csdnimg.cn/20200427230001749.png" alt="在这里插入图片描述" loading="lazy"><br>
+由于</p>
+<pre><code class="language-bash">@SpringBootApplication
 </code></pre>
-<p>是</p>
-<pre><code class="language-js">$(document).ready(function(){})
+<p>包含了</p>
+<pre><code class="language-bash">@Configuration
 </code></pre>
-<p>的缩写,这个函数会在DOM加载完成后执行.</p>
-<pre><code class="language-js">$(&quot;p&quot;)
+<p>因此这里只需要后一个.<br>
+运行后获取密文输出:<br>
+<img src="https://img-blog.csdnimg.cn/20200427200115611.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="24-替换配置文件">2.4 替换配置文件</h2>
+<p>把上面的密文替换到原配置文件,加上前缀ENC(与后缀):<br>
+<img src="https://img-blog.csdnimg.cn/2020042720012975.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样就加密成功了,直接获取属性可以看到明文:<br>
+<img src="https://img-blog.csdnimg.cn/20200427200308779.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-自定义加密">3 自定义加密</h1>
+<p>当然,上面的简单加密不能满足实际使用需求,因此,这里需要进行自定义加密.</p>
+<h2 id="31-自定义加密前后缀">3.1 自定义加密前后缀</h2>
+<p>需要使用一个前后缀区分需要加密与不需加密的字段,默认前缀为</p>
+<pre><code class="language-bash">ENC(
 </code></pre>
-<p>表示选择页面的所有&lt;p&gt;元素,html()可以设置元素的内容.<br>
-<img src="https://img-blog.csdnimg.cn/20200311193454323.png" alt="在这里插入图片描述" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MySQL数据类型全解析]]></title>
-        <id>https://2293736867.github.io/post/mysql-shu-ju-lei-xing-quan-jie-xi/</id>
-        <link href="https://2293736867.github.io/post/mysql-shu-ju-lei-xing-quan-jie-xi/">
-        </link>
-        <updated>2020-06-02T21:05:41.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>本文主要介绍了MySQL的各种数据类型,版本为8.x,<br>
-MySQL的数据类型可以分为六类:数值类型,日期时间类型,字符串类型,二进制类型,JSON类型与空间数据类型.</p>
-<h1 id="2-数值类型">2 数值类型</h1>
-<p>数值类型是最基本的类型,可以分为整数类型与浮点数类型.</p>
-<h2 id="21-整型">2.1 整型</h2>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>字节数</th>
-<th>无符号范围</th>
-<th>有符号范围</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TINYINT</td>
-<td>1</td>
-<td>[0,255]</td>
-<td>[-128,127]</td>
-</tr>
-<tr>
-<td>SMALLINT</td>
-<td>2</td>
-<td>[0,65535]</td>
-<td>[-32768,32767]</td>
-</tr>
-<tr>
-<td>MEDIUMINT</td>
-<td>3</td>
-<td>0-1677w</td>
-<td>+-838w</td>
-</tr>
-<tr>
-<td>INT/INTEGER</td>
-<td>4</td>
-<td>0-42e</td>
-<td>+-21e</td>
-</tr>
-<tr>
-<td>BIGINT</td>
-<td>8</td>
-<td>0-18446744e</td>
-<td>+-9223372e</td>
-</tr>
-</tbody>
-</table>
-<p>没写出的具体的精确值无符号的范围计算公式如下:</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200309150453284.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>有符号的计算公式如下:</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200309150501675.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>所有整形如果允许NULL的话默认为NULL,不允许为NULL的需要手动设置默认值.</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200309151859330.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>如果插入或修改的数据范围不符合会提示操作失败,如上图提示列c_mediumint的数据超出范围.</p>
-<h2 id="22-浮点型">2.2 浮点型</h2>
-<p>可以用两种方式来表示小数,分别是浮点数类型与定点数类型.</p>
-<p>浮点数用于不需要太精确的小数场合,类型包括FLOAT与DOUBLE,定点数类型就是DECIMAL.</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>字节数</th>
-<th>范围</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FLOAT</td>
-<td>4</td>
-<td>+- 1.17e-38 - 3.4e+38 和 0</td>
-</tr>
-<tr>
-<td>DOUBLE</td>
-<td>8</td>
-<td>+- 2.22e-308 - 1.79e+308 和 0</td>
-</tr>
-<tr>
-<td>DEC(M,D)/DECIMAL(M,D)</td>
-<td>取决于M与D</td>
-<td>取决于M与D</td>
-</tr>
-</tbody>
-</table>
-<p>下面是测试的待插入的数据:</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200309153655569.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入之后再查询:</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200309153711324.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>可以看到,float的精度最高为6位,后面的进行四舍五入,DOUBLE的最高精度为15位.</p>
-<p>下面来说一下DECIMAL.</p>
-<h2 id="23-decimal">2.3 DECIMAL</h2>
-<p>DECIMAL也可用DEC来表示,用于计算精确的小数值,DECIMAL通常如下表示:</p>
-<pre><code class="language-sql">DECIMAL(M,D)
+<p>后缀为:</p>
+<pre><code class="language-bash">)
 </code></pre>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>含义</th>
-<th>取值范围</th>
-<th>默认值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>M</td>
-<td>十进制有效数字总个数</td>
-<td>1-65</td>
-<td>10</td>
-</tr>
-<tr>
-<td>D</td>
-<td>小数点后十进制数字个数</td>
-<td>0-30(D&lt;=M)</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-<p>如果要计算所占用的字节数,需要分为整数与小数两部分,分开计算再相加,每部分又按照9位数字去拆分,计算规则如下:</p>
-<table>
-<thead>
-<tr>
-<th>位数</th>
-<th>占用字节数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1-2</td>
-<td>1</td>
-</tr>
-<tr>
-<td>3-4</td>
-<td>2</td>
-</tr>
-<tr>
-<td>5-6</td>
-<td>3</td>
-</tr>
-<tr>
-<td>7-9</td>
-<td>4</td>
-</tr>
-</tbody>
-</table>
-<p>也就是说对于</p>
-<pre><code class="language-sql">DECIMAL(24,8)
+<p>因此加密时需要加上ENC(与).<br>
+自定义前后缀指定两个属性就可以了:<br>
+<img src="https://img-blog.csdnimg.cn/20200427200623296.png" alt="在这里插入图片描述" loading="lazy"><br>
+密码字段需要对应修改.</p>
+<h2 id="32-口令参数化">3.2 口令参数化</h2>
+<p>其实就是在启动的时候加上命令行参数或者应用环境变量,或者通过系统环境变量读取口令,详细使用方式请看第4点部署.<br>
+命令行参数:</p>
+<pre><code class="language-bash">java -jar xxx.jar --jasypt.encryptor.password=xxx
 </code></pre>
-<p>整数部分24-8=16位,小数部分8位,小数部分的8位根据规则所占用的字节数为4个,整数部分按每9位进行拆分,16=9+7,9位的部分占4个字节,7位的部分按照规则也占4个字节,所以整数部分占8个字节,加上小数部分的4个字节,总共占12个字节.</p>
-<p>至于NUMERIC,在MySQL中,NUMERIC被实现为DECIMAL:</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200310010544290.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-日期与时间类型">3 日期与时间类型</h1>
-<p>总共有五类:YEAR,TIME,DATE,DATETIME,TIMESTAMP.</p>
-<h2 id="31-日期">3.1 日期</h2>
-<p>日期有两种类型:YEAR与DATE,YEAR表示年,DATE表示日期.</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>字节数</th>
-<th>取值范围</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>YEAR</td>
-<td>1</td>
-<td>[1901,2155]</td>
-</tr>
-<tr>
-<td>DATE</td>
-<td>3</td>
-<td>[1000-01-01,9999-12-31]</td>
-</tr>
-</tbody>
-</table>
-<p>DATE中的年月日插入时可以不分隔或者用各种符号进行分隔,比如</p>
-<pre><code>! @ # $ % ^ &amp; * ( ) - / \ [ ] { } : ; ' &quot; |  , . &lt; &gt; ?
+<p>应用环境变量:</p>
+<pre><code class="language-bash">java -Djasypt.encryptor.password=xxx -jar xxx.jar
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/2020030919130056.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>上图中的date都是合法的,插入之后MySQL都会统一用横杠代替:</p>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200309191403324.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>YEAR的话MySQL其实允许两位数的YEAR,其中00-69表示2000-2069,70-99表示1970-1999.</p>
-<p>其他插入方式的话可以用CURRENT_DATE,CURRENT_DATE(),CURDATE(),NOW(),CURTIME(),CURRENT_TIME,CURRENT_TIME():</p>
-<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20200310103517135.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20200310103529133.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="32-时间">3.2 时间</h2>
-<p>时间就一种类型:TIME.</p>
-<p>TIME所占的字节数为3个字节,取值范围为:</p>
-<pre><code>[-838:59:59,838:59:59]
+<p>系统环境变量:</p>
+<pre><code class="language-bash">jasypt.encryptor.password=${TEST}
 </code></pre>
-<p>插入时时分秒可以不分隔或者必须以冒号分隔.</p>
-<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200309192901773.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入后统一变为冒号分隔:</p>
-<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200309192920996.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>可以使用CURRENT_TIME或CURRENT_TIME(),CURTIME()或NOW()插入:</p>
-<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200310103949962.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200310104123855.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>甚至也可以使用CURDATE(),不过此时插入的是零值:</p>
-<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200310104255682.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="33-日期时间">3.3 日期+时间</h2>
-<p>TIMESTAMP与DATETIME:</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>字节数</th>
-<th>取值范围</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DATETIME</td>
-<td>8</td>
-<td>[1000-01-01 00:00:00,9999-12-31 23:59:59]</td>
-</tr>
-<tr>
-<td>TIMESTAMP</td>
-<td>4</td>
-<td>[19700101080001,20380119111407]</td>
-</tr>
-</tbody>
-</table>
-<p>DATETIME就是DATE与TIME的结合,先DATE再TIME,空格分隔.</p>
-<p>TIMESTAMP表示时间戳,表示当前时间到1970年1月1日0时0分0秒经过的秒数,中的写法是年月日时分秒,比如</p>
-<pre><code>19700101080001
+<p>前提是已经设置好对应系统变量.</p>
+<h2 id="33-自定义加密类">3.3 自定义加密类</h2>
+<p>可以实现StringEncryptor接口,重写里面的encrypt与decrypt方法,再定义一个加密配置类,指定加密类的名字:</p>
+<pre><code class="language-java">@Configuration
+@EnableEncryptableProperties
+public class MyEncryptorConfiguration {
+    @Bean(&quot;MyEncryptor&quot;)
+    public StringEncryptor getStringEncryptor()
+    {
+        return new StringEncryptor() {
+            @Override
+            public String encrypt(String s) {
+                return &quot;111&quot;;
+            }
+
+            @Override
+            public String decrypt(String s) {
+                return &quot;222&quot;;
+            }
+        };
+    }
+}
 </code></pre>
-<p>表示</p>
-<pre><code>1970年1月1日8时0分01秒
+<p>这里是一个很简单的例子,加密直接返回111,解密直接返回222,具体加解密算法直接替换函数体即可.<br>
+注意需要在配置文件中写上Bean的名字:</p>
+<pre><code class="language-java">jasypt.encryptor.bean=codeSheepEncryptorBean
 </code></pre>
-<p>这里之所以使用080001是因为中国的时区.</p>
-<pre><code>19700101000000
+<p>使用构造函数注入(Autowired也可以):</p>
+<pre><code class="language-java">private final StringEncryptor stringEncryptor;
+public DemoApplication(MyEncryptorConfiguration encryptorConfiguration)
+{
+	stringEncryptor = encryptorConfiguration.getStringEncryptor();
+}
 </code></pre>
-<p>会报错,范围不允许.</p>
-<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200310104801863.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<pre><code>19700101080000
+<p>测试:</p>
+<pre><code class="language-java">@Override
+public void run(String... args) throws Exception {
+	Environment environment = applicationContext.getEnvironment();
+	l.info(stringEncryptor.encrypt(environment.getProperty(&quot;password&quot;)));
+	l.info(stringEncryptor.decrypt(environment.getProperty(&quot;password&quot;)));
+}
 </code></pre>
-<p>也不行.</p>
-<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200310104836434.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>在插入时可以指定默认值,使用now()或CURRENT_TIMESTAMP:</p>
-<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200309194103501.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入后DATETIME与TIMESTAMP存储的形式一致,横杠分隔日期,冒号分隔时间,时间与日期用空格隔开.</p>
-<p>也可以使用CURTIME()或CURDATE()插入,对于CURTIME(),日期采用当前日期,对于CURDATE(),时间采用</p>
-<pre><code class="language-bash">00:00:00
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200428002416775.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-部署">4 部署</h1>
+<h2 id="41-jar部署">4.1 jar部署</h2>
+<h3 id="411-命令行参数方式">4.1.1 命令行参数方式</h3>
+<p>这种方式的话先把配置文件中的jasypt.encryptor.password去掉,然后修改在Spring Boot的运行配置,进行本地测试:<br>
+<img src="https://img-blog.csdnimg.cn/20200427201930643.png" alt="在这里插入图片描述" loading="lazy"><br>
+打包时,如果测试的话需要设置Maven的参数,不测试的话直接勾选Skip Tests:<br>
+<img src="https://img-blog.csdnimg.cn/20200427202236607.png" alt="在这里插入图片描述" loading="lazy"><br>
+打包后(右侧Maven-&gt;package)加上参数运行就可以了:<br>
+<img src="https://img-blog.csdnimg.cn/20200427202533381.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="412-应用环境变量方式">4.1.2 应用环境变量方式</h3>
+<p>其实和第一种方式差不多,也是把jasypt.encryptor.password去掉,在VM options中设置参数,Spring Boot运行配置如下:<br>
+<img src="https://img-blog.csdnimg.cn/20200427202648116.png" alt="在这里插入图片描述" loading="lazy"><br>
+Maven设置(当然也可以跳过测试):<br>
+<img src="https://img-blog.csdnimg.cn/20200427202821966.png" alt="在这里插入图片描述" loading="lazy"><br>
+不过遗憾的是笔者测试失败了:<br>
+<img src="https://img-blog.csdnimg.cn/20200427203630350.png" alt="在这里插入图片描述" loading="lazy"><br>
+<s>没理由啊,那为什么Spring Boot那里就这样设置就可以....</s><br>
+(有大佬知道为什么会失败的话可以留言,感激不尽.)<br>
+这里就直接跳过测试了.<br>
+<img src="https://img-blog.csdnimg.cn/20200427203744263.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后就可以愉快地运行了(笔者的win下需要加两个单引号):<br>
+<img src="https://img-blog.csdnimg.cn/20200427204023824.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="413-系统环境变量方式">4.1.3 系统环境变量方式</h3>
+<p>设置环境变量这个应该不用怎么说了,直接去设置就行,然后修改一下jasypt.encryptor.password,两个花括号中间是对应的环境变量名:<br>
+<img src="https://img-blog.csdnimg.cn/20200427204110263.png" alt="在这里插入图片描述" loading="lazy"><br>
+Spring Boot运行配置:<br>
+<img src="https://img-blog.csdnimg.cn/20200427204145113.png" alt="在这里插入图片描述" loading="lazy"><br>
+Maven:<br>
+<img src="https://img-blog.csdnimg.cn/20200427204236199.png" alt="在这里插入图片描述" loading="lazy"><br>
+这次Maven测试就没问题了.<br>
+<s>真是奇了怪了.</s><br>
+运行(还是这个舒服,直接-jar):<br>
+<img src="https://img-blog.csdnimg.cn/20200427204523667.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="42-war部署">4.2 war部署</h2>
+<h3 id="421-jar-war转换">4.2.1 jar-war转换</h3>
+<p>原来的是jar打包,换成war时,需要修改pom.xml中的&lt;packaging&gt;为war,同时加上tomcat依赖:</p>
+<pre><code class="language-xml">&lt;packaging&gt;war&lt;/packaging&gt;
+...
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+	&lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+	&lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
 </code></pre>
-<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200310105052112.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20200310105103360.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200310105115368.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-字符串类型">4 字符串类型</h1>
-<h2 id="41-charvarchar">4.1 CHAR/VARCHAR</h2>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>最大长度</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CHAR</td>
-<td>255个字符</td>
-<td>长度固定,CHAR(M)表明CHAR的长度为M个字符,所占用的字节数为字符个数*每个字符所占用字节数,也就是说与字符集有关,定长的效率较高,一般用于存储固定位数的数据或经常需要更新的数据,如电话号码,身份证,MD5值等.保存CHAR时,会在末尾填充空格用于对齐,查询时自动把空格删除</td>
-</tr>
-<tr>
-<td>VARCHAR</td>
-<td>65535字节,字符个数为(最大行大小-NULL标识-长度标识)/字符集单字符最大字节数,可以看<a href="https://learn.blog.csdn.net/article/details/103341778">这里</a></td>
-<td>长度不固定,实际占用的空间为字符串实际长度+1/2,也就是说需要额外的1或2个字节记录字符串的长度.相对来说VARCHAR比CHAR更节省空间,但是在UPDATE时可能会使行变得更长,需要做额外的工作.VARCHAR适合存储字段更新少,字符串平均长度不稳定的情况</td>
-</tr>
-</tbody>
-</table>
-<p>无论是CHAR还是VARCHAR,超过了创建时指定的长度便插入失败:</p>
-<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200309200811823.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200309200849689.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="42-text">4.2 TEXT</h2>
-<p>TEXT是一种专用于存储长文本的变长数据类型,包括TINYTEXT,TEXT,MEDIUMTEXT,LONGTEXT:</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>允许长度(字节)</th>
-<th>存储空间</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TINYTEXT</td>
-<td>[0,255]</td>
-<td>长度+2字节</td>
-</tr>
-<tr>
-<td>TEXT</td>
-<td>[0,65535]</td>
-<td>长度+2字节</td>
-</tr>
-<tr>
-<td>MEDIUMTEXT</td>
-<td>0-1677w</td>
-<td>长度+3字节</td>
-</tr>
-<tr>
-<td>LONGTEXT</td>
-<td>0-42e</td>
-<td>长度+4字节</td>
-</tr>
-</tbody>
-</table>
-<p>TEXT在插入时超过最大允许长度会插入失败.</p>
-<h2 id="43-enum">4.3 ENUM</h2>
-<p>枚举类型,在创建表时enum的取值范围以列表的形式指定:</p>
-<pre><code class="language-sql">ENUM('value1','value2',...,'valuen')
+<p>再添加一个ServletInitializer:</p>
+<pre><code class="language-java">public class ServletInitializer extends SpringBootServletInitializer {
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder)
+    {
+        return builder.sources(DemoApplication.class);
+    }
+}
 </code></pre>
-<p>ENUM占用1或2个字节,列表中最多能有65535个值,每个值末尾的空格都会被删除,列表中的每个值独有一个顺序排列的编号,MySQL会存入这个编号而不是对应的值.</p>
-<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200309210144560.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/20200309210013736.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>等价于</p>
-<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200309210104709.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>即取值列表的编号从1开始.</p>
-<h2 id="44-set">4.4 SET</h2>
-<p>SET占用1或2或3或4或8个字节,取决于里面元素的数量,最大数量为64.SET可以是一个或多个元素的组合,值后面多余的空格会被删除,取多个元素时,不同元素用逗号隔开.</p>
-<p>如:</p>
-<figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20200309220709295.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入前:</p>
-<figure data-type="image" tabindex="28"><img src="https://img-blog.csdnimg.cn/20200309220642491.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入后:</p>
-<figure data-type="image" tabindex="29"><img src="https://img-blog.csdnimg.cn/20200309220651250.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-二进制类型">5 二进制类型</h1>
-<h2 id="51-bit">5.1 BIT</h2>
-<p>BIT在创建时指定最大长度:</p>
-<pre><code>BIT(M)
+<p>其中DemoApplication为main函数所在的类.<br>
+war转为jar时进行对应的相反操作就可以了.</p>
+<h3 id="422-命令行参数方式">4.2.2 命令行参数方式</h3>
+<p>Maven设置就不说了,像上面一样,打包之后...<br>
+笔者找不到设置Tomcat命令行参数的方式,所以,就跳过这个了...<br>
+(欢迎大佬找到的留言补充,感激不尽!!!)<br>
+<s>笔者太菜了,害.</s></p>
+<h3 id="423-应用环境变量方式">4.2.3 应用环境变量方式</h3>
+<p>win下可以直接修改catalina.bat或者进入tomcat9w.exe(tomcat9,tomcat8是tomcat8w.exe)进行图形化修改,这里选择修改catalina.bat的方式,找到setlocal,后面加上</p>
+<pre><code class="language-bash">set &quot;JAVA_OPTS=-Djasypt.encryptor.password=test&quot;
 </code></pre>
-<p>M表示最大二进制数的位数,M取值1-64,默认1,插入数据时,如果数据在BIT允许的范围则插入成功,否则插入失败.</p>
-<p>插入时需要加上b前缀,后面跟的字符串由0与1组成:</p>
-<figure data-type="image" tabindex="30"><img src="https://img-blog.csdnimg.cn/20200309222955594.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>查询之后就变成了十进制:</p>
-<figure data-type="image" tabindex="31"><img src="https://img-blog.csdnimg.cn/20200309223004928.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="52-blob">5.2 BLOB</h2>
-<p>BLOB是特殊的二进制数据类型,用来保存数据量很大的二进制数据,如图片等,BLOB包括TINYBLOB,BLOB,MEDIUMBLOB,LONGBLOG,与TEXT类似:</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>允许长度(字节)</th>
-<th>存储空间</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TINYBLOB</td>
-<td>[0,255]</td>
-<td>长度+2字节</td>
-</tr>
-<tr>
-<td>BLOB</td>
-<td>[0,65535]</td>
-<td>长度+2字节</td>
-</tr>
-<tr>
-<td>MEDIUMBLOB</td>
-<td>0-1677w</td>
-<td>长度+3字节</td>
-</tr>
-<tr>
-<td>LONGBLOB</td>
-<td>0-42e</td>
-<td>长度+4字节</td>
-</tr>
-</tbody>
-</table>
-<h2 id="53-binaryvarbinary">5.3 BINARY/VARBINARY</h2>
-<p>BINARY(M)/VARBINARY(M)中的M指的是字节长度,由于BINARY/VARBINARY存储的是二进制字符串,因此没有字符集的概念.</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>最大长度</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>BINARY</td>
-<td>255字节</td>
-<td>定长,允许长度0-M的二进制字符串,不足最大长度的空间由0x00补全,查询时不会截断后面的0x00,比较时所有字节都有效</td>
-</tr>
-<tr>
-<td>VARBINARY</td>
-<td>65535字节</td>
-<td>变长,不会在后面填充0x00.</td>
-</tr>
-</tbody>
-</table>
-<p>下面的例子演示了插入时填充0x00:</p>
-<figure data-type="image" tabindex="32"><img src="https://img-blog.csdnimg.cn/20200310115610953.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里的BINARY为3个字节,插入了a,等价是插入了</p>
-<pre><code class="language-sql">a\0\0
+<p><img src="https://img-blog.csdnimg.cn/20200427213521174.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后把war放到webapps下就可以了.</p>
+<h3 id="424-环境变量方式">4.2.4 环境变量方式</h3>
+<p>这种方式最简单,设置好了环境变量,修改配置文件:<br>
+<img src="https://img-blog.csdnimg.cn/20200427213713883.png" alt="在这里插入图片描述" loading="lazy"><br>
+直接war打包部署就行.</p>
+<h1 id="5-非对称加密">5 非对称加密</h1>
+<p>Spring Boot2.2.1之后支持非对称加密,密钥对的格式可以为PEM/DER.</p>
+<h2 id="51-加密">5.1 加密</h2>
+<p>这里使用的一位大佬的RSA自定义位数加密工具类(<a href="https://leanote.zzzmh.cn/blog/post/5d1c661416199b0683002dc8">戳这里</a>),无需额外依赖,仅自带JDK实现(JDK8+).</p>
+<pre><code class="language-java">import java.util.Base64;
+import javax.crypto.Cipher;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.HashMap;
+import java.util.Map;
+/**
+ * Java RSA 加密工具类
+ * 参考： https://blog.csdn.net/qy20115549/article/details/83105736
+ */
+public class Test {
+    /**
+     * 密钥长度 于原文长度对应 以及越长速度越慢
+     */
+    private final static int KEY_SIZE = 2048;
+    /**
+     * 用于封装随机产生的公钥与私钥
+     */
+    private static Map&lt;Integer, String&gt; keyMap = new HashMap&lt;Integer, String&gt;();
+    /**
+     * 随机生成密钥对
+     */
+    public static void genKeyPair() throws NoSuchAlgorithmException {
+        // KeyPairGenerator类用于生成公钥和私钥对，基于RSA算法生成对象
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(&quot;RSA&quot;);
+        // 初始化密钥对生成器
+        keyPairGen.initialize(KEY_SIZE, new SecureRandom());
+        // 生成一个密钥对，保存在keyPair中
+        KeyPair keyPair = keyPairGen.generateKeyPair();
+        // 得到私钥
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        // 得到公钥
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        // 得到私钥字符串
+        String privateKeyString = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+        // 将公钥和私钥保存到Map
+        //0表示公钥
+        keyMap.put(0, publicKeyString);
+        //1表示私钥
+        keyMap.put(1, privateKeyString);
+    }
+    /**
+     * RSA公钥加密
+     *
+     * @param str       加密字符串
+     * @param publicKey 公钥
+     * @return 密文
+     * @throws Exception 加密过程中的异常信息
+     */
+    public static String encrypt(String str, String publicKey) throws Exception {
+        //base64编码的公钥
+        byte[] decoded = Base64.getDecoder().decode(publicKey);
+        RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance(&quot;RSA&quot;).generatePublic(new X509EncodedKeySpec(decoded));
+        //RSA加密
+        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);
+        cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+        String outStr = Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(&quot;UTF-8&quot;)));
+        return outStr;
+    }
+    /**
+     * RSA私钥解密
+     *
+     * @param str        加密字符串
+     * @param privateKey 私钥
+     * @return 明文
+     * @throws Exception 解密过程中的异常信息
+     */
+    public static String decrypt(String str, String privateKey) throws Exception {
+        //64位解码加密后的字符串
+        byte[] inputByte = Base64.getDecoder().decode(str);
+        //base64编码的私钥
+        byte[] decoded = Base64.getDecoder().decode(privateKey);
+        RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance(&quot;RSA&quot;).generatePrivate(new PKCS8EncodedKeySpec(decoded));
+        //RSA解密
+        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);
+        cipher.init(Cipher.DECRYPT_MODE, priKey);
+        String outStr = new String(cipher.doFinal(inputByte));
+        return outStr;
+    }
+    
+    public static void main(String[] args) throws Exception {
+        long temp = System.currentTimeMillis();
+        //生成公钥和私钥
+        genKeyPair();
+        //加密字符串
+        System.out.println(&quot;公钥:&quot; + keyMap.get(0));
+        System.out.println(&quot;私钥:&quot; + keyMap.get(1));
+        System.out.println(&quot;生成密钥消耗时间:&quot; + (System.currentTimeMillis() - temp) / 1000.0 + &quot;秒&quot;);
+        // String message = &quot;RSA测试ABCD~!@#$&quot;;
+        String message = &quot;test&quot;;
+        System.out.println(&quot;原文:&quot; + message);
+        temp = System.currentTimeMillis();
+        String messageEn = encrypt(message, keyMap.get(0));
+        System.out.println(&quot;密文:&quot; + messageEn);
+        System.out.println(&quot;加密消耗时间:&quot; + (System.currentTimeMillis() - temp) / 1000.0 + &quot;秒&quot;);
+        temp = System.currentTimeMillis();
+        String messageDe = decrypt(messageEn, keyMap.get(1));
+        System.out.println(&quot;解密:&quot; + messageDe);
+        System.out.println(&quot;解密消耗时间:&quot; + (System.currentTimeMillis() - temp) / 1000.0 + &quot;秒&quot;);
+    }
+}
 </code></pre>
-<p>两个\0填充后面两个字节,因此,前面两个比较的结果都为0.</p>
-<p>比较时按照二进制值进行比较,这与CHAR/VARCHAR有很大不同.</p>
-<figure data-type="image" tabindex="33"><img src="https://img-blog.csdnimg.cn/2020031011452984.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>CHAR/VARCHAR比较的是字符值,忽略后面的空格,因此比较结果为1,但是BINARY比较的是二进制值,'a'的二进制值化为十六进制为61,'a '的二进制值化为十六进制为6120,因此比较结果为0.</p>
-<h1 id="6-json类型">6 JSON类型</h1>
-<p>JSON存储的数据不能是NULL,只能是JSON格式的数据,否则会报错,</p>
-<p>创建很简单,直接为JSON类型:</p>
-<figure data-type="image" tabindex="34"><img src="https://img-blog.csdnimg.cn/20200309231111993.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入时可以使用一个JSON对象或JSON数组,数组用方括号,一个对象用花括号:</p>
-<figure data-type="image" tabindex="35"><img src="https://img-blog.csdnimg.cn/20200309231123689.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>MySQL同时提供了一组操作JSON的函数,具体看<a href="https://dev.mysql.com/doc/refman/8.0/en/json-function-reference.html">这里</a>.</p>
-<p>这里演示了json_object函数,用来创建一个JSON对象:</p>
-<figure data-type="image" tabindex="36"><img src="https://img-blog.csdnimg.cn/20200310120504269.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入后:</p>
-<figure data-type="image" tabindex="37"><img src="https://img-blog.csdnimg.cn/20200310120513867.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="7-空间数据类型">7 空间数据类型</h1>
-<p>Spatial数据,又叫空间或几何数据,包含的数据类型有</p>
-<ul>
-<li>GEOMETRY</li>
-<li>POINT</li>
-<li>LINESTRING</li>
-<li>POLYGON</li>
-</ul>
-<p>其中GEOMETRY可用于存储任意几何类型.其他集合类型的空间数据类型如下:</p>
-<ul>
-<li>MULTIPOINT</li>
-<li>MULTILINESTRING</li>
-<li>MULTIPOLYGON</li>
-<li>GEOMETRYCOLLECTION</li>
-</ul>
-<p>其中GEOMETRYCOLLECTION可以存储任意类型的集合.</p>
-<p>下面仅对POINT的使用作简单介绍.</p>
-<figure data-type="image" tabindex="38"><img src="https://img-blog.csdnimg.cn/20200310004610365.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>插入数据使用st_geomfromtext()函数,参数是一个point(),里面的参数标识x,y坐标,空格分隔.</p>
-<p>查询时直接</p>
-<pre><code class="language-sql">SELECT * FROM
-</code></pre>
-<p>会返回BLOB数据,需要使用st_astext(),参数为列名.</p>
-<p>增加几行数据后,继续查询:</p>
-<figure data-type="image" tabindex="39"><img src="https://img-blog.csdnimg.cn/20200310004919534.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="40"><img src="https://img-blog.csdnimg.cn/20200310005104166.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>使用了st_x()与st_y()两个函数,分别取得point的x,y坐标.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Chrome/Chromium的实验性功能+扩展推荐，让你的Chrome/Chromium起飞!]]></title>
-        <id>https://2293736867.github.io/post/chromechromium-de-shi-yan-xing-gong-neng-kuo-zhan-tui-jian-rang-ni-de-chromechromium-qi-fei/</id>
-        <link href="https://2293736867.github.io/post/chromechromium-de-shi-yan-xing-gong-neng-kuo-zhan-tui-jian-rang-ni-de-chromechromium-qi-fei/">
-        </link>
-        <updated>2020-06-02T21:05:18.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%8A%9F%E8%83%BD">1 实验性功能</a>
-<ul>
-<li><a href="#11-%E5%B9%B3%E6%BB%91%E6%BB%9A%E5%8A%A8">1.1 平滑滚动</a></li>
-<li><a href="#12-%E6%82%AC%E5%81%9C%E6%A0%87%E7%AD%BE">1.2 悬停标签</a></li>
-<li><a href="#14-%E5%B9%B6%E8%A1%8C%E4%B8%8B%E8%BD%BD">1.4 并行下载</a></li>
-<li><a href="#15-%E5%BC%BA%E5%88%B6%E9%BB%91%E6%9A%97%E6%A8%A1%E5%BC%8F">1.5 强制黑暗模式</a></li>
-<li><a href="#16-%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F">1.6 阅读模式</a></li>
-<li><a href="#17-%E6%89%A9%E5%B1%95%E8%8F%9C%E5%8D%95%E6%A0%8F">1.7 扩展菜单栏</a></li>
-<li><a href="#18-%E6%B8%B2%E6%9F%93%E7%BA%A7%E5%88%AB%E6%95%B0%E6%8D%AE%E4%BC%98%E5%8C%96">1.8 渲染级别数据优化</a></li>
-</ul>
-</li>
-<li><a href="#2-%E6%89%A9%E5%B1%95%E6%8E%A8%E8%8D%90">2 扩展推荐</a>
-<ul>
-<li><a href="#21-adguardublock">2.1 AdGuard/uBlock</a></li>
-<li><a href="#22-better-onetab">2.2 better-onetab</a></li>
-<li><a href="#23-dark-reader">2.3 Dark Reader</a></li>
-<li><a href="#24-extensions-manager">2.4 Extensions Manager</a></li>
-<li><a href="#25-imagus">2.5 Imagus</a></li>
-<li><a href="#26-infinity-pro">2.6 Infinity Pro</a></li>
-<li><a href="#27-minimal-scrollbar">2.7 Minimal Scrollbar</a></li>
-<li><a href="#28-similar-sites">2.8 Similar Sites</a></li>
-<li><a href="#29-tampermonkey">2.9 Tampermonkey</a></li>
-<li><a href="#210-vimuim">2.10 Vimuim</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%9C%80%E5%90%8E">3 最后</a></li>
-</ul>
-</p>
-<h1 id="1-实验性功能">1 实验性功能</h1>
-<p>Chrome/Chromium内置了一些很酷的实验性功能,打开</p>
-<pre><code class="language-bash">chrome://flags
-</code></pre>
-<p>即可访问.打开这些实验性功能后,浏览器的使用体验会更好,这里Chrome的版本为80.0.3987.132,<br>
-Chromium的版本为82.0.4080.0,不同的版本中有不同的实验性功能,具体每一项请打开上面的访问地址进行查看.</p>
-<h2 id="11-平滑滚动">1.1 平滑滚动</h2>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200308230035381.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="12-悬停标签">1.2 悬停标签</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200308230138896.png" alt="在这里插入图片描述" loading="lazy"><br>
-鼠标悬停标签显示网址与网页缩略图.</p>
-<h2 id="14-并行下载">1.4 并行下载</h2>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200308230326521.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="15-强制黑暗模式">1.5 强制黑暗模式</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200308230416164.png" alt="在这里插入图片描述" loading="lazy"><br>
-对所有内容使用黑暗模式.</p>
-<h2 id="16-阅读模式">1.6 阅读模式</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200308231106685.png" alt="在这里插入图片描述" loading="lazy"><br>
-开启之后会在某些页面的地址栏的在最右边的收藏五角星符号旁边多一个阅读视图的符号。</p>
-<h2 id="17-扩展菜单栏">1.7 扩展菜单栏</h2>
-<p><img src="https://img-blog.csdnimg.cn/20200308231407418.png" alt="在这里插入图片描述" loading="lazy"><br>
-这样就不用每次都打开&quot;更多工具&quot;了.<br>
-<img src="https://img-blog.csdnimg.cn/20200308234541365.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="18-渲染级别数据优化">1.8 渲染级别数据优化</h2>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200308231942914.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="2-扩展推荐">2 扩展推荐</h1>
-<p>先来一张图，这是笔者自用的扩展：<br>
-<img src="https://img-blog.csdnimg.cn/20200309020220830.png" alt="在这里插入图片描述" loading="lazy"><br>
-扩展不在多而在精，原本是有20多个的，然后不断精简，优化，替换，就剩下了13个扩展。</p>
-<h2 id="21-adguardublock">2.1 AdGuard/uBlock</h2>
-<p>去广告的扩展，原本用的是什么广告终结者，AdBlock，后来就改成了这两个。</p>
-<h2 id="22-better-onetab">2.2 better-onetab</h2>
-<p>原本用的是onetab，onetab其实做的不错了，只是UI确实比better-onetab差。。。<br>
-这个扩展是用于标签管理的，最常见的功能是，需要关闭浏览器，但是目前开了很多个标签，想在下一次打开浏览器时恢复这些标签，但是又不想一个一个加进收藏夹，因为完全没必要而且大部分都是一次性使用，此时better-onetab便派上了用场，单击扩展存储全部标签即可。<br>
-<img src="https://img-blog.csdnimg.cn/20200309020837151.png" alt="在这里插入图片描述" loading="lazy"><br>
-由于这个可能经常使用，建议打开</p>
-<pre><code class="language-bash">chrome://extensions/shortcuts
-</code></pre>
-<p>增加快捷键。<br>
-<img src="https://img-blog.csdnimg.cn/20200309021032966.png" alt="在这里插入图片描述" loading="lazy"><br>
-笔者这里加了两个，一个是显示扩展页面的，一个是存储所有标签的。</p>
-<h2 id="23-dark-reader">2.3 Dark Reader</h2>
-<p>这个嘛，看名字就知道了，黑暗模式，支持一键切换，支持不同站点，也支持亮度，对比度等的调节，非常实用，也建议加上快捷键。<br>
-<img src="https://img-blog.csdnimg.cn/2020030902121062.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200309021250493.png" alt="在这里插入图片描述" loading="lazy"><br>
-比如这里加的快捷键为alt+q，然后按一下就可以切换黑暗/正常模式了。</p>
-<h2 id="24-extensions-manager">2.4 Extensions Manager</h2>
-<p>扩展管理器，可以管理所有的扩展，一键开启/关闭，同时也支持不同环境下的快速切换扩展，常见的场景是一般浏览使用默认配置，然后开发环境使用另一套扩展，切换非常的简单，首先在设置里添加。<br>
-<img src="https://img-blog.csdnimg.cn/20200309021623523.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后单击该扩展就可以进行切换了：<br>
-<img src="https://img-blog.csdnimg.cn/202003090306061.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="25-imagus">2.5 Imagus</h2>
-<p>这个扩展主要用于预览图片，鼠标悬停可以放大预览图片，还可以对临时的预览图片进行缩放，旋转等功能。<br>
-<img src="https://img-blog.csdnimg.cn/20200309021834577.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200309022047462.png" alt="在这里插入图片描述" loading="lazy"><br>
-可以打开设置修改默认的快捷键，默认q垂直翻转，w水平翻转，e逆时针旋转，r顺时针旋转，剩下的就不说了，按需要自定义。</p>
-<h2 id="26-infinity-pro">2.6 Infinity Pro</h2>
-<p>一个非常漂亮的新标签页扩展，建议注册一个账号去开启Pro功能，开启Pro后可以支持文件夹的创建，还可以把数据备份到云端，然后切换浏览器可以一键恢复数据。<br>
-<img src="https://img-blog.csdnimg.cn/20200309022517485.png" alt="在这里插入图片描述" loading="lazy"><br>
-可以自定义的设置非常丰富，包括布局行列数，行宽，列宽，图标大小，阴影，圆角，透明度，字体大小，阴影，颜色，自定义/随机壁纸，搜索栏显隐等，自行体会。</p>
-<h2 id="27-minimal-scrollbar">2.7 Minimal Scrollbar</h2>
-<p>最小化滚动条，这个没啥好说的，自己对比一下安装扩展后的变化就好了。</p>
-<h2 id="28-similar-sites">2.8 Similar Sites</h2>
-<p>可以发现类似的网站，比如，打开csdn时，显示了github，stackoverflow，博客园等网站。<br>
-<img src="https://img-blog.csdnimg.cn/20200309023041551.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="29-tampermonkey">2.9 Tampermonkey</h2>
-<p>这个很出名啊，油猴，有一个类似的，叫暴力猴。油猴这个扩展主要是用来管理脚本的，也就是说，单单安装这个扩展啥用也没有，需要安装脚本，这里推荐这个网站：<a href="https://greasyfork.org/zh-CN">Greasy Fork</a>.<br>
-具体就不多说了，有些奥秘需要自己去探个究竟。</p>
-<h2 id="210-vimuim">2.10 Vimuim</h2>
-<p>这个压轴登场的扩展，是vim与chromium的结合体，换句话说，在浏览器中集成vim的操作。<br>
-比如hjkl是最常见的vim操作，对应页面的滚动，分别是左/下/上/右滚，f是页面跳转功能，比如一个页面按f前：<br>
-<img src="https://img-blog.csdnimg.cn/20200309024053284.png" alt="在这里插入图片描述" loading="lazy"><br>
-按了f后：<br>
-<img src="https://img-blog.csdnimg.cn/20200309024116944.png" alt="在这里插入图片描述" loading="lazy"><br>
-可以看到多了很多字母对吧，如果此时再输入对应的字母，便会在当前页面跳转到目标页面，比如此时再输入le，便会跳转到“这份Android Studio快捷键大全....”这个页面，大写F实现的功能类似，不过是在新标签页打开。<br>
-另一个非常实用的功能是搜索框，按下o/O即可出现：<br>
-<img src="https://img-blog.csdnimg.cn/20200309024531165.png" alt="在这里插入图片描述" loading="lazy"><br>
-这个框可以直接输入链接跳转，或者输入字符进去搜索，可以在vimuim的设置里设置默认的搜索引擎：<br>
-<img src="https://img-blog.csdnimg.cn/20200309024658987.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里默认的搜索引擎是百度，下面的设置可以自定义搜索引擎，比如第一行为</p>
-<pre><code class="language-bash">g : https://www......
-</code></pre>
-<p>冒号前面的g表示关键字，后面的搜索关键字用</p>
-<pre><code class="language-bash">%s
-</code></pre>
-<p>代替，然后在搜索框中输入关键字+空格+字符就可以用该关键字对应的搜索引擎进去搜索了。<br>
-这里演示一下添加搜索引擎的方法，以github为例，打开github随便搜索123：<br>
-<img src="https://img-blog.csdnimg.cn/20200309025131406.png" alt="在这里插入图片描述" loading="lazy"><br>
-复制这个地址，加上关键字与替换123：<br>
-<img src="https://img-blog.csdnimg.cn/2020030902520092.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200309031239662.png" alt="在这里插入图片描述" loading="lazy"><br>
-别忘了底部的保存按钮。<br>
-<img src="https://img-blog.csdnimg.cn/2020030902522413.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后输入关键字+空格+搜索字符进行搜索即可。<br>
-<img src="https://img-blog.csdnimg.cn/20200309025308465.png" alt="在这里插入图片描述" loading="lazy"><br>
-再说一下书签功能，输入b/B可以直接访问书签（强大吧），比如笔者这里的书签有四个文件夹：<br>
-<img src="https://img-blog.csdnimg.cn/20200309025504765.png" alt="在这里插入图片描述" loading="lazy"><br>
-输入的标签以斜杠符号开始，后面加对应的文件夹以及对应的网站，这里不用担心输错，因为有自动显示的功能，输错的话下面没有书签显示：<br>
-<img src="https://img-blog.csdnimg.cn/20200309025704247.png" alt="在这里插入图片描述" loading="lazy"><br>
-还有很多功能就不逐一介绍了，可以输入?查看帮助：<br>
-<img src="https://img-blog.csdnimg.cn/2020030902581057.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="3-最后">3 最后</h1>
-<p>现在主流的Chrome已经很强大了，加上这些实验性功能与推荐的扩展，希望你们能有一个更舒服的上网冲浪的环境。</p>
+<h2 id="52-修改配置文件">5.2 修改配置文件</h2>
+<p>把明文输入,得到密文与私钥后,替换原来的配置文件:<br>
+<img src="https://img-blog.csdnimg.cn/20200427224758917.png" alt="在这里插入图片描述" loading="lazy"><br>
+密文复制到对应加密字段,加上前后缀,同时私钥格式选择der,把私钥复制过去:<br>
+<img src="https://img-blog.csdnimg.cn/20200427225047658.png" alt="在这里插入图片描述" loading="lazy"><br>
+运行测试没问题就可以了.</p>
 ]]></content>
     </entry>
 </feed>
