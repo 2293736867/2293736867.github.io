@@ -1,0 +1,1909 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://2293736867.github.io</id>
+    <title>氷泠&apos;s blog</title>
+    <updated>2020-06-02T19:26:22.746Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://2293736867.github.io"/>
+    <link rel="self" href="https://2293736867.github.io/atom.xml"/>
+    <subtitle>我配不上你，
+纵然很努力。</subtitle>
+    <logo>https://2293736867.github.io/images/avatar.png</logo>
+    <icon>https://2293736867.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[java通过ServerSocket与Socket实现通信]]></title>
+        <id>https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/</id>
+        <link href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/">
+        </link>
+        <updated>2020-06-02T19:24:13.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1serversocket">1.ServerSocket</a>
+<ul>
+<li><a href="#1">(1)</a></li>
+<li><a href="#2">(2)</a></li>
+<li><a href="#3">(3)</a></li>
+</ul>
+</li>
+<li><a href="#2socket">2.Socket</a>
+<ul>
+<li><a href="#1-2">(1)</a></li>
+<li><a href="#2-2">(2)</a></li>
+<li><a href="#3-2">(3)</a></li>
+<li><a href="#4">(4)</a></li>
+</ul>
+</li>
+<li><a href="#3%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF">3.服务器端</a></li>
+<li><a href="#4%E5%AE%A2%E6%88%B7%E7%AB%AF">4.客户端</a></li>
+<li><a href="#5%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">5.运行结果</a></li>
+<li><a href="#6socket%E8%AE%BE%E7%BD%AE%E8%B6%85%E6%97%B6">6.Socket设置超时</a></li>
+</ul>
+<br>
+首先说一下ServerSocket与Socket.</p>
+<h1 id="1serversocket">1.ServerSocket</h1>
+<p>ServerSocket是用来监听客户端Socket连接的类,如果没有连接会一直处于等待状态.<br>
+ServetSocket有三个构造方法:</p>
+<h2 id="1">(1)</h2>
+<pre><code class="language-java">ServerSocket(int port);
+</code></pre>
+<p>这个使用指定的端口去创建ServerSocket,IP地址使用默认的本地IP地址.</p>
+<h2 id="2">(2)</h2>
+<pre><code class="language-java">ServetSocket(int port,int backlog);
+</code></pre>
+<p>除了端口外,还有一个用来改变队列长度参数的backlog,指定当服务器繁忙时,可以与之保持连接请求的客户端数量,默认为50.</p>
+<h2 id="3">(3)</h2>
+<pre><code class="language-java">ServetSocket(int port,int backlog,InetAddress ip);
+</code></pre>
+<p>这个使用指定的端口,backlog,ip地址去创建ServerSocket.</p>
+<p>(这里简单提一下InetAddress,InetAddress没有构造方法,只有两个静态方法获取InetAddress对象,分别是</p>
+<pre><code class="language-java">getByName(String hostName);
+getByAddress(byte[] address);
+</code></pre>
+<p>)</p>
+<h1 id="2socket">2.Socket</h1>
+<p>Socket一般用来连接到服务器,程序通过Socket发出网络请求或应答网络请求.<br>
+Socket有三个构造方法:</p>
+<h2 id="1-2">(1)</h2>
+<pre><code class="language-java">Socket(InetAddress address,int port);
+</code></pre>
+<p>使用指定IP与指定端口构造Socket,对于本地地址,默认使用本地ip,对于本地端口则动态分配.</p>
+<h2 id="2-2">(2)</h2>
+<pre><code class="language-java">Socket(String address,int port);
+</code></pre>
+<p>与(1)一样,使用String表示远程ip.</p>
+<h2 id="3-2">(3)</h2>
+<pre><code class="language-java">Socket(InetAddress address,int port,InetAddress localAddr,int localPort);
+</code></pre>
+<p>创建指定了远程ip,远程端口,本地ip,本地端口的Socket.</p>
+<h2 id="4">(4)</h2>
+<pre><code class="language-java">Socket(String address,int port,InetAddress localAddr,int localPort)
+</code></pre>
+<p>与(2)类似,使用String表示远程ip,用InetAddress表示本地ip.</p>
+<p>了解了ServerSocket与Socket后可以编写实现简单的通信了.</p>
+<h1 id="3服务器端">3.服务器端</h1>
+<pre><code class="language-java">import java.io.IOException;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server
+{
+    public static void main(String[] args) throws IOException
+    {
+        ServerSocket serverSocket = new ServerSocket(12345);//这个端口自己随意,建议1024以上未使用的端口.
+        while(true)
+        {
+            Socket socket = serverSocket.accept();//一直等待来自客户端的请求.
+            PrintStream printStream = new PrintStream(socket.getOutputStream());//创建输出流
+            printStream.println(&quot;Server message.&quot;);
+            printStream.close();
+            socket.close();
+        }
+    }
+}
+</code></pre>
+<p>说一下ServetSocket的accept()方法:</p>
+<pre><code class="language-java">Socket accept();
+</code></pre>
+<p>没有参数,返回一个Socket,如果接收到客户端的一个Socket,则返回,否则一直处于等待状态,线程也被阻塞.</p>
+<h1 id="4客户端">4.客户端</h1>
+<pre><code class="language-java">import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+
+public class Client
+{
+    public static void main(String[] args) throws IOException
+    {
+        Socket socket = new Socket(&quot;127.0.0.1&quot;, 12345);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        System.out.println(&quot;This message comes from server:&quot;+bufferedReader.readLine());
+        bufferedReader.close();
+        socket.close();
+    }
+}
+</code></pre>
+<pre><code class="language-java">Socket socket = new Socket(&quot;127.0.0.1&quot;, 12345);
+</code></pre>
+<p>表示创建一个本地地址,端口为12345的Socket,创建好了后服务器的.accept()方法就会接收到这个Socket,并创建输出流输出相应信息,然后客户端从Socket获取输入流进行读取,读取到了来自服务器的信息.</p>
+<h1 id="5运行结果">5.运行结果</h1>
+<p>(由于作者的漂亮终端不知道什么原因坏了....只能让用VScode的默认终端了....)<br>
+先运行服务器端的代码:<br>
+<img src="https://img-blog.csdnimg.cn/20191018234828415.png" alt="在这里插入图片描述" loading="lazy"><br>
+服务器端这边因为accept()方法会一直阻塞直到客户端发送请求.<br>
+<img src="https://img-blog.csdnimg.cn/20191018234834135.png" alt="在这里插入图片描述" loading="lazy"><br>
+客户端这边一运行就收到了来自服务器端的信息.</p>
+<h1 id="6socket设置超时">6.Socket设置超时</h1>
+<p>可以为Socket设置超时设置,当Socket超过这个时间没有连接上时系统会认为连接失败.</p>
+<pre><code class="language-java">Socket socket = new Socket(&quot;127.0.0.1&quot;,12345);
+socket.setToTimeout(10000);//单位:ms,在这里是10s
+</code></pre>
+<p>但是未连接上之前无法创建Socket对象,并且Socket没有提供指定超时的构造方法,因此常见的做法是先创建一个无连接的Socket,再调用connect()方法连接.</p>
+<pre><code class="language-java">Socket socket = new Socket();
+socket.connect(new InetSocketAddress(&quot;127.0.0.1&quot;,12345),12345);
+</code></pre>
+<p>connect()方法其实有两个重载方法,分别是</p>
+<pre><code class="language-java">void connect(SocketAddress endpoint);
+void connect(SocketAddress endpoint,int timeout);
+</code></pre>
+<p>对于第一个connect()官方文档没有提及超时之类的,就是直接连接.<br>
+对于第二个connect,timeout指定的超时时间,单位为ms,设置为0则为无限期等待.</p>
+<p>参考链接<br>
+1.<a href="https://blog.csdn.net/hutaoxiaodai/article/details/48030145">socket</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[java7与java9中的try-finally关闭资源]]></title>
+        <id>https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/</id>
+        <link href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/">
+        </link>
+        <updated>2020-06-02T19:22:01.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="1java7中的try">1.java7中的try</h2>
+<p>在java7之前,对于一些需要使用finally关闭资源的操作,会显得很臃肿.</p>
+<pre><code class="language-java">try
+{
+	//
+}
+catch(Exception e)
+{
+	//
+}
+finally
+{
+	if(xxxx != null)
+	{
+		xxxx.close();
+	}
+}
+</code></pre>
+<p>在java7中引入了可以在try中直接声明需要关闭的资源的功能,在try后的圆括号直接定义一个或多个资源即可.</p>
+<pre><code class="language-java">try(
+	var xxx = new xxx();
+	var xxx = new xxx();
+)
+{
+	//
+}
+</code></pre>
+<p>但是这些类都需要实现了Closeable或AutoCloseable接口,实现其中的close().</p>
+<h2 id="2closeable接口">2.Closeable接口</h2>
+<p>Closeable接口是AutoCloseable的子接口,其中的close()抛出了IOException异常,实现接口时要注意抛出的异常需是IOException异常或IOException子类异常.</p>
+<h2 id="3autocloseable接口">3.AutoCloseable接口</h2>
+<p>AutoCloseable接口中的close()抛出的异常是Exception,实现接口时可以抛出任何类型的异常.</p>
+<blockquote>
+<p>java7几乎把所有的&quot;资源类&quot;(包括文件IO的各种类,JDBC编程的Connection,Statement等接口)进行了改写,改写后的资源都实现了AutoCloseable或Closeable接口.(引自&lt;&lt;疯狂Java讲义&gt;&gt;(第5版) P381)</p>
+</blockquote>
+<h2 id="4java9中的try">4.java9中的try</h2>
+<p>java9不像java7一样在try中定义资源,只需要自动关闭的资源有final修饰即可.也就是说,可以不在try中声明,在try前声明且使用final修饰即可.</p>
+<pre><code class="language-java">final var xxx = new xxx();
+final var xxx = new xxx();
+try(xxx;xxx)
+{
+	//
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[一文带你理解脏读,幻读,不可重复读与mysql的锁,事务隔离机制]]></title>
+        <id>https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/</id>
+        <link href="https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/">
+        </link>
+        <updated>2020-06-02T19:21:29.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-acid">1 ACID</a>
+<ul>
+<li><a href="#1-font-colorreda%E5%8E%9F%E5%AD%90%E6%80%A7atomicityfont">(1) <font color=red>A:原子性(Atomicity)</font></a></li>
+<li><a href="#2-font-colorredc%E4%B8%80%E8%87%B4%E6%80%A7consistencyfont">(2) <font color=red>C:一致性(Consistency)</font></a></li>
+<li><a href="#3-font-colorredi%E9%9A%94%E7%A6%BB%E6%80%A7isolationfont">(3) <font color=red>I:隔离性(Isolation)</font></a></li>
+<li><a href="#4-font-colorredd%E6%8C%81%E4%B9%85%E6%80%A7durabilityfont">(4) <font color=red>D:持久性(Durability)</font></a></li>
+</ul>
+</li>
+<li><a href="#2-mysql%E7%9A%84%E9%94%81">2 Mysql的锁</a>
+<ul>
+<li><a href="#1-s%E9%94%81%E4%B8%8Ex%E9%94%81">(1) S锁与X锁</a>
+<ul>
+<li><a href="#is%E9%94%81">Ⅰ.S锁</a></li>
+<li><a href="#iix%E9%94%81">Ⅱ.X锁</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81">(2) 乐观锁与悲观锁</a>
+<ul>
+<li><a href="#i%E4%B9%90%E8%A7%82%E9%94%81">Ⅰ.乐观锁</a></li>
+<li><a href="#ii%E6%82%B2%E8%A7%82%E9%94%81">Ⅱ.悲观锁</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E8%84%8F%E8%AF%BB%E5%B9%BB%E8%AF%BB%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E4%B8%8E%E4%B8%A4%E7%B1%BB%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0">4 脏读,幻读,不可重复读与两类丢失更新</a>
+<ul>
+<li><a href="#1-%E8%84%8F%E8%AF%BB">(1) 脏读</a></li>
+<li><a href="#2-%E5%B9%BB%E8%AF%BB">(2) 幻读</a></li>
+<li><a href="#3-%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">(3) 不可重复读</a></li>
+<li><a href="#4-%E7%AC%AC%E4%B8%80%E7%B1%BB%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0">(4) 第一类丢失更新</a>
+<ul>
+<li><a href="#5-%E7%AC%AC%E4%BA%8C%E7%B1%BB%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0">(5) 第二类丢失更新</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE%E4%B8%8E%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB">5 封锁协议与隔离级别</a>
+<ul>
+<li><a href="#1-%E4%B8%80%E7%BA%A7%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE">(1) 一级封锁协议</a>
+<ul>
+<li><a href="#a%E5%BC%95%E5%8F%91%E8%84%8F%E8%AF%BB">a.引发脏读</a></li>
+<li><a href="#b%E5%BC%95%E5%8F%91%E5%B9%BB%E8%AF%BB">b.引发幻读</a></li>
+<li><a href="#c%E5%BC%95%E5%8F%91%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">c.引发不可重复读</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%BA%8C%E7%BA%A7%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE">(2) 二级封锁协议</a>
+<ul>
+<li><a href="#iread-committed">Ⅰ.Read committed</a>
+<ul>
+<li><a href="#a%E9%81%BF%E5%85%8D%E8%84%8F%E8%AF%BB">a.避免脏读</a></li>
+<li><a href="#b%E5%BC%95%E5%8F%91%E5%B9%BB%E8%AF%BB-2">b.引发幻读</a></li>
+<li><a href="#c%E5%BC%95%E5%8F%91%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB-2">c.引发不可重复读</a></li>
+</ul>
+</li>
+<li><a href="#iirepeatable-read">Ⅱ.Repeatable read</a>
+<ul>
+<li><a href="#a%E9%81%BF%E5%85%8D%E8%84%8F%E8%AF%BB-2">a.避免脏读</a></li>
+<li><a href="#b%E9%81%BF%E5%85%8D%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">b.避免不可重复读</a></li>
+<li><a href="#c%E5%BC%95%E5%8F%91%E5%B9%BB%E8%AF%BB">c.引发幻读</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E4%B8%89%E7%BA%A7%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE">(3) 三级封锁协议</a>
+<ul>
+<li><a href="#a%E9%81%BF%E5%85%8D%E8%84%8F%E8%AF%BB-3">a.避免脏读</a></li>
+<li><a href="#b%E9%81%BF%E5%85%8D%E5%B9%BB%E8%AF%BB">b.避免幻读</a></li>
+<li><a href="#c%E9%81%BF%E5%85%8D%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">c.避免不可重复读</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E4%B8%A4%E6%AE%B5%E9%94%81%E5%8D%8F%E8%AE%AE">6 两段锁协议</a>
+<ul>
+<li><a href="#1-%E5%8A%A0%E9%94%81">(1) 加锁</a></li>
+<li><a href="#2-%E8%A7%A3%E9%94%81">(2) 解锁</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>首先说一下数据库事务的四大特性</p>
+<h1 id="1-acid">1 ACID</h1>
+<p>事务的四大特性是ACID(不是&quot;酸&quot;....)</p>
+<h2 id="1-font-colorreda原子性atomicityfont">(1) <font color=red>A:原子性(Atomicity)</font></h2>
+<p>原子性指的是事务要么完全执行,要么完全不执行.</p>
+<h2 id="2-font-colorredc一致性consistencyfont">(2) <font color=red>C:一致性(Consistency)</font></h2>
+<p>事务完成时,数据必须处于一致的状态.若事务执行途中出错,会回滚到之前的事务没有执行前的状态,这样数据就处于一致的状态.若事务出错后没有回滚,部分修改的内容写入到了数据库中,这时数据就是不一致的状态.</p>
+<h2 id="3-font-colorredi隔离性isolationfont">(3) <font color=red>I:隔离性(Isolation)</font></h2>
+<p>同时处理多个事务时,一个事务的执行不能被另一个事务所干扰,事务的内部操作与其他并发事务隔离.</p>
+<h2 id="4-font-colorredd持久性durabilityfont">(4) <font color=red>D:持久性(Durability)</font></h2>
+<p>事务提交后,对数据的修改是永久性的.</p>
+<h1 id="2-mysql的锁">2 Mysql的锁</h1>
+<p>Mysql的锁其实可以按很多种形式分类:</p>
+<ul>
+<li>按加锁机制分,可分为乐观锁与悲观锁.</li>
+<li>按兼容性来分,可分为X锁与S锁.</li>
+<li>按锁粒度分,可分为表锁,行锁,页锁.</li>
+<li>按锁模式分,可分为记录锁,gap锁,next-key锁,意向锁,插入意向锁.</li>
+</ul>
+<p>这里主要讨论S锁,X锁,乐观锁与悲观锁.</p>
+<h2 id="1-s锁与x锁">(1) S锁与X锁</h2>
+<p>S锁与X锁是InnoDB引擎实现的两种标准行锁机制.查看默认引擎可使用</p>
+<pre><code class="language-sql">show variables like '%storage_engine%';
+</code></pre>
+<p>作者的mysql版本为8.0.17,结果如下:<br>
+<img src="https://img-blog.csdnimg.cn/20191016190755652.png" alt="在这里插入图片描述" loading="lazy"><br>
+先建好测试库与测试表,很简单,表就两个字段.</p>
+<pre><code class="language-sql">create database test;
+use test;
+create table a
+(
+id int primary key auto_increment,
+money int
+);
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191016193632734.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="is锁">Ⅰ.S锁</h3>
+<p><font color=red>S锁也叫共享锁,读锁,数据只能被读取不能被修改.</font><br>
+玩一下,上锁!</p>
+<pre><code class="language-sql">lock table a read;
+</code></pre>
+<p>然后.....<br>
+<img src="https://img-blog.csdnimg.cn/20191016190141582.png" alt="在这里插入图片描述" loading="lazy"><br>
+只能读不能改,删,也不能增.</p>
+<h3 id="iix锁">Ⅱ.X锁</h3>
+<p><font color=red>X锁也叫排他锁,写锁,一个事务对表加锁后,其他事务就不能对其进行加锁与增删查改操作.</font></p>
+<p>设置手动提交,开启事务,上X锁.</p>
+<pre><code class="language-sql">set autocmmmit=0;
+start transaction;
+lock table a write;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016191621404.png" alt="在这里插入图片描述" loading="lazy"><br>
+在开启另一个事务,使用select语句.</p>
+<pre><code class="language-sql">set autocommit=0;
+start transaction;
+select * from a;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016191731228.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里是阻塞select操作,因为一直都没释放X锁.<br>
+<img src="https://img-blog.csdnimg.cn/20191016191741384.png" alt="在这里插入图片描述" loading="lazy"><br>
+同样也不能再加锁,也是阻塞中.<br>
+<img src="https://img-blog.csdnimg.cn/20191016191843455.png" alt="在这里插入图片描述" loading="lazy"><br>
+回到原来那个加锁的事务,嗯,什么事也没有,正常读写.<br>
+<img src="https://img-blog.csdnimg.cn/20191016192002681.png" alt="在这里插入图片描述" loading="lazy"><br>
+释放锁后:</p>
+<pre><code class="language-sql">unlock table;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016192109242.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/2019101619211847.png" alt="在这里插入图片描述" loading="lazy"><br>
+在另一个事务中可以看到中断时间.</p>
+<h2 id="2-乐观锁与悲观锁">(2) 乐观锁与悲观锁</h2>
+<h3 id="i乐观锁">Ⅰ.乐观锁</h3>
+<p>乐观锁就是总是假设是最好的情况,每次去操作的时候都不会上锁,但在更新时会判断有没有其他操作去更新这个数据,是一种宽松的加锁机制.<br>
+mysql本身没有提供乐观锁的支持,需要自己来实现,常用的方法有版本控制和时间戳控制两种.</p>
+<ul>
+<li>
+<p>版本控制<br>
+版本控制就是为表增加一个version字段,读取数据时连同这个version字段一起读出来,之后进行更新操作,版本号加1,再将提交的数据的版本号与数据库中的版本号进行比较,若提交的数据的版本号大于数据库中的版本号才会进行更新.</p>
+<p>举个例子,假设此时version=1,A进行操作,更新数据后version=2,与此同时B也进行操作,更新数据后version=2,A先完成操作,率先将数据库中的version设置为2,此时B提交,B的version与数据库中的version一样,不接受B的提交.</p>
+</li>
+<li>
+<p>时间戳控制<br>
+时间戳控制与版本控制差不多,把version字段改为timestamp字段</p>
+</li>
+</ul>
+<p>还有一种实现方法叫CAS算法,这个作者不怎么了解,有兴趣可以自行搜索.</p>
+<h3 id="ii悲观锁">Ⅱ.悲观锁</h3>
+<p>悲观锁就是总是假设最坏的情况,在整个数据处理状态中数据处于锁定状态,悲观锁的实现往往依靠数据库的锁机制.每次在拿到数据前都会上锁.<br>
+mysql在调用一些语句时会上悲观锁,如(先关闭自动提交,开启事务):</p>
+<pre><code class="language-sql">set autocommit=0;
+start transaction;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016221902357.png" alt="在这里插入图片描述" loading="lazy"><br>
+两个事务都这样操作,然后其中一个事务输入:</p>
+<pre><code class="language-sql">select * from a where xxx for update;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016222155579.png" alt="在这里插入图片描述" loading="lazy"><br>
+在另一事务也这样输入:<br>
+<img src="https://img-blog.csdnimg.cn/20191016222214362.png" alt="在这里插入图片描述" loading="lazy"><br>
+这时语句会被阻塞,直到上锁的那个事务commit(解开悲观锁).<br>
+<img src="https://img-blog.csdnimg.cn/20191016222405788.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191016222413683.png" alt="在这里插入图片描述" loading="lazy"><br>
+在另一事务中可以看到这个事务被阻塞了2.81s.</p>
+<pre><code class="language-sql">*** lock in share mode.
+</code></pre>
+<p>也会加上悲观锁.</p>
+<h1 id="4-脏读幻读不可重复读与两类丢失更新">4 脏读,幻读,不可重复读与两类丢失更新</h1>
+<h2 id="1-脏读">(1) 脏读</h2>
+<p><font color=red size=6>脏读是指一个事务读取到了另一事务未提交的数据,造成select前后数据不一致.</font></p>
+<p>比如事务A修改了一些数据,但没有提交,此时事务B却读取了,这时事务B就形成了脏读,一般事务A的后续操作是回滚,事务B读取到了临时数值.</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>更新X,旧值X=1,新值X=2</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>读取X,X=2(脏读)</td>
+</tr>
+<tr>
+<td>回滚X=1</td>
+<td></td>
+</tr>
+<tr>
+<td>结束事务(X=1)</td>
+<td>结束事务</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-幻读">(2) 幻读</h2>
+<p><font color=red size=6>幻读是指并不是指同一个事务执行两次相同的select语句得到的结果不同,<br>
+而是指select时不存在某记录,但准备插入时发现此记录已存在,无法插入,这就产生了幻读.</font></p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>select某个数据为空,准备插入一个新数据</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>插入一个新数据</td>
+</tr>
+<tr>
+<td> </td>
+<td>提交,结束事务</td>
+</tr>
+<tr>
+<td>插入数据,发现插入失败,由于事务B已插入相同数据</td>
+<td> </td>
+</tr>
+<tr>
+<td>结束事务</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-不可重复读">(3) 不可重复读</h2>
+<p><font color=red size=6>不可重复读指一个事务读取到了另一事务已提交的数据,造成select前后数据不一致.</font><br>
+比如事务A修改了一些数据并且提交了,此时事务B却读取了,这时事务B就形成了不可重复读.</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>读取X=1</td>
+<td>读取X=1</td>
+</tr>
+<tr>
+<td>更新X=2</td>
+<td></td>
+</tr>
+<tr>
+<td>提交,结束事务</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>读取X=2</td>
+</tr>
+<tr>
+<td> </td>
+<td>结束事务</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-第一类丢失更新">(4) 第一类丢失更新</h2>
+<p><font color=red>第一类丢失更新就是两个事务同时更新一个数据,一个事务更新完毕并提交后,另一个事务回滚,造成提交的更新丢失.</font></p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>读取X=1</td>
+<td>读取X=1</td>
+</tr>
+<tr>
+<td>修改X=2</td>
+<td>修改X=3</td>
+</tr>
+<tr>
+<td> </td>
+<td>提交,结束事务</td>
+</tr>
+<tr>
+<td>回滚</td>
+<td></td>
+</tr>
+<tr>
+<td>结束事务(X=1)</td>
+<td>X=1,X本应为提交的3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-第二类丢失更新">(5) 第二类丢失更新</h3>
+<p><font color=red>第二类丢失更新就是两个事务同时更新一个数据,先更新的事务提交的数据会被后更新的事务提交的数据覆盖,即先更新的事务提交的数据丢失.</font></p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>读取X=1</td>
+<td>读取X=1</td>
+</tr>
+<tr>
+<td>更新X=2</td>
+<td></td>
+</tr>
+<tr>
+<td>提交事务,X=2,结束</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>更新X=3</td>
+</tr>
+<tr>
+<td> </td>
+<td>提交事务,X=3,事务A的更新丢失,结束</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-封锁协议与隔离级别">5 封锁协议与隔离级别</h1>
+<p>封锁协议就是在用X锁或S锁时制定的一些规则,比如锁的持续时间,锁的加锁时间等.不同的封锁协议对应不同的隔离级别.事务的隔离级别一共有4种,由低到高分别是Read uncommitted,Read committed,Repeatable read,Serializable,分别对应的相应的封锁协议等级.</p>
+<h2 id="1-一级封锁协议">(1) 一级封锁协议</h2>
+<p><font color=red>一级封锁协议对应的是Read uncommitted隔离级别,Read uncommitted,读未提交,一个事务可以读取另一个事务未提交的数据,这是最低的级别.一级封锁协议本质上是在事务修改数据之前加上X锁,直到事务结束后才释放,事务结束包括正常结束(commit)与非正常结束(rollback).</font></p>
+<p>一级封锁协议不会造成更新丢失,但可能引发脏读,幻读,不可重复读.<br>
+设置手动提交与事务隔离等级为read uncommited,并开启事务(注意要先设置事务等级再开启事务).</p>
+<pre><code class="language-sql">set autocommit=0;
+set session transaction isolation level read uncommitted;
+start transaction;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016230608168.png" alt="在这里插入图片描述" loading="lazy"><br>
+(中间有一行打多了一个t可以忽略.....)</p>
+<h3 id="a引发脏读">a.引发脏读</h3>
+<p>在一个事务中修改表中的值,不提交,另一个事务可以select到未提交的值.<br>
+<img src="https://img-blog.csdnimg.cn/20191016231232303.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191016231238131.png" alt="在这里插入图片描述" loading="lazy"><br>
+出现了脏读.</p>
+<h3 id="b引发幻读">b.引发幻读</h3>
+<p>在一个事务中插入一条数据,提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017124932306.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中select时没有,准备insert,但是insert时却提示已经存在.引发幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017124948380.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="c引发不可重复读">c.引发不可重复读</h3>
+<p>未操作提交前:<br>
+<img src="https://img-blog.csdnimg.cn/20191016231914258.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务修改并提交:<br>
+<img src="https://img-blog.csdnimg.cn/20191016231942242.png" alt="在这里插入图片描述" loading="lazy"><br>
+再次读:<br>
+<img src="https://img-blog.csdnimg.cn/20191016231953625.png" alt="在这里插入图片描述" loading="lazy"><br>
+引发不可重复读.</p>
+<h2 id="2-二级封锁协议">(2) 二级封锁协议</h2>
+<p><font color=red>二级封锁协议本质上在一级协议的基础上(在修改数据时加X锁),在读数据时加上S锁,读完后立即释放S锁,可以避免脏读.但有可能出现不可重复读与幻读.二级封锁协议对应的是Read committed与Repeatable Read隔离级别.</font><br>
+先设置隔离等级</p>
+<pre><code class="language-sql">set session transaction isolation level read committed;
+</code></pre>
+<h3 id="iread-committed">Ⅰ.Read committed</h3>
+<p>Read committed,读提交,读提交可以避免脏读,但可能出现幻读与不可重复读.</p>
+<h4 id="a避免脏读">a.避免脏读</h4>
+<p>开启一个事务并更新值,在这个事务中money=100(更新后)<br>
+<img src="https://img-blog.csdnimg.cn/20191017001853865.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中money为未更新前的值,这就避免了脏读.<br>
+<img src="https://img-blog.csdnimg.cn/2019101700190018.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意,事实上脏读在read committed隔离级别下是不被允许的,但是mysql不会阻塞查询,而是返回未修改之前数据的备份,这种机制叫MVCC机制(多版本并发控制).</p>
+<h4 id="b引发幻读-2">b.引发幻读</h4>
+<p>在一个事务中插入数据并提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017125333560.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中不能插入&quot;不存在&quot;的数据,出现幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017125340821.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="c引发不可重复读-2">c.引发不可重复读</h4>
+<p>事务修改并提交前:<br>
+<img src="https://img-blog.csdnimg.cn/2019101700301729.png" alt="在这里插入图片描述" loading="lazy"><br>
+事务修改并提交:<br>
+<img src="https://img-blog.csdnimg.cn/20191017003033412.png" alt="在这里插入图片描述" loading="lazy"><br>
+出现不可重复读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017003039789.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="iirepeatable-read">Ⅱ.Repeatable read</h3>
+<p>Repeatable read比Read committed严格一点,是Mysql的默认级别,读取过程更多地受到MVCC影响,可防止不可重复读与脏读,但仍有可能出现幻读.</p>
+<h4 id="a避免脏读-2">a.避免脏读</h4>
+<p>在一个事务中修改数据,不提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005118705.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中两次select的结果都不变,没有出现脏读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005126573.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="b避免不可重复读">b.避免不可重复读</h4>
+<p>一个事务修改数据并提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005603624.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中select的结果没有发生改变,即没有出现不可重复读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005654610.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="c引发幻读">c.引发幻读</h4>
+<p>同理,一个事务插入一条数据并提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017134016776.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一个事务插入时出现幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017134023321.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="3-三级封锁协议">(3) 三级封锁协议</h2>
+<p><font color=red>三级封锁协议,在一级封锁协议的基础上(修改时加X锁),读数据时加上S锁(与二级类似),但是直到事务结束后才释放S锁,可以避免幻读,脏读与不可重复读.三级封锁协议对应的隔离级别是Serializable.</font><br>
+先设置Serializable隔离级别</p>
+<pre><code class="language-sql">set session transaction isolation level serializable
+</code></pre>
+<h3 id="a避免脏读-3">a.避免脏读</h3>
+<p>设置事务隔离等级后开启事务并update,发现堵塞.从而避免了脏读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017134919950.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="b避免幻读">b.避免幻读</h3>
+<p>插入时直接阻塞,避免了幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017135057292.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="c避免不可重复读">c.避免不可重复读</h3>
+<p>在脏读的例子中可以知道,update会被堵塞,都不能提交事务,因此也避免了不可重复读.</p>
+<h1 id="6-两段锁协议">6 两段锁协议</h1>
+<p>事务必须分为两个阶段对数据进行加锁与解锁,两端锁协议叫2PL(不是2PC),所有的加锁都在解锁之前进行.</p>
+<h2 id="1-加锁">(1) 加锁</h2>
+<p>加锁会在更新或者</p>
+<pre><code class="language-sql">select *** for update
+*** lock in share mode
+</code></pre>
+<p>时进行</p>
+<h2 id="2-解锁">(2) 解锁</h2>
+<p>解锁在事务结束时进行,事务结束包括rollback与commit.</p>
+<p>参考链接<br>
+1:<a href="https://blog.csdn.net/qq_37480021/article/details/80703272">ACID1</a><br>
+2:<a href="https://www.cnblogs.com/Kevin-ZhangCG/p/9038371.html">ACID2</a><br>
+3:<a href="https://www.jianshu.com/p/6c9d8368ae8c">mysql的锁1</a><br>
+4:<a href="https://segmentfault.com/a/1190000016611415">乐观锁与悲观锁1</a><br>
+5:<a href="https://juejin.im/post/5b4977ae5188251b146b2fc8">乐观锁与悲观锁2</a><br>
+6:<a href="https://www.cnblogs.com/cyhbyw/p/8869855.html">乐观锁与悲观锁3</a><br>
+7:<a href="https://blog.csdn.net/japanstudylang/article/details/101365971">mysql修改事务隔离等级</a><br>
+8:<a href="https://blog.csdn.net/mulinsen77/article/details/89349080">mysql三级封锁与二段锁</a><br>
+9:<a href="https://blog.csdn.net/m0_37316917/article/details/80050650">数据库封锁协议</a><br>
+10:<a href="https://www.cnblogs.com/hongdada/p/10683831.html">mysql事务隔离机制1</a><br>
+11:<a href="https://cloud.tencent.com/developer/article/1114439">mysql事务隔离机制2</a><br>
+12:<a href="https://segmentfault.com/a/1190000016566788?utm_source=tag-newest">mysql幻读</a><br>
+13:<a href="https://blog.csdn.net/zzti_erlie/article/details/88080822">mysql脏读,不可重复读与幻读</a><br>
+14:<a href="https://my.oschina.net/alchemystar/blog/1438839">mysql两段锁1</a><br>
+15:<a href="https://segmentfault.com/a/1190000012513286">mysql两段锁2</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[android通过web与后台数据库交互]]></title>
+        <id>https://2293736867.github.io/post/android-tong-guo-web-yu-hou-tai-shu-ju-ku-jiao-hu/</id>
+        <link href="https://2293736867.github.io/post/android-tong-guo-web-yu-hou-tai-shu-ju-ku-jiao-hu/">
+        </link>
+        <updated>2020-06-02T19:20:40.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1%E8%83%8C%E6%99%AF">1.背景</a></li>
+<li><a href="#2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">2.开发环境</a></li>
+<li><a href="#3%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90">3.相关资源</a></li>
+<li><a href="#4%E9%85%8D%E7%BD%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">4.配置开发环境</a>
+<ul>
+<li><a href="#%E4%B8%80-%E5%AE%89%E8%A3%85mysql8017">一. 安装Mysql8.0.17</a></li>
+<li><a href="#1-%E4%B8%8B%E8%BD%BDmysql">(1) 下载mysql</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85mysql">(2) 安装mysql</a></li>
+<li><a href="#3-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1">(3) 启动服务</a></li>
+<li><a href="#4-%E6%9F%A5%E7%9C%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%86%E7%A0%81%E7%94%A8%E4%BA%8E%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%AE%BE%E7%BD%AE%E8%87%AA%E5%B7%B1%E7%9A%84root%E5%AF%86%E7%A0%81">(4) 查看初始化密码,用于下一步设置自己的root密码</a></li>
+<li><a href="#5-%E6%9C%AC%E5%9C%B0%E4%BD%BF%E7%94%A8root%E7%99%BB%E5%BD%95">(5) 本地使用root登录</a></li>
+<li><a href="#6-%E6%9B%B4%E6%94%B9%E5%AF%86%E7%A0%81">(6) 更改密码</a></li>
+<li><a href="#7-%E5%85%81%E8%AE%B8%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE">(7) 允许外部访问</a></li>
+<li><a href="#8-%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99%E5%8F%AF%E9%80%89">(8) 配置防火墙(可选)</a></li>
+<li><a href="#%E4%BA%8C%E5%AE%89%E8%A3%85tomcat9">二.安装tomcat9</a></li>
+<li><a href="#1-%E5%85%88%E5%8E%BB%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD%E4%B8%8B%E8%BD%BD%E5%90%8E%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">(1) 先去官网下载,下载后上传文件到服务器</a></li>
+<li><a href="#2-%E8%BF%9E%E6%8E%A5%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%A3%E5%8E%8B%E5%8E%8B%E7%BC%A9%E5%8C%85">(2) 连接到服务器,解压压缩包</a></li>
+<li><a href="#3-%E4%BF%AE%E6%94%B9tomcat%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E5%8F%AF%E9%80%89">(3) 修改tomcat默认端口(可选)</a></li>
+<li><a href="#4-%E5%90%AF%E5%8A%A8tomcat">(4) 启动tomcat</a></li>
+<li><a href="#5-%E6%B5%8B%E8%AF%95">(5) 测试</a></li>
+<li><a href="#6%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">(6)开机启动</a></li>
+</ul>
+</li>
+<li><a href="#5%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8">5.建库建表</a>
+<ul>
+<li><a href="#1-%E5%88%9B%E5%BB%BAusersql">(1) 创建user.sql</a></li>
+<li><a href="#2-%E5%AF%BC%E5%85%A5%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93">(2) 导入到数据库</a></li>
+</ul>
+</li>
+<li><a href="#6%E5%90%8E%E7%AB%AF%E9%83%A8%E5%88%86">6.后端部分</a>
+<ul>
+<li><a href="#1-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">(1) 创建项目</a></li>
+<li><a href="#2-%E6%B7%BB%E5%8A%A0jar%E5%8C%85">(2) 添加jar包</a></li>
+<li><a href="#3-%E5%88%9B%E5%BB%BA%E5%8C%85%E4%B8%8E%E7%B1%BB">(3) 创建包与类</a></li>
+<li><a href="#4-%E5%85%88%E6%9D%A5%E5%A4%84%E7%90%86dbutils%E7%B1%BB">(4) 先来处理DBUtils类</a></li>
+<li><a href="#5-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%A4%84%E7%90%86user%E7%B1%BB">(5) 接下来处理User类</a></li>
+<li><a href="#6-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%98%AFuserdao">(6) 接下来是UserDao</a></li>
+<li><a href="#7-servlet%E5%8C%85%E7%9A%84signin%E4%B8%8Esignup%E7%B1%BB">(7) servlet包的SignIn与SignUp类</a></li>
+<li><a href="#8-%E6%B7%BB%E5%8A%A0servlet%E5%88%B0webxml">(8) 添加servlet到web.xml</a></li>
+<li><a href="#9-%E6%9C%80%E5%90%8E%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E5%8F%ABhellohtml%E7%9A%84html%E6%96%87%E4%BB%B6%E7%94%A8%E4%BA%8E%E6%B5%8B%E8%AF%95">(9) 最后添加一个叫Hello.html的html文件用于测试.</a></li>
+</ul>
+</li>
+<li><a href="#7%E6%89%93%E5%8C%85%E5%8F%91%E5%B8%83">7.打包发布</a>
+<ul>
+<li><a href="#1-%E6%89%93%E5%BC%80project-structure">(1) 打开project structure</a></li>
+<li><a href="#2-%E9%80%89%E6%8B%A9artifactsweb-applicationarchive">(2) 选择Artifacts,Web Application:Archive</a></li>
+<li><a href="#3-%E6%94%B9%E5%90%8D%E5%AD%97%E5%88%9B%E5%BB%BAweb-inf%E7%9B%AE%E5%BD%95%E4%B8%8E%E5%AD%90%E7%9B%AE%E5%BD%95classes">(3) 改名字,创建WEB-INF目录与子目录classes</a></li>
+<li><a href="#4-%E9%80%89%E4%B8%ADclasses%E6%B7%BB%E5%8A%A0module-output%E9%80%89%E6%8B%A9%E8%87%AA%E5%B7%B1%E7%9A%84web%E9%A1%B9%E7%9B%AE">(4) 选中classes,添加Module Output,选择自己的web项目</a></li>
+<li><a href="#5-%E6%B7%BB%E5%8A%A0jar%E5%8C%85%E9%80%89%E4%B8%ADlib%E7%9B%AE%E5%BD%95%E5%90%8E%E6%B7%BB%E5%8A%A0jar%E5%8C%85%E6%96%87%E4%BB%B6">(5) 添加jar包,选中lib目录后添加jar包文件</a></li>
+<li><a href="#6-%E6%B7%BB%E5%8A%A0hellohtml%E4%B8%8Ewebxml">(6) 添加Hello.html与web.xml</a></li>
+<li><a href="#7-%E6%89%93%E5%8C%85build-build-artifacts">(7) 打包,Build-&gt;Build Artifacts</a></li>
+<li><a href="#8-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">(8) 上传到服务器</a></li>
+<li><a href="#9-%E6%B5%8B%E8%AF%95">(9) 测试</a></li>
+</ul>
+</li>
+<li><a href="#8%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E9%83%A8%E5%88%86">8.前端页面部分</a>
+<ul>
+<li><a href="#1-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">(1) 新建工程</a></li>
+<li><a href="#2-mainactivityjava">(2) MainActivity.java</a></li>
+<li><a href="#3-userservicejava">(3) UserService.java</a></li>
+<li><a href="#4-activity_mainxml">(4) activity_main.xml</a></li>
+</ul>
+</li>
+<li><a href="#9%E6%B5%8B%E8%AF%95">9.测试</a>
+<ul>
+<li><a href="#1-%E6%B3%A8%E5%86%8C%E6%B5%8B%E8%AF%95">(1) 注册测试</a></li>
+<li><a href="#2-%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">(2) 登录测试</a></li>
+</ul>
+</li>
+<li><a href="#10%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">10.注意事项</a>
+<ul>
+<li><a href="#1-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81%E4%B8%80%E5%AE%9A%E8%A6%81%E8%AE%BE%E7%BD%AE%E6%AD%A3%E7%A1%AE%E8%A6%81%E4%B8%8D%E7%84%B6%E4%BC%9A%E8%BF%99%E6%A0%B7%E6%8F%90%E7%A4%BA">(1) 数据库的用户名和密码一定要设置正确,要不然会这样提示</a></li>
+<li><a href="#2-%E7%BD%91%E7%BB%9C%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98">(2) 网络权限问题</a></li>
+<li><a href="#3-%E9%98%B2%E7%81%AB%E5%A2%99%E9%97%AE%E9%A2%98">(3) 防火墙问题</a></li>
+<li><a href="#4-%E4%BD%BF%E7%94%A8http%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">(4) 使用HTTP注意事项</a><br>
+*<br>
+*<br>
+* <a href="#1-%E4%BD%BF%E7%94%A8https">1 使用HTTPS</a><br>
+* <a href="#2-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%9A%84androidmanifestxml%E4%BD%BF%E5%85%B6%E5%85%81%E8%AE%B8http%E8%BF%9E%E6%8E%A5">2 修改默认的AndroidManifest.xml使其允许HTTP连接</a></li>
+<li><a href="#5-%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98">(5) 线程问题</a></li>
+<li><a href="#6-avd%E9%97%AE%E9%A2%98">(6) AVD问题</a></li>
+</ul>
+</li>
+<li><a href="#11-%E6%9C%80%E5%90%8E">11 最后</a></li>
+</ul>
+</p>
+<h1 id="1背景">1.背景</h1>
+<p>开发一个app与后台数据库交互,基于mysql+jdbc+tomcat,没有使用DBUtils或jdbc框架,纯粹底层jdbc实现.<br>
+以后逐步改用Spring框架,优化mysql,进一步部署tomcat等等,现在项目刚刚起步,还有很多不懂的东西,得慢慢来......<br>
+这几天踩了很多坑,说得夸张点真是踩到我没有知觉,希望能帮助别人少踩坑...</p>
+<h1 id="2开发环境">2.开发环境</h1>
+<ul>
+<li>系统 : win10</li>
+<li>IDE : Android Studio 3.5.1,IntelliJ IDEA 2019.02</li>
+<li>DBMS : Mysql 8.0.17</li>
+<li>web服务器: tomcat9</li>
+</ul>
+<h1 id="3相关资源">3.相关资源</h1>
+<ul>
+<li>
+<p>1.相关jar包:<br>
+<a href="https://jar-download.com/download-handling.php">mysqlV8.0.17驱动</a>(注意这个要与自己的mysql版本对应)<br>
+<a href="https://search.maven.org/search?q=a:javax.servlet-api">java-servlet-api-V4.0.1</a><br>
+其他版本可以来这里搜索下载<br>
+<a href="https://search.maven.org/">Maven仓库</a></p>
+</li>
+<li>
+<p>2.<a href="https://github.com/2293736867/AndroidWebMysql">github</a><br>
+这是源码地址,包括前后端与建表等所有代码.<br>
+(欢迎star)</p>
+</li>
+<li>
+<p>3.<a href="https://gitee.com/imykr/AndroidWebMysql">码云</a><br>
+这也是源码地址</p>
+</li>
+</ul>
+<h1 id="4配置开发环境">4.配置开发环境</h1>
+<p>IDE就不说了,重点说一下mysql与tomcat9的安装</p>
+<h2 id="一-安装mysql8017">一. 安装Mysql8.0.17</h2>
+<p>这个是目前比较新的mysql版本.</p>
+<p>服务器系统是centos<br>
+其他系统安装看这里</p>
+<ul>
+<li><a href="https://blog.csdn.net/very666/article/details/98594227">win10</a></li>
+<li><a href="https://blog.csdn.net/wm609972715/article/details/83759266">ubuntu</a></li>
+<li><a href="https://blog.csdn.net/LaySwift/article/details/81036746">fedroa</a></li>
+<li><a href="https://www.cnblogs.com/levia/p/11396512.html">reahat</a></li>
+</ul>
+<p>centos使用yum命令安装<a href="https://www.cnblogs.com/hujiapeng/p/9124298.html">(参考链接)</a></p>
+<h2 id="1-下载mysql">(1) 下载mysql</h2>
+<pre><code class="language-bash">sudo yum localinstall https://repo.mysql.com//mysql80-community-release-el7-1.noarch.rpm
+</code></pre>
+<h2 id="2-安装mysql">(2) 安装mysql</h2>
+<pre><code class="language-bash">sudo yum install mysql-community-server
+</code></pre>
+<h2 id="3-启动服务">(3) 启动服务</h2>
+<pre><code class="language-bash">sudo service mysqld start
+</code></pre>
+<h2 id="4-查看初始化密码用于下一步设置自己的root密码">(4) 查看初始化密码,用于下一步设置自己的root密码</h2>
+<pre><code class="language-bash">sudo grep 'temporary password' /var/log/mysqld.log
+</code></pre>
+<h2 id="5-本地使用root登录">(5) 本地使用root登录</h2>
+<pre><code class="language-bash">mysql -u root -p
+</code></pre>
+<p>输入上一步看到的密码</p>
+<h2 id="6-更改密码">(6) 更改密码</h2>
+<pre><code class="language-bash">alter mysql.user 'root'@'localhost' identified by 'password';
+</code></pre>
+<p>注意新版本的mysql不能使用太弱的密码<br>
+如果出现如下提示<br>
+<img src="https://img-blog.csdnimg.cn/20191011203406645.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+则说明密码太弱了,请使用一个更高强度的密码</p>
+<h2 id="7-允许外部访问">(7) 允许外部访问</h2>
+<pre><code class="language-bash">use mysql;
+update user set host='%' where user='root';
+</code></pre>
+<p>这个可以根据自己的需要去修改,host='%'表明允许所有的ip登录,也可以设置特定的ip,若使用host='%'的话建议新建一个用户配置相应的权限.</p>
+<h2 id="8-配置防火墙可选">(8) 配置防火墙(可选)</h2>
+<p>由于作者使用的是阿里云的服务器,没配置防火墙的话远程连接不上,因此需要手动配置,如图<br>
+<img src="https://img-blog.csdnimg.cn/20191011204036860.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191011204050697.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191011204059183.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191011204106298.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
+<p>其中授权对象可以根据自己的需要更改,0.0.0.0/0表示允许所有的ip.</p>
+<p><br><br></p>
+<h2 id="二安装tomcat9">二.安装tomcat9</h2>
+<h2 id="1-先去官网下载下载后上传文件到服务器">(1) 先去<a href="http://tomcat.apache.org/">官网</a>下载,下载后上传文件到服务器</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191012183713584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012183728606.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+作者使用的是scp命令,<a href="https://www.cnblogs.com/leeeel/p/10847983.html">不会的可以看这里</a></p>
+<pre><code class="language-bash">scp apache-tomcat-xxxx.tar.gz username@xx.xx.xx.xx:/
+</code></pre>
+<p>改成自己的用户名和ip</p>
+<h2 id="2-连接到服务器解压压缩包">(2) 连接到服务器,解压压缩包</h2>
+<pre><code class="language-bash">mkdir /usr/local/tomcat
+mv apache-tomcat-xxxx.tar.gz /usr/local/tomcat
+tar -xzvf apache-tomcat-xxx.tar.gz
+</code></pre>
+<h2 id="3-修改tomcat默认端口可选">(3) 修改tomcat默认端口(可选)</h2>
+<p>修改conf/server.xml文件,一般只需修改</p>
+<pre><code class="language-xml">&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot; connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;
+</code></pre>
+<p>中的8080端口,修改这个端口即可<br>
+这个懒的话(比如作者)可以不改</p>
+<h2 id="4-启动tomcat">(4) 启动tomcat</h2>
+<p>运行bin目录下的startup.sh</p>
+<pre><code class="language-bash">cd bin
+./startup.sh
+</code></pre>
+<h2 id="5-测试">(5) 测试</h2>
+<p>浏览器输入</p>
+<pre><code class="language-bash">服务器IP:端口
+</code></pre>
+<p>若出现<br>
+<img src="https://img-blog.csdnimg.cn/20191012175944240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+则表示成功.</p>
+<h2 id="6开机启动">(6)开机启动</h2>
+<p>建议配置开机启动,修改/etc/rc.local文件</p>
+<pre><code class="language-bash">vim /etc/rc.local
+添加
+sh /usr/local/tomcat/bin/startup.sh
+</code></pre>
+<p>这个根据自己的tomcat安装路径修改,指定bin下的startup.sh即可</p>
+<h1 id="5建库建表">5.建库建表</h1>
+<p>创建用户表,这里简化操作(好吧我喜欢偷懒)就不创建新用户不授权了<br>
+这是一个在本地用root登录的示例,请根据实际情况创建并授权用户.</p>
+<h2 id="1-创建usersql">(1) 创建user.sql</h2>
+<pre><code class="language-sql">CREATE DATABASE userinfo;
+USE userinfo;
+CREATE TABLE user
+(
+    id          INT     NOT NULL    PRIMARY KEY   AUTO_INCREMENT,
+    name        CHAR(30)    NULL,
+    password    CHAR(30)    NULL
+);
+</code></pre>
+<h2 id="2-导入到数据库">(2) 导入到数据库</h2>
+<pre><code class="language-bash">mysql -u root -p &lt; user.sql
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2019101219043336.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6后端部分">6.后端部分</h1>
+<h2 id="1-创建项目">(1) 创建项目</h2>
+<p>选择web application<br>
+<img src="https://img-blog.csdnimg.cn/20191012190950456.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+选好路径,改好名字后finish<br>
+<img src="https://img-blog.csdnimg.cn/20191012191108974.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="2-添加jar包">(2) 添加jar包</h2>
+<p>创建一个叫lib的目录<br>
+<img src="https://img-blog.csdnimg.cn/20191012191304154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+添加两个jar包:<br>
+mysql-connector-java-8.0.17.jar<br>
+javax.servlet-api-4.0.1.jar<br>
+<img src="https://img-blog.csdnimg.cn/20191012191334571.png" alt="在这里插入图片描述" loading="lazy"><br>
+打开Project Structure<br>
+<img src="https://img-blog.csdnimg.cn/2019101219254063.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+Modules--&gt;  +  --&gt;  JARs or directories<br>
+<img src="https://img-blog.csdnimg.cn/20191012192548349.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+选择刚才新建的lib下的两个jar包<br>
+<img src="https://img-blog.csdnimg.cn/20191012192658119.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+打勾,apply<br>
+<img src="https://img-blog.csdnimg.cn/20191012192747677.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="3-创建包与类">(3) 创建包与类</h2>
+<p>总共4个包</p>
+<ul>
+<li>com.servlet<br>
+用于处理来自前端的请求,包含SignUp.java,SignIn.java</li>
+<li>com.util<br>
+主要功能是数据库连接,包含DBUtils.java</li>
+<li>com.entity<br>
+用户类,包含User.java</li>
+<li>com.dao<br>
+操作用户类的类,包含UserDao.java<br>
+<img src="https://img-blog.csdnimg.cn/2019101219191645.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></li>
+</ul>
+<h2 id="4-先来处理dbutils类">(4) 先来处理DBUtils类</h2>
+<p>这个是连接数据库的类,纯粹的底层jdbc实现,注意驱动版本.</p>
+<pre><code class="language-java">package com.util;
+import java.sql.*;
+
+public class DBUtils {
+
+    private static Connection connection = null;
+    public static Connection getConnection()
+    {
+        try {
+            Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);
+            String url = &quot;jdbc:mysql://127.0.0.1:3306/数据库名字&quot;;
+            String usename = &quot;账号&quot;;
+            String password = &quot;密码&quot;;
+            connection = DriverManager.getConnection(url,usename,password);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        return connection;
+    }
+
+    public static void closeConnection()
+    {
+        if(connection != null)
+        {
+            try {
+                connection.close();
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre>
+<p>主要就是获取连接与关闭连接两个函数.</p>
+<pre><code class="language-java">String url = &quot;jdbc:mysql://127.0.0.1:3306/数据库名字&quot;;
+String usename = &quot;账号&quot;;
+String password = &quot;密码&quot;;
+</code></pre>
+<p>这几行根据自己的用户名,密码,服务器ip和库名修改</p>
+<p><strong>注意,mysql8.0以上使用的注册驱动的语句是</strong></p>
+<pre><code class="language-java">Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);
+</code></pre>
+<p><strong>旧版的是</strong></p>
+<pre><code class="language-java">Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+</code></pre>
+<p>注意对应.</p>
+<h2 id="5-接下来处理user类">(5) 接下来处理User类</h2>
+<p>User类比较简单,就是就三个字段与getter,setter</p>
+<pre><code class="language-java">package com.entity;
+
+public class User {
+    private int id;
+    private String name;
+    private String password;
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+</code></pre>
+<h2 id="6-接下来是userdao">(6) 接下来是UserDao</h2>
+<pre><code class="language-java">package com.dao;
+
+import com.entity.User;
+import com.util.DBUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class UserDao {
+    public boolean query(User user)
+    {
+        Connection connection = DBUtils.getConnection();
+        String sql = &quot;select * from user where name = ? and password = ?&quot;;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,user.getName());
+            preparedStatement.setString(2,user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            DBUtils.closeConnection();
+        }
+    }
+
+    public boolean add(User user)
+    {
+        Connection connection = DBUtils.getConnection();
+        String sql = &quot;insert into user(name,password) values(?,?)&quot;;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,user.getName());
+            preparedStatement.setString(2,user.getPassword());
+            preparedStatement.executeUpdate();
+            return preparedStatement.getUpdateCount() != 0;
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            DBUtils.closeConnection();
+        }
+    }
+}
+</code></pre>
+<p>主要就是查询与添加操作,查询操作中存在该用户就返回true,否则返回false<br>
+添加操作中使用executeUpdate()与getUpdateCount() != 0.注意不能直接使用</p>
+<pre><code class="language-java"> return preparedStatement.execute();
+</code></pre>
+<p>去代替</p>
+<pre><code class="language-java">preparedStatement.executeUpdate();
+return preparedStatement.getUpdateCount() != 0;
+</code></pre>
+<p>咋一看好像没有什么问题,那天晚上我测试的时候问题可大了,android那边显示注册失败,但是数据库这边的却insert进去了.........我......<br>
+好吧说多了都是泪,还是函数用得不够熟练.<br><br></p>
+<ul>
+<li>一般来说select使用executeQuery()<br>
+executeQuery()返回ResultSet,表示结果集,保存了select语句的执行结果,配合next()使用</li>
+<li>delete,insert,update使用executeUpdate()<br>
+executeUpdate()返回的是一个整数,表示受影响的行数,即delete,insert,update修改的行数,对于drop,create操作返回0</li>
+<li>create,drop使用execute()<br>
+execute()的返回值是这样的:
+<ul>
+<li>如果第一个结果是ResultSet对象,则返回true</li>
+<li>如果第一个结果是更新计数或者没有结果则返回false</li>
+</ul>
+</li>
+</ul>
+<p>所以在这个例子中</p>
+<pre><code class="language-java"> return preparedStatement.execute();
+</code></pre>
+<p>肯定返回false,所以才会数据库这边insert进去,但前端显示注册失败(这个bug作者找了很久......)</p>
+<h2 id="7-servlet包的signin与signup类">(7) servlet包的SignIn与SignUp类</h2>
+<p>SingIn类用于处理登录,调用jdbc查看数据库是否有对应的用户<br>
+SignUp类用于处理注册,把user添加到数据库中<br>
+这两个使用的是http连接,后期作者会采用https加密连接.</p>
+<p>SignIn.java</p>
+<pre><code class="language-java">package com.servlet;
+
+import com.dao.UserDao;
+import com.entity.User;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet(&quot;/SignIn&quot;)
+public class SingIn extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException,ServletException
+    {
+        this.doPost(httpServletRequest,httpServletResponse);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws IOException, ServletException
+    {
+        httpServletRequest.setCharacterEncoding(&quot;utf-8&quot;);
+        httpServletResponse.setCharacterEncoding(&quot;utf-8&quot;);
+        httpServletResponse.setContentType(&quot;text/plain;charset=utf-8&quot;);//设置相应类型为html,编码为utf-8
+
+        String name = httpServletRequest.getParameter(&quot;name&quot;);
+        String password = httpServletRequest.getParameter(&quot;password&quot;);
+
+        UserDao userDao = new UserDao();
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+
+        if(!userDao.query(user))//若查询失败
+        {
+            httpServletResponse.sendError(204,&quot;query failed.&quot;);//设置204错误码与出错信息
+        }
+    }
+}
+
+</code></pre>
+<pre><code class="language-java">@WebServlet(&quot;/SignIn&quot;)
+</code></pre>
+<p>这行代码表示这是一个名字叫SignIn的servlet,可用于实现servlet与url的映射,如果不在这里添加这个注解,则需要在WEB-INF目录下的web.xml添加一个</p>
+<pre><code class="language-xml">&lt;servlet-mapping&gt;
+</code></pre>
+<p>叫servlet的映射</p>
+<pre><code class="language-java">httpServletResponse.setContentType(&quot;text/plain;charset=utf-8&quot;);//设置相应类型为html,编码为utf-8
+</code></pre>
+<p>这行代码设置响应类型与编码</p>
+<pre><code class="language-java">String name = httpServletRequest.getParameter(&quot;name&quot;);
+String password = httpServletRequest.getParameter(&quot;password&quot;);
+</code></pre>
+<p>HttpServletRequest.getParameter(String name)方法表示根据name获取相应的参数</p>
+<p>下面是SignUp.java</p>
+<pre><code class="language-java">package com.servlet;
+
+import com.dao.UserDao;
+import com.entity.User;
+
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+import javax.servlet.*;
+import java.io.IOException;
+
+@WebServlet(&quot;/SignUp&quot;)
+public class SignUp extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws IOException,ServletException
+    {
+        this.doPost(httpServletRequest,httpServletResponse);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws IOException,ServletException
+    {
+        httpServletRequest.setCharacterEncoding(&quot;utf-8&quot;);
+        httpServletResponse.setCharacterEncoding(&quot;utf-8&quot;);//设定编码防止中文乱码
+        httpServletResponse.setContentType(&quot;text/plain;charset=utf-8&quot;);//设置相应类型为html,编码为utf-8
+
+        String name = httpServletRequest.getParameter(&quot;name&quot;);//根据name获取参数
+        String password = httpServletRequest.getParameter(&quot;password&quot;);//根据password获取参数
+
+        UserDao userDao = new UserDao();
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+
+        if(!userDao.add(user)) //若添加失败
+        {
+            httpServletResponse.sendError(204,&quot;add failed.&quot;);//设置204错误码与出错信息
+        }
+    }
+}
+
+</code></pre>
+<h2 id="8-添加servlet到webxml">(8) 添加servlet到web.xml</h2>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;
+         version=&quot;4.0&quot;&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;SignIn&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.servlet.SingIn&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;SignUp&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.servlet.SignUp&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>要把刚才创建的Servlet添加进web.xml,在&lt;servlet&gt;中添加子元素&lt;servlet-name&gt;与&lt;servlet-class&gt;<br>
+&lt;servlet-name&gt;是Servlet的名字,最好与类名一致.<br>
+&lt;servlet-class&gt;是Servlet类的位置.<br>
+如果在Servlet类中没有添加</p>
+<pre><code class="language-java">@WebServlet(&quot;/xxxx&quot;)
+</code></pre>
+<p>这个注解,则需要在web.xml中添加</p>
+<pre><code class="language-xml">&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;SignIn&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/SignIn&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+<p>其中&lt;servlet-name&gt;与&lt;servlet&gt;中的子元素&lt;servlet-name&gt;中的值一致<br>
+&lt;url-pattern&gt;是访问的路径</p>
+<h2 id="9-最后添加一个叫hellohtml的html文件用于测试">(9) 最后添加一个叫Hello.html的html文件用于测试.</h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;Welcome&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Hello web.
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><br><br><br></p>
+<h1 id="7打包发布">7.打包发布</h1>
+<p>作者用的是IDEA,<a href="https://blog.csdn.net/xiongyouqiang/article/details/79141047">Eclipse的打包请看这里</a></p>
+<h2 id="1-打开project-structure">(1) 打开project structure</h2>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191012182046795.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="2-选择artifactsweb-applicationarchive">(2) 选择Artifacts,Web Application:Archive</h2>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191012182136777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="3-改名字创建web-inf目录与子目录classes">(3) 改名字,创建WEB-INF目录与子目录classes</h2>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191012182427780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="4-选中classes添加module-output选择自己的web项目">(4) 选中classes,添加Module Output,选择自己的web项目</h2>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191012182600529.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="5-添加jar包选中lib目录后添加jar包文件">(5) 添加jar包,选中lib目录后添加jar包文件</h2>
+<p>(那个lib文件夹被挡住了.....)<br>
+<img src="https://img-blog.csdnimg.cn/20191012182731373.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="6-添加hellohtml与webxml">(6) 添加Hello.html与web.xml</h2>
+<p>web.xml这个需要在WEB-INF目录里,Hello.html在WEB-INF外面<br>
+<img src="https://img-blog.csdnimg.cn/2019101223351572.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="7-打包build-build-artifacts">(7) 打包,Build-&gt;Build Artifacts</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191012183049145.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012183056973.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="8-上传到服务器">(8) 上传到服务器</h2>
+<p>把打包好的.war文件上传到服务器的tomcat的/webapps目录下的</p>
+<pre><code class="language-bash">scp ***.war username@xxx.xxx.xxx.xxx:/usr/local/tomcat/webapps
+</code></pre>
+<p>注意改成自己的webapps目录.</p>
+<h2 id="9-测试">(9) 测试</h2>
+<p>在浏览器输入</p>
+<pre><code class="language-bash">服务器IP:端口/项目/Hello.html
+</code></pre>
+<p>作者是在本地上开了tomcat后测试的<br>
+<img src="https://img-blog.csdnimg.cn/20191012221720592.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="8前端页面部分">8.前端页面部分</h1>
+<h2 id="1-新建工程">(1) 新建工程</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191012223400703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012223408874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="2-mainactivityjava">(2) MainActivity.java</h2>
+<pre><code class="language-java">package com.cx;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Button signin = (Button) findViewById(R.id.signin);
+        signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = ((EditText) findViewById(R.id.etname)).getText().toString();
+                String password = ((EditText) findViewById(R.id.etpassword)).getText().toString();
+                if (UserService.signIn(name, password))
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, &quot;登录成功&quot;, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, &quot;登录失败&quot;, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
+
+        Button signup = (Button) findViewById(R.id.signup);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = ((EditText) findViewById(R.id.etname)).getText().toString();
+                String password = ((EditText) findViewById(R.id.etpassword)).getText().toString();
+                if (UserService.signUp(name, password))
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, &quot;注册成功&quot;, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, &quot;注册失败&quot;, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
+}
+</code></pre>
+<p>没什么好说的,就为两个Button绑定事件,然后设置两个Toast提示信息.</p>
+<h2 id="3-userservicejava">(3) UserService.java</h2>
+<pre><code class="language-java">package com.cx;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+public class UserService {
+    public static boolean signIn(String name, String password) {
+        MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignIn&quot;,name,password);
+        try
+        {
+            myThread.start();
+            myThread.join();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        return myThread.getResult();
+    }
+
+    public static boolean signUp(String name, String password) {
+        MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignUp&quot;,name,password);
+        try
+        {
+            myThread.start();
+            myThread.join();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        return myThread.getResult();
+    }
+}
+
+class MyThread extends Thread
+{
+    private String path;
+    private String name;
+    private String password;
+    private boolean result = false;
+
+    public MyThread(String path,String name,String password)
+    {
+        this.path = path;
+        this.name = name;
+        this.password = password;
+    }
+    @Override
+    public void run()
+    {
+        try {
+            URL url = new URL(path);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(8000);//设置连接超时时间
+            httpURLConnection.setReadTimeout(8000);//设置读取超时时间
+            httpURLConnection.setRequestMethod(&quot;POST&quot;);//设置请求方法,post
+
+            String data = &quot;name=&quot; + URLEncoder.encode(name, &quot;utf-8&quot;) + &quot;&amp;password=&quot; + URLEncoder.encode(password, &quot;utf-8&quot;);//设置数据
+            httpURLConnection.setRequestProperty(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;);//设置响应类型
+            httpURLConnection.setRequestProperty(&quot;Content-Length&quot;, data.length() + &quot;&quot;);//设置内容长度
+            httpURLConnection.setDoOutput(true);//允许输出
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            outputStream.write(data.getBytes(&quot;utf-8&quot;));//写入数据
+            result = (httpURLConnection.getResponseCode() == 200);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean getResult()
+    {
+        return result;
+    }
+}
+</code></pre>
+<pre><code class="language-java">MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignUp&quot;,name,password);
+MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignIn&quot;,name,password);
+</code></pre>
+<p>这两行换成自己的ip,本地ip的话可以用ipconfig或ifconfig查看,修改了默认端口的话也把端口一起改了.<br>
+路径的话就是</p>
+<pre><code class="language-java">端口/web项目名/Servlet名
+</code></pre>
+<p>web项目名是再打成war包时设置的,Servlet名在web.xml中的&lt;servlet&gt;的子元素&lt;servlet-name&gt;设置,与java源码中的@WebServlet()注解中的一致</p>
+<p>另外一个要注意的就是线程问题,需要新开一个线程进行http的连接</p>
+<h2 id="4-activity_mainxml">(4) activity_main.xml</h2>
+<p>前端页面部分很简单,就两个button,用于验证功能.</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;
+    &gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot;&gt;
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;用户名&quot;
+            /&gt;
+        &lt;EditText
+            android:layout_width=&quot;300dp&quot;
+            android:layout_height=&quot;60dp&quot;
+            android:id=&quot;@+id/etname&quot;
+            /&gt;
+    &lt;/LinearLayout&gt;
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot;&gt;
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;密码&quot;
+            /&gt;
+        &lt;EditText
+            android:layout_width=&quot;300dp&quot;
+            android:layout_height=&quot;60dp&quot;
+            android:id=&quot;@+id/etpassword&quot;
+            /&gt;
+    &lt;/LinearLayout&gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot;&gt;
+        &lt;Button
+            android:layout_width=&quot;120dp&quot;
+            android:layout_height=&quot;60dp&quot;
+            android:text=&quot;注册&quot;
+            android:id=&quot;@+id/signup&quot;
+            /&gt;
+        &lt;Button
+            android:layout_width=&quot;120dp&quot;
+            android:layout_height=&quot;60dp&quot;
+            android:text=&quot;登录&quot;
+            android:id=&quot;@+id/signin&quot;
+            /&gt;
+    &lt;/LinearLayout&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<h1 id="9测试">9.测试</h1>
+<h2 id="1-注册测试">(1) 注册测试</h2>
+<p>随便输入用户名与密码<br>
+<img src="https://img-blog.csdnimg.cn/20191013115103777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
+<p>查看数据库<br>
+<img src="https://img-blog.csdnimg.cn/20191013115116634.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+这里没有加密保存,后期会添加加密保存</p>
+<h2 id="2-登录测试">(2) 登录测试</h2>
+<p><img src="https://img-blog.csdnimg.cn/2019101311520422.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+perfect!</p>
+<h1 id="10注意事项">10.注意事项</h1>
+<h2 id="1-数据库的用户名和密码一定要设置正确要不然会这样提示">(1) 数据库的用户名和密码一定要设置正确,要不然会这样提示</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191012234615701.png" alt="在这里插入图片描述" loading="lazy"><br>
+这个错误在加载驱动错误时也可能会出现这个错误,因此要确保打成war包时lib目录正确且jar包版本正确.<br>
+还有就是由于这个是jdbc的底层实现,注意手写的sql语句不能错<br>
+千万千万别像我这样:<br>
+<img src="https://img-blog.csdnimg.cn/20191013114342926.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="2-网络权限问题">(2) 网络权限问题</h2>
+<p>这个需要在AndroidManifest.xml添加网络权限</p>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
+</code></pre>
+<h2 id="3-防火墙问题">(3) 防火墙问题</h2>
+<p>服务器的话一般会有相应的相应的网页界面配置,比如作者的是阿里云服务器,当然也可以手动配置iptables<br>
+修改/etc/sysconfig/iptables</p>
+<pre><code class="language-bash">vim /etc/sysconfig/iptables
+</code></pre>
+<p>添加</p>
+<pre><code class="language-bash">-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+</code></pre>
+<p>重启iptables</p>
+<pre><code class="language-bash">service iptables restart
+</code></pre>
+<h2 id="4-使用http注意事项">(4) 使用HTTP注意事项</h2>
+<p>由于从Android P开始,google默认要求使用加密连接,即要使用HTTPS,所以会禁止使用HTTP连接<br>
+使用HTTP连接时会出现以下异常</p>
+<pre><code class="language-java"> W/System.err: java.io.IOException: Cleartext HTTP traffic to **** not permitted
+ java.net.UnknownServiceException: CLEARTEXT communication ** not permitted by network security policy
+</code></pre>
+<p>两种建议:</p>
+<h5 id="1-使用https">1 使用HTTPS</h5>
+<h5 id="2-修改默认的androidmanifestxml使其允许http连接">2 修改默认的AndroidManifest.xml使其允许HTTP连接</h5>
+<p>在res下新建一个文件夹xml,创建一个叫network_security_config.xml的文件,文件内容如下</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;network-security-config&gt;
+    &lt;base-config cleartextTrafficPermitted=&quot;true&quot; /&gt;
+&lt;/network-security-config&gt;
+</code></pre>
+<p>然后在AndroidMainfest.xml中加入</p>
+<pre><code class="language-xml">&lt;application
+ android:networkSecurityConfig=&quot;@xml/network_security_config&quot;
+/&gt;
+</code></pre>
+<p>即可</p>
+<p>另一种办法是直接加入一句</p>
+<pre><code>android:usesCleartextTraffic=&quot;true&quot;
+</code></pre>
+<pre><code class="language-xml">&lt;application 
+android:usesCleartextTraffic=&quot;true&quot;
+/&gt;
+
+</code></pre>
+<h2 id="5-线程问题">(5) 线程问题</h2>
+<p>从android4.0开始,联网不能再主线程操作,万一网络不好就会卡死,所以有关联网的操作都需要新开一个线程,不能在主线程操作.</p>
+<h2 id="6-avd问题">(6) AVD问题</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191013121532711.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+这个bug作者找了很久,http连接没问题,服务器没问题,数据库没问题,前端代码没问题,然后去了stackoverflow,发现是AVD的问题,我.......<br>
+<img src="https://img-blog.csdnimg.cn/20191013121713201.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+简单来说就是卸载了再重启AVD,居然成功了.....</p>
+<h1 id="11-最后">11 最后</h1>
+<p>作者小白一枚,有什么不对的地方请大家指正,评论作者会好好回复的.最后分享一首歌希望你们喜欢.<br>
+<a href="https://music.163.com/#/song?id=471385043">薛之谦-暧昧</a></p>
+<p>参考网站<br>
+1.<a href="https://blog.csdn.net/Tianweidadada/article/details/79516799">Android 通过Web服务器与Mysql数据库交互</a><br>
+2.<a href="https://blog.csdn.net/gengkui9897/article/details/82863966">Android高版本联网失败</a><br>
+3.<a href="https://blog.csdn.net/liujian8654562/article/details/99418954">IDEA 部署Web项目</a><br>
+4.<a href="https://blog.csdn.net/j080624/article/details/52633844">PreparedStatement的executeQuery、executeUpdate和execute</a><br>
+5.<a href="https://www.cnblogs.com/mahuangping/p/6252887.html">preparedstatement execute()操作成功！但是返回false</a><br>
+6.<a href="https://blog.csdn.net/weixin_41547486/article/details/81266768">HttpServletResponse(一)</a><br>
+7.<a href="https://www.cnblogs.com/naihuangbao/p/9705625.html">HttpServletResponse(二)</a><br>
+8.<a href="https://blog.csdn.net/wwq0813/article/details/90256058">HttpServletRequest</a><br>
+9.<a href="https://stackoverflow.com/questions/23582621/httpurlconnection-getoutputstream-throws-ioexception">HttpUrlConnection</a><br>
+10.<a href="https://stackoverflow.com/questions/56266801/java-net-socketexception-socket-failed-eperm-operation-not-permitted">java.net.socketexception</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[强大的工具(一):Capslock+]]></title>
+        <id>https://2293736867.github.io/post/qiang-da-de-gong-ju-yi-capslock/</id>
+        <link href="https://2293736867.github.io/post/qiang-da-de-gong-ju-yi-capslock/">
+        </link>
+        <updated>2020-06-02T18:14:55.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD">基本功能</a></li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD">高级功能</a></li>
+</ul>
+<br>
+Capslock+利用了键盘少用的Capslock键,实现了很多强大的操作。<br>
+Capslock+是开源的，源码在Github上，<a href="https://github.com/wo52616111/capslock-plus">点击这里查看</a>，不强制收费。<br>
+官网:<a href="https://cjkis.me/capslock+/">Capslock+官网</a></p>
+<h1 id="基本功能">基本功能</h1>
+<ul>
+<li><strong>光标移动</strong></li>
+</ul>
+<p>capslock+e 光标向上<br>
+capslock+d 光标向下<br>
+capslock+s 光标向左<br>
+capslock+f 光标向右<br>
+<img src="https://img-blog.csdnimg.cn/20190103115058988.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+a 光标向左跳过一个词<br>
+capslock+g 光标向右跳过一个词<br>
+<strong>使用a和g时汉字可能会整句跳过</strong><br>
+capslock+y 光标向上5行<br>
+capslock+b 光标向下5行<br>
+<img src="https://img-blog.csdnimg.cn/20190103094224929.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+= 光标向下移动一页<br>
+capslock+- 光标向上移动一页<br>
+capslock+p 光标到行首<br>
+capslock+;  光标向行尾<br>
+<img src="https://img-blog.csdnimg.cn/20190103094413801.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>光标选择</strong></li>
+</ul>
+<p>capslock+i 光标向上选中<br>
+capslock+k 光标向下选中<br>
+capslock+j 光标向左选中<br>
+capslock+l(是字母L的小写) 光标向右选中</p>
+<p>capslock+h 光标向左选中一个词<br>
+capslock+n 光标向右选中一个词<br>
+<strong>与a、g一样，h和n对于汉字可能会选择整句</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190103094553421.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+0 光标向上选中5行<br>
+capslock+m 光标向下选中5行<br>
+capslock+u 光标向行首选中<br>
+capslock+o 光标向行尾选中<br>
+<img src="https://img-blog.csdnimg.cn/20190103094722330.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>插入符号</strong></li>
+</ul>
+<p>capslock+9 插入()<br>
+capslock+[ 插入{}<br>
+capslock+' 插入&quot;&quot;<br>
+capslock+, 插入&lt;&gt;<br>
+<strong>以上4项在选中文本时插入到文本两侧</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190103094931186.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>其他修改操作</strong></li>
+</ul>
+<p>capslock+w 等于Backspace<br>
+capslock+r 等于delete<br>
+capslock+Backspace 删除光标所在的一行<br>
+capslock+z 撤销<br>
+连续按下capslock+z会交替撤销与重做<br>
+<img src="https://img-blog.csdnimg.cn/20190103095107261.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+space 等于Enter<br>
+capslock+Enter 不论光标是否在行尾，直接换行<br>
+<img src="https://img-blog.csdnimg.cn/20190103120906340.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+c capslock+x capslock+v 与ctrl+c独立的一套剪切板<br>
+当选中文字时，对所选的文字操作<br>
+不选中文字时，对光标所在行的文字进行操作<br>
+<img src="https://img-blog.csdnimg.cn/20190103121817403.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>翻译</strong></li>
+</ul>
+<p>capslock+t 翻译，默认使用有道翻译，可以选中或不选中翻译<br>
+不选中的话，若光标在整个句子或整个单词的右侧，或者光标在句子或单词的中间时，可以翻译光标所在的句子或单词<br>
+光标在句子或单词的左侧时，会翻译上一个句子或单词<br>
+建议英文不选中翻译，中文选中翻译<br>
+<strong>注意</strong><br>
+<strong>1.翻译的面板可以修改，重新输入后按Enter可继续翻译<br>
+2.获取单词发送通过ctrl+c实现，请确保按下capslock+t的时候ctrl+c不会有额外操作<br>
+3.翻译功能通过有道API实现，请求频率限制为每小时1000次，也就是所有使用该翻译功能的人一小时内翻译次数不能超过1000次，突破限制的方法在下面介绍</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190103125726212.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>与LAlt(左边的Alt键)结合</strong></li>
+<li><strong>临时改变鼠标速度</strong></li>
+</ul>
+<p>按住capslock+LAlt可临时改变鼠标的速度，按住capslock+LAlt再配合滚轮上下滚动可以增加或减慢速度，一般是先配合滚轮设定速度，松开LAlt与capslock后再一起按从而临时改变速度<br>
+<img src="https://img-blog.csdnimg.cn/20190104165313192.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>切换不同窗口</strong></li>
+</ul>
+<p>capslock+LAlt+e 切换当前窗口上面的窗口<br>
+capslock+LAlt+d 切换当前窗口下面的窗口<br>
+capslock+LAlt+s 切换当前窗口左边的窗口<br>
+capslock+LAlt+f 切换当前窗口右边的窗口<br>
+capslock+LAlt+a 切换当前窗口最左侧的窗口<br>
+capslock+LAlt+g 切换当前窗口最右侧的窗口<br>
+对窗口位置的判定是以当前窗口的横竖中线为依据<br>
+<img src="https://img-blog.csdnimg.cn/20190104165421588.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>快速打开/关闭窗口</strong></li>
+</ul>
+<p>capslock+LAlt+j 把当前窗口最小化且记录当前窗口为capslock+LAlt+l(小写L)即将打开的窗口<br>
+capslock+LAlt+k 把当前窗口最小化且记录当前窗口为capslock+LAlt+l最后一个打开的窗口<br>
+这与队列差不多，capslock+LAlt+j把窗口放进队首，capslock+LAlt+k把窗口放进队尾<br>
+capslock+LAlt+l 打开队列中的第一个窗口，并将其移出队列<br>
+capslock+LAlt+h 清楚窗口队列的记录<br>
+<img src="https://img-blog.csdnimg.cn/20190104174202501.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>切换标签</strong></li>
+</ul>
+<p>capslock+LAlt+w 等于ctrl+shift+tab<br>
+capslock+LAlt+r 等于ctrl+tab<br>
+<img src="https://img-blog.csdnimg.cn/20190104170354707.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>模拟光标滚动</strong></li>
+</ul>
+<p>capslock+LAlt+y 页面向上移动5行，光标不动<br>
+capslock+LAlt+b 页面向下移动5行，光标不动<br>
+capslock+LAlt+- 光标移动到页首<br>
+capslock+LAlt+= 光标移动到页尾<br>
+<img src="https://img-blog.csdnimg.cn/20190104170544817.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>第三套剪切板</strong><br>
+ctrl+x/c/v为第一套，capslock+x/c/v为第二套，capslock+LAlt+x/c/v为第三套<br>
+当选中文字时复制文字，不选中文字时复制光标所在行的文字<br>
+capslock+F12可关闭独立剪切板的功能，关闭后capslock+x/c/v与capslock+LAlt+x/c/v失效，capslock+F12可重新开启</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20190104223800526.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li><strong>F1-F6的功能</strong></li>
+</ul>
+<p>capslock+F1 打开帮助文档网页<br>
+capslock+F2 弹出计算面板<br>
+在计算面版被激活的情况下，若切换为大写，主键盘一部分被替换成小键盘，对应关系如下<br>
+u-----------8  i-----------9 o----------0 p-----------* [---------------/<br>
+j------------4  k----------5  l----------6 ;------------+ '---------------(减号)<br>
+m----------1  ,-----------2 .-----------3 space----0 RAlt----------.<br>
+shift+Enter会将计算结果输出到下一行，ctrl+Enter或capslock+space为换行<br>
+<img src="https://img-blog.csdnimg.cn/20190105084457854.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+F3 下一首歌<br>
+capslock+F4 短按时将窗口变为半透明<br>
+长按时配合滚轮改变透明度<br>
+若当前窗口的透明度，不是完全不透明，或不是半透明，则先将窗口变为完全不透明<br>
+<img src="https://img-blog.csdnimg.cn/2019010422363636.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>capslock+F5 重载capslock+<br>
+capslock+F6 置顶/解除置顶一个窗口，即若该窗口不是处于置顶的状态，则将该窗口置顶，若窗口处于置顶的状态，则解除窗口的置顶状态<br>
+<img src="https://img-blog.csdnimg.cn/20190104223707572.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="高级功能">高级功能</h1>
+<ul>
+<li><strong>CapsLock+settings.ini中的[Global]全局设置</strong></li>
+</ul>
+<p>loadScript:要加载的JS文件(要放在loadScript文件夹里)，用逗号分隔<br>
+allowClipboard:是否允许使用独立剪切板，1为是，0为否，默认1<br>
+mouseSpeed:按下capslock+LAlt时鼠标的速度，范围1-20，默认3<br>
+autostart:是否开机启动，1为是，0为否，默认0<br>
+loadingAnimation:是否开启程序加载动画，1为是，0为否，默认1<br>
+<img src="https://img-blog.csdnimg.cn/2019010613543577.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>capslock+Tab:补全+计算</strong></li>
+</ul>
+<p>1.补全<br>
+这个补全其实是将某一字符串替换成你自定义的字符串，需要在capslock+的位置下的CapsLock+settings.ini中进行设置<br>
+CapsLock+settings.ini中有三个字段有字符串替换功能，分别是[TabHotString]、[QRun]与[QWeb]，优先级是[TabHotString]&gt;[QRun]&gt;[QWeb]，也就是如果三个字段下都有相同的键名，会按优先级顺序替换，但最好不要重复键名，替换的最好都在[TabHotString]中设置<br>
+格式为:键名 = 要替换的字符串<br>
+<img src="https://img-blog.csdnimg.cn/20190106084724312.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>2.计算(<strong>对于比较严格的计算，如金钱计算，慎用</strong>)<br>
+计算其实是运行相应的JavaScript代码，处理的是光标左边的字符，直到遇到第一个空格或行首，之间的字符串会被认为是表达式<br>
+当表达式不带=时，会替换掉原来的表达式，当表达式带=时，将结果输出到=右侧，计算不出结果时返回?<br>
+若表达式带有空格，则要先选中表达式或在表达式头部加上`，若表达式在跨越多行只能选中<br>
+<img src="https://img-blog.csdnimg.cn/20190106134224492.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p><strong>用JS自定义函数</strong><br>
+首先要编写自己的.js文件，把它放到capslock+文件夹下的loadScript文件夹，然后在CapsLock+settings.ini中的[Global]中，在loadScript=scriptDemo.js后面加上,在加上自己的js文件名，保存，capslock+F5重载capslock+，然后就可以使用了<br>
+scriptDemo.js中有一些定义好的函数和事例，可以参照一下<br>
+<img src="https://img-blog.csdnimg.cn/20190106090245591.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>比如说我自己写的my.js中包含了如下两个函数(我不太会JS...以下只是模仿别人写的)<br>
+<img src="https://img-blog.csdnimg.cn/2019010609042545.gif" alt="在这里插入图片描述" loading="lazy"><br>
+然后...<br>
+<img src="https://img-blog.csdnimg.cn/20190106134353935.gif" alt="在这里插入图片描述" loading="lazy"><br>
+如果直接打函数名字的话会出现函数的源代码<br>
+还可以对多行字符串使用字符串函数，但要先选中<br>
+<img src="https://img-blog.csdnimg.cn/20190106134254849.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>翻译的高级设置</strong></li>
+</ul>
+<p>由于有道API每小时只能翻译1000次，想要更多请前往有道智云申请一个独立的Key，<br>
+申请到后把key写进capslock+安装目录下的CapsLock+settings.ini下的[TTranslate]段</p>
+<p>免费版的填apiType=0 apiKey=xxxx(你申请的key) KeyFrom=xxxx<br>
+<img src="https://img-blog.csdnimg.cn/2019010316125152.gif" alt="在这里插入图片描述" loading="lazy"><br>
+收费版的填apiType=1 apiKey=xxxx(你申请的key)<br>
+<img src="https://img-blog.csdnimg.cn/20190103161350235.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>窗口绑定</strong></li>
+</ul>
+<p>窗口绑定有三种模式：<br>
+第一种：直接绑定<br>
+capslock+LAlt+1-8,把当前的窗口绑定到相应按键<br>
+然后capslock+1-8，会激活绑定到相应按键的窗口<br>
+（1-8，capslock+9是插入括号，capslock+0是向上选中5行）<br>
+若当前窗口不是绑定的窗口则先切换到按键绑定的窗口，若当前窗口是按键绑定的窗口，则会最小化该窗口，或从最小化复原</p>
+<p>另外，capslock+LAlt+反单引号(`，主键盘区数字1左边)也可绑定窗口，激活时capslock+反单引号<br>
+<img src="https://img-blog.csdnimg.cn/2019010912414023.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>第二种：绑定多个窗口到同一按键（按两次）<br>
+先选中某一个窗口，capslock+LAlt+1绑定（按两次1），在选中另一个窗口后，再capslock+LAlt+两次1，然后capslock+1会按绑定次序打开窗口，多次按下时类似用Alt+tab切换绑定的窗口，会优先打开最常使用的窗口<br>
+<img src="https://img-blog.csdnimg.cn/20190109123945240.gif" alt="在这里插入图片描述" loading="lazy"><br>
+第三种：把当前窗口所属程序的所有窗口绑定（按三次）<br>
+比如你打开了3个txt，切换到三个txt之一后，按capslock+LAlt+1（按三次1），然后三个txt都被绑定到capslock+1上，然后按capslock+1会在这三个txt之间切换，类似于Alt+tab，也会优先打开最常用的窗口<br>
+<img src="https://img-blog.csdnimg.cn/20190109123835904.gif" alt="在这里插入图片描述" loading="lazy"><br>
+模式三类似于模式二，模式二可对不同程序的窗口绑定到同一按键，要分别绑定，模式三对同一程序的所有窗口绑定，只需绑定一次</p>
+<ul>
+<li><strong>Qbar</strong></li>
+</ul>
+<p>Qbar是按capslock+q弹出的框，可以方便地浏览文件、打开文件、与打开网页或是用引擎搜索，Esc可关闭，重新按capslock+q可获得焦点，选中字符后按capslock+q会自动填入，选中文件会将路径填入。</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20190109123900428.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>输入cl set可以设置CapsLock+settings.ini文件<br>
+Qbar还能使用通配符，?表示单个，<em>表示多个，如a?b匹配aab，abb，acb，adb等<br>
+a</em>b匹配abb,abbb,accb等(不区分大小写)</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20190109123642981.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以按/或\或tab进入下一层文件夹，按capslock+,返回上一层<br>
+<img src="https://img-blog.csdnimg.cn/20190110083950996.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>Qbar中的QRun</strong></li>
+</ul>
+<p>可以在CapsLock+settings.ini中的[QRun]下添加想要快速运行的程序，只需在Qbar中键入相应名字即可，也可直接在Qbar中使用&quot; -&gt;run &quot;来设定，格式为：<br>
+xxx -&gt; xxx<br>
+或<br>
+xxx -&gt;run xxx<br>
+注意第一种-&gt;两旁有空格，第二种-&gt;前面有空格，后面紧接run，run后面有空格<br>
+QRun也可设定用来打开文件的程序，比如在[QRun]下有aa = &quot;xxxx/xxx.exe&quot;，bb = &quot;xxx/xxxx&quot;，就会用aa打开bb<br>
+<img src="https://img-blog.csdnimg.cn/20190110084000733.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>Qbar中的QSearch</strong></li>
+</ul>
+<p>这个可以用搜索引擎快速搜索，内置了bd(百度)，wk（维基），g（谷歌），m（MDN），tb（淘宝），默认为百度<br>
+<img src="https://img-blog.csdnimg.cn/20190110085158442.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>当然可以自定义...<br>
+例如改变默认搜索引擎，在CapsLock+settings.ini中的[QSearch]添加default=xxxxx)<br>
+也可以直接在Qbar中default -&gt; xxxx<br>
+这需要通过网址定位到搜索的关键词，并将关键词修改成{q}<br>
+<img src="https://img-blog.csdnimg.cn/20190110091656952.gif" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20190110091523399.gif" alt="在这里插入图片描述" loading="lazy"><br>
+添加自己的搜索引擎类似，CapsLock+settings.ini中的[QSearch]中添加，或在Qbar中使用 -&gt;search 添加<br>
+<img src="https://img-blog.csdnimg.cn/20190110090453572.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>Qbar中的QWeb</strong></li>
+</ul>
+<p>打开网站，直接输入网址即可，可以在Qbar中使用-&gt;web 定义，也可在CapsLock+settings.ini中的[QWeb]下定义，xxx = xxxx<br>
+<img src="https://img-blog.csdnimg.cn/20190110152841505.gif" alt="在这里插入图片描述" loading="lazy"><br>
+ctrl+Enter可在前面加www.，后面加.com，如输入taobao，ctrl+Enter会打开www.taobao.com，对于含有.net，.com，.org，www.，http://，https://可以直接当作网址打开而不是用默认引擎去搜索，一些特定的网站可以加上web xxxx打开</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20190110155803992.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li><strong>自定义Qbar的样式</strong></li>
+</ul>
+<p>在CapsLock+settings.ini中的[QStyle]下设置<br>
+颜色可以是指定16种HTML基础颜色之一或6位的RGB颜色值(0x前缀可以省略)。例如：red、ffffaa、FFFFAA、0xFFFFAA。下面的颜色设置也一样。<br>
+borderBackgroundColor-----背景颜色，默认red<br>
+borderRadius-------------------边框四角圆角程度，默认9<br>
+textBackgroundColor---------文字输入框的背景颜色，默认green<br>
+textColor-------------------------输入文字的颜色，默认ffffff，白色<br>
+editFontName------------------输入文字的字体，默认Hiragino Sans GB W6<br>
+editFontSize--------------------输入文字大小，默认12<br>
+listFontName-------------------提示列表字体，默认consoals<br>
+listFontSize---------------------提示列表字体大小，默认10<br>
+listBackgroundColor----------提示列表背景颜色，默认blue<br>
+listColor--------------------------提示列表文字颜色，默认0x000000<br>
+listCount-------------------------提示列表行数，默认5<br>
+lineHeight-----------------------提示列表每行高度，默认19<br>
+progressColor------------------进度条颜色，默认0x00cc99<br>
+比如这是我的Qbar（好丑，对不对，好像比默认的还。。。）<br>
+<img src="https://img-blog.csdnimg.cn/20190110091953784.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<ul>
+<li><strong>自定义某些按键</strong></li>
+</ul>
+<p>在CapsLock+settings.ini中的[Keys]下可以改变一些capslock+按键的功能，也可以增加一些按键，capslock+支持的按键有:<br>
+Capslock + (LALt + ) F1~F12<br>
+Capslock + (LALt + ) 0~9<br>
+Capslock + (LALt + ) a~z<br>
+Capslock + (LALt + ) -=[];',./<br>
+Capslock + (LALt + ) Backspace, Tab, Enter, Space, RAlt<br>
+keyFunc_volumeMute    静音<br>
+keyFunc_volumeDown    音量增大<br>
+keyFunc_volumeUp      音量减少<br>
+keyFunc_mediaPrev     上一首<br>
+keyFunc_mediaPlayPause  播放/暂停<br>
+以caps_开头，字母用小写表示，F1-F12用f1-f12表示，LALt用lalt表示，键位以keyFunc_开头，如caps_j=keyFunc_selectLeft，具体可用capslock+q输入cl CapsLock+settingsDemo.ini中查看<br>
+比如在CapsLock+settings.ini中的[Keys]下添加了caps_lalt_9=keyFunc_volumeMut，则按capslock+LAlt+9可以静音<br>
+<img src="https://img-blog.csdnimg.cn/20190109115214719.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<p>------------------------------------------------没有了----------------------------------------------------------</p>
+<p>这基本上就是capslock+的所有功能了，作者好像不怎么更新了，最新的版本是16年的</p>
+<p>有一个问题就是其实capslock+e/d/s/f并不能完全代替上下左右的方向键，比如Alt+←是后退，但Alt+capslcok+s没有任何反应，当上下左右和其他键联合使用capslock还不能代替</p>
+]]></content>
+    </entry>
+</feed>

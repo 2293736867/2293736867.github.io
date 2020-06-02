@@ -1,0 +1,478 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>java通过ServerSocket与Socket实现通信 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.ServerSocket
+
+(1)
+(2)
+(3)
+
+
+2.Socket
+
+(1)
+(2)
+(3)
+(4)
+
+
+3.服务器端
+4.客户端
+5.运行结果
+6.Socket设置超时
+
+
+首先说一下ServerSocket与Socket.
+..." />
+    <meta name="keywords" content="Java" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591125978197" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/"> </span>
+              </a>
+              <span id="/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">java通过ServerSocket与Socket实现通信</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1serversocket">1.ServerSocket</a>
+<ul>
+<li><a href="#1">(1)</a></li>
+<li><a href="#2">(2)</a></li>
+<li><a href="#3">(3)</a></li>
+</ul>
+</li>
+<li><a href="#2socket">2.Socket</a>
+<ul>
+<li><a href="#1-2">(1)</a></li>
+<li><a href="#2-2">(2)</a></li>
+<li><a href="#3-2">(3)</a></li>
+<li><a href="#4">(4)</a></li>
+</ul>
+</li>
+<li><a href="#3%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF">3.服务器端</a></li>
+<li><a href="#4%E5%AE%A2%E6%88%B7%E7%AB%AF">4.客户端</a></li>
+<li><a href="#5%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">5.运行结果</a></li>
+<li><a href="#6socket%E8%AE%BE%E7%BD%AE%E8%B6%85%E6%97%B6">6.Socket设置超时</a></li>
+</ul>
+<br>
+首先说一下ServerSocket与Socket.</p>
+<h1 id="1serversocket">1.ServerSocket</h1>
+<p>ServerSocket是用来监听客户端Socket连接的类,如果没有连接会一直处于等待状态.<br>
+ServetSocket有三个构造方法:</p>
+<h2 id="1">(1)</h2>
+<pre><code class="language-java">ServerSocket(int port);
+</code></pre>
+<p>这个使用指定的端口去创建ServerSocket,IP地址使用默认的本地IP地址.</p>
+<h2 id="2">(2)</h2>
+<pre><code class="language-java">ServetSocket(int port,int backlog);
+</code></pre>
+<p>除了端口外,还有一个用来改变队列长度参数的backlog,指定当服务器繁忙时,可以与之保持连接请求的客户端数量,默认为50.</p>
+<h2 id="3">(3)</h2>
+<pre><code class="language-java">ServetSocket(int port,int backlog,InetAddress ip);
+</code></pre>
+<p>这个使用指定的端口,backlog,ip地址去创建ServerSocket.</p>
+<p>(这里简单提一下InetAddress,InetAddress没有构造方法,只有两个静态方法获取InetAddress对象,分别是</p>
+<pre><code class="language-java">getByName(String hostName);
+getByAddress(byte[] address);
+</code></pre>
+<p>)</p>
+<h1 id="2socket">2.Socket</h1>
+<p>Socket一般用来连接到服务器,程序通过Socket发出网络请求或应答网络请求.<br>
+Socket有三个构造方法:</p>
+<h2 id="1-2">(1)</h2>
+<pre><code class="language-java">Socket(InetAddress address,int port);
+</code></pre>
+<p>使用指定IP与指定端口构造Socket,对于本地地址,默认使用本地ip,对于本地端口则动态分配.</p>
+<h2 id="2-2">(2)</h2>
+<pre><code class="language-java">Socket(String address,int port);
+</code></pre>
+<p>与(1)一样,使用String表示远程ip.</p>
+<h2 id="3-2">(3)</h2>
+<pre><code class="language-java">Socket(InetAddress address,int port,InetAddress localAddr,int localPort);
+</code></pre>
+<p>创建指定了远程ip,远程端口,本地ip,本地端口的Socket.</p>
+<h2 id="4">(4)</h2>
+<pre><code class="language-java">Socket(String address,int port,InetAddress localAddr,int localPort)
+</code></pre>
+<p>与(2)类似,使用String表示远程ip,用InetAddress表示本地ip.</p>
+<p>了解了ServerSocket与Socket后可以编写实现简单的通信了.</p>
+<h1 id="3服务器端">3.服务器端</h1>
+<pre><code class="language-java">import java.io.IOException;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server
+{
+    public static void main(String[] args) throws IOException
+    {
+        ServerSocket serverSocket = new ServerSocket(12345);//这个端口自己随意,建议1024以上未使用的端口.
+        while(true)
+        {
+            Socket socket = serverSocket.accept();//一直等待来自客户端的请求.
+            PrintStream printStream = new PrintStream(socket.getOutputStream());//创建输出流
+            printStream.println(&quot;Server message.&quot;);
+            printStream.close();
+            socket.close();
+        }
+    }
+}
+</code></pre>
+<p>说一下ServetSocket的accept()方法:</p>
+<pre><code class="language-java">Socket accept();
+</code></pre>
+<p>没有参数,返回一个Socket,如果接收到客户端的一个Socket,则返回,否则一直处于等待状态,线程也被阻塞.</p>
+<h1 id="4客户端">4.客户端</h1>
+<pre><code class="language-java">import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+
+public class Client
+{
+    public static void main(String[] args) throws IOException
+    {
+        Socket socket = new Socket(&quot;127.0.0.1&quot;, 12345);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        System.out.println(&quot;This message comes from server:&quot;+bufferedReader.readLine());
+        bufferedReader.close();
+        socket.close();
+    }
+}
+</code></pre>
+<pre><code class="language-java">Socket socket = new Socket(&quot;127.0.0.1&quot;, 12345);
+</code></pre>
+<p>表示创建一个本地地址,端口为12345的Socket,创建好了后服务器的.accept()方法就会接收到这个Socket,并创建输出流输出相应信息,然后客户端从Socket获取输入流进行读取,读取到了来自服务器的信息.</p>
+<h1 id="5运行结果">5.运行结果</h1>
+<p>(由于作者的漂亮终端不知道什么原因坏了....只能让用VScode的默认终端了....)<br>
+先运行服务器端的代码:<br>
+<img src="https://img-blog.csdnimg.cn/20191018234828415.png" alt="在这里插入图片描述" loading="lazy"><br>
+服务器端这边因为accept()方法会一直阻塞直到客户端发送请求.<br>
+<img src="https://img-blog.csdnimg.cn/20191018234834135.png" alt="在这里插入图片描述" loading="lazy"><br>
+客户端这边一运行就收到了来自服务器端的信息.</p>
+<h1 id="6socket设置超时">6.Socket设置超时</h1>
+<p>可以为Socket设置超时设置,当Socket超过这个时间没有连接上时系统会认为连接失败.</p>
+<pre><code class="language-java">Socket socket = new Socket(&quot;127.0.0.1&quot;,12345);
+socket.setToTimeout(10000);//单位:ms,在这里是10s
+</code></pre>
+<p>但是未连接上之前无法创建Socket对象,并且Socket没有提供指定超时的构造方法,因此常见的做法是先创建一个无连接的Socket,再调用connect()方法连接.</p>
+<pre><code class="language-java">Socket socket = new Socket();
+socket.connect(new InetSocketAddress(&quot;127.0.0.1&quot;,12345),12345);
+</code></pre>
+<p>connect()方法其实有两个重载方法,分别是</p>
+<pre><code class="language-java">void connect(SocketAddress endpoint);
+void connect(SocketAddress endpoint,int timeout);
+</code></pre>
+<p>对于第一个connect()官方文档没有提及超时之类的,就是直接连接.<br>
+对于第二个connect,timeout指定的超时时间,单位为ms,设置为0则为无限期等待.</p>
+<p>参考链接<br>
+1.<a href="https://blog.csdn.net/hutaoxiaodai/article/details/48030145">socket</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">java7与java9中的try-finally关闭资源</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/">java通过ServerSocket与Socket实现通信</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/">java7与java9中的try-finally关闭资源</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/">一文带你理解脏读,幻读,不可重复读与mysql的锁,事务隔离机制</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-3 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-4 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 7 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

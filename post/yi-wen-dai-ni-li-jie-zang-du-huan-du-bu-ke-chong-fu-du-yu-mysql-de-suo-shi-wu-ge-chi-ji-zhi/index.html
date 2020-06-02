@@ -1,0 +1,824 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一文带你理解脏读,幻读,不可重复读与mysql的锁,事务隔离机制 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 ACID
+
+(1) A:原子性(Atomicity)
+(2) C:一致性(Consistency)
+(3) I:隔离性(Isolation)
+(4) D:持久性(Durability)
+
+
+2 Mysql的锁
+
+(1) S锁与X锁
+
+..." />
+    <meta name="keywords" content="MySQL" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591125978197" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">5 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/"> </span>
+              </a>
+              <span id="/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-0 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">一文带你理解脏读,幻读,不可重复读与mysql的锁,事务隔离机制</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-acid">1 ACID</a>
+<ul>
+<li><a href="#1-font-colorreda%E5%8E%9F%E5%AD%90%E6%80%A7atomicityfont">(1) <font color=red>A:原子性(Atomicity)</font></a></li>
+<li><a href="#2-font-colorredc%E4%B8%80%E8%87%B4%E6%80%A7consistencyfont">(2) <font color=red>C:一致性(Consistency)</font></a></li>
+<li><a href="#3-font-colorredi%E9%9A%94%E7%A6%BB%E6%80%A7isolationfont">(3) <font color=red>I:隔离性(Isolation)</font></a></li>
+<li><a href="#4-font-colorredd%E6%8C%81%E4%B9%85%E6%80%A7durabilityfont">(4) <font color=red>D:持久性(Durability)</font></a></li>
+</ul>
+</li>
+<li><a href="#2-mysql%E7%9A%84%E9%94%81">2 Mysql的锁</a>
+<ul>
+<li><a href="#1-s%E9%94%81%E4%B8%8Ex%E9%94%81">(1) S锁与X锁</a>
+<ul>
+<li><a href="#is%E9%94%81">Ⅰ.S锁</a></li>
+<li><a href="#iix%E9%94%81">Ⅱ.X锁</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81">(2) 乐观锁与悲观锁</a>
+<ul>
+<li><a href="#i%E4%B9%90%E8%A7%82%E9%94%81">Ⅰ.乐观锁</a></li>
+<li><a href="#ii%E6%82%B2%E8%A7%82%E9%94%81">Ⅱ.悲观锁</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E8%84%8F%E8%AF%BB%E5%B9%BB%E8%AF%BB%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E4%B8%8E%E4%B8%A4%E7%B1%BB%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0">4 脏读,幻读,不可重复读与两类丢失更新</a>
+<ul>
+<li><a href="#1-%E8%84%8F%E8%AF%BB">(1) 脏读</a></li>
+<li><a href="#2-%E5%B9%BB%E8%AF%BB">(2) 幻读</a></li>
+<li><a href="#3-%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">(3) 不可重复读</a></li>
+<li><a href="#4-%E7%AC%AC%E4%B8%80%E7%B1%BB%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0">(4) 第一类丢失更新</a>
+<ul>
+<li><a href="#5-%E7%AC%AC%E4%BA%8C%E7%B1%BB%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0">(5) 第二类丢失更新</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE%E4%B8%8E%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB">5 封锁协议与隔离级别</a>
+<ul>
+<li><a href="#1-%E4%B8%80%E7%BA%A7%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE">(1) 一级封锁协议</a>
+<ul>
+<li><a href="#a%E5%BC%95%E5%8F%91%E8%84%8F%E8%AF%BB">a.引发脏读</a></li>
+<li><a href="#b%E5%BC%95%E5%8F%91%E5%B9%BB%E8%AF%BB">b.引发幻读</a></li>
+<li><a href="#c%E5%BC%95%E5%8F%91%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">c.引发不可重复读</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%BA%8C%E7%BA%A7%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE">(2) 二级封锁协议</a>
+<ul>
+<li><a href="#iread-committed">Ⅰ.Read committed</a>
+<ul>
+<li><a href="#a%E9%81%BF%E5%85%8D%E8%84%8F%E8%AF%BB">a.避免脏读</a></li>
+<li><a href="#b%E5%BC%95%E5%8F%91%E5%B9%BB%E8%AF%BB-2">b.引发幻读</a></li>
+<li><a href="#c%E5%BC%95%E5%8F%91%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB-2">c.引发不可重复读</a></li>
+</ul>
+</li>
+<li><a href="#iirepeatable-read">Ⅱ.Repeatable read</a>
+<ul>
+<li><a href="#a%E9%81%BF%E5%85%8D%E8%84%8F%E8%AF%BB-2">a.避免脏读</a></li>
+<li><a href="#b%E9%81%BF%E5%85%8D%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">b.避免不可重复读</a></li>
+<li><a href="#c%E5%BC%95%E5%8F%91%E5%B9%BB%E8%AF%BB">c.引发幻读</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E4%B8%89%E7%BA%A7%E5%B0%81%E9%94%81%E5%8D%8F%E8%AE%AE">(3) 三级封锁协议</a>
+<ul>
+<li><a href="#a%E9%81%BF%E5%85%8D%E8%84%8F%E8%AF%BB-3">a.避免脏读</a></li>
+<li><a href="#b%E9%81%BF%E5%85%8D%E5%B9%BB%E8%AF%BB">b.避免幻读</a></li>
+<li><a href="#c%E9%81%BF%E5%85%8D%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB">c.避免不可重复读</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E4%B8%A4%E6%AE%B5%E9%94%81%E5%8D%8F%E8%AE%AE">6 两段锁协议</a>
+<ul>
+<li><a href="#1-%E5%8A%A0%E9%94%81">(1) 加锁</a></li>
+<li><a href="#2-%E8%A7%A3%E9%94%81">(2) 解锁</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<p>首先说一下数据库事务的四大特性</p>
+<h1 id="1-acid">1 ACID</h1>
+<p>事务的四大特性是ACID(不是&quot;酸&quot;....)</p>
+<h2 id="1-font-colorreda原子性atomicityfont">(1) <font color=red>A:原子性(Atomicity)</font></h2>
+<p>原子性指的是事务要么完全执行,要么完全不执行.</p>
+<h2 id="2-font-colorredc一致性consistencyfont">(2) <font color=red>C:一致性(Consistency)</font></h2>
+<p>事务完成时,数据必须处于一致的状态.若事务执行途中出错,会回滚到之前的事务没有执行前的状态,这样数据就处于一致的状态.若事务出错后没有回滚,部分修改的内容写入到了数据库中,这时数据就是不一致的状态.</p>
+<h2 id="3-font-colorredi隔离性isolationfont">(3) <font color=red>I:隔离性(Isolation)</font></h2>
+<p>同时处理多个事务时,一个事务的执行不能被另一个事务所干扰,事务的内部操作与其他并发事务隔离.</p>
+<h2 id="4-font-colorredd持久性durabilityfont">(4) <font color=red>D:持久性(Durability)</font></h2>
+<p>事务提交后,对数据的修改是永久性的.</p>
+<h1 id="2-mysql的锁">2 Mysql的锁</h1>
+<p>Mysql的锁其实可以按很多种形式分类:</p>
+<ul>
+<li>按加锁机制分,可分为乐观锁与悲观锁.</li>
+<li>按兼容性来分,可分为X锁与S锁.</li>
+<li>按锁粒度分,可分为表锁,行锁,页锁.</li>
+<li>按锁模式分,可分为记录锁,gap锁,next-key锁,意向锁,插入意向锁.</li>
+</ul>
+<p>这里主要讨论S锁,X锁,乐观锁与悲观锁.</p>
+<h2 id="1-s锁与x锁">(1) S锁与X锁</h2>
+<p>S锁与X锁是InnoDB引擎实现的两种标准行锁机制.查看默认引擎可使用</p>
+<pre><code class="language-sql">show variables like '%storage_engine%';
+</code></pre>
+<p>作者的mysql版本为8.0.17,结果如下:<br>
+<img src="https://img-blog.csdnimg.cn/20191016190755652.png" alt="在这里插入图片描述" loading="lazy"><br>
+先建好测试库与测试表,很简单,表就两个字段.</p>
+<pre><code class="language-sql">create database test;
+use test;
+create table a
+(
+id int primary key auto_increment,
+money int
+);
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20191016193632734.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="is锁">Ⅰ.S锁</h3>
+<p><font color=red>S锁也叫共享锁,读锁,数据只能被读取不能被修改.</font><br>
+玩一下,上锁!</p>
+<pre><code class="language-sql">lock table a read;
+</code></pre>
+<p>然后.....<br>
+<img src="https://img-blog.csdnimg.cn/20191016190141582.png" alt="在这里插入图片描述" loading="lazy"><br>
+只能读不能改,删,也不能增.</p>
+<h3 id="iix锁">Ⅱ.X锁</h3>
+<p><font color=red>X锁也叫排他锁,写锁,一个事务对表加锁后,其他事务就不能对其进行加锁与增删查改操作.</font></p>
+<p>设置手动提交,开启事务,上X锁.</p>
+<pre><code class="language-sql">set autocmmmit=0;
+start transaction;
+lock table a write;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016191621404.png" alt="在这里插入图片描述" loading="lazy"><br>
+在开启另一个事务,使用select语句.</p>
+<pre><code class="language-sql">set autocommit=0;
+start transaction;
+select * from a;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016191731228.png" alt="在这里插入图片描述" loading="lazy"><br>
+这里是阻塞select操作,因为一直都没释放X锁.<br>
+<img src="https://img-blog.csdnimg.cn/20191016191741384.png" alt="在这里插入图片描述" loading="lazy"><br>
+同样也不能再加锁,也是阻塞中.<br>
+<img src="https://img-blog.csdnimg.cn/20191016191843455.png" alt="在这里插入图片描述" loading="lazy"><br>
+回到原来那个加锁的事务,嗯,什么事也没有,正常读写.<br>
+<img src="https://img-blog.csdnimg.cn/20191016192002681.png" alt="在这里插入图片描述" loading="lazy"><br>
+释放锁后:</p>
+<pre><code class="language-sql">unlock table;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016192109242.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/2019101619211847.png" alt="在这里插入图片描述" loading="lazy"><br>
+在另一个事务中可以看到中断时间.</p>
+<h2 id="2-乐观锁与悲观锁">(2) 乐观锁与悲观锁</h2>
+<h3 id="i乐观锁">Ⅰ.乐观锁</h3>
+<p>乐观锁就是总是假设是最好的情况,每次去操作的时候都不会上锁,但在更新时会判断有没有其他操作去更新这个数据,是一种宽松的加锁机制.<br>
+mysql本身没有提供乐观锁的支持,需要自己来实现,常用的方法有版本控制和时间戳控制两种.</p>
+<ul>
+<li>
+<p>版本控制<br>
+版本控制就是为表增加一个version字段,读取数据时连同这个version字段一起读出来,之后进行更新操作,版本号加1,再将提交的数据的版本号与数据库中的版本号进行比较,若提交的数据的版本号大于数据库中的版本号才会进行更新.</p>
+<p>举个例子,假设此时version=1,A进行操作,更新数据后version=2,与此同时B也进行操作,更新数据后version=2,A先完成操作,率先将数据库中的version设置为2,此时B提交,B的version与数据库中的version一样,不接受B的提交.</p>
+</li>
+<li>
+<p>时间戳控制<br>
+时间戳控制与版本控制差不多,把version字段改为timestamp字段</p>
+</li>
+</ul>
+<p>还有一种实现方法叫CAS算法,这个作者不怎么了解,有兴趣可以自行搜索.</p>
+<h3 id="ii悲观锁">Ⅱ.悲观锁</h3>
+<p>悲观锁就是总是假设最坏的情况,在整个数据处理状态中数据处于锁定状态,悲观锁的实现往往依靠数据库的锁机制.每次在拿到数据前都会上锁.<br>
+mysql在调用一些语句时会上悲观锁,如(先关闭自动提交,开启事务):</p>
+<pre><code class="language-sql">set autocommit=0;
+start transaction;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016221902357.png" alt="在这里插入图片描述" loading="lazy"><br>
+两个事务都这样操作,然后其中一个事务输入:</p>
+<pre><code class="language-sql">select * from a where xxx for update;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016222155579.png" alt="在这里插入图片描述" loading="lazy"><br>
+在另一事务也这样输入:<br>
+<img src="https://img-blog.csdnimg.cn/20191016222214362.png" alt="在这里插入图片描述" loading="lazy"><br>
+这时语句会被阻塞,直到上锁的那个事务commit(解开悲观锁).<br>
+<img src="https://img-blog.csdnimg.cn/20191016222405788.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191016222413683.png" alt="在这里插入图片描述" loading="lazy"><br>
+在另一事务中可以看到这个事务被阻塞了2.81s.</p>
+<pre><code class="language-sql">*** lock in share mode.
+</code></pre>
+<p>也会加上悲观锁.</p>
+<h1 id="4-脏读幻读不可重复读与两类丢失更新">4 脏读,幻读,不可重复读与两类丢失更新</h1>
+<h2 id="1-脏读">(1) 脏读</h2>
+<p><font color=red size=6>脏读是指一个事务读取到了另一事务未提交的数据,造成select前后数据不一致.</font></p>
+<p>比如事务A修改了一些数据,但没有提交,此时事务B却读取了,这时事务B就形成了脏读,一般事务A的后续操作是回滚,事务B读取到了临时数值.</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>更新X,旧值X=1,新值X=2</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>读取X,X=2(脏读)</td>
+</tr>
+<tr>
+<td>回滚X=1</td>
+<td></td>
+</tr>
+<tr>
+<td>结束事务(X=1)</td>
+<td>结束事务</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-幻读">(2) 幻读</h2>
+<p><font color=red size=6>幻读是指并不是指同一个事务执行两次相同的select语句得到的结果不同,<br>
+而是指select时不存在某记录,但准备插入时发现此记录已存在,无法插入,这就产生了幻读.</font></p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>select某个数据为空,准备插入一个新数据</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>插入一个新数据</td>
+</tr>
+<tr>
+<td> </td>
+<td>提交,结束事务</td>
+</tr>
+<tr>
+<td>插入数据,发现插入失败,由于事务B已插入相同数据</td>
+<td> </td>
+</tr>
+<tr>
+<td>结束事务</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-不可重复读">(3) 不可重复读</h2>
+<p><font color=red size=6>不可重复读指一个事务读取到了另一事务已提交的数据,造成select前后数据不一致.</font><br>
+比如事务A修改了一些数据并且提交了,此时事务B却读取了,这时事务B就形成了不可重复读.</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>读取X=1</td>
+<td>读取X=1</td>
+</tr>
+<tr>
+<td>更新X=2</td>
+<td></td>
+</tr>
+<tr>
+<td>提交,结束事务</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>读取X=2</td>
+</tr>
+<tr>
+<td> </td>
+<td>结束事务</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-第一类丢失更新">(4) 第一类丢失更新</h2>
+<p><font color=red>第一类丢失更新就是两个事务同时更新一个数据,一个事务更新完毕并提交后,另一个事务回滚,造成提交的更新丢失.</font></p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>读取X=1</td>
+<td>读取X=1</td>
+</tr>
+<tr>
+<td>修改X=2</td>
+<td>修改X=3</td>
+</tr>
+<tr>
+<td> </td>
+<td>提交,结束事务</td>
+</tr>
+<tr>
+<td>回滚</td>
+<td></td>
+</tr>
+<tr>
+<td>结束事务(X=1)</td>
+<td>X=1,X本应为提交的3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-第二类丢失更新">(5) 第二类丢失更新</h3>
+<p><font color=red>第二类丢失更新就是两个事务同时更新一个数据,先更新的事务提交的数据会被后更新的事务提交的数据覆盖,即先更新的事务提交的数据丢失.</font></p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开始事务</td>
+<td>开始事务</td>
+</tr>
+<tr>
+<td>读取X=1</td>
+<td>读取X=1</td>
+</tr>
+<tr>
+<td>更新X=2</td>
+<td></td>
+</tr>
+<tr>
+<td>提交事务,X=2,结束</td>
+<td></td>
+</tr>
+<tr>
+<td> </td>
+<td>更新X=3</td>
+</tr>
+<tr>
+<td> </td>
+<td>提交事务,X=3,事务A的更新丢失,结束</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-封锁协议与隔离级别">5 封锁协议与隔离级别</h1>
+<p>封锁协议就是在用X锁或S锁时制定的一些规则,比如锁的持续时间,锁的加锁时间等.不同的封锁协议对应不同的隔离级别.事务的隔离级别一共有4种,由低到高分别是Read uncommitted,Read committed,Repeatable read,Serializable,分别对应的相应的封锁协议等级.</p>
+<h2 id="1-一级封锁协议">(1) 一级封锁协议</h2>
+<p><font color=red>一级封锁协议对应的是Read uncommitted隔离级别,Read uncommitted,读未提交,一个事务可以读取另一个事务未提交的数据,这是最低的级别.一级封锁协议本质上是在事务修改数据之前加上X锁,直到事务结束后才释放,事务结束包括正常结束(commit)与非正常结束(rollback).</font></p>
+<p>一级封锁协议不会造成更新丢失,但可能引发脏读,幻读,不可重复读.<br>
+设置手动提交与事务隔离等级为read uncommited,并开启事务(注意要先设置事务等级再开启事务).</p>
+<pre><code class="language-sql">set autocommit=0;
+set session transaction isolation level read uncommitted;
+start transaction;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191016230608168.png" alt="在这里插入图片描述" loading="lazy"><br>
+(中间有一行打多了一个t可以忽略.....)</p>
+<h3 id="a引发脏读">a.引发脏读</h3>
+<p>在一个事务中修改表中的值,不提交,另一个事务可以select到未提交的值.<br>
+<img src="https://img-blog.csdnimg.cn/20191016231232303.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191016231238131.png" alt="在这里插入图片描述" loading="lazy"><br>
+出现了脏读.</p>
+<h3 id="b引发幻读">b.引发幻读</h3>
+<p>在一个事务中插入一条数据,提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017124932306.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中select时没有,准备insert,但是insert时却提示已经存在.引发幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017124948380.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="c引发不可重复读">c.引发不可重复读</h3>
+<p>未操作提交前:<br>
+<img src="https://img-blog.csdnimg.cn/20191016231914258.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务修改并提交:<br>
+<img src="https://img-blog.csdnimg.cn/20191016231942242.png" alt="在这里插入图片描述" loading="lazy"><br>
+再次读:<br>
+<img src="https://img-blog.csdnimg.cn/20191016231953625.png" alt="在这里插入图片描述" loading="lazy"><br>
+引发不可重复读.</p>
+<h2 id="2-二级封锁协议">(2) 二级封锁协议</h2>
+<p><font color=red>二级封锁协议本质上在一级协议的基础上(在修改数据时加X锁),在读数据时加上S锁,读完后立即释放S锁,可以避免脏读.但有可能出现不可重复读与幻读.二级封锁协议对应的是Read committed与Repeatable Read隔离级别.</font><br>
+先设置隔离等级</p>
+<pre><code class="language-sql">set session transaction isolation level read committed;
+</code></pre>
+<h3 id="iread-committed">Ⅰ.Read committed</h3>
+<p>Read committed,读提交,读提交可以避免脏读,但可能出现幻读与不可重复读.</p>
+<h4 id="a避免脏读">a.避免脏读</h4>
+<p>开启一个事务并更新值,在这个事务中money=100(更新后)<br>
+<img src="https://img-blog.csdnimg.cn/20191017001853865.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中money为未更新前的值,这就避免了脏读.<br>
+<img src="https://img-blog.csdnimg.cn/2019101700190018.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意,事实上脏读在read committed隔离级别下是不被允许的,但是mysql不会阻塞查询,而是返回未修改之前数据的备份,这种机制叫MVCC机制(多版本并发控制).</p>
+<h4 id="b引发幻读-2">b.引发幻读</h4>
+<p>在一个事务中插入数据并提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017125333560.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中不能插入&quot;不存在&quot;的数据,出现幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017125340821.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="c引发不可重复读-2">c.引发不可重复读</h4>
+<p>事务修改并提交前:<br>
+<img src="https://img-blog.csdnimg.cn/2019101700301729.png" alt="在这里插入图片描述" loading="lazy"><br>
+事务修改并提交:<br>
+<img src="https://img-blog.csdnimg.cn/20191017003033412.png" alt="在这里插入图片描述" loading="lazy"><br>
+出现不可重复读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017003039789.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="iirepeatable-read">Ⅱ.Repeatable read</h3>
+<p>Repeatable read比Read committed严格一点,是Mysql的默认级别,读取过程更多地受到MVCC影响,可防止不可重复读与脏读,但仍有可能出现幻读.</p>
+<h4 id="a避免脏读-2">a.避免脏读</h4>
+<p>在一个事务中修改数据,不提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005118705.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中两次select的结果都不变,没有出现脏读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005126573.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="b避免不可重复读">b.避免不可重复读</h4>
+<p>一个事务修改数据并提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005603624.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一事务中select的结果没有发生改变,即没有出现不可重复读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017005654610.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="c引发幻读">c.引发幻读</h4>
+<p>同理,一个事务插入一条数据并提交.<br>
+<img src="https://img-blog.csdnimg.cn/20191017134016776.png" alt="在这里插入图片描述" loading="lazy"><br>
+另一个事务插入时出现幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017134023321.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="3-三级封锁协议">(3) 三级封锁协议</h2>
+<p><font color=red>三级封锁协议,在一级封锁协议的基础上(修改时加X锁),读数据时加上S锁(与二级类似),但是直到事务结束后才释放S锁,可以避免幻读,脏读与不可重复读.三级封锁协议对应的隔离级别是Serializable.</font><br>
+先设置Serializable隔离级别</p>
+<pre><code class="language-sql">set session transaction isolation level serializable
+</code></pre>
+<h3 id="a避免脏读-3">a.避免脏读</h3>
+<p>设置事务隔离等级后开启事务并update,发现堵塞.从而避免了脏读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017134919950.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="b避免幻读">b.避免幻读</h3>
+<p>插入时直接阻塞,避免了幻读.<br>
+<img src="https://img-blog.csdnimg.cn/20191017135057292.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="c避免不可重复读">c.避免不可重复读</h3>
+<p>在脏读的例子中可以知道,update会被堵塞,都不能提交事务,因此也避免了不可重复读.</p>
+<h1 id="6-两段锁协议">6 两段锁协议</h1>
+<p>事务必须分为两个阶段对数据进行加锁与解锁,两端锁协议叫2PL(不是2PC),所有的加锁都在解锁之前进行.</p>
+<h2 id="1-加锁">(1) 加锁</h2>
+<p>加锁会在更新或者</p>
+<pre><code class="language-sql">select *** for update
+*** lock in share mode
+</code></pre>
+<p>时进行</p>
+<h2 id="2-解锁">(2) 解锁</h2>
+<p>解锁在事务结束时进行,事务结束包括rollback与commit.</p>
+<p>参考链接<br>
+1:<a href="https://blog.csdn.net/qq_37480021/article/details/80703272">ACID1</a><br>
+2:<a href="https://www.cnblogs.com/Kevin-ZhangCG/p/9038371.html">ACID2</a><br>
+3:<a href="https://www.jianshu.com/p/6c9d8368ae8c">mysql的锁1</a><br>
+4:<a href="https://segmentfault.com/a/1190000016611415">乐观锁与悲观锁1</a><br>
+5:<a href="https://juejin.im/post/5b4977ae5188251b146b2fc8">乐观锁与悲观锁2</a><br>
+6:<a href="https://www.cnblogs.com/cyhbyw/p/8869855.html">乐观锁与悲观锁3</a><br>
+7:<a href="https://blog.csdn.net/japanstudylang/article/details/101365971">mysql修改事务隔离等级</a><br>
+8:<a href="https://blog.csdn.net/mulinsen77/article/details/89349080">mysql三级封锁与二段锁</a><br>
+9:<a href="https://blog.csdn.net/m0_37316917/article/details/80050650">数据库封锁协议</a><br>
+10:<a href="https://www.cnblogs.com/hongdada/p/10683831.html">mysql事务隔离机制1</a><br>
+11:<a href="https://cloud.tencent.com/developer/article/1114439">mysql事务隔离机制2</a><br>
+12:<a href="https://segmentfault.com/a/1190000016566788?utm_source=tag-newest">mysql幻读</a><br>
+13:<a href="https://blog.csdn.net/zzti_erlie/article/details/88080822">mysql脏读,不可重复读与幻读</a><br>
+14:<a href="https://my.oschina.net/alchemystar/blog/1438839">mysql两段锁1</a><br>
+15:<a href="https://segmentfault.com/a/1190000012513286">mysql两段锁2</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">java7与java9中的try-finally关闭资源</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/android-tong-guo-web-yu-hou-tai-shu-ju-ku-jiao-hu.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/android-tong-guo-web-yu-hou-tai-shu-ju-ku-jiao-hu/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">android通过web与后台数据库交互</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/">java通过ServerSocket与Socket实现通信</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/java7-yu-java9-zhong-de-try-finally-guan-bi-zi-yuan/">java7与java9中的try-finally关闭资源</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/yi-wen-dai-ni-li-jie-zang-du-huan-du-bu-ke-chong-fu-du-yu-mysql-de-suo-shi-wu-ge-chi-ji-zhi/">一文带你理解脏读,幻读,不可重复读与mysql的锁,事务隔离机制</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-3 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-4 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 7 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
