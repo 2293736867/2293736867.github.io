@@ -1,0 +1,561 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>聊聊java中final那点事 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.final是什么
+2.final有什么用
+3.final修饰成员变量
+
+(1)修饰静态变量
+(2)修饰普通成员变量
+
+
+4.final修饰局部变量
+
+(1)修饰形参
+(2)修饰局部变量
+(3)final修饰引用变量
+
+
+5.final..." />
+    <meta name="keywords" content="Java" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591126411628" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/liao-liao-java-zhong-final-na-dian-shi.png');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/liao-liao-java-zhong-final-na-dian-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/liao-liao-java-zhong-final-na-dian-shi/"> </span>
+              </a>
+              <span id="/liao-liao-java-zhong-final-na-dian-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">聊聊java中final那点事</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1final%E6%98%AF%E4%BB%80%E4%B9%88">1.final是什么</a></li>
+<li><a href="#2final%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">2.final有什么用</a></li>
+<li><a href="#3final%E4%BF%AE%E9%A5%B0%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F">3.final修饰成员变量</a>
+<ul>
+<li><a href="#1%E4%BF%AE%E9%A5%B0%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F">(1)修饰静态变量</a></li>
+<li><a href="#2%E4%BF%AE%E9%A5%B0%E6%99%AE%E9%80%9A%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F">(2)修饰普通成员变量</a></li>
+</ul>
+</li>
+<li><a href="#4final%E4%BF%AE%E9%A5%B0%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">4.final修饰局部变量</a>
+<ul>
+<li><a href="#1%E4%BF%AE%E9%A5%B0%E5%BD%A2%E5%8F%82">(1)修饰形参</a></li>
+<li><a href="#2%E4%BF%AE%E9%A5%B0%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">(2)修饰局部变量</a></li>
+<li><a href="#3final%E4%BF%AE%E9%A5%B0%E5%BC%95%E7%94%A8%E5%8F%98%E9%87%8F">(3)final修饰引用变量</a></li>
+</ul>
+</li>
+<li><a href="#5final%E4%BF%AE%E9%A5%B0%E6%96%B9%E6%B3%95">5.final修饰方法</a></li>
+<li><a href="#6final%E4%BF%AE%E9%A5%B0%E7%B1%BB">6.final修饰类</a></li>
+</ul>
+</p>
+<h1 id="1final是什么">1.final是什么</h1>
+<p>final是一个java关键字,一个修饰符,可用于修饰变量,方法,修饰类.</p>
+<h1 id="2final有什么用">2.final有什么用</h1>
+<ul>
+<li>final可以修饰变量时,可以使其值不能改变</li>
+<li>final修饰方法时使其不能被重写</li>
+<li>final修饰类时,使其不能被继承.</li>
+</ul>
+<h1 id="3final修饰成员变量">3.final修饰成员变量</h1>
+<p>fianl最常见的用法时用来修饰成员变量,成员变量分为静态变量与普通变量.<br>
+对于final修饰的变量,不是不能被赋值,是其值不能被改变,可以理解成只能赋一次值.可以在定义时赋值,也可以在定义后在另外赋值,但无论何种方式只能被赋值一次.</p>
+<h2 id="1修饰静态变量">(1)修饰静态变量</h2>
+<p>修饰静态变量时,可以选择以下两种方式赋值:</p>
+<ul>
+<li>在定义时赋值</li>
+<li>静态初始化块内赋值</li>
+</ul>
+<pre><code class="language-java">final static int a = 6;
+final static int b;
+static 
+{
+	b = 6;
+}
+</code></pre>
+<h2 id="2修饰普通成员变量">(2)修饰普通成员变量</h2>
+<p>修饰普通成员变量时,可以选择以下三种方式赋值:</p>
+<ul>
+<li>定义时赋值</li>
+<li>初始化块内赋值</li>
+<li>构造方法赋值</li>
+</ul>
+<pre><code class="language-java">public class test
+{
+	int c = 1;
+	int d;
+	int e;
+	{
+		d = 2;
+	}
+	public test()
+	{
+		e = 3;
+	}
+}
+</code></pre>
+<p>根据&quot;静态&quot;不能访问&quot;非静态&quot;规则,就是说静态的方法不能访问非静态成员,static初始化块不能初始化非静态成员,普通初始化块也不能初始化静态变量.<br>
+但是,有一个&quot;bug&quot;就是java允许通过方法访问final成员,因此...有趣的事情发生了.</p>
+<pre><code class="language-java">public class test
+{
+    final int a;
+    {
+        System.out.println(a);//这里会报错
+        printA();
+        a = 3;
+        printA();
+    }
+    void printA()
+    {
+        System.out.println(a);
+    }
+    public static void main(String[] args) {
+        new test();
+    }
+}
+</code></pre>
+<p>以上这段代码会报错,因为java不允许final成员未初始化前访问.</p>
+<p><img src="https://img-blog.csdnimg.cn/20191025210132589.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+把上面那一行出错的代码注释后...居然通过了编译?!</p>
+<pre><code class="language-java">public class test
+{
+    final int a;
+    {
+        //System.out.println(a);//这里会报错
+        printA();
+        a = 3;
+        printA();
+    }
+    void printA()
+    {
+        System.out.println(a);
+    }
+    public static void main(String[] args) {
+        new test();
+    }
+}
+</code></pre>
+<p>printA()中只是用方法包装了一下输出函数,居然就通过了编译...有没有兴趣看一下结果?</p>
+<p><img src="https://img-blog.csdnimg.cn/20191025210403178.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+emmmmmm....final&quot;默认值&quot;为0.....总之<s>就不要想这些歪门邪道去在final初始化之前访问final变量了</s> ,在使用final变量前初始化,初始化,初始化,重要的事情说三遍.</p>
+<h1 id="4final修饰局部变量">4.final修饰局部变量</h1>
+<p>final修饰局部变量其实也分两种,一种是修饰形参,一种是修饰方法内部的局部变量</p>
+<h2 id="1修饰形参">(1)修饰形参</h2>
+<p>没什么好说的...就是形参的值不能改变.</p>
+<pre><code class="language-java">public void f(final int a)
+{
+	a = 3;//报错.
+}
+</code></pre>
+<h2 id="2修饰局部变量">(2)修饰局部变量</h2>
+<p>修饰局部变量时可以定义时赋值,也可以在定义后在赋值(仅一次).</p>
+<pre><code class="language-java">public void f()
+{
+	final int  a = 3;
+	final int b;
+	b = 2;
+}
+</code></pre>
+<h2 id="3final修饰引用变量">(3)final修饰引用变量</h2>
+<p>嗯.....这个是一个特别一点的例子,Talk is cheap.上代码.</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class test
+{
+    public static void main(String[] args) {
+        final int[] arr = {1,2,3};
+        arr[1] = 5;
+        Arrays.stream(arr).forEach(System.out::print);
+        System.out.println();
+        final A a = new A();
+        a.setA(9);
+        System.out.println(a.getA());
+    }
+}
+
+class A
+{
+    private int a = 3;
+    public void setA(int a)
+    {
+        this.a = a;
+    }
+    public int getA()
+    {
+        return a;
+    }
+}
+</code></pre>
+<p>为什么final数组可以赋值???fianl对象的值被改变了???看看结果:<br>
+<img src="https://img-blog.csdnimg.cn/20191025213120723.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+final数组居然被改变了??final对象的值也被改变了??<br>
+其实呢,因为数组是引用类型,final修饰引用类型时,只能保证这个变量永远&quot;指向&quot;那一段内存空间,保存的仅仅是一个引用,但是那段内存空间的值是可以改变的.修饰对象时也是一样的道理.</p>
+<h1 id="5final修饰方法">5.final修饰方法</h1>
+<p>final修饰的方法不能被重写,当然,不能&quot;配合&quot;private&quot;使用&quot;,因为private把方法变成了私有,相当于对子类不可见,子类都不知道父类&quot;还有这玩意&quot;,就可以进行所谓的&quot;重写&quot;了.</p>
+<pre><code class="language-java">class A
+{
+	private final void f(){}
+}
+class B extends A
+{
+	public final void f(){}//没毛病
+}
+</code></pre>
+<p>因为B类的f()是属于B类的,不是从A类继承过来的.</p>
+<h1 id="6final修饰类">6.final修饰类</h1>
+<p>final修饰类时表示该类不能被继承.</p>
+<pre><code class="language-java">final class A{}
+class B extends A{}//出错
+</code></pre>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java-duo-chong-wen-jian-fu-zhi-fang-shi-yi-ji-xiao-lu-bi-jiao.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/java-duo-chong-wen-jian-fu-zhi-fang-shi-yi-ji-xiao-lu-bi-jiao/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">java多种文件复制方式以及效率比较</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java-zi-ding-yi-de-getinstancefan-hui-fan-xing.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/java-zi-ding-yi-de-getinstancefan-hui-fan-xing/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">java自定义的getInstance()返回泛型</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/">后端spring boot+前端Android交互+mysql增删查改</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/">Spring boot+Mysql+Spring data JPA一个Web的Demo</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/">JDBC+C3P0+DBCP 基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-3 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-4 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-5 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-6 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-7 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-8 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-9 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-11 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-12 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 16 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

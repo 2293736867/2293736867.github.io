@@ -1,0 +1,975 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>后端spring boot+前端Android交互+mysql增删查改 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.概述
+2.开发环境
+3.后端
+
+(1)新建一个spring boot项目
+(2)Entity
+(3)Repository
+(4)Service
+(5)Controller
+
+
+4.前端
+
+(1)增
+(2)删
+(3)查
+(4)改
+(5)..." />
+    <meta name="keywords" content="Spring Boot,MySQL,Android" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591126411628" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/"> </span>
+              </a>
+              <span id="/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">后端spring boot+前端Android交互+mysql增删查改</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1%E6%A6%82%E8%BF%B0">1.概述</a></li>
+<li><a href="#2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">2.开发环境</a></li>
+<li><a href="#3%E5%90%8E%E7%AB%AF">3.后端</a>
+<ul>
+<li><a href="#1%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAspring-boot%E9%A1%B9%E7%9B%AE">(1)新建一个spring boot项目</a></li>
+<li><a href="#2entity">(2)Entity</a></li>
+<li><a href="#3repository">(3)Repository</a></li>
+<li><a href="#4service">(4)Service</a></li>
+<li><a href="#5controller">(5)Controller</a></li>
+</ul>
+</li>
+<li><a href="#4%E5%89%8D%E7%AB%AF">4.前端</a>
+<ul>
+<li><a href="#1%E5%A2%9E">(1)增</a></li>
+<li><a href="#2%E5%88%A0">(2)删</a></li>
+<li><a href="#3%E6%9F%A5">(3)查</a></li>
+<li><a href="#4%E6%94%B9">(4)改</a></li>
+<li><a href="#5%E7%95%8C%E9%9D%A2">(5)界面</a></li>
+<li><a href="#6%E4%BE%9D%E8%B5%96%E4%B8%8E%E5%85%B6%E4%BB%96">(6)依赖与其他</a></li>
+<li><a href="#7%E7%BD%91%E7%BB%9C%E6%9D%83%E9%99%90">(7)网络权限</a></li>
+</ul>
+</li>
+<li><a href="#5%E6%B5%8B%E8%AF%95">5.测试</a></li>
+<li><a href="#6%E6%BA%90%E7%A0%81">6.源码</a></li>
+</ul>
+</p>
+<h1 id="1概述">1.概述</h1>
+<p>使用spring boot作为后端框架与Android端配合mysql进行基本的交互,包含了最基本的增删查改功能.</p>
+<h1 id="2开发环境">2.开发环境</h1>
+<ul>
+<li>win10</li>
+<li>IDEA</li>
+<li>tomcat9.0.27</li>
+<li>mysql8.0.17</li>
+<li>spring boot</li>
+</ul>
+<h1 id="3后端">3.后端</h1>
+<h2 id="1新建一个spring-boot项目">(1)新建一个spring boot项目</h2>
+<p><a href="https://blog.csdn.net/qq_27525611/article/details/103241368">可以看这里</a></p>
+<h2 id="2entity">(2)Entity</h2>
+<p>新建User类作为实体类:</p>
+<pre><code class="language-java">package com.test;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    private String name;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+</code></pre>
+<p>这里其实使用的是(1)中的代码,里面有详细的解释.</p>
+<h2 id="3repository">(3)Repository</h2>
+<p>新建UserRepository去实现增删查改:</p>
+<pre><code class="language-java">package com.test;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Repository
+public interface UserRepository extends CrudRepository&lt;User,Integer&gt;
+{
+    @Query(value = &quot;select * from user where name = ?1&quot;,nativeQuery = true)
+    public List&lt;User&gt; findByName(String name);
+
+    @Modifying
+    @Query(value = &quot;delete from user where name = ?1&quot;,nativeQuery = true)
+    public int deleteByName(String name);
+}
+</code></pre>
+<p>由于CrudRepository中已经包含了&quot;增&quot;与&quot;改&quot;,所以按需要实现自己的&quot;查&quot;与&quot;删&quot;即可.<br>
+CrudRepository的api很简单,<a href="https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html">官方文档在这里.</a></p>
+<ul>
+<li>&quot;增&quot;使用save即可,参数为实体类</li>
+<li>&quot;删&quot;使用deleteById,通过主键删除,若不想通过主键删除可以自己编写sql,像上面一样</li>
+<li>&quot;查&quot;使用findAll或findById,自定义查找的话需要自己编写sql.</li>
+<li>&quot;改&quot;也可使用save,注意需要设置主键.</li>
+</ul>
+<p>@Query用于设置sql,nativeQuery表示使用原生sql.</p>
+<h2 id="4service">(4)Service</h2>
+<p>新建一个MainService.java</p>
+<pre><code class="language-java">package com.test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Transactional
+@Service
+public class MainService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public Iterable&lt;User&gt; getAllUsers()
+    {
+        return userRepository.findAll();
+    }
+
+    public List&lt;User&gt; findByName(String name)
+    {
+        return userRepository.findByName(name);
+    }
+
+    public boolean add(String name)
+    {
+        User user = new User();
+        user.setName(name);
+        userRepository.save(user);
+		return true;
+    }
+
+    public boolean modify(Integer id,String name)
+    {
+        User user = new User();
+        user.setName(name);
+        user.setId(id);
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean deleteByName(String name)
+    {
+        return userRepository.deleteByName(name) != 0;
+    }
+}
+</code></pre>
+<ul>
+<li>getAllUsers()返回所有行,Iterable&lt;E&gt;类型</li>
+<li>findByName()根据name返回所有name相同的行.</li>
+<li>add直接使用了save,由于save返回的是实体类,原本的代码是这样写的:</li>
+</ul>
+<pre><code class="language-java">return userRepository.save(user) != null;
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20191126232352501.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+但是文档说了不会为null,所以只能强制返回true了.</p>
+<ul>
+<li>modify使用了id与name作为参数,新建一个user,将其作为setter的参数,然后交给save.</li>
+<li>deleteByName使用了自定义的删除函数,返回的是int,在UserRepository中这个int代表sql影响的行数,删除成功则行数不为0,删除失败,或者没有这行数据则行数为0.因此将返回值与0进行比较.</li>
+</ul>
+<h2 id="5controller">(5)Controller</h2>
+<pre><code class="language-java">package com.test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping(path = &quot;/demo&quot;)
+public class MainController {
+    @Autowired
+    private MainService mainService;
+
+    @GetMapping(path = &quot;/getAll&quot;)
+    public @ResponseBody Iterable&lt;User&gt; getAllUsers()
+    {
+        return mainService.getAllUsers();
+    }
+
+    @PostMapping(path = &quot;/get&quot;)
+    public @ResponseBody List&lt;User&gt; findByName(String name)
+    {
+        return mainService.findByName(name);
+    }
+
+    @PostMapping(path = &quot;/add&quot;)
+    public @ResponseBody boolean add(@RequestParam String name)
+    {
+        return mainService.add(name);
+    }
+
+    @PostMapping(path = &quot;/modify&quot;)
+    public @ResponseBody boolean modify(@RequestParam Integer id,@RequestParam String name)
+    {
+        return mainService.modify(id,name);
+    }
+
+    @PostMapping(path = &quot;/delete&quot;)
+    public @ResponseBody boolean deleteByName(@RequestParam String name)
+    {
+        return mainService.deleteByName(name);
+    }
+}
+</code></pre>
+<p>Controller主要就是几个注解,除了getAllUsers使用Get外,其他的都是用Post.另外就是路径设置,直接在path中设置即可.<br>
+后端的话到这里就基本完成了,剩下的打包部署操作就.....</p>
+<h1 id="4前端">4.前端</h1>
+<p>什么新建工程之类的就不说了.<br>
+直接上MainActivity:</p>
+<pre><code class="language-java">package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.os.Looper;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSONArray;
+import com.example.myapplication.model.dao.*;
+import com.example.myapplication.model.entity.*;
+
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Button register = findViewById(R.id.register);
+        register.setOnClickListener(
+                v -&gt;
+                {
+                    new Thread(()-&gt; {
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        String name = ((EditText) findViewById(R.id.name)).getText().toString();
+                        FormBody formBody = new FormBody.Builder().add(&quot;name&quot;, name).build();
+                        Request request = new Request.Builder()
+                                .url(Constant.ADD)
+                                .post(formBody)
+                                .build();
+                        try (Response response = okHttpClient.newCall(request).execute()) {
+                            Looper.prepare();
+                            if (Boolean.parseBoolean(response.body().string()))
+                            {
+                                Toast.makeText(this, &quot;注册成功&quot;, Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this, &quot;注册失败&quot;, Toast.LENGTH_SHORT).show();
+                            }
+                            Looper.loop();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+        );
+        Button login = findViewById(R.id.login);
+        login.setOnClickListener(
+                v -&gt;
+                {
+                    new Thread(()-&gt; {
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        String name = ((EditText) findViewById(R.id.name)).getText().toString();
+                        FormBody formBody = new FormBody.Builder().add(&quot;name&quot;, name).build();
+                        Request request = new Request.Builder()
+                                .url(Constant.GET)
+                                .post(formBody)
+                                .build();
+                        try (Response response = okHttpClient.newCall(request).execute()) {
+                            List&lt;User&gt; users = JSONArray.parseArray(response.body().string(),User.class);
+                            Looper.prepare();
+                            if(users.size() == 0)
+                            {
+                                Toast.makeText(this,&quot;登录失败&quot;,Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this,&quot;登录成功&quot;,Toast.LENGTH_SHORT).show();
+                            }
+                            Looper.loop();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+        );
+
+        Button delete = findViewById(R.id.delete);
+        delete.setOnClickListener(
+                v -&gt;
+                {
+                    new Thread(()-&gt; {
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        String name = ((EditText) findViewById(R.id.name)).getText().toString();
+                        FormBody formBody = new FormBody.Builder().add(&quot;name&quot;, name).build();
+                        Request request = new Request.Builder()
+                                .url(Constant.DELETE)
+                                .post(formBody)
+                                .build();
+                        try (Response response = okHttpClient.newCall(request).execute()) {
+                            Looper.prepare();
+                            if (Boolean.parseBoolean(response.body().string()))
+                            {
+                                Toast.makeText(this, &quot;删除成功&quot;, Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this, &quot;删除失败&quot;, Toast.LENGTH_SHORT).show();
+                            }
+                            Looper.loop();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+        );
+
+        Button modify = findViewById(R.id.modify);
+        modify.setOnClickListener(
+                v -&gt;
+                {
+                    new Thread(()-&gt; {
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        String name = ((EditText) findViewById(R.id.name)).getText().toString();
+                        String id = ((EditText)findViewById(R.id.id)).getText().toString();
+                        FormBody formBody = new FormBody.Builder()
+                                .add(&quot;name&quot;, name)
+                                .add(&quot;id&quot;,id)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(Constant.MODIFY)
+                                .post(formBody)
+                                .build();
+                        try (Response response = okHttpClient.newCall(request).execute()) {
+                            Looper.prepare();
+                            if (Boolean.parseBoolean(response.body().string()))
+                            {
+                                Toast.makeText(this, &quot;修改成功&quot;, Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this, &quot;修改失败&quot;, Toast.LENGTH_SHORT).show();
+                            }
+                            Looper.loop();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+        );
+    }
+}
+</code></pre>
+<h2 id="1增">(1)增</h2>
+<pre><code class="language-java">OkHttpClient okHttpClient = new OkHttpClient();
+String name = ((EditText) findViewById(R.id.name)).getText().toString();
+FormBody formBody = new FormBody.Builder().add(&quot;name&quot;, name).build();
+Request request = new Request.Builder()
+        .url(Constant.ADD)
+        .post(formBody)
+        .build();
+try (Response response = okHttpClient.newCall(request).execute()) {
+    Looper.prepare();
+    if (Boolean.parseBoolean(response.body().string()))
+    {
+        Toast.makeText(this, &quot;注册成功&quot;, Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+        Toast.makeText(this, &quot;注册失败&quot;, Toast.LENGTH_SHORT).show();
+    }
+    Looper.loop();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+</code></pre>
+<p>使用okhttp,通过FormBody设置参数,然后创建Request通过OkHttpClient发送.<br>
+由于后端&quot;增&quot;的方法返回的是一个true,因此这里将response.body().string()转换成boolean判断是否操作成功.<br>
+稍微提一下,</p>
+<pre><code class="language-java">Looper.prepare();
+Looper.loop();
+</code></pre>
+<p>这两行可以在非UI线程中使用Toast.</p>
+<h2 id="2删">(2)删</h2>
+<pre><code class="language-java">OkHttpClient okHttpClient = new OkHttpClient();
+String name = ((EditText) findViewById(R.id.name)).getText().toString();
+FormBody formBody = new FormBody.Builder().add(&quot;name&quot;, name).build();
+Request request = new Request.Builder()
+        .url(Constant.DELETE)
+        .post(formBody)
+        .build();
+try (Response response = okHttpClient.newCall(request).execute()) {
+    Looper.prepare();
+    if (Boolean.parseBoolean(response.body().string()))
+    {
+        Toast.makeText(this, &quot;删除成功&quot;, Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+        Toast.makeText(this, &quot;删除失败&quot;, Toast.LENGTH_SHORT).show();
+    }
+    Looper.loop();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+</code></pre>
+<p>删这部分也是差不多的,就是改一下url,然后....然后没有了....<s>好像很简单的样子?</s></p>
+<h2 id="3查">(3)查</h2>
+<pre><code class="language-java">OkHttpClient okHttpClient = new OkHttpClient();
+String name = ((EditText) findViewById(R.id.name)).getText().toString();
+FormBody formBody = new FormBody.Builder().add(&quot;name&quot;, name).build();
+Request request = new Request.Builder()
+        .url(Constant.GET)
+        .post(formBody)
+        .build();
+try (Response response = okHttpClient.newCall(request).execute()) {
+    List&lt;User&gt; users = JSONArray.parseArray(response.body().string(),User.class);
+    Looper.prepare();
+    if(users.size() == 0)
+    {
+        Toast.makeText(this,&quot;登录失败&quot;,Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+        Toast.makeText(this,&quot;登录成功&quot;,Toast.LENGTH_SHORT).show();
+    }
+    Looper.loop();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+</code></pre>
+<p>查这里注意一下后端返回的是List,这里借助阿里的fastjson转换成List.</p>
+<pre><code class="language-java">List&lt;User&gt; users = JSONArray.parseArray(response.body().string(),User.class);
+</code></pre>
+<p>然后判断有没有的话就判断长度是否为0即可.</p>
+<h2 id="4改">(4)改</h2>
+<pre><code class="language-java">OkHttpClient okHttpClient = new OkHttpClient();
+String name = ((EditText) findViewById(R.id.name)).getText().toString();
+String id = ((EditText)findViewById(R.id.id)).getText().toString();
+FormBody formBody = new FormBody.Builder()
+        .add(&quot;name&quot;, name)
+        .add(&quot;id&quot;,id)
+        .build();
+Request request = new Request.Builder()
+        .url(Constant.MODIFY)
+        .post(formBody)
+        .build();
+try (Response response = okHttpClient.newCall(request).execute()) {
+    Looper.prepare();
+    if (Boolean.parseBoolean(response.body().string()))
+    {
+        Toast.makeText(this, &quot;修改成功&quot;, Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+        Toast.makeText(this, &quot;修改失败&quot;, Toast.LENGTH_SHORT).show();
+    }
+    Looper.loop();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+</code></pre>
+<p>改的话只需一个额外的ID参数,在FormBody中add一个即可,不难.</p>
+<h2 id="5界面">(5)界面</h2>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot;&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/delete&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginStart=&quot;280dp&quot;
+        android:layout_marginTop=&quot;404dp&quot;
+        android:text=&quot;删除&quot;
+        app:layout_constraintStart_toStartOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/register&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginStart=&quot;32dp&quot;
+        android:layout_marginTop=&quot;293dp&quot;
+        android:text=&quot;注册&quot;
+        app:layout_constraintStart_toStartOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/modify&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginStart=&quot;32dp&quot;
+        android:layout_marginTop=&quot;404dp&quot;
+        android:text=&quot;修改&quot;
+        app:layout_constraintStart_toStartOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+    &lt;EditText
+        android:id=&quot;@+id/name&quot;
+        android:layout_width=&quot;336dp&quot;
+        android:layout_height=&quot;50dp&quot;
+        android:layout_marginStart=&quot;32dp&quot;
+        android:layout_marginTop=&quot;192dp&quot;
+        android:layout_marginEnd=&quot;43dp&quot;
+        android:ems=&quot;10&quot;
+        android:hint=&quot;请输入姓名&quot;
+        android:inputType=&quot;textPersonName&quot;
+        app:layout_constraintEnd_toEndOf=&quot;parent&quot;
+        app:layout_constraintHorizontal_bias=&quot;0.0&quot;
+        app:layout_constraintStart_toStartOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+    &lt;EditText
+        android:id=&quot;@+id/id&quot;
+        android:layout_width=&quot;336dp&quot;
+        android:layout_height=&quot;50dp&quot;
+        android:layout_marginStart=&quot;32dp&quot;
+        android:layout_marginTop=&quot;112dp&quot;
+        android:layout_marginEnd=&quot;43dp&quot;
+        android:ems=&quot;10&quot;
+        android:hint=&quot;请输入id&quot;
+        android:inputType=&quot;textPersonName&quot;
+        app:layout_constraintEnd_toEndOf=&quot;parent&quot;
+        app:layout_constraintHorizontal_bias=&quot;0.0&quot;
+        app:layout_constraintStart_toStartOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/login&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;293dp&quot;
+        android:layout_marginEnd=&quot;43dp&quot;
+        android:text=&quot;登录&quot;
+        app:layout_constraintEnd_toEndOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;
+</code></pre>
+<p>界面不详细说了,不难.</p>
+<h2 id="6依赖与其他">(6)依赖与其他</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191127015216289.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意一下依赖,还有设置java8.</p>
+<h2 id="7网络权限">(7)网络权限</h2>
+<p>这个作者之前的文章有说.<br>
+<a href="https://blog.csdn.net/qq_27525611/article/details/102493643">请看这里.</a></p>
+<h1 id="5测试">5.测试</h1>
+<p>这是&quot;原本的&quot;数据库.<br>
+<s>没办法为了测试.</s><br>
+<img src="https://img-blog.csdnimg.cn/20191127015752855.png" alt="在这里插入图片描述" loading="lazy"><br>
+注册一个.<br>
+<img src="https://img-blog.csdnimg.cn/20191127015830255.png" alt="在这里插入图片描述" loading="lazy"><br>
+看看数据库:<br>
+<img src="https://img-blog.csdnimg.cn/20191127015937365.png" alt="在这里插入图片描述" loading="lazy"></p>
+<p><img src="https://img-blog.csdnimg.cn/20191127015903596.png" alt="在这里插入图片描述" loading="lazy"><br>
+试试登录一个不存在的.<br>
+<img src="https://img-blog.csdnimg.cn/20191127020030459.png" alt="在这里插入图片描述" loading="lazy"><br>
+修改:<br>
+<img src="https://img-blog.csdnimg.cn/20191127020118499.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191127020149349.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191127020214410.png" alt="在这里插入图片描述" loading="lazy"><br>
+最后是删除:<br>
+<img src="https://img-blog.csdnimg.cn/20191127020251561.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191127020319777.png" alt="在这里插入图片描述" loading="lazy"><br>
+删除一个不存在的会删除失败.<br>
+<img src="https://img-blog.csdnimg.cn/20191127020354806.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="6源码">6.源码</h1>
+<ul>
+<li><a href="https://github.com/2293736867/spring-boot-Android-Mysql">github</a></li>
+<li><a href="https://gitee.com/imykr/spring-boot-Android-Mysql">码云</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></div>
+                 <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Spring boot+Mysql+Spring data JPA一个Web的Demo</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/">后端spring boot+前端Android交互+mysql增删查改</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/">Spring boot+Mysql+Spring data JPA一个Web的Demo</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/">JDBC+C3P0+DBCP 基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-3 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-4 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-5 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-6 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-7 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-8 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-9 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-11 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-12 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 16 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

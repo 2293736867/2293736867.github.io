@@ -1,0 +1,710 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JDBC+C3P0+DBCP 基本使用 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.概述
+2.mysql的处理
+
+(1)新建用户
+(2)建立数据表
+(3)用户权限
+
+
+2.JDBC
+
+(1)jar包
+(2)连接
+(3)Statement
+(4)PreparedStatement
+(5)事务
+
+
+3.C3P0
+
+(1)..." />
+    <meta name="keywords" content="JDBC,C3P0,DBCP" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591126411628" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/jdbcc3p0dbcp-ji-ben-shi-yong/"> </span>
+              </a>
+              <span id="/jdbcc3p0dbcp-ji-ben-shi-yong/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-0 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-1 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-2 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">JDBC+C3P0+DBCP 基本使用</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1%E6%A6%82%E8%BF%B0">1.概述</a></li>
+<li><a href="#2mysql%E7%9A%84%E5%A4%84%E7%90%86">2.mysql的处理</a>
+<ul>
+<li><a href="#1%E6%96%B0%E5%BB%BA%E7%94%A8%E6%88%B7">(1)新建用户</a></li>
+<li><a href="#2%E5%BB%BA%E7%AB%8B%E6%95%B0%E6%8D%AE%E8%A1%A8">(2)建立数据表</a></li>
+<li><a href="#3%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90">(3)用户权限</a></li>
+</ul>
+</li>
+<li><a href="#2jdbc">2.JDBC</a>
+<ul>
+<li><a href="#1jar%E5%8C%85">(1)jar包</a></li>
+<li><a href="#2%E8%BF%9E%E6%8E%A5">(2)连接</a></li>
+<li><a href="#3statement">(3)Statement</a></li>
+<li><a href="#4preparedstatement">(4)PreparedStatement</a></li>
+<li><a href="#5%E4%BA%8B%E5%8A%A1">(5)事务</a></li>
+</ul>
+</li>
+<li><a href="#3c3p0">3.C3P0</a>
+<ul>
+<li><a href="#1jar%E5%8C%85-2">(1)jar包</a></li>
+<li><a href="#2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">(2)配置文件</a></li>
+<li><a href="#3%E5%B7%A5%E5%85%B7%E7%B1%BB">(3)工具类</a></li>
+</ul>
+</li>
+<li><a href="#4dbcp">4.DBCP</a>
+<ul>
+<li><a href="#1jar%E5%8C%85-3">(1)jar包</a></li>
+<li><a href="#2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-2">(2)配置文件</a></li>
+<li><a href="#3%E5%B7%A5%E5%85%B7%E7%B1%BB-2">(3)工具类</a></li>
+</ul>
+</li>
+<li><a href="#5%E6%BA%90%E7%A0%81">5.源码</a></li>
+</ul>
+</p>
+<h1 id="1概述">1.概述</h1>
+<p>这篇文章主要说了JDBC的基本使用,包括Statement,PreparedStatement,JDBC的连接,Mysql创建用户创建数据表,C3P0的连接与配置,DBCP的连接与配置.</p>
+<h1 id="2mysql的处理">2.mysql的处理</h1>
+<p>这里的JDBC使用Mysql作为DBMS,请先安装Mysql,未安装的<a href="https://www.mysql.com/">请点击这里下载</a>,<a href="https://www.cnblogs.com/xzlive/p/11023527.html">安装教程在这里</a>,作者使用的Mysql的8.0.17版本.</p>
+<h2 id="1新建用户">(1)新建用户</h2>
+<p>随便新建一个用户,比如这里作者新建的是aa,密码是aa123bb.</p>
+<pre><code class="language-sql">create user 'aa'@'localhost' identified by 'aa123bb'
+</code></pre>
+<h2 id="2建立数据表">(2)建立数据表</h2>
+<p>建立测试用的数据表与数据库.</p>
+<pre><code class="language-sql">create database db;
+use db;
+
+create table db
+(
+    id int PRIMARY key,
+    name char(20)
+);
+</code></pre>
+<h2 id="3用户权限">(3)用户权限</h2>
+<p>对刚才新建的用户授权:</p>
+<pre><code class="language-sql">grant select,update,delete,insert on db.* to 'aa'@'localhost';
+</code></pre>
+<h1 id="2jdbc">2.JDBC</h1>
+<h2 id="1jar包">(1)jar包</h2>
+<p><a href="https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar">8.0.17版本在这里</a></p>
+<p><a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java">各个版本的在这里下载</a></p>
+<h2 id="2连接">(2)连接</h2>
+<p>首先注册驱动,驱动需要一个url,用户名和密码,用户名和密码是上一步创建好的,url包含ip地址,端口和数据库的名字.</p>
+<pre><code class="language-java">private static final boolean mysqlVersionGreaterThen8 = true;
+private static final String driver = &quot;com.mysql&quot; + (mysqlVersionGreaterThen8 ? &quot;.cj&quot; : &quot;&quot;) + &quot;.jdbc.Driver&quot;;
+private static final String ip = &quot;127.0.0.1&quot;;
+private static final String port = &quot;3306&quot;;
+private static String databaseName = &quot;db&quot;;
+private static String url;
+private static String username = &quot;aa&quot;;
+private static String password = &quot;k041400r&quot;;
+private static Connection connection = null;
+
+public static Connection getConnection() {
+    try {
+        url = &quot;jdbc:mysql://&quot; + ip + &quot;:&quot; + port + &quot;/&quot; + databaseName;
+        Class.forName(driver);
+        return connection = DriverManager.getConnection(url, username, password);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+</code></pre>
+<p>这里要注意以下旧版本的mysql的驱动叫com.mysql.jdbc.Driver,新版本的叫com.mysql.cj.jdbc.Driver.还有就是url的格式:</p>
+<pre><code class="language-java">jdbc:mysql://ip:port/database
+</code></pre>
+<h2 id="3statement">(3)Statement</h2>
+<p>获取数据库连接后,使用createStatement方法创建Statement</p>
+<ul>
+<li>对于select,使用Statement的executeQuery(sql),返回ResultSet</li>
+<li>对于update,delete,insert,使用Statement的executeUpdate(sql)</li>
+</ul>
+<p>其中sql是要执行的sql语句,一个String.</p>
+<pre><code class="language-java">public void useStatement() {
+    try {
+        useStatementInsert();
+        useStatementSelect();
+        useStatementUpdate();
+        useStatementSelect();
+        useStatementDelete();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void useStatementInsert() throws SQLException {
+    String sql = &quot;insert into db(id,name) values(1,'23')&quot;;
+    Statement statement = connection.createStatement();
+    statement.executeUpdate(sql);
+}
+
+public void useStatementDelete() throws SQLException {
+    String sql = &quot;delete from db&quot;;
+    Statement statement = connection.createStatement();
+    statement.executeUpdate(sql);
+}
+
+public void useStatementSelect() throws SQLException {
+    String sql = &quot;select * from db&quot;;
+    Statement statement = connection.createStatement();
+    ResultSet resultSet = statement.executeQuery(sql);
+    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+    int count = resultSetMetaData.getColumnCount();
+    while (resultSet.next()) {
+        for (int i = 1; i &lt;= count; ++i) {
+            System.out.println(resultSet.getObject(i));
+        }
+    }
+}
+
+public void useStatementUpdate() throws SQLException {
+    Statement statement = connection.createStatement();
+    String sql = &quot;update db set id = 3,name = '555' where id = 1&quot;;
+    statement.executeUpdate(sql);
+}
+</code></pre>
+<p>这里对ResultSet使用的getMetaData,可以获取结果集的各种类型信息,包括字段的类型,个数,等等.</p>
+<h2 id="4preparedstatement">(4)PreparedStatement</h2>
+<p>PreparedStatement与Statement使用基本一样.调用的时候先使用Connection的prepareStatement(sql)创建,然后</p>
+<ul>
+<li>对于select,使用executeQuery(),返回一个ResultSet</li>
+<li>对于update,delete,insert使用executeUpdate().</li>
+</ul>
+<pre><code class="language-java">public void usePrepareStatement() {
+    try {
+        usePrepareStatementInsert();
+        usePrepareStatementSelect();
+        usePrepareStatementUpdate();
+        usePrepareStatementSelect();
+        usePrepareStatementDelete();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void usePrepareStatementInsert() throws SQLException {
+    String sql = &quot;insert into db(id,name) values(1,'23')&quot;;
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.executeUpdate();
+}
+
+public void usePrepareStatementDelete() throws SQLException {
+    String sql = &quot;delete from db&quot;;
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.executeUpdate();
+}
+
+public void usePrepareStatementSelect() throws SQLException {
+    String sql = &quot;select * from db&quot;;
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    ResultSet resultSet = preparedStatement.executeQuery();
+    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+    int count = resultSetMetaData.getColumnCount();
+    while (resultSet.next()) {
+        for (int i = 1; i &lt;= count; ++i)
+            System.out.println(resultSet.getObject(i));
+    }
+}
+
+public void usePrepareStatementUpdate() throws SQLException {
+    String sql = &quot;update db set id = 3,name = '555' where id = 1&quot;;
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.executeUpdate();
+}
+</code></pre>
+<h2 id="5事务">(5)事务</h2>
+<p>Connection有一个setAutoCommit()方法,把它设置成false即可关闭自动提交,所有语句准备好后,一次性使用commit()提交即可.<br>
+实现回滚可以配合SavePoint使用.</p>
+<h1 id="3c3p0">3.C3P0</h1>
+<h2 id="1jar包-2">(1)jar包</h2>
+<p>两个:</p>
+<ul>
+<li>
+<p><a href="https://repo1.maven.org/maven2/com/mchange/c3p0/0.9.5.4/c3p0-0.9.5.4.jar">c3p0</a></p>
+</li>
+<li>
+<p><a href="https://repo1.maven.org/maven2/com/mchange/mchange-commons-java/0.2.19/mchange-commons-java-0.2.19.jar">mchange-commons</a></p>
+</li>
+</ul>
+<h2 id="2配置文件">(2)配置文件</h2>
+<p>src下创建一个叫c3p0.properties的文件:</p>
+<pre><code class="language-cpp">c3p0.driverClass=com.mysql.cj.jdbc.Driver
+c3p0.jdbcUrl=jdbc:mysql://127.0.0.1:3306/db
+c3p0.user=aa
+c3p0.password=aa123bb
+</code></pre>
+<p>这里按自己需要更改即可.</p>
+<h2 id="3工具类">(3)工具类</h2>
+<pre><code class="language-java">import com.mchange.v2.c3p0.ComboPooledDataSource;
+import java.sql.Connection;
+
+public class DbUtil
+{
+    private static ComboPooledDataSource C3P0dataSource = new ComboPooledDataSource(&quot;c3p0.properties&quot;);
+    public static void releaseConnection(Connection connection)
+    {
+        try
+        {
+            if(connection != null)
+                connection.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection getC3P0Connection()
+    {
+        try
+        {
+            return C3P0dataSource.getConnection();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+</code></pre>
+<h1 id="4dbcp">4.DBCP</h1>
+<h2 id="1jar包-3">(1)jar包</h2>
+<p>三个:</p>
+<ul>
+<li>
+<p><a href="https://repo1.maven.org/maven2/org/apache/commons/commons-dbcp2/2.7.0/commons-dbcp2-2.7.0.jar">commons-dbcp</a></p>
+</li>
+<li>
+<p><a href="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar">commons-logging</a></p>
+</li>
+<li>
+<p><a href="https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.7.0/commons-pool2-2.7.0.jar">commons-pool</a></p>
+</li>
+</ul>
+<h2 id="2配置文件-2">(2)配置文件</h2>
+<p>src下新建dbcp.properties:</p>
+<pre><code class="language-cpp">driver=com.mysql.cj.jdbc.Driver
+url=jdbc:mysql://127.0.0.1:3306/db
+username=aa
+password=k041400r
+initialSize=10
+maxActive=50
+maxIdle=15
+minIdle=10
+maxWait=60000
+connectionProperties=useUnicode=true;characterEncoding=utf8
+defaultAutoCommit=true
+</code></pre>
+<p>分别是驱动,url,用户名,密码,初始化连接数,最大连接数,最大空闲连接数,最小空闲连接数,最大等待实际,连接属性(这里设置了编码),自动提交.</p>
+<h2 id="3工具类-2">(3)工具类</h2>
+<pre><code class="language-java">import org.apache.commons.dbcp2.BasicDataSourceFactory;
+
+import java.io.InputStream;
+import java.sql.Connection;
+import java.util.Properties;
+import javax.sql.DataSource;
+
+public class DbUtil {
+    private static DataSource DBCPdataSource;
+    static {
+        try {
+            InputStream inputStream = DbUtil.class.getClassLoader().getResourceAsStream(&quot;dbcp.properties&quot;);
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            DBCPdataSource = BasicDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection getDBCPConnection() {
+        try {
+            return DBCPdataSource.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void releaseConnection(Connection connection) {
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>首先加载属性文件,再使用Properties的load方法将其加载到一个Properties对象中,最后交给BasicDataSourceFactory处理.</p>
+<h1 id="5源码">5.源码</h1>
+<p>包含了jar包,配置文件,sql文件与测试代码.</p>
+<ul>
+<li><a href="https://github.com/2293736867/JDBC-C3P0-DBCP">github</a></li>
+<li><a href="https://gitee.com/imykr/JDBC-C3P0-DBCP">码云</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></div>
+                 <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">Spring boot+Mysql+Spring data JPA一个Web的Demo</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/cong-0-kai-shi-zi-zhi-ji-suan-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/cong-0-kai-shi-zi-zhi-ji-suan-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">从0开始自制计算器!</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/">后端spring boot+前端Android交互+mysql增删查改</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/">Spring boot+Mysql+Spring data JPA一个Web的Demo</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/">JDBC+C3P0+DBCP 基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-3 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-4 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-5 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-6 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-7 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-8 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-9 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-11 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-12 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 16 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

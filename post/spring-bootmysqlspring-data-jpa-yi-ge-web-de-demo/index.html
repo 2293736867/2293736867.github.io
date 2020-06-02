@@ -1,0 +1,579 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring boot+Mysql+Spring data JPA一个Web的Demo | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.概述
+2.创建初始spring demo
+3.配置数据源
+
+(1)建库
+(2)建用户
+(3)用户授权
+(4)配置application.properties
+
+a.none
+b.update
+c.create
+d.create-dro..." />
+    <meta name="keywords" content="Spring Boot,Spring Data JPA,MySQL,Web" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591126411628" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/"> </span>
+              </a>
+              <span id="/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-1 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-2 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-3 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Spring boot+Mysql+Spring data JPA一个Web的Demo</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1%E6%A6%82%E8%BF%B0">1.概述</a></li>
+<li><a href="#2%E5%88%9B%E5%BB%BA%E5%88%9D%E5%A7%8Bspring-demo">2.创建初始spring demo</a></li>
+<li><a href="#3%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E6%BA%90">3.配置数据源</a>
+<ul>
+<li><a href="#1%E5%BB%BA%E5%BA%93">(1)建库</a></li>
+<li><a href="#2%E5%BB%BA%E7%94%A8%E6%88%B7">(2)建用户</a></li>
+<li><a href="#3%E7%94%A8%E6%88%B7%E6%8E%88%E6%9D%83">(3)用户授权</a></li>
+<li><a href="#4%E9%85%8D%E7%BD%AEapplicationproperties">(4)配置application.properties</a>
+<ul>
+<li><a href="#anone">a.none</a></li>
+<li><a href="#bupdate">b.update</a></li>
+<li><a href="#ccreate">c.create</a></li>
+<li><a href="#dcreate-drop">d.create-drop</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BD%93%E7%B1%BB">4.创建实体类</a></li>
+<li><a href="#5%E5%88%9B%E5%BB%BArepository">5.创建Repository</a></li>
+<li><a href="#6%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8">6.创建控制器</a></li>
+<li><a href="#7ide%E4%B8%8A%E6%B5%8B%E8%AF%95">7.IDE上测试</a></li>
+<li><a href="#8%E6%89%93%E5%8C%85%E5%8F%91%E5%B8%83">8.打包发布</a></li>
+<li><a href="#9%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81">9.完整代码</a></li>
+</ul>
+</p>
+<h1 id="1概述">1.概述</h1>
+<p>因为要用spring boot,最近刚刚学习.这是一个web项目的配合mysq+Hibernate+tomcat的简单示例demo,很容易在此基础上扩展成自己的项目.</p>
+<h1 id="2创建初始spring-demo">2.创建初始spring demo</h1>
+<p>作者用的IDE是IDEA,新建一个工程,选择Spring Initalizer.<br>
+<img src="https://img-blog.csdnimg.cn/2019112523242899.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+下一步的话由于作者需要部署到服务器上面,选择了war.不需要的话可以选择jar.<br>
+<img src="https://img-blog.csdnimg.cn/20191125232753957.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+选择spring web+spring Data JPA+Mysql Driver.<br>
+<img src="https://img-blog.csdnimg.cn/20191125233048539.jpg" alt="在这里插入图片描述" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/201911252330373.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191125233023480.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+然后完成即可,首次运行的话配置依赖需要一点时间,请耐心等待.</p>
+<h1 id="3配置数据源">3.配置数据源</h1>
+<p>配置数据源分为两部分,一部分是建表与建用户,另一部分是在application.properties中配置的.</p>
+<h2 id="1建库">(1)建库</h2>
+<pre><code class="language-sql">create database test;
+</code></pre>
+<p>注意这里不用创建表了,因为Hibernate从实体类自动创建一个同名的表.</p>
+<h2 id="2建用户">(2)建用户</h2>
+<pre><code class="language-sql">create user 'db'@'%' identified by 'xxxxx';
+</code></pre>
+<h2 id="3用户授权">(3)用户授权</h2>
+<pre><code class="language-sql">grant all on test.* to 'db'@'%';
+</code></pre>
+<p>这里建议授权all,因为后面Hibernate会用到建表权限,不能仅仅授权增删查改.</p>
+<h2 id="4配置applicationproperties">(4)配置application.properties</h2>
+<p>配置四个属性:</p>
+<pre><code class="language-java">spring.jpa.hibernate.ddl-auto=
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+</code></pre>
+<p>第一个属性是可以取值</p>
+<ul>
+<li>none</li>
+<li>update</li>
+<li>create</li>
+<li>create-drop</li>
+</ul>
+<h3 id="anone">a.none</h3>
+<p>none是对mysql的默认值,不会改变数据库结构.</p>
+<h3 id="bupdate">b.update</h3>
+<p>Hibernate会根据给出的实体类去改变数据库.</p>
+<h3 id="ccreate">c.create</h3>
+<p>创建数据库但是不会在关闭的时候删除.</p>
+<h3 id="dcreate-drop">d.create-drop</h3>
+<p>创建数据库,当SessionFactory关闭时删除数据库.这个是对H2与其他嵌入式数据库的默认选项.</p>
+<p>第一次运行时必须设置为update或create,因为还不知道确切的实体类,第一次运行后,可以设置为update或none.<br>
+url的话对于mysql来说是</p>
+<pre><code>jdbc:mysql://ip:3306/database
+</code></pre>
+<p>剩下的两个为用户名与密码.<br>
+以下是作者的配置,供参考:<br>
+<img src="https://img-blog.csdnimg.cn/20191125235544555.jpg" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4创建实体类">4.创建实体类</h1>
+<p>这里创建一个简单的User实体类,需要用到javax中的Entity,Id,GeneratedValue与GenerationType注解.<br>
+Entity用于标识实体类,Id用于标识主键,GeneratedValue与GenerationType用于配置主键.</p>
+<pre><code class="language-java">package com.test;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    private String name;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+</code></pre>
+<p>除了主键之外,可以加上自己想要的属性,还有setter与getter,Hibernate会自动将实体类制作成一个数据表.</p>
+<h1 id="5创建repository">5.创建Repository</h1>
+<p>创建仓库保存用户记录.需要继承CrudRepository&lt;T,ID&gt;,第一个类型为实体类,第二个类型为主键类型.</p>
+<pre><code class="language-java">package com.test;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface UserRepository extends CrudRepository&lt;User,Integer&gt;
+{
+}
+</code></pre>
+<h1 id="6创建控制器">6.创建控制器</h1>
+<p>控制器用于控制Http请求,在控制器中可以配置不同的路径实现不同的操作.</p>
+<pre><code class="language-java">package com.test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping(path = &quot;/demo&quot;)
+public class MainController {
+    @Autowired
+    private UserRepository userRepository;
+    
+    @PostMapping(path = &quot;/add&quot;)
+    public @ResponseBody String addNewUser(@RequestParam String name)
+    {
+        User user = new User();
+        user.setName(name);
+        userRepository.save(user);
+        return &quot;Saved.&quot;;
+    }
+    
+    @GetMapping(path = &quot;/all&quot;)
+    public @ResponseBody Iterable&lt;User&gt; getAllUsers()
+    {
+        return userRepository.findAll();
+    }
+}
+</code></pre>
+<p>@RequestMapping中的值表示url以此值开头.<br>
+@PostMapping是仅处理post请求的路径.<br>
+@ResponseBody表示返回的类型.<br>
+@RequestParam表示一个从get或post中获取的参数.<br>
+getAllUsers()会返回一个json或者xml.</p>
+<h1 id="7ide上测试">7.IDE上测试</h1>
+<p>首先输入</p>
+<pre><code class="language-java">localhost:8080/demo/all
+</code></pre>
+<p>由于作者先前已经有一行数据所以有显示.<br>
+<img src="https://img-blog.csdnimg.cn/20191126001631148.png" alt="在这里插入图片描述" loading="lazy"><br>
+否则的话应该显示为[]<br>
+接下来可以添加数据:</p>
+<pre><code class="language-bash">curl localhost:8080/demo/add -d name=123
+</code></pre>
+<p>回应:<br>
+<img src="https://img-blog.csdnimg.cn/20191126001842383.png" alt="在这里插入图片描述" loading="lazy"><br>
+接下来可以选择再次查看:<br>
+<img src="https://img-blog.csdnimg.cn/20191126001922655.png" alt="在这里插入图片描述" loading="lazy"><br>
+在看看数据库:<br>
+<img src="https://img-blog.csdnimg.cn/20191126001956984.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="8打包发布">8.打包发布</h1>
+<p>Build-&gt;Build Artifacts.<br>
+<img src="https://img-blog.csdnimg.cn/20191126002525722.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191126002457453.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+Build即可.<br>
+然后会在项目目录的target下有一个test-0.0.1-xxx的war文件,就是这个了.<br>
+<img src="https://img-blog.csdnimg.cn/20191126002610710.png" alt="在这里插入图片描述" loading="lazy"><br>
+改名字放到tomcat的webapps/下,比如作者改成了demo.war:<br>
+<img src="https://img-blog.csdnimg.cn/20191126002746230.png" alt="在这里插入图片描述" loading="lazy"><br>
+然后可以去访问了,注意路径,这里的路径是war的路径再加上@RequestMapping中的路径再加上 @PostMapping或 @GetMapping路径:<br>
+<img src="https://img-blog.csdnimg.cn/20191126002912162.png" alt="在这里插入图片描述" loading="lazy"><br>
+完成!</p>
+<h1 id="9完整代码">9.完整代码</h1>
+<ul>
+<li><a href="https://github.com/2293736867/spring-boot-hibernate-tomcat-mysql">github</a></li>
+<li><a href="https://gitee.com/imykr/spring-boot-hibernate-tomcat-mysql">码云</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">后端spring boot+前端Android交互+mysql增删查改</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">JDBC+C3P0+DBCP 基本使用</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/">后端spring boot+前端Android交互+mysql增删查改</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/">Spring boot+Mysql+Spring data JPA一个Web的Demo</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/">JDBC+C3P0+DBCP 基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-3 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-4 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-5 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-6 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-7 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-8 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-9 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-11 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-12 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 16 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

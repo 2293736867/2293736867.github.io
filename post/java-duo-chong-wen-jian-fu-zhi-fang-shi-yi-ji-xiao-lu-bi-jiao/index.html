@@ -1,0 +1,1958 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>java多种文件复制方式以及效率比较 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1.背景
+2.概述
+3.jar包
+4.遍历
+
+(1)listFiles()
+(2)list()
+(3)org.codehaus.plexus.util.FileUtils.getFiles
+(4)Commons.io工具包
+(5)NIO-..." />
+    <meta name="keywords" content="Java" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591126411628" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/java-duo-chong-wen-jian-fu-zhi-fang-shi-yi-ji-xiao-lu-bi-jiao.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">3 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/java-duo-chong-wen-jian-fu-zhi-fang-shi-yi-ji-xiao-lu-bi-jiao/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/java-duo-chong-wen-jian-fu-zhi-fang-shi-yi-ji-xiao-lu-bi-jiao/"> </span>
+              </a>
+              <span id="/java-duo-chong-wen-jian-fu-zhi-fang-shi-yi-ji-xiao-lu-bi-jiao/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">java多种文件复制方式以及效率比较</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1%E8%83%8C%E6%99%AF">1.背景</a></li>
+<li><a href="#2%E6%A6%82%E8%BF%B0">2.概述</a></li>
+<li><a href="#3jar%E5%8C%85">3.jar包</a></li>
+<li><a href="#4%E9%81%8D%E5%8E%86">4.遍历</a>
+<ul>
+<li><a href="#1listfiles">(1)listFiles()</a></li>
+<li><a href="#2list">(2)list()</a></li>
+<li><a href="#3orgcodehausplexusutilfileutilsgetfiles">(3)org.codehaus.plexus.util.FileUtils.getFiles</a></li>
+<li><a href="#4commonsio%E5%B7%A5%E5%85%B7%E5%8C%85">(4)Commons.io工具包</a></li>
+<li><a href="#5nio-walkfiletree">(5)NIO--walkFileTree</a></li>
+</ul>
+</li>
+<li><a href="#5%E5%A4%8D%E5%88%B6">5.复制</a>
+<ul>
+<li><a href="#1fileinputstreamfileoutputstream">(1)FileInputStream+FileOutputStream</a>
+<ul>
+<li><a href="#aread">A.read()</a></li>
+<li><a href="#breadb">B.read(b)</a></li>
+<li><a href="#creadbofflen">C.read(b,off,len)</a></li>
+</ul>
+</li>
+<li><a href="#2bufferedinputstreambufferedoutputstream">(2)BufferedInputStream+BufferedOutputStream</a>
+<ul>
+<li><a href="#areadb">A.read(b)</a></li>
+<li><a href="#breadbofflen">B.read(b,off,len)</a></li>
+<li><a href="#creadallbytes">C.readAllBytes()</a></li>
+</ul>
+</li>
+<li><a href="#3filereaderfilewriter">(3)FileReader+FileWriter</a></li>
+<li><a href="#4bufferedreaderbufferedwriter">(4)BufferedReader+BufferedWriter</a></li>
+<li><a href="#5nio-filechannel">(5)NIO--FileChannel</a></li>
+<li><a href="#6nio-filechannelbytebuffer">(6)NIO--FileChannel+ByteBuffer</a></li>
+<li><a href="#7fileutilscopyfile">(7)FileUtils.copyFile()</a></li>
+<li><a href="#8filescopy">(8)Files.copy()</a></li>
+</ul>
+</li>
+<li><a href="#6%E5%85%B6%E4%BB%96">6.其他</a>
+<ul>
+<li><a href="#1swing%E5%B8%83%E5%B1%80">(1)swing布局</a>
+<ul>
+<li><a href="#a%E7%BD%91%E6%A0%BC%E5%B8%83%E5%B1%80">A.网格布局</a></li>
+<li><a href="#b%E5%B1%85%E4%B8%AD">B.居中</a></li>
+<li><a href="#c%E7%BB%84%E4%BB%B6%E7%9A%84%E6%B7%BB%E5%8A%A0%E4%B8%8E%E5%88%A0%E9%99%A4">C.组件的添加与删除</a></li>
+</ul>
+</li>
+<li><a href="#2%E8%BF%9B%E5%BA%A6%E6%9D%A1">(2)进度条</a></li>
+</ul>
+</li>
+<li><a href="#7%E6%B5%8B%E8%AF%95">7.测试</a>
+<ul>
+<li><a href="#11g%E6%96%87%E4%BB%B6">(1)1G文件</a></li>
+<li><a href="#210g%E6%96%87%E4%BB%B6">(2)10G文件</a></li>
+<li><a href="#31g%E7%9B%AE%E5%BD%95">(3)1G目录</a></li>
+<li><a href="#410g%E7%9B%AE%E5%BD%95">(4)10G目录</a></li>
+</ul>
+</li>
+<li><a href="#8%E6%BA%90%E7%A0%81">8.源码</a></li>
+</ul>
+</p>
+<h1 id="1背景">1.背景</h1>
+<p>java复制文件的方式其实有很多种,可以分为</p>
+<ul>
+<li>传统的字节流读写复制FileInputStream,FileOutputStream,BufferedInputStream,BufferedOutputStream</li>
+<li>传统的字符流读写复制FileReader,FileWriter,BufferWriter,BufferedWriter,BufferedReader</li>
+<li>NIO系列的FileChannel</li>
+<li>FileChannel+缓冲</li>
+<li>java.nio.Files.copy()</li>
+<li>第三方包中的FileUtils.copy方法,比如org.apache.commons.io.FileUtils,org.codehaus.plexus.util.FileUtils等等.</li>
+</ul>
+<p>所以呢,看看各种方法效率怎么样,主要衡量的标准就是时间,另外的一些标准包括大文件的复制时的内存溢出等问题.</p>
+<h1 id="2概述">2.概述</h1>
+<p>由于很多时候复制文件都包括了文件夹下的所有子目录及文件的复制,所以作者采用的遍历+复制方法去复制文件.就是把整个复制过程分为先遍历,遍历的过程中遇到文件夹就创建,遇到文件就调用不同的复制方法.<br>
+遍历的5种方法:</p>
+<ul>
+<li>(1)File.listFiles()</li>
+<li>(2)File.list()</li>
+<li>(3)org.codehaus.plexus.util.FileUtils.getFiles()</li>
+<li>(4)org.apache.commons.io.FileUtils.listFiles()</li>
+<li>(5)java nio中的java.nio.file.Files.walkFileTree</li>
+</ul>
+<p>复制的8种方法:</p>
+<ul>
+<li>(1)FileInputStream+FileOutputStream</li>
+<li>(2)BufferedInputStream+BufferedOutputStream</li>
+<li>(3)FileReader+FileWriter</li>
+<li>(4)BufferedReader+BufferedWriter</li>
+<li>(5)FileChannel</li>
+<li>(6)FileChannel+buffer</li>
+<li>(7)org.apache.commons.io.FileUtils.copyFile()</li>
+<li>(8)java.nio.file.Files.copy()</li>
+</ul>
+<p>另外作者不太想看控制台.....所以配合了一点swing使用.</p>
+<h1 id="3jar包">3.jar包</h1>
+<p>1.<a href="https://repo1.maven.org/maven2/commons-io/commons-io/2.6/commons-io-2.6.jar">org.apache.commons</a><br>
+2.<a href="https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils/3.3.0/plexus-utils-3.3.0.jar">org.codehaus.plexus</a></p>
+<h1 id="4遍历">4.遍历</h1>
+<h2 id="1listfiles">(1)listFiles()</h2>
+<pre><code class="language-java"> private static void traverseByListFiles(File srcFile,File desFile) throws IOException
+{
+	if(srcFile.isDirectory())
+	{
+		File[] files = srcFile.listFiles();
+		assert files != null;
+		for(File file : files)
+		{
+			File desFileOrDir = new File(desFile.getAbsolutePath() + File.separator + file.getName());
+			if(file.isDirectory())
+			{
+				if(desFileOrDir.exists())
+					desFileOrDir.delete();
+				desFileOrDir.mkdirs();
+			}
+			traverseByListFiles(file, desFileOrDir);
+		}
+	}
+	else 
+	{
+		copyFile(srcFile, desFile);
+	}
+}
+</code></pre>
+<p>通过srcFile的listFiles()获取所有的子文件与子文件夹,然后判断是否是目录<br>
+如果是目录,首先判断有没有这个文件(有时候本来是文件夹但是却存在同名的文件,就先删除),再创建文件夹,然后递归执行函数.<br>
+如果不是目录,直接把两个File作为参数进行文件复制,里面用什么方法后面会设置.</p>
+<h2 id="2list">(2)list()</h2>
+<pre><code class="language-java">private static void traverseByList(File srcFile,File desFile) throws IOException
+{
+	if (srcFile.isDirectory())
+	{
+		String[] files = srcFile.list();
+		assert files != null;
+		for (String file : files)
+		{
+			File subSrcFile = new File(srcFile, file);
+			File subDesFile = new File(desFile, file);
+			if (subSrcFile.isDirectory())
+			{
+				if (subDesFile.exists())
+					subDesFile.delete();
+				subDesFile.mkdirs();
+			}
+			traverseByList(subSrcFile, subDesFile);
+		}
+	}
+	else
+	{
+		copyFile(srcFile, desFile);
+	}
+}
+</code></pre>
+<p>list与第一种listFiles()类似,不过是String[],也是先判断目录,创建目录,不是目录直接复制</p>
+<h2 id="3orgcodehausplexusutilfileutilsgetfiles">(3)org.codehaus.plexus.util.FileUtils.getFiles</h2>
+<pre><code class="language-java">private static void traverseByGetFiles(File srcFile, File desFile) throws IOException
+{
+	if (srcFile.isDirectory())
+	{
+		java.util.List&lt;File&gt; fileList = org.codehaus.plexus.util.FileUtils.getFiles(srcFile,null,null);
+		for (File file : fileList)
+		{
+			File desFileOrDir = new File(desFile.getAbsolutePath() + File.separator + file.getName());
+			if(file.isDirectory())
+			{
+				if(desFileOrDir.exists())
+					desFileOrDir.delete();
+				desFileOrDir.mkdirs();
+			}
+			traverseByListFiles(file, desFileOrDir);
+		}
+	}
+	else
+	{
+		copyFile(srcFile, desFile);
+	}
+}
+</code></pre>
+<p>这是用了别人的工具类进行遍历.</p>
+<pre><code class="language-java">org.codehaus.plexus.util.FileUtils.getFiles(srcFile,null,null);
+</code></pre>
+<p>返回的结果的java.util.List</p>
+<h2 id="4commonsio工具包">(4)Commons.io工具包</h2>
+<pre><code class="language-java">private static void traverseByCommonsIO(File srcFile, File desFile) throws IOException
+{
+	if (srcFile.isDirectory())
+	{
+		Collection&lt;File&gt; files = org.apache.commons.io.FileUtils.listFiles(srcFile,null,false);
+		for (File file : files)
+		{
+			File desFileOrDir = new File(desFile.getAbsolutePath() + File.separator + file.getName());
+			if(file.isDirectory())
+			{
+				if(desFileOrDir.exists())
+					desFileOrDir.delete();
+				desFileOrDir.mkdirs();
+			}
+			traverseByCommonsIO(file, desFileOrDir);
+        }
+	}
+	else 
+	{
+		copyFile(srcFile, desFile);
+	}
+}
+</code></pre>
+<p>使用org.apache.commons.io.FileUtils的listFiles方法，参数为要遍历的目录，一个null和一个false，第二个参数表示过滤器，表示过滤出特定后缀名的文件，类型为String [],第三个布尔参数表示是否递归访问子目录.</p>
+<h2 id="5nio-walkfiletree">(5)NIO--walkFileTree</h2>
+<p>利用FileVisitor这个接口.实际中常用SimpleFileVisitor.</p>
+<pre><code class="language-java">private static void traverseByNIO2(File srcFile) throws IOException
+{
+	java.nio.file.Files.walkFileTree(srcFile.toPath(), new SimpleFileVisitor&lt;&gt;() {
+		@Override
+		public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException 
+		{
+			File d = new File(des.toString() + path.toAbsolutePath().toString().substring(src.toString().length()));
+            new File(d.toString().substring(0, d.toString().lastIndexOf(File.separator))).mkdirs();
+            copyFile(path.toFile(), d);
+            return FileVisitResult.CONTINUE;
+        }
+    });
+}
+</code></pre>
+<p>FileVisitor接口定义了四个方法，分别为：</p>
+<pre><code class="language-java">public interface FileVisitor&lt;T&gt;
+{
+	FileVisitResult preVisitDirectory(T dir,BasicFileAttributes attrs)
+	{
+		//访问dir前的操作，dir类型一般为java.nio.Path
+	}
+	
+	FileVisitResult postVisitDirectory(T dir,BasicFileAttributes attrs)
+	{
+		//访问dir后的操作
+	}
+	
+	FileVisitResult visitFile(T file,BasicFileAttributes attrs)
+	{
+		//访问file时的操作
+	}
+	
+	FileVisitResult visitFileFailed(T file,BasicFileAttributes attrs)
+	{
+		//访问file失败时的操作
+	}
+}
+</code></pre>
+<p>在上面的例子中只是实现了visitFile，因为只是复制操作，首先判断是否是源目录的路径，不是的话创建文件夹再复制文件.<br>
+这里说一下返回值FileVisitResult.FileVisitResult是一个枚举类型，根据返回值判断是否继续遍历.<br>
+FileVisitResult可取值:</p>
+<ul>
+<li>CONTINUE:继续</li>
+<li>TERMINNATE:结束</li>
+<li>SKIP_SIBLINGS:继续，跳过同一目录的节点</li>
+<li>SKIP_SUBTREE:继续，跳过子目录，但会访问子文件</li>
+</ul>
+<h1 id="5复制">5.复制</h1>
+<h2 id="1fileinputstreamfileoutputstream">(1)FileInputStream+FileOutputStream</h2>
+<p>首先是经典的字节流FileInputStream+FileOutputStream,这个比较简单,使用FileInputStream读取后使用FileOutputStream写入,不过效率嘛.....一般般.</p>
+<pre><code class="language-java">private static void copyByFileStream(File srcFile,File desFile) throws IOException
+{
+	FileInputStream inputStream = new FileInputStream(srcFile);
+	FileOutputStream outputStream = new FileOutputStream(desFile);
+	byte [] b = new byte[1024];
+	while(inputStream.read(b) != -1)
+	{
+		outputStream.write(b);
+		addCopySize();
+	}
+	inputStream.close();
+	outputStream.close();
+}
+</code></pre>
+<p>这里说一下三个read方法的区别,FileInputStream有三个read方法:</p>
+<pre><code class="language-java">input.read();
+input.read(b);
+input.read(b,off,len);
+</code></pre>
+<h3 id="aread">A.read()</h3>
+<p>逐个字节进行读取,返回int,写入时直接使用write(n);</p>
+<pre><code class="language-java">int n = input.read();
+output.write(n);
+</code></pre>
+<p>这个可以说是三个read中最慢的....作者试了一个2G左右的文件,用了大概10分钟才复制160M......</p>
+<h3 id="breadb">B.read(b)</h3>
+<p>参数是一个byte [],将字节缓冲到其中,返回数组的字节个数,这个比read()快很多.</p>
+<pre><code class="language-java">byte [] b = new byte[1024];
+while(input.read(b) != -1)
+	output.write(b);
+</code></pre>
+<h3 id="creadbofflen">C.read(b,off,len)</h3>
+<p>这个方法其实和read(b)差不多,read(b)相当于省略了参数的read(b,off,len).</p>
+<pre><code class="language-java">byte [] b = new byte[1024];
+int n;
+while((n = input.read(b,0,1024))!=-1)
+	output.write(b,0,n);
+</code></pre>
+<pre><code class="language-java">public int read(byte b[], int off, int len) throws IOException 
+{
+	return readBytes(b, off, len);
+}
+
+public int read(byte b[]) throws IOException 
+{
+	return readBytes(b, 0, b.length);
+}
+</code></pre>
+<p>这两个都是调用一样的readBytes():</p>
+<pre><code class="language-java">private native int readBytes(byte b[], int off, int len) throws IOException;
+</code></pre>
+<p>至于效率...可以看看结果(作者用的是10G内的小文件):<br>
+<img src="https://img-blog.csdnimg.cn/2019110618161675.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191106181622795.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191106181628553.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191106181635467.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以看到,没有哪个一定比另外一个更快(不过最后一个误差有点太大了?7G不够的文件.).<br>
+采用哪一个建议自己去测试,毕竟这存在很多误差,比如文件,java版本,机器本身等等,仅供参考.</p>
+<h2 id="2bufferedinputstreambufferedoutputstream">(2)BufferedInputStream+BufferedOutputStream</h2>
+<p>缓冲字节流BufferedInputStream+BufferedOutputStream,相比起FileInputStream,BufferedInputStream读取时会先从缓冲区读取数据,缓冲区无可读数据再从文件读取,所以会比FileInputStream快.</p>
+<pre><code class="language-java">private static void copyByBufferStream(File srcFile,File desFile) throws IOException
+{
+	BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(srcFile));
+	BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(desFile));
+	byte [] b = new byte[1024];
+	while(inputStream.read(b) != -1)
+	{
+		addCopySize();
+		outputStream.write(b);
+	}
+	inputStream.close();
+	outputStream.close();
+}
+</code></pre>
+<p>这里也说一下BufferedInputStream的三个read(实际上还有,还有readN,与read(),read()肯定最慢,readN作者很少用,所以就没列出来了)</p>
+<pre><code class="language-java">read(b);
+read(b,off,len);
+readAllBytes();
+</code></pre>
+<h3 id="areadb">A.read(b)</h3>
+<p>这个其实和FileInputStream的那个没啥区别,把一个字节数组仍进去就好了.</p>
+<h3 id="breadbofflen">B.read(b,off,len)</h3>
+<p>这个....也和FileInputStream那个没啥区别,不说了</p>
+<h3 id="creadallbytes">C.readAllBytes()</h3>
+<p>这个一次可以读取所有的字节.不过用这个虽然省事,可以直接</p>
+<pre><code class="language-java">output.write(input.readAllBytes());
+</code></pre>
+<p>但是呢,有代价的:<br>
+<img src="https://img-blog.csdnimg.cn/20191106181439394.png" alt="在这里插入图片描述" loading="lazy"><br>
+会出现OutOfMemory错误,就是对于大文件还是老老实实分开吧,不要&quot;一口搞定&quot;,&quot;多吃几口&quot;.</p>
+<p>看看效率:<br>
+<img src="https://img-blog.csdnimg.cn/20191106181730636.png" alt="在这里插入图片描述" loading="lazy"><br>
+readAllBytes对于大文件(作者这个是5G内的文件)直接爆内存....<br>
+<img src="https://img-blog.csdnimg.cn/20191106181901643.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191106182220116.png" alt="在这里插入图片描述" loading="lazy"><br>
+readAllBytes()又爆了.....这个才2G不到的文件...readAllBytes()看来不是很给力啊....不过对于小文件效率还可以接受.</p>
+<h2 id="3filereaderfilewriter">(3)FileReader+FileWriter</h2>
+<p>字符流读写FileReader+FileWriter,相比起字节流的read,基本上把byte[]换成char[]即可,因为是逐个字符读取,而字节流是逐个字节读取因此采用byte[].<br>
+注意这个不能用来读取图片,音乐等文件,不然复制出来的文件打不开.</p>
+<pre><code class="language-java">private static void copyByFileReader(File srcFile,File desFile) throws IOException
+{
+	FileReader reader = new FileReader(srcFile);
+	FileWriter writer = new FileWriter(desFile);
+
+	char [] c = new char[1024];
+	while(reader.read(c) != -1)
+	{
+		addCopySize();
+		writer.write(c);
+	}
+	reader.close();
+	writer.close();
+}
+</code></pre>
+<h2 id="4bufferedreaderbufferedwriter">(4)BufferedReader+BufferedWriter</h2>
+<p>缓冲字符流读写BufferedReader+BufferedWriter,BufferedReader相比起FileReader有一个readLine()方法,可以每行读入,会比FileReader快.对应的BufferedWriter提供了write(String)方法,当然也有write(String s,int off,int len).同样这个不能用来读取图片等.</p>
+<pre><code class="language-java">private static void copyByBufferReader(File srcFile,File desFile) throws IOException
+{
+	BufferedReader reader = new BufferedReader(new FileReader(srcFile));
+	BufferedWriter writer = new BufferedWriter(new FileWriter(desFile));
+
+	char [] c = new char[1024];
+	while(reader.read(c) != -1)
+	{
+		addCopySize();
+		writer.write(c);
+	}
+	reader.close();
+	writer.close();
+}
+</code></pre>
+<h2 id="5nio-filechannel">(5)NIO--FileChannel</h2>
+<p>通过FileChannel复制,首先通过FileInputStream与FileOutputStream打开流,再用getChannel()方法.最后使用transferTo()或transferFrom()进行复制,一条语句即可,十分方便,而且效率很高.</p>
+<pre><code class="language-java">private static void copyByFileChannel(File srcFile,File desFile) throws IOException
+{
+	FileChannel srcChannel = new FileInputStream(srcFile).getChannel();
+	FileChannel desChannel = new FileOutputStream(desFile).getChannel();
+	srcChannel.transferTo(0,srcChannel.size(),desChannel);
+	srcChannel.close();
+	desChannel.close();
+}
+</code></pre>
+<h2 id="6nio-filechannelbytebuffer">(6)NIO--FileChannel+ByteBuffer</h2>
+<p>在利用了FileInputStream与FileOutputStream打开了FileChannel的基础上,配合ByteBuffer使用.</p>
+<pre><code class="language-java">private static void copyByFileChannelWithBuffer(File srcFile,File desFile) throws IOException
+{
+	FileChannel srcChannel = new FileInputStream(srcFile).getChannel();
+	FileChannel desChannel = new FileOutputStream(desFile).getChannel();
+	ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+	while(srcChannel.read(buffer) != -1)
+	{
+		buffer.flip();
+		desChannel.write(buffer);
+		buffer.clear();
+		addCopySize();
+	}
+	srcChannel.close();
+	desChannel.close();
+}
+</code></pre>
+<p>flip的意思是&quot;翻转&quot;,</p>
+<pre><code class="language-java">buffer.flip();
+</code></pre>
+<p>把Buffer从写模式变为读模式,接着write(buffer),再把buffer清空.<br>
+看看这两种方法效率:<br>
+<img src="https://img-blog.csdnimg.cn/20191106190454690.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191106190911444.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191106192021387.png" alt="在这里插入图片描述" loading="lazy"></p>
+<p>另外作者发现transferTo的&quot;上限&quot;为2G,就是对于大于2G的单个文件最多最能复制2个G.<br>
+所以...对于大文件没有可比性了.</p>
+<h2 id="7fileutilscopyfile">(7)FileUtils.copyFile()</h2>
+<p>这是工具类,没啥好说的,参数是两个File,分别表示源与目标.</p>
+<pre><code class="language-java">private static void copyByCommonsIO(File srcFile,File desFile) throws IOException
+{
+	FileUtils.copyFile(srcFile, desFile);
+}
+</code></pre>
+<h2 id="8filescopy">(8)Files.copy()</h2>
+<p>这是官方提供的Files工具类,前两个参数为Path,分别表示源与目标,可以设置第三个参数(或者省略),表示选项.例如可以设置</p>
+<pre><code class="language-java">StandardCopyOption.REPLACE_EXISTING
+</code></pre>
+<pre><code class="language-java">private static void copyByFiles(File srcFile,File desFile) throws IOException
+{
+	Files.copy(srcFile.toPath(), desFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+}
+</code></pre>
+<p>注意Files.copy会保持文件的隐藏属性,原来是隐藏的文件复制后也是隐藏的.以上7种则不会.</p>
+<h1 id="6其他">6.其他</h1>
+<h2 id="1swing布局">(1)swing布局</h2>
+<h3 id="a网格布局">A.网格布局</h3>
+<p>主JFrame采用了网格布局</p>
+<pre><code class="language-java">setLayout(new GridLayout(3,1,5,3));
+</code></pre>
+<p>三行一列，因为只要三个按钮，选择源文件(夹),选择目标文件夹,选择遍历方式.<br>
+选择遍历方式/复制方式的JFrame同样适用了网格布局:</p>
+<pre><code class="language-java">showTraverseMethod.setLayout(new GridLayout(5,1,3,3));
+showCopyMethod.setLayout(new GridLayout(4,2,5,5));
+</code></pre>
+<h3 id="b居中">B.居中</h3>
+<pre><code class="language-java">setBounds(
+(int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - 200,
+(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - 200, 
+400, 400);
+</code></pre>
+<p>高400,宽400,利用ToolKit.getDefaultToolKit().getScreenSize()获取屏幕的高度和宽度实现居中.</p>
+<h3 id="c组件的添加与删除">C.组件的添加与删除</h3>
+<p>由于在主JFrame中只有三个按钮,选择完遍历方式后需要更新这个组件,作者的做法是先删除这个组件在添加组件:</p>
+<pre><code class="language-java">traverseMethodButton.setVisible(false);
+remove(traverseMethodButton);
+add(copyMethodButton);
+copyMethodButton.setVisible(true);
+</code></pre>
+<p>设置它不可见再删除,再添加另一组件,再设置可见.</p>
+<h2 id="2进度条">(2)进度条</h2>
+<p>进度条这个东西把作者搞得很惨啊......其实就是新建一个线程就可以了.<br>
+核心代码为:</p>
+<pre><code class="language-java">new Thread(
+	() -&gt;
+	{
+		int percent;
+		while ((percent = getCopyPercent()) &lt; 100)
+		{
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			copyProgressBar.setValue(percent);
+		}
+	}
+).start();
+</code></pre>
+<p>作者的JProgressBar是直接添加在一个JFrame中的,不用什么太复杂的布局.<br>
+获取百分比后调用setValue(),一定要新建一个线程操作,不然不能正常显示进度条.<br>
+另外复制的操作建议使用SwingWorker.</p>
+<pre><code class="language-java">SwingWorker&lt;String,Object&gt; copyTask = new SwingWorker&lt;&gt;()
+{
+	@Override
+	protected String doInBackground()
+	{
+		try
+		{
+			if (traverseMethod[0])
+				traverseByListFiles(src, des);
+			else if (traverseMethod[1])
+				traverseByList(src, des);
+			else if (traverseMethod[2])
+				traverseByGetFiles(src, des);
+			else if (traverseMethod[3])
+				traverseByCommonsIO(src, des);
+			else if (traverseMethod[4])
+				traverseByNIO2(src);
+			else
+			{
+				showProgressBar.dispose();
+				showMessage(&quot;遍历失败,找不到遍历方法&quot;);
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			showProgressBar.dispose();
+			showMessage(&quot;未知错误复制失败&quot;);
+		}
+		finish(start);
+		return null;
+	}
+};
+copyTask.execute();
+</code></pre>
+<h1 id="7测试">7.测试</h1>
+<p>说了那么多来点实际的.<br>
+(以下所有的测试都是删除复制的文件后再进行新一次的复制.)</p>
+<h2 id="11g文件">(1)1G文件</h2>
+<table>
+<thead>
+<tr>
+<th>1G file</th>
+<th>File.listFiles()</th>
+<th>File.list()</th>
+<th>plexus.util.FileUtils.getFiles()</th>
+<th>commons.io.FileUtils.listFiles</th>
+<th>Files.walkFileTree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FileIntput/OutputStream</td>
+<td>20.189s</td>
+<td>21.152s</td>
+<td>18.249s</td>
+<td>20.131s</td>
+<td>21.782s</td>
+</tr>
+<tr>
+<td>BufferedInput/OuputStream</td>
+<td>17.761s</td>
+<td>23.786s</td>
+<td>22.118s</td>
+<td>19.646s</td>
+<td>16.806s</td>
+</tr>
+<tr>
+<td>FileReader/Writer</td>
+<td>61.334s</td>
+<td>58.3s</td>
+<td>58.904s</td>
+<td>58.679s</td>
+<td>55.762s</td>
+</tr>
+<tr>
+<td>BufferedReader/Writer</td>
+<td>63.287s</td>
+<td>59.546s</td>
+<td>56.664s</td>
+<td>58.212s</td>
+<td>59.884s</td>
+</tr>
+<tr>
+<td>FileChannel</td>
+<td>20.097s</td>
+<td>22.272s</td>
+<td>22.751s</td>
+<td>22.765s</td>
+<td>20.291s</td>
+</tr>
+<tr>
+<td>FileChannel+ByteBuffer</td>
+<td>18.857s</td>
+<td>22.489s</td>
+<td>23.148s</td>
+<td>22.337s</td>
+<td>17.213s</td>
+</tr>
+<tr>
+<td>FileUtils.copyFile</td>
+<td>25.398s</td>
+<td>21.95s</td>
+<td>22.808s</td>
+<td>25.325s</td>
+<td>22.483s</td>
+</tr>
+<tr>
+<td>Files.copy</td>
+<td>16.272s</td>
+<td>14.166s</td>
+<td>17.057s</td>
+<td>14.987s</td>
+<td>10.653s</td>
+</tr>
+</tbody>
+</table>
+<p>文件的话其实纵向比较即可,因为基本不用怎么遍历,横向比较可以勉强看作求平均值.<br>
+对于非文本文件,FileReader/Writer和BufferedReader/Writer没有太大的参考意义,比如复制视频文件是打不开的,而且复制出来的文件会变大.对于单文件Files.copy的性能非常好,java的nio果然厉害.</p>
+<h2 id="210g文件">(2)10G文件</h2>
+<table>
+<thead>
+<tr>
+<th>10G file</th>
+<th>File.listFiles()</th>
+<th>File.list()</th>
+<th>plexus.util.FileUtils.getFiles()</th>
+<th>commons.io.FileUtils.listFiles</th>
+<th>Files.walkFileTree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FileIntput/OutputStream</td>
+<td>171.427s</td>
+<td>173.146s</td>
+<td>172.611s</td>
+<td>184.182s</td>
+<td>250.251s</td>
+</tr>
+<tr>
+<td>BufferedInput/OuputStream</td>
+<td>203.509s</td>
+<td>174.792s</td>
+<td>167.727s</td>
+<td>177.451s</td>
+<td>217.53s</td>
+</tr>
+<tr>
+<td>FileReader/Writer</td>
+<td>187.55s</td>
+<td>169.306s</td>
+<td>226.571s</td>
+<td>168.982s</td>
+<td>218.303s</td>
+</tr>
+<tr>
+<td>BufferedReader/Writer</td>
+<td>155.134s</td>
+<td>165.883s</td>
+<td>166.192s</td>
+<td>176.488s</td>
+<td>206.306s</td>
+</tr>
+<tr>
+<td>FileChannel</td>
+<td>34.48s</td>
+<td>35.445s</td>
+<td>43.896s</td>
+<td>41.827s</td>
+<td>41.755s</td>
+</tr>
+<tr>
+<td>FileChannel+ByteBuffer</td>
+<td>175.632s</td>
+<td>167.091s</td>
+<td>178.455s</td>
+<td>182.977s</td>
+<td>183.763s</td>
+</tr>
+<tr>
+<td>FileUtils.copyFile</td>
+<td>203.997s</td>
+<td>206.623s</td>
+<td>201.01s</td>
+<td>213.949s</td>
+<td>208.739s</td>
+</tr>
+<tr>
+<td>Files.copy</td>
+<td>209.898s</td>
+<td>186.889s</td>
+<td>244.355s</td>
+<td>222.336s</td>
+<td>244.68s</td>
+</tr>
+</tbody>
+</table>
+<p>这个10G的文件是文本文件.<br>
+现在可以看看FileChannel的这一行,明显所花的时间要比其他要少,为什么呢?<br>
+因为文件大于2G.FileChannel的trasferTo方法只能写入最多2G的文件,所以对于大于2G的文件复制出来只有2G,因此FileChannel的这一行没有太大可比性.对于文本文件,BufferedReader/Writer的复制速度是最快的了,其次是FileInput/OutputStream.对于单个大文件,apache的FileUtils与NIO的Files.copy的速度比FileInputStream慢啊...</p>
+<h2 id="31g目录">(3)1G目录</h2>
+<table>
+<thead>
+<tr>
+<th>1G dir</th>
+<th>File.listFiles()</th>
+<th>File.list()</th>
+<th>plexus.util.FileUtils.getFiles()</th>
+<th>commons.io.FileUtils.listFiles</th>
+<th>Files.walkFileTree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FileIntput/OutputStream</td>
+<td>23.549s</td>
+<td>99.386s</td>
+<td>143.388s</td>
+<td>13.451s</td>
+<td>10.773s</td>
+</tr>
+<tr>
+<td>BufferedInput/OuputStream</td>
+<td>6.306s</td>
+<td>59.458s</td>
+<td>20.704s</td>
+<td>6.668s</td>
+<td>6.616s</td>
+</tr>
+<tr>
+<td>FileReader/Writer</td>
+<td>49.059s</td>
+<td>103.257s</td>
+<td>51.995s</td>
+<td>49.729s</td>
+<td>51.509s</td>
+</tr>
+<tr>
+<td>BufferedReader/Writer</td>
+<td>59.932s</td>
+<td>127.359s</td>
+<td>51.731s</td>
+<td>51.418s</td>
+<td>50.317s</td>
+</tr>
+<tr>
+<td>FileChannel</td>
+<td>40.082s</td>
+<td>71.713s</td>
+<td>17.617s</td>
+<td>15.782s</td>
+<td>19.777s</td>
+</tr>
+<tr>
+<td>FileChannel+ByteBuffer</td>
+<td>33.355s</td>
+<td>83.845s</td>
+<td>19.68s</td>
+<td>10.288s</td>
+<td>17.152s</td>
+</tr>
+<tr>
+<td>FileUtils.copyFile</td>
+<td>24.163s</td>
+<td>63.979s</td>
+<td>8.277s</td>
+<td>6.115s</td>
+<td>19.513s</td>
+</tr>
+<tr>
+<td>Files.copy</td>
+<td>14.528s</td>
+<td>28.215s</td>
+<td>6.578s</td>
+<td>5.883s</td>
+<td>7.502s</td>
+</tr>
+</tbody>
+</table>
+<p>对于目录的话可以考虑放弃BufferedReader与FileReader了,除非全部是文本文件,否则推荐使用BufferedInput/OutputStream与Files.copy()进行复制,工具类FileUtils的复制方法表现还是不错的,但相比起java标准的Files.copy效率都差了.<br>
+对于FileChannel与配合缓冲使用的FileChannel,1G的话好像不相上下.<br>
+遍历方式的话...可以看到plexus的遍历方法表现差距很大,而apache的listFiles或者java nio的walkFileTree比较稳定且速度还可以,推荐使用这两种方式遍历目录.</p>
+<h2 id="410g目录">(4)10G目录</h2>
+<table>
+<thead>
+<tr>
+<th>10G dir</th>
+<th>File.listFiles()</th>
+<th>File.list()</th>
+<th>plexus.util.FileUtils.getFiles()</th>
+<th>commons.io.FileUtils.listFiles</th>
+<th>Files.walkFileTree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FileIntput/OutputStream</td>
+<td>216.822s</td>
+<td>228.792s</td>
+<td>227.908s</td>
+<td>240.042s</td>
+<td>191.863s</td>
+</tr>
+<tr>
+<td>BufferedInput/OuputStream</td>
+<td>218.599s</td>
+<td>210.941s</td>
+<td>207.375s</td>
+<td>213.991s</td>
+<td>167.614s</td>
+</tr>
+<tr>
+<td>FileReader/Writer</td>
+<td>536.747s</td>
+<td>550.755s</td>
+<td>550.415s</td>
+<td>548.881s</td>
+<td>516.684s</td>
+</tr>
+<tr>
+<td>BufferedReader/Writer</td>
+<td>587.612s</td>
+<td>552.55s</td>
+<td>549.716s</td>
+<td>553.484s</td>
+<td>498.18s</td>
+</tr>
+<tr>
+<td>FileChannel</td>
+<td>115.126s</td>
+<td>117.538s</td>
+<td>117.456s</td>
+<td>118.207s</td>
+<td>97.626s</td>
+</tr>
+<tr>
+<td>FileChannel+ByteBuffer</td>
+<td>225.887s</td>
+<td>224.932s</td>
+<td>222.077s</td>
+<td>223.812s</td>
+<td>180.177s</td>
+</tr>
+<tr>
+<td>FileUtils.copyFile</td>
+<td>233.724s</td>
+<td>230.199s</td>
+<td>232.133s</td>
+<td>223.286s</td>
+<td>189.737s</td>
+</tr>
+<tr>
+<td>Files.copy</td>
+<td>229.819s</td>
+<td>227.562s</td>
+<td>226.793s</td>
+<td>226.78s</td>
+<td>181.071s</td>
+</tr>
+</tbody>
+</table>
+<p>FileReader与BufferedReader这两行可以忽略了.对于小文件用FileChannel的话还是不错的,对于大文件一定要用FileChannel的话可以配合ByteBuffer使用,不过从数据上看效果比BufferedInput/OutputStream要低.<br>
+再看看org.apache.commons.io.FileUtils与java.nio.file.Files的copy,差别不太,效果接近,但在1G的时候差距有点大.<br>
+遍历方式的话,java nio的walkFileTrees最快.</p>
+<p>当然这些测试仅供参考,具体使用哪一个要看看具体环境,另外这种方式把遍历与复制分开,apache的FileUtils有方法可以直接复制目录的,因此,使用哪个更合适还需要个人具体测试.</p>
+<h1 id="8源码">8.源码</h1>
+<p>作者比较偷懒全部仍在一个文件了.七百行.</p>
+<pre><code class="language-java">import java.awt.*;
+import javax.swing.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.util.*;
+import org.apache.commons.io.*;
+
+public class Test extends JFrame
+{
+    public static final long serialVersionUID = 12398129389122L;
+
+    private JFrame showTraverseMethod = new JFrame(&quot;遍历方式&quot;);
+    private JFrame showCopyMethod = new JFrame(&quot;复制方式&quot;);
+
+    private JButton traverseMethodButton = new JButton(&quot;请选择遍历方式&quot;);
+    private JButton copyMethodButton = new JButton(&quot;请选择复制方式&quot;);
+    private JButton copyButton = new JButton(&quot;开始复制&quot;);
+
+    private JButton traverseByListFiles = new JButton(&quot;File.listFiles()&quot;);
+    private JButton traverseByList = new JButton(&quot;File.list()&quot;);
+    private JButton traverseByGetFiles = new JButton(&quot;(plexus)getFiles()&quot;);
+    private JButton traverseByCommonsIO = new JButton(&quot;Commons IO&quot;);
+    private JButton traverseByNIO2 = new JButton(&quot;NIO2&quot;);
+
+    private JButton copyByFileStream = new JButton(&quot;File stream&quot;);
+    private JButton copyByBufferStream = new JButton(&quot;Buffer stream&quot;);
+    private JButton copyByFileReader = new JButton(&quot;File reader&quot;);
+    private JButton copyByBufferReader = new JButton(&quot;Buffer reader&quot;);
+    private JButton copyByFileChannel = new JButton(&quot;File channel&quot;);
+    private JButton copyByFileChannelWithBuffer = new JButton(&quot;File channel with buffer&quot;);
+    private JButton copyByCommonsIO = new JButton(&quot;Commons IO&quot;);
+    private JButton copyByFiles = new JButton(&quot;Files.copy&quot;);
+
+    public Test()
+    {
+        JButton src = new JButton(&quot;选择源文件(夹)&quot;);
+        src.addActionListener(
+            event -&gt;
+            {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                fileChooser.showDialog(new Label(), &quot;选择文件(夹)&quot;);
+                FilesCopy.setSrc(fileChooser.getSelectedFile());
+            }
+        );
+        JButton des = new JButton(&quot;选择目标文件夹&quot;);
+        des.addActionListener(
+            event -&gt;
+            {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                fileChooser.showDialog(new JLabel(),&quot;选择文件夹&quot;);
+                FilesCopy.setDes(fileChooser.getSelectedFile());
+            }
+        );
+
+        traverseMethodButton.addActionListener(
+            event -&gt;
+            {
+                traverseByListFiles.addActionListener(
+                    e-&gt;
+                    {
+                        FilesCopy.setTraverseByListFiles();
+                        showTraverseMethod.dispose();
+                    }
+                );
+
+                traverseByList.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setTraverseByList();
+                        showTraverseMethod.dispose();
+                    }
+                );
+
+                traverseByGetFiles.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setTraverseByGetfiles();
+                        showTraverseMethod.dispose();
+                    }
+                );
+
+                traverseByCommonsIO.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setTraverseByCommonsIO();
+                        showTraverseMethod.dispose();
+                    }
+                );
+
+                traverseByNIO2.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setTraverseByNIO2();
+                        showTraverseMethod.dispose();
+                    }
+                );
+
+
+                showTraverseMethod.setLayout(new GridLayout(5,1,3,3));
+                showTraverseMethod.setTitle(&quot;遍历方式&quot;);
+                showTraverseMethod.setBounds((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - 200,
+                        (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - 200, 400, 400);
+                showTraverseMethod.setVisible(true);
+                showTraverseMethod.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                showTraverseMethod.add(traverseByListFiles);
+                showTraverseMethod.add(traverseByList);
+                showTraverseMethod.add(traverseByGetFiles);
+                showTraverseMethod.add(traverseByCommonsIO);
+                showTraverseMethod.add(traverseByNIO2);
+
+                traverseMethodButton.setVisible(false);
+                remove(traverseMethodButton);
+                add(copyMethodButton);
+                copyMethodButton.setVisible(true);
+            }
+        );
+
+        copyMethodButton.addActionListener(
+            event -&gt;
+            {
+                copyByFileStream.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByFileStream();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByBufferStream.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByBufferStream();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByFileReader.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByFileReader();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByBufferReader.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByBufferReader();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByFileChannel.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByFileChannel();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByFileChannelWithBuffer.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByFileChannelWithBuffer();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByCommonsIO.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByCommonsIO();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                copyByFiles.addActionListener(
+                    e -&gt;
+                    {
+                        FilesCopy.setCopyByFiles();
+                        showCopyMethod.dispose();
+                    }
+                );
+
+                showCopyMethod.setLayout(new GridLayout(4,2,5,5));
+                showCopyMethod.setTitle(&quot;复制方式&quot;);
+                showCopyMethod.setBounds(
+                        (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - 200,
+                        (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - 200, 400, 400);
+                showCopyMethod.setVisible(true);
+                showCopyMethod.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                showCopyMethod.add(copyByFileStream);
+                showCopyMethod.add(copyByBufferStream);
+                showCopyMethod.add(copyByFileReader);
+                showCopyMethod.add(copyByBufferReader);
+                showCopyMethod.add(copyByFileChannel);
+                showCopyMethod.add(copyByFileChannelWithBuffer);
+                showCopyMethod.add(copyByCommonsIO);
+                showCopyMethod.add(copyByFiles);
+
+                copyMethodButton.setVisible(false);
+                remove(copyMethodButton);
+                add(copyButton);
+                copyButton.setVisible(true);
+            }
+        );
+
+        copyButton.addActionListener(
+            event -&gt;
+            {
+                if(FilesCopy.haveSelectedSrcAndDes())
+                {
+                    FilesCopy.copy();
+                    copyButton.setVisible(false);
+                    remove(copyButton);
+                    add(traverseMethodButton);
+                    traverseMethodButton.setVisible(true);
+                }
+                else
+                    JOptionPane.showMessageDialog(null,&quot;请先选择源文件(夹)与目标文件夹!&quot;);
+            }
+        );
+
+        setLayout(new GridLayout(3,1,5,3));
+        setTitle(&quot;复制文件&quot;);
+        setBounds((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - 200,
+                (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - 200, 400, 400);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        add(src);
+        add(des);
+        add(traverseMethodButton);
+    }
+
+    public static void main(String[] args) {
+        new Test();
+    }
+}
+
+class FilesCopy
+{
+    private static File src = null;
+    private static File des = null;
+    private static long desSize = 0;
+    private static long srcSize = 0;
+    private static boolean [] traverseMethod = {false,false,false,false,false,false};
+    private static boolean[] copyMethod = { false, false, false, false, false, false ,false,false};
+    private static JFrame showProgressBar = new JFrame();
+    private static JProgressBar copyProgressBar = new JProgressBar();
+    private static JTextField textField = new JTextField();
+    private static int index = 0;
+
+    private static int getCopyPercent()
+    {
+        return (int)(desSize * 100.0 / srcSize);
+    }
+
+    private static void addCopySize() {
+        desSize += 1024L;
+    }
+
+    public static void setTraverseByListFiles()
+    {
+        traverseMethod[0] = true;
+    }
+
+    private static void traverseByListFiles(File srcFile,File desFile) throws IOException
+    {
+        if(srcFile.isDirectory())
+        {
+            File[] files = srcFile.listFiles();
+            assert files != null;
+            for(File file : files)
+            {
+                File desFileOrDir = new File(desFile.getAbsolutePath() + File.separator + file.getName());
+                if(file.isDirectory())
+                {
+                    if(desFileOrDir.exists())
+                        desFileOrDir.delete();
+                    desFileOrDir.mkdirs();
+                }
+                traverseByListFiles(file, desFileOrDir);
+            }
+        }
+        else {
+            copyFile(srcFile, desFile);
+        }
+    }
+
+    public static void setTraverseByList()
+    {
+        traverseMethod[1] = true;
+    }
+
+    private static void traverseByList(File srcFile,File desFile) throws IOException
+    {
+        if (srcFile.isDirectory())
+        {
+            String[] files = srcFile.list();
+            assert files != null;
+            for (String file : files)
+            {
+                File subSrcFile = new File(srcFile, file);
+                File subDesFile = new File(desFile, file);
+                if (subSrcFile.isDirectory())
+                {
+                    if (subDesFile.exists())
+                        subDesFile.delete();
+                    subDesFile.mkdirs();
+                }
+                traverseByList(subSrcFile, subDesFile);
+            }
+        }
+        else
+        {
+            copyFile(srcFile, desFile);
+        }
+
+    }
+
+    public static void setTraverseByGetfiles()
+    {
+        traverseMethod[2] = true;
+    }
+
+    private static void traverseByGetFiles(File srcFile, File desFile) throws IOException
+    {
+        if (srcFile.isDirectory())
+        {
+            java.util.List&lt;File&gt; fileList = org.codehaus.plexus.util.FileUtils.getFiles(srcFile,null,null);
+            for (File file : fileList)
+            {
+                File desFileOrDir = new File(desFile.getAbsolutePath() + File.separator + file.getName());
+                if(file.isDirectory())
+                {
+                    if(desFileOrDir.exists())
+                        desFileOrDir.delete();
+                    desFileOrDir.mkdirs();
+                }
+                traverseByListFiles(file, desFileOrDir);
+            }
+        }
+        else
+        {
+            copyFile(srcFile, desFile);
+        }
+    }
+
+    public static void setTraverseByCommonsIO()
+    {
+        traverseMethod[3] = true;
+    }
+
+    private static void traverseByCommonsIO(File srcFile, File desFile) throws IOException
+    {
+        if (srcFile.isDirectory())
+        {
+            Collection&lt;File&gt; files = org.apache.commons.io.FileUtils.listFiles(srcFile,null,false);
+            for (File file : files)
+            {
+                File desFileOrDir = new File(desFile.getAbsolutePath() + File.separator + file.getName());
+                if(file.isDirectory())
+                {
+                    if(desFileOrDir.exists())
+                        desFileOrDir.delete();
+                    desFileOrDir.mkdirs();
+                }
+                traverseByCommonsIO(file, desFileOrDir);
+            }
+        }
+        else {
+            copyFile(srcFile, desFile);
+        }
+    }
+
+    public static void setTraverseByNIO2()
+    {
+        traverseMethod[4] = true;
+    }
+
+    private static void traverseByNIO2(File srcFile) throws IOException
+    {
+        java.nio.file.Files.walkFileTree(srcFile.toPath(), new SimpleFileVisitor&lt;&gt;() {
+            @Override
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                File d = new File(des.toString() + path.toAbsolutePath().toString().substring(src.toString().length()));
+                new File(d.toString().substring(0, d.toString().lastIndexOf(File.separator))).mkdirs();
+                copyFile(path.toFile(), d);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    public static void setCopyByFileStream()
+    {
+        copyMethod[0] = true;
+    }
+
+    private static void copyByFileStream(File srcFile,File desFile) throws IOException
+    {
+        FileInputStream inputStream = new FileInputStream(srcFile);
+        FileOutputStream outputStream = new FileOutputStream(desFile);
+        byte [] b = new byte[1024];
+        while(inputStream.read(b) != -1)
+        {
+            outputStream.write(b);
+            addCopySize();
+        }
+        inputStream.close();
+        outputStream.close();
+    }
+
+    public static void setCopyByBufferStream()
+    {
+        copyMethod[1] = true;
+    }
+
+    private static void copyByBufferStream(File srcFile,File desFile) throws IOException
+    {
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(srcFile));
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(desFile));
+        byte [] b = new byte[1024];
+        while(inputStream.read(b) != -1)
+        {
+            addCopySize();
+            outputStream.write(b);
+        }
+        inputStream.close();
+        outputStream.close();
+    }
+
+    public static void setCopyByFileReader()
+    {
+        copyMethod[2] = true;
+    }
+
+    private static void copyByFileReader(File srcFile,File desFile) throws IOException
+    {
+        FileReader reader = new FileReader(srcFile);
+        FileWriter writer = new FileWriter(desFile);
+
+        char [] c = new char[1024];
+        while(reader.read(c) != -1)
+        {
+            addCopySize();
+            writer.write(c);
+        }
+        reader.close();
+        writer.close();
+    }
+
+    public static void setCopyByBufferReader()
+    {
+        copyMethod[3] = true;
+    }
+
+    private static void copyByBufferReader(File srcFile,File desFile) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new FileReader(srcFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(desFile));
+
+        char [] c = new char[1024];
+        while(reader.read(c) != -1)
+        {
+            addCopySize();
+            writer.write(c);
+        }
+        reader.close();
+        writer.close();
+    }
+
+    public static void setCopyByFileChannel()
+    {
+        copyMethod[4] = true;
+    }
+
+    private static void copyByFileChannel(File srcFile,File desFile) throws IOException
+    {
+        FileChannel srcChannel = new FileInputStream(srcFile).getChannel();
+        FileChannel desChannel = new FileOutputStream(desFile).getChannel();
+        srcChannel.transferTo(0,srcChannel.size(),desChannel);
+        srcChannel.close();
+        desChannel.close();
+    }
+
+    public static void setCopyByFileChannelWithBuffer()
+    {
+        copyMethod[5] = true;
+    }
+
+    private static void copyByFileChannelWithBuffer(File srcFile,File desFile) throws IOException
+    {
+        FileChannel srcChannel = new FileInputStream(srcFile).getChannel();
+        FileChannel desChannel = new FileOutputStream(desFile).getChannel();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+        while(srcChannel.read(buffer) != -1)
+        {
+            buffer.flip();
+            desChannel.write(buffer);
+            buffer.clear();
+            addCopySize();
+        }
+        srcChannel.close();
+        desChannel.close();
+    }
+
+    public static void setCopyByCommonsIO()
+    {
+        copyMethod[6] = true;
+    }
+
+    private static void copyByCommonsIO(File srcFile,File desFile) throws IOException
+    {
+        FileUtils.copyFile(srcFile, desFile);
+    }
+
+    public static void setCopyByFiles()
+    {
+        copyMethod[7] = true;
+    }
+
+    private static void copyByFiles(File srcFile,File desFile) throws IOException
+    {
+        Files.copy(srcFile.toPath(), desFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public static void setSrc(File srcFile) {
+		src = srcFile;
+		if(srcFile.isDirectory())
+		    srcSize = org.apache.commons.io.FileUtils.sizeOfDirectory(srcFile);
+		else
+            srcSize = src.length();
+	}
+
+    public static void setDes(File desFile) {
+        des = desFile;
+        desSize = 0;
+    }
+
+    public static void setSrc(Path srcPath)
+    {
+        setSrc(srcPath.toFile());
+    }
+
+    public static void setDes(Path desPath)
+    {
+        setDes(desPath.toFile());
+    }
+
+    private static void copyFile(File srcFile,File desFile) throws IOException
+    {
+        if (copyMethod[0])
+            copyByFileStream(srcFile,desFile);
+        else if (copyMethod[1])
+            copyByBufferStream(srcFile, desFile);
+        else if (copyMethod[2])
+            copyByFileReader(srcFile, desFile);
+        else if (copyMethod[3])
+            copyByBufferReader(srcFile, desFile);
+        else if (copyMethod[4])
+            copyByFileChannel(srcFile, desFile);
+        else if (copyMethod[5])
+            copyByFileChannelWithBuffer(srcFile, desFile);
+        else if (copyMethod[6])
+            copyByCommonsIO(srcFile, desFile);
+        else if (copyMethod[7])
+            copyByFiles(srcFile, desFile);
+        else
+            showMessage(&quot;复制失败,找不到复制方法.&quot;);
+    }
+
+    private static void showMessage(String message)
+    {
+        JOptionPane.showMessageDialog(null, message);
+    }
+
+    public static boolean haveSelectedSrcAndDes()
+    {
+        return src != null &amp;&amp; des != null;
+    }
+
+    public static void copy()
+    {
+        long start = System.currentTimeMillis();
+        if(haveSelectedSrcAndDes())
+        {
+            if(src.isFile())
+            {
+                des = new File(des.getAbsolutePath()+File.separator+src.getName());
+            }
+            SwingWorker&lt;String,Object&gt; copyTask = new SwingWorker&lt;&gt;()
+            {
+                @Override
+                protected String doInBackground()
+                {
+                    try
+                    {
+                        if (traverseMethod[0])
+                            traverseByListFiles(src, des);
+                        else if (traverseMethod[1])
+                            traverseByList(src, des);
+                        else if (traverseMethod[2])
+                            traverseByGetFiles(src, des);
+                        else if (traverseMethod[3])
+                            traverseByCommonsIO(src, des);
+                        else if (traverseMethod[4])
+                            traverseByNIO2(src);
+                        else
+                        {
+                            showProgressBar.dispose();
+                            showMessage(&quot;遍历失败,找不到遍历方法&quot;);
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                        showProgressBar.dispose();
+                        showMessage(&quot;未知错误复制失败&quot;);
+                    }
+                    finish(start);
+                    return null;
+                }
+            };
+            copyTask.execute();
+            if (!copyMethod[4] &amp;&amp; !copyMethod[6] &amp;&amp; !copyMethod[7])
+            {
+                copyProgressBar.setMinimum(0);
+                copyProgressBar.setMaximum(100);
+                copyProgressBar.setValue(0);
+                copyProgressBar.setVisible(true);
+                copyProgressBar.setStringPainted(true);
+
+                showProgressBar.add(copyProgressBar);
+                showProgressBar.setTitle(&quot;复制进度&quot;);
+                showProgressBar.setBounds((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - 150,
+                        (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - 50, 300, 100);
+                showProgressBar.setVisible(true);
+                new Thread(
+                        () -&gt;
+                        {
+                            int percent;
+                            while ((percent = getCopyPercent()) &lt; 100)
+                            {
+                                try
+                                {
+                                    Thread.sleep(100);
+                                }
+                                catch(InterruptedException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                copyProgressBar.setValue(percent);
+                            }
+                        }
+                ).start();
+            }
+            else
+            {
+
+                final String [] text = {&quot;.&quot;,&quot;..&quot;,&quot;...&quot;,&quot;....&quot;,&quot;.....&quot;,&quot;.......&quot;,&quot;......&quot;,&quot;.....&quot;,&quot;....&quot;,&quot;...&quot;,&quot;..&quot;,&quot;.&quot;};
+                textField.setVisible(true);
+                textField.setHorizontalAlignment(JTextField.CENTER);
+                textField.setEditable(false);
+                showProgressBar.add(textField);
+                showProgressBar.setTitle(&quot;复制中&quot;);
+                showProgressBar.setBounds((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - 120,
+                        (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2) - 40, 240, 80);
+                showProgressBar.setVisible(true);
+
+                new Thread(
+                        () -&gt;
+                        {
+                            while (getCopyPercent() &lt; 100)
+                            {
+                                try
+                                {
+                                    Thread.sleep(400);
+                                }
+                                catch(InterruptedException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                if(index &lt; text.length)
+                                    textField.setText(&quot;复制中&quot;+text[index++]);
+                                else
+                                    index = 0;
+                            }
+                        }
+                ).start();
+            }
+        }
+    }
+
+    private static void finish(long start)
+    {
+        long end = System.currentTimeMillis();
+        showProgressBar.dispose();
+        showMessage(&quot;复制成功,用时:&quot; + (end - start) / 1000.0 + &quot;s&quot;);
+
+        copyProgressBar.setVisible(false);
+        showProgressBar.remove(copyProgressBar);
+        textField.setVisible(false);
+        showProgressBar.remove(textField);
+
+        Arrays.fill(traverseMethod, false);
+        Arrays.fill(copyMethod, false);
+        des = src = null;
+        desSize = srcSize;
+    }
+}
+</code></pre>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/cong-0-kai-shi-zi-zhi-ji-suan-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/cong-0-kai-shi-zi-zhi-ji-suan-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">从0开始自制计算器!</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/liao-liao-java-zhong-final-na-dian-shi.png');"></div>
+                 <a href="https://2293736867.github.io/post/liao-liao-java-zhong-final-na-dian-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-03">2020-06-03</time>
+                  <h4 class="title white no-margin">聊聊java中final那点事</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai/">后端spring boot+前端Android交互+mysql增删查改</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/spring-bootmysqlspring-data-jpa-yi-ge-web-de-demo/">Spring boot+Mysql+Spring data JPA一个Web的Demo</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jdbcc3p0dbcp-ji-ben-shi-yong.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-03">2020-06-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jdbcc3p0dbcp-ji-ben-shi-yong/">JDBC+C3P0+DBCP 基本使用</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-3 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-4 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-5 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-6 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-7 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-8 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-9 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-11 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-12 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 16 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
