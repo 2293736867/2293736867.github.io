@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-02T21:41:42.911Z</updated>
+    <updated>2020-06-06T06:57:21.260Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,142 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[JavaFX+SpringBoot+验证码功能的小型薪酬管理系统]]></title>
+        <id>https://2293736867.github.io/post/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/</id>
+        <link href="https://2293736867.github.io/post/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/">
+        </link>
+        <updated>2020-06-06T06:56:58.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E7%AE%80%E4%BB%8B">1.1 简介</a></li>
+<li><a href="#12-%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B">1.2 响应流程</a></li>
+<li><a href="#13-%E6%BC%94%E7%A4%BA">1.3 演示</a></li>
+</ul>
+</li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#8-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">8 注意事项</a>
+<ul>
+<li><a href="#81-%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98">8.1 路径问题</a></li>
+<li><a href="#82-https">8.2 HTTPS</a></li>
+<li><a href="#83-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E5%AF%86">8.3 配置文件加密</a></li>
+<li><a href="#84-%E9%94%AE%E7%9B%98%E4%BA%8B%E4%BB%B6">8.4 键盘事件</a></li>
+<li><a href="#85-%E6%95%B0%E6%8D%AE%E5%BA%93">8.5 数据库</a></li>
+<li><a href="#86-%E9%AA%8C%E8%AF%81%E7%A0%81">8.6 验证码</a></li>
+</ul>
+</li>
+<li><a href="#9-%E6%BA%90%E7%A0%81">9 源码</a></li>
+<li><a href="#10-%E5%8F%82%E8%80%83">10 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-简介">1.1 简介</h2>
+<p>一个简单的小型薪酬管理系统，前端JavaFX+后端Spring Boot，功能倒没多少，主要精力放在了UI和前端的一些逻辑上面，后端其实做得很简单。<br>
+主要功能：</p>
+<ul>
+<li>用户注册/登录</li>
+<li>验证码找回密码</li>
+<li>用户修改信息，修改头像</li>
+<li>柱状图形式显示薪酬</li>
+<li>管理员管理用户，录入工资</li>
+</ul>
+<h2 id="12-响应流程">1.2 响应流程</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+用户请求 -&gt;&gt; 封装及提取数据: 发送请求
+封装及提取数据-&gt;&gt; Gson转换: List/Map/Worker
+Gson转换 -&gt;&gt; OkHttp : String
+OkHttp --&gt;&gt; Gson转换:转换返回数据
+Note left of Gson转换: 封装及提取数据:根据&lt;br/&gt;ReturnCode判断状态&lt;br&gt;码并从中提取所&lt;br/&gt;需要的结果
+Gson转换 --&gt;&gt; 封装及提取数据: 
+封装及提取数据 --&gt;&gt; 用户请求:更新UI
+</code></pre>
+<pre><code class="language-mermaid">sequenceDiagram
+OkHttp -&gt;&gt; 后端Controller层: 发送到对应url
+后端Controller层 -&gt;&gt; 后端Controller层:日志记录
+后端Controller层 -&gt;&gt; service层: 处理业务逻辑
+service层 -&gt;&gt; 持久层: 持久化数据
+service层 --&gt;&gt; 后端Controller层: 返回处理结果
+后端Controller层 --&gt;&gt; OkHttp: 封装ReturnCode为String
+</code></pre>
+<h2 id="13-演示">1.3 演示</h2>
+<p>登录界面：<br>
+<img src="https://img-blog.csdnimg.cn/202006041443179.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200604144337577.png" alt="在这里插入图片描述" loading="lazy"><br>
+用户界面：<br>
+<img src="https://img-blog.csdnimg.cn/20200604154028861.gif" alt="在这里插入图片描述" loading="lazy"><br>
+管理员界面：<br>
+<img src="https://img-blog.csdnimg.cn/20200604154042814.gif" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li>IDEA 2020.1</li>
+<li>本地JDK+服务器JDK：OpenJDK 11</li>
+<li>OepnJFX 11</li>
+<li>Spring Boot 2.3.0（Spring Boot的更新速度真是太快了）</li>
+<li>Tomcat 9.0.33</li>
+<li>MySQL 8.0.17</li>
+</ul>
+<h1 id="8-注意事项">8 注意事项</h1>
+<h2 id="81-路径问题">8.1 路径问题</h2>
+<p>对于资源文件千万千万不要直接使用什么相对路径或绝对路径，比如：</p>
+<pre><code class="language-java">String path1 = &quot;/xxx/xxx/xxx/xx.png&quot;;
+String path2 = &quot;xxx/xx.jpg&quot;;
+</code></pre>
+<p>这样会有很多问题，比如有可能在IDEA中直接运行与打成jar包运行的结果不一致，路径读取不了，另外还可能会出现平台问题，众所周知Linux的路径分隔符与Windows的不一致。所以，对于资源文件，统一使用如下方式获取：</p>
+<pre><code class="language-java">String path = getClass().getResource(&quot;/image/xx.png&quot;);
+</code></pre>
+<p>其中<code>image</code>直接位于<code>resources</code>资源文件夹下。其他类似，也就是说这里的<code>/</code>代表在<code>resources</code>下。</p>
+<h2 id="82-https">8.2 HTTPS</h2>
+<p>默认没有提供HTTPS，证书文件没有摆上去，默认走的是本地8080端口，有关OkHttp使用HTTPS的文章有不少，但是大部分都是仅仅写了前端如何配置HTTPS的，没有提到后端如何部署，可以参考笔者的<a href="https://blog.csdn.net/qq_27525611/article/details/105184098">这篇文章</a>，包含Tomcat的配置教程。</p>
+<h2 id="83-配置文件加密">8.3 配置文件加密</h2>
+<p>配置文件使用了jasypt-spring-boot开源组件进行加密，设置口令可以有三种方式设置：</p>
+<ul>
+<li>命令行参数</li>
+<li>应用环境变量</li>
+<li>系统环境变量</li>
+</ul>
+<p>目前最新的版本为3.0.3（2020.05.31更新3.0.3 ，笔者之前使用3.0.2的版本进行加密时本地测试没问题，但是部署到服务器上老是提示找不到口令，无奈只好使用旧一点的2.x版本，但是新版本出了后笔者尝试过部署到本地Tomcat没有问题但是没有部署到服务器上），建议使用最新版本进行部署：<br>
+<img src="https://img-blog.csdnimg.cn/20200606033459144.png" alt="在这里插入图片描述" loading="lazy"><br>
+毕竟前后跨度挺大的，虽然说这是小的bug修复，但是还是建议试试，估计不会有3.0.2的问题了。<br>
+另外对于含有中文的字段记得进行编码转换：</p>
+<pre><code class="language-java">str = new String(str.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8);)
+</code></pre>
+<p>另外笔者已写好了测试文件，直接首先替换掉配置文件原来的密文，填上明文重新加密：<br>
+<img src="https://img-blog.csdnimg.cn/20200606111549200.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意如果没有在配置文件中设置<code>jasypt.encryptor.password</code>的话可以在运行配置中设置VM Options（建议不要把口令直接写在配置文件中，当然这个默认是使用PBE加密，非对称加密可以使用<code>jasypt.encryptor.private-key-string</code>或<code>jasypt.encryptor.private-key-location</code>）：<br>
+<img src="https://img-blog.csdnimg.cn/20200606111736683.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="84-键盘事件">8.4 键盘事件</h2>
+<p>添加键盘事件可以使用如下代码：</p>
+<pre><code class="language-java">scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), ()-&gt;{xxx});
+//getAccelerators返回ObservableMap&lt;KeyCombination, Runnable&gt;
+</code></pre>
+<p>响应之前需要让parent获取焦点：</p>
+<pre><code class="language-java">parent.requestFocus();
+</code></pre>
+<h2 id="85-数据库">8.5 数据库</h2>
+<p>默认使用的数据库名为<code>app_test</code>，用户名<code>test_user</code>，密码<code>test_password</code>，<code>resources</code>下有一个<code>init.sql</code>，直接使用MySQL导入即可。<br>
+<img src="https://img-blog.csdnimg.cn/2020060611431640.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="86-验证码">8.6 验证码</h2>
+<p>默认没有自带验证码功能，由于涉及隐私问题故没有开放，需要的话可以参考笔者的腾讯云短信API使用或者自行搜索其他短信验证API。一些写在配置文件中的API需要的密钥等信息强烈建议加密。</p>
+<h1 id="9-源码">9 源码</h1>
+<p>前后端完整代码，带README.md说明：</p>
+<ul>
+<li>github</li>
+<li>码云</li>
+</ul>
+<h1 id="10-参考">10 参考</h1>
+<p>1、<a href="https://blog.csdn.net/yangguosb/article/details/80619481">CSDN-maven-shade-plugin介绍及使用</a><br>
+2、<a href="https://blog.csdn.net/qq_32736999/article/details/93395246">CSDN-Maven3种打包方式之一maven-assembly-plugin的使用</a><br>
+3、<a href="https://zhuanlan.zhihu.com/p/82540739">知乎-制作包含Java 11和JavaFX的JRE</a><br>
+4、<a href="https://blog.csdn.net/zzzgd_666/article/details/80756430">CSDN-使用exe4j将java文件打成exe文件运行详细教程</a><br>
+5、<a href="https://github.com/ulisesbocchio/jasypt-spring-boot/issues/218">Github-jasypt-spring-boot issue</a><br>
+6、<a href="https://www.w3cschool.cn/java/javafx-line.html">w3cschool-JavaFX</a><br>
+7、<a href="https://www.jianshu.com/p/045f95c008a0">简书-Linux Tomcat+Openssl单向/双向认证</a></p>
+<p>如果觉得文章好看，欢迎点赞。</p>
+<p>同时欢迎关注微信公众号：氷泠之路。</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200325170404220.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JFX11+Maven+IDEA 发布跨平台应用的完美解决方案]]></title>
         <id>https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/</id>
@@ -832,53 +968,6 @@ cmath
 <p>2.<a href="https://vim.fandom.com/wiki/Buffers">Vim官方文档-1</a></p>
 <p>3.<a href="https://vim.fandom.com/wiki/Pasting_registers">Vim官方文档-2</a></p>
 <p>4.<a href="https://www.zhihu.com/question/19863631">知乎-如何将 Vim 剪贴板里面的东西粘贴到 Vim 之外的地方</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[ERROR]: gitstatus failed to initialize.]]></title>
-        <id>https://2293736867.github.io/post/error-gitstatus-failed-to-initialize/</id>
-        <link href="https://2293736867.github.io/post/error-gitstatus-failed-to-initialize/">
-        </link>
-        <updated>2020-06-02T21:36:08.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>Manjaro升级后，zsh的主题p10k出现的问题。</p>
-<pre><code class="language-bash">Your git prompt may disappear or become slow.
-Run the following command to retry with extra diagnostics:
-GITSTATUS_ENABLE_LOGGING=1 gitstatus_start -s 1 -u 1 -d 1 -m -1 POWERLEVEL9K
-
-OUTPUT:
-
-[ERROR]: gitstatus failed to initialize.
-......
-</code></pre>
-<h1 id="2-解决方法">2 解决方法</h1>
-<p>来自gitstatus官方issue，<a href="https://github.com/romkatv/gitstatus/issues/36">戳这里</a>，其实就是把p10k主题更新到最新版本就好了，用</p>
-<pre><code class="language-bash">pacman -Qi zsh-theme-powerlevel10k
-</code></pre>
-<p>查看版本，若不是最新版本，不要使用自带的软件包升级：</p>
-<pre><code class="language-bash">pcaman -S zsh-theme-powerlevel10k
-</code></pre>
-<p>官方说这是旧的，不要使用：<br>
-<img src="https://img-blog.csdnimg.cn/2020052311011054.png" alt="在这里插入图片描述" loading="lazy"><br>
-因此先把配置文件备份：</p>
-<pre><code class="language-bash">sudo cp ~/.p10k.zsh ~/Desktop
-</code></pre>
-<p>再卸载掉，然后clone安装：</p>
-<pre><code class="language-bash">pacman -R zsh-theme-powerlevel10k
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-# 或使用码云上的镜像
-# git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-</code></pre>
-<p>在</p>
-<pre><code class="language-bash">~/.zshrc
-</code></pre>
-<p>修改主题：</p>
-<pre><code class="language-bash">ZSH_THEME=&quot;powerlevel10k/powerlevel10k&quot;
-</code></pre>
-<p>最后把配置文件覆盖：</p>
-<pre><code class="language-bash">sudo cp ~/.p10k.zsh ~/.p10k.zsh.bak
-sudo cp ~/Desktop/.p10k.zsh ~/.p10k.zsh
-</code></pre>
 ]]></content>
     </entry>
 </feed>

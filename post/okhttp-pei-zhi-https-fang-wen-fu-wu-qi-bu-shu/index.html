@@ -83,7 +83,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1591134096649" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1591426637552" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -98,7 +98,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('/post-images/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">20 分钟前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">3 天前</span></time>
               
               <a href="https://2293736867.github.io/post/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/okhttp-pei-zhi-https-fang-wen-fu-wu-qi-bu-shu/"> </span>
@@ -181,7 +181,7 @@
 <li>一个证书</li>
 </ul>
 <p>什么?都没有?买!<br>
-当然证书可以不用买,可以使用openssl之类的工具生成,不过自签名的证书后面验证的时候会有点麻烦,建议还是购买.</p>
+当然证书可以不用买,可以使用Openssl之类的工具生成,不过自签名的证书后面验证的时候会有点麻烦,建议还是购买.</p>
 <h1 id="4-okhttp部分">4 OkHttp部分</h1>
 <h2 id="41-暴力方案">4.1 暴力方案</h2>
 <pre><code class="language-java">public static String test() {
@@ -247,9 +247,9 @@ public void checkServerTrusted(X509Certificate[] chain, String authType) throws 
 	}
 };
 </code></pre>
-<p>这里验证主机名是www.test.com就返回true,实现得比较简单,业务复杂的话可以结合配置中心,黑/白名单等动态校验.</p>
+<p>这里验证主机名是www.test.com就返回true(也可以使用服务器ip进行验证),实现得比较简单,业务复杂的话可以结合配置中心,黑/白名单等动态校验.</p>
 <h3 id="422-x509trustmanager">4.2.2 X509TrustManager</h3>
-<p>这里其实有两种方式,一种是以流的方式添加信任证书:</p>
+<p>接着是X509TrustManager的处理,这里其实有两种方式,一种是以流的方式添加信任证书(来源:<a href="https://www.programcreek.com/java-api-examples/?class=java.security.cert.CertificateFactory&amp;method=generateCertificates">Java Code Example</a>):</p>
 <pre><code class="language-java">private static X509TrustManager trustManagerForCertificates(InputStream in)
         throws GeneralSecurityException
 {
@@ -282,7 +282,9 @@ public void checkServerTrusted(X509Certificate[] chain, String authType) throws 
     return (X509TrustManager) trustManagers[0];
 }
 </code></pre>
-<p>完整代码见文末.这里把工具类的方法实现成了静态,调用时可以直接:</p>
+<p>返回一个信任由输入流读取的证书的信任管理器,若证书没有被签名则抛出SSLHandsakeException,证书建议使用第三方签名的而不是自签名的（比如使用openssl生成）,特别是在生产环境中,例子的注释也提到:<br>
+<img src="https://img-blog.csdnimg.cn/20200605153122874.png" alt="在这里插入图片描述" loading="lazy"><br>
+完整代码见文末.这里把工具类的方法实现成了静态,调用时可以直接:</p>
 <pre><code class="language-java">OKHTTP.send(&quot;https://xxxxx&quot;);
 </code></pre>
 <p>另一种方式是直接自定义一个TrustManager,重写里面的三个方法:</p>
@@ -335,8 +337,8 @@ public X509Certificate[] getAcceptedIssuers() {
     return new X509Certificate[0];
 }
 </code></pre>
-<p>返回受信任的X509证书数组.</p>
-<p>这种方法笔者没有试过,仅供参考.</p>
+<p>返回受信任的X509证书数组.<br>
+这种方法笔者没有试过,仅供参考.</p>
 <h1 id="5-服务器部署">5 服务器部署</h1>
 <p>服务器用的是Tomcat,简单介绍一下部署.</p>
 <h2 id="51-上传工程">5.1 上传工程</h2>
@@ -348,13 +350,19 @@ public X509Certificate[] getAcceptedIssuers() {
 <img src="https://img-blog.csdnimg.cn/20200330012446941.png" alt="在这里插入图片描述" loading="lazy"><br>
 然后是证书的配置,笔者的证书在某某云上购买的,这里提供了几种格式的证书下载:<br>
 <img src="https://img-blog.csdnimg.cn/20200330012635198.png" alt="在这里插入图片描述" loading="lazy"><br>
-Tomcat的是两个文件,一个是pfx文件,一个是密码文件,把pfx文件上传到服务器的Tomcat后,继续修改server.xml,大约87行左右的位置(Tomcat版本9.0.33):<br>
+Tomcat的是两个文件,一个是pfx文件,一个是密码文件,把pfx文件上传到服务器的Tomcat后,继续修改server.xml,搜索8443找到如下位置(Tomcat版本9.0.33):<br>
 <img src="https://img-blog.csdnimg.cn/20200330012945701.png" alt="在这里插入图片描述" loading="lazy"><br>
+一些Tomcat8的高版本提供了HTTP/2的实现,默认使用apr实现的,这里使用的是HTTP/1.1,使用HTTP/2需要额外安装Apr,Apr-util以及Tomcat-native,因此这里采用HTTP/1.1实现.使用HTTP/2可以参考<a href="https://blog.csdn.net/qq_27525611/article/details/106557158">这里</a>.<br>
 修改如下:<br>
 <img src="https://img-blog.csdnimg.cn/20200330012834456.png" alt="在这里插入图片描述" loading="lazy"><br>
 添加了scheme,secure,keystoreFile,keystoreType,keystorePass,clientAuth,sslProtocol配置,同时去掉里面的&lt;SSLHostConfig&gt;,keystoreFile是刚才的pfx文件,采用绝对路径,keystorePass是密码.<br>
 另外默认的端口为8443,这里修改成了8123.<br>
-重启Tomcat后输入</p>
+如果想要更安全的话可以手动指定TLS的版本:</p>
+<pre><code class="language-xml">&lt;Connector ...
+sslProtocol=&quot;TLS&quot; sslEnabledProtocols=&quot;TLSv1.3&quot;
+&gt;
+</code></pre>
+<p>重启Tomcat后输入</p>
 <pre><code class="language-bash">https://www.test.com:port
 </code></pre>
 <p>进行测试<br>
@@ -463,6 +471,21 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-06">2020-06-06</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/">JavaFX+SpringBoot+验证码功能的小型薪酬管理系统</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jfx11mavenidea-fa-bu-kua-ping-tai-ying-yong-de-wan-mei-jie-jue-fang-an.png');"></span>
                     </a>
@@ -477,7 +500,7 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/yi-ge-kai-yuan-de-kua-ping-tai-yin-le-bo-fang-yu-yin-le-xia-zai-qi.jpg');"></span>
                     </a>
@@ -491,19 +514,6 @@ jQuery(document).ready(function($){
                   </article>
                   
                   
-                  
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/javafx-huo-qu-ping-mu-chi-cun.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-06-03">2020-06-03</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/javafx-huo-qu-ping-mu-chi-cun/">JavaFX获取屏幕尺寸</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
@@ -904,7 +914,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 115 篇文章
+          ©2019 共 116 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>
