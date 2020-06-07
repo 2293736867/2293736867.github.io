@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-06T08:18:51.598Z</updated>
+    <updated>2020-06-07T03:51:44.159Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,30 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[残酷游戏]]></title>
+        <id>https://2293736867.github.io/post/can-ku-you-xi/</id>
+        <link href="https://2293736867.github.io/post/can-ku-you-xi/">
+        </link>
+        <updated>2020-06-07T03:20:49.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>其实自命受苦都只因我能离不离<br>
+看着对你爱得仿似爱情欲避不避<br>
+若能耗尽力气  去捕捉你<br>
+亦能剩下自己可挽救自己<br>
+我也知越是幻想不准想你更记得起<br>
+我在故意去将苦涩替代寂寞滋味<br>
+用残酷游戏  制造卑微<br>
+自由自在莫非惨过永远受气</p>
+</blockquote>
+<p>摊牌，<br>
+哦豁，<br>
+GG。<br>
+历史总是惊人的相似，<br>
+现实总是太多的无奈。<br>
+注孤生。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JavaFX+SpringBoot+验证码功能的小型薪酬管理系统]]></title>
         <id>https://2293736867.github.io/post/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/</id>
@@ -1964,231 +1988,6 @@ module-info.java包含了所需要的javafx.controls与javafx.fxml这两个模�
 <p>例子：</p>
 <pre><code class="language-bash">~/.IntelliJIdea2019.3/config
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vim与系统剪贴版的交互]]></title>
-        <id>https://2293736867.github.io/post/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/</id>
-        <link href="https://2293736867.github.io/post/vim-yu-xi-tong-jian-tie-ban-de-jiao-hu/">
-        </link>
-        <updated>2020-06-02T21:37:22.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>vim中的复制，删除，替换（d，r，s，x，y等）的内容都会被保存到默认的未命名的寄存器中，之后可以通过p进行粘贴，但是，这个寄存器不是系统的剪贴版，很多时候需要vim与系统剪贴版的交互，那么，具体怎么做呢？</p>
-<h1 id="2-暴力解决">2 暴力解决</h1>
-<p>系统剪贴版复制vim时，新建一个文件，直接ctrl+v复制过去然后vim打开。<br>
-vim中的内容复制到系统剪贴版，使用cat+grep，在终端ctrl+c复制即可。<br>
-这是最简单也是比较通用的方法，不会受到什么vim不支持剪贴版之类的影响。<br>
-<s>没错就是简单粗暴。</s></p>
-<h1 id="3-优雅的方案">3 优雅的方案</h1>
-<p>当然上面的方法想必也不是您想要的，因此，这里介绍一种优雅一点的方法。</p>
-<h2 id="31-查看剪贴板支持">3.1 查看剪贴板支持</h2>
-<p>首先需要知道vim是否支持剪贴版：</p>
-<pre><code class="language-bash">vim --version | grep clipboard
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/2020052710391175.png" alt="在这里插入图片描述" loading="lazy"><br>
-如果有</p>
-<pre><code class="language-bash">+clipboard
-</code></pre>
-<p>就表示支持，没有的话比如笔者这个就不支持，需要安装。<br>
-笔者的Manjaro，可以使用yay安装，不过提示过期了：<br>
-<img src="https://img-blog.csdnimg.cn/20200527104442825.png" alt="在这里插入图片描述" loading="lazy"><br>
-也可以选择安装gvim，另外，Debian系的可以安装vim-gtk：</p>
-<pre><code class="language-bash">sudo apt install vim-gtk
-</code></pre>
-<p>Redhat系的需要安装vim-X11以及vim-enhanced，然后加个别名：</p>
-<pre><code class="language-bash">alias vi='vimx'
-alias vim='vimx'
-</code></pre>
-<p>MacOS：</p>
-<pre><code class="language-bash">sudo brew install vim
-</code></pre>
-<h2 id="32-系统剪贴板复制到vim">3.2 系统剪贴板复制到vim</h2>
-<p>很简单，使用</p>
-<pre><code class="language-bash">&quot;+p
-</code></pre>
-<p>或</p>
-<pre><code class="language-bash">&quot;*p
-</code></pre>
-<p>即可，vim提供了</p>
-<pre><code class="language-bash">+ *
-</code></pre>
-<p>这两个寄存器与系统剪贴板进行交互，大多数系统上这两个系统一样，但在某些linux上可能不等价，以下是<a href="https://vim.fandom.com/wiki/Accessing_the_system_clipboard">官方文档</a>：<br>
-<img src="https://img-blog.csdnimg.cn/2020052710535542.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-bash">+
-</code></pre>
-<p>对应ctrl+c，ctrl+v使用的系统剪贴板，</p>
-<pre><code class="language-bash">*
-</code></pre>
-<p>对应的是鼠标选择的内容，可以使用中间粘贴。<br>
-当然高版本的vim还有一种很简单的解决办法：Shift+Insert能直接粘贴。</p>
-<h2 id="33-vim寄存器复制到系统剪贴板">3.3 vim寄存器复制到系统剪贴板</h2>
-<p>在vim中使用y进行复制，但是是复制到默认的未命名寄存器的，想要复制到系统剪贴版只需要把y改为</p>
-<pre><code class="language-bash">&quot;+y
-</code></pre>
-<p>或</p>
-<pre><code class="language-bash">&quot;*y
-</code></pre>
-<p>即可。</p>
-<h2 id="34-偷懒方法">3.4 偷懒方法</h2>
-<p>所谓的偷懒方法就是把默认的未命名寄存器与系统剪贴板关联上，使用</p>
-<pre><code class="language-bash">set clipboard=unnamed
-</code></pre>
-<p>即可。vim7.3.74以上的版本可以使用：</p>
-<pre><code class="language-bash">set clipboard=unnamedplus
-</code></pre>
-<p>这样y，d，s，x等操作就和系统剪贴版关联上了。</p>
-<h1 id="4-寄存器相关知识">4 寄存器相关知识</h1>
-<p>vim中的y，d，c，x，s等的操作的内容会复制到寄存器中，可以使用</p>
-<pre><code class="language-bash">:reg 
-</code></pre>
-<p>查看寄存器的内容，使用</p>
-<pre><code class="language-bash">:help registers
-</code></pre>
-<p>查看帮助，另外，寄存器的常用操作包括：</p>
-<pre><code class="language-java">&quot;{register}y 复制到寄存器，默认register为未命名寄存器
-&quot;{register}p 粘贴寄存器的内容
-</code></pre>
-<p>比如</p>
-<pre><code class="language-java">&quot;a4yy
-&quot;+p
-</code></pre>
-<p>vim中提供了多种多样的寄存器，具体来说可以分为10种共48个寄存器。</p>
-<h2 id="41-未命名寄存器">4.1 未命名寄存器</h2>
-<pre><code class="language-bash">&quot;&quot;
-</code></pre>
-<p>也叫匿名寄存器，使用d，c，x等删除的字符会存放进匿名寄存器，换句话说，最近一次删除，修改，复制的内容都存放在这里，会覆盖。</p>
-<h2 id="42-编号寄存器">4.2 编号寄存器</h2>
-<pre><code class="language-bash">&quot;0
-&quot;1
-...
-&quot;9
-</code></pre>
-<p>从0到9共10个，可以细分为复制专用寄存器与删除专用寄存器，因为</p>
-<pre><code class="language-bash">&quot;0
-</code></pre>
-<p>保存着最近一次y复制的内容，而</p>
-<pre><code class="language-bash">&quot;1
-...
-&quot;9
-</code></pre>
-<p>这9个寄存器保存着最近一次删除（d，c，s，x等）的内容。上一次删除的内容被存放在</p>
-<pre><code class="language-bash">&quot;1
-</code></pre>
-<p>上上次的被存放在</p>
-<pre><code class="language-bash">&quot;2
-</code></pre>
-<p>以此类推。</p>
-<p><strong>注意，只有整行的删除，和通过段落级别的移动指令的删除才会放进</strong></p>
-<pre><code class="language-bash">&quot;1
-</code></pre>
-<p><strong>另外当指定寄存器后，比如</strong></p>
-<pre><code class="language-bash">&quot;ayy
-</code></pre>
-<p><strong>不会写入到</strong></p>
-<pre><code class="language-bash">&quot;0
-</code></pre>
-<p><strong>中，但是</strong></p>
-<pre><code class="language-bash">&quot;add
-</code></pre>
-<p><strong>会写入到</strong></p>
-<pre><code class="language-bash">&quot;1
-</code></pre>
-<p><strong>中，也就是说，指定寄存器后复制内容不会写入0寄存器，但是删除内容会写入1寄存器。</strong></p>
-<h2 id="43-小删除寄存器">4.3 小删除寄存器</h2>
-<pre><code class="language-bash">&quot;-
-</code></pre>
-<p>不足一行的小删除会被放进去，包括s，d，c，x。与</p>
-<pre><code class="language-bash">&quot;0
-</code></pre>
-<p>类似，用户指定寄存器后不会被写入。</p>
-<h2 id="44-命名寄存器">4.4 命名寄存器</h2>
-<pre><code class="language-bash">&quot;a
-&quot;b
-...
-</code></pre>
-<p>小写字母组成的26个寄存器，一般用来录制键盘宏，比如有如下内容：</p>
-<pre><code class="language-cpp">iostream
-string
-cmath
-</code></pre>
-<p>可以把位置定位到第一行，然后</p>
-<pre><code class="language-java">qaI#include&lt;{ESC}A&gt;{ESC}jq
-</code></pre>
-<p>其中</p>
-<pre><code class="language-bash">{ESC}
-</code></pre>
-<p>表示按下ESC键，这样第一行就加上include了，同时把宏记录到了寄存器a，接下来，使用</p>
-<pre><code class="language-bash">2@a
-</code></pre>
-<p>即可在剩余两行加上include。<br>
-另外，小写对应的大写字母的寄存器用于追加内容，比如：</p>
-<pre><code class="language-bash">&quot;Ayy
-</code></pre>
-<p>可以向</p>
-<pre><code class="language-bash">&quot;a
-</code></pre>
-<p>追加内容。</p>
-<h2 id="45-只读寄存器">4.5 只读寄存器</h2>
-<pre><code class="language-java">&quot;. 上一次insert插入的内容
-&quot;% 当前文件名，从vim的工作目录到该文件的路径
-&quot;: 上次命令模式下键入的命令，使用@:执行上次命令， .只能进行一些简单的重复，一些复杂的命令比如替换，需要使用@:
-</code></pre>
-<p>共三个，只读。</p>
-<h2 id="46-交替文件寄存器">4.6 交替文件寄存器</h2>
-<pre><code class="language-bash">&quot;#
-</code></pre>
-<p>保存着当前窗口的交替文件。<br>
-交替文件是缓冲区（Buffer）上的一个文件，而缓冲区其实时vim中打开文件编辑时占用的那部分内存，编辑文件时，只是编辑缓冲区中的文件，当使用</p>
-<pre><code class="language-bash">:w
-</code></pre>
-<p>时，会把缓冲区的文件写入磁盘。</p>
-<h2 id="47-表达式寄存器">4.7 表达式寄存器</h2>
-<pre><code class="language-bash">&quot;=
-</code></pre>
-<p>计算vim脚本的返回值，输入后会跳转到命令行，此时若输入3+2，回车并p，会粘贴5。</p>
-<h2 id="48-选择拖放寄存器">4.8 选择拖放寄存器</h2>
-<p>上面已经介绍了两个：</p>
-<pre><code class="language-java">&quot;+
-&quot;*
-</code></pre>
-<p>还有一个是</p>
-<pre><code class="language-bash">&quot;~
-</code></pre>
-<p>其中</p>
-<pre><code class="language-java">&quot;+
-&quot;*
-</code></pre>
-<p>在Mac与Windows上指的是系统剪贴板，在大多数X11，也就是带桌面环境的Linux发行版中是有区别的，上面也提到了一点：</p>
-<pre><code class="language-java">&quot;+ 系统剪贴板
-&quot;* 鼠标选中区域，可以中键粘贴
-</code></pre>
-<p>有文本拖拽到vim时，被存放在</p>
-<pre><code class="language-java">&quot;~
-</code></pre>
-<p>中，默认会将其中的内容插入到光标位置。</p>
-<h2 id="49-黑洞寄存器">4.9 黑洞寄存器</h2>
-<pre><code class="language-java">&quot;_
-</code></pre>
-<p>所有进入到里面的内容会消失，通常用于脚本中。</p>
-<h2 id="410-搜索寄存器">4.10 搜索寄存器</h2>
-<pre><code class="language-java">&quot;/
-</code></pre>
-<p>存储上一次搜索的关键词。可写，通过</p>
-<pre><code class="language-java">:let @/ = &quot;123&quot;
-</code></pre>
-<p>下一次搜索可直接</p>
-<pre><code class="language-java">/
-</code></pre>
-<p>不输入关键词回车即可。<br>
-注意不存在</p>
-<pre><code class="language-java">&quot;?
-</code></pre>
-<p>寄存器。</p>
-<h1 id="5-参考">5 参考</h1>
-<p>1.<a href="https://harttle.land/2016/07/25/vim-registers.html#header-12">Vim 寄存器完全手册</a></p>
-<p>2.<a href="https://vim.fandom.com/wiki/Buffers">Vim官方文档-1</a></p>
-<p>3.<a href="https://vim.fandom.com/wiki/Pasting_registers">Vim官方文档-2</a></p>
-<p>4.<a href="https://www.zhihu.com/question/19863631">知乎-如何将 Vim 剪贴板里面的东西粘贴到 Vim 之外的地方</a></p>
 ]]></content>
     </entry>
 </feed>
