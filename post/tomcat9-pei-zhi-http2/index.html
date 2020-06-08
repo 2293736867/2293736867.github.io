@@ -1,0 +1,875 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tomcat9配置HTTP/2 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 HTTP/2特性
+
+2.1 二进制分帧
+2.2 压缩头部
+2.3 多路复用
+2.4 流优先及流控制
+2.5 服务器推送
+2.6 应用层协商协议
+
+
+3 使用mkcert生成证书
+
+3.1 安装mkcert
+
+3.1.1 Ma..." />
+    <meta name="keywords" content="HTTP/2,Tomcat" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1591601594987" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('/post-images/tomcat9-pei-zhi-http2.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-06-08"><i class="fa fa-calendar"></i><span class="lately">3 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/tomcat9-pei-zhi-http2/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/tomcat9-pei-zhi-http2/"> </span>
+              </a>
+              <span id="/tomcat9-pei-zhi-http2/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-0 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-1 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Tomcat9配置HTTP/2</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-http2%E7%89%B9%E6%80%A7">2 HTTP/2特性</a>
+<ul>
+<li><a href="#21-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%B8%A7">2.1 二进制分帧</a></li>
+<li><a href="#22-%E5%8E%8B%E7%BC%A9%E5%A4%B4%E9%83%A8">2.2 压缩头部</a></li>
+<li><a href="#23-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8">2.3 多路复用</a></li>
+<li><a href="#24-%E6%B5%81%E4%BC%98%E5%85%88%E5%8F%8A%E6%B5%81%E6%8E%A7%E5%88%B6">2.4 流优先及流控制</a></li>
+<li><a href="#25-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A8%E9%80%81">2.5 服务器推送</a></li>
+<li><a href="#26-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E5%95%86%E5%8D%8F%E8%AE%AE">2.6 应用层协商协议</a></li>
+</ul>
+</li>
+<li><a href="#3-%E4%BD%BF%E7%94%A8mkcert%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6">3 使用mkcert生成证书</a>
+<ul>
+<li><a href="#31-%E5%AE%89%E8%A3%85mkcert">3.1 安装mkcert</a>
+<ul>
+<li><a href="#311-macos">3.1.1 MacOS</a></li>
+<li><a href="#312-linux">3.1.2 Linux</a></li>
+<li><a href="#313-windows">3.1.3 Windows</a></li>
+</ul>
+</li>
+<li><a href="#32-%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6">3.2 生成证书</a>
+<ul>
+<li><a href="#321-%E5%AE%89%E8%A3%85%E6%9C%AC%E5%9C%B0ca%E8%AF%81%E4%B9%A6">3.2.1 安装本地CA证书</a></li>
+<li><a href="#322-%E5%88%A9%E7%94%A8ca%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%8F%91%E6%9C%AC%E5%9C%B0%E8%AF%81%E4%B9%A6">3.2.2 利用CA证书签发本地证书</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E9%85%8D%E7%BD%AEtomcat">4 配置Tomcat</a>
+<ul>
+<li><a href="#41-%E4%BD%BF%E7%94%A8nio">4.1 使用Nio</a></li>
+<li><a href="#42-%E4%BD%BF%E7%94%A8apr">4.2 使用APR</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>Tomcat从Tomcat8的一些较新版本就支持HTTP/2了，Tomcat9直接支持，本文首先讲述了相关HTTP/2的特性，接着利用一个简单的开源工具mkcert生成证书并利用该证书配置HTTP/2。</p>
+<h1 id="2-http2特性">2 HTTP/2特性</h1>
+<p>首先介绍一下HTTP/2特性，这也从另一方面解释了为什么需要使用HTTP/2。</p>
+<h2 id="21-二进制分帧">2.1 二进制分帧</h2>
+<p>HTTP/2在应用层与传输层增加了一个二进制分帧，能够达到“在不改动HTTP语义，HTTP方法，状态码，URI及首部字段的情况下，突破HTTP/1.1的性能限制，改进传输性能，实现低延迟和高吞吐量。”</p>
+<h2 id="22-压缩头部">2.2 压缩头部</h2>
+<p>HTTP/2对消息头采用了HPACK进行压缩传输，能够节省消息头占用的网络流量，而HTTP/1.x每次请求都会携带大量的冗余头信息，浪费了很多带宽资源。</p>
+<h2 id="23-多路复用">2.3 多路复用</h2>
+<p>简单地说就是所有的请求都通过一个TCP连接并发完成。HTTP/1.x虽然能利用一个连接完成多次请求，但是多个请求之间是有先后顺序的，后面发送的请求必须等待上一个请求返回才能发送响应，很容易导致后面的请求被阻塞。而HTTP/2做到了真正的并发请求。<br>
+HTTP/2将消息分解为帧，为每帧分配一个流标识符，然后在一个TCP连接上独立发送，HTTP/2将请求帧与响应帧交织在一起，能够让所有请求与响应都在一个套接字上发生，所有请求或响应都无法相互阻塞，减少了延迟，提高了页面加载速度，消除了对HTTP/1.1工具的需求。</p>
+<h2 id="24-流优先及流控制">2.4 流优先及流控制</h2>
+<p>消息帧通过对流进行发送，每个流分配了一个优先级，用于确定处理顺序以及收到的资源量，优先级可以是0-256之间的数字，可以定义依赖关系，允许在一个资源之前加载另一个资源。<br>
+流控制管理数据的传输，允许接收者停止或减少发送的数据量，比如观看视频暂停时，客户端会通知服务器停止发送视频数据。</p>
+<h2 id="25-服务器推送">2.5 服务器推送</h2>
+<p>一般情况下需要客户端请求服务器才会响应，HTTP/2中能够先于客户端检测将要请求的资源，提前通知客户端，但是不发送资源只发送URL，客户端收到后会进行验证缓存，发现需要则正式发起请求。</p>
+<h2 id="26-应用层协商协议">2.6 应用层协商协议</h2>
+<p>客户端与服务器都升级才能支持HTTP/2，但是有可能存在HTTP/1与HTTP/2并存的情况，如果都使用80端口，需要选择其中一个协议通信。<br>
+APLN（Application Layer Protocol Negotiation）就是为了解决这个问题，通过协商选择协议：</p>
+<ul>
+<li>首先客户端发起请求，如果支持HTTP/2则带upgrade头部</li>
+<li>若服务器不支持则拒绝升级通过HTTP/1.1返回响应</li>
+<li>若服务器支持则接受升级，切换到新分帧使用HTTP/2通信</li>
+</ul>
+<p>更多请查看<a href="https://httpwg.org/specs/rfc7540.html">RFC7540 官方文档</a>。</p>
+<h1 id="3-使用mkcert生成证书">3 使用mkcert生成证书</h1>
+<p>网上大部分的教程都是使用OpenSSL生成根证书，客户端证书以及服务端证书的，一堆参数配置非常复杂，因此这里使用一个简单的一键生成本地证书的开源工具<a href="https://github.com/FiloSottile/mkcert">mkcert</a>，无需任何配置。</p>
+<h2 id="31-安装mkcert">3.1 安装mkcert</h2>
+<h3 id="311-macos">3.1.1 MacOS</h3>
+<pre><code class="language-bash">brew install mkcert
+brew install nss # 如果使用火狐
+</code></pre>
+<p>使用MacPorts：</p>
+<pre><code class="language-bash">sudo port selftupdate
+sudo port install mkcert
+sudo port install css # 如果使用火狐
+</code></pre>
+<h3 id="312-linux">3.1.2 Linux</h3>
+<p>需要先安装<code>certutil</code>：</p>
+<pre><code class="language-bash">#Debian/Ubuntu
+sudo apt install libnss3-tools
+#Red Hat/Fedora/CentOS
+sudo yum install nss-tools
+#Arch/Manjaro
+sudo pacman -S nss
+#SUSE
+sudo zypper install mozilla-nss-tools
+</code></pre>
+<p>使用<code>LinuxBrew</code>安装：</p>
+<pre><code class="language-bash">brew install mkcert
+</code></pre>
+<p>安装<a href="https://docs.brew.sh/Homebrew-on-Linux">LinuxBrew</a>：</p>
+<pre><code class="language-bash">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)&quot;
+</code></pre>
+<p>Arch/Manjaro可以使用pacman安装：</p>
+<pre><code class="language-bash">sudo pacman -Syu mkcert
+</code></pre>
+<p>或者从源码安装（需要go环境）：</p>
+<pre><code class="language-bash">git clone https://github.com/FiloSottile/mkcert &amp;&amp; cd mkcert
+go build -ldflags &quot;-X main.Version=$(git describe --tags)&quot;
+</code></pre>
+<p>或者使用<a href="https://github.com/FiloSottile/mkcert/releases">已构建好的版本</a>。</p>
+<h3 id="313-windows">3.1.3 Windows</h3>
+<p>安装Chocolatey（以管理员运行PowerShell）：</p>
+<pre><code class="language-bash">Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+</code></pre>
+<p>或安装Scoop（管理员PowerShell）：</p>
+<pre><code class="language-bash">Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+# 或
+iwr -useb get.scoop.sh | iex
+</code></pre>
+<p>使用Chocolatey或Scoop安装：</p>
+<pre><code class="language-bash">choco install mkcert
+#或
+scoop bucket add extras
+scoop install mkcert
+</code></pre>
+<p>或者使用<a href="https://github.com/FiloSottile/mkcert/releases">已构建好的版本</a>。</p>
+<h2 id="32-生成证书">3.2 生成证书</h2>
+<p>mkcert的命令非常简单，可以使用<code>--help</code>查看帮助：</p>
+<pre><code class="language-bash">mkcert --help
+</code></pre>
+<h3 id="321-安装本地ca证书">3.2.1 安装本地CA证书</h3>
+<pre><code class="language-bash">mkcert -install
+</code></pre>
+<p>默认会在<code>~/.local/share/mkcert</code>生成CA证书。</p>
+<h3 id="322-利用ca证书签发本地证书">3.2.2 利用CA证书签发本地证书</h3>
+<pre><code class="language-bash">mkcert localhost
+</code></pre>
+<p>其中localhost表示签发本地证书，可以换成<code>example.com</code>，<code>*.example.com</code>，<code>example.test</code>，<code>127.0.0.1</code>，<code>::1</code>之类的域名或者ip。<br>
+执行后会在当前文件夹下生成<code>localhost-key.pem</code>与<code>localhost.pem</code>，前者是私钥，后者是证书。</p>
+<h1 id="4-配置tomcat">4 配置Tomcat</h1>
+<p>Tomcat可以通过两种方式配置HTTP/2，一种是自带的Nio方式，另一种是使用额外库APR，APR-util与TC-Native的方式。</p>
+<h2 id="41-使用nio">4.1 使用Nio</h2>
+<p>通过Nio配置HTTP/2需要结合OpenSSL与keytool将证书转换为<code>pkcs#12</code>再转换为<code>jks</code>：</p>
+<pre><code class="language-bash">openssl pkcs12 -export -inkey localhost-key.pem -in localhost.pem -out localhost.p12
+</code></pre>
+<p>会提示输入导出密码，需要记住，转换成<code>jks</code>时需要用到。<br>
+<img src="https://img-blog.csdnimg.cn/20200608144240906.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着转换为<code>jks</code>：</p>
+<pre><code class="language-bash">keytool -importkeystore -srckeystore localhost.p12 -srcstoretype pkcs12 -destkeystore localhost.jks
+</code></pre>
+<p>这里会提示输入目标keystore与源keystore的密码，目标keystore密码一会在修改<code>server.xml</code>时需要用到，源keystore密码就是上面的导出密码。<br>
+<img src="https://img-blog.csdnimg.cn/20200608144851193.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着复制<code>localhost.jks</code>到Tomcat的<code>conf</code>下并修改<code>server.xml</code>：</p>
+<pre><code class="language-xml">&lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;
+               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot;&gt;
+	&lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;
+    &lt;SSLHostConfig&gt;
+        &lt;Certificate certificateKeystoreFile=&quot;conf/localhost.jks&quot;
+       				 certificateKeystorePassword=&quot;111111&quot;
+                     type=&quot;RSA&quot; /&gt;
+    &lt;/SSLHostConfig&gt;
+&lt;/Connector&gt;
+</code></pre>
+<p>添加了升级协议（默认HTTP/1.1）：</p>
+<pre><code class="language-xml">&lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;
+</code></pre>
+<p>另外<code>certificateKeystorePassword</code>是上一步的目标keystore的密码。<br>
+完成后开启Tomcat并访问<code>https://localhost:8443</code>：<br>
+<img src="https://img-blog.csdnimg.cn/20200608150201599.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200608150257547.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="42-使用apr">4.2 使用APR</h2>
+<p>使用APR不需要对证书进行额外的转换，但是需要安装三个库：</p>
+<ul>
+<li><a href="https://apr.apache.org/">APR</a></li>
+<li><a href="https://apr.apache.org/">APR-util</a></li>
+<li><a href="https://tomcat.apache.org/native-doc/">TC-Native</a></li>
+</ul>
+<p>笔者的Manjaro可以直接包管理器安装：</p>
+<pre><code class="language-bash">sudo pacman -S apr apr-util tomcat-native
+</code></pre>
+<p>其他系统请自行使用包管理器或者按上面的官网链接进行编译安装。<br>
+复制<code>localhost-key.pem</code>与<code>localhost.pem</code>到Tomcat的<code>conf</code>目录下，并修改<code>server.xml</code>：</p>
+<pre><code class="language-xml">&lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;
+               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; &gt;
+    &lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;
+    &lt;SSLHostConfig&gt;
+        &lt;Certificate certificateKeyFile=&quot;conf/localhost-key.pem&quot;
+                     certificateFile=&quot;conf/localhost.pem&quot;
+                     type=&quot;RSA&quot; /&gt;
+    &lt;/SSLHostConfig&gt;
+&lt;/Connector&gt;
+</code></pre>
+<p>开启Tomcat后就可以访问<code>https://localhost:8443</code>了：<br>
+<img src="https://img-blog.csdnimg.cn/20200608143030125.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200608143333489.png" alt="在这里插入图片描述" loading="lazy"></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/6-yue-ting-geng.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/6-yue-ting-geng/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-08">2020-06-08</time>
+                  <h4 class="title white no-margin">6月停更</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/can-ku-you-xi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/can-ku-you-xi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-06-07">2020-06-07</time>
+                  <h4 class="title white no-margin">残酷游戏</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/6-yue-ting-geng/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/6-yue-ting-geng.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-08">2020-06-08</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/6-yue-ting-geng/">6月停更</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/tomcat9-pei-zhi-http2/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/post-images/tomcat9-pei-zhi-http2.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-08">2020-06-08</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/tomcat9-pei-zhi-http2/">Tomcat9配置HTTP/2</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/can-ku-you-xi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/can-ku-you-xi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-06-07">2020-06-07</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/can-ku-you-xi/">残酷游戏</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-0 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-1 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-2 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-3 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-4 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-5 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-6 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-7 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-8 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-9 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-10 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-11 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-12 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-13 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-14 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-15 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-16 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-17 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-18 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-19 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-20 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-21 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-22 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-23 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-24 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-25 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-26 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-27 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-28 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-29 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-30 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-31 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-32 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-33 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-34 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-35 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-36 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-37 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-38 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-39 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-40 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-41 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-42 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-43 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-44 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-45 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-46 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-47 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-48 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-49 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-50 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-51 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-52 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-53 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-54 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-55 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-56 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-57 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-58 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-59 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-60 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-61 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-62 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 119 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

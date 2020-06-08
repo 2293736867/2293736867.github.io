@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-07T03:51:44.159Z</updated>
+    <updated>2020-06-08T07:33:22.128Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,207 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[6月停更]]></title>
+        <id>https://2293736867.github.io/post/6-yue-ting-geng/</id>
+        <link href="https://2293736867.github.io/post/6-yue-ting-geng/">
+        </link>
+        <updated>2020-06-08T07:32:49.000Z</updated>
+        <content type="html"><![CDATA[<p>害。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Tomcat9配置HTTP/2]]></title>
+        <id>https://2293736867.github.io/post/tomcat9-pei-zhi-http2/</id>
+        <link href="https://2293736867.github.io/post/tomcat9-pei-zhi-http2/">
+        </link>
+        <updated>2020-06-08T07:30:17.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-http2%E7%89%B9%E6%80%A7">2 HTTP/2特性</a>
+<ul>
+<li><a href="#21-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%B8%A7">2.1 二进制分帧</a></li>
+<li><a href="#22-%E5%8E%8B%E7%BC%A9%E5%A4%B4%E9%83%A8">2.2 压缩头部</a></li>
+<li><a href="#23-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8">2.3 多路复用</a></li>
+<li><a href="#24-%E6%B5%81%E4%BC%98%E5%85%88%E5%8F%8A%E6%B5%81%E6%8E%A7%E5%88%B6">2.4 流优先及流控制</a></li>
+<li><a href="#25-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A8%E9%80%81">2.5 服务器推送</a></li>
+<li><a href="#26-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E5%95%86%E5%8D%8F%E8%AE%AE">2.6 应用层协商协议</a></li>
+</ul>
+</li>
+<li><a href="#3-%E4%BD%BF%E7%94%A8mkcert%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6">3 使用mkcert生成证书</a>
+<ul>
+<li><a href="#31-%E5%AE%89%E8%A3%85mkcert">3.1 安装mkcert</a>
+<ul>
+<li><a href="#311-macos">3.1.1 MacOS</a></li>
+<li><a href="#312-linux">3.1.2 Linux</a></li>
+<li><a href="#313-windows">3.1.3 Windows</a></li>
+</ul>
+</li>
+<li><a href="#32-%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6">3.2 生成证书</a>
+<ul>
+<li><a href="#321-%E5%AE%89%E8%A3%85%E6%9C%AC%E5%9C%B0ca%E8%AF%81%E4%B9%A6">3.2.1 安装本地CA证书</a></li>
+<li><a href="#322-%E5%88%A9%E7%94%A8ca%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%8F%91%E6%9C%AC%E5%9C%B0%E8%AF%81%E4%B9%A6">3.2.2 利用CA证书签发本地证书</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E9%85%8D%E7%BD%AEtomcat">4 配置Tomcat</a>
+<ul>
+<li><a href="#41-%E4%BD%BF%E7%94%A8nio">4.1 使用Nio</a></li>
+<li><a href="#42-%E4%BD%BF%E7%94%A8apr">4.2 使用APR</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>Tomcat从Tomcat8的一些较新版本就支持HTTP/2了，Tomcat9直接支持，本文首先讲述了相关HTTP/2的特性，接着利用一个简单的开源工具mkcert生成证书并利用该证书配置HTTP/2。</p>
+<h1 id="2-http2特性">2 HTTP/2特性</h1>
+<p>首先介绍一下HTTP/2特性，这也从另一方面解释了为什么需要使用HTTP/2。</p>
+<h2 id="21-二进制分帧">2.1 二进制分帧</h2>
+<p>HTTP/2在应用层与传输层增加了一个二进制分帧，能够达到“在不改动HTTP语义，HTTP方法，状态码，URI及首部字段的情况下，突破HTTP/1.1的性能限制，改进传输性能，实现低延迟和高吞吐量。”</p>
+<h2 id="22-压缩头部">2.2 压缩头部</h2>
+<p>HTTP/2对消息头采用了HPACK进行压缩传输，能够节省消息头占用的网络流量，而HTTP/1.x每次请求都会携带大量的冗余头信息，浪费了很多带宽资源。</p>
+<h2 id="23-多路复用">2.3 多路复用</h2>
+<p>简单地说就是所有的请求都通过一个TCP连接并发完成。HTTP/1.x虽然能利用一个连接完成多次请求，但是多个请求之间是有先后顺序的，后面发送的请求必须等待上一个请求返回才能发送响应，很容易导致后面的请求被阻塞。而HTTP/2做到了真正的并发请求。<br>
+HTTP/2将消息分解为帧，为每帧分配一个流标识符，然后在一个TCP连接上独立发送，HTTP/2将请求帧与响应帧交织在一起，能够让所有请求与响应都在一个套接字上发生，所有请求或响应都无法相互阻塞，减少了延迟，提高了页面加载速度，消除了对HTTP/1.1工具的需求。</p>
+<h2 id="24-流优先及流控制">2.4 流优先及流控制</h2>
+<p>消息帧通过对流进行发送，每个流分配了一个优先级，用于确定处理顺序以及收到的资源量，优先级可以是0-256之间的数字，可以定义依赖关系，允许在一个资源之前加载另一个资源。<br>
+流控制管理数据的传输，允许接收者停止或减少发送的数据量，比如观看视频暂停时，客户端会通知服务器停止发送视频数据。</p>
+<h2 id="25-服务器推送">2.5 服务器推送</h2>
+<p>一般情况下需要客户端请求服务器才会响应，HTTP/2中能够先于客户端检测将要请求的资源，提前通知客户端，但是不发送资源只发送URL，客户端收到后会进行验证缓存，发现需要则正式发起请求。</p>
+<h2 id="26-应用层协商协议">2.6 应用层协商协议</h2>
+<p>客户端与服务器都升级才能支持HTTP/2，但是有可能存在HTTP/1与HTTP/2并存的情况，如果都使用80端口，需要选择其中一个协议通信。<br>
+APLN（Application Layer Protocol Negotiation）就是为了解决这个问题，通过协商选择协议：</p>
+<ul>
+<li>首先客户端发起请求，如果支持HTTP/2则带upgrade头部</li>
+<li>若服务器不支持则拒绝升级通过HTTP/1.1返回响应</li>
+<li>若服务器支持则接受升级，切换到新分帧使用HTTP/2通信</li>
+</ul>
+<p>更多请查看<a href="https://httpwg.org/specs/rfc7540.html">RFC7540 官方文档</a>。</p>
+<h1 id="3-使用mkcert生成证书">3 使用mkcert生成证书</h1>
+<p>网上大部分的教程都是使用OpenSSL生成根证书，客户端证书以及服务端证书的，一堆参数配置非常复杂，因此这里使用一个简单的一键生成本地证书的开源工具<a href="https://github.com/FiloSottile/mkcert">mkcert</a>，无需任何配置。</p>
+<h2 id="31-安装mkcert">3.1 安装mkcert</h2>
+<h3 id="311-macos">3.1.1 MacOS</h3>
+<pre><code class="language-bash">brew install mkcert
+brew install nss # 如果使用火狐
+</code></pre>
+<p>使用MacPorts：</p>
+<pre><code class="language-bash">sudo port selftupdate
+sudo port install mkcert
+sudo port install css # 如果使用火狐
+</code></pre>
+<h3 id="312-linux">3.1.2 Linux</h3>
+<p>需要先安装<code>certutil</code>：</p>
+<pre><code class="language-bash">#Debian/Ubuntu
+sudo apt install libnss3-tools
+#Red Hat/Fedora/CentOS
+sudo yum install nss-tools
+#Arch/Manjaro
+sudo pacman -S nss
+#SUSE
+sudo zypper install mozilla-nss-tools
+</code></pre>
+<p>使用<code>LinuxBrew</code>安装：</p>
+<pre><code class="language-bash">brew install mkcert
+</code></pre>
+<p>安装<a href="https://docs.brew.sh/Homebrew-on-Linux">LinuxBrew</a>：</p>
+<pre><code class="language-bash">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)&quot;
+</code></pre>
+<p>Arch/Manjaro可以使用pacman安装：</p>
+<pre><code class="language-bash">sudo pacman -Syu mkcert
+</code></pre>
+<p>或者从源码安装（需要go环境）：</p>
+<pre><code class="language-bash">git clone https://github.com/FiloSottile/mkcert &amp;&amp; cd mkcert
+go build -ldflags &quot;-X main.Version=$(git describe --tags)&quot;
+</code></pre>
+<p>或者使用<a href="https://github.com/FiloSottile/mkcert/releases">已构建好的版本</a>。</p>
+<h3 id="313-windows">3.1.3 Windows</h3>
+<p>安装Chocolatey（以管理员运行PowerShell）：</p>
+<pre><code class="language-bash">Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+</code></pre>
+<p>或安装Scoop（管理员PowerShell）：</p>
+<pre><code class="language-bash">Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+# 或
+iwr -useb get.scoop.sh | iex
+</code></pre>
+<p>使用Chocolatey或Scoop安装：</p>
+<pre><code class="language-bash">choco install mkcert
+#或
+scoop bucket add extras
+scoop install mkcert
+</code></pre>
+<p>或者使用<a href="https://github.com/FiloSottile/mkcert/releases">已构建好的版本</a>。</p>
+<h2 id="32-生成证书">3.2 生成证书</h2>
+<p>mkcert的命令非常简单，可以使用<code>--help</code>查看帮助：</p>
+<pre><code class="language-bash">mkcert --help
+</code></pre>
+<h3 id="321-安装本地ca证书">3.2.1 安装本地CA证书</h3>
+<pre><code class="language-bash">mkcert -install
+</code></pre>
+<p>默认会在<code>~/.local/share/mkcert</code>生成CA证书。</p>
+<h3 id="322-利用ca证书签发本地证书">3.2.2 利用CA证书签发本地证书</h3>
+<pre><code class="language-bash">mkcert localhost
+</code></pre>
+<p>其中localhost表示签发本地证书，可以换成<code>example.com</code>，<code>*.example.com</code>，<code>example.test</code>，<code>127.0.0.1</code>，<code>::1</code>之类的域名或者ip。<br>
+执行后会在当前文件夹下生成<code>localhost-key.pem</code>与<code>localhost.pem</code>，前者是私钥，后者是证书。</p>
+<h1 id="4-配置tomcat">4 配置Tomcat</h1>
+<p>Tomcat可以通过两种方式配置HTTP/2，一种是自带的Nio方式，另一种是使用额外库APR，APR-util与TC-Native的方式。</p>
+<h2 id="41-使用nio">4.1 使用Nio</h2>
+<p>通过Nio配置HTTP/2需要结合OpenSSL与keytool将证书转换为<code>pkcs#12</code>再转换为<code>jks</code>：</p>
+<pre><code class="language-bash">openssl pkcs12 -export -inkey localhost-key.pem -in localhost.pem -out localhost.p12
+</code></pre>
+<p>会提示输入导出密码，需要记住，转换成<code>jks</code>时需要用到。<br>
+<img src="https://img-blog.csdnimg.cn/20200608144240906.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着转换为<code>jks</code>：</p>
+<pre><code class="language-bash">keytool -importkeystore -srckeystore localhost.p12 -srcstoretype pkcs12 -destkeystore localhost.jks
+</code></pre>
+<p>这里会提示输入目标keystore与源keystore的密码，目标keystore密码一会在修改<code>server.xml</code>时需要用到，源keystore密码就是上面的导出密码。<br>
+<img src="https://img-blog.csdnimg.cn/20200608144851193.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着复制<code>localhost.jks</code>到Tomcat的<code>conf</code>下并修改<code>server.xml</code>：</p>
+<pre><code class="language-xml">&lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;
+               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot;&gt;
+	&lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;
+    &lt;SSLHostConfig&gt;
+        &lt;Certificate certificateKeystoreFile=&quot;conf/localhost.jks&quot;
+       				 certificateKeystorePassword=&quot;111111&quot;
+                     type=&quot;RSA&quot; /&gt;
+    &lt;/SSLHostConfig&gt;
+&lt;/Connector&gt;
+</code></pre>
+<p>添加了升级协议（默认HTTP/1.1）：</p>
+<pre><code class="language-xml">&lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;
+</code></pre>
+<p>另外<code>certificateKeystorePassword</code>是上一步的目标keystore的密码。<br>
+完成后开启Tomcat并访问<code>https://localhost:8443</code>：<br>
+<img src="https://img-blog.csdnimg.cn/20200608150201599.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200608150257547.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="42-使用apr">4.2 使用APR</h2>
+<p>使用APR不需要对证书进行额外的转换，但是需要安装三个库：</p>
+<ul>
+<li><a href="https://apr.apache.org/">APR</a></li>
+<li><a href="https://apr.apache.org/">APR-util</a></li>
+<li><a href="https://tomcat.apache.org/native-doc/">TC-Native</a></li>
+</ul>
+<p>笔者的Manjaro可以直接包管理器安装：</p>
+<pre><code class="language-bash">sudo pacman -S apr apr-util tomcat-native
+</code></pre>
+<p>其他系统请自行使用包管理器或者按上面的官网链接进行编译安装。<br>
+复制<code>localhost-key.pem</code>与<code>localhost.pem</code>到Tomcat的<code>conf</code>目录下，并修改<code>server.xml</code>：</p>
+<pre><code class="language-xml">&lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;
+               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; &gt;
+    &lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; /&gt;
+    &lt;SSLHostConfig&gt;
+        &lt;Certificate certificateKeyFile=&quot;conf/localhost-key.pem&quot;
+                     certificateFile=&quot;conf/localhost.pem&quot;
+                     type=&quot;RSA&quot; /&gt;
+    &lt;/SSLHostConfig&gt;
+&lt;/Connector&gt;
+</code></pre>
+<p>开启Tomcat后就可以访问<code>https://localhost:8443</code>了：<br>
+<img src="https://img-blog.csdnimg.cn/20200608143030125.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200608143333489.png" alt="在这里插入图片描述" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[残酷游戏]]></title>
         <id>https://2293736867.github.io/post/can-ku-you-xi/</id>
@@ -1835,159 +2036,6 @@ win\bin\java -m TestJFX/sample.Main
 <p><a href="https://github.com/2293736867/JFX11-IDEA-Test-Project">github</a></p>
 <h1 id="12-参考">12 参考</h1>
 <p><a href="https://openjfx.io/openjfx-docs/#maven">Getting Started with JavaFX</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IDEA通过Maven打包JavaFX工程（OpenJFX11）]]></title>
-        <id>https://2293736867.github.io/post/idea-tong-guo-maven-da-bao-javafx-gong-cheng-openjfx11/</id>
-        <link href="https://2293736867.github.io/post/idea-tong-guo-maven-da-bao-javafx-gong-cheng-openjfx11/">
-        </link>
-        <updated>2020-06-02T21:38:19.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>最近研究JFX，写出来了但是打包不了，这。。。尴尬。。。<br>
-<a href="https://www.jetbrains.com/help/idea/packaging-javafx-applications.html#">IDEA的文档</a>说只支持Java8打成jar包：<br>
-<img src="https://img-blog.csdnimg.cn/20200529220753361.png" alt="在这里插入图片描述" loading="lazy"><br>
-尝试过直接使用Maven插件的package，不行，也尝试过Build Artifacts，也不行，各种奇奇怪怪的问题。包括下图中的</p>
-<pre><code class="language-bash">Error....fx:deploy is not available in this JDK
-</code></pre>
-<p>不过幸好文档末尾提到可以使用一些<a href="https://openjfx.io/openjfx-docs/#maven">第三方工具</a>：<br>
-<img src="https://img-blog.csdnimg.cn/20200529220849122.png" alt="在这里插入图片描述" loading="lazy"><br>
-因此记录一下使用IDEA打包JFX11工程的过程。</p>
-<h1 id="2-环境">2 环境</h1>
-<ul>
-<li>IDEA 2020.1</li>
-<li>OpenJDK 11</li>
-<li>OpenJFX 11</li>
-</ul>
-<p>只需安装IDEA与JDK即可，JFX可以在pom.xml中引入。</p>
-<h1 id="3-创建工程">3 创建工程</h1>
-<p>选择Maven，选择Create from archetype，然后Add Archetype并填上GroupId：</p>
-<pre><code class="language-bash">org.openjfx
-</code></pre>
-<p>与ArtifactId：</p>
-<pre><code class="language-bash">javafx-maven-archetypes
-</code></pre>
-<p>还有version：</p>
-<pre><code class="language-bash">0.0.1
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200529222351159.png" alt="在这里插入图片描述" loading="lazy"><br>
-下一步自定义，这里为了方便就直接默认了。<br>
-<img src="https://img-blog.csdnimg.cn/20200529222436539.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后修改archetypeArtifactId为</p>
-<pre><code class="language-bash">javafx-archetype-fxml
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200529223233339.png" alt="在这里插入图片描述" loading="lazy"><br>
-完成即可。</p>
-<h1 id="4-检查文件">4 检查文件</h1>
-<p>Maven同步完后，检查项目目录下的module-info.java与pom.xml，其中pom.xml不应该是下图这样的：<br>
-<img src="https://img-blog.csdnimg.cn/20200529222717282.png" alt="在这里插入图片描述" loading="lazy"><br>
-而应该是这样的，包含了javafx.controls与javafx.fxml依赖，还有javafx-maven-plugin插件：<br>
-<img src="https://img-blog.csdnimg.cn/20200529223421120.png" alt="在这里插入图片描述" loading="lazy"><br>
-同时src下的module-info.java应该长这样：<br>
-<img src="https://img-blog.csdnimg.cn/20200529223524571.png" alt="在这里插入图片描述" loading="lazy"><br>
-module-info.java包含了所需要的javafx.controls与javafx.fxml这两个模块。</p>
-<h1 id="5-修改插件依赖">5 修改插件依赖</h1>
-<p>默认的javafx-maven-plugin版本应该为0.0.1：<br>
-<img src="https://img-blog.csdnimg.cn/20200529223713794.png" alt="在这里插入图片描述" loading="lazy"><br>
-整个去掉，修改为：</p>
-<pre><code class="language-xml">&lt;plugin&gt;
-    &lt;groupId&gt;org.openjfx&lt;/groupId&gt;
-    &lt;artifactId&gt;javafx-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;0.0.4&lt;/version&gt;
-    &lt;configuration&gt;
-        &lt;stripDebug&gt;true&lt;/stripDebug&gt;
-        &lt;compress&gt;2&lt;/compress&gt;
-        &lt;noHeaderFiles&gt;true&lt;/noHeaderFiles&gt;
-        &lt;noManPages&gt;true&lt;/noManPages&gt;
-        &lt;launcher&gt;launcher&lt;/launcher&gt;
-        &lt;jlinkImageName&gt;output&lt;/jlinkImageName&gt;
-        &lt;jlinkZipName&gt;outputzip&lt;/jlinkZipName&gt;
-        &lt;mainClass&gt;org.openjfx.App&lt;/mainClass&gt;
-    &lt;/configuration&gt;
-&lt;/plugin&gt;
-</code></pre>
-<p>其中launcher为可执行文件名，jlinkImageName为Image输出目录名，jlinkZipName为zip文件名，mainClass为主类。</p>
-<h1 id="6-运行并打包">6 运行并打包</h1>
-<p>从右侧栏的Maven通过javafx插件运行并打包：<br>
-<img src="https://img-blog.csdnimg.cn/20200529224201517.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200529224909134.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="7-测试">7 测试</h1>
-<p>根据修改插件时的目录，进入对应的target下的子目录直接运行即可：</p>
-<pre><code class="language-bash">项目目录/target/output/bin/launcher
-</code></pre>
-<p>注意这个是跨平台的，只需具备JDK11环境即可，发布只需要把zip文件发布。</p>
-<h1 id="8-demo">8 demo</h1>
-<ul>
-<li><a href="https://github.com/2293736867/IDEA-JFX-Project-Example">github</a></li>
-<li><a href="https://gitee.com/imykr/IDEA-JFX-Project-Example">码云</a></li>
-</ul>
-<h1 id="9-扩展阅读">9 扩展阅读</h1>
-<p>这篇文章是OpenJFX的文档，主要介绍了：</p>
-<ul>
-<li>通过三种方式（JFX+Maven+Gradle）运行Hello World</li>
-<li>构建运行镜像（CLI+Maven+Gradle+自定义镜像）</li>
-<li>IntelliJ/NetBeans/Eclipse通过三种方式（IDE自身+Maven+Gradle）运行与打包JFX</li>
-</ul>
-<p>链接<a href="https://openjfx.io/openjfx-docs/#introduction">戳这里</a>。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IDEA 配置文件位置]]></title>
-        <id>https://2293736867.github.io/post/idea-pei-zhi-wen-jian-wei-zhi/</id>
-        <link href="https://2293736867.github.io/post/idea-pei-zhi-wen-jian-wei-zhi/">
-        </link>
-        <updated>2020-06-02T21:37:55.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-idea-20201-以上">1 IDEA 2020.1 以上</h1>
-<h2 id="11-win">1.1 Win</h2>
-<p>语法：</p>
-<pre><code class="language-bash">%APPDATA%\JetBrains\&lt;product&gt;&lt;version&gt;
-</code></pre>
-<p>Win上的APPDATA默认位置如下：</p>
-<pre><code class="language-bash">C:\Users\用户名\AppData\Roaming
-</code></pre>
-<p>例子：</p>
-<pre><code class="language-bash">C:\Users\用户名\AppData\Roaming\JetBrains\IntelliJIdea2020.1
-</code></pre>
-<h2 id="12-macos">1.2 MacOS</h2>
-<p>语法：</p>
-<pre><code class="language-bash">~/Library/Application Support/JetBrains/&lt;product&gt;&lt;version&gt;
-</code></pre>
-<p>例子：</p>
-<pre><code class="language-bash">~/Library/Application Support/JetBrains/IntelliJIdea2020.1
-</code></pre>
-<h2 id="13-linux">1.3 Linux</h2>
-<p>语法：</p>
-<pre><code class="language-bash">~/.config/JetBrains/&lt;product&gt;&lt;version&gt;
-</code></pre>
-<p>例子：</p>
-<pre><code class="language-bash">~/.config/JetBrains/IntelliJIdea2020.1
-</code></pre>
-<h1 id="2-idea-20193x以下">2 IDEA 2019.3.x以下</h1>
-<h2 id="21-win">2.1 Win</h2>
-<p>语法：</p>
-<pre><code class="language-bash">%HOMEPATH%\\.&lt;product&gt;&lt;version&gt;\config
-</code></pre>
-<p>Win的HOMEPATH默认为：</p>
-<pre><code class="language-bash">\Users\用户名
-</code></pre>
-<p>注意，无盘符。<br>
-例子：</p>
-<pre><code class="language-bash">C:\Users\用户名\.IntelliJIdea2019.3\config
-</code></pre>
-<h2 id="22-macos">2.2 MacOS</h2>
-<p>语法：</p>
-<pre><code class="language-bash">~/Library/Preferences/&lt;product&gt;&lt;version&gt;
-</code></pre>
-<p>例子：</p>
-<pre><code class="language-bash">~/Library/Preferences/IntelliJIdea2019.3
-</code></pre>
-<h2 id="23-linux">2.3 Linux</h2>
-<p>语法：</p>
-<pre><code class="language-bash">~/.&lt;product&gt;&lt;version&gt;/config
-</code></pre>
-<p>例子：</p>
-<pre><code class="language-bash">~/.IntelliJIdea2019.3/config
-</code></pre>
 ]]></content>
     </entry>
 </feed>
