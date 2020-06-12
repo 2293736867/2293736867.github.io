@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-08T07:34:29.841Z</updated>
+    <updated>2020-06-12T14:08:28.435Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,60 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[一次使用IDEA中HTTP Client的经历]]></title>
+        <id>https://2293736867.github.io/post/yi-ci-shi-yong-idea-zhong-http-client-de-jing-li/</id>
+        <link href="https://2293736867.github.io/post/yi-ci-shi-yong-idea-zhong-http-client-de-jing-li/">
+        </link>
+        <updated>2020-06-12T14:00:59.000Z</updated>
+        <content type="html"><![CDATA[<p><s>说好六月停更的。。。。</s><br>
+<s>害。。。</s></p>
+<h1 id="1-开端">1 开端</h1>
+<p>HTTP Client是IDEA中自带的一个插件，用于代替原来的REST Client，打开<code>Tools-&gt;HTTP Client-&gt;Test RESTful Web Service</code>，会提示REST Client不推荐使用，推荐使用HTTP Client：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200612212834462.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>然后当然就点击使用啊，但是，问题来了，一个普通的GET请求都发送不出去？？？？</p>
+<p><img src="https://img-blog.csdnimg.cn/20200612213023340.png" alt="在这里插入图片描述" loading="lazy"><br>
+IDEA的东西估计没这么菜吧？？？</p>
+<p>肯定不会这么菜的。。。</p>
+<p>但是为什么就是发不出去？？？</p>
+<h1 id="2-尝试">2 尝试</h1>
+<p>GET请求对吧，浏览器也可以做，于是，使用了浏览器进行测试，一点问题都没有：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020061221324552.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>没理由啊，笔者在想，那为什么IDEA不行呢？？</p>
+<p>接着使用了大名鼎鼎的Postman，也是一点问题也没有：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200612213409109.png" alt="在这里插入图片描述" loading="lazy"><br>
+Postman也没问题啊，接着试试“情敌”Postwoman，问题来了！</p>
+<p>发送不出去，查看了一下F12控制台，报错如下：<br>
+<img src="https://img-blog.csdnimg.cn/2020061221413586.png" alt="在这里插入图片描述" loading="lazy"><br>
+搜索了一下解决办法，是跨域资源请求的问题，在Controller类上加上</p>
+<pre><code class="language-java">@CrossOrigin(value = &quot;http://localhost:3000&quot;)
+</code></pre>
+<p>即可，因为Postwoman默认运行的端口为3000。</p>
+<p>这个注解还可以作用在方法上，起作用的就是对应的方法，这里是对整个Controller起作用。</p>
+<p>另外这里只使用了最简单的参数，其他的参数还有<code>origins</code>（同<code>value</code>），<code>allowHeaders</code>，<code>exposedHeaders</code>，<code>methods</code>，<code>allowCredentials</code>，<code>maxAge</code>，具体使用不介绍，加上了以后Postwoman就能正常发送请求了：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200612214301201.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-再次尝试">3 再次尝试</h1>
+<p>但是IDEA中的HTTP Client还是不行啊，就最最最普通的GET请求，还是返回500：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200612214433478.png" alt="在这里插入图片描述" loading="lazy"><br>
+于是换了一种思路，想再用其他类似插件的方式测试。</p>
+<p>所以就想到了VScode，里面有一个类似的扩展叫REST Client，安装以后写了一个普通的GET请求，完全没问题：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200612214557968.png" alt="在这里插入图片描述" loading="lazy"><br>
+但还是想不到为什么IDEA还是不行啊？？？</p>
+<p>还是500 。。。</p>
+<p>。。。</p>
+<p>但是，反过来想，可能是请求发送不出去，因为如果是接受到了请求的话，肯定会有日志记录的，但是没有，所以原因可能是请求发送不出去。。。</p>
+<h1 id="4-最终答案">4 最终答案</h1>
+<p>一个普通的GET请求为什么发送不出去？</p>
+<p>到底是为什么会返回500？</p>
+<p>最后，经过一番痛苦的思考，找到了问题所在：代理！</p>
+<p><img src="https://img-blog.csdnimg.cn/2020061221491977.png?" alt="在这里插入图片描述" loading="lazy"><br>
+发送不出去就是因为设置了本地代理，返回的500，是代理服务器返回的，不是Tomcat返回的。</p>
+<p>终于，把代理去掉之后，HTTP Client就可以正常使用了：<br>
+<img src="https://img-blog.csdnimg.cn/20200612215103984.png" alt="在这里插入图片描述" loading="lazy"><br>
+没错，“真凶”就是代理。</p>
+<p>最后终于打消了笔者的误解，为什么IDEA中的HTTP Client会这么“菜”，连一个普通的GET请求也发送不出去？？</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[6月停更]]></title>
         <id>https://2293736867.github.io/post/6-yue-ting-geng/</id>
@@ -1913,129 +1967,6 @@ Update your application's configuration
 <p>部署到Tomcat时添加环境变量：</p>
 <pre><code class="language-bash">export JAVA_OPTS=&quot;-Djasypt.encryptor.password=xxxx&quot;
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JFX11+IDEA跨平台打包发布的完美解决办法]]></title>
-        <id>https://2293736867.github.io/post/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/</id>
-        <link href="https://2293736867.github.io/post/jfx11idea-kua-ping-tai-da-bao-fa-bu-de-wan-mei-jie-jue-ban-fa/">
-        </link>
-        <updated>2020-06-02T21:38:45.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>IDEA2020.1的文档中提到只有JFX8的工程才支持打成jar包，并且，如果直接使用Build Artifacts的话，会如下提示：<br>
-<img src="https://img-blog.csdnimg.cn/2020053017384177.png" alt="在这里插入图片描述" loading="lazy"><br>
-<a href="https://www.jetbrains.com/help/idea/packaging-javafx-applications.html">IDEA文档</a>有提到这个的解决办法，是使用一些<a href="https://openjfx.io/openjfx-docs/#install-javafx">第三方工具</a>。里面介绍了通过IDEA结合自身/Maven/Gradle打包发布JFX11以上版本的方法。但是，不足的地方有：</p>
-<ul>
-<li>直接创建JFX工程默认只有一个src目录，不像Maven工程还带有resources与test，给管理资源文件以及外部依赖造成了困难，getClass().getResource()会出现空指针问题，但是好处是只需具备JDK环境，打包出来的文件能带上jmods能跨平台直接运行</li>
-<li>直接创建Maven项目虽然是管理依赖以及资源文件方便，但是无论是直接通过Maven打出的jar包还是通过JavaFX Maven Plugins打出来的jar包默认绑定了开发平台的JFX SDK，简单地说就是Linux开发的JFX程序不能直接跑在具有JDK环境的Win上，因为用的是Linux的JFX SDK而不是Win的JFX SDK</li>
-</ul>
-<p>因此，本文结合这两者的优点，参照Maven的目录管理，以JFX工程为基础，记录了从新建工程到发布跨平台JFX应用的过程。</p>
-<h1 id="2-环境">2 环境</h1>
-<ul>
-<li>IDEA 2020.1</li>
-<li>OpenJDK 11</li>
-<li>OpenJFX 11 Linux SDK</li>
-<li>OpenJFX 11 Linux/Windows/Mac OS X jmods</li>
-</ul>
-<p>JDK安装就不说了，JFX直接下载然后在工程中通过外部库引入即可，三种jmods解压出来即可，用于最后生成可执行文件时添加的模块。<br>
-下载链接<a href="https://gluonhq.com/products/javafx/">戳这里</a>。</p>
-<h1 id="3-新建jfx工程">3 新建JFX工程</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200530175758622.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里的项目名为TestJFX，对应修改即可。<br>
-<img src="https://img-blog.csdnimg.cn/20200530175913541.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4-添加jfx11-sdk">4 添加JFX11 SDK</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200530180127745.png" alt="在这里插入图片描述" loading="lazy"><br>
-添加上一步下载的对应平台的JFX SDK。<br>
-<img src="https://img-blog.csdnimg.cn/20200530180205495.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5-添加module-infojava">5 添加module-info.java</h1>
-<p>在src目录右键New-&gt;module-info.java，修改如下：</p>
-<pre><code class="language-ruby">module TestJFX {
-    requires javafx.fxml;
-    requires javafx.controls;
-    
-    opens sample to javafx.fxml;
-    exports sample;
-}
-</code></pre>
-<p>其中TestJFX为新建项目时的项目名，这个创建module-info.java时就默认加上了，sample为默认包，对应修改。</p>
-<h1 id="6-添加vm-options">6 添加VM Options</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200530181426399.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200531023450900.png" alt="在这里插入图片描述" loading="lazy"><br>
-添加</p>
-<pre><code class="language-bash">--module-path /usr/local/jfx/lib:out/production
-</code></pre>
-<p>其中</p>
-<pre><code class="language-bash">/usr/local/jfx/lib
-</code></pre>
-<p>为下载的JFX JDK的lib目录，后面的out不需要更改，是默认的编译输出的目录。</p>
-<h1 id="7-运行">7 运行</h1>
-<p>这时候应该可以Shift+F10或者点击绿色小三角运行了：<br>
-<img src="https://img-blog.csdnimg.cn/20200530181814745.png" alt="在这里插入图片描述" loading="lazy"><br>
-当然内容是空的，因为什么也没有加。</p>
-<h1 id="8-添加资源文件">8 添加资源文件</h1>
-<p>默认的fxml是放在与Main类同一目录下的，getResource()也没有加路径直接写上文件名：<br>
-<img src="https://img-blog.csdnimg.cn/20200530195546612.png" alt="在这里插入图片描述" loading="lazy"><br>
-但是这是src文件夹，放个fxml还勉强可以接受，放张图片总不合适吧？所以，新建一个资源文件夹，把css，fxml什么的都放里面：<br>
-<img src="https://img-blog.csdnimg.cn/20200530195911419.png" alt="在这里插入图片描述" loading="lazy"><br>
-直接在IDEA中移动fxml文件，Main中的引用路径也自动更改，不得不说这个特性是真的好用，但遗憾的是，抛出了空指针异常。<br>
-因此采取绝对路径来进行读取文件，通过URL+System.getProperty()指定绝对路径：</p>
-<pre><code class="language-java">@Override
-public void start(Stage primaryStage) throws Exception{
-    String path = System.getProperty(&quot;user.dir&quot;);
-    URL fxmlUrl = new URL(&quot;file:&quot;+path+&quot;/resources/fxml/sample.fxml&quot;);
-    Parent root = FXMLLoader.load(fxmlUrl);
-    primaryStage.setTitle(&quot;Hello World&quot;);
-    Scene scene = new Scene(root);
-    scene.getStylesheets().add(new URL(&quot;file:&quot;+path+&quot;/resources/css/1.css&quot;).toString());
-    primaryStage.setScene(scene);
-    primaryStage.show();
-}
-</code></pre>
-<p>其中</p>
-<pre><code class="language-java">System.getProperty(&quot;user.dir&quot;)
-</code></pre>
-<p>获取项目路径，注意URL前面要加上“file:”，css的获取也同理，只不过是需要转换为String。</p>
-<h1 id="9-外部依赖">9 外部依赖</h1>
-<p>由于没有了Maven管理依赖，所以外部依赖的管理会相对麻烦一点，基本上是以jar包的形式手动添加，这里以添加Gson为例，<a href="https://mvnrepository.com/artifact/com.google.code.gson/gson">戳这里</a>下载jar包，然后在项目目录下新建一个lib文件夹，把jar包放进去：<br>
-<img src="https://img-blog.csdnimg.cn/20200531023924445.png" alt="在这里插入图片描述" loading="lazy"><br>
-接着在项目结构中把整个lib文件夹添加到外部库：<br>
-<img src="https://img-blog.csdnimg.cn/20200531022019954.png" alt="在这里插入图片描述" loading="lazy"><br>
-然后VM Options中添加lib路径，在上面的VM Options后面加一个冒号和lib就行：<br>
-<img src="https://img-blog.csdnimg.cn/20200531022600107.png" alt="在这里插入图片描述" loading="lazy"><br>
-但是，此时可以IDEA还不能进行补全，最后需要修改module-info.java：<br>
-<img src="https://img-blog.csdnimg.cn/20200531022743664.png" alt="在这里插入图片描述" loading="lazy"><br>
-加一行requires，此时IDEA能够进行补全了，每个jar包都不同，对应修改即可。</p>
-<h1 id="10-制作跨平台镜像">10 制作跨平台镜像</h1>
-<p>运行没问题之后就可以制作运行时镜像发布了，终端进入项目根路径：</p>
-<pre><code class="language-bash">jlink --module-path jmod/linux:out/production:lib --add-modules TestJFX --output linux
-linux/bin/java -m TestJFX/sample.Main
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200531030506500.png" alt="在这里插入图片描述" loading="lazy"><br>
-其中</p>
-<pre><code class="language-bash">jmod/linux
-</code></pre>
-<p>为开发平台jmod的路径，可以是绝对路径，也可以是相对与项目根目录的相对路径，out/production与上面的VM Options保持一致。</p>
-<pre><code class="language-bash">--add-modules
-</code></pre>
-<p>后面跟的是模块名，这是在生成module-info.java时指定的，为项目名。</p>
-<pre><code class="language-bash">--output
-</code></pre>
-<p>为输出目录。<br>
-后一条命令中-m指定模块名，后面跟包名+主类名。<br>
-这样linux平台的镜像就制作好了，Mac与Win的同理，只需要把jmod换成对应平台的jmod即可，但是注意语法有一些差别，Mac的语法同Linux，只需要把jmod路径换一下，但是注意需要整个工程在对应的平台进行jlink：</p>
-<pre><code class="language-bash">jlink --module-path xxxxx/{MAC_JMOD}:out/production:lib --add-modules TestJFX --output mac
-mac/bin/java -m TestJFX/sample.Main
-</code></pre>
-<p>Win的语法有些区别，一样需要在Win下进行jlink：</p>
-<pre><code class="language-bash">jlink --module-path &quot;xxxxx/{WIN_JMOD};out/production&quot; --add-modules TestJFX --output win
-win\bin\java -m TestJFX/sample.Main
-</code></pre>
-<p>下面是Win下的截图：<br>
-<img src="https://img-blog.csdnimg.cn/20200531025545467.PNG" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="11-demo">11 demo</h1>
-<p><a href="https://github.com/2293736867/JFX11-IDEA-Test-Project">github</a></p>
-<h1 id="12-参考">12 参考</h1>
-<p><a href="https://openjfx.io/openjfx-docs/#maven">Getting Started with JavaFX</a></p>
 ]]></content>
     </entry>
 </feed>
