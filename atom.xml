@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-15T16:06:36.626Z</updated>
+    <updated>2020-06-15T18:13:10.672Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,60 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[单个java文件打成可执行jar包]]></title>
+        <id>https://2293736867.github.io/post/dan-ge-java-wen-jian-da-cheng-ke-zhi-xing-jar-bao/</id>
+        <link href="https://2293736867.github.io/post/dan-ge-java-wen-jian-da-cheng-ke-zhi-xing-jar-bao/">
+        </link>
+        <updated>2020-06-15T18:01:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>使用JDK自带的jar与java将单个java文件打成可执行jar包并运行。<br>
+当然也可以使用IDE完成，使用Maven只需要一个简单的package，但是单个文件嘛，没必要这么“凶狠”。</p>
+<h1 id="2-新建测试文件">2 新建测试文件</h1>
+<p>著名的Hello World：</p>
+<pre><code class="language-java">public class Main
+{
+	public static void main(String [] args)
+	{
+		System.out.println(&quot;Hello world.&quot;);
+	}
+}
+</code></pre>
+<h1 id="3-编译">3 编译</h1>
+<p>生成jar包需要class文件，换句话说需要先编译，建议先创建一个临时文件夹存放class文件。</p>
+<pre><code class="language-java">mkdir test &amp;&amp; mv Main.java test &amp;&amp; cd test;
+javac Main.java
+</code></pre>
+<h1 id="4-打包">4 打包</h1>
+<pre><code class="language-java">jar --create --verbose --file Main.jar --main-class Main *.class
+</code></pre>
+<p>说明一下各个参数：</p>
+<ul>
+<li><code>--create</code>：创建jar</li>
+<li><code>--verbose</code>：打包时产生输出</li>
+<li><code>--file</code>：打包的jar文件名</li>
+<li><code>--main-class</code>：指定入口类</li>
+<li><code>*.class</code>：打包所有的class文件，这里可以接受的参数可以是<code>*</code>，表示打包该目录下所有文件，也可以是目录名，打包指定目录下的所有文件</li>
+</ul>
+<p>这里使用默认的包，若是自定义包，使用</p>
+<pre><code class="language-bash">--main-class com.xxx.xxx.Main
+</code></pre>
+<p>即可。</p>
+<p>注意打包时网上有的教程使用简写：</p>
+<pre><code class="language-java">jar -cvf Main.jar *.class
+</code></pre>
+<p>这样确实是能打包，但是直接运行的时候会提示：</p>
+<pre><code class="language-bash">no main manifest attribute, in Main.jar
+</code></pre>
+<p>可以加上<code>--main-class</code>参数或者直接更新打包后里面的<code>MANIFEST.mf</code>文件，加上：</p>
+<pre><code class="language-bash">Main-Class: Main
+</code></pre>
+<p>当然还是建议使用上述的方法一步打包到位。</p>
+<h1 id="5-运行">5 运行</h1>
+<pre><code class="language-java">java -jar Main.jar
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[一次使用IDEA中HTTP Client的经历]]></title>
         <id>https://2293736867.github.io/post/yi-ci-shi-yong-idea-zhong-http-client-de-jing-li/</id>
@@ -1948,54 +2002,6 @@ double height = screenRectangle.getHeight();
 下载链接<a href="https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib">戳这里</a>。</p>
 <h1 id="3-解决方案">3 解决方案</h1>
 <p>把对应版本的okio以及kotlin-stdlib添加到依赖库即可。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[jasypt-spring-boot提示Failed to bind properties]]></title>
-        <id>https://2293736867.github.io/post/jasypt-spring-boot-ti-shi-failed-to-bind-properties/</id>
-        <link href="https://2293736867.github.io/post/jasypt-spring-boot-ti-shi-failed-to-bind-properties/">
-        </link>
-        <updated>2020-06-02T21:39:09.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>在Spring Boot中使用jasypt-spring-boot进行加密，但是提示：</p>
-<pre><code class="language-bash">Description:
-
-Failed to bind properties under 'spring.datasource.password' to java.lang.String:
-
-    Reason: Failed to bind properties under 'spring.datasource.password' to java.lang.String
-
-Action:
-
-Update your application's configuration
-</code></pre>
-<p>或提示</p>
-<pre><code class="language-bash">Description:
-
-Failed to bind properties under 'spring.datasource.url' to java.lang.String:
-
-    Reason: Failed to bind properties under 'spring.datasource.password' to java.lang.String
-
-Action:
-
-Update your application's configuration
-</code></pre>
-<p>最后的异常是这个：<br>
-<img src="https://img-blog.csdnimg.cn/20200531013232211.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="2-解决办法">2 解决办法</h1>
-<p>查阅了相关<a href="https://github.com/ulisesbocchio/jasypt-spring-boot/issues/154">issue</a>，发现是3.0.2更改了默认的加密算法，最后的办法是把版本降到2.1.2：<br>
-<img src="https://img-blog.csdnimg.cn/20200531014007872.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;
-    &lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;2.1.2&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>接着重新加密配置，但是2.1.2不支持使用环境变量作为加密的口令，在IDEA中测试的时候需要在运行配置加上</p>
-<pre><code class="language-bash">-Djasypt.encryptor.password=xxxx
-</code></pre>
-<p>部署到Tomcat时添加环境变量：</p>
-<pre><code class="language-bash">export JAVA_OPTS=&quot;-Djasypt.encryptor.password=xxxx&quot;
-</code></pre>
 ]]></content>
     </entry>
 </feed>
