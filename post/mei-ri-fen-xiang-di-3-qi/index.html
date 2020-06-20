@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>log4j2入门hello world | 氷泠&#39;s blog</title>
+<title>每日分享 第3期 | 氷泠&#39;s blog</title>
 <meta name="description" content="我配不上你，
 纵然很努力。" />
 <link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
@@ -17,22 +17,14 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-1.什么是log4j2
+每日鸡汤
 
-(1)log4j
-(2)log4j2
+我的脑袋不是空的。我是要大有作为的人，只是混沌初开。
 
+每日冷知识
 
-3.VScode下使用log4j2(不用Maven)
-
-(1)准备jar包
-(2)准备插件
-(3)创建项目
-(4)设置jar包路径
-(5)新建测试文件
-(6)运行
-(7)..." />
-    <meta name="keywords" content="Log4j2" />
+在日本直到2015年时，人们在过了零点以后跳舞还是非法行为。这条法律是在1948年开始实施的，为的是打击一些为非法活动作掩护的餐厅，到了2015年这条法律才..." />
+    <meta name="keywords" content="每日分享" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
   </head>
@@ -94,23 +86,23 @@
       <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
 
         <div class="center content">
-          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/log4j2-ru-men-hello-world.jpg');">
+          <div class="featured-image cover" style="background-image: url('https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180751050-2107348189.png');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">18 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-06-21"><i class="fa fa-calendar"></i><span class="lately">25 分钟前</span></time>
               
-              <a href="https://2293736867.github.io/post/log4j2-ru-men-hello-world/#comments" class="comments meta-info" title="">
-                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/log4j2-ru-men-hello-world/"> </span>
+              <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-3-qi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/mei-ri-fen-xiang-di-3-qi/"> </span>
               </a>
-              <span id="/log4j2-ru-men-hello-world/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              <span id="/mei-ri-fen-xiang-di-3-qi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
               
             </div>
             <div class="info">
               <div class="tags ">
                 
-                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-0 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
               </div>
-              <h1 class="title ularge white bold">log4j2入门hello world</h1>
+              <h1 class="title ularge white bold">每日分享 第3期</h1>
             </div>
           </div>
         </div>  
@@ -120,473 +112,102 @@
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <p><ul class="markdownIt-TOC">
-<li><a href="#1%E4%BB%80%E4%B9%88%E6%98%AFlog4j2">1.什么是log4j2</a>
-<ul>
-<li><a href="#1log4j">(1)log4j</a></li>
-<li><a href="#2log4j2">(2)log4j2</a></li>
-</ul>
-</li>
-<li><a href="#3vscode%E4%B8%8B%E4%BD%BF%E7%94%A8log4j2%E4%B8%8D%E7%94%A8maven">3.VScode下使用log4j2(不用Maven)</a>
-<ul>
-<li><a href="#1%E5%87%86%E5%A4%87jar%E5%8C%85">(1)准备jar包</a></li>
-<li><a href="#2%E5%87%86%E5%A4%87%E6%8F%92%E4%BB%B6">(2)准备插件</a></li>
-<li><a href="#3%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">(3)创建项目</a></li>
-<li><a href="#4%E8%AE%BE%E7%BD%AEjar%E5%8C%85%E8%B7%AF%E5%BE%84">(4)设置jar包路径</a></li>
-<li><a href="#5%E6%96%B0%E5%BB%BA%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6">(5)新建测试文件</a></li>
-<li><a href="#6%E8%BF%90%E8%A1%8C">(6)运行</a></li>
-<li><a href="#7%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BD%BF%E5%85%B6%E8%BE%93%E5%87%BA%E6%9B%B4%E5%A4%9A%E4%BF%A1%E6%81%AF">(7)创建配置文件使其输出更多信息</a></li>
-<li><a href="#8%E5%86%8D%E6%AC%A1%E8%BF%90%E8%A1%8C">(8)再次运行</a></li>
-</ul>
-</li>
-<li><a href="#4vscode%E4%B8%8B%E4%BD%BF%E7%94%A8log4j2%E5%B8%A6maven">4.VScode下使用log4j2(带Maven)</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BAmaven%E9%A1%B9%E7%9B%AE">(1)创建maven项目</a></li>
-<li><a href="#2%E5%9C%A8pomxml%E9%85%8D%E7%BD%AE%E4%BE%9D%E8%B5%96">(2)在pom.xml配置依赖</a></li>
-<li><a href="#3%E5%88%9B%E5%BB%BAlog4j2xml">(3)创建log4j2.xml</a></li>
-<li><a href="#4%E4%BF%AE%E6%94%B9%E6%B5%8B%E8%AF%95%E7%B1%BB">(4)修改测试类</a></li>
-<li><a href="#5%E6%B5%8B%E8%AF%95">(5)测试</a></li>
-</ul>
-</li>
-<li><a href="#5idea%E4%B8%8B%E4%BD%BF%E7%94%A8log4j2%E4%B8%8D%E7%94%A8maven">5.IDEA下使用log4j2(不用Maven)</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">(1)创建项目</a></li>
-<li><a href="#2%E6%B7%BB%E5%8A%A0jar%E5%8C%85">(2)添加jar包</a></li>
-<li><a href="#3%E6%96%B0%E5%BB%BA%E6%B5%8B%E8%AF%95%E7%B1%BB">(3)新建测试类</a></li>
-<li><a href="#4%E6%96%B0%E5%BB%BAlog4j2xml">(4)新建log4j2.xml</a></li>
-<li><a href="#5%E6%B5%8B%E8%AF%95-2">(5)测试</a></li>
-</ul>
-</li>
-<li><a href="#6idea%E4%B8%8B%E4%BD%BF%E7%94%A8log4j2%E5%B8%A6maven">6.IDEA下使用log4j2(带Maven)</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BAmaven%E9%A1%B9%E7%9B%AE-%E6%A8%A1%E5%9D%97">(1)创建maven<s>项目</s> 模块</a></li>
-<li><a href="#2%E9%85%8D%E7%BD%AE%E4%BE%9D%E8%B5%96">(2)配置依赖</a></li>
-<li><a href="#3%E5%88%9B%E5%BB%BAlog4j2xml-2">(3)创建log4j2.xml</a></li>
-<li><a href="#4%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E7%B1%BB">(4)创建测试类</a></li>
-<li><a href="#5%E6%B5%8B%E8%AF%95-3">(5)测试</a></li>
-</ul>
-</li>
-</ul>
-</p>
-<h1 id="1什么是log4j2">1.什么是log4j2</h1>
-<h2 id="1log4j">(1)log4j</h2>
-<p>log4j是apache的一个开源项目,表示log for java.是一个日志工具,可以将日志信息输出到文件,控制台等其他地方 ,还可以定义日志的输出格式,另外还有日志级别的区分,可通过配置文件去配置输出格式,输出目的地等信息.</p>
-<h2 id="2log4j2">(2)log4j2</h2>
-<p>log4j2从名字就知道了,是log4j的升级版本,性能有了很大提升,增加了很多新特性(如自定义级别,lambda表达式)与新的API,直接与tomcat等服务器集成.</p>
-<h1 id="3vscode下使用log4j2不用maven">3.VScode下使用log4j2(不用Maven)</h1>
-<h2 id="1准备jar包">(1)准备jar包</h2>
-<p><a href="https://logging.apache.org/log4j/2.x/download.html">点击这里下载</a><br>
-<img src="https://img-blog.csdnimg.cn/20191020200608156.png" alt="在这里插入图片描述" loading="lazy"><br>
-作者用的是win10,下载zip.</p>
-<h2 id="2准备插件">(2)准备插件</h2>
-<p>搜索安装:Eclipse New Java Project<br>
-<img src="https://img-blog.csdnimg.cn/20191020200424893.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3创建项目">(3)创建项目</h2>
-<p>ctrl+shift+p调出命令面板,输入new java project<br>
-<img src="https://img-blog.csdnimg.cn/20191020201508261.png" alt="在这里插入图片描述" loading="lazy"><br>
-项目名<br>
-<img src="https://img-blog.csdnimg.cn/20191020201518977.png" alt="在这里插入图片描述" loading="lazy"></p>
-<p>JavaSE版本<br>
-<img src="https://img-blog.csdnimg.cn/20191020201534737.png" alt="在这里插入图片描述" loading="lazy"><br>
-创建完毕.<br>
-<img src="https://img-blog.csdnimg.cn/201910202015435.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="4设置jar包路径">(4)设置jar包路径</h2>
-<p>在项目根路径下新建lib文件夹,把下载的<br>
-<img src="https://img-blog.csdnimg.cn/20191020201650516.png" alt="在这里插入图片描述" loading="lazy"><br>
-这两个jar包放进去.<br>
-下一步设置.classpath.<br>
-添加</p>
-<pre><code class="language-xml">&lt;classpathentry kind=&quot;lib&quot; path=&quot;lib/log4j-api-2.12.1.jar&quot; /&gt;
-&lt;classpathentry kind=&quot;lib&quot; path=&quot;lib/log4j-core-2.12.1.jar&quot; /&gt;
-</code></pre>
-<h2 id="5新建测试文件">(5)新建测试文件</h2>
-<p>src下直接建立test.java</p>
-<p>test.java:</p>
-<pre><code class="language-java">import org.apache.logging.log4j.*;
-
-public class test
-{
-    private final static Logger logger = LogManager.getLogger(test.class.getName());
-    public static void main(String[] args) {
-        logger.info(&quot;info&quot;);
-        logger.error(&quot;error&quot;);
-        logger.debug(&quot;debug&quot;);
-        logger.trace(&quot;trace&quot;);
-        logger.fatal(&quot;fatel&quot;);
-    }
-}
-</code></pre>
-<h2 id="6运行">(6)运行</h2>
-<p>点击main上的Run<br>
-<img src="https://img-blog.csdnimg.cn/20191020202234941.png" alt="在这里插入图片描述" loading="lazy"></p>
-<p>结果:<br>
-<img src="https://img-blog.csdnimg.cn/20191020202300581.png" alt="在这里插入图片描述" loading="lazy"><br>
-输出了fatel与error信息.<br>
-另外还提示了没有找到log4j2配置文件,使用默认的配置文件,默认输出到控制台.</p>
-<h2 id="7创建配置文件使其输出更多信息">(7)创建配置文件使其输出更多信息</h2>
-<p>src下创建log4j2.xml配置文件.<br>
-<img src="https://img-blog.csdnimg.cn/20191020202514614.png" alt="在这里插入图片描述" loading="lazy"><br>
-log4j2的配置文件只能是.xml或.json或.jsn文件,默认会在classpath下寻找(在这里classpath相当于图中的src).<br>
-默认情况下系统选择配置文件的优先级如下:</p>
-<ul>
-<li>1.classpath下名为 log4j-test.json 或者log4j-test.jsn文件</li>
-<li>2.classpath下名为 log4j2-test.xml</li>
-<li>3.classpath下名为 log4j.json 或者log4j.jsn文件</li>
-<li>4.classpath下名为 log4j2.xml</li>
-</ul>
-<p>这里使用log4j2.<br>
-xml.log4j2.xml如下:</p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;    
-&lt;configuration status=&quot;OFF&quot;&gt;    
-  &lt;appenders&gt;    
-    &lt;Console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;    
-      &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot;/&gt;    
-    &lt;/Console&gt;    
-  &lt;/appenders&gt;    
-  &lt;loggers&gt;    
-    &lt;logger name=&quot;test&quot; level=&quot;info&quot; additivity=&quot;false&quot;&gt;    
-      &lt;appender-ref ref=&quot;Console&quot;/&gt;    
-    &lt;/logger&gt;    
-    &lt;root level=&quot;info&quot;&gt;    
-      &lt;appender-ref ref=&quot;Console&quot;/&gt;    
-    &lt;/root&gt;    
-  &lt;/loggers&gt;    
-&lt;/configuration&gt;  
-</code></pre>
-<p>Logger三个主要的组件为</p>
-<ul>
-<li>logger(记录器)</li>
-<li>appender(输出目的地)</li>
-<li>layout(布局,定义日志的格式)</li>
-</ul>
-<p>&lt;appenders&gt;了输出目的地,&lt;Console&gt;表示控制台,&lt;PatternLayout&gt;定义了布局,里面的布局表示时间格式(%d,HH:mm:ss.SSS),接着是日志线程名(%t),%-5表示最小长度为5左对齐,level表示输出日志级别.<br>
-%logger表示输出logger名称.<br>
-%m是%msg与%message的缩写,表示输出应用提供的与记录事件有关的信息.<br>
-%n表示换行.</p>
-<p>&lt;loggers&gt;定义的logger与logger使用的appender.root为log默认的输出形式,如果一个类的没有明确loggers中的输出格式就会采用root的格式.</p>
-<h2 id="8再次运行">(8)再次运行</h2>
-<p>没有之前的&quot;没有配置文件&quot;的提示了.<br>
-<img src="https://img-blog.csdnimg.cn/20191020205433738.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="4vscode下使用log4j2带maven">4.VScode下使用log4j2(带Maven)</h1>
-<h2 id="1创建maven项目">(1)创建maven项目</h2>
-<p>使用插件maven for java创建,命令面板(ctrl+shift+p)输入.<br>
-<img src="https://img-blog.csdnimg.cn/20191020205627669.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择quickstart.<br>
-<img src="https://img-blog.csdnimg.cn/20191020205733268.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择版本.<br>
-<img src="https://img-blog.csdnimg.cn/2019102020581850.png" alt="在这里插入图片描述" loading="lazy"><br>
-最后选择项目路径即可.<br>
-在控制台中vscode会下载相关文件,然后会提示以交互模式创建:<br>
-<img src="https://img-blog.csdnimg.cn/20191020213533538.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里等一会就好了.<br>
-然后会提示输入一些值.<br>
-<img src="https://img-blog.csdnimg.cn/20191021074532605.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20191021074613153.png" alt="在这里插入图片描述" loading="lazy"><br>
-ok.</p>
-<h2 id="2在pomxml配置依赖">(2)在pom.xml配置依赖</h2>
-<p>在&lt;dependencies&gt;中添加如下代码:</p>
-<pre><code class="language-xml">&lt;dependency&gt;
-	&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-    &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
-    &lt;version&gt;2.12.1&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-    &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
-    &lt;version&gt;2.12.1&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>以下是完整的pom.xml:</p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
-
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-    &lt;groupId&gt;com.example&lt;/groupId&gt;
-    &lt;artifactId&gt;test&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-    &lt;name&gt;test&lt;/name&gt;
-    &lt;!-- FIXME change it to the project's website --&gt;
-    &lt;url&gt;http://www.example.com&lt;/url&gt;
-
-    &lt;properties&gt;
-        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
-        &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;
-        &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;
-    &lt;/properties&gt;
-
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;junit&lt;/groupId&gt;
-            &lt;artifactId&gt;junit&lt;/artifactId&gt;
-            &lt;version&gt;4.11&lt;/version&gt;
-            &lt;scope&gt;test&lt;/scope&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-            &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
-            &lt;version&gt;2.12.1&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-            &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
-            &lt;version&gt;2.12.1&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-
-    &lt;build&gt;
-        &lt;pluginManagement&gt;
-            &lt;!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) --&gt;
-            &lt;plugins&gt;
-                &lt;!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle --&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;3.1.0&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging --&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;3.0.2&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;3.8.0&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;2.22.1&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;3.0.2&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-install-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;2.5.2&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;2.8.2&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle --&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-site-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;3.7.1&lt;/version&gt;
-                &lt;/plugin&gt;
-                &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-project-info-reports-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;3.0.0&lt;/version&gt;
-                &lt;/plugin&gt;
-            &lt;/plugins&gt;
-        &lt;/pluginManagement&gt;
-    &lt;/build&gt;
-&lt;/project&gt;
-
-</code></pre>
-<p>右键选择Update project configuration.<br>
-<img src="https://img-blog.csdnimg.cn/20191021074957718.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3创建log4j2xml">(3)创建log4j2.xml</h2>
-<p>在java目录下新建log4j2.xml.<br>
-<img src="https://img-blog.csdnimg.cn/20191021075807542.png" alt="在这里插入图片描述" loading="lazy"></p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;configuration status=&quot;OFF&quot;&gt;
-    &lt;appenders&gt;
-        &lt;Console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;
-            &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot; /&gt;
-        &lt;/Console&gt;
-    &lt;/appenders&gt;
-    &lt;loggers&gt;
-        &lt;logger name=&quot;com.example.App&quot; level=&quot;info&quot; additivity=&quot;false&quot;&gt;
-            &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;/logger&gt;
-        &lt;root level=&quot;info&quot;&gt;
-            &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;/root&gt;
-    &lt;/loggers&gt;
-&lt;/configuration&gt;
-</code></pre>
-<h2 id="4修改测试类">(4)修改测试类</h2>
-<p>修改默认的App.java.</p>
-<pre><code class="language-java">package com.example;
-import org.apache.logging.log4j.*;
-public class App
-{
-    private static final Logger logger = LogManager.getLogger(App.class.getName());
-    public static void main( String[] args )
-    {
-        logger.info(&quot;info&quot;);
-        logger.error(&quot;error&quot;);
-        logger.debug(&quot;debug&quot;);
-        logger.trace(&quot;trace&quot;);
-        logger.fatal(&quot;fatel&quot;);
-    }
-}
-</code></pre>
-<h2 id="5测试">(5)测试</h2>
-<p>run即可.<br>
-<img src="https://img-blog.csdnimg.cn/20191021080047982.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20191021080054841.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5idea下使用log4j2不用maven">5.IDEA下使用log4j2(不用Maven)</h1>
-<h2 id="1创建项目">(1)创建项目</h2>
-<p>什么也不用选,直接next.<br>
-<img src="https://img-blog.csdnimg.cn/20191020210516150.png" alt="在这里插入图片描述" loading="lazy"><br>
-勾选从模板创建项目.<br>
-<img src="https://img-blog.csdnimg.cn/2019102021064196.png" alt="在这里插入图片描述" loading="lazy"><br>
-选好路径与填好项目名即可.</p>
-<h2 id="2添加jar包">(2)添加jar包</h2>
-<p><img src="https://img-blog.csdnimg.cn/20191020210903580.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择刚才的lib目录,或者自己手动改成两个jar包(log4j-api-版本.jar,log4j-core-版本.jar).<br>
-<img src="https://img-blog.csdnimg.cn/20191020210913784.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3新建测试类">(3)新建测试类</h2>
-<p>项目结构如下:<br>
-<img src="https://img-blog.csdnimg.cn/20191020211309252.png" alt="在这里插入图片描述" loading="lazy"><br>
-Main.java</p>
-<pre><code class="language-java">package com.test;
-import org.apache.logging.log4j.*;
-
-public class Main {
-
-    private static final Logger logger = LogManager.getLogger(Main.class.getName());
-    public static void main(String[] args) {
-        logger.info(&quot;info&quot;);
-        logger.error(&quot;error&quot;);
-        logger.debug(&quot;debug&quot;);
-        logger.trace(&quot;trace&quot;);
-        logger.fatal(&quot;fatel&quot;);
-    }
-}
-
-</code></pre>
-<h2 id="4新建log4j2xml">(4)新建log4j2.xml</h2>
-<p>在src下新建log4j2.xml.</p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;configuration status=&quot;OFF&quot;&gt;
-    &lt;appenders&gt;
-        &lt;Console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;
-            &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot; /&gt;
-        &lt;/Console&gt;
-    &lt;/appenders&gt;
-    &lt;loggers&gt;
-        &lt;logger name=&quot;com.test.Main&quot; level=&quot;info&quot; additivity=&quot;false&quot;&gt;
-            &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;/logger&gt;
-        &lt;root level=&quot;info&quot;&gt;
-            &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;/root&gt;
-    &lt;/loggers&gt;
-&lt;/configuration&gt;
-</code></pre>
-<h2 id="5测试-2">(5)测试</h2>
-<p>直接点击run按钮.<br>
-<img src="https://img-blog.csdnimg.cn/20191020211513646.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="6idea下使用log4j2带maven">6.IDEA下使用log4j2(带Maven)</h1>
-<h2 id="1创建maven项目-模块">(1)创建maven<s>项目</s> 模块</h2>
-<p>这里作者偷懒就直接在上面项目的基础上新建模块不新建项目了.<br>
-<img src="https://img-blog.csdnimg.cn/20191020211928566.png" alt="在这里插入图片描述" loading="lazy"></p>
-<p>都不用选直接next.<br>
-<img src="https://img-blog.csdnimg.cn/20191020211952402.png" alt="在这里插入图片描述" loading="lazy"><br>
-填好GroupId与ArtifactId之后next.<br>
-<img src="https://img-blog.csdnimg.cn/20191020212033878.png" alt="在这里插入图片描述" loading="lazy"><br>
-最后选好位置.</p>
-<h2 id="2配置依赖">(2)配置依赖</h2>
-<p>pom.xml中加入:</p>
-<pre><code class="language-xml">&lt;dependencies&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-        &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
-        &lt;version&gt;2.12.1&lt;/version&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-        &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
-        &lt;version&gt;2.12.1&lt;/version&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre>
-<p>以下是完整的pom.xml文件</p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-
-    &lt;groupId&gt;com.example&lt;/groupId&gt;
-    &lt;artifactId&gt;test&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-            &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
-            &lt;version&gt;2.12.1&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
-            &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
-            &lt;version&gt;2.12.1&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-&lt;/project&gt;
-</code></pre>
-<p>右键选择同步pom.xml.<br>
-<img src="https://img-blog.csdnimg.cn/20191021074734906.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择右下角弹出的提示中的Import Changes.<br>
-<img src="https://img-blog.csdnimg.cn/20191021075520677.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3创建log4j2xml-2">(3)创建log4j2.xml</h2>
-<p>在target下的classes下创建log4j2.xml.<br>
-<img src="https://img-blog.csdnimg.cn/20191021120152165.png" alt="在这里插入图片描述" loading="lazy"><br>
-log4j2.xml:</p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;configuration status=&quot;OFF&quot;&gt;
-    &lt;appenders&gt;
-        &lt;Console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;
-            &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot; /&gt;
-        &lt;/Console&gt;
-    &lt;/appenders&gt;
-    &lt;loggers&gt;
-        &lt;logger name=&quot;com.example.test&quot; level=&quot;info&quot; additivity=&quot;false&quot;&gt;
-            &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;/logger&gt;
-        &lt;root level=&quot;info&quot;&gt;
-            &lt;appender-ref ref=&quot;Console&quot;/&gt;
-        &lt;/root&gt;
-    &lt;/loggers&gt;
-&lt;/configuration&gt;
-</code></pre>
-<h2 id="4创建测试类">(4)创建测试类</h2>
-<p>创建包与test.java.</p>
-<p>test.java</p>
-<pre><code class="language-java">package com.example;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-public class test {
-    private static final Logger logger = LogManager.getLogger(test.class.getName());
-    public static void main(String[] args) {
-        logger.info(&quot;info&quot;);
-        logger.error(&quot;error&quot;);
-        logger.debug(&quot;debug&quot;);
-        logger.trace(&quot;trace&quot;);
-        logger.fatal(&quot;fatel&quot;);
-    }
-}
-
-</code></pre>
-<h2 id="5测试-3">(5)测试</h2>
-<p>新建配置Application.<br>
-<img src="https://img-blog.csdnimg.cn/20191021115456431.png" alt="在这里插入图片描述" loading="lazy"></p>
-<p>输入Main class与名字.<br>
-<img src="https://img-blog.csdnimg.cn/20191021115507597.png" alt="在这里插入图片描述" loading="lazy"><br>
-run.<br>
-<img src="https://img-blog.csdnimg.cn/20191021120310528.png" alt="在这里插入图片描述" loading="lazy"></p>
-<p>参考:<br>
-1.<a href="https://blog.csdn.net/moonpure/article/details/83415432">log4j2(1)</a><br>
-2.<a href="https://www.iteye.com/blog/bijian10J13-2307334">log4j2(2)</a><br>
-3.<a href="https://www.cnblogs.com/littleatp/p/9260784.html">log4j2(3)</a><br>
-4.<a href="https://www.cnblogs.com/sa-dan/p/6837225.html">log4j2(4)</a><br>
-5.<a href="http://logging.apache.org/log4j/2.x/manual/layouts.html">log4j2(5)</a></p>
+                  <figure data-type="image" tabindex="1"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200621015932609-1177793518.png" alt="" loading="lazy"></figure>
+<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>我的脑袋不是空的。我是要大有作为的人，只是混沌初开。</p>
+</blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote>
+<p>在日本直到2015年时，人们在过了零点以后跳舞还是非法行为。这条法律是在1948年开始实施的，为的是打击一些为非法活动作掩护的餐厅，到了2015年这条法律才废除。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>接天莲叶无穷碧，映日荷花别样红。<br>
+——杨万里《晓出净慈寺送林子方》</p>
+</blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote>
+<p><a href="https://music.163.com/#/song?id=28661853">我配不上你-夏天Alex</a></p>
+</blockquote>
+<blockquote>
+<p>你完全可以找个更好的知己<br>
+不一定和我这样子如此亲密<br>
+害怕有一天自己 真的就离不开你<br>
+距离让我们怎么靠近<br>
+我知道自己和你有很大差距<br>
+爱情却让我再一次身不由己<br>
+受过伤的人怀疑 尽管这来之不易<br>
+拼命的争取不如放弃</p>
+</blockquote>
+<blockquote>
+<p>我配不上你 纵然很努力<br>
+我喜欢你 心里却没底<br>
+我没有歇斯底里 我只是望尘莫及<br>
+就像买不起心爱的衬衣<br>
+我还在原地 你飞上天际<br>
+我喜欢你 想一想而已<br>
+总是说后会有期 有天会在一起<br>
+只是在一起的两个人<br>
+不是我和你</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180745405-735410624.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>你完全可以找个更好的知己<br>
+不一定和我这样子如此亲密<br>
+害怕有一天自己真的就离不开你<br>
+距离让我们怎么靠近<br>
+我知道自己和你有很大差距<br>
+爱情却让我再一次身不由己<br>
+受过伤的人怀疑 尽管尽管这来之不易<br>
+拼命的争取不如放弃</p>
+</blockquote>
+<blockquote>
+<p>我配不上你 纵然很努力<br>
+我喜欢你 心里却没底<br>
+我没有歇斯底里 我只是望尘莫及<br>
+就像买不起心爱的衬衣<br>
+我还在原地 你飞上天际<br>
+我喜欢你 想一想而已<br>
+总是说后会有期<br>
+有天会在一起<br>
+只是在一起的两个人<br>
+不是我和你</p>
+</blockquote>
+<figure data-type="image" tabindex="3"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180757816-1790799237.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>我配不上你 纵然很努力<br>
+我喜欢你 心里却没底<br>
+我没有歇斯底里 我只是望尘莫及<br>
+就像买不起心爱的衬衣<br>
+我还在原地 你飞上天际<br>
+我喜欢你 想一想而已<br>
+总是说后会有期 有天会在一起<br>
+只是在一起的两个人<br>
+不是我和你</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180751050-2107348189.png" alt="" loading="lazy"></figure>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>温柔正确的人总是难以生存，因为这个世界既不温柔，也不正确<br>
+——我的青春恋爱物语果然有问题</p>
+</blockquote>
+<h1 id="有关重温火影">有关重温火影</h1>
+<p>最近重温了火影的一些经典，包括白与再不斩，佐助VS鼬，佐助VS卡卡西，当然还有最后的鸣左封印辉夜，要不是疫情的原因估计我也不会去看。<br>
+不过说真的感觉自己的青春就这么过去了还是有点不甘啊，720集也就是最后一集无数人留名以及表白，感觉自己的青春也就这么没了啊。。。。</p>
+<figure data-type="image" tabindex="5"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175841465-696434200.png" alt="" loading="lazy"></figure>
+<p>来说说鼬神吧，背负整个村子的骂名，杀光一整族的人，只是为了弟弟。真的是宠弟狂魔，临死前也有给佐助上个天照就是为了不与带土见面。个人觉得鼬是真的厉害，智商爆棚，可惜到了358集就死了，唉，真是可惜了，虽然后面秽土转生给复活了。</p>
+<figure data-type="image" tabindex="6"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175818060-706163986.png" alt="" loading="lazy"></figure>
+<p>不过打佐助的时候还是放了点水的，虽然很多弹幕说“放了海”“鬼鲛的大坝都要塌了不要放海了”，一开始的月读虽然动漫里面说是佐助解的，但是感觉是鼬自己解开的，也需要做点戏给观战的绝看看，到后面豪火球对决的时候，加上了天照，吞噬佐助的火球的同时还把翅膀给烧了，但是主动熄灭了。。。这确实是放水了。佐助放麒麟被鼬的须佐抵挡后，用十拳剑封印了佐助体内的大蛇丸，为什么当时就不一刀下去把佐助给杀了？（当然这样的话可能就全剧终了岸本也不会这样做的不过也可以劈一下啊，确实放水了）</p>
+<figure data-type="image" tabindex="7"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175854505-954165188.png" alt="" loading="lazy"></figure>
+<p>最后虽然是鼬死了但是感觉是鼬自己用万花筒过度加上自身的病死的，说真的要不是鼬放水佐助应该打不过，即使鼬死后场地旁边还留有天照，还把封印大蛇丸时逃出来的那一条小白蛇给烧了，确实是保护佐助到家了。</p>
+<figure data-type="image" tabindex="8"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175759748-1880087122.png" alt="" loading="lazy"></figure>
+<p>鼬应该给个火影做啊，这人设确实有点惨。<br>
+就这样吧，反正我的青春也完结了2333333。。。。</p>
+<p>虽然还有博人传，但是怎么也看不惯，毕竟画风不一样，当然这也不奇怪，毕竟不是岸本画的，是池本画的。感觉里面的鸣人还有佐助被削了很多，鸣人动不动就暴仙人九尾，螺旋手里剑都看不见了，不是一般先搞一下体术，然后分身，再仙人之类的吗？？？？<br>
+还有佐助虽然单手了，豪火球都不怎么用，轮回眼说闪就闪，须佐一用就最厉害的那个，不是要仇恨吗？？？还记得以前是怎么打迪达拉，打团藏的吗？</p>
+<p>不过也无可厚非了，毕竟博人的丸子会隐身，而且觉得65集，也就是国人黄成希导演的那一集，是做的不错的。虽然博人出场扔了两个丸子，一个是基本没什么伤害的但是救了众人的，一个是父子合力的。。。大的夸张的丸子，直接把桃式给秒了，还留下什么狠化“一个打败神的人是注定做不回凡人的”。不过这集确实看的过瘾，佐助和鸣人的配合着实高燃。</p>
+<figure data-type="image" tabindex="9"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175956579-1013118963.png" alt="" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -596,26 +217,13 @@ run.<br>
 
             <section class="related section">
               
-              <article class="prev grid-50 tablet-grid-50 grid-parent">
-                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java-fan-she-array-de-shi-yong.jpeg');"></div>
-                 <a href="https://2293736867.github.io/post/java-fan-she-array-de-shi-yong/" class="full-link"></a>
-                 <div class="info">
-                  <time datetime="2020-06-03">2020-06-03</time>
-                  <h4 class="title white no-margin">java反射Array的使用</h4>
-                </div>
-                 <span class="epcl-button red">
-                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
-                </span>
-                <div class="overlay"></div>
-              </article>
-              
               
               <article class="next grid-50 tablet-grid-50 grid-parent">
-                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin.jpg');"></div>
-                 <a href="https://2293736867.github.io/post/java-tong-guo-serversocket-yu-socket-shi-xian-tong-xin/" class="full-link"></a>
+                <div class="thumb cover lazy loaded" style="background-image: url('https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620135723335-645357184.png');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-2-qi/" class="full-link"></a>
                  <div class="info">
-                  <time datetime="2020-06-03">2020-06-03</time>
-                  <h4 class="title white no-margin">java通过ServerSocket与Socket实现通信</h4>
+                  <time datetime="2020-06-20">2020-06-20</time>
+                  <h4 class="title white no-margin">每日分享 第2期</h4>
                 </div>
                  <span class="epcl-button red">
                   <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
