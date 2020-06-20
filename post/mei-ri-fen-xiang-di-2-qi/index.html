@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>java自定义的getInstance()返回泛型 | 氷泠&#39;s blog</title>
+<title>每日分享 第2期 | 氷泠&#39;s blog</title>
 <meta name="description" content="我配不上你，
 纵然很努力。" />
 <link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
@@ -16,12 +16,19 @@
 <script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
-    <meta name="description" content="1.背景
-实际中经常使用getInstance()方法返回一个对象,对于工厂模式,传入对应的参数返回与之相对应的对象.但是,问题来了,返回的对象需要被强制转换,很麻烦.
-import java.lang.reflect.*;
+    <meta name="description" content="
+每日鸡汤
 
-public..." />
-    <meta name="keywords" content="Java" />
+不明白你们遇到好事，为什么要掐腿揉眼睛，真醒了怎么办？
+
+每日冷知识
+
+尽管可可豆已经被食用了数千年之久，但知道19世纪40年代人类才产生出第一块固体巧克力棒。以前可可豆都以粉末或饮料形式被食用。
+
+每日诗词
+
+荷叶罗裙一色裁..." />
+    <meta name="keywords" content="每日分享" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
   </head>
@@ -83,23 +90,23 @@ public..." />
       <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
 
         <div class="center content">
-          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/java-zi-ding-yi-de-getinstancefan-hui-fan-xing.jpg');">
+          <div class="featured-image cover" style="background-image: url('https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620135723335-645357184.png');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">17 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-06-20"><i class="fa fa-calendar"></i><span class="lately">几秒前</span></time>
               
-              <a href="https://2293736867.github.io/post/java-zi-ding-yi-de-getinstancefan-hui-fan-xing/#comments" class="comments meta-info" title="">
-                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/java-zi-ding-yi-de-getinstancefan-hui-fan-xing/"> </span>
+              <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-2-qi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/mei-ri-fen-xiang-di-2-qi/"> </span>
               </a>
-              <span id="/java-zi-ding-yi-de-getinstancefan-hui-fan-xing/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              <span id="/mei-ri-fen-xiang-di-2-qi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
               
             </div>
             <div class="info">
               <div class="tags ">
                 
-                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
               </div>
-              <h1 class="title ularge white bold">java自定义的getInstance()返回泛型</h1>
+              <h1 class="title ularge white bold">每日分享 第2期</h1>
             </div>
           </div>
         </div>  
@@ -109,103 +116,107 @@ public..." />
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <h1 id="1背景">1.背景</h1>
-<p>实际中经常使用getInstance()方法返回一个对象,对于工厂模式,传入对应的参数返回与之相对应的对象.但是,问题来了,返回的对象需要被强制转换,很麻烦.</p>
-<pre><code class="language-java">import java.lang.reflect.*;
-
-public class test
-{
-    public static void main(String[] args) {
-        test1 t1 = factory.getInstance(&quot;test1&quot;);
-        test2 t2 = factory.getInstance(&quot;test2&quot;);
-    }
-}
-
-class factory
-{
-    public static Object getInstance(String className)
-    {
-        try
-        {
-            return Class.forName(className).getConstructor().newInstance();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
-
-class test1
-{
-    public test1()
-    {
-    }
-}
-
-class test2
-{
-    public test2()
-    {
-    }
-}
-</code></pre>
-<p>编译不通过,说类型不兼容.<br>
-<img src="https://img-blog.csdnimg.cn/20191025171011736.jpg" alt="在这里插入图片描述" loading="lazy"></p>
-<p>因此加上强制类型转换,编译通过了.</p>
-<pre><code class="language-java">test1 t1 = (test1)factory.getInstance(&quot;test1&quot;);
-test2 t2 = (test2)factory.getInstance(&quot;test2&quot;);
-</code></pre>
-<h1 id="2如何处理">2.如何处理</h1>
-<p>例子只有两个类,手动强制转换还可以,但如果多个类咋办啊?而且作者是那种非常懒的人,也不想手动去转换,因此,用大招-----泛型!</p>
-<h1 id="3使用泛型">3.使用泛型</h1>
-<p>使用Class&lt;T&gt; 泛型可以避免强制转换<s>从而更有效地偷懒</s> ,需要把返回类型改成&lt;T&gt; T,同时由于使用了T,必须修改传进来的参数.</p>
-<pre><code class="language-java">public static &lt;T&gt; T getInstance(Class&lt;T&gt; t)
-</code></pre>
-<h1 id="4完整代码">4.完整代码</h1>
-<pre><code class="language-java">import java.lang.reflect.*;
-
-public class test
-{
-    public static void main(String[] args) {
-        test1 t1 = factory.getInstance(test1.class);
-        test2 t2 = factory.getInstance(test2.class);
-    }
-}
-
-class factory
-{
-    public static &lt;T&gt; T getInstance(Class&lt;T&gt; t)
-    {
-        try
-        {
-            return t.getConstructor().newInstance();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-}
-
-class test1
-{
-    public test1()
-    {
-
-    }
-}
-
-class test2
-{
-    public test2()
-    {
-
-    }
-}
-</code></pre>
+                  <figure data-type="image" tabindex="1"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620135827815-1047854143.png" alt="" loading="lazy"></figure>
+<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>不明白你们遇到好事，为什么要掐腿揉眼睛，真醒了怎么办？</p>
+</blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote>
+<p>尽管可可豆已经被食用了数千年之久，但知道19世纪40年代人类才产生出第一块固体巧克力棒。以前可可豆都以粉末或饮料形式被食用。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>荷叶罗裙一色裁，芙蓉向脸两边开。<br>
+——王昌龄《采莲曲》</p>
+</blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote>
+<p><a href="https://music.163.com/#/song?id=204435">分手假期-钟洁/Hojo</a></p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620135723335-645357184.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>原来分手也有假期<br>
+想要回去<br>
+才发现我无法面对你<br>
+曾经对爱的憧憬<br>
+拼了命去爱你<br>
+而最后 只剩下回忆</p>
+</blockquote>
+<blockquote>
+<p>删掉你短信 怪我不争气<br>
+失落的情绪 就让你离去<br>
+别犹豫 你还在我回忆<br>
+别伤心 没什么了不起<br>
+也许是我还不懂爱情<br>
+还是我不够年龄<br>
+太多的心事说给谁听<br>
+你听我后悔的声音<br>
+你听 我爱上你的原因</p>
+</blockquote>
+<blockquote>
+<p>Oh Baby<br>
+还记得第一次邂逅的场景<br>
+我被你的眼睛吸引 我动心<br>
+不想在犹豫 慢慢向你靠近<br>
+风吹散你香气 深深的为你着迷<br>
+爱上你 我难以抽离<br>
+怪我的坏脾气 你才会狠下心<br>
+眼看着我陷入谷底<br>
+我该怎么才能挽回你</p>
+</blockquote>
+<blockquote>
+<p>原来分手也有假期<br>
+想要回去<br>
+才发现我无法面对你<br>
+曾经对爱的憧憬<br>
+拼了命去爱你<br>
+而最后 只剩下回忆<br>
+原来分手还会想你<br>
+保持清醒<br>
+只是我再也不会爱你<br>
+喜欢孤单的旅行<br>
+在陌生的城市<br>
+仿佛看到熟悉的背影</p>
+</blockquote>
+<blockquote>
+<p>短暂的分离 出国散散心<br>
+陌生国度里 还是想起你<br>
+在餐厅 听浪漫进行曲<br>
+烛光里 欣赏窗外美景<br>
+我渴望一段新的恋情<br>
+能代替过去的爱情<br>
+爱像突如其来的大雨<br>
+你听 我悲泣的声音<br>
+你听 我离开你的原因</p>
+</blockquote>
+<blockquote>
+<p>Oh Baby<br>
+还记得第一次邂逅的默契<br>
+时间缠绵滴答滴答 走下去<br>
+相处之后发现勉强在一起<br>
+让你受尽委屈 所以才会答应你<br>
+爱上你 我深信不疑<br>
+渴望幸福甜蜜 可惜我太花心<br>
+眼看着你为我痛心<br>
+最后只能默默的离开你</p>
+</blockquote>
+<blockquote>
+<p>原来分手也有假期<br>
+想要回去<br>
+才发现我无法面对你<br>
+曾经对爱的憧憬<br>
+拼了命去爱你<br>
+而最后 只剩下回忆<br>
+原来分手还会想你<br>
+保持清醒<br>
+只是我再也不会爱你<br>
+喜欢孤单的旅行<br>
+在陌生的城市<br>
+仿佛看到熟悉的背影<br>
+我的脚步怎么会犹豫<br>
+不敢相信那个人是你</p>
+</blockquote>
 
                 </div>
                 <div class="clear"></div>
@@ -215,26 +226,13 @@ class test2
 
             <section class="related section">
               
-              <article class="prev grid-50 tablet-grid-50 grid-parent">
-                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/liao-liao-java-zhong-final-na-dian-shi.png');"></div>
-                 <a href="https://2293736867.github.io/post/liao-liao-java-zhong-final-na-dian-shi/" class="full-link"></a>
-                 <div class="info">
-                  <time datetime="2020-06-03">2020-06-03</time>
-                  <h4 class="title white no-margin">聊聊java中final那点事</h4>
-                </div>
-                 <span class="epcl-button red">
-                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
-                </span>
-                <div class="overlay"></div>
-              </article>
-              
               
               <article class="next grid-50 tablet-grid-50 grid-parent">
-                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/java-fan-she-array-de-shi-yong.jpeg');"></div>
-                 <a href="https://2293736867.github.io/post/java-fan-she-array-de-shi-yong/" class="full-link"></a>
+                <div class="thumb cover lazy loaded" style="background-image: url('https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200619145148467-1839808462.png');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-1-qi/" class="full-link"></a>
                  <div class="info">
-                  <time datetime="2020-06-03">2020-06-03</time>
-                  <h4 class="title white no-margin">java反射Array的使用</h4>
+                  <time datetime="2020-06-19">2020-06-19</time>
+                  <h4 class="title white no-margin">每日分享  第1期</h4>
                 </div>
                  <span class="epcl-button red">
                   <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
