@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>git push时出现Permission denied(publickey)的解决 | 氷泠&#39;s blog</title>
+<title>每日分享 第5期 | 氷泠&#39;s blog</title>
 <meta name="description" content="我配不上你，
 纵然很努力。" />
 <link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
@@ -16,12 +16,26 @@
 <script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
-    <meta name="description" content="1 问题描述
+    <meta name="description" content="
+每日鸡汤
 
-push的时候出现上述错误,它说请确保有足够的权限和这个仓库存在,仓库不存在...这个估计不是,所以是权限的问题,准确来说是sshkey的问题.
-2 重新生成ssh key
-ssh-key -t rsa -b 4096 -C..." />
-    <meta name="keywords" content="Git" />
+想好了的是假象，认真的做了也没前途。
+
+每日冷知识
+
+据估计，有5%的人类从未经历过头痛。
+
+每日诗词
+
+潜力黄云白日曛，北风吹雁雪纷纷。
+——高适《别董大二首》
+
+每日一句
+
+隔着屏幕轻易产生感情的你，肯定很孤独吧。
+
+每日..." />
+    <meta name="keywords" content="每日分享" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
   </head>
@@ -83,23 +97,23 @@ ssh-key -t rsa -b 4096 -C..." />
       <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
 
         <div class="center content">
-          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue.jpg');">
+          <div class="featured-image cover" style="background-image: url('https://img-blog.csdnimg.cn/20200623034208533.png');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-06-03"><i class="fa fa-calendar"></i><span class="lately">20 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-06-23"><i class="fa fa-calendar"></i><span class="lately">16 分钟前</span></time>
               
-              <a href="https://2293736867.github.io/post/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/#comments" class="comments meta-info" title="">
-                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/"> </span>
+              <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-5-qi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/mei-ri-fen-xiang-di-5-qi/"> </span>
               </a>
-              <span id="/git-push-shi-chu-xian-permission-deniedpublickeyde-jie-jue/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              <span id="/mei-ri-fen-xiang-di-5-qi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
               
             </div>
             <div class="info">
               <div class="tags ">
                 
-                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-0 ctag-7QobdEpAB" aria-label="">Git</a>
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
               </div>
-              <h1 class="title ularge white bold">git push时出现Permission denied(publickey)的解决</h1>
+              <h1 class="title ularge white bold">每日分享 第5期</h1>
             </div>
           </div>
         </div>  
@@ -109,38 +123,119 @@ ssh-key -t rsa -b 4096 -C..." />
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <h1 id="1-问题描述">1 问题描述</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200113160239767.png" alt="在这里插入图片描述" loading="lazy"><br>
-push的时候出现上述错误,它说请确保有足够的权限和这个仓库存在,仓库不存在...这个估计不是,所以是权限的问题,准确来说是sshkey的问题.</p>
-<h1 id="2-重新生成ssh-key">2 重新生成ssh key</h1>
-<pre><code class="language-bash">ssh-key -t rsa -b 4096 -C xxxx@xxxxx
-</code></pre>
-<p>这是gitub推荐的生成新ssh key的方法.注意,请不要使用默认的名字,第一个就会提示输入名字,请使用自定义的名字.</p>
-<h1 id="3-修改~sshconfig">3 修改~/.ssh/config</h1>
-<p>移动公钥和私钥到~/.ssh下.</p>
-<pre><code>mv xxx xxx.pub ~/.ssh
-</code></pre>
-<p>修改~/.ssh/config:</p>
-<pre><code>vim ~/.ssh/config
-</code></pre>
-<p>输入</p>
-<pre><code>Host github.com
-HostName github.com
-User git
-IdentityFile ~/.ssh/name
-</code></pre>
-<p>其中name为上一步的自定义的key名字,是私钥,不是.pub结尾的公钥.</p>
-<h1 id="4-添加公钥到github">4 添加公钥到github</h1>
-<p>在github首页中,点击右上角头像进入设置.<br>
-<img src="https://img-blog.csdnimg.cn/20200113161704918.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200113161738893.png" alt="在这里插入图片描述" loading="lazy"><br>
-选择:<br>
-<img src="https://img-blog.csdnimg.cn/20200113161757536.png" alt="在这里插入图片描述" loading="lazy"><br>
-输入名字与公钥的内容,保存.<br>
-<img src="https://img-blog.csdnimg.cn/20200113161815741.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5-push">5 push</h1>
-<p><img src="https://img-blog.csdnimg.cn/20200113161919367.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功!</p>
+                  <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200623034208533.png" alt="" loading="lazy"></figure>
+<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>想好了的是假象，认真的做了也没前途。</p>
+</blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote>
+<p>据估计，有5%的人类从未经历过头痛。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>潜力黄云白日曛，北风吹雁雪纷纷。<br>
+——高适《别董大二首》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>隔着屏幕轻易产生感情的你，肯定很孤独吧。</p>
+</blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote>
+<p><a href="https://music.163.com/#/song?id=22677433">千本桜-黒うさP / 初音ミク</a></p>
+</blockquote>
+<blockquote>
+<p>大胆不敵にハイカラ革命<br>
+磊々落々(らいらいらくらく)<br>
+反戦国<br>
+日の丸印の二輪車転が<br>
+悪霊退散　ICBM<br>
+環状線を走り抜けて<br>
+東奔西走なんのその<br>
+少年少女戦国無双<br>
+浮世の随(まにま)に</p>
+</blockquote>
+<blockquote>
+<p>千本桜 夜ニ紛レ<br>
+君ノ声モ届カナイヨ<br>
+此処は宴 鋼の檻<br>
+その断頭台で見下ろし<br>
+三千世界<br>
+常世之闇(とこよのやみ)<br>
+嘆ク唄モ聞コエナイヨ<br>
+青藍(せいらん)の空 遥か彼方<br>
+その光線銃で打ち抜いて</p>
+</blockquote>
+<blockquote>
+<p>百戦錬磨の見た目は将校<br>
+いったりきたりの<br>
+花魁(おいらん)道中<br>
+アイツもコイツも皆で集まれ<br>
+聖者の行進 わんっ つー さん しっ<br>
+禅定門(ぜんじょうもん)を<br>
+潜り抜けて<br>
+安楽浄土厄払い<br>
+きっと終幕(さいご)は大団円<br>
+拍手の合間に</p>
+</blockquote>
+<blockquote>
+<p>千本桜 夜ニ紛レ<br>
+君ノ声モ届カナイヨ<br>
+此処は宴 鋼の檻<br>
+その断頭台で見下ろして<br>
+三千世界<br>
+常世之闇(とこよのやみ)<br>
+嘆ク唄モ聞コエナイヨ<br>
+希望の丘 遥か彼方<br>
+その閃光弾を打ち上げろ</p>
+</blockquote>
+<blockquote>
+<p>環状線を走り抜けて<br>
+東奔西走なんのその<br>
+少年少女戦国無双<br>
+浮世の随(まにま)に</p>
+</blockquote>
+<blockquote>
+<p>千本桜 夜ニ紛レ<br>
+君ノ声モ届カナイヨ<br>
+此処は宴 鋼の檻<br>
+その断頭台を飛び降りて<br>
+千本桜 夜ニ紛レ<br>
+君が歌い僕は踊る<br>
+此処は宴 鋼の檻<br>
+さあ光線銃を撃ちまくれ</p>
+</blockquote>
+<h1 id="有关十二生肖">有关十二生肖</h1>
+<p>最近看了一篇十二生肖的文章，我们知道中国传统的十二生肖分别是：</p>
+<blockquote>
+<p>鼠 牛 虎 兔 龙 蛇 马 羊 猴 鸡 狗 猪</p>
+</blockquote>
+<p>但是十二生肖并不是中国所特有，在中国周边国家甚至中国不同民族也有不同的十二生肖，有的国家是直接引进，比如日本，有的国家是变形重组，比如越南。</p>
+<p>与中国十二生肖相同的有：日本、韩国、朝鲜、台湾和新加坡。<br>
+在国内的一些少数民族，十二生肖会有部分不一样，比如：</p>
+<blockquote>
+<p>桂西彝族：龙 凤 马 蚁 人 鸡 狗 猪 雀 牛 虎 蛇<br>
+哀牢山彝族：虎 兔 穿山甲 蛇 马 羊 猴 鸡 狗 猪 鼠 牛<br>
+川滇黔彝族：鼠 牛 虎 兔 龙 蛇 马 羊 猴 鸡 狗 猪<br>
+海南黎族：鸡 狗 猪 鼠 牛 虫 兔 龙 蛇 马 羊 猴</p>
+</blockquote>
+<p>而在越南中，兔改成了猫（以后可以说十二生肖中有猫了哈哈），由兔子变成猫有三种说法：</p>
+<blockquote>
+<p>一是越南当时没有兔子，用猫代替。<br>
+二是比起兔子越南人更喜欢猫，并且猫在越南有“小虎”之称。<br>
+三是当初十二生肖传入越南时，当地人把原本的“卯兔年”误读成“猫”，于是沿用至今。</p>
+</blockquote>
+<p>泰国，生肖从蛇开始，而龙变成了“那伽”。</p>
+<blockquote>
+<p>古埃及则是：牝（pin）牛 山羊 狮子 驴 蟹 蛇 犬 猫 鳄 红鹤 猿 秃鹰</p>
+</blockquote>
+<blockquote>
+<p>美国原住民则是：狼 隼（sun） 海狸 鹿 啄木鸟 鲑鱼 熊 乌鸦 蛇 猫头鹰 鹅 水獭 （ta）</p>
+</blockquote>
+<blockquote>
+<p>但是对于古代欧洲的凯尔特人，他们依照月亮的周期将一年分为13月，每一个月都有代表的动物和守护树，代表的13种动物为：鹿 猫 牛 马 蝴蝶 蛇 海马 鱼 狼 狐狸 鹪鹩（jiao liao） 天鹅 隼</p>
+</blockquote>
 
                 </div>
                 <div class="clear"></div>
@@ -150,26 +245,13 @@ IdentityFile ~/.ssh/name
 
             <section class="related section">
               
-              <article class="prev grid-50 tablet-grid-50 grid-parent">
-                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/python-sheng-cheng-ci-yun.jpg');"></div>
-                 <a href="https://2293736867.github.io/post/python-sheng-cheng-ci-yun/" class="full-link"></a>
-                 <div class="info">
-                  <time datetime="2020-06-03">2020-06-03</time>
-                  <h4 class="title white no-margin">Python生成词云</h4>
-                </div>
-                 <span class="epcl-button red">
-                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
-                </span>
-                <div class="overlay"></div>
-              </article>
-              
               
               <article class="next grid-50 tablet-grid-50 grid-parent">
-                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/vim-ti-huan-ming-ling.jpeg');"></div>
-                 <a href="https://2293736867.github.io/post/vim-ti-huan-ming-ling/" class="full-link"></a>
+                <div class="thumb cover lazy loaded" style="background-image: url('https://img-blog.csdnimg.cn/20200623034814769.png');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-4-qi/" class="full-link"></a>
                  <div class="info">
-                  <time datetime="2020-06-03">2020-06-03</time>
-                  <h4 class="title white no-margin">vim替换命令</h4>
+                  <time datetime="2020-06-22">2020-06-22</time>
+                  <h4 class="title white no-margin">每日分享 第4期</h4>
                 </div>
                  <span class="epcl-button red">
                   <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
