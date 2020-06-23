@@ -17,17 +17,18 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-1.背景
-2.开发环境
-3.相关资源
-4.配置开发环境
+2020.06.23 更新
+1 背景
+2 开发环境
+3 准备环境
 
-一. 安装Mysql8.0.17
-(1) 下载mysql
-(2) 安装mysql
-(3) 启动服务
-(4) 查看初始化密码,用于下一步设置自己的root密码
-(5) 本地使用roo..." />
+3.1 安装MySQL
+
+3.1.1 下载并安装mysql
+3.1.2 启动服务并查看初始化密码
+3.1.3 修改密码
+3.1.4 允许外部访问
+3.1.5 配置防火墙(..." />
     <meta name="keywords" content="MySQL,Android,Web" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -77,7 +78,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1592855715886" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1592894521084" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -121,213 +122,195 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
-<li><a href="#1%E8%83%8C%E6%99%AF">1.背景</a></li>
-<li><a href="#2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">2.开发环境</a></li>
-<li><a href="#3%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90">3.相关资源</a></li>
-<li><a href="#4%E9%85%8D%E7%BD%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">4.配置开发环境</a>
+<li><a href="#20200623-%E6%9B%B4%E6%96%B0">2020.06.23 更新</a></li>
+<li><a href="#1-%E8%83%8C%E6%99%AF">1 背景</a></li>
+<li><a href="#2-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">2 开发环境</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83">3 准备环境</a>
 <ul>
-<li><a href="#%E4%B8%80-%E5%AE%89%E8%A3%85mysql8017">一. 安装Mysql8.0.17</a></li>
-<li><a href="#1-%E4%B8%8B%E8%BD%BDmysql">(1) 下载mysql</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85mysql">(2) 安装mysql</a></li>
-<li><a href="#3-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1">(3) 启动服务</a></li>
-<li><a href="#4-%E6%9F%A5%E7%9C%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%86%E7%A0%81%E7%94%A8%E4%BA%8E%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%AE%BE%E7%BD%AE%E8%87%AA%E5%B7%B1%E7%9A%84root%E5%AF%86%E7%A0%81">(4) 查看初始化密码,用于下一步设置自己的root密码</a></li>
-<li><a href="#5-%E6%9C%AC%E5%9C%B0%E4%BD%BF%E7%94%A8root%E7%99%BB%E5%BD%95">(5) 本地使用root登录</a></li>
-<li><a href="#6-%E6%9B%B4%E6%94%B9%E5%AF%86%E7%A0%81">(6) 更改密码</a></li>
-<li><a href="#7-%E5%85%81%E8%AE%B8%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE">(7) 允许外部访问</a></li>
-<li><a href="#8-%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99%E5%8F%AF%E9%80%89">(8) 配置防火墙(可选)</a></li>
-<li><a href="#%E4%BA%8C%E5%AE%89%E8%A3%85tomcat9">二.安装tomcat9</a></li>
-<li><a href="#1-%E5%85%88%E5%8E%BB%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD%E4%B8%8B%E8%BD%BD%E5%90%8E%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">(1) 先去官网下载,下载后上传文件到服务器</a></li>
-<li><a href="#2-%E8%BF%9E%E6%8E%A5%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%A3%E5%8E%8B%E5%8E%8B%E7%BC%A9%E5%8C%85">(2) 连接到服务器,解压压缩包</a></li>
-<li><a href="#3-%E4%BF%AE%E6%94%B9tomcat%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E5%8F%AF%E9%80%89">(3) 修改tomcat默认端口(可选)</a></li>
-<li><a href="#4-%E5%90%AF%E5%8A%A8tomcat">(4) 启动tomcat</a></li>
-<li><a href="#5-%E6%B5%8B%E8%AF%95">(5) 测试</a></li>
-<li><a href="#6%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">(6)开机启动</a></li>
+<li><a href="#31-%E5%AE%89%E8%A3%85mysql">3.1 安装MySQL</a>
+<ul>
+<li><a href="#311-%E4%B8%8B%E8%BD%BD%E5%B9%B6%E5%AE%89%E8%A3%85mysql">3.1.1 下载并安装mysql</a></li>
+<li><a href="#312-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%B9%B6%E6%9F%A5%E7%9C%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%86%E7%A0%81">3.1.2 启动服务并查看初始化密码</a></li>
+<li><a href="#313-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">3.1.3 修改密码</a></li>
+<li><a href="#314-%E5%85%81%E8%AE%B8%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE">3.1.4 允许外部访问</a></li>
+<li><a href="#315-%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99%E5%8F%AF%E9%80%89">3.1.5 配置防火墙(可选)</a></li>
 </ul>
 </li>
-<li><a href="#5%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8">5.建库建表</a>
+<li><a href="#32-%E5%AE%89%E8%A3%85tomcat">3.2 安装Tomcat</a>
 <ul>
-<li><a href="#1-%E5%88%9B%E5%BB%BAusersql">(1) 创建user.sql</a></li>
-<li><a href="#2-%E5%AF%BC%E5%85%A5%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93">(2) 导入到数据库</a></li>
+<li><a href="#321-%E4%B8%8B%E8%BD%BD%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">3.2.1 下载并上传到服务器</a></li>
+<li><a href="#322-%E8%A7%A3%E5%8E%8B">3.2.2 解压</a></li>
+<li><a href="#323-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E5%8F%AF%E9%80%89">3.2.3 修改默认端口(可选)</a></li>
+<li><a href="#324-%E5%90%AF%E5%8A%A8">3.2.4 启动</a></li>
+<li><a href="#325-%E6%B5%8B%E8%AF%95">3.2.5 测试</a></li>
+<li><a href="#326-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%8F%AF%E9%80%89">3.2.6 开机启动(可选)</a></li>
 </ul>
 </li>
-<li><a href="#6%E5%90%8E%E7%AB%AF%E9%83%A8%E5%88%86">6.后端部分</a>
-<ul>
-<li><a href="#1-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">(1) 创建项目</a></li>
-<li><a href="#2-%E6%B7%BB%E5%8A%A0jar%E5%8C%85">(2) 添加jar包</a></li>
-<li><a href="#3-%E5%88%9B%E5%BB%BA%E5%8C%85%E4%B8%8E%E7%B1%BB">(3) 创建包与类</a></li>
-<li><a href="#4-%E5%85%88%E6%9D%A5%E5%A4%84%E7%90%86dbutils%E7%B1%BB">(4) 先来处理DBUtils类</a></li>
-<li><a href="#5-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%A4%84%E7%90%86user%E7%B1%BB">(5) 接下来处理User类</a></li>
-<li><a href="#6-%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%98%AFuserdao">(6) 接下来是UserDao</a></li>
-<li><a href="#7-servlet%E5%8C%85%E7%9A%84signin%E4%B8%8Esignup%E7%B1%BB">(7) servlet包的SignIn与SignUp类</a></li>
-<li><a href="#8-%E6%B7%BB%E5%8A%A0servlet%E5%88%B0webxml">(8) 添加servlet到web.xml</a></li>
-<li><a href="#9-%E6%9C%80%E5%90%8E%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E5%8F%ABhellohtml%E7%9A%84html%E6%96%87%E4%BB%B6%E7%94%A8%E4%BA%8E%E6%B5%8B%E8%AF%95">(9) 最后添加一个叫Hello.html的html文件用于测试.</a></li>
 </ul>
 </li>
-<li><a href="#7%E6%89%93%E5%8C%85%E5%8F%91%E5%B8%83">7.打包发布</a>
+<li><a href="#4-%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8">4 建库建表</a>
 <ul>
-<li><a href="#1-%E6%89%93%E5%BC%80project-structure">(1) 打开project structure</a></li>
-<li><a href="#2-%E9%80%89%E6%8B%A9artifactsweb-applicationarchive">(2) 选择Artifacts,Web Application:Archive</a></li>
-<li><a href="#3-%E6%94%B9%E5%90%8D%E5%AD%97%E5%88%9B%E5%BB%BAweb-inf%E7%9B%AE%E5%BD%95%E4%B8%8E%E5%AD%90%E7%9B%AE%E5%BD%95classes">(3) 改名字,创建WEB-INF目录与子目录classes</a></li>
-<li><a href="#4-%E9%80%89%E4%B8%ADclasses%E6%B7%BB%E5%8A%A0module-output%E9%80%89%E6%8B%A9%E8%87%AA%E5%B7%B1%E7%9A%84web%E9%A1%B9%E7%9B%AE">(4) 选中classes,添加Module Output,选择自己的web项目</a></li>
-<li><a href="#5-%E6%B7%BB%E5%8A%A0jar%E5%8C%85%E9%80%89%E4%B8%ADlib%E7%9B%AE%E5%BD%95%E5%90%8E%E6%B7%BB%E5%8A%A0jar%E5%8C%85%E6%96%87%E4%BB%B6">(5) 添加jar包,选中lib目录后添加jar包文件</a></li>
-<li><a href="#6-%E6%B7%BB%E5%8A%A0hellohtml%E4%B8%8Ewebxml">(6) 添加Hello.html与web.xml</a></li>
-<li><a href="#7-%E6%89%93%E5%8C%85build-build-artifacts">(7) 打包,Build-&gt;Build Artifacts</a></li>
-<li><a href="#8-%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">(8) 上传到服务器</a></li>
-<li><a href="#9-%E6%B5%8B%E8%AF%95">(9) 测试</a></li>
+<li><a href="#41-%E5%88%9B%E5%BB%BAusersql">4.1 创建user.sql</a></li>
+<li><a href="#42-%E5%AF%BC%E5%85%A5%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93">4.2 导入到数据库</a></li>
 </ul>
 </li>
-<li><a href="#8%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E9%83%A8%E5%88%86">8.前端页面部分</a>
+<li><a href="#5-%E5%90%8E%E7%AB%AF%E9%83%A8%E5%88%86">5 后端部分</a>
 <ul>
-<li><a href="#1-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">(1) 新建工程</a></li>
-<li><a href="#2-mainactivityjava">(2) MainActivity.java</a></li>
-<li><a href="#3-userservicejava">(3) UserService.java</a></li>
-<li><a href="#4-activity_mainxml">(4) activity_main.xml</a></li>
+<li><a href="#51-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">5.1 创建项目</a></li>
+<li><a href="#52-%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96%E5%BA%93">5.2 添加依赖库</a></li>
+<li><a href="#53-%E5%88%9B%E5%BB%BA%E5%8C%85%E4%B8%8E%E7%B1%BB">5.3 创建包与类</a></li>
+<li><a href="#54-dbutils">5.4 DBUtils</a></li>
+<li><a href="#55-user">5.5 User</a></li>
+<li><a href="#56-userdao">5.6 UserDao</a></li>
+<li><a href="#57-signin%E4%B8%8Esignup">5.7 SignIn与SignUp</a></li>
+<li><a href="#58-%E6%B7%BB%E5%8A%A0servlet%E5%88%B0webxml">5.8 添加servlet到web.xml</a></li>
+<li><a href="#59-hellohtml%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6">5.9 Hello.html测试文件</a></li>
 </ul>
 </li>
-<li><a href="#9%E6%B5%8B%E8%AF%95">9.测试</a>
+<li><a href="#6-%E6%89%93%E5%8C%85%E5%8F%91%E5%B8%83">6 打包发布</a>
 <ul>
-<li><a href="#1-%E6%B3%A8%E5%86%8C%E6%B5%8B%E8%AF%95">(1) 注册测试</a></li>
-<li><a href="#2-%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">(2) 登录测试</a></li>
+<li><a href="#61-project-structure-artifacts-web-applicationarchive">6.1 Project Structure-&gt;Artifacts-&gt;Web Application:Archive</a></li>
+<li><a href="#62-%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95%E5%B9%B6%E6%B7%BB%E5%8A%A0%E6%A8%A1%E5%9D%97">6.2 创建目录并添加模块</a></li>
+<li><a href="#63-%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96%E5%BA%93%E4%B8%8E%E5%85%B6%E4%BB%96%E6%96%87%E4%BB%B6">6.3 添加依赖库与其他文件</a></li>
+<li><a href="#64-%E6%89%93%E5%8C%85">6.4 打包</a></li>
+<li><a href="#65-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">6.5 上传测试</a></li>
 </ul>
 </li>
-<li><a href="#10%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">10.注意事项</a>
+<li><a href="#7-android%E7%AB%AF">7 Android端</a>
 <ul>
-<li><a href="#1-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81%E4%B8%80%E5%AE%9A%E8%A6%81%E8%AE%BE%E7%BD%AE%E6%AD%A3%E7%A1%AE%E8%A6%81%E4%B8%8D%E7%84%B6%E4%BC%9A%E8%BF%99%E6%A0%B7%E6%8F%90%E7%A4%BA">(1) 数据库的用户名和密码一定要设置正确,要不然会这样提示</a></li>
-<li><a href="#2-%E7%BD%91%E7%BB%9C%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98">(2) 网络权限问题</a></li>
-<li><a href="#3-%E9%98%B2%E7%81%AB%E5%A2%99%E9%97%AE%E9%A2%98">(3) 防火墙问题</a></li>
-<li><a href="#4-%E4%BD%BF%E7%94%A8http%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">(4) 使用HTTP注意事项</a><br>
-*<br>
-*<br>
-* <a href="#1-%E4%BD%BF%E7%94%A8https">1 使用HTTPS</a><br>
-* <a href="#2-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%9A%84androidmanifestxml%E4%BD%BF%E5%85%B6%E5%85%81%E8%AE%B8http%E8%BF%9E%E6%8E%A5">2 修改默认的AndroidManifest.xml使其允许HTTP连接</a></li>
-<li><a href="#5-%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98">(5) 线程问题</a></li>
-<li><a href="#6-avd%E9%97%AE%E9%A2%98">(6) AVD问题</a></li>
+<li><a href="#71-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">7.1 新建工程</a></li>
+<li><a href="#72-mainactivityjava">7.2 MainActivity.java</a></li>
+<li><a href="#73-userservicejava">7.3 UserService.java</a></li>
+<li><a href="#74-activity_mainxml">7.4 activity_main.xml</a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%B5%8B%E8%AF%95">8 测试</a>
+<ul>
+<li><a href="#81-%E6%B3%A8%E5%86%8C%E6%B5%8B%E8%AF%95">8.1 注册测试</a></li>
+<li><a href="#82-%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">8.2 登录测试</a></li>
+</ul>
+</li>
+<li><a href="#9-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">9 注意事项</a>
+<ul>
+<li><a href="#91-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%A8%E6%88%B7%E5%90%8D%E4%B8%8E%E5%AF%86%E7%A0%81">9.1 数据库用户名与密码</a></li>
+<li><a href="#92-%E7%BD%91%E7%BB%9C%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98">9.2 网络权限问题</a></li>
+<li><a href="#93-%E9%98%B2%E7%81%AB%E5%A2%99%E9%97%AE%E9%A2%98">9.3 防火墙问题</a></li>
+<li><a href="#94-http%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">9.4 HTTP注意事项</a></li>
+<li><a href="#95-%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98">9.5 线程问题</a></li>
+<li><a href="#96-avd%E9%97%AE%E9%A2%98">9.6 AVD问题</a></li>
+</ul>
+</li>
+<li><a href="#10-%E6%BA%90%E7%A0%81%E4%B8%8Ejar%E5%8C%85">10 源码与JAR包</a>
+<ul>
+<li><a href="#101-jar%E5%8C%85">10.1 JAR包</a></li>
+<li><a href="#102-%E6%BA%90%E7%A0%81">10.2 源码</a></li>
 </ul>
 </li>
 <li><a href="#11-%E6%9C%80%E5%90%8E">11 最后</a></li>
+<li><a href="#12-%E5%8F%82%E8%80%83%E7%BD%91%E7%AB%99">12 参考网站</a></li>
 </ul>
 </p>
-<h1 id="1背景">1.背景</h1>
-<p>开发一个app与后台数据库交互,基于mysql+jdbc+tomcat,没有使用DBUtils或jdbc框架,纯粹底层jdbc实现.<br>
-以后逐步改用Spring框架,优化mysql,进一步部署tomcat等等,现在项目刚刚起步,还有很多不懂的东西,得慢慢来......<br>
-这几天踩了很多坑,说得夸张点真是踩到我没有知觉,希望能帮助别人少踩坑...</p>
-<h1 id="2开发环境">2.开发环境</h1>
+<h1 id="20200623-更新">2020.06.23 更新</h1>
+<h1 id="1-背景">1 背景</h1>
+<p>开发一个app与后台数据库交互,基于MySQL+原生JDBC+Tomcat,没有使用DBUtils或JDBC框架,纯粹底层jdbc实现.<br>
+以后逐步改用Spring框架,优化MySQL,进一步部署Tomcat等等,现在项目刚刚起步,还有很多不懂的东西,得慢慢来......<br>
+这几天踩了很多坑,说得夸张点真是踩到笔者没有知觉,希望能帮助别人少踩坑...</p>
+<h1 id="2-开发环境">2 开发环境</h1>
 <ul>
-<li>系统 : win10</li>
-<li>IDE : Android Studio 3.5.1,IntelliJ IDEA 2019.02</li>
-<li>DBMS : Mysql 8.0.17</li>
-<li>web服务器: tomcat9</li>
+<li>本地Win</li>
+<li>服务器CentOS 7</li>
+<li>Android Studio 3.5.1</li>
+<li>IntelliJ IDEA 2019.02</li>
+<li>MySQL 8.0.17</li>
+<li>Tomcat 9.0.26</li>
 </ul>
-<h1 id="3相关资源">3.相关资源</h1>
+<h1 id="3-准备环境">3 准备环境</h1>
+<p>说一下MySQL与Tomcat的安装.</p>
+<h2 id="31-安装mysql">3.1 安装MySQL</h2>
+<p>这个是目前比较新的MySQL版本.<br>
+服务器系统是CentOS.<br>
+其他系统安装看这里:</p>
 <ul>
-<li>
-<p>1.相关jar包:<br>
-<a href="https://jar-download.com/download-handling.php">mysqlV8.0.17驱动</a>(注意这个要与自己的mysql版本对应)<br>
-<a href="https://search.maven.org/search?q=a:javax.servlet-api">java-servlet-api-V4.0.1</a><br>
-其他版本可以来这里搜索下载<br>
-<a href="https://search.maven.org/">Maven仓库</a></p>
-</li>
-<li>
-<p>2.<a href="https://github.com/2293736867/AndroidWebMysql">github</a><br>
-这是源码地址,包括前后端与建表等所有代码.<br>
-(欢迎star)</p>
-</li>
-<li>
-<p>3.<a href="https://gitee.com/imykr/AndroidWebMysql">码云</a><br>
-这也是源码地址</p>
-</li>
+<li><a href="https://blog.csdn.net/very666/article/details/98594227">Win10</a></li>
+<li><a href="https://blog.csdn.net/wm609972715/article/details/83759266">Ubuntu</a></li>
+<li><a href="https://blog.csdn.net/LaySwift/article/details/81036746">Fedroa</a></li>
+<li><a href="https://www.cnblogs.com/levia/p/11396512.html">ReaHat</a></li>
 </ul>
-<h1 id="4配置开发环境">4.配置开发环境</h1>
-<p>IDE就不说了,重点说一下mysql与tomcat9的安装</p>
-<h2 id="一-安装mysql8017">一. 安装Mysql8.0.17</h2>
-<p>这个是目前比较新的mysql版本.</p>
-<p>服务器系统是centos<br>
-其他系统安装看这里</p>
-<ul>
-<li><a href="https://blog.csdn.net/very666/article/details/98594227">win10</a></li>
-<li><a href="https://blog.csdn.net/wm609972715/article/details/83759266">ubuntu</a></li>
-<li><a href="https://blog.csdn.net/LaySwift/article/details/81036746">fedroa</a></li>
-<li><a href="https://www.cnblogs.com/levia/p/11396512.html">reahat</a></li>
-</ul>
-<p>centos使用yum命令安装<a href="https://www.cnblogs.com/hujiapeng/p/9124298.html">(参考链接)</a></p>
-<h2 id="1-下载mysql">(1) 下载mysql</h2>
+<p>CentOS使用yum命令安装:</p>
+<h3 id="311-下载并安装mysql">3.1.1 下载并安装mysql</h3>
 <pre><code class="language-bash">sudo yum localinstall https://repo.mysql.com//mysql80-community-release-el7-1.noarch.rpm
+sudo yum install mysql-community-server
 </code></pre>
-<h2 id="2-安装mysql">(2) 安装mysql</h2>
-<pre><code class="language-bash">sudo yum install mysql-community-server
-</code></pre>
-<h2 id="3-启动服务">(3) 启动服务</h2>
+<h3 id="312-启动服务并查看初始化密码">3.1.2 启动服务并查看初始化密码</h3>
 <pre><code class="language-bash">sudo service mysqld start
+sudo grep 'temporary password' /var/log/mysqld.log
 </code></pre>
-<h2 id="4-查看初始化密码用于下一步设置自己的root密码">(4) 查看初始化密码,用于下一步设置自己的root密码</h2>
-<pre><code class="language-bash">sudo grep 'temporary password' /var/log/mysqld.log
-</code></pre>
-<h2 id="5-本地使用root登录">(5) 本地使用root登录</h2>
+<h3 id="313-修改密码">3.1.3 修改密码</h3>
+<p>首先使用root登录:</p>
 <pre><code class="language-bash">mysql -u root -p
 </code></pre>
-<p>输入上一步看到的密码</p>
-<h2 id="6-更改密码">(6) 更改密码</h2>
+<p>输入上一步看到的密码,接着使用alter修改密码:</p>
 <pre><code class="language-bash">alter mysql.user 'root'@'localhost' identified by 'password';
 </code></pre>
-<p>注意新版本的mysql不能使用太弱的密码<br>
-如果出现如下提示<br>
+<p>注意新版本的MySQL不能使用太弱的密码.<br>
+如果出现如下提示:<br>
 <img src="https://img-blog.csdnimg.cn/20191011203406645.jpg" alt="在这里插入图片描述" loading="lazy"><br>
-则说明密码太弱了,请使用一个更高强度的密码</p>
-<h2 id="7-允许外部访问">(7) 允许外部访问</h2>
+则说明密码太弱了,请使用一个更高强度的密码.</p>
+<h3 id="314-允许外部访问">3.1.4 允许外部访问</h3>
 <pre><code class="language-bash">use mysql;
 update user set host='%' where user='root';
 </code></pre>
-<p>这个可以根据自己的需要去修改,host='%'表明允许所有的ip登录,也可以设置特定的ip,若使用host='%'的话建议新建一个用户配置相应的权限.</p>
-<h2 id="8-配置防火墙可选">(8) 配置防火墙(可选)</h2>
-<p>由于作者使用的是阿里云的服务器,没配置防火墙的话远程连接不上,因此需要手动配置,如图<br>
-<img src="https://img-blog.csdnimg.cn/20191011204036860.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20191011204050697.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+<p>这个可以根据自己的需要去修改,<code>host='%'</code>表明允许所有的ip登录,也可以设置特定的ip,若使用<code>host='%'</code>的话建议新建一个用户配置相应的权限.</p>
+<h3 id="315-配置防火墙可选">3.1.5 配置防火墙(可选)</h3>
+<p>一般来说需要在对应的云厂商的防火墙配置中开启响应端口,如图:<br>
+<img src="https://img-blog.csdnimg.cn/20191011204036860.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191011204050697.jpg" alt="在这里插入图片描述" loading="lazy"><br>
 <img src="https://img-blog.csdnimg.cn/20191011204059183.jpg" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20191011204106298.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
-<p>其中授权对象可以根据自己的需要更改,0.0.0.0/0表示允许所有的ip.</p>
-<p><br><br></p>
-<h2 id="二安装tomcat9">二.安装tomcat9</h2>
-<h2 id="1-先去官网下载下载后上传文件到服务器">(1) 先去<a href="http://tomcat.apache.org/">官网</a>下载,下载后上传文件到服务器</h2>
-<p><img src="https://img-blog.csdnimg.cn/20191012183713584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20191012183728606.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-作者使用的是scp命令,<a href="https://www.cnblogs.com/leeeel/p/10847983.html">不会的可以看这里</a></p>
+<img src="https://img-blog.csdnimg.cn/20191011204106298.jpg" alt="在这里插入图片描述" loading="lazy"><br>
+其中授权对象可以根据自己的需要更改,<code>0.0.0.0/0</code>表示允许所有的ip.</p>
+<h2 id="32-安装tomcat">3.2 安装Tomcat</h2>
+<h3 id="321-下载并上传到服务器">3.2.1 下载并上传到服务器</h3>
+<p>先去<a href="http://tomcat.apache.org/">官网</a>下载,下载后上传文件到服务器:<br>
+<img src="https://img-blog.csdnimg.cn/20191012183713584.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012183728606.png" alt="在这里插入图片描述" loading="lazy"><br>
+笔者使用的是scp命令,<a href="https://www.cnblogs.com/leeeel/p/10847983.html">使用不熟练的可以戳这里看看</a></p>
 <pre><code class="language-bash">scp apache-tomcat-xxxx.tar.gz username@xx.xx.xx.xx:/
 </code></pre>
-<p>改成自己的用户名和ip</p>
-<h2 id="2-连接到服务器解压压缩包">(2) 连接到服务器,解压压缩包</h2>
+<p>改成自己的用户名和ip.</p>
+<h3 id="322-解压">3.2.2 解压</h3>
+<p>ssh连接到服务器,接着移动到<code>/usr/local</code>并解压:</p>
 <pre><code class="language-bash">mkdir /usr/local/tomcat
 mv apache-tomcat-xxxx.tar.gz /usr/local/tomcat
 tar -xzvf apache-tomcat-xxx.tar.gz
 </code></pre>
-<h2 id="3-修改tomcat默认端口可选">(3) 修改tomcat默认端口(可选)</h2>
-<p>修改conf/server.xml文件,一般只需修改</p>
+<h3 id="323-修改默认端口可选">3.2.3 修改默认端口(可选)</h3>
+<p>修改<code>conf/server.xml</code>文件,一般只需修改</p>
 <pre><code class="language-xml">&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot; connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;
 </code></pre>
-<p>中的8080端口,修改这个端口即可<br>
-这个懒的话(比如作者)可以不改</p>
-<h2 id="4-启动tomcat">(4) 启动tomcat</h2>
-<p>运行bin目录下的startup.sh</p>
+<p>中的8080端口,修改这个端口即可.<br>
+需要的话自行更改.<br>
+<s>笔者这么懒的是不会更改的.</s></p>
+<h3 id="324-启动">3.2.4 启动</h3>
+<p>运行<code>bin</code>目录下的<code>startup.sh</code>:</p>
 <pre><code class="language-bash">cd bin
 ./startup.sh
 </code></pre>
-<h2 id="5-测试">(5) 测试</h2>
-<p>浏览器输入</p>
+<h3 id="325-测试">3.2.5 测试</h3>
+<p>浏览器输入:</p>
 <pre><code class="language-bash">服务器IP:端口
 </code></pre>
-<p>若出现<br>
-<img src="https://img-blog.csdnimg.cn/20191012175944240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+<p>若出现:<br>
+<img src="https://img-blog.csdnimg.cn/20191012175944240.png" alt="在这里插入图片描述" loading="lazy"><br>
 则表示成功.</p>
-<h2 id="6开机启动">(6)开机启动</h2>
-<p>建议配置开机启动,修改/etc/rc.local文件</p>
-<pre><code class="language-bash">vim /etc/rc.local
-添加
-sh /usr/local/tomcat/bin/startup.sh
+<h3 id="326-开机启动可选">3.2.6 开机启动(可选)</h3>
+<p>建议配置开机启动,修改<code>/etc/rc.local</code>文件,添加:</p>
+<pre><code class="language-bash">sh /usr/local/tomcat/bin/startup.sh
 </code></pre>
-<p>这个根据自己的tomcat安装路径修改,指定bin下的startup.sh即可</p>
-<h1 id="5建库建表">5.建库建表</h1>
-<p>创建用户表,这里简化操作(好吧我喜欢偷懒)就不创建新用户不授权了<br>
+<p>这个根据自己的Tomcat安装路径修改,指定<code>bin</code>下的<code>startup.sh</code>即可.</p>
+<h1 id="4-建库建表">4 建库建表</h1>
+<p>创建用户表,这里简化操作(好吧笔者就是喜欢偷懒)就不创建新用户不授权了.<br>
 这是一个在本地用root登录的示例,请根据实际情况创建并授权用户.</p>
-<h2 id="1-创建usersql">(1) 创建user.sql</h2>
+<h2 id="41-创建usersql">4.1 创建user.sql</h2>
 <pre><code class="language-sql">CREATE DATABASE userinfo;
 USE userinfo;
 CREATE TABLE user
@@ -337,50 +320,44 @@ CREATE TABLE user
     password    CHAR(30)    NULL
 );
 </code></pre>
-<h2 id="2-导入到数据库">(2) 导入到数据库</h2>
+<h2 id="42-导入到数据库">4.2 导入到数据库</h2>
 <pre><code class="language-bash">mysql -u root -p &lt; user.sql
 </code></pre>
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2019101219043336.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6后端部分">6.后端部分</h1>
-<h2 id="1-创建项目">(1) 创建项目</h2>
-<p>选择web application<br>
-<img src="https://img-blog.csdnimg.cn/20191012190950456.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-选好路径,改好名字后finish<br>
-<img src="https://img-blog.csdnimg.cn/20191012191108974.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="2-添加jar包">(2) 添加jar包</h2>
-<p>创建一个叫lib的目录<br>
-<img src="https://img-blog.csdnimg.cn/20191012191304154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-添加两个jar包:<br>
-mysql-connector-java-8.0.17.jar<br>
-javax.servlet-api-4.0.1.jar<br>
-<img src="https://img-blog.csdnimg.cn/20191012191334571.png" alt="在这里插入图片描述" loading="lazy"><br>
-打开Project Structure<br>
-<img src="https://img-blog.csdnimg.cn/2019101219254063.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-Modules--&gt;  +  --&gt;  JARs or directories<br>
-<img src="https://img-blog.csdnimg.cn/20191012192548349.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-选择刚才新建的lib下的两个jar包<br>
-<img src="https://img-blog.csdnimg.cn/20191012192658119.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-打勾,apply<br>
-<img src="https://img-blog.csdnimg.cn/20191012192747677.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="3-创建包与类">(3) 创建包与类</h2>
+<h1 id="5-后端部分">5 后端部分</h1>
+<h2 id="51-创建项目">5.1 创建项目</h2>
+<p>选择<code>Web Application</code>:<br>
+<img src="https://img-blog.csdnimg.cn/20191012190950456.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012191108974.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="52-添加依赖库">5.2 添加依赖库</h2>
+<p>创建一个叫lib的目录:<br>
+<img src="https://img-blog.csdnimg.cn/20191012191304154.png" alt="在这里插入图片描述" loading="lazy"><br>
+添加两个jar包(jar包在文末提供下载链接):</p>
+<ul>
+<li>mysql-connector-java-8.0.17.jar</li>
+<li>javax.servlet-api-4.0.1.jar</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20191012191334571.png" alt="在这里插入图片描述" loading="lazy"><br>
+打开Project Structure:<br>
+<img src="https://img-blog.csdnimg.cn/2019101219254063.png" alt="在这里插入图片描述" loading="lazy"><br>
+<code>Modules --&gt; + --&gt; JARs or directories</code>:<br>
+<img src="https://img-blog.csdnimg.cn/20191012192548349.png" alt="在这里插入图片描述" loading="lazy"><br>
+选择刚才新建的lib下的两个jar包:<br>
+<img src="https://img-blog.csdnimg.cn/20191012192658119.png" alt="在这里插入图片描述" loading="lazy"><br>
+打勾,apply:<br>
+<img src="https://img-blog.csdnimg.cn/20191012192747677.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="53-创建包与类">5.3 创建包与类</h2>
 <p>总共4个包</p>
 <ul>
-<li>com.servlet<br>
-用于处理来自前端的请求,包含SignUp.java,SignIn.java</li>
-<li>com.util<br>
-主要功能是数据库连接,包含DBUtils.java</li>
-<li>com.entity<br>
-用户类,包含User.java</li>
-<li>com.dao<br>
-操作用户类的类,包含UserDao.java<br>
-<img src="https://img-blog.csdnimg.cn/2019101219191645.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></li>
+<li><code>com.servlet</code>:用于处理来自前端的请求,包含<code>SignUp.java</code>,<code>SignIn.java</code></li>
+<li><code>com.util</code>:主要功能是数据库连接,包含<code>DBUtils.java</code></li>
+<li><code>com.entity</code>:实体类,包含<code>User.java</code></li>
+<li><code>com.dao</code>:操作用户类的类,包含<code>UserDao.java</code></li>
 </ul>
-<h2 id="4-先来处理dbutils类">(4) 先来处理DBUtils类</h2>
-<p>这个是连接数据库的类,纯粹的底层jdbc实现,注意驱动版本.</p>
-<pre><code class="language-java">package com.util;
-import java.sql.*;
-
-public class DBUtils {
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2019101219191645.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="54-dbutils">5.4 DBUtils</h2>
+<p>连接数据库的类,纯粹的底层jdbc实现,注意驱动版本.</p>
+<pre><code class="language-java">public class DBUtils {
 
     private static Connection connection = null;
     public static Connection getConnection()
@@ -420,60 +397,25 @@ public class DBUtils {
 String usename = &quot;账号&quot;;
 String password = &quot;密码&quot;;
 </code></pre>
-<p>这几行根据自己的用户名,密码,服务器ip和库名修改</p>
-<p><strong>注意,mysql8.0以上使用的注册驱动的语句是</strong></p>
+<p>这几行根据自己的用户名,密码,服务器ip和库名修改.<br>
+<strong>注意,MySQL 8.0以上使用的注册驱动的语句是</strong>:</p>
 <pre><code class="language-java">Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);
 </code></pre>
-<p><strong>旧版的是</strong></p>
+<p><strong>旧版的是</strong>:</p>
 <pre><code class="language-java">Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
 </code></pre>
-<p>注意对应.</p>
-<h2 id="5-接下来处理user类">(5) 接下来处理User类</h2>
-<p>User类比较简单,就是就三个字段与getter,setter</p>
-<pre><code class="language-java">package com.entity;
-
-public class User {
+<h2 id="55-user">5.5 User</h2>
+<p>User类比较简单,就是就三个字段与getter,setter:</p>
+<pre><code class="language-java">public class User {
     private int id;
     private String name;
     private String password;
-    
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    //三个getter与三个setter
+    //...
 }
 </code></pre>
-<h2 id="6-接下来是userdao">(6) 接下来是UserDao</h2>
-<pre><code class="language-java">package com.dao;
-
-import com.entity.User;
-import com.util.DBUtils;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-public class UserDao {
+<h2 id="56-userdao">5.6 UserDao</h2>
+<pre><code class="language-java">public class UserDao {
     public boolean query(User user)
     {
         Connection connection = DBUtils.getConnection();
@@ -518,24 +460,21 @@ public class UserDao {
 }
 </code></pre>
 <p>主要就是查询与添加操作,查询操作中存在该用户就返回true,否则返回false<br>
-添加操作中使用executeUpdate()与getUpdateCount() != 0.注意不能直接使用</p>
+添加操作中使用<code>executeUpdate()</code>与<code>getUpdateCount() != 0</code>.注意不能直接使用</p>
 <pre><code class="language-java"> return preparedStatement.execute();
 </code></pre>
 <p>去代替</p>
 <pre><code class="language-java">preparedStatement.executeUpdate();
 return preparedStatement.getUpdateCount() != 0;
 </code></pre>
-<p>咋一看好像没有什么问题,那天晚上我测试的时候问题可大了,android那边显示注册失败,但是数据库这边的却insert进去了.........我......<br>
-好吧说多了都是泪,还是函数用得不够熟练.<br><br></p>
+<p>咋一看好像没有什么问题,那天晚上笔者测试的时候问题可大了,android那边显示注册失败,但是数据库这边的却insert进去了.........这.....<br>
+好吧说多了都是泪,还是函数用得不够熟练.</p>
 <ul>
-<li>一般来说select使用executeQuery()<br>
-executeQuery()返回ResultSet,表示结果集,保存了select语句的执行结果,配合next()使用</li>
-<li>delete,insert,update使用executeUpdate()<br>
-executeUpdate()返回的是一个整数,表示受影响的行数,即delete,insert,update修改的行数,对于drop,create操作返回0</li>
-<li>create,drop使用execute()<br>
-execute()的返回值是这样的:
+<li>一般来说<code>select</code>使用<code>executeQuery()</code>,<code>executeQuery()</code>返回<code>ResultSet</code>,表示结果集,保存了<code>select</code>语句的执行结果,配合<code>next()</code>使用</li>
+<li><code>delete</code>,<code>insert</code>,<code>update</code>使用<code>executeUpdate()</code>,<code>executeUpdate()</code>返回的是一个整数,表示受影响的行数,即<code>delete</code>,<code>insert</code>,<code>update</code>修改的行数,对于<code>drop</code>,<code>create</code>操作返回0</li>
+<li><code>create</code>,<code>drop</code>使用<code>execute()</code>,<code>execute()</code>的返回值是这样的:
 <ul>
-<li>如果第一个结果是ResultSet对象,则返回true</li>
+<li>如果第一个结果是<code>ResultSet</code>对象,则返回true</li>
 <li>如果第一个结果是更新计数或者没有结果则返回false</li>
 </ul>
 </li>
@@ -543,25 +482,13 @@ execute()的返回值是这样的:
 <p>所以在这个例子中</p>
 <pre><code class="language-java"> return preparedStatement.execute();
 </code></pre>
-<p>肯定返回false,所以才会数据库这边insert进去,但前端显示注册失败(这个bug作者找了很久......)</p>
-<h2 id="7-servlet包的signin与signup类">(7) servlet包的SignIn与SignUp类</h2>
-<p>SingIn类用于处理登录,调用jdbc查看数据库是否有对应的用户<br>
-SignUp类用于处理注册,把user添加到数据库中<br>
-这两个使用的是http连接,后期作者会采用https加密连接.</p>
-<p>SignIn.java</p>
-<pre><code class="language-java">package com.servlet;
-
-import com.dao.UserDao;
-import com.entity.User;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-@WebServlet(&quot;/SignIn&quot;)
+<p>肯定返回false,所以才会数据库这边insert进去,但前端显示注册失败(这个bug笔者找了是真的久......)</p>
+<h2 id="57-signin与signup">5.7 SignIn与SignUp</h2>
+<p><code>servlet</code>包的<code>SingIn</code>类用于处理登录,调用JDBC查看数据库是否有对应的用户.<br>
+<code>SignUp</code>类用于处理注册,把User添加到数据库中.<br>
+目前使用的是HTTP连接,后期会考虑添加HTTPS支持.</p>
+<p><code>SignIn.java</code>如下:</p>
+<pre><code class="language-java">@WebServlet(&quot;/SignIn&quot;)
 public class SingIn extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException,ServletException
@@ -594,29 +521,16 @@ public class SingIn extends HttpServlet {
 </code></pre>
 <pre><code class="language-java">@WebServlet(&quot;/SignIn&quot;)
 </code></pre>
-<p>这行代码表示这是一个名字叫SignIn的servlet,可用于实现servlet与url的映射,如果不在这里添加这个注解,则需要在WEB-INF目录下的web.xml添加一个</p>
-<pre><code class="language-xml">&lt;servlet-mapping&gt;
-</code></pre>
-<p>叫servlet的映射</p>
+<p>首先是<code>@WebServlet</code>注解,表示这是一个名字叫<code>SignIn</code>的<code>servlet</code>,可用于实现servlet与url的映射,如果不在这里添加这个注解,则需要在<code>WEB-INF</code>目录下的<code>web.xml</code>添加一个<code>&lt;servlet-mapping&gt;</code>,也就是叫servlet的映射.</p>
+<p>接着设置响应类型与编码:</p>
 <pre><code class="language-java">httpServletResponse.setContentType(&quot;text/plain;charset=utf-8&quot;);//设置相应类型为html,编码为utf-8
 </code></pre>
-<p>这行代码设置响应类型与编码</p>
+<p><code>HttpServletRequest.getParameter(String name)</code>方法表示根据name获取相应的参数:</p>
 <pre><code class="language-java">String name = httpServletRequest.getParameter(&quot;name&quot;);
 String password = httpServletRequest.getParameter(&quot;password&quot;);
 </code></pre>
-<p>HttpServletRequest.getParameter(String name)方法表示根据name获取相应的参数</p>
-<p>下面是SignUp.java</p>
-<pre><code class="language-java">package com.servlet;
-
-import com.dao.UserDao;
-import com.entity.User;
-
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.io.IOException;
-
-@WebServlet(&quot;/SignUp&quot;)
+<p>下面是<code>SignUp.java</code>:</p>
+<pre><code class="language-java">@WebServlet(&quot;/SignUp&quot;)
 public class SignUp extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws IOException,ServletException
@@ -645,9 +559,8 @@ public class SignUp extends HttpServlet {
         }
     }
 }
-
 </code></pre>
-<h2 id="8-添加servlet到webxml">(8) 添加servlet到web.xml</h2>
+<h2 id="58-添加servlet到webxml">5.8 添加servlet到web.xml</h2>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
@@ -664,21 +577,20 @@ public class SignUp extends HttpServlet {
     &lt;/servlet&gt;
 &lt;/web-app&gt;
 </code></pre>
-<p>要把刚才创建的Servlet添加进web.xml,在&lt;servlet&gt;中添加子元素&lt;servlet-name&gt;与&lt;servlet-class&gt;<br>
-&lt;servlet-name&gt;是Servlet的名字,最好与类名一致.<br>
-&lt;servlet-class&gt;是Servlet类的位置.<br>
-如果在Servlet类中没有添加</p>
-<pre><code class="language-java">@WebServlet(&quot;/xxxx&quot;)
-</code></pre>
-<p>这个注解,则需要在web.xml中添加</p>
+<p>要把刚才创建的Servlet添加进<code>web.xml</code>,在<code>&lt;servlet&gt;</code>中添加子元素<code>&lt;servlet-name&gt;</code>与<code>&lt;servlet-class&gt;</code>:</p>
+<ul>
+<li><code>&lt;servlet-name&gt;</code>是Servlet的名字,最好与类名一致</li>
+<li><code>&lt;servlet-class&gt;</code>是Servlet类的位置</li>
+</ul>
+<p>如果在Servlet类中没有添加<code>@WebServlet(&quot;/xxxx&quot;)</code>注解,则需要在<code>web.xml</code>中添加:</p>
 <pre><code class="language-xml">&lt;servlet-mapping&gt;
 	&lt;servlet-name&gt;SignIn&lt;/servlet-name&gt;
 	&lt;url-pattern&gt;/SignIn&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
 </code></pre>
-<p>其中&lt;servlet-name&gt;与&lt;servlet&gt;中的子元素&lt;servlet-name&gt;中的值一致<br>
-&lt;url-pattern&gt;是访问的路径</p>
-<h2 id="9-最后添加一个叫hellohtml的html文件用于测试">(9) 最后添加一个叫Hello.html的html文件用于测试.</h2>
+<p>其中<code>&lt;servlet-name&gt;</code>与<code>&lt;servlet&gt;</code>中的子元素<code>&lt;servlet-name&gt;</code>中的值一致,<code>&lt;url-pattern&gt;</code>是访问的路径.</p>
+<h2 id="59-hellohtml测试文件">5.9 Hello.html测试文件</h2>
+<p>最后添加一个叫<code>Hello.html</code>的HTML测试文件.</p>
 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
     &lt;head&gt;
         &lt;meta charset=&quot;utf-8&quot;&gt;
@@ -689,53 +601,42 @@ public class SignUp extends HttpServlet {
     &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-<p><br><br><br></p>
-<h1 id="7打包发布">7.打包发布</h1>
-<p>作者用的是IDEA,<a href="https://blog.csdn.net/xiongyouqiang/article/details/79141047">Eclipse的打包请看这里</a></p>
-<h2 id="1-打开project-structure">(1) 打开project structure</h2>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20191012182046795.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="2-选择artifactsweb-applicationarchive">(2) 选择Artifacts,Web Application:Archive</h2>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20191012182136777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="3-改名字创建web-inf目录与子目录classes">(3) 改名字,创建WEB-INF目录与子目录classes</h2>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20191012182427780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="4-选中classes添加module-output选择自己的web项目">(4) 选中classes,添加Module Output,选择自己的web项目</h2>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20191012182600529.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="5-添加jar包选中lib目录后添加jar包文件">(5) 添加jar包,选中lib目录后添加jar包文件</h2>
-<p>(那个lib文件夹被挡住了.....)<br>
-<img src="https://img-blog.csdnimg.cn/20191012182731373.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="6-添加hellohtml与webxml">(6) 添加Hello.html与web.xml</h2>
-<p>web.xml这个需要在WEB-INF目录里,Hello.html在WEB-INF外面<br>
+<h1 id="6-打包发布">6 打包发布</h1>
+<p>笔者用的IDEA,<a href="https://blog.csdn.net/xiongyouqiang/article/details/79141047">Eclipse的打包请看这里</a>.</p>
+<h2 id="61-project-structure-artifacts-web-applicationarchive">6.1 Project Structure-&gt;Artifacts-&gt;Web Application:Archive</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191012182046795.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012182136777.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="62-创建目录并添加模块">6.2 创建目录并添加模块</h2>
+<p>修改名字,并创建<code>WEB-INF</code>目录与子目录<code>classes</code>:<br>
+<img src="https://img-blog.csdnimg.cn/20191012182427780.png" alt="在这里插入图片描述" loading="lazy"><br>
+选中<code>classes</code>,添加<code>Module Output</code>,选择自己的web项目:<br>
+<img src="https://img-blog.csdnimg.cn/20191012182600529.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="63-添加依赖库与其他文件">6.3 添加依赖库与其他文件</h2>
+<p>添加JAR包,选中<code>lib</code>目录后添加JAR包文件:<br>
+(<code>lib</code>文件夹被挡住了不要在意细节哈...)<br>
+<img src="https://img-blog.csdnimg.cn/20191012182731373.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着添加<code>Hello.html</code>与<code>web.xml</code>,<code>web.xml</code>需要在<code>WEB-INF</code>目录里,<code>Hello.html</code>在<code>WEB-INF</code>外面:<br>
 <img src="https://img-blog.csdnimg.cn/2019101223351572.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="7-打包build-build-artifacts">(7) 打包,Build-&gt;Build Artifacts</h2>
-<p><img src="https://img-blog.csdnimg.cn/20191012183049145.png" alt="在这里插入图片描述" loading="lazy"><br>
+<h2 id="64-打包">6.4 打包</h2>
+<p><code>Build-&gt;Build Artifacts</code>:<br>
+<img src="https://img-blog.csdnimg.cn/20191012183049145.png" alt="在这里插入图片描述" loading="lazy"><br>
 <img src="https://img-blog.csdnimg.cn/20191012183056973.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="8-上传到服务器">(8) 上传到服务器</h2>
-<p>把打包好的.war文件上传到服务器的tomcat的/webapps目录下的</p>
+<h2 id="65-上传测试">6.5 上传测试</h2>
+<p>打包好的.war文件上传到服务器的Tomcat的<code>webapps</code>目录下:</p>
 <pre><code class="language-bash">scp ***.war username@xxx.xxx.xxx.xxx:/usr/local/tomcat/webapps
 </code></pre>
-<p>注意改成自己的webapps目录.</p>
-<h2 id="9-测试">(9) 测试</h2>
-<p>在浏览器输入</p>
+<p>注意改成自己的<code>webapps</code>目录.<br>
+Tomcat启动后,在浏览器输入</p>
 <pre><code class="language-bash">服务器IP:端口/项目/Hello.html
 </code></pre>
-<p>作者是在本地上开了tomcat后测试的<br>
+<p>笔者为了方便就在本地测试了:<br>
 <img src="https://img-blog.csdnimg.cn/20191012221720592.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="8前端页面部分">8.前端页面部分</h1>
-<h2 id="1-新建工程">(1) 新建工程</h2>
-<p><img src="https://img-blog.csdnimg.cn/20191012223400703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20191012223408874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="2-mainactivityjava">(2) MainActivity.java</h2>
-<pre><code class="language-java">package com.cx;
-
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-public class MainActivity extends AppCompatActivity {
+<h1 id="7-android端">7 Android端</h1>
+<h2 id="71-新建工程">7.1 新建工程</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191012223400703.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20191012223408874.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="72-mainactivityjava">7.2 MainActivity.java</h2>
+<pre><code class="language-java">public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -794,17 +695,10 @@ public class MainActivity extends AppCompatActivity {
 }
 </code></pre>
 <p>没什么好说的,就为两个Button绑定事件,然后设置两个Toast提示信息.</p>
-<h2 id="3-userservicejava">(3) UserService.java</h2>
-<pre><code class="language-java">package com.cx;
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
-public class UserService {
+<h2 id="73-userservicejava">7.3 UserService.java</h2>
+<pre><code class="language-java">public class UserService {
     public static boolean signIn(String name, String password) {
-        MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignIn&quot;,name,password);
+        MyThread myThread = new MyThread(&quot;http://本机内网IP:8080/cx/SignIn&quot;,name,password);
         try
         {
             myThread.start();
@@ -819,7 +713,7 @@ public class UserService {
     }
 
     public static boolean signUp(String name, String password) {
-        MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignUp&quot;,name,password);
+        MyThread myThread = new MyThread(&quot;http://本机内网IP:8080/cx/SignUp&quot;,name,password);
         try
         {
             myThread.start();
@@ -874,16 +768,16 @@ class MyThread extends Thread
     }
 }
 </code></pre>
-<pre><code class="language-java">MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignUp&quot;,name,password);
-MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignIn&quot;,name,password);
+<pre><code class="language-java">MyThread myThread = new MyThread(&quot;http://内网IP:8080/cx/SignUp&quot;,name,password);
+MyThread myThread = new MyThread(&quot;http://内网IP:8080/cx/SignIn&quot;,name,password);
 </code></pre>
-<p>这两行换成自己的ip,本地ip的话可以用ipconfig或ifconfig查看,修改了默认端口的话也把端口一起改了.<br>
-路径的话就是</p>
+<p>这两行换成自己的ip,内网ip的话可以用<code>ipconfig</code>或<code>ifconfig</code>查看,修改了默认端口的话也把端口一起改了.<br>
+路径的话就是:</p>
 <pre><code class="language-java">端口/web项目名/Servlet名
 </code></pre>
-<p>web项目名是再打成war包时设置的,Servlet名在web.xml中的&lt;servlet&gt;的子元素&lt;servlet-name&gt;设置,与java源码中的@WebServlet()注解中的一致</p>
-<p>另外一个要注意的就是线程问题,需要新开一个线程进行http的连接</p>
-<h2 id="4-activity_mainxml">(4) activity_main.xml</h2>
+<p>web项目名是再打成war包时设置的,Servlet名在<code>web.xml</code>中的<code>&lt;servlet&gt;</code>的子元素<code>&lt;servlet-name&gt;</code>设置,与源码中的<code>@WebServlet()</code>注解一致.</p>
+<p>另外一个要注意的就是线程问题,需要新开一个线程进行http的连接.</p>
+<h2 id="74-activity_mainxml">7.4 activity_main.xml</h2>
 <p>前端页面部分很简单,就两个button,用于验证功能.</p>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;LinearLayout
@@ -944,82 +838,91 @@ MyThread myThread = new MyThread(&quot;http://本机IP:8080/cx/SignIn&quot;,name
     &lt;/LinearLayout&gt;
 &lt;/LinearLayout&gt;
 </code></pre>
-<h1 id="9测试">9.测试</h1>
-<h2 id="1-注册测试">(1) 注册测试</h2>
+<h1 id="8-测试">8 测试</h1>
+<h2 id="81-注册测试">8.1 注册测试</h2>
 <p>随便输入用户名与密码<br>
-<img src="https://img-blog.csdnimg.cn/20191013115103777.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
-<p>查看数据库<br>
-<img src="https://img-blog.csdnimg.cn/20191013115116634.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-这里没有加密保存,后期会添加加密保存</p>
-<h2 id="2-登录测试">(2) 登录测试</h2>
-<p><img src="https://img-blog.csdnimg.cn/2019101311520422.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-perfect!</p>
-<h1 id="10注意事项">10.注意事项</h1>
-<h2 id="1-数据库的用户名和密码一定要设置正确要不然会这样提示">(1) 数据库的用户名和密码一定要设置正确,要不然会这样提示</h2>
-<p><img src="https://img-blog.csdnimg.cn/20191012234615701.png" alt="在这里插入图片描述" loading="lazy"><br>
-这个错误在加载驱动错误时也可能会出现这个错误,因此要确保打成war包时lib目录正确且jar包版本正确.<br>
-还有就是由于这个是jdbc的底层实现,注意手写的sql语句不能错<br>
-千万千万别像我这样:<br>
+<img src="https://img-blog.csdnimg.cn/20191013115103777.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看数据库:<br>
+<img src="https://img-blog.csdnimg.cn/20191013115116634.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="82-登录测试">8.2 登录测试</h2>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/2019101311520422.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="9-注意事项">9 注意事项</h1>
+<h2 id="91-数据库用户名与密码">9.1 数据库用户名与密码</h2>
+<p>数据库的用户名和密码一定要设置正确,要不然会像下图一样抛出异常:<br>
+<img src="https://img-blog.csdnimg.cn/20191012234615701.png" alt="在这里插入图片描述" loading="lazy"><br>
+在加载驱动错误时也可能会出现这个错误,因此要确保打成WAR包时<code>lib</code>目录正确且JAR包版本正确.<br>
+还有就是由于这个是JDBC的底层实现,注意手写的SQL语句不能错.<br>
+千万千万别像笔者这样:<br>
 <img src="https://img-blog.csdnimg.cn/20191013114342926.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="2-网络权限问题">(2) 网络权限问题</h2>
-<p>这个需要在AndroidManifest.xml添加网络权限</p>
+<h2 id="92-网络权限问题">9.2 网络权限问题</h2>
+<p>需要在<code>AndroidManifest.xml</code>添加网络权限:</p>
 <pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
 &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;
 &lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
 </code></pre>
-<h2 id="3-防火墙问题">(3) 防火墙问题</h2>
-<p>服务器的话一般会有相应的相应的网页界面配置,比如作者的是阿里云服务器,当然也可以手动配置iptables<br>
-修改/etc/sysconfig/iptables</p>
+<h2 id="93-防火墙问题">9.3 防火墙问题</h2>
+<p>服务器的话一般会有相应的相应的网页界面配置,当然也可以手动配置<code>iptables</code>.<br>
+修改<code>/etc/sysconfig/iptables</code></p>
 <pre><code class="language-bash">vim /etc/sysconfig/iptables
 </code></pre>
 <p>添加</p>
 <pre><code class="language-bash">-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 </code></pre>
-<p>重启iptables</p>
+<p>重启<code>iptables</code>:</p>
 <pre><code class="language-bash">service iptables restart
 </code></pre>
-<h2 id="4-使用http注意事项">(4) 使用HTTP注意事项</h2>
-<p>由于从Android P开始,google默认要求使用加密连接,即要使用HTTPS,所以会禁止使用HTTP连接<br>
-使用HTTP连接时会出现以下异常</p>
-<pre><code class="language-java"> W/System.err: java.io.IOException: Cleartext HTTP traffic to **** not permitted
- java.net.UnknownServiceException: CLEARTEXT communication ** not permitted by network security policy
+<h2 id="94-http注意事项">9.4 HTTP注意事项</h2>
+<p>由于从Android P开始,google默认要求使用加密连接,即要使用HTTPS,所以会禁止使用HTTP连接.<br>
+使用HTTP连接时会出现以下异常:</p>
+<pre><code class="language-java">W/System.err: java.io.IOException: Cleartext HTTP traffic to **** not permitted
+java.net.UnknownServiceException: CLEARTEXT communication ** not permitted by network security policy
 </code></pre>
 <p>两种建议:</p>
-<h5 id="1-使用https">1 使用HTTPS</h5>
-<h5 id="2-修改默认的androidmanifestxml使其允许http连接">2 修改默认的AndroidManifest.xml使其允许HTTP连接</h5>
-<p>在res下新建一个文件夹xml,创建一个叫network_security_config.xml的文件,文件内容如下</p>
+<ul>
+<li>使用HTTPS</li>
+<li>修改默认的AndroidManifest.xml使其允许HTTP连接</li>
+</ul>
+<p>在<code>res</code>下新建一个文件夹<code>xml</code>,创建一个叫<code>network_security_config.xml</code>的文件,文件内容如下</p>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;network-security-config&gt;
     &lt;base-config cleartextTrafficPermitted=&quot;true&quot; /&gt;
 &lt;/network-security-config&gt;
 </code></pre>
-<p>然后在AndroidMainfest.xml中加入</p>
+<p>然后在<code>AndroidMainfest.xml</code>中加入:</p>
 <pre><code class="language-xml">&lt;application
  android:networkSecurityConfig=&quot;@xml/network_security_config&quot;
 /&gt;
 </code></pre>
-<p>即可</p>
-<p>另一种办法是直接加入一句</p>
-<pre><code>android:usesCleartextTraffic=&quot;true&quot;
-</code></pre>
+<p>即可<br>
+另一种办法是在<code>AndroidManifest.xml</code>直接加入一句</p>
 <pre><code class="language-xml">&lt;application 
 android:usesCleartextTraffic=&quot;true&quot;
 /&gt;
-
 </code></pre>
-<h2 id="5-线程问题">(5) 线程问题</h2>
+<h2 id="95-线程问题">9.5 线程问题</h2>
 <p>从android4.0开始,联网不能再主线程操作,万一网络不好就会卡死,所以有关联网的操作都需要新开一个线程,不能在主线程操作.</p>
-<h2 id="6-avd问题">(6) AVD问题</h2>
-<p><img src="https://img-blog.csdnimg.cn/20191013121532711.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-这个bug作者找了很久,http连接没问题,服务器没问题,数据库没问题,前端代码没问题,然后去了stackoverflow,发现是AVD的问题,我.......<br>
-<img src="https://img-blog.csdnimg.cn/20191013121713201.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzI3NTI1NjEx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
-简单来说就是卸载了再重启AVD,居然成功了.....</p>
+<h2 id="96-avd问题">9.6 AVD问题</h2>
+<p><img src="https://img-blog.csdnimg.cn/20191013121532711.png" alt="在这里插入图片描述" loading="lazy"><br>
+这个bug笔者找了很久,HTTP连接没问题,服务器没问题,数据库没问题,前端代码没问题,然后去了StackOverflow,发现是AVD的问题....<br>
+<img src="https://img-blog.csdnimg.cn/20191013121713201.png" alt="在这里插入图片描述" loading="lazy"><br>
+简单来说就是卸载了APP再重启AVD,居然成功了.....</p>
+<h1 id="10-源码与jar包">10 源码与JAR包</h1>
+<h2 id="101-jar包">10.1 JAR包</h2>
+<ul>
+<li><a href="https://jar-download.com/download-handling.php">MySQL 8.0.17驱动</a>(注意这个要与自己的mysql版本对应)</li>
+<li><a href="https://search.maven.org/search?q=a:javax.servlet-api">java-servlet-api-4.0.1</a></li>
+</ul>
+<p>其他版本可以来<a href="https://search.maven.org/">这里</a>搜索下载.</p>
+<h2 id="102-源码">10.2 源码</h2>
+<ul>
+<li><a href="https://github.com/2293736867/AndroidWebMysql">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/AndroidWebMysql">码云</a></li>
+</ul>
 <h1 id="11-最后">11 最后</h1>
-<p>作者小白一枚,有什么不对的地方请大家指正,评论作者会好好回复的.最后分享一首歌希望你们喜欢.<br>
-<a href="https://music.163.com/#/song?id=471385043">薛之谦-暧昧</a></p>
-<p>参考网站<br>
-1.<a href="https://blog.csdn.net/Tianweidadada/article/details/79516799">Android 通过Web服务器与Mysql数据库交互</a><br>
+<p>笔者小白一枚,有什么不对的地方请大家指正,评论笔者会好好回复的.</p>
+<h1 id="12-参考网站">12 参考网站</h1>
+<p>1.<a href="https://blog.csdn.net/Tianweidadada/article/details/79516799">Android 通过Web服务器与Mysql数据库交互</a><br>
 2.<a href="https://blog.csdn.net/gengkui9897/article/details/82863966">Android高版本联网失败</a><br>
 3.<a href="https://blog.csdn.net/liujian8654562/article/details/99418954">IDEA 部署Web项目</a><br>
 4.<a href="https://blog.csdn.net/j080624/article/details/52633844">PreparedStatement的executeQuery、executeUpdate和execute</a><br>
@@ -1029,6 +932,9 @@ android:usesCleartextTraffic=&quot;true&quot;
 8.<a href="https://blog.csdn.net/wwq0813/article/details/90256058">HttpServletRequest</a><br>
 9.<a href="https://stackoverflow.com/questions/23582621/httpurlconnection-getoutputstream-throws-ioexception">HttpUrlConnection</a><br>
 10.<a href="https://stackoverflow.com/questions/56266801/java-net-socketexception-socket-failed-eperm-operation-not-permitted">java.net.socketexception</a></p>
+<p>如果觉得文章好看，欢迎点赞。</p>
+<p>同时欢迎关注微信公众号：氷泠之路。</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200325170404220.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
