@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-06-25T07:57:12.474Z</updated>
+    <updated>2020-06-26T13:57:24.827Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,483 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Kotlin学习笔记]]></title>
+        <id>https://2293736867.github.io/post/kotlin-xue-xi-bi-ji/</id>
+        <link href="https://2293736867.github.io/post/kotlin-xue-xi-bi-ji/">
+        </link>
+        <updated>2020-06-26T13:56:47.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>这篇文章首先会介绍Kotlin的特点，接着介绍Kotlin与Java的语法比较。</p>
+<h1 id="2-kotlin特点">2 Kotlin特点</h1>
+<ul>
+<li>一门现代化的编程语言</li>
+<li>可开发跨平台应用，web，Socket，安卓，js，NativeApp等</li>
+<li>静态编程语言，性能基本与原声Java相当</li>
+<li>100%兼容Java（说是兼容但实际上有些坑，可以<a href="https://blog.hlyue.com/2018/05/03/Kotlin-and-springboot/">戳这里</a>看看）</li>
+<li>简洁：跟Java相比真的是简洁很多，语法糖特别舒服</li>
+<li>安全：彻底解决写Java基本上都会遇到的著名的NullPointerException问题，结合编译器可以在编译截断发现几乎所有可能存在NPE问题的代码</li>
+<li>互操作性：基于JVM，可以直接拿现有的Java库用</li>
+<li>工具友好：和JetBrains的IDE结合简直舒服得不要不要的</li>
+<li>支持函数式编程：比如Lambda表达式</li>
+<li>支持协程：协程像是非常轻量级的县城，协程将复杂性放入库来简化异步编程，逻辑可以在协程中顺序表达，底层库负责解决异步性，很重要的一点是协程挂起不会阻塞其他线程。官方一个demo是开启10w个协程：<br>
+<img src="https://user-gold-cdn.xitu.io/2020/6/26/172f0e691032f67b?w=640&amp;h=191&amp;f=png&amp;s=39706" alt="在这里插入图片描述" loading="lazy"></li>
+<li>支持扩展函数：类似C#，能够扩展一个类的新功能而无需继承类或者使用装饰者这样的设计模式，Kotlin支持扩展函数和扩展属性</li>
+<li>泛型：当然Java也支持泛型，但是Kotlin比Java支持得更好</li>
+<li>不依赖XML</li>
+</ul>
+<p>下面进入Kotlin的语法部分。</p>
+<h1 id="3-基本语法">3 基本语法</h1>
+<ul>
+<li>无<code>;</code>结尾</li>
+<li><code>println()</code>代替<code>System.out.println();</code></li>
+<li>输出语句中使用<code>$变量名</code>代替Java中的<code>+变量名</code>，比如<code>println(&quot;age:$age&quot;)</code>而不是<code>System.out.println(&quot;age:&quot;+age)</code></li>
+<li>三引号（三个双引号连在一起）中的字符串不会进行转义</li>
+</ul>
+<h1 id="4-变量与常量">4 变量与常量</h1>
+<ul>
+<li><code>var</code>声明变量</li>
+<li><code>val</code>声明常量</li>
+<li>可以在<code>var</code>/<code>val</code>后面加上类型，比如<code>val a:Int</code></li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2020/6/26/172f0e6911d59e71?w=557&amp;h=281&amp;f=png&amp;s=119209" alt="在这里插入图片描述" loading="lazy"><br>
+如上图提示<code>val</code>不能被赋值，提示改为<code>var</code>。<code>val</code>类似与Java中的<code>final</code>，虽然<code>val</code>引用自身不可变，但是指向的对象是可以改变的。</p>
+<p><code>val</code>只能进行唯一一次初始化，如果编译器能确保只有唯一一条初始化语句被执行，可以根据条件进行不同的初始化操作：</p>
+<pre><code class="language-kotlin">val a:Int
+if (4&gt;3)
+{
+    a = 9
+}
+else
+{
+    a = 10
+}
+</code></pre>
+<h1 id="5-表达式和语句">5 表达式和语句</h1>
+<p>Java中所有的控制结构都是语句，在Kotlin中除了三大循环（<code>while</code>，<code>for</code>，<code>do while</code>）外，大多数控制结构都是表达式。比如<code>if</code>是表达式而不是语句。也就是说，<code>if</code>有值而不像Java里面一样没有值（语句）。<br>
+例子：</p>
+<pre><code class="language-kotlin">var a = if (3&gt;2) 3 else 2
+</code></pre>
+<pre><code class="language-kotlin">fun main()
+{
+    var a = max(4,9)
+}
+
+fun max(a:Int,b:Int): Int = if(a&gt;b) a else b
+</code></pre>
+<h1 id="6-枚举">6 枚举</h1>
+<p>使用<code>enum class</code>而不是Java中的<code>enum</code>：</p>
+<pre><code class="language-kotlin">fun main()
+{
+    val months = Months.May
+    println(months.days)
+}
+
+enum class Months(val days:Int)
+{
+    May(31),
+    Jun(30)
+}
+</code></pre>
+<h1 id="7-when">7 when</h1>
+<p><code>when</code>相当于Java中的<code>switch</code>：</p>
+<pre><code class="language-kotlin">fun main()
+{
+    val months = Months.May
+    when(months)
+    {
+        Months.May -&gt; print(&quot;May&quot;)
+        Months.Jun -&gt; print(&quot;June&quot;)
+    }
+}
+
+enum class Months(val days:Int)
+{
+    May(31),
+    Jun(30),;
+}
+</code></pre>
+<p>使用<code>-&gt;</code>进行了简化。</p>
+<h1 id="8-循环">8 循环</h1>
+<h2 id="81-while与do-while">8.1 while与do while</h2>
+<p>与Java一样。</p>
+<h2 id="82-for">8.2 for</h2>
+<p>使用<code>..</code>表示区间，在<code>i</code>前面没有类型：</p>
+<pre><code class="language-kotlin">for (i in 1..100)
+	print(i)
+</code></pre>
+<p>注意区间是两边都包含的，也就是<code>1..100</code>表示<code>i</code>从1循环到100。</p>
+<p>使用下标迭代：</p>
+<pre><code class="language-kotlin">val arr = arrayListOf(&quot;1111&quot;,&quot;2222&quot;,&quot;333&quot;)
+for ((i,e) in arr.withIndex())
+	println(&quot;$i = $e&quot;)
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">0 = 1111
+1 = 2222
+2 = 333
+</code></pre>
+<h1 id="9-类">9 类</h1>
+<h2 id="91-构造方法">9.1 构造方法</h2>
+<pre><code class="language-kotlin">class Person(val name:String)
+</code></pre>
+<p>不需要像Java一样<code>this.xxx=xxx</code>。</p>
+<h2 id="92-gettersetter">9.2 getter/setter</h2>
+<p>因为<code>val</code>代表常量，而<code>var</code>代表变量，setter是用于改变值的，因此，使用<code>var</code>声明的属性具有getter与setter，使用<code>val</code>声明的属性只有getter。<br>
+Kotlin没有提供直接操纵getter与setter的方式，通过使用<code>.属性名</code>进行修改属性或者获取属性：</p>
+<pre><code class="language-kotlin">class Person
+{
+	var name = &quot;&quot;
+	val id = &quot;&quot;
+}
+var person = Person()
+person.name=&quot;111&quot;
+person.id=&quot;222&quot; //编译不通过，id为val不可变
+</code></pre>
+<h2 id="93-自定义gettersetter">9.3 自定义getter/setter</h2>
+<p>在相应的属性后面加上<code>get</code>/<code>set</code>即可自定义getter/setter：</p>
+<pre><code class="language-kotlin">class Person
+{
+	var name=&quot;&quot;
+	get()
+	{
+		return &quot;name&quot;+field
+	}
+	var id=&quot;&quot;
+	set(id)
+	{
+		field = id
+	}
+}
+</code></pre>
+<p>在<code>get</code>/<code>set</code>中使用<code>field</code>表示字段，比如在上面例子中的get中，<code>field</code>表示<code>name</code>，而在下面的<code>set</code>中，<code>field</code>表示自己的<code>id</code>，<code>=</code>后面是参数的<code>id</code>。</p>
+<h1 id="10-异常">10 异常</h1>
+<h2 id="101-抛出异常">10.1 抛出异常</h2>
+<p>直接<code>throw</code>，无需<code>new</code>：</p>
+<pre><code class="language-kotlin">val age = 300
+if(age !in 1..100)
+	throw IllegalArgumentException(&quot;Out of range:$age&quot;)
+</code></pre>
+<h2 id="102-trycatch">10.2 try/catch</h2>
+<pre><code class="language-kotlin">try 
+{
+	throw Exception(&quot;exception&quot;)
+}
+catch (e:Exception)
+{
+	e.printStackTrace()
+}
+</code></pre>
+<h2 id="103-受检异常与不受检异常">10.3 受检异常与不受检异常</h2>
+<p>Java中的异常有两类：</p>
+<ul>
+<li><code>Unchecked Exception</code>：不受检异常，可以不进行<code>try/catch</code>处理，包括<code>Runtime Exception</code>及其子类</li>
+<li><code>Checked Exception</code>：受检异常，必须进行<code>try/catch</code>处理或者声明需要抛出，不属于不受检异常的异常都属于受检异常</li>
+</ul>
+<p>Kotlin不区分两者，也就是对于Java的受检异常可以不处理，比如：</p>
+<pre><code class="language-kotlin">fun main()
+{
+    throw IllegalArgumentException(&quot;333&quot;)
+}
+</code></pre>
+<p>可通过编译，而Java中的</p>
+<pre><code class="language-java">public class Test
+{
+	public static void main(String []args)
+	{
+		throw new Exception(&quot;111&quot;);
+	}
+}
+</code></pre>
+<p>则无法通过编译。</p>
+<h1 id="11-集合类">11 集合类</h1>
+<pre><code class="language-kotlin">val arrayList = ArrayList&lt;Int&gt;()
+arrayList.add(3)
+arrayList.add(9)
+arrayList.forEach { t-&gt; println(t) }
+
+val hashSet = hashSetOf&lt;String&gt;()
+hashSet.add(&quot;2222&quot;)
+hashSet.add(&quot;99999&quot;)
+hashSet.forEach{t-&gt; println(t)}
+
+val list = listOf(3,5,5)
+list.forEach{t-&gt; println(t)}
+
+val map = mapOf(&quot;a&quot; to 1,&quot;b&quot; to 2)
+map.forEach{(k,v)-&gt; println(&quot;$k to $v&quot;)}
+</code></pre>
+<p>可以直接使用集合类或者<code>xxxOf</code>创建，遍历使用<code>forEach</code>与Lambda，Kotlin风格的Lambda使用<code>{}</code>。</p>
+<h1 id="12-函数">12 函数</h1>
+<h2 id="121-基本语法">12.1 基本语法</h2>
+<pre><code class="language-kotlin">fun printStr(str:String)
+{
+    println(str)
+}
+
+fun add(a:Int):Int
+{
+	return a+3
+}
+</code></pre>
+<ul>
+<li><code>fun</code>声明函数</li>
+<li>形参类型在形参名称后</li>
+<li>返回类型放在最后，前面需要带<code>：</code></li>
+<li>函数不强制放在类中</li>
+</ul>
+<h2 id="122-默认参数">12.2 默认参数</h2>
+<p>Java里面没有默认参数，实现类似功能需要重载去解决，而Kotlin的函数可以具有默认参数：</p>
+<pre><code class="language-kotlin">fun main()
+{
+    println(add())
+    println(add(1))
+    println(add(1,2))
+}
+fun add(a:Int = 3,b:Int = 4):Int = a+b
+</code></pre>
+<p>可以省略的只有在末尾的参数，也就是默认参数从末尾开始确定默认值。</p>
+<h2 id="123-命名参数">12.3 命名参数</h2>
+<p>类似Python，调用函数时使用形参名称与值的方式调用而不是仅仅通过值调用，同时可以结合默认参数省略部分值。</p>
+<pre><code class="language-kotlin">fun main()
+{
+    println(add(b=1))
+    println(add(b=5,a=9))
+}
+
+fun add(a:Int = 3,b:Int = 4):Int = a+b
+</code></pre>
+<h2 id="124-可变参数">12.4 可变参数</h2>
+<p>使用<code>vararg</code>：</p>
+<pre><code class="language-kotlin">fun main()
+{
+    println(add(1,2,3,4))
+}
+
+fun add(vararg a:Int):Int = a.sum()
+</code></pre>
+<h1 id="13-顶层函数与顶层属性">13 顶层函数与顶层属性</h1>
+<h2 id="131-顶层函数">13.1 顶层函数</h2>
+<p>Kotlin中可以将函数放在代码文件的顶层，不用附属于任何类，但仍然是包内作用域，包外需要<code>import</code>，作用类似Java中的静态函数。</p>
+<pre><code class="language-kotlin">fun add(vararg a:Int):Int = a.sum()
+fun main()
+{
+    println(add(1,2,3,4))
+}
+</code></pre>
+<p>Java中调用顶层函数时可以使用默认的Kotlin文件名作为默认包去调用，也可以使用<code>@file:JvmName</code>修改调用的包名，比如上面的文件名为<code>Test.kt</code>，则Java中调用的代码如下：</p>
+<pre><code class="language-java">TestKt.add()
+</code></pre>
+<p>使用注解后：</p>
+<pre><code class="language-kotlin">@file:JvmName(&quot;Test&quot;)
+fun add(vararg a:Int):Int = a.sum
+fun main()
+{
+    println(add(1,2,3,4))
+}
+</code></pre>
+<p>Java调用方式改变如下：</p>
+<pre><code class="language-java">Test.add()
+</code></pre>
+<h2 id="132-顶层属性">13.2 顶层属性</h2>
+<p>与Java中的静态属性类似，有点像全局变量或全局常量，可以使用<code>var</code>，<code>val</code>，<code>const val</code>修饰：</p>
+<pre><code class="language-kotlin">var a = 0
+val b = 0
+const val c = 0
+
+fun main()
+{
+    println(++a)
+    println(&quot;$b\n$c&quot;)
+    test()
+}
+
+fun test()
+{
+    println(&quot;$a\n$b\n$c&quot;)
+}
+</code></pre>
+<p><code>val</code>与<code>const val</code>的主要区别是：</p>
+<ul>
+<li><code>val</code>实质上相当与Java中的<code>private final static</code></li>
+<li><code>const val</code>实质上相当于Java中的<code>public final static</code></li>
+<li><code>const</code>相当于<code>@JvmField</code>，也就是说<code>const val a = 0</code>与<code>@JvmField val a = 0</code>等价：</li>
+</ul>
+<h1 id="14-参考">14 参考</h1>
+<p>1、<a href="http://www.jicker.cn/5777.html">Kotlin语言的特点和优劣势</a><br>
+2、<a href="https://www.cnblogs.com/fzqm/p/6803680.html">Java受检异常与不受检异常</a><br>
+3、<a href="https://blog.csdn.net/mjb00000/article/details/79174831">Kotlin中的getter与setter</a><br>
+4、<a href="https://blog.csdn.net/wangjiang_qianmo/article/details/88756728#t9">Kotlin与Java的异同</a><br>
+5、<a href="https://www.jianshu.com/p/01aac645d003">Kotlin之const val与val</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Kotlin Hello World]]></title>
+        <id>https://2293736867.github.io/post/kotlin-hello-world/</id>
+        <link href="https://2293736867.github.io/post/kotlin-hello-world/">
+        </link>
+        <updated>2020-06-26T13:42:56.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-kotlin">1 Kotlin</h1>
+<p>Kotlin是一种在JVM上运行的静态类型编程语言，被称为Android界的Wsift，由JetBrains设计。Kotline可以编译成Java字节码，也可以编译成JavaScript，方便在没有JVM的设备上运行。Google宣布在Google I/O 2017上宣布Kotlin成为Android官方语言。</p>
+<p>笔者不是专攻Android的，是做服务端的，尽管目前大部分都是使用Java做后端，但是也有一些Kotlin做后端的资料，比如Kotlin结合Spring Boot的也有不少文章，因此笔者决定使用Kotlin进行后端开发。</p>
+<p>那么，先从Hello world开始。</p>
+<h1 id="2-新建工程">2 新建工程</h1>
+<p>IDE用的是IDEA，新建工程并选择Kotlin：<br>
+<img src="https://img-blog.csdnimg.cn/20200625135417827.png" alt="在这里插入图片描述" loading="lazy"><br>
+项目名：<br>
+<img src="https://img-blog.csdnimg.cn/20200625135526234.png" alt="在这里插入图片描述" loading="lazy"><br>
+结构应该长这样（居然连个Main都没有。。。）：<br>
+<img src="https://img-blog.csdnimg.cn/20200625135620472.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-main">3 Main</h1>
+<p>在src下新建一个<code>Main.kt</code>：<br>
+<img src="https://img-blog.csdnimg.cn/20200625135833312.png" alt="在这里插入图片描述" loading="lazy"><br>
+代码在图中就不再贴一次了。<br>
+当然可能有人会问<code>Stirng [] args</code>去哪里了，那就把它加上：<br>
+<img src="https://img-blog.csdnimg.cn/20200625142652470.png" alt="在这里插入图片描述" loading="lazy"><br>
+IDEA提示从Kotlin1.3开始main参数不是必要的，因此把它去掉了。不过老实说Kotlin比起Java还真的简洁。</p>
+<h1 id="4-添加运行配置">4 添加运行配置</h1>
+<p>选择<code>Add Configuration</code>，接着选择<code>Kotlin</code>：<br>
+<img src="https://img-blog.csdnimg.cn/20200625140005605.png" alt="在这里插入图片描述" loading="lazy"><br>
+在<code>Main class:</code>处输入默认包<code>MainKt</code>：<br>
+<img src="https://img-blog.csdnimg.cn/20200625140044779.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-运行">5 运行</h1>
+<p><code>Shift+F10</code>或者点击绿色小箭头运行即可。<br>
+<img src="https://img-blog.csdnimg.cn/20200625140237528.png" alt="在这里插入图片描述" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第8期 樱花树下特辑]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-8-qi-ying-hua-shu-xia-te-ji/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-8-qi-ying-hua-shu-xia-te-ji/">
+        </link>
+        <updated>2020-06-26T09:29:44.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200626172810954.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>老一辈的人常告诉我们，年轻的时候多吃点苦，这样老了才能习惯啊！</p>
+</blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote>
+<p>一项研究发现，帽贝齿由自然界中最强韧的生物材料制成。组成这种软体动物牙齿材料强度大约是蜘蛛丝的五倍（前最强韧生物材料头衔持有者）。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>空白处，寄幽怀。怕人猜。<br>
+执轻罗扇，捕影追风，斜过香腮。<br>
+—— 张维芬《诉衷情令 约茶樱花树下》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>窗外 那绛红色的茎叶上 长串的樱花 伸展着淡粉色的花瓣<br>
+——《樱花树下》（外两首）</p>
+</blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote>
+<p><a href="https://music.163.com/#/song?id=188384">樱花树下</a></p>
+</blockquote>
+<blockquote>
+<p>树荫有一只蝉<br>
+跌落你身边<br>
+惊慌到失足向前<br>
+然后扑入我一双肩<br>
+令你腼腆一脸<br>
+像樱花万千<br>
+怀念美好高中两年<br>
+期望你的青春不变<br>
+去到今天</p>
+</blockquote>
+<blockquote>
+<p>还记得樱花正开<br>
+还未懂跟你示爱<br>
+初春来时 彼此约定过<br>
+继续期待<br>
+人置身这大时代<br>
+投入几番竞技赛<br>
+曾分开 曾相爱<br>
+等待 花蕊又跌下来<br>
+才洞悉这是恋爱</p>
+</blockquote>
+<blockquote>
+<p>未有过的爱情<br>
+但有种温馨<br>
+归家那单车小径<br>
+沿路细听你的歌声<br>
+没法再三倾听<br>
+你的感动昵称<br>
+维系错的一番友情<br>
+无奈已经不可纠正<br>
+太过坚贞</p>
+</blockquote>
+<blockquote>
+<p>还记得樱花正开<br>
+还未懂跟你示爱<br>
+初春来时 彼此闭着眼<br>
+渴望未来<br>
+人置身这大时代<br>
+投入几番竞技赛<br>
+曾分开 曾相爱<br>
+等待 跟你未爱的爱<br>
+你说悲不悲哀<br>
+秒速之间变改  小小世界<br>
+眷恋 也许走不过<br>
+拆卸的街<br>
+少女亦随年渐长<br>
+走得多么快</p>
+</blockquote>
+<blockquote>
+<p>如有天樱花再开<br>
+期望可跟你示爱<br>
+当天园林 今天已换上<br>
+满地青苔<br>
+如有天置地门外<br>
+乘电车跨过大海<br>
+匆匆 跟你 相望一眼 没理睬<br>
+明日花 昨日已开</p>
+</blockquote>
+<h1 id="樱花树下">《樱花树下》</h1>
+<p>这里说的是渡边淳一的小说《樱花树下》，笔者看过这本书，最近有回想了起来，记录一下感悟。</p>
+<figure data-type="image" tabindex="2"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWcyMDIwLmNuYmxvZ3MuY29tL2Jsb2cvMjAwODk2My8yMDIwMDYvMjAwODk2My0yMDIwMDYyMjE1MzcwNzk5NS0xNjU1MzYxMDIucG5n?x-oss-process=image/format,png" alt="" loading="lazy"></figure>
+<p>首先介绍一下渡边淳一吧，1933-2014，出生于北海道上砂川町，日本当代作家，1963年获得医学博士学位。1969年35岁的渡边淳一弃医从文，1989年发表《樱花树下》，获得过的奖项包括同人杂志奖，芥川奖，直木文学奖，吉川英治文学奖，文艺春秋读者奖。</p>
+<p>《樱花树下》与渡边淳一的其他情爱作品类似，下面是摘自<a href="https://www.zhihu.com/question/274758755/answer/377570747">知乎</a>的原话：</p>
+<blockquote>
+<p>《失乐园》“清纯而又冶艳的少妇”爱上了已婚的中老年编辑<br>
+《泡沫》“清纯而又冶艳的少妇”爱上了中老年作家<br>
+《雁来红》“清纯而又冶艳的少女”爱上了已婚的中老年医生<br>
+《为何不分手》“清纯而又冶艳的年轻医生”爱上了已婚的中老年医生<br>
+《樱花树下》“清纯而又冶艳的母女俩”同时爱上了已婚的中老年出版社社长<br>
+《一片雪》“清纯而又冶艳的富婆、少女、少妇”同时爱上了已婚的中老年设计师<br>
+。。。</p>
+</blockquote>
+<p>小说有写到：</p>
+<blockquote>
+<p>“樱花这么美，你知道是为什么吗？”<br>
+“因为，樱花树下埋着尸体。”<br>
+“真的吗？埋了尸体，樱花就能开得更盛吗？”<br>
+“也许是把人的血肉当养分吸收了。”</p>
+</blockquote>
+<p>樱花贯穿始终，无论是作为环境的描写还是场景的过渡，给人的感觉就是有一种神秘的色彩。小说里面介绍了两种樱花：</p>
+<ul>
+<li>一种是开得鲜艳、娇滴滴的垂枝樱</li>
+<li>一种是开得妩媚又有些悲哀的染井吉野</li>
+</ul>
+<p>下面是染井吉野的图：</p>
+<figure data-type="image" tabindex="3"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWcyMDIwLmNuYmxvZ3MuY29tL2Jsb2cvMjAwODk2My8yMDIwMDYvMjAwODk2My0yMDIwMDYyMjE1MTgyMDYwMC0yMDU2Mjc5ODQzLnBuZw?x-oss-process=image/format,png" alt="" loading="lazy"></figure>
+<p>染井吉野是一种花期只有一周的花，谢幕的时候花瓣会坠落成“樱花雨”：</p>
+<figure data-type="image" tabindex="4"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWcyMDIwLmNuYmxvZ3MuY29tL2Jsb2cvMjAwODk2My8yMDIwMDYvMjAwODk2My0yMDIwMDYyMjE1MTc1MTUxOS00ODg0MzU4ODEucG5n?x-oss-process=image/format,png" alt="" loading="lazy"></figure>
+<p>染井吉野给人一种美得妖艳的感觉，这种谢幕的场景给笔者的感觉是确实很美但是会感到一丝凉意。在作品中，樱花仿佛是一个具有灵气的妖孽，从开幕的赏樱花到最后的菊乃躺在樱花树下，始终充满了迷幻的色彩。尽管作者没有大段大段的描写过樱花，但是寥寥几笔就能让读者“想入非非”，感受到了樱花的美。</p>
+<p>垂枝樱和染井吉野代指了凉子与菊乃，暗示着凉子就是开得诱人鲜艳的垂枝樱，而菊乃就是妩媚但悲哀的染井吉野。或许正是由于染井吉野的妖艳，菊乃迎来的最后结局注定是悲惨的。尽管小说没有写到菊乃是自杀还是不小心坠落致死，不过给笔者的感觉就是自杀死亡的。试想，女儿怀孕了，但是造成这结果的人确实自己心爱的男人，这样的事实又能有多少正常女性可以接受？</p>
+<p>菊乃死后埋在樱花树下，与“樱花树下埋着尸体”对应了起来：</p>
+<blockquote>
+<p>去年赏樱的时候，你说过，樱花树下埋着尸体。凉子和游佐并肩而立，抬头看着樱花说道。<br>
+“妈妈现在真的在这棵樱花树下长眠了。”<br>
+“听到那句话的时候我就有不详的预感。”<br>
+“我说的时候，并不是有心的。”<br>
+“但是，确实就像真的一样，很可怕。”<br>
+“虽然觉得可怕，还是被你深深吸引。”</p>
+</blockquote>
+<p>最后凉子离开游佐，宣告了故事的结束，就这样两种不同的“樱花”，仿佛就是游佐生命的过客，来得安静，也走得安静。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第7期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-7-qi/</id>
@@ -566,345 +1043,6 @@ npm run dev
 </blockquote>
 <blockquote>
 <p>但是对于古代欧洲的凯尔特人，他们依照月亮的周期将一年分为13月，每一个月都有代表的动物和守护树，代表的13种动物为：鹿 猫 牛 马 蝴蝶 蛇 海马 鱼 狼 狐狸 鹪鹩（jiao liao） 天鹅 隼</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第4期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-4-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-4-qi/">
-        </link>
-        <updated>2020-06-22T01:42:11.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200623034814769.png" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>长得好看的才叫吃货，长得不好看的那叫饭桶。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>欧洲最矮的国家是马耳他。马耳他人的平均身高为164.9cm（约65英寸），而欧盟的平均身高为169.6cm（约67英寸）。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>凉风吹夜雨，萧瑟动寒林。<br>
-——张说《幽州夜饮》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>如果温柔是罪，那就只能用拳头来洗清我们犯下的罪孽。<br>
-——镇魂街</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=439121233">Dancin-Aaron Smith/Luvli/Krono</a></p>
-</blockquote>
-<blockquote>
-<p>Get up on the floor<br>
-Dancin' all night long<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin'</p>
-</blockquote>
-<blockquote>
-<p>All the time<br>
-My baby you on my mind<br>
-And I don't know why<br>
-Yeah but the feeling is find<br>
-Can't you see<br>
-Yo' honey you are for me oh<br>
-It were meant to be<br>
-Dancin' in the moonlight<br>
-Gazing at the stars so bright<br>
-Holding you until the sunrise<br>
-Sleeping unti the midnight</p>
-</blockquote>
-<blockquote>
-<p>Get up on the floor<br>
-Dancin's all night floor<br>
-Get up on the floor<br>
-Dancin till the break of dawn<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin'</p>
-</blockquote>
-<blockquote>
-<p>Dancin' is what to do<br>
-Dancin' is what I think of you<br>
-Dancin' is what makes me whole<br>
-Dancin' is what to do<br>
-Dancin' when I think of you<br>
-Dancin' is what clears my soul<br>
-Dancin' is what makes me whole<br>
-Everytime when I look in your eyes<br>
-That smile was crying that you were mine<br>
-Do you know, your love is true I know<br>
-You are the best thing that has happened to me</p>
-</blockquote>
-<blockquote>
-<p>Get up on the floor<br>
-Dancin' all night long<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin'</p>
-</blockquote>
-<blockquote>
-<p>Dancin' is what to do<br>
-Dancin' when I thik of you<br>
-Dancin' is what clears my soul<br>
-Dancin' is what to do<br>
-Dancin' when I think of you<br>
-Dancin' is what clears my soul<br>
-Dancin' is what makes me whole</p>
-</blockquote>
-<blockquote>
-<p>Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor<br>
-Dancin'(oh)<br>
-Get up on the floor<br>
-Dancin' all night long<br>
-Get up on the floor<br>
-Dancin' till the break of dawn<br>
-Get up on the floor</p>
-</blockquote>
-<blockquote>
-<p>Dancin'(oh)<br>
-Dancin' is what to do<br>
-Dancin' when I think of you<br>
-Dancin' is what clears my soul<br>
-Dancin' what to do<br>
-Dancin' when I think of yo<br>
-Dancin' is what clears my soul<br>
-Dancin' is what to do<br>
-Dancin' when I think of you<br>
-Dancin' is what clears my soul<br>
-Dancin' is what makes me whole<br>
-Dancin' what to do<br>
-Dancin' when I think of you<br>
-Dancin' is what clears my soul<br>
-Dancin' is what makes me whole</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第3期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-3-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-3-qi/">
-        </link>
-        <updated>2020-06-20T18:00:24.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200621015932609-1177793518.png" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>我的脑袋不是空的。我是要大有作为的人，只是混沌初开。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>在日本直到2015年时，人们在过了零点以后跳舞还是非法行为。这条法律是在1948年开始实施的，为的是打击一些为非法活动作掩护的餐厅，到了2015年这条法律才废除。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>接天莲叶无穷碧，映日荷花别样红。<br>
-——杨万里《晓出净慈寺送林子方》</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=28661853">我配不上你-夏天Alex</a></p>
-</blockquote>
-<blockquote>
-<p>你完全可以找个更好的知己<br>
-不一定和我这样子如此亲密<br>
-害怕有一天自己 真的就离不开你<br>
-距离让我们怎么靠近<br>
-我知道自己和你有很大差距<br>
-爱情却让我再一次身不由己<br>
-受过伤的人怀疑 尽管这来之不易<br>
-拼命的争取不如放弃</p>
-</blockquote>
-<blockquote>
-<p>我配不上你 纵然很努力<br>
-我喜欢你 心里却没底<br>
-我没有歇斯底里 我只是望尘莫及<br>
-就像买不起心爱的衬衣<br>
-我还在原地 你飞上天际<br>
-我喜欢你 想一想而已<br>
-总是说后会有期 有天会在一起<br>
-只是在一起的两个人<br>
-不是我和你</p>
-</blockquote>
-<figure data-type="image" tabindex="2"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180745405-735410624.png" alt="" loading="lazy"></figure>
-<blockquote>
-<p>你完全可以找个更好的知己<br>
-不一定和我这样子如此亲密<br>
-害怕有一天自己真的就离不开你<br>
-距离让我们怎么靠近<br>
-我知道自己和你有很大差距<br>
-爱情却让我再一次身不由己<br>
-受过伤的人怀疑 尽管尽管这来之不易<br>
-拼命的争取不如放弃</p>
-</blockquote>
-<blockquote>
-<p>我配不上你 纵然很努力<br>
-我喜欢你 心里却没底<br>
-我没有歇斯底里 我只是望尘莫及<br>
-就像买不起心爱的衬衣<br>
-我还在原地 你飞上天际<br>
-我喜欢你 想一想而已<br>
-总是说后会有期<br>
-有天会在一起<br>
-只是在一起的两个人<br>
-不是我和你</p>
-</blockquote>
-<figure data-type="image" tabindex="3"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180757816-1790799237.png" alt="" loading="lazy"></figure>
-<blockquote>
-<p>我配不上你 纵然很努力<br>
-我喜欢你 心里却没底<br>
-我没有歇斯底里 我只是望尘莫及<br>
-就像买不起心爱的衬衣<br>
-我还在原地 你飞上天际<br>
-我喜欢你 想一想而已<br>
-总是说后会有期 有天会在一起<br>
-只是在一起的两个人<br>
-不是我和你</p>
-</blockquote>
-<figure data-type="image" tabindex="4"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620180751050-2107348189.png" alt="" loading="lazy"></figure>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>温柔正确的人总是难以生存，因为这个世界既不温柔，也不正确<br>
-——我的青春恋爱物语果然有问题</p>
-</blockquote>
-<h1 id="有关重温火影">有关重温火影</h1>
-<p>最近重温了火影的一些经典，包括白与再不斩，佐助VS鼬，佐助VS卡卡西，当然还有最后的鸣左封印辉夜，要不是疫情的原因估计我也不会去看。<br>
-不过说真的感觉自己的青春就这么过去了还是有点不甘啊，720集也就是最后一集无数人留名以及表白，感觉自己的青春也就这么没了啊。。。。</p>
-<figure data-type="image" tabindex="5"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175841465-696434200.png" alt="" loading="lazy"></figure>
-<p>来说说鼬神吧，背负整个村子的骂名，杀光一整族的人，只是为了弟弟。真的是宠弟狂魔，临死前也有给佐助上个天照就是为了不与带土见面。个人觉得鼬是真的厉害，智商爆棚，可惜到了358集就死了，唉，真是可惜了，虽然后面秽土转生给复活了。</p>
-<figure data-type="image" tabindex="6"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175818060-706163986.png" alt="" loading="lazy"></figure>
-<p>不过打佐助的时候还是放了点水的，虽然很多弹幕说“放了海”“鬼鲛的大坝都要塌了不要放海了”，一开始的月读虽然动漫里面说是佐助解的，但是感觉是鼬自己解开的，也需要做点戏给观战的绝看看，到后面豪火球对决的时候，加上了天照，吞噬佐助的火球的同时还把翅膀给烧了，但是主动熄灭了。。。这确实是放水了。佐助放麒麟被鼬的须佐抵挡后，用十拳剑封印了佐助体内的大蛇丸，为什么当时就不一刀下去把佐助给杀了？（当然这样的话可能就全剧终了岸本也不会这样做的不过也可以劈一下啊，确实放水了）</p>
-<figure data-type="image" tabindex="7"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175854505-954165188.png" alt="" loading="lazy"></figure>
-<p>最后虽然是鼬死了但是感觉是鼬自己用万花筒过度加上自身的病死的，说真的要不是鼬放水佐助应该打不过，即使鼬死后场地旁边还留有天照，还把封印大蛇丸时逃出来的那一条小白蛇给烧了，确实是保护佐助到家了。</p>
-<figure data-type="image" tabindex="8"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175759748-1880087122.png" alt="" loading="lazy"></figure>
-<p>鼬应该给个火影做啊，这人设确实有点惨。<br>
-就这样吧，反正我的青春也完结了2333333。。。。</p>
-<p>虽然还有博人传，但是怎么也看不惯，毕竟画风不一样，当然这也不奇怪，毕竟不是岸本画的，是池本画的。感觉里面的鸣人还有佐助被削了很多，鸣人动不动就暴仙人九尾，螺旋手里剑都看不见了，不是一般先搞一下体术，然后分身，再仙人之类的吗？？？？<br>
-还有佐助虽然单手了，豪火球都不怎么用，轮回眼说闪就闪，须佐一用就最厉害的那个，不是要仇恨吗？？？还记得以前是怎么打迪达拉，打团藏的吗？</p>
-<p>不过也无可厚非了，毕竟博人的丸子会隐身，而且觉得65集，也就是国人黄成希导演的那一集，是做的不错的。虽然博人出场扔了两个丸子，一个是基本没什么伤害的但是救了众人的，一个是父子合力的。。。大的夸张的丸子，直接把桃式给秒了，还留下什么狠化“一个打败神的人是注定做不回凡人的”。不过这集确实看的过瘾，佐助和鸣人的配合着实高燃。</p>
-<figure data-type="image" tabindex="9"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620175956579-1013118963.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第2期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-2-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-2-qi/">
-        </link>
-        <updated>2020-06-20T05:58:35.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620135827815-1047854143.png" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>不明白你们遇到好事，为什么要掐腿揉眼睛，真醒了怎么办？</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>尽管可可豆已经被食用了数千年之久，但知道19世纪40年代人类才产生出第一块固体巧克力棒。以前可可豆都以粉末或饮料形式被食用。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>荷叶罗裙一色裁，芙蓉向脸两边开。<br>
-——王昌龄《采莲曲》</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=204435">分手假期-钟洁/Hojo</a></p>
-</blockquote>
-<figure data-type="image" tabindex="2"><img src="https://img2020.cnblogs.com/blog/2008963/202006/2008963-20200620135723335-645357184.png" alt="" loading="lazy"></figure>
-<blockquote>
-<p>原来分手也有假期<br>
-想要回去<br>
-才发现我无法面对你<br>
-曾经对爱的憧憬<br>
-拼了命去爱你<br>
-而最后 只剩下回忆</p>
-</blockquote>
-<blockquote>
-<p>删掉你短信 怪我不争气<br>
-失落的情绪 就让你离去<br>
-别犹豫 你还在我回忆<br>
-别伤心 没什么了不起<br>
-也许是我还不懂爱情<br>
-还是我不够年龄<br>
-太多的心事说给谁听<br>
-你听我后悔的声音<br>
-你听 我爱上你的原因</p>
-</blockquote>
-<blockquote>
-<p>Oh Baby<br>
-还记得第一次邂逅的场景<br>
-我被你的眼睛吸引 我动心<br>
-不想在犹豫 慢慢向你靠近<br>
-风吹散你香气 深深的为你着迷<br>
-爱上你 我难以抽离<br>
-怪我的坏脾气 你才会狠下心<br>
-眼看着我陷入谷底<br>
-我该怎么才能挽回你</p>
-</blockquote>
-<blockquote>
-<p>原来分手也有假期<br>
-想要回去<br>
-才发现我无法面对你<br>
-曾经对爱的憧憬<br>
-拼了命去爱你<br>
-而最后 只剩下回忆<br>
-原来分手还会想你<br>
-保持清醒<br>
-只是我再也不会爱你<br>
-喜欢孤单的旅行<br>
-在陌生的城市<br>
-仿佛看到熟悉的背影</p>
-</blockquote>
-<blockquote>
-<p>短暂的分离 出国散散心<br>
-陌生国度里 还是想起你<br>
-在餐厅 听浪漫进行曲<br>
-烛光里 欣赏窗外美景<br>
-我渴望一段新的恋情<br>
-能代替过去的爱情<br>
-爱像突如其来的大雨<br>
-你听 我悲泣的声音<br>
-你听 我离开你的原因</p>
-</blockquote>
-<blockquote>
-<p>Oh Baby<br>
-还记得第一次邂逅的默契<br>
-时间缠绵滴答滴答 走下去<br>
-相处之后发现勉强在一起<br>
-让你受尽委屈 所以才会答应你<br>
-爱上你 我深信不疑<br>
-渴望幸福甜蜜 可惜我太花心<br>
-眼看着你为我痛心<br>
-最后只能默默的离开你</p>
-</blockquote>
-<blockquote>
-<p>原来分手也有假期<br>
-想要回去<br>
-才发现我无法面对你<br>
-曾经对爱的憧憬<br>
-拼了命去爱你<br>
-而最后 只剩下回忆<br>
-原来分手还会想你<br>
-保持清醒<br>
-只是我再也不会爱你<br>
-喜欢孤单的旅行<br>
-在陌生的城市<br>
-仿佛看到熟悉的背影<br>
-我的脚步怎么会犹豫<br>
-不敢相信那个人是你</p>
 </blockquote>
 ]]></content>
     </entry>
