@@ -71,7 +71,7 @@ String str = &quot;a/b/1.jp..." />
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1593790441515" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1593793531671" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -86,7 +86,7 @@ String str = &quot;a/b/1.jp..." />
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/java-huo-qu-zi-yuan-wen-jian-lu-jing.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-03"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-03"><i class="fa fa-calendar"></i><span class="lately">1 小时前</span></time>
               
               <a href="https://2293736867.github.io/post/java-huo-qu-zi-yuan-wen-jian-lu-jing/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/java-huo-qu-zi-yuan-wen-jian-lu-jing/"> </span>
@@ -127,13 +127,13 @@ InputStream inputStream = getClass().getClassLoader().getResourceAsStream(&quot;
 <pre><code class="language-java">URL url = getClass().getClassLoader().getResource(&quot;/a/b/1.jpg&quot;);
 InputStream inputStream = getClass().getClassLoader().getResourceAsStream(&quot;/a/b/1.png&quot;);
 </code></pre>
-<p>这样读取出来是<code>null</code>。<br>
-<code>getClass().getClassLoader().getResource()</code>从源码运行的<code>URL</code>如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200703172515252.png" alt="在这里插入图片描述" loading="lazy"><br>
-从JAR包运行的<code>URL</code>如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200703172623460.png" alt="在这里插入图片描述" loading="lazy"><br>
-测试系统Win10，从源码运行的话有一个<code>file:</code>前缀，而从JAR包运行有一个<code>jar:file:</code>前缀。<br>
-前缀一般没有影响，一般都能直接通过<code>URL</code>获取文件，比如在<code>Swing</code>的<code>JFrame</code>中设置图标：</p>
+<p>这样读取出来是<code>null</code>。</p>
+<p><code>getClass().getClassLoader().getResource()</code>从源码运行的<code>URL</code>如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200703172515252.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>从JAR包运行的<code>URL</code>如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200703172623460.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>测试系统Win10，从源码运行的话有一个<code>file:</code>前缀，而从JAR包运行有一个<code>jar:file:</code>前缀。</p>
+<p>前缀一般没有影响，一般都能直接通过<code>URL</code>获取文件，比如在<code>Swing</code>的<code>JFrame</code>中设置图标：</p>
 <pre><code class="language-java">mainFrame.setIconImage(new ImageIcon(getClass().getClassLoader().getResource(&quot;image/icon.png&quot;)).getImage());
 </code></pre>
 <p>如果只能通过<code>String</code>处理路径，需要把前缀<code>file:</code>或者<code>jar:file:</code>去掉，JAR的话可以结合<code>JarFile</code>类读取文件。</p>
