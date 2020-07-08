@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-08T04:08:08.254Z</updated>
+    <updated>2020-07-08T05:51:27.233Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,69 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Linux递归压缩图片脚本]]></title>
+        <id>https://2293736867.github.io/post/linux-di-gui-ya-suo-tu-pian-jiao-ben/</id>
+        <link href="https://2293736867.github.io/post/linux-di-gui-ya-suo-tu-pian-jiao-ben/">
+        </link>
+        <updated>2020-07-08T05:49:19.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="1-压缩图片">1 压缩图片</h1>
+<p>使用<code>ImageMagick</code>的<code>convert</code>命令进行压缩图片，一般只需要一个指定压缩质量的参数，比如：</p>
+<pre><code class="language-bash">convert -quality 75 1.jpg 1_compress.jpg
+</code></pre>
+<p>可以支持压缩<code>jpg</code>/<code>png</code>/<code>jpeg</code>。</p>
+<h1 id="2-递归压缩">2 递归压缩</h1>
+<p>递归压缩使用<code>find</code>配合<code>grep</code>列出所有的图片，接着通过一个循环传递给<code>convert</code>进行压缩。</p>
+<pre><code class="language-bash">originalPic=`find $compressDir | grep -iE &quot;*.jpg|*.png|*.jpeg&quot;`
+for i in $originalPic 
+do
+	convert -quality $1 $i $i
+done
+</code></pre>
+<h1 id="3-使用">3 使用</h1>
+<pre><code class="language-bash">sh compress.sh 75 # 默认递归压缩当前目录，备份在~/Desktop
+sh compress.sh 75 ~/Downloads # 压缩指定目录，会在后面加后缀_bak备份，比如这里备份在~/Downloads_bak
+</code></pre>
+<p>压缩之前会先进行备份，压缩好的图片直接默认覆盖原图片，带有简单的错误检测，比如当前或者指定目录下有没有图片，第一个参数是否为数字。压缩完成后会计算压缩比率：<br>
+<img src="https://img-blog.csdnimg.cn/20200708115416588.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-完整脚本">4 完整脚本</h1>
+<p><a href="https://github.com/2293736867/PicCompressRecursivelyScript">Github</a></p>
+<h1 id="5-其他">5 其他</h1>
+<ul>
+<li><a href="https://blog.csdn.net/qq_27525611/article/details/106101010">压缩当前目录的图片</a></li>
+<li><a href="https://blog.csdn.net/qq_35458793/article/details/101787782">批量压缩<code>jpg</code>/<code>png</code></a></li>
+</ul>
+]]></summary>
+        <content type="html"><![CDATA[<h1 id="1-压缩图片">1 压缩图片</h1>
+<p>使用<code>ImageMagick</code>的<code>convert</code>命令进行压缩图片，一般只需要一个指定压缩质量的参数，比如：</p>
+<pre><code class="language-bash">convert -quality 75 1.jpg 1_compress.jpg
+</code></pre>
+<p>可以支持压缩<code>jpg</code>/<code>png</code>/<code>jpeg</code>。</p>
+<h1 id="2-递归压缩">2 递归压缩</h1>
+<p>递归压缩使用<code>find</code>配合<code>grep</code>列出所有的图片，接着通过一个循环传递给<code>convert</code>进行压缩。</p>
+<pre><code class="language-bash">originalPic=`find $compressDir | grep -iE &quot;*.jpg|*.png|*.jpeg&quot;`
+for i in $originalPic 
+do
+	convert -quality $1 $i $i
+done
+</code></pre>
+<h1 id="3-使用">3 使用</h1>
+<pre><code class="language-bash">sh compress.sh 75 # 默认递归压缩当前目录，备份在~/Desktop
+sh compress.sh 75 ~/Downloads # 压缩指定目录，会在后面加后缀_bak备份，比如这里备份在~/Downloads_bak
+</code></pre>
+<p>压缩之前会先进行备份，压缩好的图片直接默认覆盖原图片，带有简单的错误检测，比如当前或者指定目录下有没有图片，第一个参数是否为数字。压缩完成后会计算压缩比率：<br>
+<img src="https://img-blog.csdnimg.cn/20200708115416588.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-完整脚本">4 完整脚本</h1>
+<p><a href="https://github.com/2293736867/PicCompressRecursivelyScript">Github</a></p>
+<h1 id="5-其他">5 其他</h1>
+<ul>
+<li><a href="https://blog.csdn.net/qq_27525611/article/details/106101010">压缩当前目录的图片</a></li>
+<li><a href="https://blog.csdn.net/qq_35458793/article/details/101787782">批量压缩<code>jpg</code>/<code>png</code></a></li>
+</ul>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1594187480697.jpg" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第20期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-20-qi/</id>
@@ -921,110 +984,6 @@ InputStream inputStream = getClass().getClassLoader().getResourceAsStream(&quot;
 <pre><code class="language-java">mainFrame.setIconImage(new ImageIcon(getClass().getClassLoader().getResource(&quot;image/icon.png&quot;)).getImage());
 </code></pre>
 <p>如果只能通过<code>String</code>处理路径，需要把前缀<code>file:</code>或者<code>jar:file:</code>去掉，JAR的话可以结合<code>JarFile</code>类读取文件。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第15期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-15-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-15-qi/">
-        </link>
-        <updated>2020-07-03T07:23:21.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1593674672656.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>减肥，你想要坚持，但是坚持不想要你。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>气候变化正在将世界上最古老的木乃伊变成黑色粘稠物质。尽管这些木乃伊已经在智力的阿塔卡马沙漠保存了7000年，但是该地区的湿度如今已经上升到足以令木乃伊迅速腐烂的地步。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>阴阴溪曲绿交加，小雨翻萍上浅沙。<br>
-——晁冲之《春日》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>如果你仲记得我，就返转头啦。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=1379456709">井胧-想死却又不敢</a></p>
-</blockquote>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1593678037677.jpeg" alt="" loading="lazy"></figure>
-<blockquote>
-<p>把黑夜当作是我最爱的颜色<br>
-一个人独自忍受着夜的折磨<br>
-只有对着孤独沉默  慢慢地怀恋<br>
-想要爱你却又不敢</p>
-</blockquote>
-<blockquote>
-<p>把幸福当作幻想都沉醉入眠<br>
-把誓言当作谎言却都是欺骗<br>
-回忆曾经那些诺言 浮现在眼前<br>
-想要放弃却心又不甘</p>
-</blockquote>
-<blockquote>
-<p>把黑夜当作是我最爱的颜色<br>
-一个人独自忍受着夜的折磨<br>
-只有对着孤独沉默  慢慢地怀恋<br>
-想要爱你却又不敢<br>
-把爱情当作拥有却难以忘怀<br>
-把深情当作伤害却难以放开<br>
-只有喝着孤独的酒 慢慢地怀恋<br>
-想要爱你却又不敢</p>
-</blockquote>
-<blockquote>
-<p>把幸福当作幻想都沉醉入眠<br>
-把誓言当作谎言却全都欺骗<br>
-回忆曾经那些诺言 浮现在眼前<br>
-想要放弃我却又不敢</p>
-</blockquote>
-<blockquote>
-<p>把爱情当作拥有却难以忘怀<br>
-把深情当作伤害却难以放开<br>
-只有喝着孤独烈酒 慢慢地怀恋<br>
-想要爱你却又不敢</p>
-</blockquote>
-<h1 id="有关民间骗术">有关民间骗术</h1>
-<p>清朝末年，江湖骗子这一职业被细分为“蜂、麻、燕、雀”（也叫“风、马、颜、缺”）四个门派。</p>
-<h2 id="蜂">蜂</h2>
-<p>蜂字门，靠的是多人配合，行动如蜂群，分工明确演绎一场骗局。</p>
-<p>例子：</p>
-<ul>
-<li>近几年中国乡村流行的<a href="https://www.sohu.com/a/239205187_649216https://www.sohu.com/a/239205187_649216">“煤气罐诈骗”</a></li>
-<li><a href="https://www.sohu.com/a/213581639_651632">电信诈骗</a>（会追随社会热点和一些热门新闻，包括政治、经济、文化、体育、娱乐等）</li>
-<li>2005年<a href="http://news.sohu.com/20081117/n260684428.shtml?&amp;type=1">“木匠假扮港商欲建西北第一楼” &quot;西北第一爆&quot;</a></li>
-</ul>
-<h2 id="麻">麻</h2>
-<p>麻字门，走技术流。骗子大多号称自己是神医、高僧、大仙，靠戏法，靠三寸不烂之舌混迹江湖。</p>
-<p>例子：</p>
-<ul>
-<li><a href="https://www.sohu.com/a/54849158_115401">“筷子刮眼抓虫”</a></li>
-<li><a href="https://www.sohu.com/a/160021905_99962931">北宋郭京，“六甲神兵”</a></li>
-<li><a href="https://m.k.sohu.com/d/418126183?channelId=1&amp;page=1">高科技</a>：<a href="https://www.sohu.com/a/111396492_465428">48亿的立体快巴“巴铁”项目</a></li>
-</ul>
-<h2 id="燕">燕</h2>
-<p>燕字门，靠美色。比如</p>
-<ul>
-<li>靠女色行骗，这种很常见</li>
-<li>靠男色行骗，跟就是现在说的PUA差不多</li>
-</ul>
-<p>例子：</p>
-<ul>
-<li><a href="https://baijiahao.baidu.com/s?id=1643621328538743810&amp;wfr=spider&amp;for=pc">“最美通缉犯”</a></li>
-<li>仙人跳，这个太多了，随便举几个：<a href="https://baijiahao.baidu.com/s?id=1637910965694097015&amp;wfr=spider&amp;for=pc">戳这里</a>，<a href="http://www.bjdcfy.com/qita/ydxrtzhdbf/2020-4/1317955.html">这里</a>，<a href="https://kuaibao.qq.com/s/20180309A1E7CJ00?refer=spider">或这里</a></li>
-<li><a href="http://ent.ifeng.com/c/7rFgxSU8wdr">PUA</a></li>
-<li>杀猪盘，顾名思义受害人是猪，把猪养肥了再杀，<a href="https://www.zhihu.com/question/355686894">男</a><a href="https://zhuanlan.zhihu.com/p/90875204">女</a>的例子都有</li>
-</ul>
-<h2 id="雀">雀</h2>
-<p>雀字门，当属最硬核操作，杀官夺印冒名上任。</p>
-<p>例子：</p>
-<ul>
-<li>《西游记》中的<a href="https://www.sohu.com/a/337389932_418750">强盗刘洪</a></li>
-<li><a href="https://www.sohu.com/a/31134513_114735">2010年&quot;爱新觉罗三公主&quot;</a></li>
-<li><a href="https://web.shobserver.com/news/detail?id=74939">2017年詹承华</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
