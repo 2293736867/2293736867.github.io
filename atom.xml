@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-09T19:27:22.460Z</updated>
+    <updated>2020-07-10T09:07:13.383Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,350 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Vue学习笔记（一）]]></title>
+        <id>https://2293736867.github.io/post/vue-xue-xi-bi-ji-yi/</id>
+        <link href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-yi/">
+        </link>
+        <updated>2020-07-10T09:05:56.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-vue%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">1 Vue目录结构</a></li>
+<li><a href="#2-vue%E5%AF%B9%E8%B1%A1">2 Vue对象</a></li>
+<li><a href="#3-vue%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95">3 Vue模板语法</a>
+<ul>
+<li><a href="#31-%E6%8F%92%E5%80%BC">3.1 插值</a></li>
+<li><a href="#32-%E5%B1%9E%E6%80%A7">3.2 属性</a></li>
+<li><a href="#33-%E8%A1%A8%E8%BE%BE%E5%BC%8F">3.3 表达式</a></li>
+<li><a href="#34-%E6%8C%87%E4%BB%A4">3.4 指令</a></li>
+<li><a href="#35-%E5%8F%82%E6%95%B0">3.5 参数</a></li>
+<li><a href="#36-%E4%BF%AE%E9%A5%B0%E7%AC%A6">3.6 修饰符</a></li>
+<li><a href="#37-v-model">3.7 v-model</a></li>
+<li><a href="#38-%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6">3.8 按钮事件</a></li>
+<li><a href="#39-%E8%BF%87%E6%BB%A4%E5%99%A8">3.9 过滤器</a></li>
+<li><a href="#310-%E7%BC%A9%E5%86%99">3.10 缩写</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-vue目录结构">1 Vue目录结构</h1>
+<ul>
+<li><code>build</code>：项目构建webpack的相关代码</li>
+<li><code>config</code>：配置目录，包括端口号等</li>
+<li><code>node_modules</code>：npm加载的项目依赖模块</li>
+<li><code>src</code>：开发的目录模块，包含<code>assets</code>（资源文件），<code>components</code>（组件文件），<code>App.vue</code>项目入口文件，<code>main.js</code>项目核心文件</li>
+<li><code>static</code>：静态资源文件，如图片，字体等</li>
+<li><code>test</code>：初始测试目录</li>
+<li><code>.xxx</code>：配置文件，比如语法配置，git配置等等</li>
+<li><code>index.html</code>：首页入口文件</li>
+<li><code>package.json</code>：项目配置文件</li>
+<li><code>README.md</code>：项目说明文件</li>
+</ul>
+<h1 id="2-vue对象">2 Vue对象</h1>
+<p><code>Vue</code>对象的基本参数有：</p>
+<ul>
+<li><code>el</code>：DOM元素的id</li>
+<li><code>data</code>：用于定义属性</li>
+<li><code>methods</code>：用于定义函数</li>
+<li><code>{{}}</code>输出对象属性和函数返回值</li>
+</ul>
+<p>一个Vue实例被创建时，会向Vue的响应式系统加入了<code>data</code>中能找到的所有属性，当这些属性的值改变时HTML视图也会发生相应变化。</p>
+<h1 id="3-vue模板语法">3 Vue模板语法</h1>
+<p>Vue.js使用了基于HTML的模板语法，允许开发者声明式地将DOM绑定至底层Vue实例数据。<br>
+Vue.js的核心是一个允许你采用简洁的模板语法来声明式的将数据渲染进DOM的系统，结合响应系统，在应用状态改变时，Vue能够智能地计算出重新渲染组建的最小代价并应用到DOM操作上。</p>
+<h2 id="31-插值">3.1 插值</h2>
+<p>插值分为两种方式：</p>
+<ul>
+<li>纯文本</li>
+<li>HTML</li>
+</ul>
+<p>纯文本可以使用<code>{{}}</code>插值，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;{{message}}&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'text'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>HTML使用<code>v-html</code>指令：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot; v-html=&quot;message&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'&lt;h1&gt;h1标题&lt;/h1&gt;'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="32-属性">3.2 属性</h2>
+<p>属性绑定使用<code>v-bind</code>指令，比如：</p>
+<pre><code class="language-html">&lt;div v-bind:class=&quot;{'class1':use}&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		use:false
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="33-表达式">3.3 表达式</h2>
+<p>可以在<code>{{}}</code>直接嵌入JS表达式，包括计算以及函数调用等等，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	{{5.222-1.2345}}
+	&lt;br&gt;
+	{{ok ? 'YES' : 'NO'}}
+	&lt;br&gt;
+	{{message.reverse()}}
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;	
+new Vue({
+	el:'#app',
+	data:{
+		ok:true,
+		message:'Reverse',
+	}
+})
+&lt;/scirpt&gt;
+</code></pre>
+<h2 id="34-指令">3.4 指令</h2>
+<p>指令是带有<code>v-</code>前缀的特殊属性，指令用于在表达式的值改变时，将某些行为应用到DOM上，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p v-if=&quot;seen&quot;&gt;看到了&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		seen:true
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="35-参数">3.5 参数</h2>
+<p>参数在指令后面以冒号表明，比如<code>v-bind</code>指令用于响应地更新HTML：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;a v-bind:href=&quot;url&quot;&gt;某个网站&lt;/a&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		url:'https://www.xxx.com'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p><code>href</code>是参数，告知<code>v-bind</code>指令将该元素的<code>href</code>属性与表达式<code>url</code>的值绑定。</p>
+<h2 id="36-修饰符">3.6 修饰符</h2>
+<p>修饰符是以<code>.</code>指明的特殊后缀，用于指出一个指令应该以特殊的方式绑定，例如<code>.prevent</code>修饰符告知<code>v-on</code>指令对于出发事件调用<code>event.preventDefault()</code>：</p>
+<pre><code class="language-html">&lt;form v-on:sbumit.prevent=&quot;onSubmit&quot;&gt;&lt;/form&gt; 
+</code></pre>
+<h2 id="37-v-model">3.7 v-model</h2>
+<p><code>v-model</code>用来在<code>input</code>，<code>select</code>，<code>textarea</code>，<code>chekcbox</code>，<code>radio</code>等表单控件元素上创建双向的数据绑定，根据表单上的值更新绑定元素的值。比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;{{message}}&lt;/p&gt;
+	&lt;input v-model=&quot;message&quot;&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'text'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="38-按钮事件">3.8 按钮事件</h2>
+<p>可以使用<code>v-on:click</code>监听按钮事件，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;{{message}}&lt;/p&gt;
+	&lt;button v-on:click=&quot;reverse&quot;&gt;反转字符串&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'reverseeeeee'
+	},
+	methods:{
+		reverse:function(){
+			this.message=this.messaage.split('').reverse().join('')
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="39-过滤器">3.9 过滤器</h2>
+<p>允许定义过滤器用作一些常见文本的格式化，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;{{message | f}}&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'text'
+	},
+	filters:{
+		f:function(value){
+			if(!value) return ''
+			value = value.toString
+			return value.charAt(0).toUpperCase()+value.slice(1)
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>另外，过滤器可以串联以及接受参数：</p>
+<pre><code class="language-js">{{message | filterA | filterB}}
+{{message | filterA('arg1','arg2')}} // message作为filterA的第一个参数，'arg1','arg2'分别为第二个，第三个参数
+</code></pre>
+<p>将上面的过滤器改动一下：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;{{message | f(10)}}&lt;/di&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+	},
+	filter:{
+		f:function(value,times){
+			if(!value) return ''
+			value = value.toString()
+			value = value.charAt(0).toUpperCase()+value.slice(1)
+			return value.repeat(times)
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="310-缩写">3.10 缩写</h2>
+<ul>
+<li><code>v-bind:href</code>可以缩写为<code>:href</code></li>
+<li><code>v-on:click</code>可以缩写为<code>@click</code></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（一）：设计模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi/">
+        </link>
+        <updated>2020-07-10T06:38:05.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E5%89%8D%E8%A8%80">1 前言</a></li>
+<li><a href="#2-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F">2 设计模式</a>
+<ul>
+<li><a href="#21-%E6%9D%A5%E6%BA%90">2.1 来源</a></li>
+<li><a href="#22-%E5%AE%9A%E4%B9%89">2.2 定义</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%B8%B8%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F">3 常用设计模式</a>
+<ul>
+<li><a href="#31-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F">3.1 创建型模式</a></li>
+<li><a href="#32-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F">3.2 结构型模式</a></li>
+<li><a href="#33-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F">3.3 行为型模式</a></li>
+</ul>
+</li>
+<li><a href="#4-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%94%A8%E9%80%94">4 设计模式用途</a></li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5 总结</a></li>
+</ul>
+</p>
+<h1 id="1-前言">1 前言</h1>
+<p>软件开发技术包含“招式”与“内功”，其中，编程语言，开发技术，著名框架可以认为是“招式”，而数据结构，算法，设计模式，重构，软件工程等则为“内功”。“招式”可以很快学会，但是“内功”的修炼需要更长的时间。对设计模式的学习会令“内功”大增，配合日益纯熟的“招式”，软件开发“功力”想必会达到一个新境界。下面来正式踏入修炼设计模式之旅。</p>
+<h1 id="2-设计模式">2 设计模式</h1>
+<h2 id="21-来源">2.1 来源</h2>
+<p><strong>模式是在特定环境下人们解决某类重复出现的问题的一套成功或有效的解决方案。</strong><br>
+GoF（Gang of Four，简称GoF，分别是Erich Gamma，Richard Helm，Ralph Johnson，John Vlissides）将模式的概念引入软件工程领域，标志着软件模式的诞生。软件模式是将模式的一般概念应用与软件开发领域，即软件开发的总体指导思想或参照样板。软件模式并非仅限于设计模式，还包括架构模式，分析模式和过程模式等。<br>
+在软件模式中，设计模式是研究最为深入的分支。设计模式用于在特定条件下为一些重复出现的问题提供合理的，有效的解决方案。</p>
+<h2 id="22-定义">2.2 定义</h2>
+<p>设计模式一般定义如下：</p>
+<pre><code class="language-bash">设计模式是一套被反复使用的，多数人知晓的，经过分类编目的，代码设计经验的总结，使用设计模式是为了可重用代码，
+让代码更容易被他人理解并且提高代码的可靠性。
+</code></pre>
+<p>设计模式一般包含的要素：</p>
+<ul>
+<li>模式名称</li>
+<li>问题</li>
+<li>目的</li>
+<li>解决方案</li>
+<li>效果</li>
+</ul>
+<p>其中关键要素为模式名称，问题，解决方案以及效果：</p>
+<ul>
+<li>模式名称：模式的命名</li>
+<li>问题：描述了应该在何时使用模式，包括了设计中存在的问题以及问题存在的原因</li>
+<li>解决方案：描述了一个设计模式的组成部分，以及这些组成部分之间的相互关系，各自的职责和协作方式，通常解决方案通过UML类图和核心代码进行描述</li>
+<li>效果：描述了模式的优缺点以及使用模式时应权衡的问题</li>
+</ul>
+<p>GoF设计模式有23个，模式分类可以按照用途或者处理方式进行分类，按照用途分类的话，可以分为：</p>
+<ul>
+<li><strong>创建型模式：主要用于描述如何创建对象</strong></li>
+<li><strong>结构型模式：主要用于描述如何实现类或对象的组合</strong></li>
+<li><strong>行为型模式：主要用于描述类或对象怎么交互以及怎样分配职责</strong></li>
+</ul>
+<p>根据处理方式分类，可以分为：</p>
+<ul>
+<li>类模式</li>
+<li>对象模式</li>
+</ul>
+<p>两种分类模式通常结合使用，比如单例模式是对象创建型模式。</p>
+<h1 id="3-常用设计模式">3 常用设计模式</h1>
+<h2 id="31-创建型模式">3.1 创建型模式</h2>
+<ul>
+<li>单例模式</li>
+<li>简单工厂模式</li>
+<li>工厂方法模式</li>
+<li>抽象工厂模式</li>
+<li>原型模式</li>
+<li>建造者模式</li>
+</ul>
+<h2 id="32-结构型模式">3.2 结构型模式</h2>
+<ul>
+<li>适配器模式</li>
+<li>桥接模式</li>
+<li>组合模式</li>
+<li>装饰模式</li>
+<li>外观模式</li>
+<li>享元模式</li>
+<li>代理模式</li>
+</ul>
+<h2 id="33-行为型模式">3.3 行为型模式</h2>
+<ul>
+<li>职责链模式</li>
+<li>命令模式</li>
+<li>解释器模式</li>
+<li>迭代器模式</li>
+<li>中介者模式</li>
+<li>备忘录模式</li>
+<li>观察者模式</li>
+<li>状态模式</li>
+<li>策略模式</li>
+<li>模板方法模式</li>
+<li>访问者模式</li>
+</ul>
+<h1 id="4-设计模式用途">4 设计模式用途</h1>
+<ul>
+<li>能够实现可维护性复用的设计方案，提高设计与开发效率</li>
+<li>设计模式提供了一套通用的设计词汇和一种通用的形式来方便开发人员之间的沟通以及交流，使得设计方案更加通俗易懂。因为设计模式跨语言，跨平台，跨应用，跨国界</li>
+<li>大部分设计模式都兼顾了系统的可重用性以及可扩展性，使得可以更好地重用一些已有的设计方案、功能模块以及一个完整的软件系统</li>
+<li>合理使用设计模式并对设计模式的使用情况进行文档化，将有助于别人更快地理解系统</li>
+</ul>
+<h1 id="5-总结">5 总结</h1>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200710134902806.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第22期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-22-qi/</id>
@@ -1424,158 +1768,6 @@ alter user 'user'@'host' identified with mysql_native_password by 'new_password'
 
 drop user 'user'@'host';
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第17期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-17-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-17-qi/">
-        </link>
-        <updated>2020-07-04T16:30:39.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1593908192557.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>当你觉得生活对你不公时，秤秤体重，照照镜子，你会觉得一切又合乎情理。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>科学家估计地球上约有40万种植物，其中一半以上可以食用。不过作为人类，我们只在吃大约200种植物。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>竹深树密虫鸣处，时有微凉不是风。<br>
-——杨万里《夏夜追凉》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>没人生来杰出。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=202529">最幸福的人-曾春年</a></p>
-</blockquote>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1593794756870.jpg" alt="" loading="lazy"></figure>
-<blockquote>
-<p>遇上一个人 要多少缘分<br>
-茫茫人海擦肩而过多少陌生人<br>
-但你的眼神 触动我的心<br>
-我愿意用所有 换你一个转身</p>
-</blockquote>
-<blockquote>
-<p>爱上一个人 要多少缘分<br>
-心甘情愿为你付出不觉得愚蠢<br>
-爱你那么深 爱得那么真<br>
-真的好想这样 让这份爱永恒</p>
-</blockquote>
-<blockquote>
-<p>你知不知道你就是我最爱的人<br>
-为你赴汤蹈火也不是不可能<br>
-从来都没有爱过这么深<br>
-遇上你我感觉我是最幸福的人</p>
-</blockquote>
-<blockquote>
-<p>你知不知道你就是我最爱的人<br>
-为你放弃一切也不是不可能<br>
-从来都没有 爱过这么深<br>
-爱上你我感觉我是最幸福的人</p>
-</blockquote>
-<blockquote>
-<p>遇上一个人 要多少缘分<br>
-茫茫人海擦肩而过多少陌生人<br>
-但你的眼神 触动我的心<br>
-我愿意用所有 换你一个转身</p>
-</blockquote>
-<blockquote>
-<p>爱上一个人 要多少缘分<br>
-心甘情愿为你付出不觉得愚蠢<br>
-爱你那么深 爱得那么真<br>
-真的好想这样 让这份爱永恒</p>
-</blockquote>
-<blockquote>
-<p>你知不知道你就是我最爱的人<br>
-为你赴汤蹈火也不是不可能<br>
-从来都没有 爱过这么深<br>
-遇上你我感觉我是最幸福的人</p>
-</blockquote>
-<blockquote>
-<p>你知不知道你就是我最爱的人<br>
-为你放弃一切也不是不可能<br>
-从来都没有爱过这么深<br>
-爱上你我感觉我是最幸福的人</p>
-</blockquote>
-<blockquote>
-<p>你知不知道你就是我最爱的人<br>
-为你赴汤蹈火也不是不可能<br>
-从来都没有 爱过这么深<br>
-遇上你我感觉我是最幸运的人</p>
-</blockquote>
-<blockquote>
-<p>你知不知道你就是我最爱的人<br>
-为你放弃一切也不是不可能<br>
-从来都没有 爱过这么深<br>
-爱上你我感觉我是最幸福的人</p>
-</blockquote>
-<blockquote>
-<p>爱上你我感觉我是最幸福的人</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Linux 递归修改后缀名]]></title>
-        <id>https://2293736867.github.io/post/linux-di-gui-xiu-gai-hou-zhui-ming/</id>
-        <link href="https://2293736867.github.io/post/linux-di-gui-xiu-gai-hou-zhui-ming/">
-        </link>
-        <updated>2020-07-04T14:31:41.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-修改命令">1 修改命令</h1>
-<p>需要用到：</p>
-<ul>
-<li><code>find</code></li>
-<li><code>awk</code></li>
-<li><code>xargs</code></li>
-</ul>
-<p>递归修改命令如下：</p>
-<pre><code class="language-bash">find . -name '*.XXX' | awk -F &quot;.&quot; '{print $2}' | xargs -i -t mv ./{}.XXX ./{}.XXXX
-</code></pre>
-<p>把<code>XXX</code>后缀修改为<code>XXXX</code>。</p>
-<h1 id="2-find">2 <code>find</code></h1>
-<p><code>find</code>用来在指定目录下查找文件，位于参数之前的字符串都被视为需要查找的目录。<br>
-<code>find . -name '*.XXX'</code>中：</p>
-<ul>
-<li><code>.</code>表示当前文件夹</li>
-<li><code>-name</code>表示文件名符合<code>name</code>的文件，有一个类似的<code>-iname</code>会忽略大小写</li>
-<li><code>*.XXX</code>表示寻找所有的<code>XXX</code>后缀的文件</li>
-</ul>
-<p>其他常用例子：</p>
-<ul>
-<li><code>find . -type f</code>：递归列出一般文件</li>
-<li><code>find . -ctime -20</code>：递归列出最近20天内更新过的文件</li>
-<li><code>find /var/log -type f -mtime +7 -ok rm {} \;</code>：查找<code>/var/log</code>下更新时间在7日以前的普通文件，并在删除之前询问</li>
-<li><code>find . -type f -perm 644 -exec ls -l {} \;</code>：查找当前目录下权限为<code>644</code>的文件</li>
-<li><code>find / -type f -size 0 -exec ls -l {} \;</code>：查找<code>/</code>下文件大小为0的普通文件并列出完整路径</li>
-</ul>
-<h1 id="3-awk">3 <code>awk</code></h1>
-<p><code>awk</code>是一种处理文本文件的语言，是一个强大的分析工具。<br>
-<code>awk -F &quot;.&quot; '{print $2}'</code>中：</p>
-<ul>
-<li><code>-F</code>指定输入文件拆分分隔符，因为需要修改后缀名，后缀名与主文件名由<code>.</code>分隔，因此后面加上<code>&quot;.&quot;</code>参数</li>
-<li><code>'{print $2}'</code>：<code>print</code>表示打印，<code>$</code>在awk中表示字段引用，这里<code>$2</code>表示引用第二个字段，字段根据前面的<code>-F</code>参数进行分隔。</li>
-<li>因为<code>find</code>打印出来的是<code>./a/b/c.XXX</code>，因此<code>print $2</code>会打印其中第二个字段，就是路径<code>/a/b/c</code>，而<code>print $1</code>为空（因为第一个<code>.</code>之前没有其他内容），<code>print $3</code>为后缀名</li>
-</ul>
-<h1 id="4-xargs">4 <code>xargs</code></h1>
-<p><code>xargs</code>是给命令传递参数的一个过滤器，可以将管道或者标准输入数据转换为命令行参数，默认的命令为<code>echo</code>。使用<code>xargs</code>可以对不支持管道的命令添加类似管道的功能，比如：</p>
-<pre><code class="language-bash">find . -name '*.jpg' | ls -l 
-# 错误，但是能执行，执行的结果仅仅是ls -l的结果
-
-find . -name '*.jpg' | xargs ls -l 
-# 正确
-</code></pre>
-<p><code>xargs -i -t mv ./{}.XXX ./{}.XXXX</code>中：</p>
-<ul>
-<li><code>-i</code>表示将<code>xargs</code>的每项名称，一般是一行一行赋值给后面的<code>{}</code></li>
-<li><code>-t</code>可选，表示先打印需要执行的命令（这里是先打印<code>mv</code>）再执行</li>
-<li><code>mv</code>：重命名</li>
-<li><code>{}</code>：配合<code>-i</code>使用，这里的<code>{}</code>表示前一步<code>awk</code>中的路径名，对每一个路径都执行一次<code>mv</code>，也就是修改后缀名</li>
-</ul>
 ]]></content>
     </entry>
 </feed>

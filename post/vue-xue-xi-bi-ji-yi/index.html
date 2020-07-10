@@ -1,0 +1,1002 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vue学习笔记（一） | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 Vue目录结构
+2 Vue对象
+3 Vue模板语法
+
+3.1 插值
+3.2 属性
+3.3 表达式
+3.4 指令
+3.5 参数
+3.6 修饰符
+3.7 v-model
+3.8 按钮事件
+3.9 过滤器
+3.10 缩写
+
+
+
+
+1 Vue..." />
+    <meta name="keywords" content="Vue" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1594372020660" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/vue-xue-xi-bi-ji-yi.png');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-07-10"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-yi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/vue-xue-xi-bi-ji-yi/"> </span>
+              </a>
+              <span id="/vue-xue-xi-bi-ji-yi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-0 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Vue学习笔记（一）</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-vue%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">1 Vue目录结构</a></li>
+<li><a href="#2-vue%E5%AF%B9%E8%B1%A1">2 Vue对象</a></li>
+<li><a href="#3-vue%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95">3 Vue模板语法</a>
+<ul>
+<li><a href="#31-%E6%8F%92%E5%80%BC">3.1 插值</a></li>
+<li><a href="#32-%E5%B1%9E%E6%80%A7">3.2 属性</a></li>
+<li><a href="#33-%E8%A1%A8%E8%BE%BE%E5%BC%8F">3.3 表达式</a></li>
+<li><a href="#34-%E6%8C%87%E4%BB%A4">3.4 指令</a></li>
+<li><a href="#35-%E5%8F%82%E6%95%B0">3.5 参数</a></li>
+<li><a href="#36-%E4%BF%AE%E9%A5%B0%E7%AC%A6">3.6 修饰符</a></li>
+<li><a href="#37-v-model">3.7 v-model</a></li>
+<li><a href="#38-%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6">3.8 按钮事件</a></li>
+<li><a href="#39-%E8%BF%87%E6%BB%A4%E5%99%A8">3.9 过滤器</a></li>
+<li><a href="#310-%E7%BC%A9%E5%86%99">3.10 缩写</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-vue目录结构">1 Vue目录结构</h1>
+<ul>
+<li><code>build</code>：项目构建webpack的相关代码</li>
+<li><code>config</code>：配置目录，包括端口号等</li>
+<li><code>node_modules</code>：npm加载的项目依赖模块</li>
+<li><code>src</code>：开发的目录模块，包含<code>assets</code>（资源文件），<code>components</code>（组件文件），<code>App.vue</code>项目入口文件，<code>main.js</code>项目核心文件</li>
+<li><code>static</code>：静态资源文件，如图片，字体等</li>
+<li><code>test</code>：初始测试目录</li>
+<li><code>.xxx</code>：配置文件，比如语法配置，git配置等等</li>
+<li><code>index.html</code>：首页入口文件</li>
+<li><code>package.json</code>：项目配置文件</li>
+<li><code>README.md</code>：项目说明文件</li>
+</ul>
+<h1 id="2-vue对象">2 Vue对象</h1>
+<p><code>Vue</code>对象的基本参数有：</p>
+<ul>
+<li><code>el</code>：DOM元素的id</li>
+<li><code>data</code>：用于定义属性</li>
+<li><code>methods</code>：用于定义函数</li>
+<li><code>{{}}</code>输出对象属性和函数返回值</li>
+</ul>
+<p>一个Vue实例被创建时，会向Vue的响应式系统加入了<code>data</code>中能找到的所有属性，当这些属性的值改变时HTML视图也会发生相应变化。</p>
+<h1 id="3-vue模板语法">3 Vue模板语法</h1>
+<p>Vue.js使用了基于HTML的模板语法，允许开发者声明式地将DOM绑定至底层Vue实例数据。<br>
+Vue.js的核心是一个允许你采用简洁的模板语法来声明式的将数据渲染进DOM的系统，结合响应系统，在应用状态改变时，Vue能够智能地计算出重新渲染组建的最小代价并应用到DOM操作上。</p>
+<h2 id="31-插值">3.1 插值</h2>
+<p>插值分为两种方式：</p>
+<ul>
+<li>纯文本</li>
+<li>HTML</li>
+</ul>
+<p>纯文本可以使用<code>{{}}</code>插值，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;{{message}}&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'text'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>HTML使用<code>v-html</code>指令：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot; v-html=&quot;message&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'&lt;h1&gt;h1标题&lt;/h1&gt;'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="32-属性">3.2 属性</h2>
+<p>属性绑定使用<code>v-bind</code>指令，比如：</p>
+<pre><code class="language-html">&lt;div v-bind:class=&quot;{'class1':use}&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		use:false
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="33-表达式">3.3 表达式</h2>
+<p>可以在<code>{{}}</code>直接嵌入JS表达式，包括计算以及函数调用等等，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	{{5.222-1.2345}}
+	&lt;br&gt;
+	{{ok ? 'YES' : 'NO'}}
+	&lt;br&gt;
+	{{message.reverse()}}
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;	
+new Vue({
+	el:'#app',
+	data:{
+		ok:true,
+		message:'Reverse',
+	}
+})
+&lt;/scirpt&gt;
+</code></pre>
+<h2 id="34-指令">3.4 指令</h2>
+<p>指令是带有<code>v-</code>前缀的特殊属性，指令用于在表达式的值改变时，将某些行为应用到DOM上，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p v-if=&quot;seen&quot;&gt;看到了&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		seen:true
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="35-参数">3.5 参数</h2>
+<p>参数在指令后面以冒号表明，比如<code>v-bind</code>指令用于响应地更新HTML：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;a v-bind:href=&quot;url&quot;&gt;某个网站&lt;/a&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		url:'https://www.xxx.com'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p><code>href</code>是参数，告知<code>v-bind</code>指令将该元素的<code>href</code>属性与表达式<code>url</code>的值绑定。</p>
+<h2 id="36-修饰符">3.6 修饰符</h2>
+<p>修饰符是以<code>.</code>指明的特殊后缀，用于指出一个指令应该以特殊的方式绑定，例如<code>.prevent</code>修饰符告知<code>v-on</code>指令对于出发事件调用<code>event.preventDefault()</code>：</p>
+<pre><code class="language-html">&lt;form v-on:sbumit.prevent=&quot;onSubmit&quot;&gt;&lt;/form&gt; 
+</code></pre>
+<h2 id="37-v-model">3.7 v-model</h2>
+<p><code>v-model</code>用来在<code>input</code>，<code>select</code>，<code>textarea</code>，<code>chekcbox</code>，<code>radio</code>等表单控件元素上创建双向的数据绑定，根据表单上的值更新绑定元素的值。比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;{{message}}&lt;/p&gt;
+	&lt;input v-model=&quot;message&quot;&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'text'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="38-按钮事件">3.8 按钮事件</h2>
+<p>可以使用<code>v-on:click</code>监听按钮事件，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;{{message}}&lt;/p&gt;
+	&lt;button v-on:click=&quot;reverse&quot;&gt;反转字符串&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'reverseeeeee'
+	},
+	methods:{
+		reverse:function(){
+			this.message=this.messaage.split('').reverse().join('')
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="39-过滤器">3.9 过滤器</h2>
+<p>允许定义过滤器用作一些常见文本的格式化，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;{{message | f}}&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		message:'text'
+	},
+	filters:{
+		f:function(value){
+			if(!value) return ''
+			value = value.toString
+			return value.charAt(0).toUpperCase()+value.slice(1)
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>另外，过滤器可以串联以及接受参数：</p>
+<pre><code class="language-js">{{message | filterA | filterB}}
+{{message | filterA('arg1','arg2')}} // message作为filterA的第一个参数，'arg1','arg2'分别为第二个，第三个参数
+</code></pre>
+<p>将上面的过滤器改动一下：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;{{message | f(10)}}&lt;/di&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+	},
+	filter:{
+		f:function(value,times){
+			if(!value) return ''
+			value = value.toString()
+			value = value.charAt(0).toUpperCase()+value.slice(1)
+			return value.repeat(times)
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h2 id="310-缩写">3.10 缩写</h2>
+<ul>
+<li><code>v-bind:href</code>可以缩写为<code>:href</code></li>
+<li><code>v-on:click</code>可以缩写为<code>@click</code></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-10">2020-07-10</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（一）：设计模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-yi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/vue-xue-xi-bi-ji-yi.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-10">2020-07-10</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-yi/">Vue学习笔记（一）</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-10">2020-07-10</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi/">设计模式学习笔记（一）：设计模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-22-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-22-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-10">2020-07-10</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-22-qi/">每日分享 第22期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-0 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-1 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-2 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-3 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-4 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-5 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-6 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-7 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-8 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-9 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-10 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-11 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-12 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-13 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-14 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-15 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-16 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-17 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-18 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-19 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-20 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-21 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-22 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-23 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-24 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-25 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-26 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-27 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-28 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-29 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-30 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-31 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-32 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-33 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-34 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-35 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-36 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-37 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-38 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-39 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-40 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-41 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-42 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-43 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-44 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-45 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-46 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-47 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-48 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-49 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-50 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-51 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-52 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-53 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-54 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-55 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-56 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-57 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-58 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-59 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-60 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-61 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-62 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-63 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-64 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-65 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-66 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-67 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-68 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-69 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-70 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 159 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
