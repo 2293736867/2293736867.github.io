@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-12T05:13:46.723Z</updated>
+    <updated>2020-07-12T05:49:51.690Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,215 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Vue学习笔记（二）]]></title>
+        <id>https://2293736867.github.io/post/vue-xue-xi-bi-ji-er/</id>
+        <link href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-er/">
+        </link>
+        <updated>2020-07-12T05:47:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-条件判断">1 条件判断</h1>
+<h2 id="11-普通if">1.1 普通if</h2>
+<p>条件判断使用<code>v-if</code>指令：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p v-if=&quot;seen&quot;&gt;看到了&lt;/p&gt;;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		seen:true
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p><code>v-if</code>指令根据表达式的值（在这里是<code>seen</code>）决定是否插入<code>&lt;p&gt;</code></p>
+<h2 id="12-if-else">1.2 if-else</h2>
+<p>可以使用<code>v-else</code>添加一个<code>else</code>块：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;div v-if=&quot;Math.random()&gt;0.5&quot;&gt;1&lt;/div&gt;
+	&lt;div v-else&gt;2&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app'
+})
+&lt;/sctipt&gt;
+</code></pre>
+<p>也可以增加<code>v-else-if</code>：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;div v-if=&quot;value === 'A'&quot;&gt;A&lt;/div&gt;
+	&lt;div v-else-if=&quot;value === 'B'&quot;&gt;B&lt;/div&gt;
+	&lt;div v-else-if=&quot;value === 'C'&quot;&gt;C&lt;/div&gt;
+	&lt;div v-else&gt;D&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:{
+		value:'A'
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p><code>v-else</code>以及<code>v-else-if</code>必须跟在<code>v-if</code>或者<code>v-else-if</code>之后。</p>
+<h2 id="13-v-show">1.3 v-show</h2>
+<p>也可以根据<code>v-show</code>展示元素：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;h1 v-show=&quot;ok&quot;&gt;Test&lt;/h1&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:
+	{
+		ok:true
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<h1 id="2-循环">2 循环</h1>
+<p>循环使用<code>v-for</code>，格式为：<code>A in B</code>，其中<code>A</code>是<code>B</code>中的每一个值，若<code>B</code>为数组，则<code>A</code>表示其中的没一个元素，若<code>B</code>为对象，则<code>A</code>可以表示<code>B</code>中的没一个值，通常配合<code>&lt;li&gt;</code>使用：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;ol&gt;
+		&lt;li v-for=&quot;i in arr&quot;&gt;{{i.value}}&lt;/li&gt;
+	&lt;/ol&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:
+	{
+		arr:
+		[
+			{value:'value1'},
+			{value:'value2'},
+			{value:'value3'}
+		]
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>另外也可以通过一个对象的属性来迭代数据：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;ul&gt;
+		&lt;li v-for=&quot;value in obj&quot;&gt;{{value}}&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:
+	{
+		obj:
+		{
+			value1:'value1',
+			value2:'value2',
+			value3:'value3'
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>也可以提供第二个参数作为键名：</p>
+<pre><code class="language-html">&lt;li v-for=&quot;(value,key) in obj&quot;&gt;
+{{key}} -&gt; {{value}}
+&lt;/li&gt;
+</code></pre>
+<p>第三个参数作为索引：</p>
+<pre><code class="language-html">&lt;li v-for=&quot;(value,key,index) in obj&quot;&gt;
+{{index}} : {{key}} -&gt; {{value}}
+&lt;/li&gt;
+</code></pre>
+<p>另外也可以迭代整数：</p>
+<pre><code class="language-html">&lt;li v-for=&quot;n in 10&quot;&gt;{{n}}&lt;/li&gt;
+</code></pre>
+<p>范围是从0到10，包含0与10。</p>
+<h1 id="3-计算属性">3 计算属性</h1>
+<h2 id="31-computed">3.1 computed</h2>
+<p>计算属性类似与方法调用，比如之前的反转字符串的例子：</p>
+<pre><code class="language-js">{{message.split('').reverse().join('')}}
+</code></pre>
+<p>这样看起来很长，可以使用计算属性进行简化：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;{{reverse}}&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">&lt;script&gt;
+new Vue({
+	el:'#app',
+	data:
+	{
+		message:'Test'
+	},
+	computed:
+	{
+		reverse:function()
+		{
+			return this.message.split.reverse().join('')
+		}
+	}
+})
+&lt;/script&gt;
+</code></pre>
+<p>这里声明了一个计算属性<code>reverse</code>，提供的函数作为属性<code>reverse</code>的<code>getter</code>，<code>reverse</code>依赖于<code>message</code>，当<code>message</code>更新时，<code>reverse</code>也会更新。</p>
+<h2 id="32-computed与methods">3.2 computed与methods</h2>
+<p>可以使用<code>methods</code>来代替<code>computed</code>：</p>
+<pre><code class="language-js">methods:
+{
+	reverse:function()
+	{
+		return this.message.split.reverse().join('')
+	}
+}
+</code></pre>
+<p>对应只需要增加一对<code>()</code>：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;{{reverse()}}&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p><code>computed</code>基于它的依赖缓存，只有相关依赖修改时才会重新取值，而使用<code>methods</code>，在重新渲染时函数总会重新调用执行。</p>
+<h2 id="33-setter">3.3 setter</h2>
+<p><code>computed</code>默认只有 <code>getter</code>，不过也可以自行提供<code>setter</code>：</p>
+<pre><code class="language-js">var vm = new Vue({
+	el:'#app',
+	data:
+	{
+		name:'test',
+		url:'https://www.test.com'
+	},
+	computed:
+	{
+		site:
+		{
+			get:function()
+			{
+				return this.name + ' ' + this.url; 
+			},
+			set:function(value)
+			{
+				var values = value.split(' ')
+				this.name = values[0]
+				this.url = values[1]
+			}
+		}
+	}
+})
+
+vm.site = 'test2 https://www.test2.com'
+document.write('name:'+vm.name)
+document.write('&lt;br&gt;')
+document.write('url:'+vm.url)
+</code></pre>
+<p>输入如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200712134247478.png" alt="在这里插入图片描述" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第24期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-24-qi/</id>
@@ -1823,83 +2032,6 @@ txt = &quot;C:\xxx\xxx\xxx\1.txt&quot;
 宁愿没出息求我别离开</p>
 </blockquote>
 <figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1594276962358.jpg" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第20期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-20-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-20-qi/">
-        </link>
-        <updated>2020-07-08T02:21:15.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1594174933839.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>听说你的城市下雨了，不知道你带伞了没有，如果带了这雨就白下了。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>虽然美国威斯康星州的饮酒年龄为21岁，但根据法律规定，任何未成年人都可以在酒吧和餐馆喝酒，只要与达到法定饮酒年龄的父母或者监护人在一起即可。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>嫩阴里，烟滋露染，翠娇红溜。<br>
-——吴文英《花心动·柳》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>这么好的一位少年，那么他喜欢着的少女，得是多好的姑娘啊？</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=111933">开心的马骝-刘德华</a></p>
-</blockquote>
-<blockquote>
-<p>紫色夹杂 灰色衬衫 T恤橙雨楼<br>
-思想放任 衣衫更是 不须多扣钮<br>
-衫松裤大 胶表带着 拉绳的布袋<br>
-街边跳动 开心快活 七彩的马骝</p>
-</blockquote>
-<blockquote>
-<p>夜 不再等候 别放手 不再要走<br>
-夜街 穿插左右<br>
-令我热热烈烈痛痛快快似喝醉了酒</p>
-</blockquote>
-<blockquote>
-<p>大雨落在七彩雨楼 两点似菊豆<br>
-十只着上七彩雨楼的湿水马骝<br>
-夜里荡在尖东去追 刺激快感受<br>
-站在路上一起再多饮光几罐酒</p>
-</blockquote>
-<blockquote>
-<p>紫色夹杂 灰色衬衫 T恤橙雨楼<br>
-思想放任 衣衫更是 不须多扣钮<br>
-衫松裤大 胶表带着 拉绳的布袋<br>
-街边跳动 开心快活 七彩的马骝<br>
-夜 不再等候 别放手 不再要走<br>
-夜街 穿插左右<br>
-令我热热烈烈痛痛快快似喝醉了酒</p>
-</blockquote>
-<blockquote>
-<p>大雨落在七彩雨楼两点似菊豆<br>
-十只着上七彩雨楼的湿水马骝<br>
-夜里荡在尖东去追刺激快感受<br>
-站在路上一起再多饮光几罐酒</p>
-</blockquote>
-<blockquote>
-<p>夜 不再等候 别放手 不再要走<br>
-夜街 穿插左右<br>
-令我热热烈烈痛痛快快似喝醉了酒<br>
-大雨落在七彩雨楼两点似菊豆<br>
-十只着上七彩雨楼的湿水马骝<br>
-夜里荡在尖东去追刺激快感受<br>
-站在路上一起再多饮光几罐酒</p>
-</blockquote>
-<blockquote>
-<p>大雨落在七彩雨楼两点似菊豆<br>
-十只着上七彩雨楼的湿水马骝<br>
-夜里荡在尖东去追刺激快感受<br>
-站在路上一起再多饮光几罐酒</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>
