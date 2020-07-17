@@ -1,0 +1,1214 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式（七）：原型模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 定义
+2 实现方法
+
+2.1 通用实现方法
+2.2 clone()
+
+
+3 实例
+4 浅克隆与深克隆
+
+4.1 浅克隆
+4.2 深克隆
+
+
+5 原型管理器
+
+5.1 定义
+5.2 实例
+
+
+6 主要优点
+7 主要缺点
+8 适用场景
+9..." />
+    <meta name="keywords" content="设计模式" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1595008262033" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-qi-yuan-xing-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-07-18"><i class="fa fa-calendar"></i><span class="lately">18 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-qi-yuan-xing-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-qi-yuan-xing-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式（七）：原型模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E5%AE%9A%E4%B9%89">1 定义</a></li>
+<li><a href="#2-%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2 实现方法</a>
+<ul>
+<li><a href="#21-%E9%80%9A%E7%94%A8%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2.1 通用实现方法</a></li>
+<li><a href="#22-clone">2.2 <code>clone()</code></a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E6%B5%85%E5%85%8B%E9%9A%86%E4%B8%8E%E6%B7%B1%E5%85%8B%E9%9A%86">4 浅克隆与深克隆</a>
+<ul>
+<li><a href="#41-%E6%B5%85%E5%85%8B%E9%9A%86">4.1 浅克隆</a></li>
+<li><a href="#42-%E6%B7%B1%E5%85%8B%E9%9A%86">4.2 深克隆</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%8E%9F%E5%9E%8B%E7%AE%A1%E7%90%86%E5%99%A8">5 原型管理器</a>
+<ul>
+<li><a href="#51-%E5%AE%9A%E4%B9%89">5.1 定义</a></li>
+<li><a href="#52-%E5%AE%9E%E4%BE%8B">5.2 实例</a></li>
+</ul>
+</li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
+</ul>
+</p>
+<h1 id="1-定义">1 定义</h1>
+<p><strong>原型模式：使用原型实例指定创建对象的种类，并且通过克隆这些原型创建新的对象。<br>
+原型模式是一种对象创建型模式。</strong></p>
+<p>原型模式的工作原理很简单，将一个原型对象传给那个要发动创建的对象，这个要发动创建的对象通过请求原型对象克隆自己来实现创建过程。原型模式是一种另类的创建型模式，创建克隆对象的工厂就是原型类自身，工厂方法由克隆方法实现。</p>
+<p>通过克隆方法创建的对象是全新的对象，它们在内存中拥有新的地址，通常对克隆多产生的对象进行的修改不会对原型对象造成任何的影响，每一个克隆的对象都是相互独立的，通过不同的方式对克隆对象进行修改之后，可以得到一系列相似但不完全相同的对象。</p>
+<p>结构图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200717155947994.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>原型模式包含以下三个角色：</p>
+<ul>
+<li>Prototype（原型抽象类）：声明克隆方法的接口，是所有具体原型类的公共父类，可以是抽象类也可以是接口，还能是具体实现类</li>
+<li>ConcretePrototypr（具体原型类）：实现在抽象原型类中声明的克隆方法，在克隆方法中返回自己的一个克隆对象</li>
+<li>Client（客户类）：让一个原型对象克隆自身从而创建一个新的对象，在客户类中只需要直接实例化或通过工厂方法等方式创建一个原型对象，再通过调用该对象的克隆方法即可得到多个相同的对象。</li>
+</ul>
+<h1 id="2-实现方法">2 实现方法</h1>
+<p>在Java中常用的实现方法有两种：</p>
+<ul>
+<li>通用实现方法</li>
+<li><code>clone()</code>方法</li>
+</ul>
+<h2 id="21-通用实现方法">2.1 通用实现方法</h2>
+<p>通用的克隆实现方法是在具体原型类的克隆方法中实例化一个与自身类型相同的对象并将其返回，并将相关的参数传入新创建的对象中，保证成员变量相同。<br>
+示例代码：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        Prototype prototype1 = new ConcretePrototype();
+        prototype1.setField(&quot;test&quot;);
+        Prototype prototype2 = prototype1.clone();
+        System.out.println(prototype1.getField() == prototype2.getField());
+        System.out.println(prototype1 == prototype2);
+    }
+}
+
+interface Prototype
+{
+    Prototype clone();
+    void setField(String f);
+    String getField();
+}
+
+
+class ConcretePrototype implements Prototype
+{
+    private String field;
+
+    public void setField(String f)
+    {
+        field = f;
+    }
+
+    public String getField()
+    {
+        return field;
+    }
+
+    public Prototype clone()
+    {
+        Prototype prototype = new ConcretePrototype();
+        prototype.setField(this.field);
+        return prototype;
+    }
+}
+</code></pre>
+<h2 id="22-clone">2.2 <code>clone()</code></h2>
+<p><code>java.lang.Object</code>提供了一个<code>clone()</code>，可以将一个Java对象克隆一份，利用<code>clone()</code>可以直接将对象克隆一份，但是必须实现<code>Cloneable</code>接口，否则<code>clone()</code>时会抛出<code>CloneNotSupportedException</code>。<br>
+示例代码如下：</p>
+<pre><code class="language-java">// 在2.1的基础上修改ConcreteProtoype即可
+class ConcretePrototype implements Prototype,Cloneable
+{
+    private String field;
+
+    public void setField(String f)
+    {
+        field = f;
+    }
+
+    public String getField()
+    {
+        return field;
+    }
+
+    public Prototype clone()
+    {
+        Object object = null;
+        try
+        {
+            object = super.clone();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (Prototype)object;
+    }
+}
+</code></pre>
+<p>一般而言，Java中的<code>clone()</code>满足：</p>
+<ul>
+<li>对任何对象<code>x</code>都有<code>x.clone() != x</code>，也就是克隆的对象与原型对象不是同一个对象</li>
+<li>对任何对象<code>x</code>都有<code>x.clone().getClass() == x.getClass()</code>，即克隆对象与原型对象的类型一样</li>
+<li>如果<code>x</code>的<code>equals()</code>定义恰当，那么<code>x.clone().equals(x)</code>应该成立</li>
+</ul>
+<p>具体实现步骤如下：</p>
+<ul>
+<li>覆盖<code>clone()</code>，并声明为<code>public</code></li>
+<li><code>clone()</code>中调用<code>super.clone()</code></li>
+<li>派生类需要实现<code>Cloneable</code>接口</li>
+</ul>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>开发一个工作周报系统，工作周报的内容都大同小异，只有一些小地方存在差异，但是系统每次默认创建的都是空白报表，用户不断复制粘贴来填写重复内容。使用原型模式对其进行优化，快速创建相同或类似的工作周报。</p>
+</blockquote>
+<p>代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        WeeklyLog weeklyLog1 = new WeeklyLog();
+        weeklyLog1.setContent(&quot;content&quot;);
+        weeklyLog1.setName(&quot;Weekly log 1&quot;);
+        weeklyLog1.setDateTime(LocalDateTime.now());
+
+        System.out.println(weeklyLog1.getName());
+        System.out.println(weeklyLog1.getContent());
+        System.out.println(weeklyLog1.getDateTime());
+
+        WeeklyLog weeklyLog2 = weeklyLog1.clone();
+        weeklyLog2.setName(&quot;Weekly log 2&quot;);
+        System.out.println(weeklyLog2.getName());
+        System.out.println(weeklyLog2.getContent());
+        System.out.println(weeklyLog2.getDateTime());
+    }
+}
+
+class WeeklyLog implements Cloneable
+{
+    private String name;
+    private LocalDateTime dateTime;
+    private String content;
+
+    //getter and setter
+    //...
+
+    public WeeklyLog clone()
+    {
+        Object obj = null;
+        try
+        {
+            obj = super.clone();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (WeeklyLog)obj;
+    }
+    
+}
+</code></pre>
+<h1 id="4-浅克隆与深克隆">4 浅克隆与深克隆</h1>
+<p>一般来说，工作周报可能会携带附件，使用上面的原型模式来进行工作周报的复制没有问题，但是附件（一般是另一个类）不会进行复制。这是因为浅克隆与深克隆的原因，下面具体来看一下。</p>
+<h2 id="41-浅克隆">4.1 浅克隆</h2>
+<p>在浅克隆中，如果原型对象的成员变量是值类型，将复制一份给克隆对象。（在Java中）值类型包括：</p>
+<ul>
+<li>int</li>
+<li>double</li>
+<li>byte</li>
+<li>boolean</li>
+<li>char</li>
+<li>float</li>
+<li>long</li>
+<li>short</li>
+</ul>
+<p>也就是这些类型的值都会完整复制一份给克隆对象，对于引用类型，则将引用对象的地址复制一份给克隆对象。（在Java中）引用类型就是除了基本类型之外的所有类型，常见的有：</p>
+<ul>
+<li>类</li>
+<li>接口</li>
+<li>数组</li>
+</ul>
+<p>对于引用类型，原型对象与克隆对象指向相同的内存地址，也就是其实并没有被复制，而是共享一份地址相同的值。<br>
+在Java中可以通过<code>Object</code>的<code>clone()</code>实现浅克隆，也就是上面例子的做法。</p>
+<h2 id="42-深克隆">4.2 深克隆</h2>
+<p>在深克隆中，无论变量是值类型还是引用类型都会完整复制一份给克隆对象。<br>
+在Java中实现深克隆可以通过序列化等方式实现。序列化就是将对象写到流的过程，写到流中的对象是原有对象的一个复制品，而原对象仍然存在于内存中。想要进行序列化必须实现<code>Serializable</code>接口。</p>
+<p>代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        WeeklyLog weeklyLog1 = new WeeklyLog();
+        WeeklyLog weeklyLog2 = null;
+        Attachement attachement = new Attachement();
+        weeklyLog1.setAttachement(attachement);
+        try
+        {
+            weeklyLog2 = weeklyLog1.deepClone(); 
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        System.out.println(weeklyLog1 == weeklyLog2);
+        System.out.println(weeklyLog1.getAttachement() == weeklyLog2.getAttachement());
+    }
+}
+
+class Attachement implements Serializable
+{
+    private String name;
+    //getter and setter
+    //...
+}
+
+class WeeklyLog implements Serializable
+{
+    private String name;
+    private LocalDateTime dateTime;
+    private String content;
+    private Attachement attachement;
+
+    //getter and setter
+    //...
+
+    public WeeklyLog deepClone() throws IOException , ClassNotFoundException , OptionalDataException
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(this);
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+
+        return (WeeklyLog)objectInputStream.readObject();
+    }
+}
+</code></pre>
+<p>当然除了使用<code>ByteArrayOutput/InputStream</code>以及<code>ObjectInput/OutputStream</code>外，还可以利用以下工具类进行深克隆：</p>
+<ul>
+<li><code>org.apache.commons.lang3.SerializationUtils.clone()</code>：需要实现<code>Serializable</code>接口</li>
+<li><code>Gson</code>：无需实现<code>Serializable</code>接口，<code>toJson()+fromJson()</code></li>
+<li><code>Jackson</code>：也是无需实现<code>Serializable</code>接口，<code>readValue()+writeValueAsString()</code>等</li>
+</ul>
+<h1 id="5-原型管理器">5 原型管理器</h1>
+<h2 id="51-定义">5.1 定义</h2>
+<p>原型管理器是将多个原型对象存储在一个集合中供客户端使用的专门负责克隆对象的工厂，其中定义了一个集合用于存储原型对象，如果需要某个原型对象的克隆，可以通过复制集合中对应的原型对象来获取。在原型管理器中针对抽象原型类进行编程。<br>
+结构图如下：<br>
+<img src="https://img-blog.csdnimg.cn/2020071800411674.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="52-实例">5.2 实例</h2>
+<blockquote>
+<p>日常办公中会有许多公文需要创建，例如《可行性分析报告》，《立项建议书》，《软件需求规格说明书》，《项目进展报告》等，为了提高工作效率需要为各类公文创建模板，用户可以通过这些模板快速创建新的公文，这些公文模板进行统一的管理，系统根据用户的请求的不同生成不同的新公文。</p>
+</blockquote>
+<p>首先是抽象原型以及具体原型的代码：</p>
+<pre><code class="language-java">interface OfficialDocument extends Cloneable
+{
+    OfficialDocument clone();
+    void display();
+}
+
+//可行性分析报告
+class FAR implements OfficialDocument 
+{
+    public OfficialDocument clone()
+    {
+        OfficialDocument far = null;
+        try
+        {
+            far = (OfficialDocument)super.clone();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return far;
+    }
+
+    public void display()
+    {
+        System.out.println(&quot;可行性分析报告&quot;);
+    }
+}
+
+//软件需求规格说明书
+class SRS implements OfficialDocument
+{
+    public OfficialDocument clone()
+    {
+        OfficialDocument srs = null;
+        try
+        {
+            srs = (OfficialDocument)super.clone();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return srs;
+    }
+
+    public void display()
+    {
+        System.out.println(&quot;软件需求规格说明书&quot;);
+    }
+}
+</code></pre>
+<p>接着是原型管理器的代码，使用枚举单例实现：</p>
+<pre><code class="language-java">enum PrototypeManager 
+{
+    INSTANCE;
+
+    private Hashtable&lt;String,OfficialDocument&gt; hashtable = new Hashtable&lt;&gt;();
+    private PrototypeManager()
+    {
+        add(&quot;far&quot;,new FAR());
+        add(&quot;srs&quot;,new SRS());
+    }
+
+    public void add(String key,OfficialDocument document)
+    {
+        hashtable.put(key, document);
+    }
+
+    public OfficialDocument get(String key)
+    {
+        return ((OfficialDocument)hashtable.get(key)).clone();
+    }
+}
+</code></pre>
+<p>测试代码：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        PrototypeManager manager = PrototypeManager.INSTANCE;
+        OfficialDocument document1,document2,document3,document4;
+
+        document1 = manager.get(&quot;far&quot;);
+        document1.display();
+
+        document2 = manager.get(&quot;far&quot;);
+        document2.display();
+        System.out.println(document1 == document2);
+
+        document3 = manager.get(&quot;srs&quot;);
+        document3.display();
+
+        document4 = manager.get(&quot;srs&quot;);
+        document4.display();
+        System.out.println(document3 == document4);
+    }
+}
+</code></pre>
+<h1 id="6-主要优点">6 主要优点</h1>
+<ul>
+<li>简化创建过程：当创建新的对象实例较为复杂时，使用原型模式可以简化对象的创建过程，通过复制一个已有实例可以提高新实例的创建效率</li>
+<li>扩展性较好：由于在原型模式中提供了抽象原型类，在客户端可以针对抽象原型类进行编程，而将具体原型类写在配置文件中，增加或减少具体原型类对系统都没有任何影响</li>
+<li>简化创建结构：原型模式提供了简化的创建结构。工厂方法模式常常需要有一个与产品类等级结构相同的工厂等级结构，而原型模式就不需要这样，原型模式中产品的复制是通过封装在原型类中的克隆方法实现的，无需专门的工厂类来创建产品</li>
+<li>保存状态：可以使用深克隆的方式保存对象的状态。使用原型模式将对象复制一份并将其状态保存起来，以便在需要的时候使用，例如恢复到某一历史状态，可辅助实现撤销操作</li>
+</ul>
+<h1 id="7-主要缺点">7 主要缺点</h1>
+<ul>
+<li>修改不方便：需要为每一个类配备一个克隆方法，而且该克隆方法位于一个类的内部，当对已有的类进行改造的时候，需要修改源代码，违背了OCP（开放闭合原则）</li>
+<li>深克隆需要嵌套类支持：在实现深克隆时需要编写较为复杂的代码，而且当对象之间存在多重的嵌套引用时，为了实现深克隆，每一层对象都必须支持深克隆，实现起来可能比较麻烦</li>
+</ul>
+<h1 id="8-适用场景">8 适用场景</h1>
+<ul>
+<li>创建新对象成本较大，比如初始化需要较长时间，占用太多的CPU资源或网络资源，新的对象可以通过原型模式对已有对象进行复制获取，如果是相似对象可以对成员变量稍作修改</li>
+<li>如果系统要保存对象的状态，而对象的变化状态很小，或者对象本身占用内存较少，可以使用原型模式配合备忘录模式</li>
+<li>需要避免使用分层次的工厂类来创建分层次的对象，并且类的实例对象只有一个或很少的几个组合状态，通过复制原型对象得到新实例可能比使用构造函数创建一个实例方便</li>
+</ul>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718011132428.png" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-30-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-30-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-18">2020-07-18</time>
+                  <h4 class="title white no-margin">每日分享 第30期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-29-qi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-29-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-17">2020-07-17</time>
+                  <h4 class="title white no-margin">每日分享 第29期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-30-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-30-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-18">2020-07-18</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-30-qi/">每日分享 第30期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-qi-yuan-xing-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-18">2020-07-18</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/">设计模式（七）：原型模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-29-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-29-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-17">2020-07-17</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-29-qi/">每日分享 第29期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-1 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-3 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-4 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-5 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-6 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-7 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-8 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-9 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-10 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-11 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-12 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-13 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-14 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-15 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-16 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-17 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-18 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-19 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-20 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-21 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-22 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-23 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-24 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-25 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-26 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-27 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-28 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-29 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-30 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-31 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-32 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-33 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-34 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-35 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-36 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-37 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-38 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-39 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-40 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-41 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-42 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-43 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-44 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-45 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-46 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-47 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-48 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-49 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-50 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-51 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-52 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-53 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-54 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-55 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-56 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-57 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-58 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-59 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-60 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-61 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-62 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-63 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-64 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-65 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-66 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-67 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-68 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-69 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-70 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 172 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
