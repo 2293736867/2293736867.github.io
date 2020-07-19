@@ -1,0 +1,1146 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（八）：建造者模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 建造者模式
+1.1 定义
+建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
+建造者模式是一种对象创建型模式。
+建造者模式是较为复杂的创建型模式，它将客户端与包含多个组成部分（或部件）的复杂对象的创..." />
+    <meta name="keywords" content="设计模式" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1595118346106" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-07-19"><i class="fa fa-calendar"></i><span class="lately">4 小时前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（八）：建造者模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-建造者模式">1 建造者模式</h1>
+<h2 id="11-定义">1.1 定义</h2>
+<p><strong>建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</strong><br>
+<strong>建造者模式是一种对象创建型模式。</strong></p>
+<p>建造者模式是较为复杂的创建型模式，它将客户端与包含多个组成部分（或部件）的复杂对象的创建过程分离，客户端无须知道复杂对象的内部组成部分与装配方式，只需要知道所需的建造者类型即可。建造者模式关注一步一步地创建一个复杂对象，不同的具体建造者定义了不同的创建过程，且具体建造者相互独立，增加新的建造者非常方便，无须修改已有代码，系统具有较好的扩展性。</p>
+<h2 id="12-复杂对象">1.2 复杂对象</h2>
+<p>建造者模式中用到了复杂对象这个概念。<br>
+<strong>复杂对象就是指那些包含多个成员变量的对象，这些成员变量也叫部件或者零件</strong>，例如汽车包括方向盘，发动机，轮胎等 ，<br>
+汽车就是复杂对象，方向盘，发动机以及轮胎就是汽车的部件。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200718102523398.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<p>建造者模式包含以下四个角色：</p>
+<ul>
+<li><code>Builder</code>（抽象建造者）：为创建一个产品Product对象的各个部件指定抽象接口，在该接口中一般声明两类方法，一类是<code>buildXXX()</code>方法，用于创建复杂对象的各个部分（部件），另一类是是<code>getResult()</code>，用于返回复杂对象。<code>Builder</code>既可以是抽象类，也可以是接口</li>
+<li><code>ConcreteBuilder</code>（具体建造者）：实现了<code>Builder</code>接口或者继承了<code>Builder</code>类，实现各个部件的具体构造和装配方法，定义并明确其所创建的复杂对象，也可以提供一个方法返回创建好的复杂对象</li>
+<li><code>Product</code>（产品角色）：是被构建的复杂对象，包含多个组成部件，具体建造者创建该产品的内部表示并定义其装配过程</li>
+<li><code>Director</code>（指挥者）：指挥者又叫导演类，复杂安排复杂对象的建造次序，指挥者与抽象建造者之间存在关联关系，可以在其<code>construct()</code>建造方法中调用建造者对象的部件构造以及装配方法，完成复杂对象的建造。客户端一般只需要与导演类进行交互，在客户端确定具体建造者的类型，并实例化具体建造者对象，然后通过导演类的构造函数或者setter将该对象传入导演类中</li>
+</ul>
+<h3 id="141-product">1.4.1 <code>Product</code></h3>
+<p>一般来说<code>Product</code>是一个复杂对象，典型的定义如下：</p>
+<pre><code class="language-java">class Product
+{
+	private type1 part1;
+	private type2 part2;
+	private type3 part3;
+	//getter + setter ...
+}
+</code></pre>
+<p>其中<code>type1</code>，<code>type2</code>等指各种不同的类型，一般来说会有嵌套类。</p>
+<h3 id="142-builder">1.4.2 <code>Builder</code></h3>
+<p>抽象建造者的典型定义如下：</p>
+<pre><code class="language-java">abstract class Builder
+{
+	protected Product product = new Product();
+	public abstract void buildPart1();
+	public abstract void buildPart2();
+	public abstract void buildPart3();
+	public Product getResult()
+	{
+		return product;
+	}
+}
+</code></pre>
+<p>抽象建造者中声明了一系列<code>buildXXX</code>方法，用于创建<code>Product</code>的各个部件，具体创建过程在<code>ConcreteBuilder</code>中实现，<code>getResult()</code>返回已创建完成的<code>Product</code>。</p>
+<h3 id="143-concretebuilder">1.4.3 <code>ConcreteBuilder</code></h3>
+<p><code>ConcreteBuilder</code>实现了<code>Builder</code>中的<code>buildXXX</code>方法，通过调用<code>Product</code>的setter来实现给产品对象的各部分赋值。<br>
+不同的<code>ConcreteBuilder</code>在实现<code>buildXXX</code>是将有所区别，比如传入<code>Product</code>的setter参数的不同。<br>
+另外在有些<code>ConcreteBuilder</code>中某些<code>buildXXX</code>无须实现（提供一个空实现），这些对客户端来说无须关心，客户端只需要知道具体建造者的类型即可。<br>
+典型定义如下：</p>
+<pre><code class="language-java">class ConcreteBuilder extends Builder
+{
+	public void buildPart1()
+	{
+		product.setPart1(&quot;part1&quot;);
+	}
+	public void buildPart2()
+	{
+		product.setPart2(&quot;part2&quot;);		
+	}
+	public void buildPart3()
+	{
+		product.setPart3(&quot;part3&quot;);
+	}
+	public Product getResult()
+	{
+		return product;
+	}
+}
+</code></pre>
+<h3 id="144-director">1.4.4 <code>Director</code></h3>
+<p><code>Director</code>类主要有两个作用：</p>
+<ul>
+<li>隔离了客户与创建过程</li>
+<li>控制产品的创建过程，包括某个<code>buildXXX</code>方法是否被调用，以及调用时的先后次序等等</li>
+</ul>
+<p>指挥者针对抽象建造者编程，客户端只需要知道具体建造者的类型，即可通过指挥者调用建造者的相关方法，返回一个完整的产品对象。典型实现如下：</p>
+<pre><code class="language-java">class Director
+{
+	private Builder builder;
+	public Director(Builder builder)
+	{
+		this.builder = builder;
+	}
+	
+	public void setBuilder(Builder builder)
+	{
+		this.builder = builder;		
+	}
+	
+	public Product construct()
+	{
+		builder.buildPart1();
+		builder.buildPart2();
+		builder.buildPart3();
+		return builder.getResult();
+	}
+}
+</code></pre>
+<h1 id="2-实例">2 实例</h1>
+<blockquote>
+<p>游戏角色的创建：不同的角色具有差别极大的外部特征，而且要求随着游戏的进行会不断出现新的角色，也就是说扩展性要好。这里例子简化就创建三个角色：英雄，天使与恶魔。</p>
+</blockquote>
+<p>思路：</p>
+<ul>
+<li><code>Actor</code>为复杂产品</li>
+<li><code>ActorController</code>为指挥者</li>
+<li><code>ActorBuilder</code>为抽象建造者</li>
+<li><code>HeroBuilder</code>/<code>AngelBuilder</code>/<code>DevilBuilder</code>为具体建造者</li>
+</ul>
+<pre><code class="language-java">// 复杂产品
+class Actor
+{
+    private String type;
+    private String face;
+    private String costume;
+    private String hairstyle;
+    //getter and setter ...
+}
+
+//抽象建造者
+abstract class ActorBuilder
+{
+    protected Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public Actor createActor()
+    {
+        return actor;
+    }
+}
+
+//具体建造者
+class HeroBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;英雄&quot;); }
+    public void buildFace(){ actor.setFace(&quot;英俊&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;盔甲&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;飘逸&quot;); }
+}
+
+class AngleBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;天使&quot;); }
+    public void buildFace(){ actor.setFace(&quot;漂亮&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;白裙&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;披肩长发&quot;); }
+}
+
+class DevilBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;恶魔&quot;); }
+    public void buildFace(){ actor.setFace(&quot;帅气&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;黑衣&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;红色&quot;); }
+}
+
+// 指挥者类
+class ActorController
+{
+    public Actor construct(ActorBuilder builder)
+    {
+        builder.buildType();
+        builder.buildFace();
+        builder.buildHairstyle();
+        builder.buildCostume();
+        return builder.createActor();
+    }
+}
+</code></pre>
+<p>测试类：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        ActorBuilder builder = new AngleBuilder();
+        ActorController controller = new ActorController();
+        Actor actor = controller.construct(builder);
+        System.out.println(actor.getType());
+        System.out.println(actor.getCostume());
+        System.out.println(actor.getHairstyle());
+        System.out.println(actor.getFace());
+    }
+}
+</code></pre>
+<h1 id="3-优化">3 优化</h1>
+<h2 id="31-省略director">3.1 省略<code>Director</code></h2>
+<p>其实<code>Director</code>是可以省略的，直接与<code>Builder</code>合并，在<code>Builder</code>中提供类似<code>Direcotr</code>中的<code>construct()</code>方法，并定义为静态方法，如：</p>
+<pre><code class="language-java">abstract class ActorBuilder
+{
+    protected static Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public static Actor build(ActorBuilder builder)
+    {
+        builder.buildType();
+        builder.buildFace();
+        builder.buildHairstyle();
+        builder.buildCostume();
+        return actor;
+    }
+}
+</code></pre>
+<p>同时客户端代码修改如下：</p>
+<pre><code class="language-java">Actor actor = ActorBuilder.build(new AngleBuilder());
+//Actor actor = ActorBuilder.build(new HeroBuilder());
+//Actor actor = ActorBuilder.build(new DevilBuilder());
+</code></pre>
+<p>再简单一点的可以省略<code>createActor</code>中的参数：</p>
+<pre><code class="language-java">abstract class ActorBuilder
+{
+    protected Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public Actor build()
+    {
+        buildType();
+        buildFace();
+        buildHairstyle();
+        buildCostume();
+        return actor;
+    }
+}
+</code></pre>
+<p>同时客户端简化如下：</p>
+<pre><code class="language-java">Actor actor = new AngleBuilder().build();
+</code></pre>
+<p>这两种方式简化了系统结构的同时又不影响灵活性以及可扩展性，但是加重了抽象建造者的职责，如果<code>build</code>方法较为复杂，待构建的产品组成部分较多，建议还是将其单独封装在<code>Director</code>中，这样更加符合SRP（单一权责原则）。</p>
+<h2 id="32-钩子方法">3.2 钩子方法</h2>
+<p>钩子方法是一种可以控制是否调用某个<code>buildXXX</code>的方法，特征如下：</p>
+<ul>
+<li>返回类型为<code>boolean</code></li>
+<li>方法名一般为<code>isXXX</code></li>
+</ul>
+<p>例如修改<code>ActorBuilder</code>如下：</p>
+<pre><code class="language-java">abstract class ActorBuilder
+{
+    protected Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public boolean isBareheaded()
+    {
+        return false;
+    }
+
+    public Actor createActor()
+    {
+        return actor;
+    }
+}
+</code></pre>
+<p>并修改<code>DevilBuilder</code>，覆盖默认方法：</p>
+<pre><code class="language-java">class DevilBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;恶魔&quot;); }
+    public void buildFace(){ actor.setFace(&quot;帅气&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;黑衣&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;红色&quot;); }
+    public boolean isBareheaded(){ return true; }
+}
+</code></pre>
+<p>最后修改<code>ActorController</code>：</p>
+<pre><code class="language-java">class ActorController
+{
+    public Actor construct(ActorBuilder builder)
+    {
+        builder.buildType();
+        builder.buildFace();
+        builder.buildCostume();
+        if(builder.isBareheaded())
+            builder.buildHairstyle();
+        return builder.createActor();
+    }
+}
+</code></pre>
+<p>相比起之前的<code>ActorController</code>多了一次判断，测试如下：</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    ActorController controller = new ActorController();
+    Actor actor = controller.construct(new AngleBuilder());
+    System.out.println(actor.getType());
+    System.out.println(actor.getCostume());
+    System.out.println(actor.getHairstyle());
+    System.out.println(actor.getFace());
+    System.out.println();
+
+    actor = controller.construct(new DevilBuilder());
+    System.out.println(actor.getType());
+    System.out.println(actor.getCostume());
+    System.out.println(actor.getHairstyle());
+    System.out.println(actor.getFace());
+}
+</code></pre>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200718142036116.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="33-返回builder">3.3 返回Builder</h2>
+<p>在实际应用中<code>Director</code>较少出现，通常只有<code>Builder</code>以及<code>Product</code>，而且<code>Builder</code>是作为<code>Product</code>的内部类，提供一系列<code>set</code>方法，这些<code>set</code>方法返回一个<code>Builder</code>方便后续调用，最后以一个<code>build()</code>结尾，比如OkHttp中的<code>Request</code>/<code>OkHttpClient</code>：</p>
+<pre><code class="language-java">OkHttpClient client = new OkHttpClient.Builder()
+.connectTimeout(5000,TimeUnit.MILLISECONDS)
+.readTimeout(10,TimeUnit.SECONDS)
+.build();
+
+Request request = new Request.Builder()
+.url(&quot;https://xxx&quot;)
+.post(requestBody)
+.build();
+</code></pre>
+<h1 id="4-主要优点">4 主要优点</h1>
+<ul>
+<li>封装细节：建造者模式中客户端不需要知道产品内部组成细节，将产品本身与产品的创建过程解耦，使得相同的创建过程可以创建不同的产品对象</li>
+<li>扩展性好：每一个具体建造者都相对独立，而与其他建造者无关，伊尼茨可以很方便地替换具体建造者或增加新的具体建造者，用户使用不同的具体建造者即可得到不同的产品对象。由于指挥者针对抽象建造者编程，增加新的具体建造者无须修改原有类库的代码，扩展方便，符合开闭原则</li>
+<li>控制创建过程：将复杂产品的创建步骤分解在不同的方法中，使得创建过程更加清晰，更加精细地控制创建过程</li>
+</ul>
+<h1 id="5-主要缺点">5 主要缺点</h1>
+<ul>
+<li>范围受限：建造者模式所创建的产品一般具有较多的共同点，其组成部分相似，如果产品之间的差异性很大，例如很多组成部分不相同，就不适合使用建造者模式，因此使用范围收到一定限制</li>
+<li>建造者多：如果产品内部结构复杂多变，可能会需要定义很多具体建造者类来实现这种变化，增大系统的理解难度与运行成本</li>
+</ul>
+<h1 id="6-适用场景">6 适用场景</h1>
+<ul>
+<li>需要生成的产品对象有复杂的内部结构，这些产品对象通常包含多个成员变量</li>
+<li>需要生成的产品对象的属性相互依赖，需要指定其生成顺序</li>
+<li>对象的创建过程独立于创建该对象的类。在建造者模式中通过引入指挥者类，将创建过程封装在指挥者类中，而不再建造者类或者客户类中</li>
+<li>隔离复杂对象的创建与使用，并使得相同的创建过程可以创建不同的产品</li>
+</ul>
+<h1 id="7-总结">7 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718143426156.png" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/vue-xue-xi-bi-ji-san.png');"></div>
+                 <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-19">2020-07-19</time>
+                  <h4 class="title white no-margin">Vue学习笔记（三）</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-30-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-30-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-18">2020-07-18</time>
+                  <h4 class="title white no-margin">每日分享 第30期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-31-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-31-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-19">2020-07-19</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-31-qi/">每日分享 第31期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/vue-xue-xi-bi-ji-san.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-19">2020-07-19</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/">Vue学习笔记（三）</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-19">2020-07-19</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/">设计模式学习笔记（八）：建造者模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-1 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-2 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-3 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-4 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-5 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-6 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-7 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-8 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-9 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-10 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-11 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-12 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-13 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-14 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-15 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-16 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-17 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-18 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-19 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-20 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-21 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-22 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-23 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-24 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-25 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-26 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-27 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-28 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-29 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-30 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-31 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-32 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-33 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-34 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-35 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-36 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-37 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-38 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-39 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-40 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-41 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-42 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-43 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-44 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-45 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-46 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-47 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-48 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-49 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-50 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-51 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-52 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-53 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-54 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-55 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-56 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-57 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-58 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-59 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-60 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-61 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-62 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-63 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-64 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-65 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-66 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-67 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-68 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-69 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-70 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 175 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

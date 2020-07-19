@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-18T22:26:12.915Z</updated>
+    <updated>2020-07-19T04:17:25.487Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -133,6 +133,684 @@
 我用这最后一分钟怀念你<br>
 我用这最后一分钟</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Vue学习笔记（三）]]></title>
+        <id>https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/</id>
+        <link href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/">
+        </link>
+        <updated>2020-07-19T00:24:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-监听">1 监听</h1>
+<p>在Vue.js中可以通过<code>watch</code>来监听数据的变化，比如通过<code>watch</code>实现的简单计数器：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;p&gt;计数器：{{count}}&lt;/p&gt;
+    &lt;button @click=&quot;count++&quot;&gt;点我增加&lt;/button&gt;
+    &lt;p id=&quot;info&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+	el: '#app',
+	data:
+	{
+	    count:0
+	}
+})
+
+vm.$watch('count',function(newValue,oldValue)
+{
+	document.getElementById(&quot;info&quot;).innerHTML = &quot;修改前：&quot;+oldValue+&quot;&lt;br&gt;修改后：&quot;+newValue;
+})
+</code></pre>
+<p>效果如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200718175810847.gif" alt="在这里插入图片描述" loading="lazy"><br>
+<code>watch</code>有两个参数，一个是要监听的变量，另一个是回调函数，回调函数接受两个参数，第一个参数是新值，第二个参数是旧值。</p>
+<p>下面再来看一下有关单位换算的例子：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    吨：&lt;input type=&quot;text&quot; v-model=&quot;ton&quot;&gt;
+    千克：&lt;input type=&quot;text&quot; v-model=&quot;kilograms&quot;&gt;&lt;br&gt;
+    吨：&lt;p id=&quot;tonInfo&quot;&gt;&lt;/p&gt;
+    千克：&lt;p id=&quot;kilogramsInfo&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data:
+    {
+        ton:0,
+        kilograms:0
+    },
+    watch:
+    {
+        ton:function(val)
+        {
+            this.kilograms = (this.ton = val) * 1000;
+        },
+        kilograms:function(val)
+        {
+            this.ton = (this.kilograms = val) / 1000;
+        }
+    }
+})
+
+vm.$watch('ton',function(newValue,oldValue)
+{
+    document.getElementById(&quot;tonInfo&quot;).innerHTML = &quot;修改前：&quot;+oldValue+&quot;&lt;br&gt;修改后：&quot;+newValue;
+})
+vm.$watch('kilograms',function(newValue,oldValue)
+{
+    document.getElementById(&quot;kilogramsInfo&quot;).innerHTML = &quot;修改前：&quot;+oldValue+&quot;&lt;br&gt;修改后：&quot;+newValue;
+})
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200718180937921.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="2-样式绑定">2 样式绑定</h1>
+<p><code>class</code>与<code>style</code>是HTML元素的属性，用于设置元素的样式，可以利用<code>v-bind</code>来设置样式属性。<code>v-bind</code>在处理<code>class</code>以及<code>style</code>时专门增强了，表达式的结果类型除了是字符串外，还能是对象或者数组。</p>
+<h2 id="21-class绑定">2.1 <code>class</code>绑定</h2>
+<p>可以为<code>v-bind:class</code>设置一个对象，从而动态切换<code>class</code>：</p>
+<pre><code class="language-html">&lt;style&gt;
+    .active
+    {
+        width:100px;
+        height: 100px;
+        background: green;
+    }
+&lt;/style&gt;
+&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:class=&quot;{'active':isActive}&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">vm = new Vue({
+	el: '#app',
+	data:
+	{
+	    isActive:true
+	}
+})
+</code></pre>
+<p>也可以传入多个属性来动态切换多个<code>class</code>：</p>
+<pre><code class="language-css">.class0
+{
+    width:100px;
+    height: 100px;
+}
+.class1
+{
+    background: green;
+}
+.class2
+{
+    background: red;
+}
+</code></pre>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div class=&quot;class0&quot; v-bind:class=&quot;{'class1':active1,'class2':active2}&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data:
+    {
+        active1:true,
+        active2:true
+    }
+})
+</code></pre>
+<p>效果：<br>
+<img src="https://img-blog.csdnimg.cn/20200719065142231.png" alt="在这里插入图片描述" loading="lazy"><br>
+也可以利用对象进行简化：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div class=&quot;class0&quot; v-bind:class=&quot;classObject&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data:
+    {
+        classObject:
+        {
+            class1:true,
+            class2:true
+        }
+    }
+})
+</code></pre>
+<h2 id="22-计算属性">2.2 计算属性</h2>
+<p>在<code>v-bind:class</code>中除了是一个对象还能绑定返回对象的计算属性，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:class=&quot;classObject&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data:
+    {
+        active1:true,
+        error:{
+            value:true,
+            type:'fatal'
+        }
+    },
+    computed:{
+        classObject:function() {
+            return {
+                class0:true,
+                class1: this.active1 &amp;&amp; !this.error.value,
+                class2: this.error.value &amp;&amp; this.error.type === 'fatal'
+            }
+        }
+    }
+})
+</code></pre>
+<p>效果如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200719070149891.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="23-数组">2.3 数组</h2>
+<p>也可以传递给<code>v-bind:class</code>一个数组，数组的元素为变量，变量的内容为对应的CSS类名：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:class=&quot;[active1,active2]&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+	el: '#app',
+	data: {
+	    active1:'class0',
+	    active2:'class1'
+	}
+})
+</code></pre>
+<p>也可以利用三元表达式来切换：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:class=&quot;[active1,active2 ? 'class1' : 'class2']&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h1 id="3-内联样式">3 内联样式</h1>
+<p>可以在<code>v-bind:style</code>中直接设置样式（注意前后带<code>{}</code>）：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:style=&quot;{color:color,fontSize:fontSize+'px'}&quot;&gt;测试&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data: {
+        color:'#FF0000',
+        fontSize:30
+    }
+})
+</code></pre>
+<p>当然也可以像绑定<code>class</code>一样直接绑定到一个对象上：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:style=&quot;styleObject&quot;&gt;测试&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data: {
+        styleObject: {
+            color:'#FF0000',
+            fontSize:'30px'
+        }
+    }
+})
+</code></pre>
+<p>也可以使用数组进行绑定多个样式：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;div v-bind:style=&quot;[styleObject1,styleObject2]&quot;&gt;测试&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data: {
+        styleObject1: {
+            color:'#FF0000',
+        },
+        styleObject2:{
+            fontSize:'30px'
+        }
+    }# 5 
+})
+</code></pre>
+<p>另外当<code>v-bind:style</code>需要特殊前缀的CSS时，比如<code>transform</code>，Vue会自动侦测并添加相应前缀。</p>
+<h1 id="4-事件处理">4 事件处理</h1>
+<h2 id="41-v-on">4.1 <code>v-on</code></h2>
+<p>事件监听可以使用<code>v-on</code>：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;button v-on:click=&quot;count += 1&quot;&gt;点击增加1&lt;/button&gt;
+    &lt;p&gt;这个按钮被点击了{{count}}次&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    data: {
+        count:0
+    }
+})
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/2020071907495115.gif" alt="在这里插入图片描述" loading="lazy"><br>
+通常来说单击按钮会触发一个方法调用，在<code>methods</code>中指定即可：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;button v-on:click=&quot;test&quot;&gt;点击触发事件&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    methods:{
+        test:function(){
+            alert('Hello')
+            //event表示是原生DOM事件
+            if(event) {
+                alert(event.target.tagName)
+            }
+        }
+    }
+})
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200719075352186.gif" alt="在这里插入图片描述" loading="lazy"><br>
+当然也可以使用内联的JS语句：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;button v-on:click=&quot;say('hi')&quot;&gt;Say hi&lt;/button&gt;
+    &lt;button v-on:click=&quot;say('what')&quot;&gt;Say what&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    methods:{
+        say:function(val){
+            alert(val)
+        }
+    }
+})
+</code></pre>
+<h2 id="42-事件修饰符">4.2 事件修饰符</h2>
+<p>Vue为<code>v-on</code>提供了事件修饰符来处理DOM事件细节，如<code>event.preventDefault()</code>或<code>event.stopPropagation()</code>，通过<code>.</code>表示的指令调用修饰符：</p>
+<ul>
+<li><code>.stop</code>：阻止事件冒泡</li>
+<li><code>.prevent</code>：提交事件不再重载页面，如<code>&lt;form v-on.submit.prevent=&quot;onSumbit&quot;&gt;&lt;/form&gt;</code></li>
+<li><code>.capture</code>：事件捕获模式</li>
+<li><code>.self</code>：只当事件在该元素本身（而不是子元素）触发时回调</li>
+<li><code>.once</code>：事件只能点击一次</li>
+</ul>
+<h2 id="43-按键修饰符">4.3 按键修饰符</h2>
+<p>Vue允许在v-on在监听键盘事件时添加按键修饰提示符：</p>
+<pre><code class="language-html">&lt;!--只有keyCode为13时调用submit()--&gt;
+&lt;input v-on:keyup.13=&quot;submit&quot;&gt;
+</code></pre>
+<p>keyCode值对应ASCII表，为了方便，Vue为常用的按键提供了别名：</p>
+<ul>
+<li><code>.esc</code></li>
+<li><code>.delete</code>（删除+退格）</li>
+<li><code>.enter</code>/<code>.space</code>/<code>.tab</code></li>
+<li><code>.up</code>/<code>.down</code>/<code>.left</code>/<code>.right</code></li>
+<li><code>.ctrl</code>/<code>.alt</code>/<code>.shift</code>/<code>.meta</code></li>
+</ul>
+<p>当然也可以进行按键的组合，使用<code>.</code>连接即可。<br>
+例子如下：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;input type=&quot;text&quot; placeholder=&quot;请按下空格&quot; v-on:keyup.space=&quot;spacePressed&quot;&gt;&lt;br&gt;
+    &lt;input type=&quot;text&quot; placeholder=&quot;请按下Ctrl+C&quot; v-on:keyup.ctrl.67=&quot;ctrlCPressed&quot;&gt;
+    &lt;!-- &lt;input type=&quot;text&quot; placeholder=&quot;请按下Ctrl+C&quot; @keyup.ctrl.67=&quot;ctrlCPressed&quot;&gt; --&gt;
+    &lt;p id=&quot;info&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">var vm = new Vue({
+    el: '#app',
+    methods:{
+        spacePressed:function(){
+            document.getElementById(&quot;info&quot;).innerHTML = &quot;您按下了空格&quot;;
+        },
+        ctrlCPressed:function(){
+            document.getElementById(&quot;info&quot;).innerHTML = &quot;您按下了Ctrl+C&quot;;
+        }
+    }
+})
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（八）：建造者模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/">
+        </link>
+        <updated>2020-07-19T00:22:48.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-建造者模式">1 建造者模式</h1>
+<h2 id="11-定义">1.1 定义</h2>
+<p><strong>建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</strong><br>
+<strong>建造者模式是一种对象创建型模式。</strong></p>
+<p>建造者模式是较为复杂的创建型模式，它将客户端与包含多个组成部分（或部件）的复杂对象的创建过程分离，客户端无须知道复杂对象的内部组成部分与装配方式，只需要知道所需的建造者类型即可。建造者模式关注一步一步地创建一个复杂对象，不同的具体建造者定义了不同的创建过程，且具体建造者相互独立，增加新的建造者非常方便，无须修改已有代码，系统具有较好的扩展性。</p>
+<h2 id="12-复杂对象">1.2 复杂对象</h2>
+<p>建造者模式中用到了复杂对象这个概念。<br>
+<strong>复杂对象就是指那些包含多个成员变量的对象，这些成员变量也叫部件或者零件</strong>，例如汽车包括方向盘，发动机，轮胎等 ，<br>
+汽车就是复杂对象，方向盘，发动机以及轮胎就是汽车的部件。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200718102523398.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<p>建造者模式包含以下四个角色：</p>
+<ul>
+<li><code>Builder</code>（抽象建造者）：为创建一个产品Product对象的各个部件指定抽象接口，在该接口中一般声明两类方法，一类是<code>buildXXX()</code>方法，用于创建复杂对象的各个部分（部件），另一类是是<code>getResult()</code>，用于返回复杂对象。<code>Builder</code>既可以是抽象类，也可以是接口</li>
+<li><code>ConcreteBuilder</code>（具体建造者）：实现了<code>Builder</code>接口或者继承了<code>Builder</code>类，实现各个部件的具体构造和装配方法，定义并明确其所创建的复杂对象，也可以提供一个方法返回创建好的复杂对象</li>
+<li><code>Product</code>（产品角色）：是被构建的复杂对象，包含多个组成部件，具体建造者创建该产品的内部表示并定义其装配过程</li>
+<li><code>Director</code>（指挥者）：指挥者又叫导演类，复杂安排复杂对象的建造次序，指挥者与抽象建造者之间存在关联关系，可以在其<code>construct()</code>建造方法中调用建造者对象的部件构造以及装配方法，完成复杂对象的建造。客户端一般只需要与导演类进行交互，在客户端确定具体建造者的类型，并实例化具体建造者对象，然后通过导演类的构造函数或者setter将该对象传入导演类中</li>
+</ul>
+<h3 id="141-product">1.4.1 <code>Product</code></h3>
+<p>一般来说<code>Product</code>是一个复杂对象，典型的定义如下：</p>
+<pre><code class="language-java">class Product
+{
+	private type1 part1;
+	private type2 part2;
+	private type3 part3;
+	//getter + setter ...
+}
+</code></pre>
+<p>其中<code>type1</code>，<code>type2</code>等指各种不同的类型，一般来说会有嵌套类。</p>
+<h3 id="142-builder">1.4.2 <code>Builder</code></h3>
+<p>抽象建造者的典型定义如下：</p>
+<pre><code class="language-java">abstract class Builder
+{
+	protected Product product = new Product();
+	public abstract void buildPart1();
+	public abstract void buildPart2();
+	public abstract void buildPart3();
+	public Product getResult()
+	{
+		return product;
+	}
+}
+</code></pre>
+<p>抽象建造者中声明了一系列<code>buildXXX</code>方法，用于创建<code>Product</code>的各个部件，具体创建过程在<code>ConcreteBuilder</code>中实现，<code>getResult()</code>返回已创建完成的<code>Product</code>。</p>
+<h3 id="143-concretebuilder">1.4.3 <code>ConcreteBuilder</code></h3>
+<p><code>ConcreteBuilder</code>实现了<code>Builder</code>中的<code>buildXXX</code>方法，通过调用<code>Product</code>的setter来实现给产品对象的各部分赋值。<br>
+不同的<code>ConcreteBuilder</code>在实现<code>buildXXX</code>是将有所区别，比如传入<code>Product</code>的setter参数的不同。<br>
+另外在有些<code>ConcreteBuilder</code>中某些<code>buildXXX</code>无须实现（提供一个空实现），这些对客户端来说无须关心，客户端只需要知道具体建造者的类型即可。<br>
+典型定义如下：</p>
+<pre><code class="language-java">class ConcreteBuilder extends Builder
+{
+	public void buildPart1()
+	{
+		product.setPart1(&quot;part1&quot;);
+	}
+	public void buildPart2()
+	{
+		product.setPart2(&quot;part2&quot;);		
+	}
+	public void buildPart3()
+	{
+		product.setPart3(&quot;part3&quot;);
+	}
+	public Product getResult()
+	{
+		return product;
+	}
+}
+</code></pre>
+<h3 id="144-director">1.4.4 <code>Director</code></h3>
+<p><code>Director</code>类主要有两个作用：</p>
+<ul>
+<li>隔离了客户与创建过程</li>
+<li>控制产品的创建过程，包括某个<code>buildXXX</code>方法是否被调用，以及调用时的先后次序等等</li>
+</ul>
+<p>指挥者针对抽象建造者编程，客户端只需要知道具体建造者的类型，即可通过指挥者调用建造者的相关方法，返回一个完整的产品对象。典型实现如下：</p>
+<pre><code class="language-java">class Director
+{
+	private Builder builder;
+	public Director(Builder builder)
+	{
+		this.builder = builder;
+	}
+	
+	public void setBuilder(Builder builder)
+	{
+		this.builder = builder;		
+	}
+	
+	public Product construct()
+	{
+		builder.buildPart1();
+		builder.buildPart2();
+		builder.buildPart3();
+		return builder.getResult();
+	}
+}
+</code></pre>
+<h1 id="2-实例">2 实例</h1>
+<blockquote>
+<p>游戏角色的创建：不同的角色具有差别极大的外部特征，而且要求随着游戏的进行会不断出现新的角色，也就是说扩展性要好。这里例子简化就创建三个角色：英雄，天使与恶魔。</p>
+</blockquote>
+<p>思路：</p>
+<ul>
+<li><code>Actor</code>为复杂产品</li>
+<li><code>ActorController</code>为指挥者</li>
+<li><code>ActorBuilder</code>为抽象建造者</li>
+<li><code>HeroBuilder</code>/<code>AngelBuilder</code>/<code>DevilBuilder</code>为具体建造者</li>
+</ul>
+<pre><code class="language-java">// 复杂产品
+class Actor
+{
+    private String type;
+    private String face;
+    private String costume;
+    private String hairstyle;
+    //getter and setter ...
+}
+
+//抽象建造者
+abstract class ActorBuilder
+{
+    protected Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public Actor createActor()
+    {
+        return actor;
+    }
+}
+
+//具体建造者
+class HeroBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;英雄&quot;); }
+    public void buildFace(){ actor.setFace(&quot;英俊&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;盔甲&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;飘逸&quot;); }
+}
+
+class AngleBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;天使&quot;); }
+    public void buildFace(){ actor.setFace(&quot;漂亮&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;白裙&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;披肩长发&quot;); }
+}
+
+class DevilBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;恶魔&quot;); }
+    public void buildFace(){ actor.setFace(&quot;帅气&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;黑衣&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;红色&quot;); }
+}
+
+// 指挥者类
+class ActorController
+{
+    public Actor construct(ActorBuilder builder)
+    {
+        builder.buildType();
+        builder.buildFace();
+        builder.buildHairstyle();
+        builder.buildCostume();
+        return builder.createActor();
+    }
+}
+</code></pre>
+<p>测试类：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        ActorBuilder builder = new AngleBuilder();
+        ActorController controller = new ActorController();
+        Actor actor = controller.construct(builder);
+        System.out.println(actor.getType());
+        System.out.println(actor.getCostume());
+        System.out.println(actor.getHairstyle());
+        System.out.println(actor.getFace());
+    }
+}
+</code></pre>
+<h1 id="3-优化">3 优化</h1>
+<h2 id="31-省略director">3.1 省略<code>Director</code></h2>
+<p>其实<code>Director</code>是可以省略的，直接与<code>Builder</code>合并，在<code>Builder</code>中提供类似<code>Direcotr</code>中的<code>construct()</code>方法，并定义为静态方法，如：</p>
+<pre><code class="language-java">abstract class ActorBuilder
+{
+    protected static Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public static Actor build(ActorBuilder builder)
+    {
+        builder.buildType();
+        builder.buildFace();
+        builder.buildHairstyle();
+        builder.buildCostume();
+        return actor;
+    }
+}
+</code></pre>
+<p>同时客户端代码修改如下：</p>
+<pre><code class="language-java">Actor actor = ActorBuilder.build(new AngleBuilder());
+//Actor actor = ActorBuilder.build(new HeroBuilder());
+//Actor actor = ActorBuilder.build(new DevilBuilder());
+</code></pre>
+<p>再简单一点的可以省略<code>createActor</code>中的参数：</p>
+<pre><code class="language-java">abstract class ActorBuilder
+{
+    protected Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public Actor build()
+    {
+        buildType();
+        buildFace();
+        buildHairstyle();
+        buildCostume();
+        return actor;
+    }
+}
+</code></pre>
+<p>同时客户端简化如下：</p>
+<pre><code class="language-java">Actor actor = new AngleBuilder().build();
+</code></pre>
+<p>这两种方式简化了系统结构的同时又不影响灵活性以及可扩展性，但是加重了抽象建造者的职责，如果<code>build</code>方法较为复杂，待构建的产品组成部分较多，建议还是将其单独封装在<code>Director</code>中，这样更加符合SRP（单一权责原则）。</p>
+<h2 id="32-钩子方法">3.2 钩子方法</h2>
+<p>钩子方法是一种可以控制是否调用某个<code>buildXXX</code>的方法，特征如下：</p>
+<ul>
+<li>返回类型为<code>boolean</code></li>
+<li>方法名一般为<code>isXXX</code></li>
+</ul>
+<p>例如修改<code>ActorBuilder</code>如下：</p>
+<pre><code class="language-java">abstract class ActorBuilder
+{
+    protected Actor actor = new Actor();
+
+    public abstract void buildType();
+    public abstract void buildFace();
+    public abstract void buildCostume();
+    public abstract void buildHairstyle();
+
+    public boolean isBareheaded()
+    {
+        return false;
+    }
+
+    public Actor createActor()
+    {
+        return actor;
+    }
+}
+</code></pre>
+<p>并修改<code>DevilBuilder</code>，覆盖默认方法：</p>
+<pre><code class="language-java">class DevilBuilder extends ActorBuilder
+{
+    public void buildType(){ actor.setType(&quot;恶魔&quot;); }
+    public void buildFace(){ actor.setFace(&quot;帅气&quot;); }
+    public void buildCostume(){ actor.setCostume(&quot;黑衣&quot;); }
+    public void buildHairstyle(){ actor.setHairstyle(&quot;红色&quot;); }
+    public boolean isBareheaded(){ return true; }
+}
+</code></pre>
+<p>最后修改<code>ActorController</code>：</p>
+<pre><code class="language-java">class ActorController
+{
+    public Actor construct(ActorBuilder builder)
+    {
+        builder.buildType();
+        builder.buildFace();
+        builder.buildCostume();
+        if(builder.isBareheaded())
+            builder.buildHairstyle();
+        return builder.createActor();
+    }
+}
+</code></pre>
+<p>相比起之前的<code>ActorController</code>多了一次判断，测试如下：</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    ActorController controller = new ActorController();
+    Actor actor = controller.construct(new AngleBuilder());
+    System.out.println(actor.getType());
+    System.out.println(actor.getCostume());
+    System.out.println(actor.getHairstyle());
+    System.out.println(actor.getFace());
+    System.out.println();
+
+    actor = controller.construct(new DevilBuilder());
+    System.out.println(actor.getType());
+    System.out.println(actor.getCostume());
+    System.out.println(actor.getHairstyle());
+    System.out.println(actor.getFace());
+}
+</code></pre>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200718142036116.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="33-返回builder">3.3 返回Builder</h2>
+<p>在实际应用中<code>Director</code>较少出现，通常只有<code>Builder</code>以及<code>Product</code>，而且<code>Builder</code>是作为<code>Product</code>的内部类，提供一系列<code>set</code>方法，这些<code>set</code>方法返回一个<code>Builder</code>方便后续调用，最后以一个<code>build()</code>结尾，比如OkHttp中的<code>Request</code>/<code>OkHttpClient</code>：</p>
+<pre><code class="language-java">OkHttpClient client = new OkHttpClient.Builder()
+.connectTimeout(5000,TimeUnit.MILLISECONDS)
+.readTimeout(10,TimeUnit.SECONDS)
+.build();
+
+Request request = new Request.Builder()
+.url(&quot;https://xxx&quot;)
+.post(requestBody)
+.build();
+</code></pre>
+<h1 id="4-主要优点">4 主要优点</h1>
+<ul>
+<li>封装细节：建造者模式中客户端不需要知道产品内部组成细节，将产品本身与产品的创建过程解耦，使得相同的创建过程可以创建不同的产品对象</li>
+<li>扩展性好：每一个具体建造者都相对独立，而与其他建造者无关，伊尼茨可以很方便地替换具体建造者或增加新的具体建造者，用户使用不同的具体建造者即可得到不同的产品对象。由于指挥者针对抽象建造者编程，增加新的具体建造者无须修改原有类库的代码，扩展方便，符合开闭原则</li>
+<li>控制创建过程：将复杂产品的创建步骤分解在不同的方法中，使得创建过程更加清晰，更加精细地控制创建过程</li>
+</ul>
+<h1 id="5-主要缺点">5 主要缺点</h1>
+<ul>
+<li>范围受限：建造者模式所创建的产品一般具有较多的共同点，其组成部分相似，如果产品之间的差异性很大，例如很多组成部分不相同，就不适合使用建造者模式，因此使用范围收到一定限制</li>
+<li>建造者多：如果产品内部结构复杂多变，可能会需要定义很多具体建造者类来实现这种变化，增大系统的理解难度与运行成本</li>
+</ul>
+<h1 id="6-适用场景">6 适用场景</h1>
+<ul>
+<li>需要生成的产品对象有复杂的内部结构，这些产品对象通常包含多个成员变量</li>
+<li>需要生成的产品对象的属性相互依赖，需要指定其生成顺序</li>
+<li>对象的创建过程独立于创建该对象的类。在建造者模式中通过引入指挥者类，将创建过程封装在指挥者类中，而不再建造者类或者客户类中</li>
+<li>隔离复杂对象的创建与使用，并使得相同的创建过程可以创建不同的产品</li>
+</ul>
+<h1 id="7-总结">7 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718143426156.png" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
@@ -1159,370 +1837,6 @@ Oh oh oh oh oh oh oh<br>
 陪你走过那条街<br>
 霎那间通话幻灭</p>
 </blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[设计模式学习笔记（四）：简单工厂模式]]></title>
-        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-si-jian-dan-gong-han-mo-shi/</id>
-        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-si-jian-dan-gong-han-mo-shi/">
-        </link>
-        <updated>2020-07-13T02:40:09.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%AE%9A%E4%B9%89">1 定义</a></li>
-<li><a href="#2-%E7%BB%93%E6%9E%84">2 结构</a></li>
-<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
-<li><a href="#4-%E7%AE%80%E5%8C%96">4 简化</a></li>
-<li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
-<li><a href="#6-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">6 主要缺点</a></li>
-<li><a href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">7 适用场景</a></li>
-<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
-</ul>
-</p>
-<h1 id="1-定义">1 定义</h1>
-<p><strong>简单工厂模式（Simple Factory Pattern）：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。</strong></p>
-<p>因为在简单工厂模式用于创建实例的方法是静态的方法，因此简单工厂模式又被称为静态工厂方法模式，它属于类创建型模式。</p>
-<p>尽管简单工厂模式不属于GoF23种设计模式之一，但是实际中用途广泛，并且可以作为学习“工厂方法模式”以及“抽象工厂模式”的基础。</p>
-<h1 id="2-结构">2 结构</h1>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/202007122243106.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>由图可知包含以下三个角色：</p>
-<ul>
-<li>Factory（工厂角色）：即工厂类，负责实现创建所有产品实例的内部逻辑，工厂类可以被外界直接调用，创建所需要的产品对象，在工厂类中提供了一个静态工厂方法用于获取产品</li>
-<li>Product（抽象产品角色）：是工厂类所创建的所有对象的父类，封装了各种产品对象的公有方法。Product会提高系统的灵活性，使得在工厂类只需要定义一个通用的工厂产品方法，因为所有创建的具体产品都是其子类对象</li>
-<li>ConcreteProduct（具体产品角色）：所有被创建的对象都充当这个角色的某个具体类的实例。每一个具体产品角色都继承了抽象产品角色，需要实现在抽象产品中声明的抽象方法</li>
-</ul>
-<h1 id="3-实例">3 实例</h1>
-<p>某公司需要开发一个图表库，该图表库可以提供各种不同外观的图表，例如柱状图，折线图等等。</p>
-<p>首先可以先设计一个抽象图表类（这里是一个接口）：</p>
-<pre><code class="language-java">interface Chart
-{
-	void display();
-}
-</code></pre>
-<p>接着各种具体产品类（柱状图，折线图，饼状图等）实现该接口即可：</p>
-<pre><code class="language-java">class HistogramChart implements Chart
-{
-    public HistogramChart()
-    {
-        System.out.println(&quot;创建柱状图&quot;);
-    }
-
-    public void display()
-    {
-        System.out.println(&quot;显示柱状图&quot;);
-    }
-}
-
-class PieChart implements Chart
-{
-    public PieChart()
-    {
-        System.out.println(&quot;创建饼状图&quot;);
-    }
-
-    public void display()
-    {
-        System.out.println(&quot;显示饼状图&quot;);
-    }
-}
-
-class LineChart implements Chart
-{
-    public LineChart()
-    {
-        System.out.println(&quot;创建折线图&quot;);
-    }
-
-    public void display()
-    {
-        System.out.println(&quot;显示折线图&quot;);
-    }
-}
-</code></pre>
-<p>最后是工厂类，为了方便加上了枚举参数：</p>
-<pre><code class="language-java">class Factory
-{
-    public static Chart getChart(Charts charts)
-    {
-        switch(charts)
-        {
-            case PIE_CHART:
-                return new PieChart();
-            case LINE_CHART:
-                return new LineChart();
-            case HISTOGRAM_CHART:
-                return new HistogramChart();
-            default:
-                return null;
-        }
-    }
-}
-
-enum Charts
-{
-    PIE_CHART,LINE_CHART,HISTOGRAM_CHART;
-}
-</code></pre>
-<p>测试：</p>
-<pre><code class="language-java">public static void main(String[] args) {
-    Chart chart = Factory.getChart(Charts.LINE_CHART);
-    chart.display();
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200713093445437.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-简化">4 简化</h1>
-<p>为了简化简单工厂模式，可以将抽象产品类与工厂类合并，将静态方法移至抽象产品类中：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200713094122200.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这样可以通过抽象产品类的静态方法获取子类对象，优化代码如下：</p>
-<pre><code class="language-java">interface Chart
-{
-    void display();
-    static Chart getChart(Charts charts)
-    {
-        switch(charts)
-        {
-            case PIE_CHART:
-                return new PieChart();
-            case LINE_CHART:
-                return new LineChart();
-            case HISTOGRAM_CHART:
-                return new HistogramChart();
-            default:
-                return null;
-        }
-    }
-}
-</code></pre>
-<h1 id="5-主要优点">5 主要优点</h1>
-<p>简单工厂模式的主要优点如下：</p>
-<ul>
-<li>分离职责：简单工厂模式实现了对象创建以及使用的分离，工厂类包含必要的判断逻辑，可以决定在什么时候创建什么哪一个产品的实例，客户端可以免除直接创建产品对象的职责，仅仅是“消费”产品</li>
-<li>简化记忆：客户端无须知道具体产品类的名字，只需要知道对应的参数即可，一般使用常量字符串或者枚举</li>
-<li>提高灵活性：可以引入配置文件（xml等）在不修改客户端代码情况下增加新的具体产品类，提高灵活性</li>
-</ul>
-<h1 id="6-主要缺点">6 主要缺点</h1>
-<p>简单工厂模式的主要缺点如下：</p>
-<ul>
-<li>工厂类集中了所有产品的创建逻辑，一旦不能正常工作，整个系统都要受影响</li>
-<li>由于引入了工厂类会增加系统中类的个数，会增加系统的复杂度和理解难度</li>
-<li>系统扩展困难，一旦添加新产品就不得不修改工厂逻辑，在产品类型过多时，有可能造成工厂逻辑过于复杂，不利于系统的扩展和维护</li>
-<li>简单工厂模式使用了静态工厂方法，造成工厂角色无法基于继承的等级结构</li>
-</ul>
-<h1 id="7-适用场景">7 适用场景</h1>
-<ul>
-<li>工厂类负责创建的对象比较少，由于创建对象较少，不会造成工厂方法中的业务逻辑太过复杂</li>
-<li>客户端只需要知道传入工厂类的参数，对如何创建对象不关心</li>
-</ul>
-<h1 id="8-总结">8 总结</h1>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/2020071309592074.png" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Vue学习笔记（二）]]></title>
-        <id>https://2293736867.github.io/post/vue-xue-xi-bi-ji-er/</id>
-        <link href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-er/">
-        </link>
-        <updated>2020-07-12T05:47:26.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-条件判断">1 条件判断</h1>
-<h2 id="11-普通if">1.1 普通if</h2>
-<p>条件判断使用<code>v-if</code>指令：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;p v-if=&quot;seen&quot;&gt;看到了&lt;/p&gt;;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app',
-	data:{
-		seen:true
-	}
-})
-&lt;/script&gt;
-</code></pre>
-<p><code>v-if</code>指令根据表达式的值（在这里是<code>seen</code>）决定是否插入<code>&lt;p&gt;</code></p>
-<h2 id="12-if-else">1.2 if-else</h2>
-<p>可以使用<code>v-else</code>添加一个<code>else</code>块：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;div v-if=&quot;Math.random()&gt;0.5&quot;&gt;1&lt;/div&gt;
-	&lt;div v-else&gt;2&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app'
-})
-&lt;/sctipt&gt;
-</code></pre>
-<p>也可以增加<code>v-else-if</code>：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;div v-if=&quot;value === 'A'&quot;&gt;A&lt;/div&gt;
-	&lt;div v-else-if=&quot;value === 'B'&quot;&gt;B&lt;/div&gt;
-	&lt;div v-else-if=&quot;value === 'C'&quot;&gt;C&lt;/div&gt;
-	&lt;div v-else&gt;D&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app',
-	data:{
-		value:'A'
-	}
-})
-&lt;/script&gt;
-</code></pre>
-<p><code>v-else</code>以及<code>v-else-if</code>必须跟在<code>v-if</code>或者<code>v-else-if</code>之后。</p>
-<h2 id="13-v-show">1.3 v-show</h2>
-<p>也可以根据<code>v-show</code>展示元素：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;h1 v-show=&quot;ok&quot;&gt;Test&lt;/h1&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app',
-	data:
-	{
-		ok:true
-	}
-})
-&lt;/script&gt;
-</code></pre>
-<h1 id="2-循环">2 循环</h1>
-<p>循环使用<code>v-for</code>，格式为：<code>A in B</code>，其中<code>A</code>是<code>B</code>中的每一个值，若<code>B</code>为数组，则<code>A</code>表示其中的没一个元素，若<code>B</code>为对象，则<code>A</code>可以表示<code>B</code>中的没一个值，通常配合<code>&lt;li&gt;</code>使用：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;ol&gt;
-		&lt;li v-for=&quot;i in arr&quot;&gt;{{i.value}}&lt;/li&gt;
-	&lt;/ol&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app',
-	data:
-	{
-		arr:
-		[
-			{value:'value1'},
-			{value:'value2'},
-			{value:'value3'}
-		]
-	}
-})
-&lt;/script&gt;
-</code></pre>
-<p>另外也可以通过一个对象的属性来迭代数据：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;ul&gt;
-		&lt;li v-for=&quot;value in obj&quot;&gt;{{value}}&lt;/li&gt;
-	&lt;/ul&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app',
-	data:
-	{
-		obj:
-		{
-			value1:'value1',
-			value2:'value2',
-			value3:'value3'
-		}
-	}
-})
-&lt;/script&gt;
-</code></pre>
-<p>也可以提供第二个参数作为键名：</p>
-<pre><code class="language-html">&lt;li v-for=&quot;(value,key) in obj&quot;&gt;
-{{key}} -&gt; {{value}}
-&lt;/li&gt;
-</code></pre>
-<p>第三个参数作为索引：</p>
-<pre><code class="language-html">&lt;li v-for=&quot;(value,key,index) in obj&quot;&gt;
-{{index}} : {{key}} -&gt; {{value}}
-&lt;/li&gt;
-</code></pre>
-<p>另外也可以迭代整数：</p>
-<pre><code class="language-html">&lt;li v-for=&quot;n in 10&quot;&gt;{{n}}&lt;/li&gt;
-</code></pre>
-<p>范围是从0到10，包含0与10。</p>
-<h1 id="3-计算属性">3 计算属性</h1>
-<h2 id="31-computed">3.1 computed</h2>
-<p>计算属性类似与方法调用，比如之前的反转字符串的例子：</p>
-<pre><code class="language-js">{{message.split('').reverse().join('')}}
-</code></pre>
-<p>这样看起来很长，可以使用计算属性进行简化：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;p&gt;{{reverse}}&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">&lt;script&gt;
-new Vue({
-	el:'#app',
-	data:
-	{
-		message:'Test'
-	},
-	computed:
-	{
-		reverse:function()
-		{
-			return this.message.split.reverse().join('')
-		}
-	}
-})
-&lt;/script&gt;
-</code></pre>
-<p>这里声明了一个计算属性<code>reverse</code>，提供的函数作为属性<code>reverse</code>的<code>getter</code>，<code>reverse</code>依赖于<code>message</code>，当<code>message</code>更新时，<code>reverse</code>也会更新。</p>
-<h2 id="32-computed与methods">3.2 computed与methods</h2>
-<p>可以使用<code>methods</code>来代替<code>computed</code>：</p>
-<pre><code class="language-js">methods:
-{
-	reverse:function()
-	{
-		return this.message.split.reverse().join('')
-	}
-}
-</code></pre>
-<p>对应只需要增加一对<code>()</code>：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-	&lt;p&gt;{{reverse()}}&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<p><code>computed</code>基于它的依赖缓存，只有相关依赖修改时才会重新取值，而使用<code>methods</code>，在重新渲染时函数总会重新调用执行。</p>
-<h2 id="33-setter">3.3 setter</h2>
-<p><code>computed</code>默认只有 <code>getter</code>，不过也可以自行提供<code>setter</code>：</p>
-<pre><code class="language-js">var vm = new Vue({
-	el:'#app',
-	data:
-	{
-		name:'test',
-		url:'https://www.test.com'
-	},
-	computed:
-	{
-		site:
-		{
-			get:function()
-			{
-				return this.name + ' ' + this.url; 
-			},
-			set:function(value)
-			{
-				var values = value.split(' ')
-				this.name = values[0]
-				this.url = values[1]
-			}
-		}
-	}
-})
-
-vm.site = 'test2 https://www.test2.com'
-document.write('name:'+vm.name)
-document.write('&lt;br&gt;')
-document.write('url:'+vm.url)
-</code></pre>
-<p>输入如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200712134247478.png" alt="在这里插入图片描述" loading="lazy"></p>
 ]]></content>
     </entry>
 </feed>
