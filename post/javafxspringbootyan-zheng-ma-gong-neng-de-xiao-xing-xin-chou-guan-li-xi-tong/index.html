@@ -17,7 +17,7 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-2020.06.26更新
+2020.07.22更新
 1 概述
 
 1.1 简介
@@ -87,7 +87,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595146962959" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1595485384241" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -102,7 +102,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-06-06"><i class="fa fa-calendar"></i><span class="lately">1 个月前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-06-06"><i class="fa fa-calendar"></i><span class="lately">2 个月前</span></time>
               
               <a href="https://2293736867.github.io/post/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/javafxspringbootyan-zheng-ma-gong-neng-de-xiao-xing-xin-chou-guan-li-xi-tong/"> </span>
@@ -133,7 +133,7 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
-<li><a href="#20200626%E6%9B%B4%E6%96%B0">2020.06.26更新</a></li>
+<li><a href="#20200722%E6%9B%B4%E6%96%B0">2020.07.22更新</a></li>
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
 <ul>
 <li><a href="#11-%E7%AE%80%E4%BB%8B">1.1 简介</a></li>
@@ -252,7 +252,7 @@
 <li><a href="#11-%E5%8F%82%E8%80%83">11 参考</a></li>
 </ul>
 </p>
-<h1 id="20200626更新">2020.06.26更新</h1>
+<h1 id="20200722更新">2020.07.22更新</h1>
 <h1 id="1-概述">1 概述</h1>
 <h2 id="11-简介">1.1 简介</h2>
 <p>一个简单的小型薪酬管理系统，前端JavaFX+后端Spring Boot，功能倒没多少，主要精力放在了UI和前端的一些逻辑上面，后端其实做得很简单。</p>
@@ -277,13 +277,16 @@
 <h1 id="2-环境">2 环境</h1>
 <h2 id="21-本地开发环境">2.1 本地开发环境</h2>
 <ul>
-<li>IDEA 2020.1</li>
-<li>OpenJDK 11</li>
-<li>OepnJFX 11</li>
+<li>Manjaro 20.0.3</li>
+<li>IDEA 2020.1.1</li>
+<li>OpenJDK 11.0.7.u10-1</li>
+<li>OepnJFX 11.0.3.u1-1</li>
 <li>Spring Boot 2.3.0</li>
+<li>MySQL 8.0.20</li>
 </ul>
 <h2 id="22-服务器环境">2.2 服务器环境</h2>
 <ul>
+<li>CentOS 8.1.1911</li>
 <li>OpenJDK 11</li>
 <li>Tomcat 9.0.33</li>
 <li>MySQL 8.0.17</li>
@@ -301,16 +304,28 @@
 <h2 id="32-概览">3.2 概览</h2>
 <h3 id="321-代码目录树">3.2.1. 代码目录树</h3>
 <figure data-type="image" tabindex="6"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMTBjOTA3NzA?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="7"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMTFiNTY4ZmU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMTFiNTY4ZmU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"><br>
+说明：</p>
+<ul>
+<li><code>constant</code>包：项目所需要的字符串常量以及一些枚举常量</li>
+<li><code>controller</code>包：控制器类，负责UI与用户的交互</li>
+<li><code>entity</code>包：实体类</li>
+<li><code>log</code>包：日志类</li>
+<li><code>network</code>包：负责网络请求，包括请求生成以及请求发送</li>
+<li><code>transition</code>包：负责处理动画</li>
+<li><code>utils</code>包：工具类</li>
+<li><code>view</code>包：负责UI的初始化预计更新</li>
+</ul>
 <h3 id="322-资源目录树">3.2.2 资源目录树</h3>
-<figure data-type="image" tabindex="8"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMzFkNzNiZDg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="9"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMzQzYmQ5NmM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMzFkNzNiZDg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkMzQzYmQ5NmM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"><br>
+说明：</p>
 <ul>
 <li><code>css</code>：界面所用到的样式</li>
 <li><code>fxml</code>：一个特殊的xml文件，用于定义界面与绑定Controller中的函数，也就是绑定事件</li>
-<li><code>image</code>：程序用到的默认图片</li>
-<li><code>key</code>：证书文件，用于OkHttp中的HTTPS</li>
-<li><code>properties</code>：项目一些常量属性</li>
+<li><code>image</code>：静态图片</li>
+<li><code>key</code>：证书文件，用于OkHttp中的HTTPS连接</li>
+<li><code>properties</code>：项目中的一些常量属性</li>
 </ul>
 <h3 id="323-项目依赖">3.2.3 项目依赖</h3>
 <p>主要依赖如下：</p>
@@ -323,19 +338,19 @@
 <li><a href="https://gluonhq.com/products/javafx/">OpenJFX11</a>：OpenJFX核心</li>
 </ul>
 <h2 id="33-常量模块">3.3 常量模块</h2>
-<figure data-type="image" tabindex="10"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkM2EzNDcyNWQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>程序所需要的常量：</p>
+<figure data-type="image" tabindex="8"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkM2EzNDcyNWQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>包含程序所需要的字符串以及枚举常量：</p>
 <ul>
-<li><code>CSSPath</code>：CSS路径，用于<code>scene.getStylesheets.add(path)</code></li>
-<li><code>FXMLPath</code>：FXML路径，用于<code>FXMLLoader.load(getClass.getResource(path).openStream())</code></li>
-<li><code>AllURL</code>：发送网络请求的路径</li>
+<li><code>CSSPath</code>：CSS路径，用于给Scene添加样式，如<code>scene.getStylesheets.add(path)</code></li>
+<li><code>FXMLPath</code>：FXML路径，用于<code>FXMLLoader</code>加载<code>FXML</code>文件，如<code>FXMLLoader.load(getClass.getResource(path).openStream())</code></li>
+<li><code>AllURL</code>：发送请求到后端的URL</li>
 <li><code>BuilderKeys</code>：OkHttp中的<code>FormBody.Builder</code>中使用的常量键名</li>
 <li><code>PaneName</code>：Pane名字，用于在同一个Scene切换不同的Pane</li>
-<li><code>ReturnCode</code>：后端返回码</li>
+<li><code>ReturnCode</code>：后端返回码，需要与后端协商</li>
 <li><code>ViewSize</code>：界面尺寸</li>
 </ul>
 <p>重点说一下路径问题，笔者的css与fxml文件都放在resources下：</p>
-<figure data-type="image" tabindex="11"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkM2M3NDNjMjY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkM2M3NDNjMjY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>其中fxml路径在项目中的用法如下：</p>
 <pre><code class="language-java">URL url = getClass().getResource(FXMLPath.xxxx);
 FXMLLoader loader = new FXMLLoader();
@@ -344,7 +359,7 @@ loader.load(url.openStream());
 </code></pre>
 <p>获取路径从根路径获取，比如上图中的MessageBox.fxml：</p>
 <pre><code class="language-java">private static final String FXML_PREFIX = &quot;/fxml/&quot;;
-private static final String FXML_SUFFIX = &quot;.fxml&quot;;
+private static final String FXML_SUFFIX = &quot;.fxml&quot;;	
 public static final String MESSAGE_BOX = FXML_PREFIX + &quot;MessageBox&quot; + FXML_SUFFIX;
 </code></pre>
 <p>若fxml文件直接放在resources根目录下，可以使用：</p>
@@ -368,12 +383,12 @@ if (properties != null)
 <h2 id="34-控制器模块">3.4 控制器模块</h2>
 <p>控制器模块用于处理用户的交互事件，分为三类：</p>
 <ul>
-<li>登录注册界面控制器（start）</li>
-<li>用户界面控制器（worker）</li>
-<li>管理员界面控制器（admin）</li>
+<li>登录注册界面控制器（start包）</li>
+<li>用户界面控制器（worker包）</li>
+<li>管理员界面控制器（admin包）</li>
 </ul>
-<figure data-type="image" tabindex="12"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkM2RmNmJkMTM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="13"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNDdmNjAxMmI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkM2RmNmJkMTM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNDdmNjAxMmI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h3 id="341-登录注册界面">3.4.1 登录注册界面</h3>
 <p>这是程序一开始进入的界面，会在这里绑定一些基本的关闭，最小化，标题栏拖拽事件：</p>
 <pre><code class="language-java">public void onMousePressed(MouseEvent e)
@@ -398,7 +413,7 @@ public void minimize()
 }
 </code></pre>
 <p>登录界面的控制器也很简单，就一个登录/注册功能加一个跳转到找回密码界面，代码就不贴了。</p>
-<p>至于找回密码界面，需要做的比较多，首先需要判断用户输入的电话是否在后端数据库存在，另外还有检查两次输入的密码是否一致，还有判断短信是否发送成功与用户输入的验证码与后端返回的验证码是否一致（短信验证码部分其实不需要后端处理，原本是放在前端的，但是考虑到可能会泄漏一些重要的信息就放到后端处理了）。</p>
+<p>至于找回密码界面，需要做的比较多，首先需要判断用户输入的电话是否在后端数据库存在，另外还要检查两次输入的密码是否一致，还要判断短信是否发送成功，并且检查用户输入的验证码与后端返回的验证码是否一致（短信验证码部分其实不需要后端处理，原本是放在前端的，但是考虑到可能会泄漏一些重要的信息就放到后端处理了）。</p>
 <h3 id="342-用户界面">3.4.2 用户界面</h3>
 <p>接着是用户登录后进入的界面，加了渐隐与移动动画：</p>
 <pre><code class="language-java">public void userEnter()
@@ -422,7 +437,7 @@ public void userExited()
 }
 </code></pre>
 <p>效果如下：</p>
-<figure data-type="image" tabindex="14"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNWE2YTU1Mzc?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNWE2YTU1Mzc?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>实际处理是把<code>&lt;Image&gt;</code>以及<code>&lt;Label&gt;</code>放进一个<code>&lt;AnchorPane&gt;</code>中，然后为这个<code>&lt;AnchorPane&gt;</code>添加鼠标移入与移出事件。从代码中可以知道图片加上了位移动画，文字同时加上了淡入与位移动画，多边形同时加上了缩放与位移动画。以左下的<code>&lt;AnchorPane&gt;</code>事件为例，当鼠标移入时，首先把图片左移：</p>
 <pre><code class="language-java">.add(new Move(userImage).x(-70))
 </code></pre>
@@ -435,7 +450,7 @@ public void userExited()
 <pre><code class="language-java">.add(new Scale(userPolygon).ratio(1.8)).add(new Move(userPolygon).x(180))
 </code></pre>
 <p>ratio表示放大的倍率，这里是放大到原来的1.8倍。</p>
-<p>右上的同样需要进行放大与移动：</p>
+<p>同理右上方同样需要进行放大与移动：</p>
 <pre><code class="language-java">.add(new Scale(queryPolygon).ratio(1.8)).add(new Move(queryPolygon).x(180))
 </code></pre>
 <p>其中用到的<code>Transition</code>，<code>Scale</code>，<code>Fade</code>是自定义的动画处理类，详情请看&quot;3.8 动画模块&quot;。</p>
@@ -484,25 +499,25 @@ public class Worker {
 <li><code>%d{HH:mm:ss}</code>：时间格式</li>
 <li><code>level</code>：日志等级</li>
 <li><code>n</code>：换行</li>
-<li>msg：日志信息</li>
+<li><code>msg</code>：日志信息</li>
 </ul>
 <p>这里前端的日志进行了简化处理，需要更多配置请自行搜索。</p>
 <h2 id="37-网络模块">3.7 网络模块</h2>
 <p>网络模块的核心使用了OkHttp实现，主要分为两个包：</p>
-<figure data-type="image" tabindex="15"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNjBkM2IyZjU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNjBkM2IyZjU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <ul>
 <li><code>request</code>：封装发送到后端的各种请求</li>
 <li><code>requestBuilder</code>：创建request的Builder类</li>
-<li><code>OKHTTP</code>：封装OkHttp的工具类，对外只有一个send方法，参数只有一个，request包中的类，使用requestBuilder生成，返回一个Object，至于Object怎么处理需要在用到OKHTTP的地方与返回方法对应</li>
+<li><code>OKHTTP</code>：封装OkHttp的工具类，对外只有一个静态send方法，参数只有一个，request包中的类，使用requestBuilder生成。send方法返回一个Object，Object怎么处理需要在用到OKHTTP的地方与返回方法对应</li>
 </ul>
 <h3 id="371-request包">3.7.1 request包</h3>
 <p>封装了各种网络请求：</p>
-<figure data-type="image" tabindex="16"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNjBhMmM4ZTU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNjBhMmM4ZTU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>所有请求继承自BaseRequest，BaseRequest的公有方法包括：</p>
 <ul>
-<li><code>setUrl</code>：设置发送的url</li>
+<li><code>setUrl</code>：设置发送的URL</li>
 <li><code>setCellphone</code>：添加cellphone参数</li>
-<li><code>setPassword</code>：添加password参数，注意password经过前端的SHA512加密</li>
+<li><code>setPassword</code>：添加password参数，注意会经过前端的SHA-512加密</li>
 <li><code>setWorker</code>：添加Worker参数</li>
 <li><code>setWorkers</code>：接受一个List&lt;Worker&gt;，管理员保存所有Worker时使用</li>
 <li><code>setAvatar</code>：添加头像参数</li>
@@ -540,18 +555,18 @@ public class Worker {
     }
 }
 </code></pre>
-<p>获取一个Worker，可能的返回值有（枚举值，在ReturnCode中定义，需要前后端统一）：</p>
+<p>获取一个Worker，可能的返回值有（返回的是在ReturnCode中定义的枚举值，需要前后端统一）：</p>
 <ul>
 <li><code>EMPTY_CELLPHOE</code>：表示发送的get请求中电话为空</li>
 <li><code>INVALID_CELLPHONE</code>：非法电话号码，判断的代码为：<code>String reg = &quot;^[1][358][0-9]{9}$&quot;;return !(Pattern.compile(reg).matcher(cellphone).matches());</code></li>
 <li><code>CELLPHONE_NOT_MATCH</code>：电话号码不匹配，也就是数据库没有对应的Worker</li>
 <li><code>EMPTY_WORKER</code>：数据库中存在这个Worker，但由于转换为String时后端处理失败，返回一个空的Worker</li>
 <li><code>GET_ONE_SUCCESS</code>：获取成功，使用工具类转换String为Worker</li>
-<li>默认：未知错误</li>
+<li>其他：未知错误</li>
 </ul>
 <h3 id="372-requestbuilder包">3.7.2 requestBuilder包</h3>
-<p>包含了对应与request的Builder：</p>
-<figure data-type="image" tabindex="17"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNzg3MWM2NWY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>包含了对应于request的Builder：</p>
+<figure data-type="image" tabindex="15"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNzg3MWM2NWY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>除了默认的构造方法与build方法外，只有set方法，比如：</p>
 <pre><code class="language-java">public class GetOneRequestBuilder {
     private final GetOneRequest request = new GetOneRequest();
@@ -575,7 +590,7 @@ public class Worker {
     }
 }
 </code></pre>
-<p>在默认构造方法里面设置了url，剩下就只需设置电话即可获取Worker。</p>
+<p>在默认构造方法里面设置了URL，剩下就只需设置电话即可获取Worker。</p>
 <h3 id="373-okhttp">3.7.3 OKHTTP</h3>
 <p>这是一个封装了OkHttp的静态工具类，唯一一个公有静态方法如下：</p>
 <pre><code class="language-java">public static Object send(BaseRequest content)
@@ -595,17 +610,18 @@ public class Worker {
     return null;
 }
 </code></pre>
-<p>采用同步post请求的方式，其中call中使用的url与body正是使用<code>BaseRequest</code>作为基类的原因，可以方便地获取url与body，若数据量大可以考虑异步请求。上面也提到后端返回的是经由Gson转换为String的ReturnCode，所以获取body后，先转换为ReturnCode再处理。</p>
+<p>采用同步POST请求的方式，用<code>BaseRequest</code>作为基类是因为能在<code>Call</code>中方便地获取URL以及请求体，若数据量大可以考虑异步请求。<br>
+另外上面也提到后端返回的是经由Gson转换为<code>String</code>的<code>ReturnCode</code>，所以获取body后，先转换为<code>ReturnCode</code>再处理。</p>
 <h3 id="374-https">3.7.4 HTTPS</h3>
-<p>至于HTTPS，采用了war包部署，后端服务器Tomcat，需要在Tomcat里设置证书，同时也需要在OkHttp中设置三部分：</p>
+<p>至于HTTPS，由于在Tomcat上进行部署，需要在Tomcat里设置证书，同时也需要在OkHttp中设置以下三部分：</p>
 <ul>
-<li>sslSocketFactory：ssl套接字工厂</li>
-<li>HostnameVerifier：验证主机名</li>
-<li>X509TrustManager：证书信任器管理类</li>
+<li><code>sslSocketFactory</code>：ssl套接字工厂</li>
+<li><code>HostnameVerifier</code>：验证主机名</li>
+<li><code>X509TrustManager</code>：证书信任器管理类</li>
 </ul>
 <h4 id="3741-okhttp配置">3.7.4.1 OkHttp配置</h4>
-<p>上面提到了需要设置三部分，下面来看看最简单的一个验证主机名部分，利用的是HostnameVerifier接口：</p>
-<figure data-type="image" tabindex="18"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNzFhMzE2MGI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>上面提到了需要设置三部分，下面来看看最简单的一个验证主机名部分，利用的是<code>HostnameVerifier</code>接口：</p>
+<figure data-type="image" tabindex="16"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNzFhMzE2MGI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <pre><code class="language-java">OkHttpClient client = new OkHttpClient.Builder()
 .connectTimeout(1500, TimeUnit.MILLISECONDS)
 .hostnameVerifier((hostname, sslSession) -&gt; {
@@ -617,8 +633,8 @@ public class Worker {
     }
 }).build();
 </code></pre>
-<p>这里验证主机名为www.test.com就返回true（也可是使用公网ip验证），否则使用默认的HostnameVerifier。业务逻辑复杂的话可以结合配置中心，黑/白名单等进行动态校验。</p>
-<p>接着是X509TrustManager的处理（来源<a href="https://www.programcreek.com/java-api-examples/?class=java.security.cert.CertificateFactory&amp;method=generateCertificates">Java Code Example</a>）：</p>
+<p>这里验证主机名为<code>www.test.com</code>就返回true（也可是使用公网ip验证），否则使用默认的HostnameVerifier。业务逻辑复杂的话可以结合配置中心，黑/白名单等进行动态校验。</p>
+<p>接着是<code>X509TrustManager</code>的处理（来源<a href="https://www.programcreek.com/java-api-examples/?class=java.security.cert.CertificateFactory&amp;method=generateCertificates">Java Code Example</a>）：</p>
 <pre><code class="language-java">private static X509TrustManager trustManagerForCertificates(InputStream in)
             throws GeneralSecurityException
 {
@@ -647,10 +663,21 @@ public class Worker {
     }
     return (X509TrustManager) trustManagers[0];
 }
+
+private static KeyStore newEmptyKeyStore(char[] password) throws GeneralSecurityException {
+    try {
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType()); // 这里添加自定义的密码，默认
+        InputStream in = null; // By convention, 'null' creates an empty key store.
+        keyStore.load(in, password);
+        return keyStore;
+    } catch (IOException e) {
+        throw new AssertionError(e);
+    }
+}
 </code></pre>
-<p>返回一个信任由输入流读取的证书的信任管理器，若证书没有被签名则抛出SSLHandsakeException，证书建议使用第三方签名的而不是自签名的（比如使用openssl生成），特别是在生产环境中，例子的注释也提到：</p>
-<figure data-type="image" tabindex="19"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNjMwZDcwNjU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>最后是ssl套接字工厂的处理：</p>
+<p>返回一个信任由输入流读取的证书的信任管理器，若证书没有被签名则抛出<code>SSLHandsakeException</code>，证书建议使用第三方签名的而不是自签名的（比如使用<code>OpenSSL</code>或者<code>acme.sh</code>生成），特别是在生产环境中千万不要使用自签名的，例子的注释也提到：</p>
+<figure data-type="image" tabindex="17"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkNjMwZDcwNjU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后是SSL套接字工厂的处理：</p>
 <pre><code class="language-java">private static SSLSocketFactory createSSLSocketFactory() {
     SSLSocketFactory ssfFactory = null;
     try {
@@ -663,7 +690,7 @@ public class Worker {
     return ssfFactory;
 }
 </code></pre>
-<p>完整的OkHttpClient构造如下：</p>
+<p>完整的<code>OkHttpClient</code>构造如下：</p>
 <pre><code class="language-java">X509TrustManager trustManager = trustManagerForCertificates(OKHTTP.class.getResourceAsStream(&quot;/key/pem.pem&quot;));
 OkHttpClient client = new OkHttpClient.Builder()
 .connectTimeout(1500, TimeUnit.MILLISECONDS)
@@ -678,16 +705,17 @@ OkHttpClient client = new OkHttpClient.Builder()
 })
 .readTimeout(10, TimeUnit.SECONDS).build();
 </code></pre>
-<p>其中<code>/key/pem.pem</code>为resources下的证书文件。</p>
+<p>其中<code>/key/pem.pem</code>为<code>resources</code>下的证书文件。</p>
 <h4 id="3742-服务器设置证书">3.7.4.2 服务器设置证书</h4>
-<p>使用war进行部署，jar部署的方式请自行搜索，服务器Tomcat，其他web服务器请自行搜索。</p>
+<p>使用WAR进行部署，JAR部署的方式请自行搜索，服务器Tomcat，其他web服务器请自行搜索。</p>
 <p>首先在Tomcat配置文件中的<code>conf/server.xml</code>修改域名：</p>
-<figure data-type="image" tabindex="20"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkODZkMGU1NWU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>找到&lt;Host&gt;并复制，直接修改其中的name为对应域名：</p>
-<figure data-type="image" tabindex="21"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkODdiYWJjNmE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>接着从证书厂商下载文件（一般都带文档，建议查看文档），Tomcat的是两个文件，一个是pfx，一个是密码文件，继续修改server.xml，搜索8443， 找到如下位置：</p>
-<figure data-type="image" tabindex="22"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkOGQ1NzJkY2E?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>其中上面的&lt;Connector&gt;是HTTP/1.1协议的，基于NIO实现，下面的&lt;Connector&gt;是HTTP/2的，基于APR实现。使用HTTP/1.1会比较简单一些，仅仅是修改server.xml即可，使用HTTP/2的话会麻烦一点，如果基于APR实现需要安装Apr，Apr-util以及Tomcat-Native，可以参考<a href="https://blog.csdn.net/qq_27525611/article/details/106557158">这里</a>，下面以HTTP/1.1的为例，修改如下：</p>
+<figure data-type="image" tabindex="18"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkODZkMGU1NWU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>找到<code>&lt;Host&gt;</code>并复制，直接修改其中的<code>name</code>为对应域名：</p>
+<figure data-type="image" tabindex="19"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkODdiYWJjNmE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着从证书厂商下载文件（一般都带文档，根据文档部署），Tomcat的是两个文件，一个是pfx，一个是密码文件，继续修改<code>server.xml</code>，搜索8443， 找到如下位置：</p>
+<figure data-type="image" tabindex="20"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkOGQ1NzJkY2E?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>其中上面的<code>&lt;Connector&gt;</code>是HTTP/1.1协议的，基于NIO实现，下面的<code>&lt;Connector&gt;</code>是HTTP/2的，基于APR实现。</p>
+<p>使用HTTP/1.1会比较简单一些，仅仅是修改<code>server.xm</code>l即可，使用HTTP/2的话会麻烦一点，如果基于APR（Apache Portable Runtime）实现需要安装APR，APR-util以及Tomcat-Native，可以参考<a href="https://blog.csdn.net/qq_27525611/article/details/106557158">这里</a>，下面以HTTP/1.1的为例，修改如下：</p>
 <pre><code class="language-xml">&lt;Connector port=&quot;8123&quot; protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;
 	maxThreads=&quot;200&quot; SSLEnabled=&quot;true&quot; 
 	scheme=&quot;https&quot; secure=&quot;true&quot;
@@ -696,76 +724,56 @@ OkHttpClient client = new OkHttpClient.Builder()
 	sslProtocol=&quot;TLS&quot;&gt;
 &lt;/Connector&gt;
 </code></pre>
-<p>修改证书位置以及密码。如果想要更加安全的话可以指定使用某个TLS版本:</p>
+<p>修改证书位置以及密码。如果想要更加安全的话可以指定使用某个TLS版本，比如使用TLS1.2版本：</p>
 <pre><code class="language-xml">&lt;Connector ...
 sslProtocol=&quot;TLS&quot; sslEnabledProtocols=&quot;TLSv1.2&quot;
 &gt;
 </code></pre>
 <h3 id="375-图片处理">3.7.5 图片处理</h3>
 <p>图片原本是想使用OkHttp的MultipartBody处理的，但是处理的图片都不太，貌似没有必要，而且实体类的数据都是以字符串的形式传输的，因此，笔者的想法是能不能统一都用字符串进行传输，于是找到了图片和String互转的函数，稍微改动，原来的函数需要外部依赖，现在改为了JDK自带的Base64：</p>
-<pre><code class="language-java">public static String fileToString(String path)
+<pre><code class="language-java">public static String avatarToString(Path path)
 {
-    File file = new File(path);
-    FileInputStream fis = null;
-    StringBuilder content = new StringBuilder();
-    try {
-        fis = new FileInputStream(file);
-        int length = 3 * 1024 * 1024;
-        byte[] byteAttr = new byte[length];
-        int byteLength;
-        while ((byteLength = fis.read(byteAttr, 0, byteAttr.length)) != -1) {
-            String encode;
-            if (byteLength != byteAttr.length) {
-                byte[] temp = new byte[byteLength];
-                System.arraycopy(byteAttr, 0, temp, 0, byteLength);
-                encode = Base64.getEncoder().encodeToString(temp);
-                content.append(encode);
-            } else {
-                encode = Base64.getEncoder().encodeToString(byteAttr);
-                content.append(encode);
-            }
-        }
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    } finally {
-        try {
-            assert fis != null;
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try
+    {
+        return new String(encoder.encode(Files.readAllBytes(path)));
     }
-    return content.toString();
+    catch (IOException e)
+    {
+        MessageBox.avatarToStringFailed();
+        L.error(e);
+        return null;
+    }
 }
 
-public static void stirngToFile(String base64Code, String targetPath) {
-    byte[] buffer;
-    FileOutputStream out = null;
-    try {
-        buffer = Base64.getDecoder().decode(base64Code);
-        out = new FileOutputStream(targetPath);
-        out.write(buffer);
-    } catch (IOException e) {
-        e.printStackTrace();
-    } finally {
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+public static void stringToAvatar(String base64Code, String cellphone){
+	try
+	{
+	    if(!Files.exists(TEMP_PATH))
+	        Files.createDirectory(TEMP_PATH);
+	    if(!Files.exists(getPath(cellphone)))
+	        Files.createFile(getPath(cellphone));
+	    Files.write(getPath(cellphone), decoder.decode(base64Code));
+	}
+	catch (IOException e) {
+	    MessageBox.stringToAvatarFailed();
+	    L.error(e);
+	}
 }
 </code></pre>
 <p>Base64是一种基于64个可打印字符来表示二进制数据的方法，可以把二进制数据（图片/视频等）转为字符,或把对应的字符解码变为原来的二进制数据。</p>
 <p>笔者实测这种方法转换速度不慢，只要有了正确的转换函数，服务器端可以轻松进行转换，但是对于大文件的支持不好：</p>
-<figure data-type="image" tabindex="23"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYWU3MmViOTI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYWU3MmViOTI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>这种方法对一般的图片来说足够了，但是对于真正的文件还是建议使用MultipartBody进行处理。</p>
 <h2 id="38-动画模块">3.8 动画模块</h2>
-<figure data-type="image" tabindex="24"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkOTk2ZjBiMDM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>包含了四类动画：淡入/淡出，位移，缩放，旋转，这四个类都实现了<code>CustomTransitionOperation</code>接口：</p>
+<figure data-type="image" tabindex="22"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkOTk2ZjBiMDM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>包含了四类动画：</p>
+<ul>
+<li>淡入/淡出</li>
+<li>位移</li>
+<li>缩放</li>
+<li>旋转</li>
+</ul>
+<p>这四个类都实现了<code>CustomTransitionOperation</code>接口：</p>
 <pre><code class="language-java">import javafx.animation.Animation;
 
 public interface CustomTransitionOperation {
@@ -774,7 +782,13 @@ public interface CustomTransitionOperation {
     void play();
 }
 </code></pre>
-<p>其中defaultSeconds表示默认持续的秒数，build用于<code>Transition</code>中对各个动画类进行统一的生成操作，最后的play用于播放动画。四个动画类类似，以旋转动画类为例：</p>
+<p>其中：</p>
+<ul>
+<li><code>defaultSeconds</code>表示动画默认持续的秒数</li>
+<li><code>build</code>用于<code>Transition</code>中对各个动画类进行统一的<code>build</code>操作</li>
+<li><code>play</code>用于播放动画</li>
+</ul>
+<p>四个动画类类似，以旋转动画类为例：</p>
 <pre><code class="language-java">public class Rotate implements CustomTransitionOperation{
     private final RotateTransition transition = new RotateTransition(Duration.seconds(1));
 
@@ -806,7 +820,7 @@ public interface CustomTransitionOperation {
     }
 }
 </code></pre>
-<p>seconds设置秒数，to表示设置旋转的角度，所有动画类统一由<code>Transition</code>控制：</p>
+<p>seconds设置秒数，to设置旋转的角度，所有动画类统一由<code>Transition</code>控制：</p>
 <pre><code class="language-java">public class Transition {
     private final ArrayList&lt;Animation&gt; animations = new ArrayList&lt;&gt;();
 
@@ -822,7 +836,7 @@ public interface CustomTransitionOperation {
     }
 }
 </code></pre>
-<p>里面是一个动画类的集合，每次add操作时先生成对应的动画再添加进数组，最后统一播放，示例用法如下：</p>
+<p>里面是一个动画类的集合，每次add操作时先生成对应的动画再添加进集合，最后统一播放，示例用法如下：</p>
 <pre><code class="language-java">new Transition()
 .add(new Move(userImage).x(-70))
 .add(new Fade(userLabel).fromTo(0,1)).add(new Move(userLabel).x(95))
@@ -831,16 +845,16 @@ public interface CustomTransitionOperation {
 .play();
 </code></pre>
 <h2 id="39-工具类模块">3.9 工具类模块</h2>
-<figure data-type="image" tabindex="25"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkOTk4ZjFiM2M?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkOTk4ZjFiM2M?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <ul>
 <li><code>AvatarUtils</code>：用于本地生成临时图片以及图片转换处理</li>
 <li><code>Check</code>：检查是否为空，是否合法等</li>
-<li><code>Conversion</code>：转换类，通过Gson在Worker/String，Map/String，List/String之间进行转换</li>
-<li><code>Utils</code>：加密，设置运行环境，居中Stage，检查网络连通等</li>
+<li><code>Conversion</code>：转换类，通过Gson在<code>Worker/String</code>，<code>Map/String</code>，<code>List/String</code>之间进行转换</li>
+<li><code>Utils</code>：加密，设置运行环境，居中<code>Stage</code>，检查网络连通等</li>
 </ul>
 <p>这里说一下<code>Utils</code>与<code>Conversion</code>。</p>
 <h3 id="391-conversion">3.9.1 Conversion</h3>
-<p>转换类，利用Gson在String与List/Worker/Map之间进行转换，比如String转Map：</p>
+<p>转换类，利用Gson在<code>String</code>与<code>List</code>/<code>Worker</code>/<code>Map</code>之间进行转换，比如<code>String</code>转<code>Map</code>：</p>
 <pre><code class="language-java">public static Map&lt;String,Double&gt; stringToMap(String str)
 {
     if(Check.isEmpty(str))
@@ -894,10 +908,28 @@ public static Properties getProperties()
     }
     return false;
 }
+
+public static boolean backendAvaliable()
+{
+    try(Socket socket = new Socket())
+    {
+        if(isProdEnvironment())
+            socket.connect(new InetSocketAddress(&quot;www.test.com&quot;,8888));
+        else
+            socket.connect(new InetSocketAddress(&quot;127.0.0.1&quot;,8080));
+        return true;
+    }
+    catch (IOException e)
+    {
+        L.error(&quot;Can not connect back end server.&quot;);
+        L.error(ExceptionUtils.getStackTrace(e));
+    }
+    return false;
+}
 </code></pre>
-<p>采用socket进行判断，准确来说可以分两个方法检查网络，其中一个是检查网络连通，另一个是检查后端是否连通。</p>
-<p>最后是居中Stage的方法，尽管Stage中自带了一个centerOnScreen，但是出来的效果并不好，笔者的实测是水平居中但是垂直偏上的，并不是垂直水平居中。</p>
-<figure data-type="image" tabindex="26"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYjdhZDIwN2M?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>采用socket进行判断，准确来说是包含检查网络连通以及后端是否连通。</p>
+<p>最后是居中<code>Stage</code>的方法，尽管Stage中自带了一个centerOnScreen，但是出来的效果并不好，笔者的实测是水平居中但是垂直偏上的，并不是垂直水平居中。</p>
+<figure data-type="image" tabindex="24"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYjdhZDIwN2M?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>因此根据屏幕高宽以及Stage的大小手动设置Stage的x和y。</p>
 <pre><code class="language-java">public static void centerMainStage()
 {
@@ -911,11 +943,11 @@ public static Properties getProperties()
 }
 </code></pre>
 <h2 id="310-视图模块">3.10 视图模块</h2>
-<figure data-type="image" tabindex="27"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYmQyZDZkYzM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="25"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYmQyZDZkYzM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <ul>
-<li><code>GUI</code>：全局变量共享以及以及控制Scene的切换</li>
+<li><code>GUI</code>：全局变量共享以及以及控制<code>Scene</code>的切换</li>
 <li><code>MainScene</code>：全局控制器，负责初始化以及绑定键盘事件</li>
-<li><code>MessBox</code>：提示信息框，对外提供show()等的静态方法。</li>
+<li><code>MessageBox</code>：提示信息框，对外提供<code>show()</code>等的静态方法</li>
 </ul>
 <p>GUI中的方法主要为<code>switchToXxx</code>，比如：</p>
 <pre><code class="language-java">public static void switchToSignInUp()
@@ -935,8 +967,8 @@ public static Properties getProperties()
     minimize.setOnMouseClicked(v-&gt;minimize());
 }
 </code></pre>
-<p>跳转到登录注册，公有静态，首先判断是否为用户信息界面，如果是进行一些清理操作，接着是让Parent获取焦点（为了让键盘事件响应），然后将对应的<code>AnchorPane</code>添加到Children，并添加css，最后修改按钮文字与事件。</p>
-<p>另外还在MainScene中加了一些键盘事件响应，比如Enter：</p>
+<p>跳转到登录注册界面，是公有静态方法，首先判断是否为用户信息界面，如果是进行一些清理操作，接着是让<code>Parent</code>获取焦点（为了让键盘事件响应），然后将对应的<code>AnchorPane</code>添加到<code>Children</code>，并添加css，最后修改按钮文字与事件。</p>
+<p>另外还在<code>MainScene</code>中加了一些键盘事件响应，比如Enter：</p>
 <pre><code class="language-java">ObservableMap&lt;KeyCombination,Runnable&gt; keyEvent = GUI.getScene().getAcclerators();
 keyEvent.put(new KeyCodeCombination(KeyCode.ENTER),()-&gt;
 {
@@ -964,12 +996,12 @@ keyEvent.put(new KeyCodeCombination(KeyCode.ENTER),()-&gt;
 </code></pre>
 <h1 id="4-前端ui部分">4 前端UI部分</h1>
 <h2 id="41-fxml">4.1 fxml</h2>
-<figure data-type="image" tabindex="28"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYmQ0ZWY5NDM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="26"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYmQ0ZWY5NDM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>界面基本上靠这些fxml文件控制，这部分没太多内容，基本上靠IDEA自带的Scene Builder设计，少部分靠代码控制，下面说几个注意事项：</p>
 <ul>
 <li>根节点为AnchorPane，每个fxml设置一个独立的<code>fx:id</code>以便切换</li>
 <li>事件绑定在对应的控件中，比如在一个Label绑定鼠标进入事件，在这个Label上设置<code>onMouseEntered=&quot;#xxx&quot;</code>，其中里面的方法为对应的控制器（<code>fx:controller=&quot;xxx.xxx.xxx.xxxController&quot;</code>）中的方法</li>
-<li><code>&lt;Image&gt;</code>中的url属性需要带上<code>@</code>，比如<code>&lt;Image url=&quot;@../../image/xxx.png&quot;&gt;</code></li>
+<li><code>&lt;Image&gt;</code>中的URL属性需要带上<code>@</code>，比如<code>&lt;Image url=&quot;@../../image/xxx.png&quot;&gt;</code></li>
 </ul>
 <h2 id="42-css">4.2 css</h2>
 <p>JFX中集成了部分css的美化功能，比如：</p>
@@ -1007,7 +1039,7 @@ private Label label1;
 }
 </code></pre>
 <p>同时JFX还支持css的伪类，比如下面的最小化与关闭的鼠标移入效果是使用伪类实现的：</p>
-<figure data-type="image" tabindex="29"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYmZhYmNhZjY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="27"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkYmZhYmNhZjY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <pre><code class="language-css">#minimize:hover
 {
     -fx-opacity: 1;
@@ -1055,67 +1087,87 @@ scene.getStylesheets().add(&quot;xxx/xxx/xxx/xxx.css&quot;);
 	//...
 }
 </code></pre>
-<p>首先新建一个Stage，接着利用FXMLLoader加载对应路径上的fxml文件，获取Parent后，利用该Parent生成Scene，再为Scene添加样式。</p>
-<p>接着是控件的处理，这里的<code>lookup</code>类似Android中的<code>findViewById</code>，根据<code>fx:id</code>获取对应控件，注意需要加上<code>#</code>。处理好控件之后，居中并显示stage，同时，绑定键盘事件并让Parent获取焦点。</p>
+<p>首先新建一个<code>Stage</code>，接着利用<code>FXMLLoader</code>加载对应路径上的fxml文件，获取<code>Parent</code>后，利用该<code>Parent</code>生成<code>Scene</code>，再为<code>Scene</code>添加样式。</p>
+<p>接着是控件的处理，这里的<code>lookup</code>类似Android中的<code>findViewById</code>，根据<code>fx:id</code>获取对应控件，注意需要加上<code>#</code>。处理好控件之后，居中并显示<code>Stage</code>，同时，绑定键盘事件并让<code>Parent</code>获取焦点。</p>
 <h1 id="5-后端部分">5 后端部分</h1>
 <h2 id="51-后端概述">5.1 后端概述</h2>
-<p>后端以Spring Boot框架为核心，部署方式为war，整体分为三层：</p>
+<p>后端以Spring Boot框架为核心，部署方式为WAR，整体分为三层：</p>
 <ul>
 <li>控制器层：负责接受前端的请求并调用业务层方法</li>
 <li>业务层：处理主要业务，如CRUD，图片处理等</li>
-<li>持久层：数据持久化，使用Hibernate+Spring Data JPA</li>
+<li>持久层：数据持久化，Hibernate+Spring Data JPA</li>
 </ul>
 <p>总的来说没有用到什么高大上的东西，逻辑也比较简单。</p>
 <h2 id="52-概览">5.2 概览</h2>
 <h3 id="521-代码目录树">5.2.1 代码目录树</h3>
-<figure data-type="image" tabindex="30"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZGJkYjg5Njg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="28"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZGJkYjg5Njg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h3 id="522-依赖">5.2.2 依赖</h3>
 <p>主要依赖如下：</p>
 <ul>
 <li><a href="https://mvnrepository.com/search?q=spring%20boot%20start%20data%20jpa">Spring Boot Starter Data JPA</a>：数据持久化</li>
-<li><a href="https://mvnrepository.com/search?q=guava">Guava</a>：工具类</li>
+<li><a href="https://mvnrepository.com/search?q=guava">Guava</a>：用于将<code>Iterable&lt;Worker&gt;</code>转换为集合</li>
 <li><a href="https://mvnrepository.com/search?q=lombok">Lombok</a>：同前端</li>
-<li><a href="https://mvnrepository.com/search?q=gson">Gson</a>：工具类</li>
-<li><a href="https://mvnrepository.com/search?q=Apache%20commons">Apache Commons</a>：工具类</li>
+<li><a href="https://mvnrepository.com/search?q=gson">Gson</a>：JSON转换类</li>
+<li><a href="https://mvnrepository.com/search?q=Apache%20commons">Apache Commons</a>：用于异常处理+随机字符串生成</li>
 <li><a href="https://mvnrepository.com/search?q=tencentcloud-sdk-java">TencentCloud SDK Java</a>：短信验证码API</li>
 <li><a href="https://mvnrepository.com/search?q=jasypt%20spring%20boot%20starter">Jasypt Spring Boot Starter</a>：加密配置文件</li>
 </ul>
 <h2 id="53-控制器层">5.3 控制器层</h2>
 <p>控制器分为三类，一类处理图片，一类处理CRUD请求，一类处理短信发送请求，统一接受POST忽略GET请求。大概的处理流程是接收参数后首先进行判断操作，比如判空以及判断是否合法等等，接着调用业务层的方法并对返回结果进行封装，同时进行日志记录，最后利用Gson把返回结果转为字符串。代码大部分比较简单就不贴了，说一下短信验证码的部分。</p>
-<p>验证码模块使用了腾讯云的功能，官网<a href="https://cloud.tencent.com/">这里</a>，搜索短信功能即可。</p>
-<figure data-type="image" tabindex="31"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZGNlOWFmNGI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>验证码模块使用了腾讯云的接口，官网<a href="https://cloud.tencent.com/">这里</a>，搜索短信功能即可。</p>
+<figure data-type="image" tabindex="29"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZGNlOWFmNGI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>新用户默认赠送100条短信：</p>
-<figure data-type="image" tabindex="32"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZGZhOTAxODc?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="30"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZGZhOTAxODc?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>发送之前需要创建签名与正文模板，审核通过即可使用。</p>
-<figure data-type="image" tabindex="33"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZTIxMjE5MzE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="31"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZTIxMjE5MzE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>可以先根据快速开始试用一下短信功能，若能成功收到短信，可以<a href="https://github.com/TencentCloud/tencentcloud-sdk-java">戳这里</a>查看API（Java版）。</p>
 <p>下面的例子由<a href="https://github.com/TencentCloud/tencentcloud-sdk-java/blob/master/examples/sms/v20190711/SendSms.java">文档例子</a>简化而来：</p>
-<pre><code class="language-java">private void sendCode()
+<pre><code class="language-java">@PostMapping(&quot;sendSms&quot;)
+public @ResponseBody
+String sendSms(@RequestParam String cellphone)
 {
+    String randomCode = RandomStringUtils.randomNumeric(6);
+    if(Check.isEmpty(cellphone))
+    {
+        L.sendSmsFailed(&quot;null&quot;,randomCode,&quot;cellphone is empty&quot;);
+        return toStr(ReturnCode.EMPTY_CELLPHONE);
+    }
+    if(Check.isInvalidCellphone(cellphone))
+    {
+        L.sendSmsFailed(cellphone,randomCode,&quot;cellphone is not valid.&quot;);
+        return toStr(ReturnCode.INVALID_CELLPHONE);
+    }
+    ReturnCode s = ReturnCode.SEND_SMS_SUCCESS;
     try
     {
-        SmsClient client = new SmsClient(new Credential(TencentSDK.id,TencentSDK.key),&quot;&quot;);
+        SmsClient client = new SmsClient(new Credential(secretId,secretKey),&quot;&quot;);
         SendSmsRequest request = new SendSmsRequest();
-        request.setSmsSdkAppid(TencentSDK.appId);
-        request.setSign(TencentSDK.sign);
-        request.setTemplateID(TencentSDK.templateId);
+        request.setSmsSdkAppid(appId);
+        request.setSign(sign);
+        request.setTemplateID(templateId);
 
-        randomCode = RandomStringUtils.randomNumeric(6);
         String [] templateParamSet = {randomCode};
         request.setTemplateParamSet(templateParamSet);
 
-        String [] phoneNumbers = {&quot;+86&quot;+cellphone.getText()};
+        String [] phoneNumbers = {&quot;+86&quot;+cellphone};
         request.setPhoneNumberSet(phoneNumbers);
-        response = client.SendSms(request);
+        SendSmsResponse response = client.SendSms(request);
+
+        if(response != null &amp;&amp; response.getSendStatusSet()[0].getCode().equals(&quot;Ok&quot;))
+        {
+            L.sendSmsSuccess(cellphone,randomCode);
+            s.body(randomCode);
+        }
     } catch (Exception e) {
-        L.error(&quot;Not send code or send code failed&quot;);
-        AlertView.show(&quot;验证码未发送或发送验证码失败&quot;);
+        L.sendSmsFailed(cellphone,randomCode,e);
+        s = ReturnCode.UNKNOWN_ERROR;
     }
+    return toStr(s);
 }
 </code></pre>
-<p>其中<code>TencentSDK.appId,TencentSDK.sign,TencentSDK.templateID</code>分别是读应的appid，签名id与正文模板id，申请通过之后会分配的，然后随机生成六位数字的验证码。</p>
-<p>接着<code>request.setPhoneNumberSet()</code>的参数为需要发送的手机号码String数组，注意需要加上区号。发送成功的话手机会收到，失败的话请根据异常信息自行判断修改。</p>
-<p>唯一要注意一下的是appid之类的数据通过配置文件配合<code>@Value</code>获取值，如：</p>
+<p>其中<code>appId,sign,templateID</code>分别是对应的appid，签名id与正文模板id，申请通过之后会分配的，然后随机生成六位数字的验证码。</p>
+<p><code>request.setPhoneNumberSet()</code>的参数为需要发送的手机号码String数组，注意需要加上区号。发送成功的话手机会收到，失败的话请根据异常信息自行判断修改。</p>
+<p>唯一要注意一下的是appid之类的数据通过<code>@Value</code>进行属性注入时，如：</p>
 <pre><code class="language-java">@Controller
 @RequestMapping(&quot;/&quot;)
 public class SmsController {
@@ -1148,7 +1200,7 @@ public void init()
     return s;
 }
 </code></pre>
-<p>另外由于<code>CurdRepository&lt;T,ID&gt;</code>的saveAll方法参数为<code>Iterable&lt;S&gt;</code>，因此可以直接保存<code>List&lt;S&gt;</code>，比如：</p>
+<p>另外由于<code>CrudRepository&lt;T,ID&gt;</code>的saveAll方法参数为<code>Iterable&lt;S&gt;</code>，因此可以直接保存<code>List&lt;S&gt;</code>，比如：</p>
 <pre><code class="language-java">public ReturnCode saveAll(List&lt;Worker&gt; workers)
 {
     workerRepository.saveAll(workers);
@@ -1159,10 +1211,10 @@ public void init()
 <h2 id="55-日志">5.5 日志</h2>
 <p>日志用的是Spring Boot自带的日志系统，只是简单地配置了一下日志路径，除此之外，日志的格式自定义（因为追求整洁输出,感觉配置文件实现得不够好,因此自定义了一个工具类）。</p>
 <p>比如日志截取如下：</p>
-<figure data-type="image" tabindex="34"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZTJlOGEyM2M?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="32"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZTJlOGEyM2M?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>自定义了标题以及每行固定输出，前后加上了提示符，内容包括方法，级别，时间以及其他信息。</p>
-<p>总的来说，除了格式化器外总共有7个类，其中L是主类，外部类只需要调用L的方法，里面都是静态方法，其余6个是L调用的类：</p>
-<figure data-type="image" tabindex="35"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZjBkZjJhZjM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>总的来说，除了格式化器外总共有7个类，其中L是主类，外部类只需要调用L的方法，大部分是公有静态方法，其余6个是L调用的类：</p>
+<figure data-type="image" tabindex="33"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZjBkZjJhZjM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>如备份成功时调用：</p>
 <pre><code class="language-java">public Success
 {
@@ -1200,12 +1252,12 @@ public FormatterBuilder message(String message)
 }
 </code></pre>
 <h2 id="56-工具类">5.6 工具类</h2>
-<figure data-type="image" tabindex="36"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZmM3MmM1MmE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="34"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNkZmM3MmM1MmE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>四个：</p>
 <ul>
 <li>Backup：定时数据库备份</li>
 <li>Check：检查合法性，是否为空等</li>
-<li>Conversion：转换类，与前端的几乎一致，利用Gson在String与List/Map/Worker之间进行转换</li>
+<li>Conversion：转换类，与前端的几乎一致，利用Gson在<code>String</code>与<code>List/Map/Worker</code>之间进行转换</li>
 <li>ReturnCode：返回码枚举类</li>
 </ul>
 <p>重点说一下备份，代码不长就直接整个类贴出来了：</p>
@@ -1265,8 +1317,8 @@ public class Backup {
 <li>fixedDelay</li>
 </ul>
 <p>这里不展开了，详细用法可以<a href="https://blog.csdn.net/qq_27525611/article/details/104083548">戳这里</a>。</p>
-<p>另外在使用前需要在类上加上<code>@EnableScheduling</code>。备份的方法首先利用url获取数据库名，接着拼合备份命令，注意如果本地使用win开发备份命令会与linux不同：</p>
-<pre><code class="language-java">//win
+<p>另外在使用前需要在类上加上<code>@EnableScheduling</code>。备份时首先利用URL获取数据库名，接着拼合备份命令，注意如果本地使用win开发备份命令会与linux不同：</p>
+<pre><code class="language-java">//win(未经测试，笔者在Linux上开发)
 command[0]=cmd
 command[1]=/c
 command[2]=mysqldump -u username --password=your_password dbname &gt; backupPath+File.separator+dbname+datetimeFormmater+&quot;.sql&quot;
@@ -1276,16 +1328,16 @@ command[0]=/bin/sh
 command[1]=-c
 command[2]=/usr/bin/mysqldump -u username --password=your_password dbname &gt; backupPath+File.separator+dbname+datetimeFormmater+&quot;.sql&quot;
 </code></pre>
-<p>再判断备份路径是否存在，接着利用Java自带的Process进行备份处理，若出错则利用其中的<code>getErrorStream()</code>获取错误信息并记录日志。</p>
+<p>再判断备份路径是否存在，接着利用Java自带的<code>Process</code>进行备份处理，若出错则利用其中的<code>getErrorStream()</code>获取错误信息并记录日志。</p>
 <h2 id="57-配置文件">5.7 配置文件</h2>
 <h3 id="571-配置文件分类">5.7.1 配置文件分类</h3>
-<figure data-type="image" tabindex="37"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMDIyNjdkZWM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="35"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMDIyNjdkZWM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>一个总的配置文件+三个是特定环境下（开发，测试，生产）的配置文件，可以使用<code>spring.profiles.active</code>切换配置文件，比如<code>spring.profiles.active=dev</code>，注意命名有规则，中间加一杠。另外自定义的配置需要在<code>additional-spring-configuration-metadata.json</code>中添加字段（非强制，只是IDE会提示），比如：</p>
 <pre><code class="language-json">&quot;properties&quot;: [
     {
         &quot;name&quot;: &quot;backup.path&quot;,
         &quot;type&quot;: &quot;java.lang.String&quot;,
-        &quot;defaultValue&quot;: &quot;null&quot;
+        &quot;defaultValue&quot;: null
     },
 ]
 </code></pre>
@@ -1308,13 +1360,13 @@ Update your application's configuration
 <p>解决方案以及问题详细描述<a href="https://blog.csdn.net/qq_27525611/article/details/106450385">戳这里</a>。</p>
 <h1 id="6-部署与打包">6 部署与打包</h1>
 <h2 id="61-前端打包">6.1 前端打包</h2>
-<p>先说一下前端的打包过程，简单地说打成jar即可跨平台运行，但是如果是特定平台的话比如win，想打成无需额外JDK环境的exe还是需要一些额外操作，这里简单介绍一下打包过程。</p>
-<p>（如果是JDK8可以使用<code>mvn jfx:native</code>打包，这个可以很方便地直接打成dmg或者exe，但可惜JFX11行不通，反正笔者尝试失败了，如果有大神知道如何使用<code>JavaFX-Maven-Plugin</code>或者在IDEA中使用<code>artifact</code>直接打成exe或dmg欢迎留言补充）</p>
+<p>先说一下前端的打包过程，简单地说打成JAR即可跨平台运行，但是如果是特定平台的话比如Win，想打成无需额外JDK环境的EXE还是需要一些额外操作，这里简单介绍一下打包过程。</p>
+<p>（如果是JDK8可以使用<code>mvn jfx:native</code>打包，这个可以很方便地直接打成DMG或者EXE，但可惜JFX11行不通，反正笔者尝试失败了，如果有大神知道如何使用<code>JavaFX-Maven-Plugin</code>或者在IDEA中使用<code>artifact</code>直接打成exe或dmg欢迎留言补充）</p>
 <h3 id="611-idea一次打包">6.1.1 IDEA一次打包</h3>
 <p>打包需要用到Maven插件，常用的Maven打包插件如下：</p>
 <ul>
-<li>mave-jar-plugin：默认的打包jar插件，生成的jar很小，但是需要把lib放置与jar相同目录下，用来打普通的JAR包</li>
-<li>maven-shade-plugin：提供了两大基本功能，将依赖的jar包打包到当前jar包，能对依赖的jar包进行重命名以及取舍过滤</li>
+<li>mave-jar-plugin：默认的打包jar插件，生成的JR很小，但是需要把lib放置与jar相同目录下，用来打普通的JAR包</li>
+<li>maven-shade-plugin：提供了两大基本功能，将依赖的jar包打包到当前jar包，能对依赖的JAR包进行重命名以及取舍过滤</li>
 <li>maven-assembly-plugin：支持定制化的打包方式，更多的是对项目目录的重新组装</li>
 </ul>
 <p>本项目使用maven-shade-plugin打包。</p>
@@ -1348,78 +1400,78 @@ Update your application's configuration
 <pre><code class="language-xml">&lt;mainClass&gt;xxxx.xxx.xxx.Main&lt;/mainClass&gt;
 </code></pre>
 <p>接着就可以从IDEA右侧栏的Maven中一键打包：</p>
-<figure data-type="image" tabindex="38"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMDY1M2I3Njg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这样在target下就有jar包了，可以跨平台运行，只需提供JDK环境。</p>
+<figure data-type="image" tabindex="36"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMDY1M2I3Njg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样在target下就有JAR包了，可以跨平台运行，只需提供JDK环境。</p>
 <pre><code class="language-bash">java -jar xxx.jar
 </code></pre>
-<p>下面的两步是使用exe4j与Enigma Virtual Box打成一个单一exe的方法，仅针对Win，使用Linux/Mac可以跳过或自行搜索其他方法。</p>
+<p>下面的两步是使用exe4j与Enigma Virtual Box打成一个单一EXE的方法，仅针对Win，使用Linux/Mac可以跳过或自行搜索其他方法。</p>
 <h3 id="612-exe4j二次打包">6.1.2 exe4j二次打包</h3>
 <h4 id="6121-exe4j">6.1.2.1 exe4j</h4>
-<p>exe4j能集成Java应用程序到Win下的java可执行文件生成工具,无论是用于服务器还是用于GUI或者命令行的应用程序。简单地说，本项目用其将jar转换为exe。exe4j需要jre，从JDK9开始模块化，需要自行生成jre，因此，需要先生成jre再使用exe4j打包。</p>
+<p>exe4j能集成Java应用程序到Win下的java可执行文件生成工具,无论是用于服务器还是用于GUI或者命令行的应用程序。简单地说，本项目用其将jar转换为EXE。exe4j需要JRE，从JDK9开始模块化，需要自行生成JRE，因此，需要先生成JRE再使用exe4j打包。</p>
 <h4 id="6122-生成jre">6.1.2.2 生成jre</h4>
 <p>各个模块的作用可以<a href="https://www.apiref.com/java11-zh/index.html">这里</a>查看：</p>
-<figure data-type="image" tabindex="39"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMDY2NWYxY2Q?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMDY2NWYxY2Q?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>经测试本程序所需要的模块如下：</p>
 <pre><code class="language-bash">java.base,java.logging,java.net.http,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,java.sql,java.management
 </code></pre>
-<p>切换到JDK目录下，使用jlink生成jre：</p>
+<p>切换到JDK目录下，使用<code>jlink</code>生成JRE：</p>
 <pre><code class="language-bash">jlink --module-path jmods --add-modules 
 java.base,java.logging,java.net.http,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,java.sql,java.management
 --output jre
 </code></pre>
-<p>由于OpenJDK11不自带JavaFX，需要<a href="https://gluonhq.com/products/javafx/">戳这里</a>自行下载Win平台的JFX jmods，并移动到JDK的jmods目录下。生成的jre大小为91M：</p>
-<figure data-type="image" tabindex="40"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMjM5MjBlZTk?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于OpenJDK11不自带JavaFX，需要<a href="https://gluonhq.com/products/javafx/">戳这里</a>自行下载Win平台的JFX jmods，并移动到JDK的<code>jmods</code>目录下。生成的JRE大小为91M：</p>
+<figure data-type="image" tabindex="38"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMjM5MjBlZTk?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>如果实在不清楚使用哪一些模块可以使用全部模块，但是不建议：</p>
 <pre><code class="language-bash">jlink --module-path jmods --add-modules 
 java.base,java.compiler,java.datatransfer,java.xml,java.prefs,java.desktop,java.instrument,java.logging,java.management,java.security.sasl,java.naming,java.rmi,java.management.rmi,java.net.http,java.scripting,java.security.jgss,java.transaction.xa,java.sql,java.sql.rowset,java.xml.crypto,java.se,java.smartcardio,jdk.accessibility,jdk.internal.vm.ci,jdk.management,jdk.unsupported,jdk.internal.vm.compiler,jdk.aot,jdk.internal.jvmstat,jdk.attach,jdk.charsets,jdk.compiler,jdk.crypto.ec,jdk.crypto.cryptoki,jdk.crypto.mscapi,jdk.dynalink,jdk.internal.ed,jdk.editpad,jdk.hotspot.agent,jdk.httpserver,jdk.internal.le,jdk.internal.opt,jdk.internal.vm.compiler.management,jdk.jartool,jdk.javadoc,jdk.jcmd,jdk.management.agent,jdk.jconsole,jdk.jdeps,jdk.jdwp.agent,jdk.jdi,jdk.jfr,jdk.jlink,jdk.jshell,jdk.jsobject,jdk.jstatd,jdk.localedata,jdk.management.jfr,jdk.naming.dns,jdk.naming.rmi,jdk.net,jdk.pack,jdk.rmic,jdk.scripting.nashorn,jdk.scripting.nashorn.shell,jdk.sctp,jdk.security.auth,jdk.security.jgss,jdk.unsupported.desktop,jdk.xml.dom,jdk.zipfs,javafx.web,javafx.swing,javafx.media,javafx.graphics,javafx.fxml,javafx.controls,javafx.base 
 --output jre
 </code></pre>
 <p>大小为238M：</p>
-<figure data-type="image" tabindex="41"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMjVjMDIyOTk?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="39"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMjVjMDIyOTk?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h4 id="6123-exe4j打包">6.1.2.3 exe4j打包</h4>
 <p>exe4j使用参考<a href="https://zhuanlan.zhihu.com/p/82540739">这里</a>，首先一开始的界面应该是这样的：</p>
-<figure data-type="image" tabindex="42"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMmE0ZjRjNzI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="40"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMmE0ZjRjNzI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>配置文件首次运行是没有的，next即可。</p>
 <p>选择JAR in EXE mode：</p>
-<figure data-type="image" tabindex="43"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMjc0MjhkNzM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="41"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMjc0MjhkNzM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>填入名称与输出目录：</p>
-<figure data-type="image" tabindex="44"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMmRmNjZhMWE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="42"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMmRmNjZhMWE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>这里的类型为GUI application，填上可执行文件的名称，选择图标路径，勾选允许单个应用实例运行：</p>
-<figure data-type="image" tabindex="45"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMzAzNDRlY2E?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="43"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlMzAzNDRlY2E?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>重定向这里可以选择标准输出流与标准错误流的输出目录，不需要的话默认即可：</p>
-<figure data-type="image" tabindex="46"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNDMzZmVhYWE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="44"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNDMzZmVhYWE?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>64位Win需要勾选生成64位的可执行文件：</p>
-<figure data-type="image" tabindex="47"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNDYwZmFlODI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="45"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNDYwZmFlODI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>接着是Java类与JRE路径设置：</p>
-<figure data-type="image" tabindex="48"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNGNhMmI5Y2Y?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>选择IDEA生成的jar，接着填上主类路径：</p>
-<figure data-type="image" tabindex="49"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNTBhYTE5NjY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="46"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNGNhMmI5Y2Y?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>选择IDEA生成的JAR，接着填上主类路径：</p>
+<figure data-type="image" tabindex="47"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNTBhYTE5NjY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>设置jre的最低支持与最高支持版本：</p>
-<figure data-type="image" tabindex="50"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNTVkZmNlMDI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="48"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNTVkZmNlMDI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>下一步是指定JRE搜索路径，首先把默认的三个位置删除：</p>
-<figure data-type="image" tabindex="51"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNWM1ZDNhODY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>接着选择之前生成的jre，把jre放在与jar同一目录下，路径填上当前目录下的jre：</p>
-<figure data-type="image" tabindex="52"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNjk1MDg0Y2Q?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="49"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNWM1ZDNhODY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着选择之前生成的JRE，把JRE放在与JAR同一目录下，路径填上当前目录下的JRE：</p>
+<figure data-type="image" tabindex="50"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNjk1MDg0Y2Q?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>接下来全next即可，完成后会提示exe4j has finished，直接运行测试一遍：</p>
-<figure data-type="image" tabindex="53"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNmIwMzg2Mjg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="51"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNmIwMzg2Mjg?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>首先会提示一遍这是用exe4j生成的：</p>
-<figure data-type="image" tabindex="54"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNmRhYjk2ODM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="52"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNmRhYjk2ODM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>若没有缺少模块应该就可以正常启动了，有缺少模块的话会默认在当前exe路径生成一个error.log，查看并添加对应模块再次使用jlink生成jre，并使用exe4j再次打包。</p>
 <h3 id="613-enigma-virtual-box三次打包">6.1.3 Enigma Virtual Box三次打包</h3>
-<p>使用exe4j打包后，虽然是也可以直接运行了，但是jre太大，而且笔者这种有强迫症非得装进一个exe。所幸笔者之前用过Enigma Virtual Box这个打包工具，能把所有文件打包为一个独立的exe。</p>
-<p>使用很简单，首先添加exe4j打包出来的exe：</p>
-<figure data-type="image" tabindex="55"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNzQ1ZGZkMzY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>使用exe4j打包后，虽然是也可以直接运行了，但是JRE太大，而且笔者这种有强迫症非得装进一个EXE。所幸笔者之前用过Enigma Virtual Box这个打包工具，能把所有文件打包为一个独立的EXE。</p>
+<p>使用很简单，首先添加exe4j打包出来的EXE：</p>
+<figure data-type="image" tabindex="53"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlNzQ1ZGZkMzY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>接着新建一个jre目录，添加上一步生成的jre：</p>
-<figure data-type="image" tabindex="56"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlN2RiNTU1ZGQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="57"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOTM1NzI3NzU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="58"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOTM1MzI1YTM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="54"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlN2RiNTU1ZGQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="55"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOTM1NzI3NzU?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="56"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOTM1MzI1YTM?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>最后选择压缩文件：</p>
-<figure data-type="image" tabindex="59"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOTc5YzhiZDQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="57"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOTc5YzhiZDQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>打包出来的单独exe大小为65M，相比起exe4j还要带上的89M的jre，已经节省了空间。</p>
-<figure data-type="image" tabindex="60"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOWM0NWRjMzI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="58"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlOWM0NWRjMzI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h2 id="62-后端部署">6.2 后端部署</h2>
-<p>后端部署的方式也简单，采用war部署的方式，若项目为jar包打包可以自行转换为war包，具体转换方式不难请自行搜索。由于Web服务器为Tomcat，因此直接把war包放置于webapps下即可，其他Web服务器自请自行搜索。</p>
-<p>当然也可以使用Docker部署，但需要使用jar而不是war，具体方式自行搜索。</p>
+<p>后端部署的方式也简单，采用WAR部署的方式，若项目为JAR包打包可以自行转换为WAR包，具体转换方式不难请自行搜索。由于Web服务器为Tomcat，因此直接把WAR包放置于webapps下即可，其他Web服务器自请自行搜索。</p>
+<p>当然也可以使用Docker部署，但需要使用JAR而不是WAR，具体方式自行搜索。</p>
 <h1 id="7-运行">7 运行</h1>
 <p>本项目已经打包，前端包括jar与exe，后端包括jar与war，首先把后端运行（先开启数据库服务）：</p>
 <p>使用jar：</p>
@@ -1459,7 +1511,7 @@ String path2 = &quot;xxx/xx.jpg&quot;;
 <li>系统环境变量</li>
 </ul>
 <p>目前最新的版本为3.0.3（2020.05.31更新3.0.3 ，笔者之前使用3.0.2的版本进行加密时本地测试没问题，但是部署到服务器上老是提示找不到口令，无奈只好使用旧一点的2.x版本，但是新版本出了后笔者尝试过部署到本地Tomcat没有问题但是没有部署到服务器上），建议使用最新版本进行部署：</p>
-<figure data-type="image" tabindex="61"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYTI0MGEwNGQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="59"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYTI0MGEwNGQ?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>毕竟前后跨度挺大的，虽然说这是小的bug修复，但是还是建议试试，估计不会有3.0.2的问题了。</p>
 <p>另外对于含有中文的字段记得进行编码转换：</p>
 <pre><code class="language-java">str = new String(str.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8);)
@@ -1467,7 +1519,7 @@ String path2 = &quot;xxx/xx.jpg&quot;;
 <p>另外笔者已写好了测试文件，直接首先替换掉配置文件原来的密文，填上明文重新加密：<br>
 <img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYjJlZDcyZDY?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></p>
 <p>注意如果没有在配置文件中设置<code>jasypt.encryptor.password</code>的话可以在运行配置中设置VM Options（建议不要把口令直接写在配置文件中，当然这个默认是使用PBE加密，非对称加密可以使用<code>jasypt.encryptor.private-key-string</code>或<code>jasypt.encryptor.private-key-location</code>）：</p>
-<figure data-type="image" tabindex="62"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYjQ3ZDYwYjI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="60"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYjQ3ZDYwYjI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h2 id="84-键盘事件">8.4 键盘事件</h2>
 <p>添加键盘事件可以使用如下代码：</p>
 <pre><code class="language-java">scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), ()-&gt;{xxx});
@@ -1478,7 +1530,7 @@ String path2 = &quot;xxx/xx.jpg&quot;;
 </code></pre>
 <h2 id="85-数据库">8.5 数据库</h2>
 <p>默认使用的数据库名为<code>app_test</code>，用户名<code>test_user</code>，密码<code>test_password</code>，<code>resources</code>下有一个<code>init.sql</code>，直接使用MySQL导入即可。</p>
-<figure data-type="image" tabindex="63"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYmU2NWFmNDI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="61"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYmU2NWFmNDI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h2 id="86-验证码">8.6 验证码</h2>
 <p>默认没有自带验证码功能，由于涉及隐私问题故没有开放。</p>
 <p>如果像笔者一样使用腾讯云的短信API，直接修改配置文件中的对应属性即可，建议加密。</p>
@@ -1520,7 +1572,7 @@ String path2 = &quot;xxx/xx.jpg&quot;;
 <p>7、<a href="https://www.jianshu.com/p/045f95c008a0">简书-Linux Tomcat+Openssl单向/双向认证</a></p>
 <p>如果觉得文章好看，欢迎点赞。</p>
 <p>同时欢迎关注微信公众号：氷泠之路。</p>
-<figure data-type="image" tabindex="64"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYjcyMzM1NGI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="62"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAyMC82LzE1LzE3MmI2ZTNlYjcyMzM1NGI?x-oss-process=image/format,png" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -1600,13 +1652,13 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-31-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-31-qi.jpeg');"></span>
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-36-qi.jpeg');"></span>
                     </a>
                     <div class="info gradient-effect">
-                      <time datetime="2020-07-19">2020-07-19</time>
+                      <time datetime="2020-07-23">2020-07-23</time>
                       <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-31-qi/">每日分享 第31期</a>
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi/">每日分享 第35期</a>
                       </h4>
                     </div>
                     <div class="clear"></div>
@@ -1615,13 +1667,13 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/vue-xue-xi-bi-ji-san.png');"></span>
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-35-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-35-qi.jpeg');"></span>
                     </a>
                     <div class="info gradient-effect">
-                      <time datetime="2020-07-19">2020-07-19</time>
+                      <time datetime="2020-07-22">2020-07-22</time>
                       <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/">Vue学习笔记（三）</a>
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-35-qi/">每日分享 第34期</a>
                       </h4>
                     </div>
                     <div class="clear"></div>
@@ -1630,17 +1682,25 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi.jpg');"></span>
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-34-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-34-qi.jpeg');"></span>
                     </a>
                     <div class="info gradient-effect">
-                      <time datetime="2020-07-19">2020-07-19</time>
+                      <time datetime="2020-07-21">2020-07-21</time>
                       <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/">设计模式学习笔记（八）：建造者模式</a>
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-34-qi/">每日分享 第33期</a>
                       </h4>
                     </div>
                     <div class="clear"></div>
                   </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                   
                   
                   
@@ -2181,7 +2241,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 175 篇文章
+          ©2019 共 179 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>
