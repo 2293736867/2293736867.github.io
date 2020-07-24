@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-23T06:48:55.269Z</updated>
+    <updated>2020-07-24T15:45:13.043Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,691 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第37期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-37-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-37-qi/">
+        </link>
+        <updated>2020-07-25T15:25:50.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote></blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote></blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote></blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote></blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote></blockquote>
+<blockquote></blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（九）：适配器模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-jiu-gua-pei-qi-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-jiu-gua-pei-qi-mo-shi/">
+        </link>
+        <updated>2020-07-24T15:26:34.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1 适配器模式</a>
+<ul>
+<li><a href="#11-%E5%AE%9A%E4%B9%89">1.1 定义</a></li>
+<li><a href="#12-%E5%88%86%E7%B1%BB">1.2 分类</a>
+<ul>
+<li><a href="#121-%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1.2.1 对象适配器模式</a></li>
+<li><a href="#122-%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1.2.2 类适配器模式</a></li>
+</ul>
+</li>
+<li><a href="#13-%E8%A7%92%E8%89%B2">1.3 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%AE%9E%E4%BE%8B">2 实例</a>
+<ul>
+<li><a href="#21-%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8">2.1 对象适配器</a></li>
+<li><a href="#22-%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8">2.2 类适配器</a></li>
+<li><a href="#23-micro-usb%E4%B8%8Etype-c">2.3 Micro USB与Type-C</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%8F%8C%E5%90%91%E9%80%82%E9%85%8D%E5%99%A8">3 双向适配器</a></li>
+<li><a href="#4-%E7%BC%BA%E7%9C%81%E9%80%82%E9%85%8D%E5%99%A8">4 缺省适配器</a>
+<ul>
+<li><a href="#41-%E5%AE%9A%E4%B9%89">4.1 定义</a></li>
+<li><a href="#42-%E7%BB%93%E6%9E%84%E5%9B%BE">4.2 结构图</a></li>
+<li><a href="#43-%E8%A7%92%E8%89%B2">4.3 角色</a></li>
+<li><a href="#44-%E5%AE%9E%E4%BE%8B">4.4 实例</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">6 主要缺点</a></li>
+<li><a href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">7 适用场景</a></li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+</ul>
+</p>
+<h1 id="1-适配器模式">1 适配器模式</h1>
+<h2 id="11-定义">1.1 定义</h2>
+<p><strong>将一个接口转换为客户希望的另一个接口，使接口不兼容的那些类可以一起工作，别名为包装器。</strong><br>
+适配器中的接口是广义的接口，可以表示一个方法或者方法的集合。</p>
+<p>适配器模式既可以作为类结构型模式，也可以作为对象结构型模式。</p>
+<h2 id="12-分类">1.2 分类</h2>
+<p>根据适配器与适配者类的关系不同，可以分为对象适配器模式以及类适配器模式。</p>
+<h3 id="121-对象适配器模式">1.2.1 对象适配器模式</h3>
+<p><strong>对象适配器模式就是适配器与适配者之间是关联关系</strong>。<br>
+结构图如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200724211913928.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="122-类适配器模式">1.2.2 类适配器模式</h3>
+<p><strong>类适配器模式就是适配器与适配者之间是继承或实现关系。</strong><br>
+结构图如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200724212614271.png" alt="在这里插入图片描述" loading="lazy"><br>
+由于语言特性的限制，比如Java，C#不支持多重继承，类适配器模式受到很多限制，例如Target如果不是接口而是一个类，就无法使用类适配器模式。此外如果适配者为<code>final</code>类也无法使用适配器模式，在Java等语言中大部分情况下使用对象适配器模式。</p>
+<h2 id="13-角色">1.3 角色</h2>
+<ul>
+<li><strong>Target（目标抽象类）：目标抽象类定义客户所需的接口，可以是一个抽象类或接口，也可以是一个具体类</strong></li>
+<li><strong>Adapter（适配器类）：适配器可以调用另一个接口，作为一个转换器，对Adaptee和Target进行适配。适配器类是适配器模式的核心，在对象适配器模式中，它通过继承Target并关联一个Adaptee对象使两者产生联系</strong></li>
+<li><strong>Adaptee（适配者类）：适配者即被适配的角色，它定义了一个已经存在的接口，这个接口需要适配，适配者类一般是一个具体类，包含了客户希望使用的业务方法，在某些情况下可能没有适配者类的源代码</strong></li>
+</ul>
+<h1 id="2-实例">2 实例</h1>
+<h2 id="21-对象适配器">2.1 对象适配器</h2>
+<p>Target类以及实现了Target的类：</p>
+<pre><code class="language-java">interface Target
+{
+    void request();
+}
+
+class ConcreteTarget implements Target
+{
+    @Override
+    public void request()
+    {
+        System.out.println(&quot;具体Target方法&quot;);
+    }
+}
+</code></pre>
+<p>适配者类：</p>
+<pre><code class="language-java">class Adaptee
+{
+    public void specificRequest()
+    {
+        System.out.println(&quot;Adaptee方法&quot;);
+    }
+}
+</code></pre>
+<p>适配器类（实现了Target，适配者作为成员变量）：</p>
+<pre><code class="language-java">class Adapter implements Target
+{
+    private Adaptee adaptee = new Adaptee();
+    @Override
+    public void request()
+    {
+        adaptee.specificRequest();
+    }
+}
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) 
+    {
+        Target target = new ConcreteTarget();
+        target.request();
+        Target adapter = new Adapter();
+        adapter.request();
+    }
+}
+</code></pre>
+<h2 id="22-类适配器">2.2 类适配器</h2>
+<p>在上述对象适配器的基础上，适配者与Target保持不变，适配器继承了适配者并实现了Target，同时取消了适配者作为成员变量，在方法内直接调用<code>super.xxx</code>，也就是适配者的方法：</p>
+<pre><code class="language-java">class Adapter extends Adaptee implements Target
+{
+    @Override
+    public void request()
+    {
+        super.specificRequest();
+    }
+}
+</code></pre>
+<h2 id="23-micro-usb与type-c">2.3 Micro USB与Type-C</h2>
+<p>假设目前只有一条Micro USB线以及一台只有Type-C接口的手机，需要对其进行充电，这时候就需要一个转接头把Micro USB转为Type-C接口，才能给手机充电。<br>
+这里的Target就是Type-C，适配者就是Micro USB，适配器就是转接头，简化实现代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        TypeC typeC = new MicroUSBToTypeC();
+        typeC.chargeWithTypeC();
+    }
+}
+
+//Target:给TypeC接口的手机充电
+interface TypeC
+{
+    void chargeWithTypeC();
+}
+
+//Adaptee:适配者,MicroUSB线
+class MicroUSB
+{
+    public void chargeWithMicroUSB()
+    {
+        System.out.println(&quot;MicroUSB充电&quot;);
+    }
+}
+
+//Adapter:适配器,MicroUSB到TypeC的转接头
+class MicroUSBToTypeC implements TypeC
+{
+    private MicroUSB microUSB = new MicroUSB();
+    @Override
+    public void chargeWithTypeC()
+    {
+        microUSB.chargeWithMicroUSB();
+    }
+}
+</code></pre>
+<h1 id="3-双向适配器">3 双向适配器</h1>
+<p>在对象适配器的使用过程中，如果在适配器中同时包含对Target类和Adaptee类的引用，Adaptee类可以通过适配器调用Target类中的方法，Target类也可以通过适配器调用Adaptee类的方法，那么该适配器就是一个双向适配器。例子如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        Adapter adapter = new Adapter();
+        adapter.request();
+        adapter.specificRequest();
+    }
+}
+
+//适配者
+interface Adaptee
+{
+    void specificRequest();
+}
+
+//Target类
+interface Target
+{
+    void request();
+}
+
+//Target实现
+class TargetImpl implements Target
+{
+    @Override
+    public void request()
+    {
+        System.out.println(&quot;Target方法&quot;);
+    }
+}
+
+//适配者实现
+class AdapteeImpl implements Adaptee
+{
+    @Override
+    public void specificRequest()
+    {
+        System.out.println(&quot;Adaptee方法&quot;);
+    }
+}
+
+//适配器
+class Adapter implements Adaptee,Target
+{
+    private Target target = new TargetImpl();
+    private Adaptee adaptee = new AdapteeImpl();
+    @Override
+    public void request()
+    {
+    	//Target的方法调用适配者方法
+        adaptee.specificRequest();
+    }
+
+    @Override
+    public void specificRequest()
+    {
+    	//适配者方法调用Target的方法
+        target.request();        
+    }
+}
+</code></pre>
+<h1 id="4-缺省适配器">4 缺省适配器</h1>
+<h2 id="41-定义">4.1 定义</h2>
+<p><strong>缺省适配器：当不需要实现一个接口所提供的所有方法时，可先设计一个抽象类实现该接口，并为接口中的每个方法都提供一个默认实现（空实现），那么该抽象类子类可以选择性覆盖父类的某些方法来实现需求，它适用于不想使用一个接口中所有方法的情况，又叫单接口适配器模式。</strong></p>
+<h2 id="42-结构图">4.2 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200724220658161.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="43-角色">4.3 角色</h2>
+<ul>
+<li><strong>ServiceInterface（适配者接口）：通常是一个声明了大量方法的接口</strong></li>
+<li><strong>AbstractServiceClass（缺省适配器类）：缺省适配器模式的核心类，使用空方法的形式实现了在ServiceInterface接口中声明的方法，通常定义为抽象类</strong></li>
+<li><strong>ConcreteServiceClass（具体业务类）：是缺省适配器类的子类，只需要有选择性地覆盖适配器者中定义的方法，其他的方法在缺省适配器类中提供了空实现</strong></li>
+</ul>
+<h2 id="44-实例">4.4 实例</h2>
+<p>Java AWT中一般可以通过两种方式来处理窗口事件：</p>
+<ul>
+<li>实现<code>WindowListener</code></li>
+<li>继承<code>WindowAdapter</code></li>
+</ul>
+<p>其中<code>WindowAdapter</code>实现了<code>WindowListener</code>接口，但是都是提供了空实现，也就是说实现<code>WindowsListener</code>的话需要实现里面所有的方法，而继承<code>WindowAdapter</code>只需要选择性地覆盖方法即可，结构图：<br>
+<img src="https://img-blog.csdnimg.cn/20200724222411465.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="5-主要优点">5 主要优点</h1>
+<p>类适配器以及对象适配器的共同优点如下：</p>
+<ul>
+<li>解耦：将Target与Adaptee解耦，引入适配器来重用现有的适配者类，无须修改原有结构</li>
+<li>提高复用性：将具体的业务实现过程封装在适配者类中，对于客户端而言是透明的，而且提高了适配者类的复用性，同一个适配者类可以在多个不同的系统复用</li>
+<li>扩展性好：可以很方便地更换适配器，也可以在不修改代码的基础上增加了新的适配器类，完全符合开闭原则，扩展灵活</li>
+</ul>
+<p>类适配器的独有优点如下：</p>
+<ul>
+<li>由于适配器类是适配者的子类，因此在适配器类中置换一些适配者的方法，使得适配器的灵活性更强。</li>
+</ul>
+<p>对象适配器的独有优点如下：</p>
+<ul>
+<li>一个对象适配器可以把多个不同的适配者适配到同一个Target</li>
+<li>可以适配一个适配者的子类，由于适配器与适配者之间是关联关系，根据LSP（里氏代换原则），适配者的子类也可以通过该适配器进行适配</li>
+</ul>
+<h1 id="6-主要缺点">6 主要缺点</h1>
+<p>类适配器缺点：</p>
+<ul>
+<li>对于Java，C#等不支持多重继承的语言，一次最多只能适配一个适配者类</li>
+<li>适配者不能是“不能继承的类”，比如Java的<code>final</code>类，C#的<code>sealed</code>类</li>
+<li>在Java，C#等Target只能是接口不能是类</li>
+</ul>
+<p>对象适配器缺点：</p>
+<ul>
+<li>置换麻烦：相比起类适配器，在适配器中置换适配者的某些方法比较麻烦，需要先创建一个适配者类的子类，在子类将适配者类的方法置换掉，再把适配者的子类作为真正的适配者类进行适配，实现较为复杂</li>
+</ul>
+<h1 id="7-适用场景">7 适用场景</h1>
+<ul>
+<li>系统需要使用一些现有的类，而这些类的接口（如方法名）不符合系统的需求，甚至没有这些类的源代码</li>
+<li>想创建一个可以重复使用的类，用于与彼此之间没有太大关联的类，包括可能在将来引进的类一起工作</li>
+</ul>
+<h1 id="8-总结">8 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200724225754968.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Vue学习笔记（四）]]></title>
+        <id>https://2293736867.github.io/post/vue-xue-xi-bi-ji-si/</id>
+        <link href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-si/">
+        </link>
+        <updated>2020-07-24T15:26:11.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-表单绑定">1 表单绑定</h1>
+<p>可以利用<code>v-model</code>在表单控件元素上创建双向的数据绑定，<code>v-model</code>会根据控件类型自动选取正确的方法来更新元素。</p>
+<h1 id="2-文本框">2 文本框</h1>
+<p>文本框的绑定例子如下：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+	&lt;p&gt;input&lt;/p&gt;
+	&lt;input v-model=&quot;message&quot;&gt;
+	&lt;p&gt;{{message}}&lt;/p&gt;
+	
+	&lt;p&gt;textarea&lt;/p&gt;
+	&lt;textarea v-model=&quot;message2&quot;&gt;&lt;/textarea&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">new Vue({
+	el:'#app',
+	data:{
+		message:'',
+		message2:''
+	}
+})
+</code></pre>
+<h1 id="3-按钮">3 按钮</h1>
+<h2 id="31-单选">3.1 单选</h2>
+<p><code>data</code>中的值为<code>&lt;input&gt;</code>的<code>value</code>，如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;input type=&quot;radio&quot; value=&quot;Value1&quot; v-model=&quot;picked&quot;&gt;
+    &lt;input type=&quot;radio&quot; value=&quot;Value2&quot; v-model=&quot;picked&quot;&gt;
+    &lt;span&gt;选中的值为：{{picked}}&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">new Vue({
+    el: '#app',
+    data: {
+        picked:'Value1'
+    }
+})
+</code></pre>
+<h2 id="32-多选">3.2 多选</h2>
+<p>单个多选绑定的数据是一个布尔值，多个多选绑定的是一个数组：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;input type=&quot;checkbox&quot; v-model=&quot;checked&quot;&gt;
+    &lt;span&gt;是否选中：{{checked ? &quot;选中&quot; : &quot;不选中&quot;}}&lt;/span&gt;
+	&lt;br&gt;
+	
+    &lt;input type=&quot;checkbox&quot; value=&quot;Value1&quot; id=&quot;box1&quot; v-model=&quot;checked2&quot;&gt;
+    &lt;label for=&quot;box1&quot;&gt;Value1&lt;/label&gt;
+    &lt;input type=&quot;checkbox&quot; value=&quot;Value2&quot; id=&quot;box2&quot; v-model=&quot;checked2&quot;&gt;
+    &lt;label for=&quot;box2&quot;&gt;Value2&lt;/label&gt;
+    &lt;input type=&quot;checkbox&quot; value=&quot;Value3&quot; id=&quot;box3&quot; v-model=&quot;checked2&quot;&gt;
+    &lt;label for=&quot;box3&quot;&gt;Value3&lt;/label&gt;
+    &lt;br&gt;
+    &lt;span&gt;选中的值为：{{checked2}}&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">new Vue({
+    el: '#app',
+    data: {
+        checked:'Value1',
+        checked2:[]
+    }
+})
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200723153506792.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-列表">4 列表</h1>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;select name=&quot;fruit&quot; v-model=&quot;selected&quot;&gt;
+        &lt;option value=&quot;&quot;&gt;请选择一个&lt;/option&gt;
+        &lt;option value=&quot;苹果&quot;&gt;苹果&lt;/option&gt;
+        &lt;option value=&quot;香蕉&quot;&gt;香蕉&lt;/option&gt;
+    &lt;/select&gt; 
+
+    &lt;div&gt;
+        选择的水果是：{{selected}}
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">new Vue({
+    el: '#app',
+    data: {
+        selected:''
+    }
+})
+</code></pre>
+<h1 id="5-修饰符">5 修饰符</h1>
+<ul>
+<li><code>.lazy</code>：默认情况下，<code>v-model</code>在input事件中同步输入框的值与数据，但可以添加一个修饰符<code>.lazy</code>，从而转变为在<code>change</code>事件中同步数据，比如<code>&lt;input v-model.lazy=&quot;meesage&quot;&gt;</code></li>
+<li><code>.number</code>：自动将用户的输入值转化为<code>Number</code>类型，如果原值的转换结果是<code>NaN</code>会返回原值，比如<code>&lt;input v-model.number=&quot;age&quot; type=&quot;number&quot;&gt;</code></li>
+<li><code>.trim</code>：自动过滤用户输入的首尾空格，比如<code>&lt;input v-model.trim=&quot;message&quot;&gt;</code></li>
+</ul>
+<p>修饰符可以混合使用，例子：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;input type=&quot;text&quot; v-model.lazy=&quot;test&quot;&gt;
+    &lt;br&gt;
+    &lt;p&gt;{{test}}&lt;/p&gt;
+
+    &lt;input type=&quot;text&quot; v-model.number.lazy=&quot;test2&quot;&gt;
+    &lt;br&gt;
+    &lt;p&gt;{{test2}}&lt;/p&gt;
+
+    &lt;input type=&quot;text&quot; v-model.trim=&quot;test3&quot;&gt;
+    &lt;br&gt;
+    &lt;p&gt;{{test3}}&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<h1 id="6-组件">6 组件</h1>
+<p>组件可以扩展HTML元素，封装可重用的代码，组件系统可以用独立可复用的小组件来构建大型应用，几乎任意类型的应用界面都可以抽象为一个组件树。<br>
+注册一个全局组件语法如下：</p>
+<pre><code class="language-js">Vue.component(tagName,options)
+</code></pre>
+<p>其中<code>tagName</code>为组件名，<code>options</code>为配置选项。注册后，按如下方式调用组件：</p>
+<pre><code class="language-html">&lt;tagName&gt;&lt;/tagName&gt;
+</code></pre>
+<h1 id="7-全局组件">7 全局组件</h1>
+<p>全局组件就是所有实例都能使用的组件，例如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;test-title&gt;&lt;/test-title&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">Vue.component('test-title',{
+    template:'&lt;h1&gt;Test Title&lt;/h1&gt;'
+})
+new Vue({el:'#app'})
+</code></pre>
+<p>注意标签名不能大写，比如写成：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;testTitle&gt;&lt;/testTitle&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">Vue.component('testTitle',{
+    template:'&lt;h1&gt;Test Title&lt;/h1&gt;'
+})
+</code></pre>
+<p>页面不会显示标题。</p>
+<h1 id="8-局部组件">8 局部组件</h1>
+<p>局部组件就是在本实例内使用的组件，比如：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;test-title&gt;&lt;/test-title&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">new Vue({
+    el: '#app',
+    components: {
+        'test-title': {
+            template:'&lt;h1&gt;Test Title&lt;/h1&gt;'
+        }
+    }
+})
+</code></pre>
+<p>也可以把模板的内容分离出来成为一个变量：</p>
+<pre><code class="language-js">var myTemplate = {
+    template:'&lt;h1&gt;Test Title&lt;/h1&gt;'
+}
+new Vue({
+    el: '#app',
+    components: {
+        'test-title': myTemplate
+    }
+})
+</code></pre>
+<h1 id="9-prop">9 <code>prop</code></h1>
+<p><code>prop</code>是子组件来接受父组件传递过来的数据的一个自定义属性，父组件的数据需要通过<code>props</code>把数据传递给子组件，子组件需要显示地使用<code>props</code>选项声明<code>prop</code>：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;test-title title=&quot;Test Title&quot;&gt;&lt;/test-title&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">Vue.component('test-title',{
+    props:['title'],
+    template:'&lt;h1&gt;{{title}}&lt;/h1&gt;'
+    //template:'&lt;h1&gt;{{this.title}}&lt;/h1&gt;'
+})
+new Vue({el: '#app'})
+</code></pre>
+<h2 id="91-动态prop">9.1 动态<code>prop</code></h2>
+<p>类似于<code>v-bind</code>绑定HTML特性到一个表达式，也可以利用<code>v-bind</code>动态绑定<code>props</code>值到父组件的数据中，每当父组件的数据变化时，该变化会传递给子组件：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;input v-model=&quot;message&quot;&gt;
+    &lt;br&gt;
+    &lt;test-title v-bind:title=&quot;message&quot;&gt;&lt;/test-title&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js"> Vue.component('test-title',{
+    props:['title'],
+    template:'&lt;h1&gt;{{title}}&lt;/h1&gt;'
+})
+new Vue({
+    el: '#app',
+    data: {
+        message:''
+    }
+})
+</code></pre>
+<p>首先当输入框内容发生变化时，更新父组件的<code>message</code>，再传递给子组件的<code>title</code>，最后更新<code>&lt;test-title&gt;</code>的内容。<br>
+下面是一个绑定无序列表的例子：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;ol&gt;
+        &lt;test-item v-for=&quot;i in items&quot; v-bind:val=&quot;i&quot;&gt;&lt;/test-item&gt;
+    &lt;/ol&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">Vue.component('test-item',{
+    props:['val'],
+    template:'&lt;h1&gt;{{val.text}}&lt;/h1&gt;'
+})
+var vm = new Vue({
+    el: '#app',
+    data: {
+        items:[
+            {text:'111'},
+            {text:'222'}
+        ]
+    }
+})
+</code></pre>
+<p>注意<code>prop</code>是单向绑定的，当父组件属性变化时传导到子组件，但是不会反过来。</p>
+<h2 id="92-子组件回传">9.2 子组件回传</h2>
+<p>父组件使用<code>props</code>传递数据给子组件，如果子组件把数据传递回去需要使用自定义事件，可以在<code>v-on</code>绑定自定义事件，每个Vue实例都实现了事件接口，也就是：</p>
+<ul>
+<li>使用<code>$on(eventName)</code>监听事件</li>
+<li>使用<code>$emit(eventName)</code>触发事件</li>
+</ul>
+<p>另外父组件可以在使用子组件的地方直接用<code>v-on</code>来监听子组件触发的事件，例子：</p>
+<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
+    &lt;p&gt;总计：{{total}}&lt;/p&gt;
+    &lt;test v-on:increment=&quot;incrementTotal&quot;&gt;&lt;/test&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;test v-on:increment=&quot;incrementTotal&quot;&gt;&lt;/test&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">Vue.component('test',{
+    template:'&lt;button v-on:click=&quot;incrementHandler&quot;&gt;点击增加，目前为{{counter}}&lt;/p&gt;',
+    data:function(){
+        return {
+            counter:0
+        }
+    },
+    methods:{
+        incrementHandler:function(){
+            this.counter += 1
+            this.$emit('increment')
+        }
+    }
+})
+new Vue({
+    el: '#app',
+    data: {
+        total:0
+    },
+    methods:{
+        incrementTotal:function(){
+            this.total += 1
+        }
+    }
+})
+</code></pre>
+<p>效果：<br>
+<img src="https://img-blog.csdnimg.cn/20200724072951726.png" alt="在这里插入图片描述" loading="lazy"><br>
+当点击任意一个按钮增加时，更新子组件内的<code>counter</code>，同时使用<code>this.$emit</code>向父组件传值，这里没有参数，如果有参数的话在后面加上即可：<code>this.$emit(&quot;func&quot;,parm)</code>。</p>
+<p>父组件中引用子组件的地方需要添加<code>v-on:func</code>，其中<code>v-on:func</code>中的<code>func</code>需要与<code>this.$emit(&quot;func&quot;)</code>中的<code>func</code>同名，接着在<code>v-on:func=&quot;func2&quot;</code>中修改<code>func2</code>为父组件的函数即可。简写方式为：</p>
+<pre><code class="language-html">@func=&quot;func2&quot;
+</code></pre>
+<p>在某个组件的根元素上监听一个原生事件可以使用<code>.native</code>修饰<code>v-on</code>，比如：</p>
+<pre><code class="language-html">&lt;test-title v-on:click.native=&quot;func&quot;&gt;&lt;/test-title&gt;
+</code></pre>
+<h2 id="93-关于子组件的data">9.3 关于子组件的<code>data</code></h2>
+<p>上面的例子中<code>data</code>不是一个对象而是一个函数，如果<code>data</code>直接返回一个已有对象会影响其他实例，比如修改上面的<code>data</code>为：</p>
+<pre><code class="language-js">var counter = {
+    counter:0
+}
+//...
+data:function(){
+    return counter
+}
+</code></pre>
+<p>效果如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200724074048258.gif" alt="在这里插入图片描述" loading="lazy"><br>
+也就是子组件共享了数据，而修改为：</p>
+<pre><code class="language-js">data:function(){
+    return {
+        counter:0
+    }
+}
+</code></pre>
+<p>效果如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200724080958742.gif" alt="在这里插入图片描述" loading="lazy"><br>
+这是因为返回给每个实例一份独立的拷贝。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第36期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi-36/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi-36/">
+        </link>
+        <updated>2020-07-24T15:24:41.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595605017154.jpeg" alt="" loading="lazy"></figure>
+<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>早起的鸟儿有虫吃，可惜你是那条虫。</p>
+</blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote>
+<p>虽然自1941年以来，烟花在美国佛罗里达州就已经完全违法，但该州数百家商店仍在将烟花卖给所有签署弃权书表示将烟花用于农业，目的是驱除鸟类以令其远离农作物的人。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>此花此叶常相映，翠减红衰愁杀人。<br>
+——李商隐《赠荷花》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>少年，别想你，那个人不是你。</p>
+</blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote>
+<p><a href="http://bd.kuwo.cn/play_detail/40900571">选择失忆-季彦琳</a></p>
+</blockquote>
+<blockquote>
+<p>一杯烈酒倒入喉<br>
+是你给的温柔<br>
+想念翻滚如浪腾<br>
+最后更痛<br>
+最后的最后<br>
+不过是一场梦<br>
+心越来越痛<br>
+如果回到最初</p>
+</blockquote>
+<blockquote>
+<p>如何能选择忘记<br>
+忘记每一段过去<br>
+你的话语太伤心<br>
+一点也没有余地<br>
+可我还是会想你<br>
+去想你 没忘记<br>
+你刺痛我心<br>
+或许一切都归零<br>
+归零到最初记忆<br>
+我一定选择<br>
+不会继续爱你<br>
+我的爱已经选择暂停<br>
+选择了失忆</p>
+</blockquote>
+<blockquote>
+<p>一杯烈酒倒入喉<br>
+是你 给的温柔<br>
+想念翻滚如浪腾<br>
+最后更痛<br>
+最后的最后<br>
+不过是一场梦<br>
+心越来越痛<br>
+如果回到最初</p>
+</blockquote>
+<blockquote>
+<p>如何能选择忘记<br>
+忘记每一段过去<br>
+你的话语太伤心<br>
+一点也没有余地<br>
+可我还是会想你<br>
+去想你 没忘记<br>
+你刺痛我心<br>
+或许一切都归零<br>
+归零到最初记忆<br>
+我一定选择<br>
+不会继续爱你<br>
+我的爱已经选择暂停<br>
+选择了失忆</p>
+</blockquote>
+<blockquote>
+<p>如何能选择忘记<br>
+忘记每一段过去<br>
+你的话语太伤心<br>
+一点也没有余地<br>
+可我还是会想你<br>
+去想你 没忘记<br>
+你刺痛我心<br>
+或许一切都归零<br>
+归零到最初记忆<br>
+我一定选择<br>
+不会继续爱你<br>
+我的爱已经选择暂停<br>
+选择了失忆</p>
+</blockquote>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JetBrains系列IDE无法输入中文]]></title>
         <id>https://2293736867.github.io/post/jetbrains-xi-lie-ide-wu-fa-shu-ru-zhong-wen/</id>
@@ -475,1195 +1160,6 @@ export QT_IM_MODULE=fcitx
 我用这最后一分钟怀念你<br>
 我用这最后一分钟</p>
 </blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Vue学习笔记（三）]]></title>
-        <id>https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/</id>
-        <link href="https://2293736867.github.io/post/vue-xue-xi-bi-ji-san/">
-        </link>
-        <updated>2020-07-19T00:24:18.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-监听">1 监听</h1>
-<p>在Vue.js中可以通过<code>watch</code>来监听数据的变化，比如通过<code>watch</code>实现的简单计数器：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;p&gt;计数器：{{count}}&lt;/p&gt;
-    &lt;button @click=&quot;count++&quot;&gt;点我增加&lt;/button&gt;
-    &lt;p id=&quot;info&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-	el: '#app',
-	data:
-	{
-	    count:0
-	}
-})
-
-vm.$watch('count',function(newValue,oldValue)
-{
-	document.getElementById(&quot;info&quot;).innerHTML = &quot;修改前：&quot;+oldValue+&quot;&lt;br&gt;修改后：&quot;+newValue;
-})
-</code></pre>
-<p>效果如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200718175810847.gif" alt="在这里插入图片描述" loading="lazy"><br>
-<code>watch</code>有两个参数，一个是要监听的变量，另一个是回调函数，回调函数接受两个参数，第一个参数是新值，第二个参数是旧值。</p>
-<p>下面再来看一下有关单位换算的例子：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    吨：&lt;input type=&quot;text&quot; v-model=&quot;ton&quot;&gt;
-    千克：&lt;input type=&quot;text&quot; v-model=&quot;kilograms&quot;&gt;&lt;br&gt;
-    吨：&lt;p id=&quot;tonInfo&quot;&gt;&lt;/p&gt;
-    千克：&lt;p id=&quot;kilogramsInfo&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data:
-    {
-        ton:0,
-        kilograms:0
-    },
-    watch:
-    {
-        ton:function(val)
-        {
-            this.kilograms = (this.ton = val) * 1000;
-        },
-        kilograms:function(val)
-        {
-            this.ton = (this.kilograms = val) / 1000;
-        }
-    }
-})
-
-vm.$watch('ton',function(newValue,oldValue)
-{
-    document.getElementById(&quot;tonInfo&quot;).innerHTML = &quot;修改前：&quot;+oldValue+&quot;&lt;br&gt;修改后：&quot;+newValue;
-})
-vm.$watch('kilograms',function(newValue,oldValue)
-{
-    document.getElementById(&quot;kilogramsInfo&quot;).innerHTML = &quot;修改前：&quot;+oldValue+&quot;&lt;br&gt;修改后：&quot;+newValue;
-})
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200718180937921.gif" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="2-样式绑定">2 样式绑定</h1>
-<p><code>class</code>与<code>style</code>是HTML元素的属性，用于设置元素的样式，可以利用<code>v-bind</code>来设置样式属性。<code>v-bind</code>在处理<code>class</code>以及<code>style</code>时专门增强了，表达式的结果类型除了是字符串外，还能是对象或者数组。</p>
-<h2 id="21-class绑定">2.1 <code>class</code>绑定</h2>
-<p>可以为<code>v-bind:class</code>设置一个对象，从而动态切换<code>class</code>：</p>
-<pre><code class="language-html">&lt;style&gt;
-    .active
-    {
-        width:100px;
-        height: 100px;
-        background: green;
-    }
-&lt;/style&gt;
-&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:class=&quot;{'active':isActive}&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">vm = new Vue({
-	el: '#app',
-	data:
-	{
-	    isActive:true
-	}
-})
-</code></pre>
-<p>也可以传入多个属性来动态切换多个<code>class</code>：</p>
-<pre><code class="language-css">.class0
-{
-    width:100px;
-    height: 100px;
-}
-.class1
-{
-    background: green;
-}
-.class2
-{
-    background: red;
-}
-</code></pre>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div class=&quot;class0&quot; v-bind:class=&quot;{'class1':active1,'class2':active2}&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data:
-    {
-        active1:true,
-        active2:true
-    }
-})
-</code></pre>
-<p>效果：<br>
-<img src="https://img-blog.csdnimg.cn/20200719065142231.png" alt="在这里插入图片描述" loading="lazy"><br>
-也可以利用对象进行简化：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div class=&quot;class0&quot; v-bind:class=&quot;classObject&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data:
-    {
-        classObject:
-        {
-            class1:true,
-            class2:true
-        }
-    }
-})
-</code></pre>
-<h2 id="22-计算属性">2.2 计算属性</h2>
-<p>在<code>v-bind:class</code>中除了是一个对象还能绑定返回对象的计算属性，比如：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:class=&quot;classObject&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data:
-    {
-        active1:true,
-        error:{
-            value:true,
-            type:'fatal'
-        }
-    },
-    computed:{
-        classObject:function() {
-            return {
-                class0:true,
-                class1: this.active1 &amp;&amp; !this.error.value,
-                class2: this.error.value &amp;&amp; this.error.type === 'fatal'
-            }
-        }
-    }
-})
-</code></pre>
-<p>效果如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200719070149891.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="23-数组">2.3 数组</h2>
-<p>也可以传递给<code>v-bind:class</code>一个数组，数组的元素为变量，变量的内容为对应的CSS类名：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:class=&quot;[active1,active2]&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-	el: '#app',
-	data: {
-	    active1:'class0',
-	    active2:'class1'
-	}
-})
-</code></pre>
-<p>也可以利用三元表达式来切换：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:class=&quot;[active1,active2 ? 'class1' : 'class2']&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<h1 id="3-内联样式">3 内联样式</h1>
-<p>可以在<code>v-bind:style</code>中直接设置样式（注意前后带<code>{}</code>）：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:style=&quot;{color:color,fontSize:fontSize+'px'}&quot;&gt;测试&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data: {
-        color:'#FF0000',
-        fontSize:30
-    }
-})
-</code></pre>
-<p>当然也可以像绑定<code>class</code>一样直接绑定到一个对象上：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:style=&quot;styleObject&quot;&gt;测试&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data: {
-        styleObject: {
-            color:'#FF0000',
-            fontSize:'30px'
-        }
-    }
-})
-</code></pre>
-<p>也可以使用数组进行绑定多个样式：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;div v-bind:style=&quot;[styleObject1,styleObject2]&quot;&gt;测试&lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data: {
-        styleObject1: {
-            color:'#FF0000',
-        },
-        styleObject2:{
-            fontSize:'30px'
-        }
-    }# 5 
-})
-</code></pre>
-<p>另外当<code>v-bind:style</code>需要特殊前缀的CSS时，比如<code>transform</code>，Vue会自动侦测并添加相应前缀。</p>
-<h1 id="4-事件处理">4 事件处理</h1>
-<h2 id="41-v-on">4.1 <code>v-on</code></h2>
-<p>事件监听可以使用<code>v-on</code>：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;button v-on:click=&quot;count += 1&quot;&gt;点击增加1&lt;/button&gt;
-    &lt;p&gt;这个按钮被点击了{{count}}次&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    data: {
-        count:0
-    }
-})
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/2020071907495115.gif" alt="在这里插入图片描述" loading="lazy"><br>
-通常来说单击按钮会触发一个方法调用，在<code>methods</code>中指定即可：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;button v-on:click=&quot;test&quot;&gt;点击触发事件&lt;/button&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    methods:{
-        test:function(){
-            alert('Hello')
-            //event表示是原生DOM事件
-            if(event) {
-                alert(event.target.tagName)
-            }
-        }
-    }
-})
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200719075352186.gif" alt="在这里插入图片描述" loading="lazy"><br>
-当然也可以使用内联的JS语句：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;button v-on:click=&quot;say('hi')&quot;&gt;Say hi&lt;/button&gt;
-    &lt;button v-on:click=&quot;say('what')&quot;&gt;Say what&lt;/button&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    methods:{
-        say:function(val){
-            alert(val)
-        }
-    }
-})
-</code></pre>
-<h2 id="42-事件修饰符">4.2 事件修饰符</h2>
-<p>Vue为<code>v-on</code>提供了事件修饰符来处理DOM事件细节，如<code>event.preventDefault()</code>或<code>event.stopPropagation()</code>，通过<code>.</code>表示的指令调用修饰符：</p>
-<ul>
-<li><code>.stop</code>：阻止事件冒泡</li>
-<li><code>.prevent</code>：提交事件不再重载页面，如<code>&lt;form v-on.submit.prevent=&quot;onSumbit&quot;&gt;&lt;/form&gt;</code></li>
-<li><code>.capture</code>：事件捕获模式</li>
-<li><code>.self</code>：只当事件在该元素本身（而不是子元素）触发时回调</li>
-<li><code>.once</code>：事件只能点击一次</li>
-</ul>
-<h2 id="43-按键修饰符">4.3 按键修饰符</h2>
-<p>Vue允许在v-on在监听键盘事件时添加按键修饰提示符：</p>
-<pre><code class="language-html">&lt;!--只有keyCode为13时调用submit()--&gt;
-&lt;input v-on:keyup.13=&quot;submit&quot;&gt;
-</code></pre>
-<p>keyCode值对应ASCII表，为了方便，Vue为常用的按键提供了别名：</p>
-<ul>
-<li><code>.esc</code></li>
-<li><code>.delete</code>（删除+退格）</li>
-<li><code>.enter</code>/<code>.space</code>/<code>.tab</code></li>
-<li><code>.up</code>/<code>.down</code>/<code>.left</code>/<code>.right</code></li>
-<li><code>.ctrl</code>/<code>.alt</code>/<code>.shift</code>/<code>.meta</code></li>
-</ul>
-<p>当然也可以进行按键的组合，使用<code>.</code>连接即可。<br>
-例子如下：</p>
-<pre><code class="language-html">&lt;div id=&quot;app&quot;&gt;
-    &lt;input type=&quot;text&quot; placeholder=&quot;请按下空格&quot; v-on:keyup.space=&quot;spacePressed&quot;&gt;&lt;br&gt;
-    &lt;input type=&quot;text&quot; placeholder=&quot;请按下Ctrl+C&quot; v-on:keyup.ctrl.67=&quot;ctrlCPressed&quot;&gt;
-    &lt;!-- &lt;input type=&quot;text&quot; placeholder=&quot;请按下Ctrl+C&quot; @keyup.ctrl.67=&quot;ctrlCPressed&quot;&gt; --&gt;
-    &lt;p id=&quot;info&quot;&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-js">var vm = new Vue({
-    el: '#app',
-    methods:{
-        spacePressed:function(){
-            document.getElementById(&quot;info&quot;).innerHTML = &quot;您按下了空格&quot;;
-        },
-        ctrlCPressed:function(){
-            document.getElementById(&quot;info&quot;).innerHTML = &quot;您按下了Ctrl+C&quot;;
-        }
-    }
-})
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[设计模式学习笔记（八）：建造者模式]]></title>
-        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/</id>
-        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/">
-        </link>
-        <updated>2020-07-19T00:22:48.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-建造者模式">1 建造者模式</h1>
-<h2 id="11-定义">1.1 定义</h2>
-<p><strong>建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</strong><br>
-<strong>建造者模式是一种对象创建型模式。</strong></p>
-<p>建造者模式是较为复杂的创建型模式，它将客户端与包含多个组成部分（或部件）的复杂对象的创建过程分离，客户端无须知道复杂对象的内部组成部分与装配方式，只需要知道所需的建造者类型即可。建造者模式关注一步一步地创建一个复杂对象，不同的具体建造者定义了不同的创建过程，且具体建造者相互独立，增加新的建造者非常方便，无须修改已有代码，系统具有较好的扩展性。</p>
-<h2 id="12-复杂对象">1.2 复杂对象</h2>
-<p>建造者模式中用到了复杂对象这个概念。<br>
-<strong>复杂对象就是指那些包含多个成员变量的对象，这些成员变量也叫部件或者零件</strong>，例如汽车包括方向盘，发动机，轮胎等 ，<br>
-汽车就是复杂对象，方向盘，发动机以及轮胎就是汽车的部件。</p>
-<h2 id="13-结构图">1.3 结构图</h2>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200718102523398.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="14-角色">1.4 角色</h2>
-<p>建造者模式包含以下四个角色：</p>
-<ul>
-<li><code>Builder</code>（抽象建造者）：为创建一个产品Product对象的各个部件指定抽象接口，在该接口中一般声明两类方法，一类是<code>buildXXX()</code>方法，用于创建复杂对象的各个部分（部件），另一类是是<code>getResult()</code>，用于返回复杂对象。<code>Builder</code>既可以是抽象类，也可以是接口</li>
-<li><code>ConcreteBuilder</code>（具体建造者）：实现了<code>Builder</code>接口或者继承了<code>Builder</code>类，实现各个部件的具体构造和装配方法，定义并明确其所创建的复杂对象，也可以提供一个方法返回创建好的复杂对象</li>
-<li><code>Product</code>（产品角色）：是被构建的复杂对象，包含多个组成部件，具体建造者创建该产品的内部表示并定义其装配过程</li>
-<li><code>Director</code>（指挥者）：指挥者又叫导演类，复杂安排复杂对象的建造次序，指挥者与抽象建造者之间存在关联关系，可以在其<code>construct()</code>建造方法中调用建造者对象的部件构造以及装配方法，完成复杂对象的建造。客户端一般只需要与导演类进行交互，在客户端确定具体建造者的类型，并实例化具体建造者对象，然后通过导演类的构造函数或者setter将该对象传入导演类中</li>
-</ul>
-<h3 id="141-product">1.4.1 <code>Product</code></h3>
-<p>一般来说<code>Product</code>是一个复杂对象，典型的定义如下：</p>
-<pre><code class="language-java">class Product
-{
-	private type1 part1;
-	private type2 part2;
-	private type3 part3;
-	//getter + setter ...
-}
-</code></pre>
-<p>其中<code>type1</code>，<code>type2</code>等指各种不同的类型，一般来说会有嵌套类。</p>
-<h3 id="142-builder">1.4.2 <code>Builder</code></h3>
-<p>抽象建造者的典型定义如下：</p>
-<pre><code class="language-java">abstract class Builder
-{
-	protected Product product = new Product();
-	public abstract void buildPart1();
-	public abstract void buildPart2();
-	public abstract void buildPart3();
-	public Product getResult()
-	{
-		return product;
-	}
-}
-</code></pre>
-<p>抽象建造者中声明了一系列<code>buildXXX</code>方法，用于创建<code>Product</code>的各个部件，具体创建过程在<code>ConcreteBuilder</code>中实现，<code>getResult()</code>返回已创建完成的<code>Product</code>。</p>
-<h3 id="143-concretebuilder">1.4.3 <code>ConcreteBuilder</code></h3>
-<p><code>ConcreteBuilder</code>实现了<code>Builder</code>中的<code>buildXXX</code>方法，通过调用<code>Product</code>的setter来实现给产品对象的各部分赋值。<br>
-不同的<code>ConcreteBuilder</code>在实现<code>buildXXX</code>是将有所区别，比如传入<code>Product</code>的setter参数的不同。<br>
-另外在有些<code>ConcreteBuilder</code>中某些<code>buildXXX</code>无须实现（提供一个空实现），这些对客户端来说无须关心，客户端只需要知道具体建造者的类型即可。<br>
-典型定义如下：</p>
-<pre><code class="language-java">class ConcreteBuilder extends Builder
-{
-	public void buildPart1()
-	{
-		product.setPart1(&quot;part1&quot;);
-	}
-	public void buildPart2()
-	{
-		product.setPart2(&quot;part2&quot;);		
-	}
-	public void buildPart3()
-	{
-		product.setPart3(&quot;part3&quot;);
-	}
-	public Product getResult()
-	{
-		return product;
-	}
-}
-</code></pre>
-<h3 id="144-director">1.4.4 <code>Director</code></h3>
-<p><code>Director</code>类主要有两个作用：</p>
-<ul>
-<li>隔离了客户与创建过程</li>
-<li>控制产品的创建过程，包括某个<code>buildXXX</code>方法是否被调用，以及调用时的先后次序等等</li>
-</ul>
-<p>指挥者针对抽象建造者编程，客户端只需要知道具体建造者的类型，即可通过指挥者调用建造者的相关方法，返回一个完整的产品对象。典型实现如下：</p>
-<pre><code class="language-java">class Director
-{
-	private Builder builder;
-	public Director(Builder builder)
-	{
-		this.builder = builder;
-	}
-	
-	public void setBuilder(Builder builder)
-	{
-		this.builder = builder;		
-	}
-	
-	public Product construct()
-	{
-		builder.buildPart1();
-		builder.buildPart2();
-		builder.buildPart3();
-		return builder.getResult();
-	}
-}
-</code></pre>
-<h1 id="2-实例">2 实例</h1>
-<blockquote>
-<p>游戏角色的创建：不同的角色具有差别极大的外部特征，而且要求随着游戏的进行会不断出现新的角色，也就是说扩展性要好。这里例子简化就创建三个角色：英雄，天使与恶魔。</p>
-</blockquote>
-<p>思路：</p>
-<ul>
-<li><code>Actor</code>为复杂产品</li>
-<li><code>ActorController</code>为指挥者</li>
-<li><code>ActorBuilder</code>为抽象建造者</li>
-<li><code>HeroBuilder</code>/<code>AngelBuilder</code>/<code>DevilBuilder</code>为具体建造者</li>
-</ul>
-<pre><code class="language-java">// 复杂产品
-class Actor
-{
-    private String type;
-    private String face;
-    private String costume;
-    private String hairstyle;
-    //getter and setter ...
-}
-
-//抽象建造者
-abstract class ActorBuilder
-{
-    protected Actor actor = new Actor();
-
-    public abstract void buildType();
-    public abstract void buildFace();
-    public abstract void buildCostume();
-    public abstract void buildHairstyle();
-
-    public Actor createActor()
-    {
-        return actor;
-    }
-}
-
-//具体建造者
-class HeroBuilder extends ActorBuilder
-{
-    public void buildType(){ actor.setType(&quot;英雄&quot;); }
-    public void buildFace(){ actor.setFace(&quot;英俊&quot;); }
-    public void buildCostume(){ actor.setCostume(&quot;盔甲&quot;); }
-    public void buildHairstyle(){ actor.setHairstyle(&quot;飘逸&quot;); }
-}
-
-class AngleBuilder extends ActorBuilder
-{
-    public void buildType(){ actor.setType(&quot;天使&quot;); }
-    public void buildFace(){ actor.setFace(&quot;漂亮&quot;); }
-    public void buildCostume(){ actor.setCostume(&quot;白裙&quot;); }
-    public void buildHairstyle(){ actor.setHairstyle(&quot;披肩长发&quot;); }
-}
-
-class DevilBuilder extends ActorBuilder
-{
-    public void buildType(){ actor.setType(&quot;恶魔&quot;); }
-    public void buildFace(){ actor.setFace(&quot;帅气&quot;); }
-    public void buildCostume(){ actor.setCostume(&quot;黑衣&quot;); }
-    public void buildHairstyle(){ actor.setHairstyle(&quot;红色&quot;); }
-}
-
-// 指挥者类
-class ActorController
-{
-    public Actor construct(ActorBuilder builder)
-    {
-        builder.buildType();
-        builder.buildFace();
-        builder.buildHairstyle();
-        builder.buildCostume();
-        return builder.createActor();
-    }
-}
-</code></pre>
-<p>测试类：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        ActorBuilder builder = new AngleBuilder();
-        ActorController controller = new ActorController();
-        Actor actor = controller.construct(builder);
-        System.out.println(actor.getType());
-        System.out.println(actor.getCostume());
-        System.out.println(actor.getHairstyle());
-        System.out.println(actor.getFace());
-    }
-}
-</code></pre>
-<h1 id="3-优化">3 优化</h1>
-<h2 id="31-省略director">3.1 省略<code>Director</code></h2>
-<p>其实<code>Director</code>是可以省略的，直接与<code>Builder</code>合并，在<code>Builder</code>中提供类似<code>Direcotr</code>中的<code>construct()</code>方法，并定义为静态方法，如：</p>
-<pre><code class="language-java">abstract class ActorBuilder
-{
-    protected static Actor actor = new Actor();
-
-    public abstract void buildType();
-    public abstract void buildFace();
-    public abstract void buildCostume();
-    public abstract void buildHairstyle();
-
-    public static Actor build(ActorBuilder builder)
-    {
-        builder.buildType();
-        builder.buildFace();
-        builder.buildHairstyle();
-        builder.buildCostume();
-        return actor;
-    }
-}
-</code></pre>
-<p>同时客户端代码修改如下：</p>
-<pre><code class="language-java">Actor actor = ActorBuilder.build(new AngleBuilder());
-//Actor actor = ActorBuilder.build(new HeroBuilder());
-//Actor actor = ActorBuilder.build(new DevilBuilder());
-</code></pre>
-<p>再简单一点的可以省略<code>createActor</code>中的参数：</p>
-<pre><code class="language-java">abstract class ActorBuilder
-{
-    protected Actor actor = new Actor();
-
-    public abstract void buildType();
-    public abstract void buildFace();
-    public abstract void buildCostume();
-    public abstract void buildHairstyle();
-
-    public Actor build()
-    {
-        buildType();
-        buildFace();
-        buildHairstyle();
-        buildCostume();
-        return actor;
-    }
-}
-</code></pre>
-<p>同时客户端简化如下：</p>
-<pre><code class="language-java">Actor actor = new AngleBuilder().build();
-</code></pre>
-<p>这两种方式简化了系统结构的同时又不影响灵活性以及可扩展性，但是加重了抽象建造者的职责，如果<code>build</code>方法较为复杂，待构建的产品组成部分较多，建议还是将其单独封装在<code>Director</code>中，这样更加符合SRP（单一权责原则）。</p>
-<h2 id="32-钩子方法">3.2 钩子方法</h2>
-<p>钩子方法是一种可以控制是否调用某个<code>buildXXX</code>的方法，特征如下：</p>
-<ul>
-<li>返回类型为<code>boolean</code></li>
-<li>方法名一般为<code>isXXX</code></li>
-</ul>
-<p>例如修改<code>ActorBuilder</code>如下：</p>
-<pre><code class="language-java">abstract class ActorBuilder
-{
-    protected Actor actor = new Actor();
-
-    public abstract void buildType();
-    public abstract void buildFace();
-    public abstract void buildCostume();
-    public abstract void buildHairstyle();
-
-    public boolean isBareheaded()
-    {
-        return false;
-    }
-
-    public Actor createActor()
-    {
-        return actor;
-    }
-}
-</code></pre>
-<p>并修改<code>DevilBuilder</code>，覆盖默认方法：</p>
-<pre><code class="language-java">class DevilBuilder extends ActorBuilder
-{
-    public void buildType(){ actor.setType(&quot;恶魔&quot;); }
-    public void buildFace(){ actor.setFace(&quot;帅气&quot;); }
-    public void buildCostume(){ actor.setCostume(&quot;黑衣&quot;); }
-    public void buildHairstyle(){ actor.setHairstyle(&quot;红色&quot;); }
-    public boolean isBareheaded(){ return true; }
-}
-</code></pre>
-<p>最后修改<code>ActorController</code>：</p>
-<pre><code class="language-java">class ActorController
-{
-    public Actor construct(ActorBuilder builder)
-    {
-        builder.buildType();
-        builder.buildFace();
-        builder.buildCostume();
-        if(builder.isBareheaded())
-            builder.buildHairstyle();
-        return builder.createActor();
-    }
-}
-</code></pre>
-<p>相比起之前的<code>ActorController</code>多了一次判断，测试如下：</p>
-<pre><code class="language-java">public static void main(String[] args) {
-    ActorController controller = new ActorController();
-    Actor actor = controller.construct(new AngleBuilder());
-    System.out.println(actor.getType());
-    System.out.println(actor.getCostume());
-    System.out.println(actor.getHairstyle());
-    System.out.println(actor.getFace());
-    System.out.println();
-
-    actor = controller.construct(new DevilBuilder());
-    System.out.println(actor.getType());
-    System.out.println(actor.getCostume());
-    System.out.println(actor.getHairstyle());
-    System.out.println(actor.getFace());
-}
-</code></pre>
-<p>输出如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200718142036116.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="33-返回builder">3.3 返回Builder</h2>
-<p>在实际应用中<code>Director</code>较少出现，通常只有<code>Builder</code>以及<code>Product</code>，而且<code>Builder</code>是作为<code>Product</code>的内部类，提供一系列<code>set</code>方法，这些<code>set</code>方法返回一个<code>Builder</code>方便后续调用，最后以一个<code>build()</code>结尾，比如OkHttp中的<code>Request</code>/<code>OkHttpClient</code>：</p>
-<pre><code class="language-java">OkHttpClient client = new OkHttpClient.Builder()
-.connectTimeout(5000,TimeUnit.MILLISECONDS)
-.readTimeout(10,TimeUnit.SECONDS)
-.build();
-
-Request request = new Request.Builder()
-.url(&quot;https://xxx&quot;)
-.post(requestBody)
-.build();
-</code></pre>
-<h1 id="4-主要优点">4 主要优点</h1>
-<ul>
-<li>封装细节：建造者模式中客户端不需要知道产品内部组成细节，将产品本身与产品的创建过程解耦，使得相同的创建过程可以创建不同的产品对象</li>
-<li>扩展性好：每一个具体建造者都相对独立，而与其他建造者无关，伊尼茨可以很方便地替换具体建造者或增加新的具体建造者，用户使用不同的具体建造者即可得到不同的产品对象。由于指挥者针对抽象建造者编程，增加新的具体建造者无须修改原有类库的代码，扩展方便，符合开闭原则</li>
-<li>控制创建过程：将复杂产品的创建步骤分解在不同的方法中，使得创建过程更加清晰，更加精细地控制创建过程</li>
-</ul>
-<h1 id="5-主要缺点">5 主要缺点</h1>
-<ul>
-<li>范围受限：建造者模式所创建的产品一般具有较多的共同点，其组成部分相似，如果产品之间的差异性很大，例如很多组成部分不相同，就不适合使用建造者模式，因此使用范围收到一定限制</li>
-<li>建造者多：如果产品内部结构复杂多变，可能会需要定义很多具体建造者类来实现这种变化，增大系统的理解难度与运行成本</li>
-</ul>
-<h1 id="6-适用场景">6 适用场景</h1>
-<ul>
-<li>需要生成的产品对象有复杂的内部结构，这些产品对象通常包含多个成员变量</li>
-<li>需要生成的产品对象的属性相互依赖，需要指定其生成顺序</li>
-<li>对象的创建过程独立于创建该对象的类。在建造者模式中通过引入指挥者类，将创建过程封装在指挥者类中，而不再建造者类或者客户类中</li>
-<li>隔离复杂对象的创建与使用，并使得相同的创建过程可以创建不同的产品</li>
-</ul>
-<h1 id="7-总结">7 总结</h1>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718143426156.png" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第30期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-30-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-30-qi/">
-        </link>
-        <updated>2020-07-17T17:34:58.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595007375325.jpg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>知道为何自古红颜多薄命吗？因为没人在意丑的人活多久。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>为了便于将石料运到现场，建造北京紫禁城的工人修建了一条冰路。这条冰路通过雪橇运输石料，以水进行润滑，从而减少摩擦，并使雪橇在水重新冷冻之前更容易滑动。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>白发渔樵江渚上，惯看秋月春风。<br>
-——杨慎《临江仙·滚滚长江东逝水》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>末将于禁，愿为曹家世代赴汤蹈火。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="http://www.kugou.com/song/132nvb3e.html#hash=B7B91C42239189D7299DDFB4CDCCBFB8&amp;album_id=0">我热情如火，你冰冻成河-黄静美</a></p>
-</blockquote>
-<blockquote>
-<p>我该如何去厮守<br>
-你才觉得不将就<br>
-互相折磨到白头<br>
-渐渐消逝的温柔<br>
-难道非你不可 是有多难得<br>
-这样的感情对我来说</p>
-</blockquote>
-<blockquote>
-<p>或许不知道<br>
-自己到底要的是什么<br>
-遇见你就像飞蛾扑火<br>
-不管值不值得<br>
-最美的承诺<br>
-只是一时快乐惹的祸<br>
-而如今只剩孤独的我<br>
-注定没有结果</p>
-</blockquote>
-<blockquote>
-<p>我懂你要的自由<br>
-别再惯性找借口<br>
-你从未被我拥有<br>
-随时都可能放开手<br>
-而我热情如火 你冰冻成河<br>
-被爱的权利你都占有</p>
-</blockquote>
-<blockquote>
-<p>我该如何去厮守<br>
-你才觉得不将就<br>
-互相折磨到白头<br>
-渐渐消逝的温柔<br>
-难道非你不可 是有多难得<br>
-这样的感情对我来说<br>
-不值得</p>
-</blockquote>
-<blockquote>
-<p>或许不知道<br>
-自己到底要的是什么<br>
-遇见你就像飞蛾扑火<br>
-不管值不值得<br>
-最美的承诺<br>
-只是一时快乐惹的祸<br>
-而如今只剩孤独的我<br>
-注定没有结果</p>
-</blockquote>
-<blockquote>
-<p>我懂你要的自由<br>
-别再惯性找借口<br>
-你从未被我拥有<br>
-随时都能放开手<br>
-而我热情如火 你冰冻成河<br>
-被爱的权利你都占有</p>
-</blockquote>
-<blockquote>
-<p>我该如何厮守<br>
-你才觉得不将就<br>
-互相折磨到白头<br>
-渐渐消逝的温柔<br>
-难道非你不可 是有多难得<br>
-这样的感情对我来说</p>
-</blockquote>
-<blockquote>
-<p>我懂你要的自由<br>
-别再惯性找借口<br>
-你从未被我拥有<br>
-随时都能放开手<br>
-而我热情如火 你冰冻成河<br>
-被爱的权利你都占有</p>
-</blockquote>
-<blockquote>
-<p>我该如何去厮守<br>
-你才觉得不将就<br>
-互相折磨到白头<br>
-渐渐消逝的温柔<br>
-难道非你不可 是有多难得<br>
-这样的感情对我来说<br>
-不值得</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[设计模式（七）：原型模式]]></title>
-        <id>https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/</id>
-        <link href="https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/">
-        </link>
-        <updated>2020-07-17T17:33:11.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%AE%9A%E4%B9%89">1 定义</a></li>
-<li><a href="#2-%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2 实现方法</a>
-<ul>
-<li><a href="#21-%E9%80%9A%E7%94%A8%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2.1 通用实现方法</a></li>
-<li><a href="#22-clone">2.2 <code>clone()</code></a></li>
-</ul>
-</li>
-<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
-<li><a href="#4-%E6%B5%85%E5%85%8B%E9%9A%86%E4%B8%8E%E6%B7%B1%E5%85%8B%E9%9A%86">4 浅克隆与深克隆</a>
-<ul>
-<li><a href="#41-%E6%B5%85%E5%85%8B%E9%9A%86">4.1 浅克隆</a></li>
-<li><a href="#42-%E6%B7%B1%E5%85%8B%E9%9A%86">4.2 深克隆</a></li>
-</ul>
-</li>
-<li><a href="#5-%E5%8E%9F%E5%9E%8B%E7%AE%A1%E7%90%86%E5%99%A8">5 原型管理器</a>
-<ul>
-<li><a href="#51-%E5%AE%9A%E4%B9%89">5.1 定义</a></li>
-<li><a href="#52-%E5%AE%9E%E4%BE%8B">5.2 实例</a></li>
-</ul>
-</li>
-<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
-<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
-<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
-<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
-</ul>
-</p>
-<h1 id="1-定义">1 定义</h1>
-<p><strong>原型模式：使用原型实例指定创建对象的种类，并且通过克隆这些原型创建新的对象。<br>
-原型模式是一种对象创建型模式。</strong></p>
-<p>原型模式的工作原理很简单，将一个原型对象传给那个要发动创建的对象，这个要发动创建的对象通过请求原型对象克隆自己来实现创建过程。原型模式是一种另类的创建型模式，创建克隆对象的工厂就是原型类自身，工厂方法由克隆方法实现。</p>
-<p>通过克隆方法创建的对象是全新的对象，它们在内存中拥有新的地址，通常对克隆多产生的对象进行的修改不会对原型对象造成任何的影响，每一个克隆的对象都是相互独立的，通过不同的方式对克隆对象进行修改之后，可以得到一系列相似但不完全相同的对象。</p>
-<p>结构图如下：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200717155947994.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>原型模式包含以下三个角色：</p>
-<ul>
-<li>Prototype（原型抽象类）：声明克隆方法的接口，是所有具体原型类的公共父类，可以是抽象类也可以是接口，还能是具体实现类</li>
-<li>ConcretePrototypr（具体原型类）：实现在抽象原型类中声明的克隆方法，在克隆方法中返回自己的一个克隆对象</li>
-<li>Client（客户类）：让一个原型对象克隆自身从而创建一个新的对象，在客户类中只需要直接实例化或通过工厂方法等方式创建一个原型对象，再通过调用该对象的克隆方法即可得到多个相同的对象。</li>
-</ul>
-<h1 id="2-实现方法">2 实现方法</h1>
-<p>在Java中常用的实现方法有两种：</p>
-<ul>
-<li>通用实现方法</li>
-<li><code>clone()</code>方法</li>
-</ul>
-<h2 id="21-通用实现方法">2.1 通用实现方法</h2>
-<p>通用的克隆实现方法是在具体原型类的克隆方法中实例化一个与自身类型相同的对象并将其返回，并将相关的参数传入新创建的对象中，保证成员变量相同。<br>
-示例代码：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        Prototype prototype1 = new ConcretePrototype();
-        prototype1.setField(&quot;test&quot;);
-        Prototype prototype2 = prototype1.clone();
-        System.out.println(prototype1.getField() == prototype2.getField());
-        System.out.println(prototype1 == prototype2);
-    }
-}
-
-interface Prototype
-{
-    Prototype clone();
-    void setField(String f);
-    String getField();
-}
-
-
-class ConcretePrototype implements Prototype
-{
-    private String field;
-
-    public void setField(String f)
-    {
-        field = f;
-    }
-
-    public String getField()
-    {
-        return field;
-    }
-
-    public Prototype clone()
-    {
-        Prototype prototype = new ConcretePrototype();
-        prototype.setField(this.field);
-        return prototype;
-    }
-}
-</code></pre>
-<h2 id="22-clone">2.2 <code>clone()</code></h2>
-<p><code>java.lang.Object</code>提供了一个<code>clone()</code>，可以将一个Java对象克隆一份，利用<code>clone()</code>可以直接将对象克隆一份，但是必须实现<code>Cloneable</code>接口，否则<code>clone()</code>时会抛出<code>CloneNotSupportedException</code>。<br>
-示例代码如下：</p>
-<pre><code class="language-java">// 在2.1的基础上修改ConcreteProtoype即可
-class ConcretePrototype implements Prototype,Cloneable
-{
-    private String field;
-
-    public void setField(String f)
-    {
-        field = f;
-    }
-
-    public String getField()
-    {
-        return field;
-    }
-
-    public Prototype clone()
-    {
-        Object object = null;
-        try
-        {
-            object = super.clone();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return (Prototype)object;
-    }
-}
-</code></pre>
-<p>一般而言，Java中的<code>clone()</code>满足：</p>
-<ul>
-<li>对任何对象<code>x</code>都有<code>x.clone() != x</code>，也就是克隆的对象与原型对象不是同一个对象</li>
-<li>对任何对象<code>x</code>都有<code>x.clone().getClass() == x.getClass()</code>，即克隆对象与原型对象的类型一样</li>
-<li>如果<code>x</code>的<code>equals()</code>定义恰当，那么<code>x.clone().equals(x)</code>应该成立</li>
-</ul>
-<p>具体实现步骤如下：</p>
-<ul>
-<li>覆盖<code>clone()</code>，并声明为<code>public</code></li>
-<li><code>clone()</code>中调用<code>super.clone()</code></li>
-<li>派生类需要实现<code>Cloneable</code>接口</li>
-</ul>
-<h1 id="3-实例">3 实例</h1>
-<blockquote>
-<p>开发一个工作周报系统，工作周报的内容都大同小异，只有一些小地方存在差异，但是系统每次默认创建的都是空白报表，用户不断复制粘贴来填写重复内容。使用原型模式对其进行优化，快速创建相同或类似的工作周报。</p>
-</blockquote>
-<p>代码如下：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        WeeklyLog weeklyLog1 = new WeeklyLog();
-        weeklyLog1.setContent(&quot;content&quot;);
-        weeklyLog1.setName(&quot;Weekly log 1&quot;);
-        weeklyLog1.setDateTime(LocalDateTime.now());
-
-        System.out.println(weeklyLog1.getName());
-        System.out.println(weeklyLog1.getContent());
-        System.out.println(weeklyLog1.getDateTime());
-
-        WeeklyLog weeklyLog2 = weeklyLog1.clone();
-        weeklyLog2.setName(&quot;Weekly log 2&quot;);
-        System.out.println(weeklyLog2.getName());
-        System.out.println(weeklyLog2.getContent());
-        System.out.println(weeklyLog2.getDateTime());
-    }
-}
-
-class WeeklyLog implements Cloneable
-{
-    private String name;
-    private LocalDateTime dateTime;
-    private String content;
-
-    //getter and setter
-    //...
-
-    public WeeklyLog clone()
-    {
-        Object obj = null;
-        try
-        {
-            obj = super.clone();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return (WeeklyLog)obj;
-    }
-    
-}
-</code></pre>
-<h1 id="4-浅克隆与深克隆">4 浅克隆与深克隆</h1>
-<p>一般来说，工作周报可能会携带附件，使用上面的原型模式来进行工作周报的复制没有问题，但是附件（一般是另一个类）不会进行复制。这是因为浅克隆与深克隆的原因，下面具体来看一下。</p>
-<h2 id="41-浅克隆">4.1 浅克隆</h2>
-<p>在浅克隆中，如果原型对象的成员变量是值类型，将复制一份给克隆对象。（在Java中）值类型包括：</p>
-<ul>
-<li>int</li>
-<li>double</li>
-<li>byte</li>
-<li>boolean</li>
-<li>char</li>
-<li>float</li>
-<li>long</li>
-<li>short</li>
-</ul>
-<p>也就是这些类型的值都会完整复制一份给克隆对象，对于引用类型，则将引用对象的地址复制一份给克隆对象。（在Java中）引用类型就是除了基本类型之外的所有类型，常见的有：</p>
-<ul>
-<li>类</li>
-<li>接口</li>
-<li>数组</li>
-</ul>
-<p>对于引用类型，原型对象与克隆对象指向相同的内存地址，也就是其实并没有被复制，而是共享一份地址相同的值。<br>
-在Java中可以通过<code>Object</code>的<code>clone()</code>实现浅克隆，也就是上面例子的做法。</p>
-<h2 id="42-深克隆">4.2 深克隆</h2>
-<p>在深克隆中，无论变量是值类型还是引用类型都会完整复制一份给克隆对象。<br>
-在Java中实现深克隆可以通过序列化等方式实现。序列化就是将对象写到流的过程，写到流中的对象是原有对象的一个复制品，而原对象仍然存在于内存中。想要进行序列化必须实现<code>Serializable</code>接口。</p>
-<p>代码如下：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        WeeklyLog weeklyLog1 = new WeeklyLog();
-        WeeklyLog weeklyLog2 = null;
-        Attachement attachement = new Attachement();
-        weeklyLog1.setAttachement(attachement);
-        try
-        {
-            weeklyLog2 = weeklyLog1.deepClone(); 
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        System.out.println(weeklyLog1 == weeklyLog2);
-        System.out.println(weeklyLog1.getAttachement() == weeklyLog2.getAttachement());
-    }
-}
-
-class Attachement implements Serializable
-{
-    private String name;
-    //getter and setter
-    //...
-}
-
-class WeeklyLog implements Serializable
-{
-    private String name;
-    private LocalDateTime dateTime;
-    private String content;
-    private Attachement attachement;
-
-    //getter and setter
-    //...
-
-    public WeeklyLog deepClone() throws IOException , ClassNotFoundException , OptionalDataException
-    {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(this);
-
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-        return (WeeklyLog)objectInputStream.readObject();
-    }
-}
-</code></pre>
-<p>当然除了使用<code>ByteArrayOutput/InputStream</code>以及<code>ObjectInput/OutputStream</code>外，还可以利用以下工具类进行深克隆：</p>
-<ul>
-<li><code>org.apache.commons.lang3.SerializationUtils.clone()</code>：需要实现<code>Serializable</code>接口</li>
-<li><code>Gson</code>：无需实现<code>Serializable</code>接口，<code>toJson()+fromJson()</code></li>
-<li><code>Jackson</code>：也是无需实现<code>Serializable</code>接口，<code>readValue()+writeValueAsString()</code>等</li>
-</ul>
-<h1 id="5-原型管理器">5 原型管理器</h1>
-<h2 id="51-定义">5.1 定义</h2>
-<p>原型管理器是将多个原型对象存储在一个集合中供客户端使用的专门负责克隆对象的工厂，其中定义了一个集合用于存储原型对象，如果需要某个原型对象的克隆，可以通过复制集合中对应的原型对象来获取。在原型管理器中针对抽象原型类进行编程。<br>
-结构图如下：<br>
-<img src="https://img-blog.csdnimg.cn/2020071800411674.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="52-实例">5.2 实例</h2>
-<blockquote>
-<p>日常办公中会有许多公文需要创建，例如《可行性分析报告》，《立项建议书》，《软件需求规格说明书》，《项目进展报告》等，为了提高工作效率需要为各类公文创建模板，用户可以通过这些模板快速创建新的公文，这些公文模板进行统一的管理，系统根据用户的请求的不同生成不同的新公文。</p>
-</blockquote>
-<p>首先是抽象原型以及具体原型的代码：</p>
-<pre><code class="language-java">interface OfficialDocument extends Cloneable
-{
-    OfficialDocument clone();
-    void display();
-}
-
-//可行性分析报告
-class FAR implements OfficialDocument 
-{
-    public OfficialDocument clone()
-    {
-        OfficialDocument far = null;
-        try
-        {
-            far = (OfficialDocument)super.clone();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return far;
-    }
-
-    public void display()
-    {
-        System.out.println(&quot;可行性分析报告&quot;);
-    }
-}
-
-//软件需求规格说明书
-class SRS implements OfficialDocument
-{
-    public OfficialDocument clone()
-    {
-        OfficialDocument srs = null;
-        try
-        {
-            srs = (OfficialDocument)super.clone();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return srs;
-    }
-
-    public void display()
-    {
-        System.out.println(&quot;软件需求规格说明书&quot;);
-    }
-}
-</code></pre>
-<p>接着是原型管理器的代码，使用枚举单例实现：</p>
-<pre><code class="language-java">enum PrototypeManager 
-{
-    INSTANCE;
-
-    private Hashtable&lt;String,OfficialDocument&gt; hashtable = new Hashtable&lt;&gt;();
-    private PrototypeManager()
-    {
-        add(&quot;far&quot;,new FAR());
-        add(&quot;srs&quot;,new SRS());
-    }
-
-    public void add(String key,OfficialDocument document)
-    {
-        hashtable.put(key, document);
-    }
-
-    public OfficialDocument get(String key)
-    {
-        return ((OfficialDocument)hashtable.get(key)).clone();
-    }
-}
-</code></pre>
-<p>测试代码：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        PrototypeManager manager = PrototypeManager.INSTANCE;
-        OfficialDocument document1,document2,document3,document4;
-
-        document1 = manager.get(&quot;far&quot;);
-        document1.display();
-
-        document2 = manager.get(&quot;far&quot;);
-        document2.display();
-        System.out.println(document1 == document2);
-
-        document3 = manager.get(&quot;srs&quot;);
-        document3.display();
-
-        document4 = manager.get(&quot;srs&quot;);
-        document4.display();
-        System.out.println(document3 == document4);
-    }
-}
-</code></pre>
-<h1 id="6-主要优点">6 主要优点</h1>
-<ul>
-<li>简化创建过程：当创建新的对象实例较为复杂时，使用原型模式可以简化对象的创建过程，通过复制一个已有实例可以提高新实例的创建效率</li>
-<li>扩展性较好：由于在原型模式中提供了抽象原型类，在客户端可以针对抽象原型类进行编程，而将具体原型类写在配置文件中，增加或减少具体原型类对系统都没有任何影响</li>
-<li>简化创建结构：原型模式提供了简化的创建结构。工厂方法模式常常需要有一个与产品类等级结构相同的工厂等级结构，而原型模式就不需要这样，原型模式中产品的复制是通过封装在原型类中的克隆方法实现的，无需专门的工厂类来创建产品</li>
-<li>保存状态：可以使用深克隆的方式保存对象的状态。使用原型模式将对象复制一份并将其状态保存起来，以便在需要的时候使用，例如恢复到某一历史状态，可辅助实现撤销操作</li>
-</ul>
-<h1 id="7-主要缺点">7 主要缺点</h1>
-<ul>
-<li>修改不方便：需要为每一个类配备一个克隆方法，而且该克隆方法位于一个类的内部，当对已有的类进行改造的时候，需要修改源代码，违背了OCP（开放闭合原则）</li>
-<li>深克隆需要嵌套类支持：在实现深克隆时需要编写较为复杂的代码，而且当对象之间存在多重的嵌套引用时，为了实现深克隆，每一层对象都必须支持深克隆，实现起来可能比较麻烦</li>
-</ul>
-<h1 id="8-适用场景">8 适用场景</h1>
-<ul>
-<li>创建新对象成本较大，比如初始化需要较长时间，占用太多的CPU资源或网络资源，新的对象可以通过原型模式对已有对象进行复制获取，如果是相似对象可以对成员变量稍作修改</li>
-<li>如果系统要保存对象的状态，而对象的变化状态很小，或者对象本身占用内存较少，可以使用原型模式配合备忘录模式</li>
-<li>需要避免使用分层次的工厂类来创建分层次的对象，并且类的实例对象只有一个或很少的几个组合状态，通过复制原型对象得到新实例可能比使用构造函数创建一个实例方便</li>
-</ul>
-<h1 id="9-总结">9 总结</h1>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718011132428.png" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
