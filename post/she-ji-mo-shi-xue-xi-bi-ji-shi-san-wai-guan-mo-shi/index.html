@@ -1,0 +1,1089 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（十三）：外观模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+
+1.1 引言
+1.2 定义
+1.3 结构图
+1.4 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 外观角色
+
+
+3 实例
+4 引入抽象外观类
+
+4.1 为什么需要引入抽象外观类？
+4.2 如何引入？
+
+
+5 注意事项
+6 主..." />
+    <meta name="keywords" content="每日分享" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1595830336083" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-07-27"><i class="fa fa-calendar"></i><span class="lately">12 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（十三）：外观模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E5%A4%96%E8%A7%82%E8%A7%92%E8%89%B2">2.2 外观角色</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%BC%95%E5%85%A5%E6%8A%BD%E8%B1%A1%E5%A4%96%E8%A7%82%E7%B1%BB">4 引入抽象外观类</a>
+<ul>
+<li><a href="#41-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%BC%95%E5%85%A5%E6%8A%BD%E8%B1%A1%E5%A4%96%E8%A7%82%E7%B1%BB">4.1 为什么需要引入抽象外观类？</a></li>
+<li><a href="#42-%E5%A6%82%E4%BD%95%E5%BC%95%E5%85%A5">4.2 如何引入？</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">5 注意事项</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>根据单一权责原则，软件中将一个系统划分为若干个子系统有利于降低整个系统的复杂性，使客户类与子系统之间的通信和相互依赖关系达到最小，方法之一就是引入一个外观角色，为子系统的访问提供一个简单而单一的入口。外观模式通过引入一个新的外观角色来降低原有系统的复杂度，同时降低客户类与子系统类的耦合度。</p>
+<p>（这里的子系统是广义的概念，可以是一个类，一个功能模块，系统的一个组成部分或者一个完整的系统）</p>
+<p>如果没有外观角色，每个客户端可能需要和多个子系统之间进行复杂的交互，系统的耦合度很大，简化示意图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200726194628891.png" alt="" loading="lazy"></figure>
+<p>而引入外观角色后，客户端只需直接与外观角色交互，客户端与子系统之间的原有复杂度由外观角色实现，从而降低系统耦合度，简化示意图如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726195100190.png" alt="" loading="lazy"><br>
+<strong>外观模式要求一个子系统的外部与其内部的通信通过一个统一的外观角色进行，外观角色将客户端与子系统的内部复杂性分隔开，使得客户端只需要与外观角色打交道，而不需要与子系统内部的很多对象打交道。</strong></p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>外观模式：外部与一个子系统的通信通过一个统一的外观角色进行，为子系统中的一组接口提供一个一致的入口。</strong><br>
+外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。<br>
+外观模式又叫门面模式，是一种对象结构型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200726195644651.png" alt="" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong>Facade（外观角色）：在客户端可以调用这个角色的方法，在外观角色中可以知道相关的一个或多个子系统的功能和责任，正常情况下将来自客户端的请求委派到对应的子系统中去，传递给相应的子系统对象处理</strong></li>
+<li><strong>SubSystem（子系统角色）：每一个子系统是一个单独的类，也可以是一个类的集合，实现子系统的功能。每一个子系统都可以被客户端直接调用，或者被外观角色调用，它处理由外观类传过来的请求，子系统并不知道外观类的存在，对于子系统而已，外观角色仅仅是另一个客户端</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义子系统：首先定义子系统，实现一个单一的功能，处理由客户端传来的请求</li>
+<li>定义外观角色：外观角色可以知道一个或多个子系统的功能和责任，将来自客户端的请求委派到对应的子系统去，外观角色对于子系统而言是另一个客户端</li>
+</ul>
+<h2 id="22-外观角色">2.2 外观角色</h2>
+<p>通常实现如下：</p>
+<pre><code class="language-java">class Facade
+{
+    private SubSystemA subSystemA = new SubSystemA();
+    private SubSystemB subSystemB = new SubSystemB();
+    private SubSystemC subSystemC = new SubSystemC();
+
+    public void method()
+    {
+        subSystemA.method();
+        subSystemB.method();
+        subSystemC.method();
+    }
+}
+
+class SubSystemA
+{
+    public void method()
+    {
+        System.out.println(&quot;子系统A&quot;);
+    }
+}
+
+class SubSystemB
+{
+    public void method()
+    {
+        System.out.println(&quot;子系统B&quot;);
+    }
+}
+
+class SubSystemC
+{
+    public void method()
+    {
+        System.out.println(&quot;子系统C&quot;);
+    }
+}
+</code></pre>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>设计一个文件加密系统，加密流程包括三部分：读取文件，加密文件，保存文件。这三个操作相对独立，并且封装在三个不同的类中，使用外观模式设计该系统。</p>
+</blockquote>
+<p>子系统类：</p>
+<ul>
+<li><code>FileReader</code>：文件读取类</li>
+<li><code>Encrypt</code>：文件加密类</li>
+<li><code>FileWriter</code>：文件保存类</li>
+</ul>
+<p>外观角色类：<code>Facade</code>。</p>
+<p>代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        Facade facade = new Facade();
+        facade.fileEncrypt(&quot;111&quot;);
+    }
+}
+
+class FileReader
+{
+    public void read(String name)
+    {
+        System.out.println(&quot;读取文件&quot;+name);
+    }
+}
+
+class Encrypt
+{
+    public void encrypt(String name)
+    {
+        System.out.println(&quot;加密文件&quot;+name);
+    }
+}
+
+class FileWriter
+{
+    public void write(String name)
+    {
+        System.out.println(&quot;保存文件&quot;+name);
+    }
+}
+
+class Facade
+{
+    private FileReader reader = new FileReader();
+    private Encrypt encrypt = new Encrypt();
+    private FileWriter writer = new FileWriter();
+
+    public void fileEncrypt(String name)
+    {
+        reader.read(name);
+        encrypt.encrypt(name);
+        writer.write(name);
+    }
+}
+</code></pre>
+<p>这里的例子比较简单，其实就是将读取，加密以及保存操作用外观角色包装起来，方便客户端调用。</p>
+<h1 id="4-引入抽象外观类">4 引入抽象外观类</h1>
+<h2 id="41-为什么需要引入抽象外观类">4.1 为什么需要引入抽象外观类？</h2>
+<p>在标准的外观模式结构中，如果需要增加，删除或修改外观类交互的子系统类，必须修改外观类或客户端的源代码，这将违背开闭原则，比如上面的例子中需要更换一种加密方法，也就是换一个加密类，这样需要直接修改外观类。</p>
+<p>可以通过引入抽象外观类来解决该问题，引入后，客户端可以针对抽象外观类进行编程，对于新的业务需求不需要修改原有的外<br>
+观类，只需要新增一个对应的具体外观类即可。</p>
+<h2 id="42-如何引入">4.2 如何引入？</h2>
+<p>首先定义抽象外观类，接着具体外观类继承或者实线抽象外观类即可。客户端针对抽象外观类进行编程，在运行时再确定具体的外观类，比如在上面例子的基础上修改加密方法，首先定义抽象外观类（这里是接口，只有一个加密方法）：</p>
+<pre><code class="language-java">interface AbstractFacade
+{
+    void encrypt(String name);
+}
+</code></pre>
+<p>接着定义具体外观类：</p>
+<pre><code class="language-java">class Facade1 implements AbstractFacade
+{
+    private FileReader reader = new FileReader();
+    private Encrypt1 encrypt1 = new Encrypt1();
+    private FileWriter writer = new FileWriter();
+
+    @Override
+    public void encrypt(String name)
+    {
+        reader.read(name);
+        encrypt1.encrypt(name);
+        writer.write(name);
+    }
+}
+
+class Facade2 implements AbstractFacade
+{
+    private FileReader reader = new FileReader();
+    private Encrypt2 encrypt2 = new Encrypt2();
+    private FileWriter writer = new FileWriter();
+
+    @Override
+    public void encrypt(String name)
+    {
+        reader.read(name);
+        encrypt2.encrypt(name);
+        writer.write(name);
+    }
+}
+</code></pre>
+<p>这两个类除了加密方法不一样其他都一样，测试：</p>
+<pre><code class="language-java">AbstractFacade facade = new Facade1();
+facade.encrypt(&quot;111&quot;);
+facade = new Facade2();
+facade.encrypt(&quot;222&quot;);
+</code></pre>
+<p>引入抽象外观类后，客户端针对抽象外观类进行编程，运行时确定具体外观类，输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726230649714.png" alt="" loading="lazy"></p>
+<h1 id="5-注意事项">5 注意事项</h1>
+<ul>
+<li><strong>外观单例</strong>：很多情况下为了节约系统资源，系统只需要一个外观类的实例，也就是外观类可以是一个单例类，这样可以降低系统资源的消耗</li>
+<li><strong>多个外观类</strong>：在一个系统中可以设计多个外观类，每个外观类负责和一些特定子对象交互，向客户端提供相应业务功能</li>
+<li><strong>不要通过外观类增加新行为</strong>：外观模式的意图是为子系统提供一个集中简化的沟通渠道，而不是向子系统中增加新行为，新行为的增加应该通过修改原有子系统类或增加新的子系统类来实现而不是通过外观类实现</li>
+</ul>
+<h1 id="6-主要优点">6 主要优点</h1>
+<ul>
+<li>简化处理：对客户端屏蔽了子系统组件，减少了客户端所需处理的对象数目并使得子系统使用起来更加容易，引入外观模式后客户端代码将简化</li>
+<li>松耦合：实现了子系统于客户端之间松耦合关系，使得子系统的变化不会影响到客户端，只需修改外观类</li>
+<li>子系统修改灵活：一个子系统的修改对其他子系统没有影响，而且子系统内部变化也不会影响外观对象</li>
+<li>唯一入口：只提供了一个访问子系统的唯一入口，但不会影响客户端直接使用子系统类</li>
+</ul>
+<h1 id="7-主要缺点">7 主要缺点</h1>
+<ul>
+<li>不能限制客户端使用子系统：外观模式不能很好地限制客户端直接使用子系统，如果客户端对访问子系统做太多的限制就会减少可变性与灵活性</li>
+<li>可能需要修改外观类：如果设计不当，增加新的子系统可能需要外观类，违背OCP</li>
+</ul>
+<h1 id="8-适用场景">8 适用场景</h1>
+<ul>
+<li>当要为访问一系列复杂的子系统提供一个简单的入口时</li>
+<li>客户端与多个子系统存在很大依赖性</li>
+<li>层次化结构中，可以使用外观模式定义系统中每一层的入口，层与层之间不直接产生联系，而通过外观类建立联系，降低层之间的耦合度</li>
+</ul>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200726233051374.png" alt="" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-27">2020-07-27</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（十四）：享元模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-27">2020-07-27</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（十二）：装饰模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-27">2020-07-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/">设计模式学习笔记（十四）：享元模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-27">2020-07-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/">设计模式学习笔记（十三）：外观模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-27">2020-07-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/">设计模式学习笔记（十二）：装饰模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-1 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-3 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-4 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-8 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-9 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-12 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-13 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-14 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-15 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-16 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-17 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-18 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-20 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-21 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-22 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-23 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-24 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-25 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-26 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-27 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-28 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-29 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-30 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-31 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-32 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-33 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-34 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-35 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-36 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-37 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-38 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-39 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-40 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-41 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-42 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-43 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-44 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-45 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-46 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-47 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-48 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-49 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-50 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-51 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-52 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-53 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-54 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-55 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-56 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-57 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-59 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-60 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-61 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-62 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-63 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-64 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-65 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-66 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-67 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-68 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-69 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-70 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-71 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 191 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

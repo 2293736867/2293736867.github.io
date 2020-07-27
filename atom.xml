@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-25T17:29:22.926Z</updated>
+    <updated>2020-07-27T06:12:24.803Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,1627 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（十四）：享元模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/">
+        </link>
+        <updated>2020-07-27T06:01:16.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%86%85%E9%83%A8%E7%8A%B6%E6%80%81%E4%B8%8E%E5%A4%96%E9%83%A8%E7%8A%B6%E6%80%81">1.2 内部状态与外部状态</a></li>
+<li><a href="#13-%E5%AE%9A%E4%B9%89">1.3 定义</a></li>
+<li><a href="#14-%E7%BB%93%E6%9E%84%E5%9B%BE">1.4 结构图</a></li>
+<li><a href="#15-%E8%A7%92%E8%89%B2">1.5 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E4%BA%AB%E5%85%83%E7%B1%BB">2.2 抽象享元类</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E4%BA%AB%E5%85%83%E7%B1%BB">2.3 具体享元类</a></li>
+<li><a href="#24-%E9%9D%9E%E5%85%B1%E4%BA%AB%E5%85%B7%E4%BD%93%E4%BA%AB%E5%85%83%E7%B1%BB">2.4 非共享具体享元类</a></li>
+<li><a href="#25-%E4%BA%AB%E5%85%83%E5%B7%A5%E5%8E%82%E7%B1%BB">2.5 享元工厂类</a></li>
+<li><a href="#26-%E5%8F%8D%E5%B0%84%E7%AE%80%E5%8C%96">2.6 反射简化</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%8A%A0%E5%85%A5%E5%A4%96%E9%83%A8%E7%8A%B6%E6%80%81">4 加入外部状态</a></li>
+<li><a href="#5-%E5%8D%95%E7%BA%AF%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%8D%E5%90%88%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">5 单纯享元模式与复合享元模式</a>
+<ul>
+<li><a href="#51-%E5%8D%95%E7%BA%AF%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">5.1 单纯享元模式</a></li>
+<li><a href="#52-%E5%A4%8D%E5%90%88%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">5.2 复合享元模式</a></li>
+</ul>
+</li>
+<li><a href="#6-%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E">6 补充说明</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">7 主要优点</a></li>
+<li><a href="#8-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">8 主要缺点</a></li>
+<li><a href="#9-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">9 适用场景</a></li>
+<li><a href="#10-%E6%80%BB%E7%BB%93">10 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>当一个系统中运行时的产生的对象太多，会带来性能下降等问题，比如一个文本字符串存在大量重复字符，如果每一个字符都用一个单独的对象表示，将会占用较多内存空间。</p>
+<p>那么该如何避免出现大量相同或相似的对象，同时又不影响客户端以面向对象的方式操作呢？</p>
+<p>享元模式正为解决这一问题而生，通过共享技术实现相同或相似对象的重用，在逻辑上每一个出现的字符都有一个对象与之对<br>
+应，但是物理上却共享一个享元对象。</p>
+<p>在享元模式中，<strong>存储共享实例的地方称为享元池</strong>，可以针对每一个不同的字符创建一个享元对象，放置于享元池中，需要时取<br>
+出，示意图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200727065325512.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="12-内部状态与外部状态">1.2 内部状态与外部状态</h2>
+<p>享元模式以共享的方式高效地支持大量细粒度对象的重用，能做到共享的关键是区分了内部状态以及外部状态。</p>
+<ul>
+<li><strong>内部状态：存储在享元对象内部并且不会随环境改变而改变，内部状态可以共享，例如字符的内容，字符a永远是字符a，不会变为字符b</strong></li>
+<li><strong>外部状态：能够随环境改变而改变，不可以共享的状态，通常由客户端保存，并在享元对象被创建之后，需要使用的时候再传入到享元对象内部。外部状态之间通常是相互独立的，比如字符的颜色，字号，字体等，可以独立变化，没有影响，客户端在使用时将外部状态注入到享元对象中</strong></li>
+</ul>
+<p>正因为区分了内部状态以及外部状态，可以将具有相同内部状态的对象存储在享元池中，享元池的对象是可以实现共享的，需要的时候从中取出，实现对象的复用。通过向取出的对象注入不同的外部状态，可以得到一系列相似的对象，而这些对象实际上只存储一份。</p>
+<h2 id="13-定义">1.3 定义</h2>
+<p><strong>享元模式：运用共享技术有效地支持大量细粒度对象的复用。</strong></p>
+<p>系统只使用少量的对象，而这些对象都很相似，状态变化很小，可以实现对象的多次复用。由于享元模式要求能够共享的对象必须是细粒度对象，因此又叫轻量级模式，是一种对象结构型模式。</p>
+<h2 id="14-结构图">1.4 结构图</h2>
+<p>享元模式一般结合工厂模式一起使用，结构图如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020072707364855.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="15-角色">1.5 角色</h2>
+<ul>
+<li><strong>Flyweights（抽象享元类）：通常是一个接口或者抽象类，在抽象享元类中声明了具体享元类公共的方法，这些方法可以向外界提供享元对象的内部数据（内部状态），同时也可以通过这些方法来设置外部数据（外部状态）</strong></li>
+<li><strong>ConcreteFlyweight（具体享元类）：实现/继承抽象共享类，实例称为共享对象，在具体享元类中为内部状态提供了存储空间，通常可以结合单例模式来设计具体享元类</strong></li>
+<li><strong>UnsharedConcreteFlyweight（非共享具体享元类）：并不是所有的抽象享元子类都需要被共享，不能被共享的子类可设计为非共享具体享元类，当需要一个非具体享元对象时可以直接实例化创建</strong></li>
+<li><strong>FlyweightFactory（享元工厂类）：享元工厂类用于创建并管理享元对象，针对抽象享元类编程，将具体享元对象存储于享元池中。一般使用键值对集合（比如Java中的</strong><code>HashMap</code><strong>）作为享元池，当客户端获取享元对象时，首先判断是否存在，存在则从集合中取出并返回，不存在则创建新具体享元的实例，存储于享元池中并返回新实例</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象享元类：将抽象享元类定义为接口或者抽象类，声明业务方法</li>
+<li>定义具体享元类：继承或实现抽象享元，实现其中的业务方法，同时使用单例模式设计，确保每个具体享元类提供唯一的享元对象</li>
+<li>（可选）定义非共享具体享元类：继承或实现抽象享元类，不使用单例模式设计，每次客户端获取都会返回一个新实例</li>
+<li>定义享元工厂类：通常使用一个键值对集合作为享元池，根据键值返回对应的具体享元对象或非共享具体享元对象</li>
+</ul>
+<h2 id="22-抽象享元类">2.2 抽象享元类</h2>
+<p>这里使用接口实现，包含一个<code>opeartion</code>业务方法：</p>
+<pre><code class="language-java">interface Flyweight
+{
+    void operation(String extrinsicState);
+}
+</code></pre>
+<h2 id="23-具体享元类">2.3 具体享元类</h2>
+<p>简单设计两个枚举单例的具体享元类：</p>
+<pre><code class="language-java">enum ConcreteFlyweight1 implements Flyweight
+{
+    INSTANCE(&quot;INTRINSIC STATE 1&quot;);
+    private String intrinsicState;
+    private ConcreteFlyweight1(String intrinsicState)
+    {
+        this.intrinsicState = intrinsicState;
+    }
+
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;具体享元操作&quot;);
+        System.out.println(&quot;内部状态:&quot;+intrinsicState);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+
+enum ConcreteFlyweight2 implements Flyweight
+{
+    INSTANCE(&quot;INTRINSIC STATE 2&quot;);
+    private String intrinsicState;
+    private ConcreteFlyweight2(String intrinsicState)
+    {
+        this.intrinsicState = intrinsicState;
+    }
+
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;具体享元操作&quot;);
+        System.out.println(&quot;内部状态:&quot;+intrinsicState);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+</code></pre>
+<h2 id="24-非共享具体享元类">2.4 非共享具体享元类</h2>
+<p>两个简单的非共享具体享元类，不是枚举单例类：</p>
+<pre><code class="language-java">class UnsharedConcreteFlyweight1 implements Flyweight
+{
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;非共享具体享元操作&quot;);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+
+class UnsharedConcreteFlyweight2 implements Flyweight
+{
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;非共享具体享元操作&quot;);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+</code></pre>
+<h2 id="25-享元工厂类">2.5 享元工厂类</h2>
+<p>为了方便客户端以及工厂管理具体享元以及非共享具体享元，首先建立两个枚举类作为享元池的键：</p>
+<pre><code class="language-java">enum Key { KEY1,KEY2 }
+enum UnsharedKey { KEY1,KEY2 }
+</code></pre>
+<p>这里的工厂类使用了枚举单例：</p>
+<pre><code class="language-java">enum Factory
+{
+    INSTANCE;
+    private Map&lt;Key,Flyweight&gt; map = new HashMap&lt;&gt;();
+    public Flyweight get(Key key)
+    {
+        if(map.containsKey(key))
+            return map.get(key);
+        switch(key)
+        {
+            case KEY1:    
+                map.put(key, ConcreteFlyweight1.INSTANCE);
+                return ConcreteFlyweight1.INSTANCE;
+            case KEY2:
+                map.put(key, ConcreteFlyweight2.INSTANCE);
+                return ConcreteFlyweight2.INSTANCE;
+            default:
+                return null;
+        }
+    }
+
+    public Flyweight get(UnsharedKey key)
+    {
+        switch(key)
+        {
+            case KEY1:
+                return new UnsharedConcreteFlyweight1();
+            case KEY2:
+                return new UnsharedConcreteFlyweight2();
+            default:
+                return null;
+        }
+    }
+}
+</code></pre>
+<p>使用<code>HashMap&lt;String,Flyweight&gt;</code>作为享元池：</p>
+<ul>
+<li>对于具体享元类，根据键值判断享元池中是否存在具体享元对象，如果存在直接返回，如果不存在把具体享元的单例存入享元池，并返回该单例</li>
+<li>对于非共享具体享元类，由于是“非共享”，不需要把实例对象存储于享元池中，每次调用直接返回新实例</li>
+</ul>
+<h2 id="26-反射简化">2.6 反射简化</h2>
+<p>如果具体享元对象变多，工厂类的<code>get()</code>中的<code>switch</code>会变得很长，这时候可以将键值类以及工厂类的<code>get()</code>改进以简化代码，例如在上面的基础上又增加了两个具体享元类：</p>
+<pre><code class="language-java">enum ConcreteFlyweight3 implements Flyweight {...}
+enum ConcreteFlyweight4 implements Flyweight {...}
+</code></pre>
+<p>这样工厂类的<code>switch</code>需要增加两个<code>Key</code>：</p>
+<pre><code class="language-java">switch(key)
+{
+    case KEY1:    
+        map.put(key, ConcreteFlyweight1.INSTANCE);
+        return ConcreteFlyweight1.INSTANCE;
+    case KEY2:
+        map.put(key, ConcreteFlyweight2.INSTANCE);
+        return ConcreteFlyweight2.INSTANCE;
+    case KEY3:
+        map.put(key, ConcreteFlyweight3.INSTANCE);
+        return ConcreteFlyweight3.INSTANCE;
+    case KEY4:
+        map.put(key, ConcreteFlyweight4.INSTANCE);
+        return ConcreteFlyweight4.INSTANCE;
+    default:
+        return null;
+}
+</code></pre>
+<p>可以利用具体享元类的命名方式进行简化，这里使用了顺序编号<code>1,2,3,4...</code>的方式，因此，利用反射获取对应的类后直接获取其中的单例对象：</p>
+<pre><code class="language-java">public Flyweight get(Key key)
+{
+    if(map.containsKey(key))
+        return map.get(key);
+    try
+    {
+        Class&lt;?&gt; cls = Class.forName(&quot;ConcreteFlyweight&quot;+key.code());
+        Flyweight flyweight = (Flyweight)(cls.getField(&quot;INSTANCE&quot;).get(null));
+        map.put(key,flyweight);
+        return flyweight;
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        return null;
+    }
+}
+</code></pre>
+<p>在此之前需要修改一下<code>Key</code>类：</p>
+<pre><code class="language-java">enum Key
+{
+    KEY1(1),KEY2(2),KEY3(3),KEY4(4);
+    private int code;
+    private Key(int code)
+    {
+        this.code = code;
+    }
+    public int code()
+    {
+        return code;
+    }
+}
+</code></pre>
+<p>增加一个<code>code</code>字段，作为区分每一个具体享元的标志。<br>
+对于非共享具体享元类似，首先修改<code>UnsharedKey</code>，同理添加<code>code</code>字段：</p>
+<pre><code class="language-java">enum UnsharedKey
+{
+    KEY1(1),KEY2(2),KEY3(3),KEY4(4);
+    private int code;
+    private UnsharedKey(int code)
+    {
+        this.code = code;
+    }
+    public int code()
+    {
+        return code;
+    }
+}
+</code></pre>
+<p>接着修改<code>get</code>方法：</p>
+<pre><code class="language-java">public Flyweight get(UnsharedKey key)
+{
+    try
+    {
+        Class&lt;?&gt; cls = Class.forName(&quot;UnsharedConcreteFlyweight&quot;+key.code());
+        return (Flyweight)(cls.newInstance());
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        return null;
+    }
+}
+</code></pre>
+<p>由于笔者使用的是OpenJDK11，其中<code>newInstance</code>被标记为过时了：<br>
+<img src="https://img-blog.csdnimg.cn/20200727092339417.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200727092356620.png" alt="在这里插入图片描述" loading="lazy"><br>
+因此使用如下方式代替直接使用<code>newInstance()</code>：</p>
+<pre><code class="language-java">return (Flyweight)(cls.getDeclaredConstructor().newInstance());
+</code></pre>
+<p>区别如下：</p>
+<ul>
+<li><code>newInstance</code>：直接调用无参构造方法</li>
+<li><code>getDeclaredConstructor().newInstance()</code>：<code>getDeclaredConstructor()</code>会根据传入的参数搜索该类的构造方法并返回，没有参数就返回该类的无参构造方法，接着调用<code>newInstance</code>进行实例化</li>
+</ul>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>围棋棋子的设计：一个棋盘中含有大量相同的黑白棋子，只是出现的位置不一样，使用享元模式对棋子进行设计。</p>
+</blockquote>
+<ul>
+<li>抽象享元类：<code>IgoChessman</code>接口（如果想要具体享元类为枚举单例的话必须是接口，使用其他方式实现单例可以为抽象类），包含<code>getColor</code>以及<code>display</code>方法</li>
+<li>具体享元类：<code>BlackChessman</code>+<code>WhiteChessman</code>，枚举单例类</li>
+<li>非共享具体享元类：无</li>
+<li>享元工厂类：<code>Factory</code>，枚举单例类，包含简单的<code>get</code>作为获取具体享元的方法，加上了<code>white</code>以及<code>balck</code>简单封装，在构造方法中初始化享元池</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">//抽象享元接口
+interface IgoChessman
+{
+    Color getColor();
+    void display();
+}
+
+//具体享元枚举单例类
+enum BlackChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.BLACK;
+    }
+
+    @Override
+    public void display()
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+    }
+}
+
+//具体享元枚举单例类
+enum WhiteChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.WHITE;
+    }
+
+    @Override
+    public void display()
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+    }
+}
+
+//享元工厂枚举单例类
+enum Factory
+{
+    INSTANCE;
+    //HashMap&lt;Color,IgoChessman&gt;作为享元池
+    private Map&lt;Color,IgoChessman&gt; map = new HashMap&lt;&gt;();
+    private Factory()
+    {
+    	//构造方法中直接初始化享元池
+        map.put(Color.WHITE, WhiteChessman.INSTANCE);
+        map.put(Color.BLACK, BlackChessman.INSTANCE);
+    }
+    public IgoChessman get(Color color)
+    {
+    	//由于在构造方法中已经初始化，如果不存在可以返回null或者添加新实例到享元池并返回，这里选择了返回null
+        if(!map.containsKey(color))
+            return null;
+        return (IgoChessman)map.get(color);
+    }
+    //简单封装
+    public IgoChessman white()
+    {
+        return get(Color.WHITE);
+    }
+    public IgoChessman black()
+    {
+        return get(Color.BLACK);
+    }
+}
+
+enum Color
+{
+    WHITE(&quot;白色&quot;),BLACK(&quot;黑色&quot;);
+    private String color;
+    private Color(String color)
+    {
+        this.color = color;
+    }
+    public String color()
+    {
+        return color;
+    }
+}
+</code></pre>
+<p>在初始化享元池时，如果具体享元类过多可以使用反射简化，不需要手动逐个<code>put</code>：</p>
+<pre><code class="language-java">private Factory()
+{
+	map.put(Color.WHITE, WhiteChessman.INSTANCE);
+	map.put(Color.BLACK, BlackChessman.INSTANCE);
+}
+</code></pre>
+<p>根据枚举值数组，结合<code>List</code>与<code>forEach</code>，逐个利用数组中的值获取对应的类，进而获取实例：</p>
+<pre><code class="language-java">private Factory()
+{
+    List.of(Color.values()).forEach(t-&gt;
+    {
+        String className = t.name().substring(0,1)+t.name().substring(1).toLowerCase()+&quot;Chessman&quot;;
+        try
+        {
+            map.put(t,(IgoChessman)(Class.forName(className).getField(&quot;INSTANCE&quot;).get(null)));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            map.put(t,null);
+        }    
+    });
+}
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Factory factory = Factory.INSTANCE;
+    IgoChessman white1 = factory.white();
+    IgoChessman white2 = factory.white();
+    white1.display();
+    white2.display();
+    System.out.println(white1 == white2);
+
+    IgoChessman black1 = factory.black();
+    IgoChessman black2 = factory.black();
+    black1.display();
+    black2.display();
+    System.out.println(black1 == black2);
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200727101745913.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-加入外部状态">4 加入外部状态</h1>
+<p>通过上面的方式已经能够实现黑白棋子的共享了，但是还有一个问题没有解决，就是如何将相同的黑白棋子放置于不同的棋盘位置上？</p>
+<p>解决办法也不难，增加一个坐标类<code>Coordinates</code>，调用<code>display</code>时作为要放置的坐标参数传入函数。</p>
+<p>首先增加一个坐标类：</p>
+<pre><code class="language-java">class Coordinates
+{
+    private int x;
+    private int y;    
+    public Coordinates(int x,int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+	//setter+getter...
+}
+</code></pre>
+<p>接着需要修改抽象享元接口，在<code>display</code>中加入<code>Coordinates</code>参数：</p>
+<pre><code class="language-java">interface IgoChessman
+{
+    Color getColor();
+    void display(Coordinates coordinates);
+}
+</code></pre>
+<p>然后修改具体享元类即可：</p>
+<pre><code class="language-java">enum BlackChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.BLACK;
+    }
+
+    @Override
+    public void display(Coordinates coordinates)
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+        System.out.println(&quot;显示坐标:&quot;);
+        System.out.println(&quot;横坐标&quot;+coordinates.getX());
+        System.out.println(&quot;纵坐标&quot;+coordinates.getY());
+    }
+}
+</code></pre>
+<p>对于客户端，创建享元对象的代码无须修改，只需修改调用了<code>display</code>的地方，传入<code>Coordinates</code>参数即可：</p>
+<pre><code class="language-java">IgoChessman white1 = factory.white();
+IgoChessman white2 = factory.white();
+white1.display(new Coordinates(1, 2));
+white2.display(new Coordinates(2, 3));
+</code></pre>
+<h1 id="5-单纯享元模式与复合享元模式">5 单纯享元模式与复合享元模式</h1>
+<h2 id="51-单纯享元模式">5.1 单纯享元模式</h2>
+<p>标准的享元模式既可以包含具体享元类，也包含非共享具体享元类。</p>
+<p><strong>但是在单纯享元模式中，所有的具体享元类都是共享的，也就是不存在非共享具体享元类。</strong></p>
+<p>比如上面棋子的例子，黑白棋子作为具体享元类都是共享的，不存在非共享具体享元类。</p>
+<h2 id="52-复合享元模式">5.2 复合享元模式</h2>
+<p><strong>将一些单纯享元对象进行使用组合模式加以组合还可以形成复合享元对象</strong>，这样的复合享元对象本身不能共享，但是它们可以分解为单纯享元对象，而后者可以共享。</p>
+<p><strong>通过复合享元模式可以确保复合享元类所包含的每个单纯享元类都具有相同的外部状态，而这些单纯享元的内部状态可以不一样</strong>，比如，上面棋子的例子中：</p>
+<ul>
+<li>黑棋子是单纯享元</li>
+<li>白棋子也是单纯享元</li>
+<li>这两个单纯享元的内部状态不同（颜色不同）</li>
+<li>但是可以设置相同的外部状态（比如设置为棋盘上同一位置，但是这样没有什么实际意义，或者设置显示为同一大小）</li>
+</ul>
+<p>例子如下，首先在抽象享元中添加一个以<code>int</code>为参数的<code>display</code>：</p>
+<pre><code class="language-java">interface IgoChessman
+{
+    Color getColor();
+    void display(int size);
+}
+</code></pre>
+<p>在具体享元实现即可：</p>
+<pre><code class="language-java">enum BlackChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.BLACK;
+    }
+
+    @Override
+    public void display(int size)
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+        System.out.println(&quot;棋子大小&quot;+size);
+    }
+}
+</code></pre>
+<p>接着添加复合享元类，里面包含一个<code>HashMap</code>存储所有具体享元：</p>
+<pre><code class="language-java">enum Chessmans implements IgoChessman
+{
+    INSTANCE;
+    private Map&lt;Color,IgoChessman&gt; map = new HashMap&lt;&gt;();
+
+    public void add(IgoChessman chessman)
+    {
+        map.put(chessman.getColor(),chessman);
+    }
+
+    @Override
+    public Color getColor()
+    {
+        return null;
+    }
+
+    @Override
+    public void display(int size)
+    {
+        map.forEach((k,v)-&gt;v.display(size));
+    }
+}
+</code></pre>
+<p>在<code>display</code>中，实际上是遍历了<code>HashMap</code>，给每一个具体享元的<code>display</code>传入相同的参数。<br>
+测试：</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    Factory factory = Factory.INSTANCE;
+    IgoChessman white = factory.white();
+    IgoChessman black = factory.black();
+    Chessmans chessmans = Chessmans.INSTANCE;
+    chessmans.add(white);
+    chessmans.add(black);
+    chessmans.display(30);
+}
+</code></pre>
+<p>输出：<br>
+<img src="https://img-blog.csdnimg.cn/20200727115118728.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样内部状态不同（颜色不同）的两个具体享元类（黑白棋）就被复合享元类（<code>Chessmans</code>）设置为具有相同的外部状态（显示大小30）。</p>
+<h1 id="6-补充说明">6 补充说明</h1>
+<ul>
+<li>与其他模式联用：享元模式通常需要与其他模式联用，比如工厂模式（享元工厂），单例模式（具体享元枚举单例），组合模式（复合享元模式）</li>
+<li>JDK中的享元模式：JDK中的<code>String</code>使用了享元模式。大家都知道<code>String</code>是不可变类，对于类似<code>String a = &quot;123&quot;</code>这种声明方式，会创建一个值为<code>&quot;123&quot;</code>的享元对象，下次使用<code>&quot;123&quot;</code>时从享元池获取，在修改享元对象时，比如<code>a += &quot;1&quot;</code>，先将原有对象复制一份，然后在新对象上进行修改，这种机制叫做&quot;Copy On Write&quot;。基本思路是，一开始大家都在共享内容，当某人需要修改时，把内容复制出去形成一个新内容并修改</li>
+</ul>
+<h1 id="7-主要优点">7 主要优点</h1>
+<ul>
+<li>降低内存消耗：享元模式可以极大地减少内存中对象的数量，使得相同或相似对象在内存中只保存一份，从而节约系统资源，提供系统性能</li>
+<li>外部状态独立：享元模式外部状态相对独立，不会影响到内部状态，从而使得享元对象可以在不同环境中被共享</li>
+</ul>
+<h1 id="8-主要缺点">8 主要缺点</h1>
+<ul>
+<li>增加复杂度：享元模式使得系统变复杂，需要分离出内部状态以及外部状态，使得程序逻辑复杂化</li>
+<li>运行时间变长：为了使对象可以共享，享元模式需要将享元对象的部分状态外部化，而读取外部状态使得运行时间变长</li>
+</ul>
+<h1 id="9-适用场景">9 适用场景</h1>
+<ul>
+<li>一个系统有大量相似或相同对象，造成大量内存浪费</li>
+<li>对象的大部分状态都可以外部化，可以将这些外部状态传入对象中</li>
+<li>由于需要维护享元池，造成一定的资源开销，因此在需要真正多次重复使用享元对象时才值得使用享元模式</li>
+</ul>
+<h1 id="10-总结">10 总结</h1>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200727112032150.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（十三）：外观模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/">
+        </link>
+        <updated>2020-07-27T06:00:47.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E5%A4%96%E8%A7%82%E8%A7%92%E8%89%B2">2.2 外观角色</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%BC%95%E5%85%A5%E6%8A%BD%E8%B1%A1%E5%A4%96%E8%A7%82%E7%B1%BB">4 引入抽象外观类</a>
+<ul>
+<li><a href="#41-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%BC%95%E5%85%A5%E6%8A%BD%E8%B1%A1%E5%A4%96%E8%A7%82%E7%B1%BB">4.1 为什么需要引入抽象外观类？</a></li>
+<li><a href="#42-%E5%A6%82%E4%BD%95%E5%BC%95%E5%85%A5">4.2 如何引入？</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">5 注意事项</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>根据单一权责原则，软件中将一个系统划分为若干个子系统有利于降低整个系统的复杂性，使客户类与子系统之间的通信和相互依赖关系达到最小，方法之一就是引入一个外观角色，为子系统的访问提供一个简单而单一的入口。外观模式通过引入一个新的外观角色来降低原有系统的复杂度，同时降低客户类与子系统类的耦合度。</p>
+<p>（这里的子系统是广义的概念，可以是一个类，一个功能模块，系统的一个组成部分或者一个完整的系统）</p>
+<p>如果没有外观角色，每个客户端可能需要和多个子系统之间进行复杂的交互，系统的耦合度很大，简化示意图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200726194628891.png" alt="" loading="lazy"></figure>
+<p>而引入外观角色后，客户端只需直接与外观角色交互，客户端与子系统之间的原有复杂度由外观角色实现，从而降低系统耦合度，简化示意图如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726195100190.png" alt="" loading="lazy"><br>
+<strong>外观模式要求一个子系统的外部与其内部的通信通过一个统一的外观角色进行，外观角色将客户端与子系统的内部复杂性分隔开，使得客户端只需要与外观角色打交道，而不需要与子系统内部的很多对象打交道。</strong></p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>外观模式：外部与一个子系统的通信通过一个统一的外观角色进行，为子系统中的一组接口提供一个一致的入口。</strong><br>
+外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。<br>
+外观模式又叫门面模式，是一种对象结构型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200726195644651.png" alt="" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong>Facade（外观角色）：在客户端可以调用这个角色的方法，在外观角色中可以知道相关的一个或多个子系统的功能和责任，正常情况下将来自客户端的请求委派到对应的子系统中去，传递给相应的子系统对象处理</strong></li>
+<li><strong>SubSystem（子系统角色）：每一个子系统是一个单独的类，也可以是一个类的集合，实现子系统的功能。每一个子系统都可以被客户端直接调用，或者被外观角色调用，它处理由外观类传过来的请求，子系统并不知道外观类的存在，对于子系统而已，外观角色仅仅是另一个客户端</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义子系统：首先定义子系统，实现一个单一的功能，处理由客户端传来的请求</li>
+<li>定义外观角色：外观角色可以知道一个或多个子系统的功能和责任，将来自客户端的请求委派到对应的子系统去，外观角色对于子系统而言是另一个客户端</li>
+</ul>
+<h2 id="22-外观角色">2.2 外观角色</h2>
+<p>通常实现如下：</p>
+<pre><code class="language-java">class Facade
+{
+    private SubSystemA subSystemA = new SubSystemA();
+    private SubSystemB subSystemB = new SubSystemB();
+    private SubSystemC subSystemC = new SubSystemC();
+
+    public void method()
+    {
+        subSystemA.method();
+        subSystemB.method();
+        subSystemC.method();
+    }
+}
+
+class SubSystemA
+{
+    public void method()
+    {
+        System.out.println(&quot;子系统A&quot;);
+    }
+}
+
+class SubSystemB
+{
+    public void method()
+    {
+        System.out.println(&quot;子系统B&quot;);
+    }
+}
+
+class SubSystemC
+{
+    public void method()
+    {
+        System.out.println(&quot;子系统C&quot;);
+    }
+}
+</code></pre>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>设计一个文件加密系统，加密流程包括三部分：读取文件，加密文件，保存文件。这三个操作相对独立，并且封装在三个不同的类中，使用外观模式设计该系统。</p>
+</blockquote>
+<p>子系统类：</p>
+<ul>
+<li><code>FileReader</code>：文件读取类</li>
+<li><code>Encrypt</code>：文件加密类</li>
+<li><code>FileWriter</code>：文件保存类</li>
+</ul>
+<p>外观角色类：<code>Facade</code>。</p>
+<p>代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        Facade facade = new Facade();
+        facade.fileEncrypt(&quot;111&quot;);
+    }
+}
+
+class FileReader
+{
+    public void read(String name)
+    {
+        System.out.println(&quot;读取文件&quot;+name);
+    }
+}
+
+class Encrypt
+{
+    public void encrypt(String name)
+    {
+        System.out.println(&quot;加密文件&quot;+name);
+    }
+}
+
+class FileWriter
+{
+    public void write(String name)
+    {
+        System.out.println(&quot;保存文件&quot;+name);
+    }
+}
+
+class Facade
+{
+    private FileReader reader = new FileReader();
+    private Encrypt encrypt = new Encrypt();
+    private FileWriter writer = new FileWriter();
+
+    public void fileEncrypt(String name)
+    {
+        reader.read(name);
+        encrypt.encrypt(name);
+        writer.write(name);
+    }
+}
+</code></pre>
+<p>这里的例子比较简单，其实就是将读取，加密以及保存操作用外观角色包装起来，方便客户端调用。</p>
+<h1 id="4-引入抽象外观类">4 引入抽象外观类</h1>
+<h2 id="41-为什么需要引入抽象外观类">4.1 为什么需要引入抽象外观类？</h2>
+<p>在标准的外观模式结构中，如果需要增加，删除或修改外观类交互的子系统类，必须修改外观类或客户端的源代码，这将违背开闭原则，比如上面的例子中需要更换一种加密方法，也就是换一个加密类，这样需要直接修改外观类。</p>
+<p>可以通过引入抽象外观类来解决该问题，引入后，客户端可以针对抽象外观类进行编程，对于新的业务需求不需要修改原有的外<br>
+观类，只需要新增一个对应的具体外观类即可。</p>
+<h2 id="42-如何引入">4.2 如何引入？</h2>
+<p>首先定义抽象外观类，接着具体外观类继承或者实线抽象外观类即可。客户端针对抽象外观类进行编程，在运行时再确定具体的外观类，比如在上面例子的基础上修改加密方法，首先定义抽象外观类（这里是接口，只有一个加密方法）：</p>
+<pre><code class="language-java">interface AbstractFacade
+{
+    void encrypt(String name);
+}
+</code></pre>
+<p>接着定义具体外观类：</p>
+<pre><code class="language-java">class Facade1 implements AbstractFacade
+{
+    private FileReader reader = new FileReader();
+    private Encrypt1 encrypt1 = new Encrypt1();
+    private FileWriter writer = new FileWriter();
+
+    @Override
+    public void encrypt(String name)
+    {
+        reader.read(name);
+        encrypt1.encrypt(name);
+        writer.write(name);
+    }
+}
+
+class Facade2 implements AbstractFacade
+{
+    private FileReader reader = new FileReader();
+    private Encrypt2 encrypt2 = new Encrypt2();
+    private FileWriter writer = new FileWriter();
+
+    @Override
+    public void encrypt(String name)
+    {
+        reader.read(name);
+        encrypt2.encrypt(name);
+        writer.write(name);
+    }
+}
+</code></pre>
+<p>这两个类除了加密方法不一样其他都一样，测试：</p>
+<pre><code class="language-java">AbstractFacade facade = new Facade1();
+facade.encrypt(&quot;111&quot;);
+facade = new Facade2();
+facade.encrypt(&quot;222&quot;);
+</code></pre>
+<p>引入抽象外观类后，客户端针对抽象外观类进行编程，运行时确定具体外观类，输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726230649714.png" alt="" loading="lazy"></p>
+<h1 id="5-注意事项">5 注意事项</h1>
+<ul>
+<li><strong>外观单例</strong>：很多情况下为了节约系统资源，系统只需要一个外观类的实例，也就是外观类可以是一个单例类，这样可以降低系统资源的消耗</li>
+<li><strong>多个外观类</strong>：在一个系统中可以设计多个外观类，每个外观类负责和一些特定子对象交互，向客户端提供相应业务功能</li>
+<li><strong>不要通过外观类增加新行为</strong>：外观模式的意图是为子系统提供一个集中简化的沟通渠道，而不是向子系统中增加新行为，新行为的增加应该通过修改原有子系统类或增加新的子系统类来实现而不是通过外观类实现</li>
+</ul>
+<h1 id="6-主要优点">6 主要优点</h1>
+<ul>
+<li>简化处理：对客户端屏蔽了子系统组件，减少了客户端所需处理的对象数目并使得子系统使用起来更加容易，引入外观模式后客户端代码将简化</li>
+<li>松耦合：实现了子系统于客户端之间松耦合关系，使得子系统的变化不会影响到客户端，只需修改外观类</li>
+<li>子系统修改灵活：一个子系统的修改对其他子系统没有影响，而且子系统内部变化也不会影响外观对象</li>
+<li>唯一入口：只提供了一个访问子系统的唯一入口，但不会影响客户端直接使用子系统类</li>
+</ul>
+<h1 id="7-主要缺点">7 主要缺点</h1>
+<ul>
+<li>不能限制客户端使用子系统：外观模式不能很好地限制客户端直接使用子系统，如果客户端对访问子系统做太多的限制就会减少可变性与灵活性</li>
+<li>可能需要修改外观类：如果设计不当，增加新的子系统可能需要外观类，违背OCP</li>
+</ul>
+<h1 id="8-适用场景">8 适用场景</h1>
+<ul>
+<li>当要为访问一系列复杂的子系统提供一个简单的入口时</li>
+<li>客户端与多个子系统存在很大依赖性</li>
+<li>层次化结构中，可以使用外观模式定义系统中每一层的入口，层与层之间不直接产生联系，而通过外观类建立联系，降低层之间的耦合度</li>
+</ul>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200726233051374.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（十二）：装饰模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/">
+        </link>
+        <updated>2020-07-27T06:00:22.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E6%9E%84%E4%BB%B6%E7%B1%BB">2.2 抽象构件类</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E6%9E%84%E4%BB%B6%E7%B1%BB">2.3 具体构件类</a></li>
+<li><a href="#24-%E6%8A%BD%E8%B1%A1%E8%A3%85%E9%A5%B0%E7%B1%BB">2.4 抽象装饰类</a></li>
+<li><a href="#25-%E5%85%B7%E4%BD%93%E8%A3%85%E9%A5%B0%E7%B1%BB">2.5 具体装饰类</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0%E4%B8%8E%E5%8D%8A%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0">4 透明装饰与半透明装饰</a>
+<ul>
+<li><a href="#41-%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F">4.1 透明装饰模式</a></li>
+<li><a href="#42-%E5%8D%8A%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F">4.2 半透明装饰模式</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">5 注意事项</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>装饰模式可以在不改变一个对象本身功能的基础上给对象增加额外的新行为。比如，一张照片，不改变照片本身，增加一个相框。</p>
+<p>装饰模式是一种用于替代继承的技术，无须定义子类即可给对象动态增加职责，使用对象之间的关联关系来代替继承关系，在装饰模式中引入了装饰类，在装饰类中既可以调用待装饰的原有类方法，还可以增加新的方法，以扩充原有的类功能。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>装饰模式：动态地给对象增加一些额外的职责。</strong></p>
+<p>就增加对象功能来说，装饰模式比生成子类实现更为灵活，装饰模式是一种对象结构型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200726111630913.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong>Component（抽象构件类）：是具体构件以及抽象装饰类的父类，声明了在具体构件中实现的业务方法，它的引入可以使客户端以一致的方式处理未被装饰之后的对象，以实现客户端的透明操作</strong></li>
+<li><strong>ConcreteComponent（具体构件类）：是抽象构件类的子类，用于定义具体的构件对象，实现了在抽象构件中声明的方法，装饰器可以给它增加额外的职责</strong></li>
+<li><strong>Decorator（抽象装饰类）：用于给具体构件类增加职责，但是具体职责在子类实现。抽象装饰类维护一个指向抽象构件的引用，通过该引用可以调用装饰之前构件对象的方法，并通过子类扩展该方法以达到装饰的目的</strong></li>
+<li><strong>ConcreteDecorator（具体装饰类）：负责向构件中添加新的职责，每一个具体装饰类都定义了一些新的行为，可以调用抽象装饰类中定义的方法，并可以增加新的职责用以扩充对象的行为</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象构件类：可以是抽象类或者接口，声明业务方法</li>
+<li>定义具体构件类：继承或实现抽象构件，实现具体业务方法</li>
+<li>定义抽象装饰类：继承或实现抽象构件，增加一个抽象构件私有成员，通过该成员可以调用装饰之前具体构件的方法</li>
+<li>定义具体装饰类：继承抽象装饰类，并且增加装饰行为，在装饰之前调用具体构件方法，接着调用装饰方法</li>
+</ul>
+<h2 id="22-抽象构件类">2.2 抽象构件类</h2>
+<p>简化只有一个业务方法：</p>
+<pre><code class="language-java">abstract class Component
+{
+    abstract void operation();
+}
+</code></pre>
+<h2 id="23-具体构件类">2.3 具体构件类</h2>
+<p>继承抽象构件：</p>
+<pre><code class="language-java">class ConcreteComponent extends Component
+{
+    public void operation()
+    {
+        System.out.println(&quot;具体构件方法&quot;);
+    }
+}
+</code></pre>
+<h2 id="24-抽象装饰类">2.4 抽象装饰类</h2>
+<pre><code class="language-java">class Decorator extends Component
+{
+    private Component component;
+
+    public Decorator(Component component)
+    {
+        this.component = component;
+    }
+
+    public void operation()
+    {
+        component.operation();
+    }
+}
+</code></pre>
+<p>抽象装饰类需要包含一个抽象构件的私有成员，以便可以通过setter或构造方法注入不同的具体构件，同时在业务方法中方便调用具体构件未装饰之前的方法。</p>
+<h2 id="25-具体装饰类">2.5 具体装饰类</h2>
+<pre><code class="language-java">class ConcreteDecorator extends Decorator
+{
+    public ConcreteDecorator(Component component)
+    {
+        super(component);
+    }
+
+    public void operation()
+    {
+        super.operation();
+        newBehavior();
+    }
+
+    public void newBehavior()
+    {
+        System.out.println(&quot;装饰方法&quot;);
+    }
+}
+</code></pre>
+<p>继承抽象装饰类，在业务方法中首先调用父类（抽象装饰类）的方法再调用新的装饰方法。</p>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>设计一个图形界面构件库，具体构件有窗体，文本框以及列表框，装饰方法包括添加滚动条与添加黑边框，使用装饰模式对系统进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象构件类：<code>Component</code></li>
+<li>具体构件类：<code>Window</code>+<code>TextBox</code>+<code>ListBox</code></li>
+<li>抽象装饰类：<code>Decorator</code></li>
+<li>具体装饰类：<code>ScrollBarDecorator</code>+<code>BlackBorderDecorator</code></li>
+</ul>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        Component component = new Window();
+        Component decorator = new ScrollBarDecorator(component);
+        decorator.display();
+    }
+}
+
+abstract class Component
+{
+    abstract void display();
+}
+
+class Window extends Component
+{
+    public void display()
+    {
+        System.out.println(&quot;显示窗口&quot;);
+    }
+}
+
+class TextBox extends Component
+{
+    public void display()
+    {
+        System.out.println(&quot;显示文本框&quot;);
+    }
+}
+
+class ListBox extends Component
+{
+    public void display()
+    {
+        System.out.println(&quot;显示列表框&quot;);
+    }
+}
+
+class Decorator extends Component
+{
+    private Component component;
+
+    public Decorator(Component component)
+    {
+        this.component = component;
+    }
+
+    public void display()
+    {
+        component.display();
+    }
+}
+
+class ScrollBarDecorator extends Decorator
+{
+    public ScrollBarDecorator(Component component)
+    {
+        super(component);
+    }
+
+    public void display()
+    {
+        addScrollBar();
+        super.display();
+    }
+
+    public void addScrollBar()
+    {
+        System.out.println(&quot;添加滚动条&quot;);
+    }
+}
+
+class BlackBorderDecorator extends Decorator
+{
+    public BlackBorderDecorator(Component component)
+    {
+        super(component);
+    }
+
+    public void display()
+    {
+        addBlackBorder();
+        super.display();
+    }
+
+    public void addBlackBorder()
+    {
+        System.out.println(&quot;添加黑边框&quot;);
+    }
+}
+</code></pre>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726114715991.png" alt="在这里插入图片描述" loading="lazy"><br>
+核心部分就是客户端的代码：</p>
+<pre><code class="language-java">Component component = new Window();
+Component decorator = new ScrollBarDecorator(component);
+decorator.display();
+</code></pre>
+<p>创建具体构件后，再创建具体装饰器，把具体构件传入具体装饰器的构造方法中，这样具体装饰器就能在装饰之后（在添加滚动条之后）调用具体构件的方法（调用显示窗口）。</p>
+<p>另外，如果向增加新的装饰方法，比如增加了滚动条后，再增加黑边框，只需要将”滚动条装饰器“本身再装饰一次：</p>
+<pre><code class="language-java">Component component = new Window();
+Component decorator = new ScrollBarDecorator(component);
+decorator = new BlackBorderDecorator(decorator);
+decorator.display();
+</code></pre>
+<p><strong>也就是把已经对具体构件进行装饰之后的具体装饰器，注入到另一个具体装饰器的构造方法再一次装饰。</strong><br>
+<img src="https://img-blog.csdnimg.cn/20200726115214121.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-透明装饰与半透明装饰">4 透明装饰与半透明装饰</h1>
+<h2 id="41-透明装饰模式">4.1 透明装饰模式</h2>
+<p>标准的装饰模式就是透明装饰，比如上述例子。在透明装饰模式中，要求客户端完全针对抽象构件编程，也就是将对象全部声明为抽象构件类型，而不是具体构件类型或具体装饰器类型。</p>
+<p>透明装饰模式的优点如下：</p>
+<ul>
+<li>客户端透明地使用装饰前以及装饰后的对象，无须关心两者区别</li>
+<li>能对已装饰过的对象进行多次装饰</li>
+</ul>
+<p>在实现透明装饰模式时，要求具体装饰类的业务方法覆盖抽象装饰类的业务方法，需要调用原有具体构件对象的业务方法以及新增装饰方法。</p>
+<h2 id="42-半透明装饰模式">4.2 半透明装饰模式</h2>
+<p>对于有时用户需要单独调用装饰方法，这时候需要使用具体装饰类型定义装饰后的对象，而具体构件对象还是可以使用抽象构件定义，这种装饰模式就叫半透明装饰模式。对于客户端来说：</p>
+<ul>
+<li>具体构件类型无需关心，是透明的</li>
+<li>具体装饰类型必须指定，是不透明的</li>
+</ul>
+<p>例子如下，修改上面的滚动条具体装饰类：</p>
+<pre><code class="language-java">class ScrollBarDecorator extends Decorator
+{
+    public ScrollBarDecorator(Component component)
+    {
+        super(component);
+    }
+
+    public void display()
+    {
+        super.display();
+    }
+
+    public void addScrollBar()
+    {
+        System.out.println(&quot;添加滚动条&quot;);
+    }
+}
+</code></pre>
+<p>其中<code>addScrollBar</code>由客户端单独调用：</p>
+<pre><code class="language-java">Component component = new Window();
+ScrollBarDecorator decorator = new ScrollBarDecorator(component);
+decorator.display();
+decorator.addScrollBar();
+</code></pre>
+<p>半透明装饰可以带来更大的灵活性，使用起来更加方便，客户端可以单独调用装饰方法来进行装饰，但是缺点就是不能对同一个对象进行多次装饰，</p>
+<h1 id="5-注意事项">5 注意事项</h1>
+<ul>
+<li>保持接口相同：尽量保持装饰类的接口与被装饰类的接口相同，这样对客户端而言装饰前/后的对象可以一致对待，也就是尽量使用透明装饰模式</li>
+<li>减少具体构件行为：过多的行为不需要放在具体构件类中，通过具体装饰类进行扩展</li>
+<li>去除抽象构件：如果只有一个具体构件类，那么抽象装饰类可以作为该具体构件类的直接子类，也就是说将原来的抽象构件用具体构件代替</li>
+</ul>
+<h1 id="6-主要优点">6 主要优点</h1>
+<ul>
+<li>动态扩展灵活：对于扩展一个对象的功能，装饰模式比继承更加灵活，不会导致类的个数急剧增加。通过选择不同的具体装饰类，可以动态扩展对象的行为</li>
+<li>多次装饰：可以对一个对象进行多次装饰，使用不同的具体装饰类以及这些装饰类的排列组合，可以创造很多不同行为的组合</li>
+<li>构件与装饰类独立变化：具体构件类以及具体装饰类可以独立变化，用户可以根据需要增加新的具体构件类或者具体装饰类，无须修改原有代码，符合开闭原则</li>
+</ul>
+<h1 id="7-主要缺点">7 主要缺点</h1>
+<ul>
+<li>对象较多：使用装饰模式会产生很多小对象，这些对象的区别在于相互连接方式的不同，小对象过多会一定程度上影响性能</li>
+<li>排查繁琐：尽管装饰模式比继承更加灵活，但也意味着比继承更加容易出错，排错也很困难，对于多次装饰后的对象可能需要逐级排查</li>
+</ul>
+<h1 id="8-适用场景">8 适用场景</h1>
+<ul>
+<li>在不影响其他对象的情况下，以动态和透明的方式给单个对象增加职责</li>
+<li>在不能采用继承扩展系统或者采用继承不利于对系统扩展和维护时可以使用装饰模式</li>
+</ul>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020072616152713.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（十一）：组合模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-yi-zu-he-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-yi-zu-he-mo-shi/">
+        </link>
+        <updated>2020-07-27T05:56:51.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<h2 id="11-概述">1.1 概述</h2>
+<p>对于树形结构，比如文件目录，一个文件夹中可以包含多个文件夹和文件，而一个文件中不能在包含子文件或者子文件夹，在这里可以称<strong>文件夹为容器</strong>，称<strong>文件为叶子</strong>。</p>
+<p>在树形结构中，当容器对象（比如文件夹）的某个方法被调用时，将遍历整个文件夹，寻找也包含这个方法的成员对象（容器对象或叶子对象）并调用执行。由于容器对象以及叶子对象在功能上的区别，使用这些对象的代码中必须有区别对待容器对象以及叶子对象，但大多数情况下需要一致性处理它们。</p>
+<p>组合模式为解决此类问题而生，它可以让叶子对象以及容器对象的使用具有一致性。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>组合模式：组合多个对象形成树形结构以表示具有“整体-部分”关系的层次结构。组合模式对单个对象（叶子对象）和组合对象（容器对象）的使用具有一致性。</strong><br>
+组合模式又叫“部分-整体”模式，它是一种对象结构型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200726093617721.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong>Component（抽象构件）：可以是接口或者抽象类，为叶子构件和容器构件对象声明接口，在该角色中可以包含所有子类共有行为的声明和实现。在抽象构件中定义了访问以及管理它的子构件的方法，例如增加/删除/获取子构件</strong></li>
+<li><strong>Leaf（叶子构件）：表示叶子节点对象，叶子节点没有子节点，它实现了在抽象构件中定义的行为，对于访问以及管理子构件的方法，通常会抛出异常</strong></li>
+<li><strong>Composite（容器构件）：表示容器节点对象，容器节点包含子节点，其子节点可以是叶子节点，也可以是容器节点，它提供一个集合用于存储子节点，实现了在抽象构件中定义的行为，包括访问以及管理子构件的方法</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<p>组合模式的关键是定义了一个抽象构件类，它既可以表示叶子也可以表示容器，客户端针对该抽象构件进行编程，无须知道到底是叶子还是容器，同时容器对象与抽象构件之间需要建立一个聚合关联关系，在容器对象中既可以包含叶子也可以包含容器，以此实现递归组合，形成树形结构。</p>
+<p>因此首先需要定义抽象构件类，通用步骤如下：</p>
+<ul>
+<li>定义抽象构件：定义抽象构件类，添加四个基本方法：增加/删除/获取成员+业务方法，可以将抽象构件类定义为抽象类或者接口</li>
+<li>定义叶子构件：继承或实现抽象构件类，覆盖或实现具体业务方法，同时对于管理或访问子构件的方法提供异常处理或错误提示</li>
+<li>定义容器构件：继承或实现抽象构件类，覆盖或实现抽象构件中的所有方法，一般来说容器构件会包含一个集合私有成员用于保存抽象构件，在业务方法中对这个集合进行遍历从而实现递归调用</li>
+</ul>
+<h2 id="22-抽象构件">2.2 抽象构件</h2>
+<p>抽象构件一般定义如下：</p>
+<pre><code class="language-java">abstract class Component
+{
+    abstract void add(Component c);
+    abstract void remove(Component c);
+    abstract Component getChild(int i);
+    abstract void operation();
+}
+</code></pre>
+<h2 id="23-叶子构件">2.3 叶子构件</h2>
+<pre><code class="language-java">class Leaf extends Component
+{
+    public void add(Component c)
+    {
+        //叶子构件不能访问该方法
+        System.out.println(&quot;错误,不能访问添加构件方法!&quot;);
+    }
+
+    public void remove(Component c)
+    {
+        //叶子构件不能访问该方法
+        System.out.println(&quot;错误,不能访问删除构件方法!&quot;);
+    }
+
+    public Component getChild(int i)
+    {
+        //叶子构件不能访问该方法
+        System.out.println(&quot;错误,不能访问获取构件方法!&quot;);
+        return null;
+    }
+
+    public void operation()
+    {
+        System.out.println(&quot;叶子业务方法&quot;);
+    }
+}
+</code></pre>
+<p>叶子构件只需要覆盖具体业务方法<code>opeartion</code>，对于管理子构件的方法可以提示错误或者抛出异常来处理。</p>
+<h2 id="24-容器构件">2.4 容器构件</h2>
+<pre><code class="language-java">class Composite extends Component
+{
+    private ArrayList&lt;Component&gt; list = new ArrayList&lt;&gt;();
+    
+    public void add(Component c)
+    {
+        list.add(c);
+    }
+
+    public void remove(Component c)
+    {
+        list.remove(c);
+    }
+
+    public Component getChild(int i)
+    {
+        return list.get(i);
+    }
+
+    public void operation()
+    {
+		list.forEach(Component::operation);
+    }
+}
+</code></pre>
+<p>容器构件只需要简单实现管理子构件的方法，对于业务方法一般需要对抽象构件集合进行遍历来实现递归调用。</p>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>开发一个杀毒软件系统，可以对某个文件夹或单个文件进行杀毒，还能根据文件类型的不同提供不同的杀毒方式，比如文本文件和图像文件的杀毒方式有所差异，使用组合模式对该系统进行设计。</p>
+</blockquote>
+<p>首先定义抽象构件类<code>AbstractFile</code>，<code>Folder</code>作为容器构件类，<code>ImageFile</code>，<code>TextFile</code>，<code>VideoFile</code>作为叶子构件类，代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        AbstractFile file1,file2,file3,file4,folder1,folder2;
+        file1 = new ImageFile(&quot;图像文件1号&quot;);
+        file2 = new VideoFile(&quot;视频文件1号&quot;);
+        file3 = new TextFile(&quot;文本文件1号&quot;);
+        file4 = new ImageFile(&quot;图像文件2号&quot;);
+
+        folder1 = new Folder(&quot;文件夹1&quot;);
+        folder2 = new Folder(&quot;文件夹2&quot;);
+
+        try
+        {
+            folder2.add(file1);
+            folder2.add(file2);
+            folder2.add(file3);
+            folder1.add(file4);
+            folder1.add(folder2);
+        }
+        catch(IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+        
+        folder1.killVirus();
+        System.out.println();
+        folder2.killVirus();
+    }
+}
+
+//抽象构件类
+abstract class AbstractFile
+{
+    protected String name;
+    abstract void add(AbstractFile file) throws IllegalAccessException;
+    abstract void remove(AbstractFile file) throws IllegalAccessException;
+    abstract AbstractFile getChild(int i) throws IllegalAccessException;
+    public void killVirus()
+    {
+        System.out.println(name+&quot; 杀毒&quot;);
+    }
+}
+
+//叶子构件类
+class ImageFile extends AbstractFile
+{
+    public ImageFile(String name)
+    {
+        this.name = name;
+    }
+
+    public void add(AbstractFile c)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问添加文件方法!&quot;);
+    }
+
+    public void remove(AbstractFile c)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问删除文件方法!&quot;);
+    }
+
+    public AbstractFile getChild(int i)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问获取文件方法!&quot;);
+    }
+}
+
+//叶子构件类
+class TextFile extends AbstractFile
+{
+    public TextFile(String name)
+    {
+        this.name = name;
+    }
+
+    public void add(AbstractFile c)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问添加文件方法!&quot;);
+    }
+
+    public void remove(AbstractFile c)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问删除文件方法!&quot;);
+    }
+
+    public AbstractFile getChild(int i)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问获取文件方法!&quot;);
+    }
+}
+
+//叶子构件类
+class VideoFile extends AbstractFile
+{
+    public VideoFile(String name)
+    {
+        this.name = name;
+    }
+
+	public void add(AbstractFile c)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问添加文件方法!&quot;);
+    }
+
+    public void remove(AbstractFile c)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问删除文件方法!&quot;);
+    }
+
+    public AbstractFile getChild(int i)
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问获取文件方法!&quot;);
+    }
+}
+
+//容器构件类
+class Folder extends AbstractFile
+{
+    private ArrayList&lt;AbstractFile&gt; list = new ArrayList&lt;&gt;();
+    public Folder(String name)
+    {
+        this.name = name;
+    }
+
+    public void add(AbstractFile c)
+    {
+        list.add(c);
+    }
+
+    public void remove(AbstractFile c)
+    {
+        list.remove(c);
+    }
+
+    public AbstractFile getChild(int i)
+    {
+        return list.get(i);
+    }
+
+    public void killVirus()
+    {
+        System.out.println(&quot;对 &quot;+name+&quot; 进行杀毒&quot;);
+        list.forEach(AbstractFile::killVirus);
+    }
+}
+</code></pre>
+<p>输入如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726090254345.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-透明组合模式与安全组合模式">4 透明组合模式与安全组合模式</h1>
+<h2 id="41-如何简化代码">4.1 如何简化代码</h2>
+<p>尽管组合模式的扩展性好，在上面的例子中增加新的文件类型无须修改原有代码，但是，由于抽象构件类<code>AbstractFile</code>声明了与叶子构件无关的构件管理方法，因此 需要实现这些方法，这样就会带来很多重复性的工作。</p>
+<p>解决方案有两个：</p>
+<ul>
+<li>抽象构件提供默认实现：叶子构件中的构件管理方法转移到抽象构件中提供默认实现</li>
+<li>抽象构件删除方法：在抽象构件中不提供管理构件的方法</li>
+</ul>
+<h2 id="42-默认实现">4.2 默认实现</h2>
+<p>如果使用抽象构件提供默认实现的方法，则上述例子代码简化如下：</p>
+<pre><code class="language-java">abstract class AbstractFile
+{
+    protected String name;
+    public AbstractFile(String name)
+    {
+        this.name = name;
+    }
+    public void add(AbstractFile file) throws IllegalAccessException
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问添加文件方法!&quot;);
+    }
+    public void remove(AbstractFile file) throws IllegalAccessException
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问删除文件方法!&quot;);
+    }
+    public AbstractFile getChild(int i) throws IllegalAccessException
+    {
+        throw new IllegalAccessException(&quot;错误,不能访问获取文件方法!&quot;);
+    }
+    public void killVirus()
+    {
+        System.out.println(name+&quot; 杀毒&quot;);
+    }
+}
+
+class ImageFile extends AbstractFile
+{
+    public ImageFile(String name)
+    {
+        super(name);
+    }
+}
+
+class TextFile extends AbstractFile
+{
+    public TextFile(String name)
+    {
+        super(name);
+    }
+}
+
+class VideoFile extends AbstractFile
+{
+    public VideoFile(String name)
+    {
+        super(name);
+    }
+}
+</code></pre>
+<p>在叶子构件中只有构造方法（实际上业务方法应该是抽象的，在叶子构件中实现业务方法，这里的业务方法是<code>killVirus()</code>，这里是进行了简化），这样修改虽然简化了代码，但是总的来说为叶子构件提供这些方法是没有意义的，因为叶子不会再下一个层次的对象，这在编译阶段不会出错 ，但是在运行阶段可能会出错。</p>
+<h2 id="43-删除方法">4.3 删除方法</h2>
+<p>如果使用抽象构件删除方法的方式进行简化代码，则上述例子简化如下：</p>
+<pre><code class="language-java">abstract class AbstractFile
+{
+    protected String name;
+    public AbstractFile(String name)
+    {
+        this.name = name;
+    }
+    abstract void killVirus();
+}
+
+class ImageFile extends AbstractFile
+{
+    public ImageFile(String name)
+    {
+        super(name);
+    }
+    public void killVirus()
+    {
+        System.out.println(&quot;图像文件&quot;+name+&quot;杀毒&quot;);
+    }
+}
+
+class TextFile extends AbstractFile
+{
+    public TextFile(String name)
+    {
+        super(name);
+    }
+    public void killVirus()
+    {
+        System.out.println(&quot;文本文件&quot;+name+&quot;杀毒&quot;);
+    }
+}
+
+class VideoFile extends AbstractFile
+{
+    public VideoFile(String name)
+    {
+        super(name);
+    }
+    public void killVirus()
+    {
+        System.out.println(&quot;视频文件&quot;+name+&quot;杀毒&quot;);
+    }
+}
+</code></pre>
+<p>这样做叶子构件就无法访问管理构件的方法了，但是带来的坏处是客户端无法统一针对抽象构件类<code>AbstractFile</code>进行编程，修改之前代码如下：</p>
+<pre><code class="language-java">AbstractFile file1,file2,file3,file4,folder1,folder2;
+</code></pre>
+<p>由于<code>AbstractFile</code>中删除了管理构件方法，因此客户端需要修改代码如下：</p>
+<pre><code class="language-java">AbstractFile file1,file2,file3,file4;
+Folder folder1,folder2;
+</code></pre>
+<h2 id="44-透明组合模式">4.4 透明组合模式</h2>
+<p>透明组合模式就是第一种解决方案中的方法，在抽象构件中声明所有用于管理构件的方法，这样做的好处是确保所有的构件类都具有相同的接口，客户端可以针对抽象构件进行统一编程，结构图如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726093555804.png" alt="在这里插入图片描述" loading="lazy"><br>
+透明组合模式的缺点是不够安全，因为叶子对象和容器对象在本质上是有区别的。叶子对象不可能有下一层次的对象，提供管理构件的方法是没有意义的，在编译阶段不会报错，但是在运行阶段可能会出错。</p>
+<h2 id="45-安全组合模式">4.5 安全组合模式</h2>
+<p>安全组合模式就是第二种方法的办法，安全组合模式中，抽象构件没有声明管理构件的方法，而是在容器构件中添加管理构件的方法，这种做法是安全的因为叶子对象不可能调用到这些方法。结构图如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200726094004258.png" alt="在这里插入图片描述" loading="lazy"><br>
+安全组合模式的缺点是不够透明，因为叶子构件与容器构件具有不同的方法，管理构件的方法在容器构件中定义，客户端不能完全针对抽象构件进行编程，必须有区别地对待叶子构件与容器构件。</p>
+<h1 id="5-主要优点">5 主要优点</h1>
+<ul>
+<li>层次控制：组合模式可以清楚定义分层次的复杂对象，表示对象的全部或者部分层次，它让客户端忽略了层次的差异，方便对整个层次结构进行控制</li>
+<li>一致使用构件：客户端可以一致地使用容器构件或者叶子构件，也就是能针对构件抽象层一致性编程</li>
+<li>扩展性好：增加新的容器构件或者叶子构件都很方便，符合开闭原则</li>
+<li>有效针对树形结构：组合模式为树形结构的面向对象实现提供了一种灵活的解决方案，通过叶子构件与容器构件的递归组合，可以形成复杂的树形结构，但控制树形结构却很简单</li>
+</ul>
+<h1 id="6-主要缺点">6 主要缺点</h1>
+<ul>
+<li>难以限制构件类型：增加新构件时难以限制构件类型，比如希望容器构件中只有某一特定类型的叶子构件，例如一个只能包含图片的文件夹，使用组合模式时不能依赖类型系统来施加这些约束，需要再运行时进行类型检查来实现，过程较为复杂</li>
+</ul>
+<h1 id="7-适用场景">7 适用场景</h1>
+<ul>
+<li>具有整体和部分的层次结构中，希望通过一种方式忽略整体与部分的差异，客户端可以一致性对待它们</li>
+<li>处理树形结构</li>
+<li>系统中能够分离出叶子构件以及容器构件，而且类型不固定，需要增加新的叶子构件或者容器构件</li>
+</ul>
+<h1 id="8-总结">8 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200726100818470.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第39期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-39-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-39-qi/">
+        </link>
+        <updated>2020-07-26T17:36:22.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595829754059.jpeg" alt="" loading="lazy"></figure>
+<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你打起精神，3分钟就能做完事情，打起精神就要花上3小时。</p>
+</blockquote>
+<h1 id="每日冷知识">每日冷知识</h1>
+<blockquote>
+<p>有研究发现，红发女性的疼痛阀值比我们其他人高出25%。此外得益于“红发基因”MC1R，红发者可以自己补充维生素D，对于温度变化的感觉也更为强烈。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>杏馆花阴恨浅，画堂银烛嫌明。<br>
+——陆游《朝中措·代谭德称作》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>破解版的“爱情”APP，有吗？</p>
+</blockquote>
+<h1 id="每日音乐">每日音乐</h1>
+<blockquote>
+<p><a href="https://y.qq.com/portal/player.html">一万个舍不得-庄心妍</a></p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1595830276163.jpg" alt="" loading="lazy"></figure>
+<blockquote>
+<p>不要追问对与错<br>
+毕竟我们深爱过<br>
+有你陪的日子里<br>
+我真的好快乐<br>
+你总是小心翼翼的<br>
+因为你怕我难过<br>
+而我却不能给你<br>
+给你想要的结果</p>
+</blockquote>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1595830281237.jpg" alt="" loading="lazy"></figure>
+<blockquote>
+<p>一万个舍不得<br>
+不能回到从前了<br>
+爱你没有后悔过<br>
+只是应该结束了<br>
+一万个舍不得<br>
+我是永远爱你的<br>
+爱你我觉得值得<br>
+只是不能再爱了</p>
+</blockquote>
+<blockquote>
+<p>不要追问谁对谁错<br>
+毕竟我们深爱过<br>
+有你陪的日子里<br>
+我真的好快乐<br>
+你总是小心翼翼的<br>
+因为你怕我难过<br>
+而我却不能给你<br>
+给你想要的结果<br>
+你永远都是最好的</p>
+</blockquote>
+<blockquote>
+<p>不要追问对与错<br>
+毕竟我们深爱过<br>
+有你陪的日子里<br>
+我真的好快乐<br>
+你总是小心翼翼的<br>
+而我却不能给你<br>
+给你想要的结果</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1595830293010.jpg" alt="" loading="lazy"></figure>
+<blockquote>
+<p>一万个舍不得<br>
+不能回到从前了<br>
+爱你没有后悔过<br>
+只是应该结束了<br>
+一万个舍不得<br>
+我是永远爱你的<br>
+爱你我觉得值得<br>
+只是不能再爱了</p>
+</blockquote>
+<blockquote>
+<p>一万个舍不得<br>
+不能回到从前了<br>
+爱你没有后悔过<br>
+只是应该结束了<br>
+一万个舍不得<br>
+我是永远爱你的<br>
+爱你我觉得值得<br>
+只是不能再爱了</p>
+</blockquote>
+<blockquote>
+<p>分开了<br>
+不代表不爱你了<br>
+我心里<br>
+你永远都是最好的</p>
+</blockquote>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第38期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-38-qi/</id>
@@ -999,341 +2620,6 @@ data:function(){
 <p>效果如下：<br>
 <img src="https://img-blog.csdnimg.cn/20200724080958742.gif" alt="在这里插入图片描述" loading="lazy"><br>
 这是因为返回给每个实例一份独立的拷贝。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第36期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi-36/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi-36/">
-        </link>
-        <updated>2020-07-24T15:24:41.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595605017154.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>早起的鸟儿有虫吃，可惜你是那条虫。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>虽然自1941年以来，烟花在美国佛罗里达州就已经完全违法，但该州数百家商店仍在将烟花卖给所有签署弃权书表示将烟花用于农业，目的是驱除鸟类以令其远离农作物的人。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>此花此叶常相映，翠减红衰愁杀人。<br>
-——李商隐《赠荷花》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>少年，别想你，那个人不是你。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="http://bd.kuwo.cn/play_detail/40900571">选择失忆-季彦琳</a></p>
-</blockquote>
-<blockquote>
-<p>一杯烈酒倒入喉<br>
-是你给的温柔<br>
-想念翻滚如浪腾<br>
-最后更痛<br>
-最后的最后<br>
-不过是一场梦<br>
-心越来越痛<br>
-如果回到最初</p>
-</blockquote>
-<blockquote>
-<p>如何能选择忘记<br>
-忘记每一段过去<br>
-你的话语太伤心<br>
-一点也没有余地<br>
-可我还是会想你<br>
-去想你 没忘记<br>
-你刺痛我心<br>
-或许一切都归零<br>
-归零到最初记忆<br>
-我一定选择<br>
-不会继续爱你<br>
-我的爱已经选择暂停<br>
-选择了失忆</p>
-</blockquote>
-<blockquote>
-<p>一杯烈酒倒入喉<br>
-是你 给的温柔<br>
-想念翻滚如浪腾<br>
-最后更痛<br>
-最后的最后<br>
-不过是一场梦<br>
-心越来越痛<br>
-如果回到最初</p>
-</blockquote>
-<blockquote>
-<p>如何能选择忘记<br>
-忘记每一段过去<br>
-你的话语太伤心<br>
-一点也没有余地<br>
-可我还是会想你<br>
-去想你 没忘记<br>
-你刺痛我心<br>
-或许一切都归零<br>
-归零到最初记忆<br>
-我一定选择<br>
-不会继续爱你<br>
-我的爱已经选择暂停<br>
-选择了失忆</p>
-</blockquote>
-<blockquote>
-<p>如何能选择忘记<br>
-忘记每一段过去<br>
-你的话语太伤心<br>
-一点也没有余地<br>
-可我还是会想你<br>
-去想你 没忘记<br>
-你刺痛我心<br>
-或许一切都归零<br>
-归零到最初记忆<br>
-我一定选择<br>
-不会继续爱你<br>
-我的爱已经选择暂停<br>
-选择了失忆</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JetBrains系列IDE无法输入中文]]></title>
-        <id>https://2293736867.github.io/post/jetbrains-xi-lie-ide-wu-fa-shu-ru-zhong-wen/</id>
-        <link href="https://2293736867.github.io/post/jetbrains-xi-lie-ide-wu-fa-shu-ru-zhong-wen/">
-        </link>
-        <updated>2020-07-23T06:48:11.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
-<p>环境Linux+fcitx，JetBrains的IDE无法输入中文，包括IDEA，PyCharm，WebStorm，CLion等等。</p>
-<h1 id="2-解决方案">2 解决方案</h1>
-<p>Linux下一般使用fcitx进入中文输入，安装的时候教程一般都会提到以下三个环境变量：</p>
-<pre><code class="language-bash">export XMODIFIERS=&quot;@im=fcitx&quot;
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-</code></pre>
-<p>安装的时候一般在<code>~/.bashrc</code>或<code>~/.bash_profile</code>或<code>~/.xprofile</code>中输入以上三个环境变量，这样fcitx就能输入中文了。</p>
-<p>但是对于JetBrains的IDE，需要进行全局环境变量的设置，也就是说需要在<code>/etc/profile</code>输入以上三个环境变量，这样就能输入中文了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第35期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-36-qi/">
-        </link>
-        <updated>2020-07-22T22:36:35.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595457502173.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>黑夜从来不会亏待晚睡的人，它会赐予你黑眼圈，和即将猝死的身体。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>土耳其婴儿出生后，被大人拎着腌火腿一样在盐堆里滚几圈，直到浑身满盐才结束。当地人相信，这样可以赋予新生儿抵御疾病的力量。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=1300885683">38度6-黑龙</a></p>
-</blockquote>
-<blockquote>
-<p>逃不出你的左右<br>
-像鱼在沙里游<br>
-明知道没尽头<br>
-却不怕头破血流<br>
-爱你是海市蜃楼<br>
-像泡沫般游走<br>
-虚幻和无所求<br>
-第一次我见你情难开口心跳在发抖</p>
-</blockquote>
-<blockquote>
-<p>拥抱这片绿洲 那热烈的温柔<br>
-我放弃整个森丽留下眷恋和哀愁<br>
-像初见你眼眸 时间停止倒流<br>
-我燃烧了宇宙像温度充满了电流<br>
-在38度6</p>
-</blockquote>
-<blockquote>
-<p>逃不出你的左右<br>
-像鱼在沙里游<br>
-明知道没尽头<br>
-却不怕头破血流<br>
-爱你是海市蜃楼<br>
-像泡沫般游走<br>
-虚幻和无所求<br>
-第一次我见你情难开口 心跳在发抖</p>
-</blockquote>
-<blockquote>
-<p>拥抱这片绿洲 那热烈的温柔<br>
-我放弃整个森林留下眷恋和哀愁<br>
-像初见你眼眸 时间停止倒流<br>
-我燃烧了宇宙温度像充满了电流<br>
-在38度6</p>
-</blockquote>
-<blockquote>
-<p>拥抱这片绿洲 那热烈的温柔<br>
-我放弃整个森林留下眷恋和哀愁<br>
-像初见你眼眸 时间停止倒流<br>
-我燃烧了宇宙温度像充满了电流<br>
-拥抱到白了头 不放开你的手<br>
-我卸下了等候和全部爱你的理由<br>
-全世界跟我走 从黑夜到白昼<br>
-我唯一的要求我们的爱永远停留<br>
-在38度6</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第34期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-35-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-35-qi/">
-        </link>
-        <updated>2020-07-21T22:36:14.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595457523821.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>年轻人不要老想着走捷径，父母强才是硬道理。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>土耳其的十二生肖，将龙换成了鳄鱼，其他相同。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=190072">黄昏-周传雄</a></p>
-</blockquote>
-<blockquote>
-<p>过完整个夏天<br>
-忧伤并没有好一些<br>
-开车行驶在公路无际无边<br>
-有离开自己的感觉</p>
-</blockquote>
-<blockquote>
-<p>唱不完一首歌<br>
-疲倦还剩下黑眼圈<br>
-感情的世界伤害在所难免<br>
-黄昏再美终要黑夜</p>
-</blockquote>
-<blockquote>
-<p>依然记得从你口中说出再见坚决如铁<br>
-昏暗中有种烈日灼身的错觉<br>
-黄昏的地平线<br>
-划出一句离别<br>
-爱情进入永夜</p>
-</blockquote>
-<blockquote>
-<p>依然记得从你眼中滑落的泪伤心欲绝<br>
-混乱中有种热泪烧伤的错觉<br>
-黄昏的地平线<br>
-割断幸福喜悦<br>
-相爱已经幻灭</p>
-</blockquote>
-<blockquote>
-<p>唱不完一首歌<br>
-疲倦还剩下黑眼圈<br>
-感情的世界伤害在所难免<br>
-黄昏再美终要黑夜</p>
-</blockquote>
-<blockquote>
-<p>依然记得从你口中说出再见坚决如铁<br>
-昏暗中有种烈日灼身的错觉<br>
-黄昏的地平线<br>
-划出一句离别<br>
-爱情进入永夜</p>
-</blockquote>
-<blockquote>
-<p>依然记得从你眼中滑落的泪伤心欲绝<br>
-混乱中有种热泪烧伤的错觉<br>
-黄昏的地平线<br>
-割断幸福喜悦<br>
-相爱已经幻灭</p>
-</blockquote>
-<blockquote>
-<p>依然记得从你口中说出再见坚决如铁<br>
-昏暗中有种烈日灼身的错觉<br>
-黄昏的地平线<br>
-划出一句离别<br>
-爱情进入永夜</p>
-</blockquote>
-<blockquote>
-<p>依然记得从你眼中滑落的泪伤心欲绝<br>
-混乱中有种热泪烧伤的错觉<br>
-黄昏的地平线<br>
-割断幸福喜悦<br>
-相爱已经幻灭</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第33期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-34-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-34-qi/">
-        </link>
-        <updated>2020-07-20T22:35:50.000Z</updated>
-        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1595457535932.jpeg" alt="" loading="lazy"></figure>
-<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>明日复明日，明日何其多！既然这么多，不妨再拖拖。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>土耳其的英文Turkey，另一个意思是火鸡。</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=545350530">有些爱情放不下-唐伯虎</a></p>
-</blockquote>
-<blockquote>
-<p>你说着那些美丽的谎话<br>
-在我的心上定格成伤疤<br>
-你说的那些承诺未抵达<br>
-热情就慢慢融化</p>
-</blockquote>
-<blockquote>
-<p>走不进你描述的那个家<br>
-却迷失我幻想的那幅画<br>
-深夜里想着你心乱如麻<br>
-我的爱旧伤复发</p>
-</blockquote>
-<blockquote>
-<p>有些爱情真的想放放不下<br>
-有些人真的可恨却牵挂<br>
-谁的爱对了谁的爱错了<br>
-爱本就真真假假<br>
-有些爱情真的想放放不下<br>
-有些梦真的做的太浮夸<br>
-眼泪虽渺小但爱却伟大<br>
-告诉我还爱我吗</p>
-</blockquote>
-<blockquote>
-<p>你说着那些美丽的谎话<br>
-在我的心上定格成伤疤<br>
-你说的那些承诺未抵达<br>
-热情就慢慢融化</p>
-</blockquote>
-<blockquote>
-<p>走不进你描述的那个家<br>
-却迷失我幻想的那幅画<br>
-深夜里想着你心乱如麻<br>
-我的爱旧伤复发</p>
-</blockquote>
-<blockquote>
-<p>有些爱情真的想放放不下<br>
-有些人真的可恨却牵挂<br>
-谁的爱对了谁的爱错了<br>
-爱本就真真假假<br>
-有些爱情真的想放放不下<br>
-有些梦真的做得太浮夸<br>
-眼泪虽渺小但爱却伟大<br>
-告诉我还爱我吗</p>
-</blockquote>
-<blockquote>
-<p>有些爱情真的想放放不下<br>
-有些人真的可恨却牵挂<br>
-谁的爱对了谁的爱错了<br>
-爱本就真真假假<br>
-有些爱情真的想放放不下<br>
-有些梦真的做得太浮夸<br>
-眼泪虽渺小但爱却伟大<br>
-告诉我还爱我吗</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>

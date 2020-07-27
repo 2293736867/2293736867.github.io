@@ -1,0 +1,1419 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（十四）：享元模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+
+1.1 引言
+1.2 内部状态与外部状态
+1.3 定义
+1.4 结构图
+1.5 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 抽象享元类
+2.3 具体享元类
+2.4 非共享具体享元类
+2.5 享元工厂类
+2.6 反射简化
+
+..." />
+    <meta name="keywords" content="每日分享" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1595830336083" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-07-27"><i class="fa fa-calendar"></i><span class="lately">11 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（十四）：享元模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%86%85%E9%83%A8%E7%8A%B6%E6%80%81%E4%B8%8E%E5%A4%96%E9%83%A8%E7%8A%B6%E6%80%81">1.2 内部状态与外部状态</a></li>
+<li><a href="#13-%E5%AE%9A%E4%B9%89">1.3 定义</a></li>
+<li><a href="#14-%E7%BB%93%E6%9E%84%E5%9B%BE">1.4 结构图</a></li>
+<li><a href="#15-%E8%A7%92%E8%89%B2">1.5 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E4%BA%AB%E5%85%83%E7%B1%BB">2.2 抽象享元类</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E4%BA%AB%E5%85%83%E7%B1%BB">2.3 具体享元类</a></li>
+<li><a href="#24-%E9%9D%9E%E5%85%B1%E4%BA%AB%E5%85%B7%E4%BD%93%E4%BA%AB%E5%85%83%E7%B1%BB">2.4 非共享具体享元类</a></li>
+<li><a href="#25-%E4%BA%AB%E5%85%83%E5%B7%A5%E5%8E%82%E7%B1%BB">2.5 享元工厂类</a></li>
+<li><a href="#26-%E5%8F%8D%E5%B0%84%E7%AE%80%E5%8C%96">2.6 反射简化</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%8A%A0%E5%85%A5%E5%A4%96%E9%83%A8%E7%8A%B6%E6%80%81">4 加入外部状态</a></li>
+<li><a href="#5-%E5%8D%95%E7%BA%AF%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%8D%E5%90%88%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">5 单纯享元模式与复合享元模式</a>
+<ul>
+<li><a href="#51-%E5%8D%95%E7%BA%AF%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">5.1 单纯享元模式</a></li>
+<li><a href="#52-%E5%A4%8D%E5%90%88%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">5.2 复合享元模式</a></li>
+</ul>
+</li>
+<li><a href="#6-%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E">6 补充说明</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">7 主要优点</a></li>
+<li><a href="#8-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">8 主要缺点</a></li>
+<li><a href="#9-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">9 适用场景</a></li>
+<li><a href="#10-%E6%80%BB%E7%BB%93">10 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>当一个系统中运行时的产生的对象太多，会带来性能下降等问题，比如一个文本字符串存在大量重复字符，如果每一个字符都用一个单独的对象表示，将会占用较多内存空间。</p>
+<p>那么该如何避免出现大量相同或相似的对象，同时又不影响客户端以面向对象的方式操作呢？</p>
+<p>享元模式正为解决这一问题而生，通过共享技术实现相同或相似对象的重用，在逻辑上每一个出现的字符都有一个对象与之对<br>
+应，但是物理上却共享一个享元对象。</p>
+<p>在享元模式中，<strong>存储共享实例的地方称为享元池</strong>，可以针对每一个不同的字符创建一个享元对象，放置于享元池中，需要时取<br>
+出，示意图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200727065325512.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="12-内部状态与外部状态">1.2 内部状态与外部状态</h2>
+<p>享元模式以共享的方式高效地支持大量细粒度对象的重用，能做到共享的关键是区分了内部状态以及外部状态。</p>
+<ul>
+<li><strong>内部状态：存储在享元对象内部并且不会随环境改变而改变，内部状态可以共享，例如字符的内容，字符a永远是字符a，不会变为字符b</strong></li>
+<li><strong>外部状态：能够随环境改变而改变，不可以共享的状态，通常由客户端保存，并在享元对象被创建之后，需要使用的时候再传入到享元对象内部。外部状态之间通常是相互独立的，比如字符的颜色，字号，字体等，可以独立变化，没有影响，客户端在使用时将外部状态注入到享元对象中</strong></li>
+</ul>
+<p>正因为区分了内部状态以及外部状态，可以将具有相同内部状态的对象存储在享元池中，享元池的对象是可以实现共享的，需要的时候从中取出，实现对象的复用。通过向取出的对象注入不同的外部状态，可以得到一系列相似的对象，而这些对象实际上只存储一份。</p>
+<h2 id="13-定义">1.3 定义</h2>
+<p><strong>享元模式：运用共享技术有效地支持大量细粒度对象的复用。</strong></p>
+<p>系统只使用少量的对象，而这些对象都很相似，状态变化很小，可以实现对象的多次复用。由于享元模式要求能够共享的对象必须是细粒度对象，因此又叫轻量级模式，是一种对象结构型模式。</p>
+<h2 id="14-结构图">1.4 结构图</h2>
+<p>享元模式一般结合工厂模式一起使用，结构图如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020072707364855.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="15-角色">1.5 角色</h2>
+<ul>
+<li><strong>Flyweights（抽象享元类）：通常是一个接口或者抽象类，在抽象享元类中声明了具体享元类公共的方法，这些方法可以向外界提供享元对象的内部数据（内部状态），同时也可以通过这些方法来设置外部数据（外部状态）</strong></li>
+<li><strong>ConcreteFlyweight（具体享元类）：实现/继承抽象共享类，实例称为共享对象，在具体享元类中为内部状态提供了存储空间，通常可以结合单例模式来设计具体享元类</strong></li>
+<li><strong>UnsharedConcreteFlyweight（非共享具体享元类）：并不是所有的抽象享元子类都需要被共享，不能被共享的子类可设计为非共享具体享元类，当需要一个非具体享元对象时可以直接实例化创建</strong></li>
+<li><strong>FlyweightFactory（享元工厂类）：享元工厂类用于创建并管理享元对象，针对抽象享元类编程，将具体享元对象存储于享元池中。一般使用键值对集合（比如Java中的</strong><code>HashMap</code><strong>）作为享元池，当客户端获取享元对象时，首先判断是否存在，存在则从集合中取出并返回，不存在则创建新具体享元的实例，存储于享元池中并返回新实例</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象享元类：将抽象享元类定义为接口或者抽象类，声明业务方法</li>
+<li>定义具体享元类：继承或实现抽象享元，实现其中的业务方法，同时使用单例模式设计，确保每个具体享元类提供唯一的享元对象</li>
+<li>（可选）定义非共享具体享元类：继承或实现抽象享元类，不使用单例模式设计，每次客户端获取都会返回一个新实例</li>
+<li>定义享元工厂类：通常使用一个键值对集合作为享元池，根据键值返回对应的具体享元对象或非共享具体享元对象</li>
+</ul>
+<h2 id="22-抽象享元类">2.2 抽象享元类</h2>
+<p>这里使用接口实现，包含一个<code>opeartion</code>业务方法：</p>
+<pre><code class="language-java">interface Flyweight
+{
+    void operation(String extrinsicState);
+}
+</code></pre>
+<h2 id="23-具体享元类">2.3 具体享元类</h2>
+<p>简单设计两个枚举单例的具体享元类：</p>
+<pre><code class="language-java">enum ConcreteFlyweight1 implements Flyweight
+{
+    INSTANCE(&quot;INTRINSIC STATE 1&quot;);
+    private String intrinsicState;
+    private ConcreteFlyweight1(String intrinsicState)
+    {
+        this.intrinsicState = intrinsicState;
+    }
+
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;具体享元操作&quot;);
+        System.out.println(&quot;内部状态:&quot;+intrinsicState);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+
+enum ConcreteFlyweight2 implements Flyweight
+{
+    INSTANCE(&quot;INTRINSIC STATE 2&quot;);
+    private String intrinsicState;
+    private ConcreteFlyweight2(String intrinsicState)
+    {
+        this.intrinsicState = intrinsicState;
+    }
+
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;具体享元操作&quot;);
+        System.out.println(&quot;内部状态:&quot;+intrinsicState);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+</code></pre>
+<h2 id="24-非共享具体享元类">2.4 非共享具体享元类</h2>
+<p>两个简单的非共享具体享元类，不是枚举单例类：</p>
+<pre><code class="language-java">class UnsharedConcreteFlyweight1 implements Flyweight
+{
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;非共享具体享元操作&quot;);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+
+class UnsharedConcreteFlyweight2 implements Flyweight
+{
+    @Override
+    public void operation(String extrinsicState)
+    {
+        System.out.println(&quot;非共享具体享元操作&quot;);
+        System.out.println(&quot;外部状态:&quot;+extrinsicState);
+    }
+}
+</code></pre>
+<h2 id="25-享元工厂类">2.5 享元工厂类</h2>
+<p>为了方便客户端以及工厂管理具体享元以及非共享具体享元，首先建立两个枚举类作为享元池的键：</p>
+<pre><code class="language-java">enum Key { KEY1,KEY2 }
+enum UnsharedKey { KEY1,KEY2 }
+</code></pre>
+<p>这里的工厂类使用了枚举单例：</p>
+<pre><code class="language-java">enum Factory
+{
+    INSTANCE;
+    private Map&lt;Key,Flyweight&gt; map = new HashMap&lt;&gt;();
+    public Flyweight get(Key key)
+    {
+        if(map.containsKey(key))
+            return map.get(key);
+        switch(key)
+        {
+            case KEY1:    
+                map.put(key, ConcreteFlyweight1.INSTANCE);
+                return ConcreteFlyweight1.INSTANCE;
+            case KEY2:
+                map.put(key, ConcreteFlyweight2.INSTANCE);
+                return ConcreteFlyweight2.INSTANCE;
+            default:
+                return null;
+        }
+    }
+
+    public Flyweight get(UnsharedKey key)
+    {
+        switch(key)
+        {
+            case KEY1:
+                return new UnsharedConcreteFlyweight1();
+            case KEY2:
+                return new UnsharedConcreteFlyweight2();
+            default:
+                return null;
+        }
+    }
+}
+</code></pre>
+<p>使用<code>HashMap&lt;String,Flyweight&gt;</code>作为享元池：</p>
+<ul>
+<li>对于具体享元类，根据键值判断享元池中是否存在具体享元对象，如果存在直接返回，如果不存在把具体享元的单例存入享元池，并返回该单例</li>
+<li>对于非共享具体享元类，由于是“非共享”，不需要把实例对象存储于享元池中，每次调用直接返回新实例</li>
+</ul>
+<h2 id="26-反射简化">2.6 反射简化</h2>
+<p>如果具体享元对象变多，工厂类的<code>get()</code>中的<code>switch</code>会变得很长，这时候可以将键值类以及工厂类的<code>get()</code>改进以简化代码，例如在上面的基础上又增加了两个具体享元类：</p>
+<pre><code class="language-java">enum ConcreteFlyweight3 implements Flyweight {...}
+enum ConcreteFlyweight4 implements Flyweight {...}
+</code></pre>
+<p>这样工厂类的<code>switch</code>需要增加两个<code>Key</code>：</p>
+<pre><code class="language-java">switch(key)
+{
+    case KEY1:    
+        map.put(key, ConcreteFlyweight1.INSTANCE);
+        return ConcreteFlyweight1.INSTANCE;
+    case KEY2:
+        map.put(key, ConcreteFlyweight2.INSTANCE);
+        return ConcreteFlyweight2.INSTANCE;
+    case KEY3:
+        map.put(key, ConcreteFlyweight3.INSTANCE);
+        return ConcreteFlyweight3.INSTANCE;
+    case KEY4:
+        map.put(key, ConcreteFlyweight4.INSTANCE);
+        return ConcreteFlyweight4.INSTANCE;
+    default:
+        return null;
+}
+</code></pre>
+<p>可以利用具体享元类的命名方式进行简化，这里使用了顺序编号<code>1,2,3,4...</code>的方式，因此，利用反射获取对应的类后直接获取其中的单例对象：</p>
+<pre><code class="language-java">public Flyweight get(Key key)
+{
+    if(map.containsKey(key))
+        return map.get(key);
+    try
+    {
+        Class&lt;?&gt; cls = Class.forName(&quot;ConcreteFlyweight&quot;+key.code());
+        Flyweight flyweight = (Flyweight)(cls.getField(&quot;INSTANCE&quot;).get(null));
+        map.put(key,flyweight);
+        return flyweight;
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        return null;
+    }
+}
+</code></pre>
+<p>在此之前需要修改一下<code>Key</code>类：</p>
+<pre><code class="language-java">enum Key
+{
+    KEY1(1),KEY2(2),KEY3(3),KEY4(4);
+    private int code;
+    private Key(int code)
+    {
+        this.code = code;
+    }
+    public int code()
+    {
+        return code;
+    }
+}
+</code></pre>
+<p>增加一个<code>code</code>字段，作为区分每一个具体享元的标志。<br>
+对于非共享具体享元类似，首先修改<code>UnsharedKey</code>，同理添加<code>code</code>字段：</p>
+<pre><code class="language-java">enum UnsharedKey
+{
+    KEY1(1),KEY2(2),KEY3(3),KEY4(4);
+    private int code;
+    private UnsharedKey(int code)
+    {
+        this.code = code;
+    }
+    public int code()
+    {
+        return code;
+    }
+}
+</code></pre>
+<p>接着修改<code>get</code>方法：</p>
+<pre><code class="language-java">public Flyweight get(UnsharedKey key)
+{
+    try
+    {
+        Class&lt;?&gt; cls = Class.forName(&quot;UnsharedConcreteFlyweight&quot;+key.code());
+        return (Flyweight)(cls.newInstance());
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        return null;
+    }
+}
+</code></pre>
+<p>由于笔者使用的是OpenJDK11，其中<code>newInstance</code>被标记为过时了：<br>
+<img src="https://img-blog.csdnimg.cn/20200727092339417.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200727092356620.png" alt="在这里插入图片描述" loading="lazy"><br>
+因此使用如下方式代替直接使用<code>newInstance()</code>：</p>
+<pre><code class="language-java">return (Flyweight)(cls.getDeclaredConstructor().newInstance());
+</code></pre>
+<p>区别如下：</p>
+<ul>
+<li><code>newInstance</code>：直接调用无参构造方法</li>
+<li><code>getDeclaredConstructor().newInstance()</code>：<code>getDeclaredConstructor()</code>会根据传入的参数搜索该类的构造方法并返回，没有参数就返回该类的无参构造方法，接着调用<code>newInstance</code>进行实例化</li>
+</ul>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>围棋棋子的设计：一个棋盘中含有大量相同的黑白棋子，只是出现的位置不一样，使用享元模式对棋子进行设计。</p>
+</blockquote>
+<ul>
+<li>抽象享元类：<code>IgoChessman</code>接口（如果想要具体享元类为枚举单例的话必须是接口，使用其他方式实现单例可以为抽象类），包含<code>getColor</code>以及<code>display</code>方法</li>
+<li>具体享元类：<code>BlackChessman</code>+<code>WhiteChessman</code>，枚举单例类</li>
+<li>非共享具体享元类：无</li>
+<li>享元工厂类：<code>Factory</code>，枚举单例类，包含简单的<code>get</code>作为获取具体享元的方法，加上了<code>white</code>以及<code>balck</code>简单封装，在构造方法中初始化享元池</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">//抽象享元接口
+interface IgoChessman
+{
+    Color getColor();
+    void display();
+}
+
+//具体享元枚举单例类
+enum BlackChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.BLACK;
+    }
+
+    @Override
+    public void display()
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+    }
+}
+
+//具体享元枚举单例类
+enum WhiteChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.WHITE;
+    }
+
+    @Override
+    public void display()
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+    }
+}
+
+//享元工厂枚举单例类
+enum Factory
+{
+    INSTANCE;
+    //HashMap&lt;Color,IgoChessman&gt;作为享元池
+    private Map&lt;Color,IgoChessman&gt; map = new HashMap&lt;&gt;();
+    private Factory()
+    {
+    	//构造方法中直接初始化享元池
+        map.put(Color.WHITE, WhiteChessman.INSTANCE);
+        map.put(Color.BLACK, BlackChessman.INSTANCE);
+    }
+    public IgoChessman get(Color color)
+    {
+    	//由于在构造方法中已经初始化，如果不存在可以返回null或者添加新实例到享元池并返回，这里选择了返回null
+        if(!map.containsKey(color))
+            return null;
+        return (IgoChessman)map.get(color);
+    }
+    //简单封装
+    public IgoChessman white()
+    {
+        return get(Color.WHITE);
+    }
+    public IgoChessman black()
+    {
+        return get(Color.BLACK);
+    }
+}
+
+enum Color
+{
+    WHITE(&quot;白色&quot;),BLACK(&quot;黑色&quot;);
+    private String color;
+    private Color(String color)
+    {
+        this.color = color;
+    }
+    public String color()
+    {
+        return color;
+    }
+}
+</code></pre>
+<p>在初始化享元池时，如果具体享元类过多可以使用反射简化，不需要手动逐个<code>put</code>：</p>
+<pre><code class="language-java">private Factory()
+{
+	map.put(Color.WHITE, WhiteChessman.INSTANCE);
+	map.put(Color.BLACK, BlackChessman.INSTANCE);
+}
+</code></pre>
+<p>根据枚举值数组，结合<code>List</code>与<code>forEach</code>，逐个利用数组中的值获取对应的类，进而获取实例：</p>
+<pre><code class="language-java">private Factory()
+{
+    List.of(Color.values()).forEach(t-&gt;
+    {
+        String className = t.name().substring(0,1)+t.name().substring(1).toLowerCase()+&quot;Chessman&quot;;
+        try
+        {
+            map.put(t,(IgoChessman)(Class.forName(className).getField(&quot;INSTANCE&quot;).get(null)));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            map.put(t,null);
+        }    
+    });
+}
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Factory factory = Factory.INSTANCE;
+    IgoChessman white1 = factory.white();
+    IgoChessman white2 = factory.white();
+    white1.display();
+    white2.display();
+    System.out.println(white1 == white2);
+
+    IgoChessman black1 = factory.black();
+    IgoChessman black2 = factory.black();
+    black1.display();
+    black2.display();
+    System.out.println(black1 == black2);
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200727101745913.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-加入外部状态">4 加入外部状态</h1>
+<p>通过上面的方式已经能够实现黑白棋子的共享了，但是还有一个问题没有解决，就是如何将相同的黑白棋子放置于不同的棋盘位置上？</p>
+<p>解决办法也不难，增加一个坐标类<code>Coordinates</code>，调用<code>display</code>时作为要放置的坐标参数传入函数。</p>
+<p>首先增加一个坐标类：</p>
+<pre><code class="language-java">class Coordinates
+{
+    private int x;
+    private int y;    
+    public Coordinates(int x,int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+	//setter+getter...
+}
+</code></pre>
+<p>接着需要修改抽象享元接口，在<code>display</code>中加入<code>Coordinates</code>参数：</p>
+<pre><code class="language-java">interface IgoChessman
+{
+    Color getColor();
+    void display(Coordinates coordinates);
+}
+</code></pre>
+<p>然后修改具体享元类即可：</p>
+<pre><code class="language-java">enum BlackChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.BLACK;
+    }
+
+    @Override
+    public void display(Coordinates coordinates)
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+        System.out.println(&quot;显示坐标:&quot;);
+        System.out.println(&quot;横坐标&quot;+coordinates.getX());
+        System.out.println(&quot;纵坐标&quot;+coordinates.getY());
+    }
+}
+</code></pre>
+<p>对于客户端，创建享元对象的代码无须修改，只需修改调用了<code>display</code>的地方，传入<code>Coordinates</code>参数即可：</p>
+<pre><code class="language-java">IgoChessman white1 = factory.white();
+IgoChessman white2 = factory.white();
+white1.display(new Coordinates(1, 2));
+white2.display(new Coordinates(2, 3));
+</code></pre>
+<h1 id="5-单纯享元模式与复合享元模式">5 单纯享元模式与复合享元模式</h1>
+<h2 id="51-单纯享元模式">5.1 单纯享元模式</h2>
+<p>标准的享元模式既可以包含具体享元类，也包含非共享具体享元类。</p>
+<p><strong>但是在单纯享元模式中，所有的具体享元类都是共享的，也就是不存在非共享具体享元类。</strong></p>
+<p>比如上面棋子的例子，黑白棋子作为具体享元类都是共享的，不存在非共享具体享元类。</p>
+<h2 id="52-复合享元模式">5.2 复合享元模式</h2>
+<p><strong>将一些单纯享元对象进行使用组合模式加以组合还可以形成复合享元对象</strong>，这样的复合享元对象本身不能共享，但是它们可以分解为单纯享元对象，而后者可以共享。</p>
+<p><strong>通过复合享元模式可以确保复合享元类所包含的每个单纯享元类都具有相同的外部状态，而这些单纯享元的内部状态可以不一样</strong>，比如，上面棋子的例子中：</p>
+<ul>
+<li>黑棋子是单纯享元</li>
+<li>白棋子也是单纯享元</li>
+<li>这两个单纯享元的内部状态不同（颜色不同）</li>
+<li>但是可以设置相同的外部状态（比如设置为棋盘上同一位置，但是这样没有什么实际意义，或者设置显示为同一大小）</li>
+</ul>
+<p>例子如下，首先在抽象享元中添加一个以<code>int</code>为参数的<code>display</code>：</p>
+<pre><code class="language-java">interface IgoChessman
+{
+    Color getColor();
+    void display(int size);
+}
+</code></pre>
+<p>在具体享元实现即可：</p>
+<pre><code class="language-java">enum BlackChessman implements IgoChessman
+{
+    INSTANCE;
+    
+    @Override
+    public Color getColor()
+    {
+        return Color.BLACK;
+    }
+
+    @Override
+    public void display(int size)
+    {
+        System.out.println(&quot;棋子颜色&quot;+getColor().color());
+        System.out.println(&quot;棋子大小&quot;+size);
+    }
+}
+</code></pre>
+<p>接着添加复合享元类，里面包含一个<code>HashMap</code>存储所有具体享元：</p>
+<pre><code class="language-java">enum Chessmans implements IgoChessman
+{
+    INSTANCE;
+    private Map&lt;Color,IgoChessman&gt; map = new HashMap&lt;&gt;();
+
+    public void add(IgoChessman chessman)
+    {
+        map.put(chessman.getColor(),chessman);
+    }
+
+    @Override
+    public Color getColor()
+    {
+        return null;
+    }
+
+    @Override
+    public void display(int size)
+    {
+        map.forEach((k,v)-&gt;v.display(size));
+    }
+}
+</code></pre>
+<p>在<code>display</code>中，实际上是遍历了<code>HashMap</code>，给每一个具体享元的<code>display</code>传入相同的参数。<br>
+测试：</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    Factory factory = Factory.INSTANCE;
+    IgoChessman white = factory.white();
+    IgoChessman black = factory.black();
+    Chessmans chessmans = Chessmans.INSTANCE;
+    chessmans.add(white);
+    chessmans.add(black);
+    chessmans.display(30);
+}
+</code></pre>
+<p>输出：<br>
+<img src="https://img-blog.csdnimg.cn/20200727115118728.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样内部状态不同（颜色不同）的两个具体享元类（黑白棋）就被复合享元类（<code>Chessmans</code>）设置为具有相同的外部状态（显示大小30）。</p>
+<h1 id="6-补充说明">6 补充说明</h1>
+<ul>
+<li>与其他模式联用：享元模式通常需要与其他模式联用，比如工厂模式（享元工厂），单例模式（具体享元枚举单例），组合模式（复合享元模式）</li>
+<li>JDK中的享元模式：JDK中的<code>String</code>使用了享元模式。大家都知道<code>String</code>是不可变类，对于类似<code>String a = &quot;123&quot;</code>这种声明方式，会创建一个值为<code>&quot;123&quot;</code>的享元对象，下次使用<code>&quot;123&quot;</code>时从享元池获取，在修改享元对象时，比如<code>a += &quot;1&quot;</code>，先将原有对象复制一份，然后在新对象上进行修改，这种机制叫做&quot;Copy On Write&quot;。基本思路是，一开始大家都在共享内容，当某人需要修改时，把内容复制出去形成一个新内容并修改</li>
+</ul>
+<h1 id="7-主要优点">7 主要优点</h1>
+<ul>
+<li>降低内存消耗：享元模式可以极大地减少内存中对象的数量，使得相同或相似对象在内存中只保存一份，从而节约系统资源，提供系统性能</li>
+<li>外部状态独立：享元模式外部状态相对独立，不会影响到内部状态，从而使得享元对象可以在不同环境中被共享</li>
+</ul>
+<h1 id="8-主要缺点">8 主要缺点</h1>
+<ul>
+<li>增加复杂度：享元模式使得系统变复杂，需要分离出内部状态以及外部状态，使得程序逻辑复杂化</li>
+<li>运行时间变长：为了使对象可以共享，享元模式需要将享元对象的部分状态外部化，而读取外部状态使得运行时间变长</li>
+</ul>
+<h1 id="9-适用场景">9 适用场景</h1>
+<ul>
+<li>一个系统有大量相似或相同对象，造成大量内存浪费</li>
+<li>对象的大部分状态都可以外部化，可以将这些外部状态传入对象中</li>
+<li>由于需要维护享元池，造成一定的资源开销，因此在需要真正多次重复使用享元对象时才值得使用享元模式</li>
+</ul>
+<h1 id="10-总结">10 总结</h1>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200727112032150.png" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-07-27">2020-07-27</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（十三）：外观模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-27">2020-07-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-si-xiang-yuan-mo-shi/">设计模式学习笔记（十四）：享元模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-27">2020-07-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/">设计模式学习笔记（十三）：外观模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-27">2020-07-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/">设计模式学习笔记（十二）：装饰模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-1 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-3 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-4 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-8 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-9 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-12 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-13 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-14 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-15 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-16 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-17 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-18 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-20 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-21 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-22 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-23 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-24 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-25 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-26 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-27 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-28 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-29 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-30 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-31 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-32 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-33 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-34 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-35 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-36 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-37 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-38 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-39 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-40 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-41 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-42 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-43 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-44 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-45 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-46 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-47 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-48 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-49 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-50 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-51 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-52 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-53 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-54 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-55 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-56 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-57 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-59 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-60 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-61 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-62 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-63 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-64 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-65 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-66 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-67 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-68 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-69 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-70 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-71 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 191 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
