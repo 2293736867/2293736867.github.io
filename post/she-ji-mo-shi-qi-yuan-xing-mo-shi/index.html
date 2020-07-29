@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>设计模式（七）：原型模式 | 氷泠&#39;s blog</title>
+<title>设计模式学习笔记（七）：原型模式 | 氷泠&#39;s blog</title>
 <meta name="description" content="我配不上你，
 纵然很努力。" />
 <link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
@@ -17,30 +17,29 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-1 定义
-2 实现方法
+1 概述
 
-2.1 通用实现方法
-2.2 clone()
+1.1 引言
+1.2 定义
+1.3 结构图
+1.4 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 抽象原型类
+2.3 具体原型类
+
+2.3.1 通用实现方法
+2.3.2 clone
+
+
+2.4 客户类
 
 
 3 实例
-4 浅克隆与深克隆
-
-4.1 浅克隆
-4.2 深克隆
-
-
-5 原型管理器
-
-5.1 定义
-5.2 实例
-
-
-6 主要优点
-7 主要缺点
-8 适用场景
-9..." />
+4 浅克..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -90,7 +89,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595868396969" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596035684254" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -105,7 +104,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-qi-yuan-xing-mo-shi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-18"><i class="fa fa-calendar"></i><span class="lately">10 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-18"><i class="fa fa-calendar"></i><span class="lately">12 天前</span></time>
               
               <a href="https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-qi-yuan-xing-mo-shi/"> </span>
@@ -119,7 +118,7 @@
                       <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
                     
               </div>
-              <h1 class="title ularge white bold">设计模式（七）：原型模式</h1>
+              <h1 class="title ularge white bold">设计模式学习笔记（七）：原型模式</h1>
             </div>
           </div>
         </div>  
@@ -130,11 +129,25 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%AE%9A%E4%B9%89">1 定义</a></li>
-<li><a href="#2-%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2 实现方法</a>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
 <ul>
-<li><a href="#21-%E9%80%9A%E7%94%A8%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2.1 通用实现方法</a></li>
-<li><a href="#22-clone">2.2 <code>clone()</code></a></li>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E5%8E%9F%E5%9E%8B%E7%B1%BB">2.2 抽象原型类</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E5%8E%9F%E5%9E%8B%E7%B1%BB">2.3 具体原型类</a>
+<ul>
+<li><a href="#231-%E9%80%9A%E7%94%A8%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95">2.3.1 通用实现方法</a></li>
+<li><a href="#232-clone">2.3.2 <code>clone</code></a></li>
+</ul>
+</li>
+<li><a href="#24-%E5%AE%A2%E6%88%B7%E7%B1%BB">2.4 客户类</a></li>
 </ul>
 </li>
 <li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
@@ -156,97 +169,95 @@
 <li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
 </ul>
 </p>
-<h1 id="1-定义">1 定义</h1>
-<p><strong>原型模式：使用原型实例指定创建对象的种类，并且通过克隆这些原型创建新的对象。<br>
-原型模式是一种对象创建型模式。</strong></p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>对于某些岗位来说，工作周报的内容会大同小异，如果用户每次都需要从空白的周报进行输入无疑会浪费用户很多的时间，如果周报能够按照用户的自定义来生成模板，或者从已有模板修改小部分得到新模板，这样用户的输入效率会大大提高。原型模式正是为解决这类问题而生。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>原型模式：使用原型实例指定创建对象的种类，并且通过克隆这些原型创建新的对象。</strong></p>
+<p>原型模式是一种对象创建型模式。</p>
 <p>原型模式的工作原理很简单，将一个原型对象传给那个要发动创建的对象，这个要发动创建的对象通过请求原型对象克隆自己来实现创建过程。原型模式是一种另类的创建型模式，创建克隆对象的工厂就是原型类自身，工厂方法由克隆方法实现。</p>
 <p>通过克隆方法创建的对象是全新的对象，它们在内存中拥有新的地址，通常对克隆多产生的对象进行的修改不会对原型对象造成任何的影响，每一个克隆的对象都是相互独立的，通过不同的方式对克隆对象进行修改之后，可以得到一系列相似但不完全相同的对象。</p>
-<p>结构图如下：</p>
+<h2 id="13-结构图">1.3 结构图</h2>
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200717155947994.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>原型模式包含以下三个角色：</p>
+<h2 id="14-角色">1.4 角色</h2>
 <ul>
-<li>Prototype（原型抽象类）：声明克隆方法的接口，是所有具体原型类的公共父类，可以是抽象类也可以是接口，还能是具体实现类</li>
-<li>ConcretePrototypr（具体原型类）：实现在抽象原型类中声明的克隆方法，在克隆方法中返回自己的一个克隆对象</li>
-<li>Client（客户类）：让一个原型对象克隆自身从而创建一个新的对象，在客户类中只需要直接实例化或通过工厂方法等方式创建一个原型对象，再通过调用该对象的克隆方法即可得到多个相同的对象。</li>
+<li><strong><code>Prototype</code>（抽象原型类）：声明克隆方法的接口，是所有具体原型类的公共父类，可以是抽象类也可以是接口，还能是具体实现类</strong></li>
+<li><strong><code>ConcretePrototypr</code>（具体原型类）：实现在抽象原型类中声明的克隆方法，在克隆方法中返回自己的一个克隆对象</strong></li>
+<li><strong><code>Client</code>（客户类）：让一个原型对象克隆自身从而创建一个新的对象，在客户类中只需要直接实例化或通过工厂方法等方式创建一个原型对象，再通过调用该对象的克隆方法即可得到多个相同的对象。</strong></li>
 </ul>
-<h1 id="2-实现方法">2 实现方法</h1>
-<p>在Java中常用的实现方法有两种：</p>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象原型类：定义为接口/抽象类，至少需要定义一个类似<code>clone</code>的方法</li>
+<li>定义具体原型类：实现/继承抽象原型类，核心是实现其中的<code>clone</code></li>
+<li>定义客户类：针对抽象原型类编程，首先需要通过实例化或工厂方法等创建一个原型对象，接着通过其中的<code>clone</code>方法获取多个对象</li>
+</ul>
+<h2 id="22-抽象原型类">2.2 抽象原型类</h2>
+<p>这里定义为接口：</p>
+<pre><code class="language-java">interface Prototype
+{
+    Prototype clone();
+    String getAttr();
+    void setAttr(String attr);
+}
+</code></pre>
+<h2 id="23-具体原型类">2.3 具体原型类</h2>
+<p>实现抽象原型接口，核心在于如何实现<code>clone</code>，在Java中<code>clone</code>通常有两种实现方式：</p>
 <ul>
 <li>通用实现方法</li>
 <li><code>clone()</code>方法</li>
 </ul>
-<h2 id="21-通用实现方法">2.1 通用实现方法</h2>
-<p>通用的克隆实现方法是在具体原型类的克隆方法中实例化一个与自身类型相同的对象并将其返回，并将相关的参数传入新创建的对象中，保证成员变量相同。<br>
-示例代码：</p>
-<pre><code class="language-java">public class Test
+<h3 id="231-通用实现方法">2.3.1 通用实现方法</h3>
+<p>通用的克隆实现方法是在具体原型类的克隆方法中实例化一个与自身类型相同的对象并将其返回，并将相关的参数传入新创建的对象中，保证成员变量相同。</p>
+<p>代码如下：</p>
+<pre><code class="language-java">class ConcretePrototype implements Prototype
 {
-    public static void main(String[] args) {
-        Prototype prototype1 = new ConcretePrototype();
-        prototype1.setField(&quot;test&quot;);
-        Prototype prototype2 = prototype1.clone();
-        System.out.println(prototype1.getField() == prototype2.getField());
-        System.out.println(prototype1 == prototype2);
-    }
-}
+    private String attr;
 
-interface Prototype
-{
-    Prototype clone();
-    void setField(String f);
-    String getField();
-}
+    @Override
+	public String getAttr() {
+		return this.attr;
+	}
 
-
-class ConcretePrototype implements Prototype
-{
-    private String field;
-
-    public void setField(String f)
-    {
-        field = f;
-    }
-
-    public String getField()
-    {
-        return field;
-    }
-
+    @Override
+	public void setAttr(String attr) {
+		this.attr = attr;
+	}
+	
+    @Override
     public Prototype clone()
     {
-        Prototype prototype = new ConcretePrototype();
-        prototype.setField(this.field);
+        Prototype = new ConcretePrototype();
+        prototype.setAttr(attr);
         return prototype;
     }
 }
 </code></pre>
-<h2 id="22-clone">2.2 <code>clone()</code></h2>
-<p><code>java.lang.Object</code>提供了一个<code>clone()</code>，可以将一个Java对象克隆一份，利用<code>clone()</code>可以直接将对象克隆一份，但是必须实现<code>Cloneable</code>接口，否则<code>clone()</code>时会抛出<code>CloneNotSupportedException</code>。<br>
-示例代码如下：</p>
-<pre><code class="language-java">// 在2.1的基础上修改ConcreteProtoype即可
-class ConcretePrototype implements Prototype,Cloneable
+<h3 id="232-clone">2.3.2 <code>clone</code></h3>
+<p><code>java.lang.Object</code>提供了一个<code>clone()</code>，可以将一个Java对象克隆一份，利用<code>clone()</code>可以直接将对象克隆一份，但是必须实现<code>Cloneable</code>接口，否则<code>clone()</code>时会抛出<code>CloneNotSupportedException</code>。</p>
+<p>代码如下：</p>
+<pre><code class="language-java">class ConcretePrototype implements Prototype,Cloneable
 {
-    private String field;
+    private String attr;
 
-    public void setField(String f)
-    {
-        field = f;
+	public String getAttr() {
+		return this.attr;
+	}
+
+	public void setAttr(String attr) {
+		this.attr = attr;
     }
-
-    public String getField()
-    {
-        return field;
-    }
-
+    
     public Prototype clone()
     {
         Object object = null;
-        try
+        try 
         {
             object = super.clone();
-        }
-        catch(Exception e)
+        } 
+        catch (Exception e) 
         {
-            e.printStackTrace();
+            e.printStacktrace();
         }
         return (Prototype)object;
     }
@@ -264,10 +275,28 @@ class ConcretePrototype implements Prototype,Cloneable
 <li><code>clone()</code>中调用<code>super.clone()</code></li>
 <li>派生类需要实现<code>Cloneable</code>接口</li>
 </ul>
+<h2 id="24-客户类">2.4 客户类</h2>
+<p>客户类针对抽象原型类编程，通过实例化获取具体原型后，调用其中的<code>clone</code>进行克隆：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) {
+        Prototype prototype1 = new ConcretePrototype();
+        prototype1.setAttr(&quot;test&quot;);
+        Prototype prototype2 = prototype1.clone();
+        System.out.println(prototype1.getAttr() == prototype2.getAttr());
+        System.out.println(prototype1 == prototype2);
+    }
+}
+</code></pre>
 <h1 id="3-实例">3 实例</h1>
 <blockquote>
 <p>开发一个工作周报系统，工作周报的内容都大同小异，只有一些小地方存在差异，但是系统每次默认创建的都是空白报表，用户不断复制粘贴来填写重复内容。使用原型模式对其进行优化，快速创建相同或类似的工作周报。</p>
 </blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象原型类：无（也可以认为是<code>Object</code>）</li>
+<li>具体原型类：<code>WeeklyLog</code></li>
+</ul>
 <p>代码如下：</p>
 <pre><code class="language-java">public class Test
 {
@@ -311,7 +340,6 @@ class WeeklyLog implements Cloneable
         }
         return (WeeklyLog)obj;
     }
-    
 }
 </code></pre>
 <h1 id="4-浅克隆与深克隆">4 浅克隆与深克隆</h1>
@@ -319,14 +347,14 @@ class WeeklyLog implements Cloneable
 <h2 id="41-浅克隆">4.1 浅克隆</h2>
 <p>在浅克隆中，如果原型对象的成员变量是值类型，将复制一份给克隆对象。（在Java中）值类型包括：</p>
 <ul>
-<li>int</li>
-<li>double</li>
-<li>byte</li>
-<li>boolean</li>
-<li>char</li>
-<li>float</li>
-<li>long</li>
-<li>short</li>
+<li><code>int</code></li>
+<li><code>double</code></li>
+<li><code>byte</code></li>
+<li><code>boolean</code></li>
+<li><code>char</code></li>
+<li><code>float</code></li>
+<li><code>long</code></li>
+<li><code>short</code></li>
 </ul>
 <p>也就是这些类型的值都会完整复制一份给克隆对象，对于引用类型，则将引用对象的地址复制一份给克隆对象。（在Java中）引用类型就是除了基本类型之外的所有类型，常见的有：</p>
 <ul>
@@ -337,8 +365,8 @@ class WeeklyLog implements Cloneable
 <p>对于引用类型，原型对象与克隆对象指向相同的内存地址，也就是其实并没有被复制，而是共享一份地址相同的值。<br>
 在Java中可以通过<code>Object</code>的<code>clone()</code>实现浅克隆，也就是上面例子的做法。</p>
 <h2 id="42-深克隆">4.2 深克隆</h2>
-<p>在深克隆中，无论变量是值类型还是引用类型都会完整复制一份给克隆对象。<br>
-在Java中实现深克隆可以通过序列化等方式实现。序列化就是将对象写到流的过程，写到流中的对象是原有对象的一个复制品，而原对象仍然存在于内存中。想要进行序列化必须实现<code>Serializable</code>接口。</p>
+<p>在深克隆中，无论变量是值类型还是引用类型都会完整复制一份给克隆对象。</p>
+<p>在Java中实现深克隆可以通过序列化等方式实现。序列化就是将对象写到流的过程，写到流中的对象是原有对象的一个复制品，而原对象仍然存在于内存中。想要进行序列化必须实现<code>Serializable</code>接口。</p>
 <p>代码如下：</p>
 <pre><code class="language-java">public class Test
 {
@@ -523,7 +551,10 @@ class SRS implements OfficialDocument
 <li>需要避免使用分层次的工厂类来创建分层次的对象，并且类的实例对象只有一个或很少的几个组合状态，通过复制原型对象得到新实例可能比使用构造函数创建一个实例方便</li>
 </ul>
 <h1 id="9-总结">9 总结</h1>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718011132428.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200729063842999.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -603,6 +634,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-44-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-01">2020-08-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/">每日分享 第44期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-43-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-31">2020-07-31</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/">每日分享 第43期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-42-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-42-qi.jpg');"></span>
                     </a>
@@ -617,33 +678,11 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-41-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-29">2020-07-29</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/">每日分享 第41期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-40-qi.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-28">2020-07-28</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/">每日分享 第40期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
+                  
+                  
                   
                   
                   
@@ -1224,7 +1263,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 194 篇文章
+          ©2019 共 198 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

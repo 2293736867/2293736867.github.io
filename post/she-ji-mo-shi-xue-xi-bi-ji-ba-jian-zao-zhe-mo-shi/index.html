@@ -16,11 +16,30 @@
 <script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
-    <meta name="description" content="1 建造者模式
-1.1 定义
-建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
-建造者模式是一种对象创建型模式。
-建造者模式是较为复杂的创建型模式，它将客户端与包含多个组成部分（或部件）的复杂对象的创..." />
+    <meta name="description" content="
+1 概述
+
+1.1 引言
+1.2 复杂对象
+1.3 定义
+1.4 结构图
+1.5 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 产品角色
+2.3 抽象建造者
+2.4 具体建造者
+2.5 导演类
+2.6 客户端
+
+
+3 实例
+4 优化
+
+..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -70,7 +89,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595868396969" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596035684254" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -85,7 +104,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-19"><i class="fa fa-calendar"></i><span class="lately">9 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-19"><i class="fa fa-calendar"></i><span class="lately">11 天前</span></time>
               
               <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/"> </span>
@@ -109,27 +128,70 @@
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <h1 id="1-建造者模式">1 建造者模式</h1>
-<h2 id="11-定义">1.1 定义</h2>
-<p><strong>建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</strong><br>
-<strong>建造者模式是一种对象创建型模式。</strong></p>
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%A4%8D%E6%9D%82%E5%AF%B9%E8%B1%A1">1.2 复杂对象</a></li>
+<li><a href="#13-%E5%AE%9A%E4%B9%89">1.3 定义</a></li>
+<li><a href="#14-%E7%BB%93%E6%9E%84%E5%9B%BE">1.4 结构图</a></li>
+<li><a href="#15-%E8%A7%92%E8%89%B2">1.5 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E4%BA%A7%E5%93%81%E8%A7%92%E8%89%B2">2.2 产品角色</a></li>
+<li><a href="#23-%E6%8A%BD%E8%B1%A1%E5%BB%BA%E9%80%A0%E8%80%85">2.3 抽象建造者</a></li>
+<li><a href="#24-%E5%85%B7%E4%BD%93%E5%BB%BA%E9%80%A0%E8%80%85">2.4 具体建造者</a></li>
+<li><a href="#25-%E5%AF%BC%E6%BC%94%E7%B1%BB">2.5 导演类</a></li>
+<li><a href="#26-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.6 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E4%BC%98%E5%8C%96">4 优化</a>
+<ul>
+<li><a href="#41-%E7%9C%81%E7%95%A5director">4.1 省略<code>Director</code></a></li>
+<li><a href="#42-%E9%92%A9%E5%AD%90%E6%96%B9%E6%B3%95">4.2 钩子方法</a></li>
+<li><a href="#43-%E8%BF%94%E5%9B%9Ebuilder">4.3 返回Builder</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">6 主要缺点</a></li>
+<li><a href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">7 适用场景</a></li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
 <p>建造者模式是较为复杂的创建型模式，它将客户端与包含多个组成部分（或部件）的复杂对象的创建过程分离，客户端无须知道复杂对象的内部组成部分与装配方式，只需要知道所需的建造者类型即可。建造者模式关注一步一步地创建一个复杂对象，不同的具体建造者定义了不同的创建过程，且具体建造者相互独立，增加新的建造者非常方便，无须修改已有代码，系统具有较好的扩展性。</p>
 <h2 id="12-复杂对象">1.2 复杂对象</h2>
-<p>建造者模式中用到了复杂对象这个概念。<br>
-<strong>复杂对象就是指那些包含多个成员变量的对象，这些成员变量也叫部件或者零件</strong>，例如汽车包括方向盘，发动机，轮胎等 ，<br>
+<p>建造者模式中用到了复杂对象这个概念。</p>
+<p><strong>复杂对象就是指那些包含多个成员变量的对象，这些成员变量也叫部件或者零件</strong>，例如汽车包括方向盘，发动机，轮胎等 ，<br>
 汽车就是复杂对象，方向盘，发动机以及轮胎就是汽车的部件。</p>
-<h2 id="13-结构图">1.3 结构图</h2>
+<h2 id="13-定义">1.3 定义</h2>
+<p><strong>建造者模式：将一个复杂的对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</strong></p>
+<p>建造者模式是一种对象创建型模式。</p>
+<h2 id="14-结构图">1.4 结构图</h2>
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200718102523398.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="14-角色">1.4 角色</h2>
+<h2 id="15-角色">1.5 角色</h2>
 <p>建造者模式包含以下四个角色：</p>
 <ul>
-<li><code>Builder</code>（抽象建造者）：为创建一个产品Product对象的各个部件指定抽象接口，在该接口中一般声明两类方法，一类是<code>buildXXX()</code>方法，用于创建复杂对象的各个部分（部件），另一类是是<code>getResult()</code>，用于返回复杂对象。<code>Builder</code>既可以是抽象类，也可以是接口</li>
-<li><code>ConcreteBuilder</code>（具体建造者）：实现了<code>Builder</code>接口或者继承了<code>Builder</code>类，实现各个部件的具体构造和装配方法，定义并明确其所创建的复杂对象，也可以提供一个方法返回创建好的复杂对象</li>
-<li><code>Product</code>（产品角色）：是被构建的复杂对象，包含多个组成部件，具体建造者创建该产品的内部表示并定义其装配过程</li>
-<li><code>Director</code>（指挥者）：指挥者又叫导演类，复杂安排复杂对象的建造次序，指挥者与抽象建造者之间存在关联关系，可以在其<code>construct()</code>建造方法中调用建造者对象的部件构造以及装配方法，完成复杂对象的建造。客户端一般只需要与导演类进行交互，在客户端确定具体建造者的类型，并实例化具体建造者对象，然后通过导演类的构造函数或者setter将该对象传入导演类中</li>
+<li><strong><code>Builder</code>（抽象建造者）：为创建一个产品Product对象的各个部件指定抽象接口，在该接口中一般声明两类方法，一类是<code>buildXXX()</code>方法，用于创建复杂对象的各个部分（部件），另一类是是<code>getResult()</code>，用于返回复杂对象。<code>Builder</code>既可以是抽象类，也可以是接口</strong></li>
+<li><strong><code>ConcreteBuilder</code>（具体建造者）：实现了<code>Builder</code>接口或者继承了<code>Builder</code>类，实现各个部件的具体构造和装配方法，定义并明确其所创建的复杂对象，也可以提供一个方法返回创建好的复杂对象</strong></li>
+<li><strong><code>Product</code>（产品角色）：是被构建的复杂对象，包含多个组成部件，具体建造者创建该产品的内部表示并定义其装配过程</strong></li>
+<li><strong><code>Director</code>（指挥者）：指挥者又叫导演类，复杂安排复杂对象的建造次序，指挥者与抽象建造者之间存在关联关系，可以在其<code>construct()</code>建造方法中调用建造者对象的部件构造以及装配方法，完成复杂对象的建造。客户端一般只需要与导演类进行交互，在客户端确定具体建造者的类型，并实例化具体建造者对象，然后通过导演类的构造函数或者setter将该对象传入导演类中</strong></li>
 </ul>
-<h3 id="141-product">1.4.1 <code>Product</code></h3>
-<p>一般来说<code>Product</code>是一个复杂对象，典型的定义如下：</p>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义产品角色：一般为复杂对象</li>
+<li>定义抽象建造者：根据产品角色确定<code>bulidXXX</code>的数量，同时声明类似<code>getResult</code>返回产品角色对象的方法</li>
+<li>定义具体建造者：实现抽象建造者中的<code>buildXXX</code>方法</li>
+<li>定义导演类：通过构造方法或者setter注入抽象建造者，提供类似<code>construct</code>的方法给外界，调用具体建造者的方法并返回产品角色对象</li>
+</ul>
+<h2 id="22-产品角色">2.2 产品角色</h2>
+<p>一般来说<code>Product</code>是一个复杂对象，典型的实现如下：</p>
 <pre><code class="language-java">class Product
 {
 	private type1 part1;
@@ -139,8 +201,8 @@
 }
 </code></pre>
 <p>其中<code>type1</code>，<code>type2</code>等指各种不同的类型，一般来说会有嵌套类。</p>
-<h3 id="142-builder">1.4.2 <code>Builder</code></h3>
-<p>抽象建造者的典型定义如下：</p>
+<h2 id="23-抽象建造者">2.3 抽象建造者</h2>
+<p>抽象建造者的典型实现如下：</p>
 <pre><code class="language-java">abstract class Builder
 {
 	protected Product product = new Product();
@@ -154,11 +216,11 @@
 }
 </code></pre>
 <p>抽象建造者中声明了一系列<code>buildXXX</code>方法，用于创建<code>Product</code>的各个部件，具体创建过程在<code>ConcreteBuilder</code>中实现，<code>getResult()</code>返回已创建完成的<code>Product</code>。</p>
-<h3 id="143-concretebuilder">1.4.3 <code>ConcreteBuilder</code></h3>
-<p><code>ConcreteBuilder</code>实现了<code>Builder</code>中的<code>buildXXX</code>方法，通过调用<code>Product</code>的setter来实现给产品对象的各部分赋值。<br>
-不同的<code>ConcreteBuilder</code>在实现<code>buildXXX</code>是将有所区别，比如传入<code>Product</code>的setter参数的不同。<br>
-另外在有些<code>ConcreteBuilder</code>中某些<code>buildXXX</code>无须实现（提供一个空实现），这些对客户端来说无须关心，客户端只需要知道具体建造者的类型即可。<br>
-典型定义如下：</p>
+<h2 id="24-具体建造者">2.4 具体建造者</h2>
+<p><code>ConcreteBuilder</code>实现了<code>Builder</code>中的<code>buildXXX</code>方法，通过调用<code>Product</code>的setter来实现给产品对象的各部分赋值。</p>
+<p>不同的<code>ConcreteBuilder</code>在实现<code>buildXXX</code>时将有所区别，比如传入<code>Product</code>的setter参数的不同。</p>
+<p>另外在有些<code>ConcreteBuilder</code>中某些<code>buildXXX</code>无须实现（提供一个空实现），这些对客户端来说无须关心，客户端只需要知道具体建造者的类型即可。</p>
+<p>典型实现如下：</p>
 <pre><code class="language-java">class ConcreteBuilder extends Builder
 {
 	public void buildPart1()
@@ -173,13 +235,9 @@
 	{
 		product.setPart3(&quot;part3&quot;);
 	}
-	public Product getResult()
-	{
-		return product;
-	}
 }
 </code></pre>
-<h3 id="144-director">1.4.4 <code>Director</code></h3>
+<h2 id="25-导演类">2.5 导演类</h2>
 <p><code>Director</code>类主要有两个作用：</p>
 <ul>
 <li>隔离了客户与创建过程</li>
@@ -208,17 +266,27 @@
 	}
 }
 </code></pre>
-<h1 id="2-实例">2 实例</h1>
+<h2 id="26-客户端">2.6 客户端</h2>
+<p>创建具体建造者并传入导演类作为构造方法参数，然后调用<code>construct</code>即可获取产品对象：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Director director = new Director(new ConcreteBuilder());
+    Product product = director.construct();
+    System.out.println(product.getPart1());
+}
+</code></pre>
+<h1 id="3-实例">3 实例</h1>
 <blockquote>
-<p>游戏角色的创建：不同的角色具有差别极大的外部特征，而且要求随着游戏的进行会不断出现新的角色，也就是说扩展性要好。这里例子简化就创建三个角色：英雄，天使与恶魔。</p>
+<p>游戏角色的创建：不同的角色具有差别极大的外部特征，而且要求随着游戏的进行会不断出现新的角色，也就是说扩展性要好。这里例子简化就创建三个角色：英雄，天使与恶魔，使用建造者模式进行设计。</p>
 </blockquote>
-<p>思路：</p>
+<p>设计如下：</p>
 <ul>
-<li><code>Actor</code>为复杂产品</li>
-<li><code>ActorController</code>为指挥者</li>
-<li><code>ActorBuilder</code>为抽象建造者</li>
-<li><code>HeroBuilder</code>/<code>AngelBuilder</code>/<code>DevilBuilder</code>为具体建造者</li>
+<li>产品对象：<code>Actor</code></li>
+<li>抽象建造者：<code>ActorBuilder</code></li>
+<li>具体建造者：<code>HeroBuilder</code>+<code>AngelBuilder</code>+<code>DevilBuilder</code></li>
+<li>指挥者：<code>ActorController</code></li>
 </ul>
+<p>代码如下：</p>
 <pre><code class="language-java">// 复杂产品
 class Actor
 {
@@ -297,8 +365,8 @@ class ActorController
     }
 }
 </code></pre>
-<h1 id="3-优化">3 优化</h1>
-<h2 id="31-省略director">3.1 省略<code>Director</code></h2>
+<h1 id="4-优化">4 优化</h1>
+<h2 id="41-省略director">4.1 省略<code>Director</code></h2>
 <p>其实<code>Director</code>是可以省略的，直接与<code>Builder</code>合并，在<code>Builder</code>中提供类似<code>Direcotr</code>中的<code>construct()</code>方法，并定义为静态方法，如：</p>
 <pre><code class="language-java">abstract class ActorBuilder
 {
@@ -348,7 +416,7 @@ class ActorController
 <pre><code class="language-java">Actor actor = new AngleBuilder().build();
 </code></pre>
 <p>这两种方式简化了系统结构的同时又不影响灵活性以及可扩展性，但是加重了抽象建造者的职责，如果<code>build</code>方法较为复杂，待构建的产品组成部分较多，建议还是将其单独封装在<code>Director</code>中，这样更加符合SRP（单一权责原则）。</p>
-<h2 id="32-钩子方法">3.2 钩子方法</h2>
+<h2 id="42-钩子方法">4.2 钩子方法</h2>
 <p>钩子方法是一种可以控制是否调用某个<code>buildXXX</code>的方法，特征如下：</p>
 <ul>
 <li>返回类型为<code>boolean</code></li>
@@ -416,9 +484,9 @@ class ActorController
     System.out.println(actor.getFace());
 }
 </code></pre>
-<p>输出如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200718142036116.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="33-返回builder">3.3 返回Builder</h2>
+<p>输出如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718142036116.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="43-返回builder">4.3 返回Builder</h2>
 <p>在实际应用中<code>Director</code>较少出现，通常只有<code>Builder</code>以及<code>Product</code>，而且<code>Builder</code>是作为<code>Product</code>的内部类，提供一系列<code>set</code>方法，这些<code>set</code>方法返回一个<code>Builder</code>方便后续调用，最后以一个<code>build()</code>结尾，比如OkHttp中的<code>Request</code>/<code>OkHttpClient</code>：</p>
 <pre><code class="language-java">OkHttpClient client = new OkHttpClient.Builder()
 .connectTimeout(5000,TimeUnit.MILLISECONDS)
@@ -430,26 +498,29 @@ Request request = new Request.Builder()
 .post(requestBody)
 .build();
 </code></pre>
-<h1 id="4-主要优点">4 主要优点</h1>
+<h1 id="5-主要优点">5 主要优点</h1>
 <ul>
 <li>封装细节：建造者模式中客户端不需要知道产品内部组成细节，将产品本身与产品的创建过程解耦，使得相同的创建过程可以创建不同的产品对象</li>
 <li>扩展性好：每一个具体建造者都相对独立，而与其他建造者无关，伊尼茨可以很方便地替换具体建造者或增加新的具体建造者，用户使用不同的具体建造者即可得到不同的产品对象。由于指挥者针对抽象建造者编程，增加新的具体建造者无须修改原有类库的代码，扩展方便，符合开闭原则</li>
 <li>控制创建过程：将复杂产品的创建步骤分解在不同的方法中，使得创建过程更加清晰，更加精细地控制创建过程</li>
 </ul>
-<h1 id="5-主要缺点">5 主要缺点</h1>
+<h1 id="6-主要缺点">6 主要缺点</h1>
 <ul>
 <li>范围受限：建造者模式所创建的产品一般具有较多的共同点，其组成部分相似，如果产品之间的差异性很大，例如很多组成部分不相同，就不适合使用建造者模式，因此使用范围收到一定限制</li>
 <li>建造者多：如果产品内部结构复杂多变，可能会需要定义很多具体建造者类来实现这种变化，增大系统的理解难度与运行成本</li>
 </ul>
-<h1 id="6-适用场景">6 适用场景</h1>
+<h1 id="7-适用场景">7 适用场景</h1>
 <ul>
 <li>需要生成的产品对象有复杂的内部结构，这些产品对象通常包含多个成员变量</li>
 <li>需要生成的产品对象的属性相互依赖，需要指定其生成顺序</li>
 <li>对象的创建过程独立于创建该对象的类。在建造者模式中通过引入指挥者类，将创建过程封装在指挥者类中，而不再建造者类或者客户类中</li>
 <li>隔离复杂对象的创建与使用，并使得相同的创建过程可以创建不同的产品</li>
 </ul>
-<h1 id="7-总结">7 总结</h1>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200718143426156.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="8-总结">8 总结</h1>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200729071550422.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -529,6 +600,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-44-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-01">2020-08-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/">每日分享 第44期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-43-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-31">2020-07-31</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/">每日分享 第43期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-42-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-42-qi.jpg');"></span>
                     </a>
@@ -543,33 +644,11 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-41-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-29">2020-07-29</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/">每日分享 第41期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-40-qi.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-28">2020-07-28</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/">每日分享 第40期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
+                  
+                  
                   
                   
                   
@@ -1150,7 +1229,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 194 篇文章
+          ©2019 共 198 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

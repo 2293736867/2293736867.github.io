@@ -17,18 +17,28 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-1 定义
-2 结构
+1 概述
+
+1.1 引言
+1.2 定义
+1.3 结构图
+1.4 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 抽象产品角色
+2.3 具体产品角色
+2.4 工厂角色
+2.5 客户端
+
+
 3 实例
 4 简化
 5 主要优点
 6 主要缺点
-7 适用场景
-8 总结
-
-
-1 定义
-简单工厂模式（Simple Factory Pattern）：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常..." />
+7 ..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -78,7 +88,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595868396969" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596035684254" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -93,7 +103,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-si-jian-dan-gong-han-mo-shi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-13"><i class="fa fa-calendar"></i><span class="lately">15 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-13"><i class="fa fa-calendar"></i><span class="lately">17 天前</span></time>
               
               <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-si-jian-dan-gong-han-mo-shi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-si-jian-dan-gong-han-mo-shi/"> </span>
@@ -118,8 +128,23 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%AE%9A%E4%B9%89">1 定义</a></li>
-<li><a href="#2-%E7%BB%93%E6%9E%84">2 结构</a></li>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E4%BA%A7%E5%93%81%E8%A7%92%E8%89%B2">2.2 抽象产品角色</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E4%BA%A7%E5%93%81%E8%A7%92%E8%89%B2">2.3 具体产品角色</a></li>
+<li><a href="#24-%E5%B7%A5%E5%8E%82%E8%A7%92%E8%89%B2">2.4 工厂角色</a></li>
+<li><a href="#25-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.5 客户端</a></li>
+</ul>
+</li>
 <li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
 <li><a href="#4-%E7%AE%80%E5%8C%96">4 简化</a></li>
 <li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
@@ -128,28 +153,103 @@
 <li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
 </ul>
 </p>
-<h1 id="1-定义">1 定义</h1>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>简单工厂模式不属于GoF23种设计模式之一，但是实际中用途广泛，并且可以作为学习“工厂方法模式”以及“抽象工厂模式”的基础。在简单工厂模式中，工厂类提供一个创建产品的工厂方法，用于创建各种产品。客户端只需传入对应的参数，利用该方法即可根据传入参数的不同返回不同的具体产品对象。</p>
+<h2 id="12-定义">1.2 定义</h2>
 <p><strong>简单工厂模式（Simple Factory Pattern）：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。</strong></p>
 <p>因为在简单工厂模式用于创建实例的方法是静态的方法，因此简单工厂模式又被称为静态工厂方法模式，它属于类创建型模式。</p>
-<p>尽管简单工厂模式不属于GoF23种设计模式之一，但是实际中用途广泛，并且可以作为学习“工厂方法模式”以及“抽象工厂模式”的基础。</p>
-<h1 id="2-结构">2 结构</h1>
+<h2 id="13-结构图">1.3 结构图</h2>
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/202007122243106.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>由图可知包含以下三个角色：</p>
+<h2 id="14-角色">1.4 角色</h2>
 <ul>
-<li>Factory（工厂角色）：即工厂类，负责实现创建所有产品实例的内部逻辑，工厂类可以被外界直接调用，创建所需要的产品对象，在工厂类中提供了一个静态工厂方法用于获取产品</li>
-<li>Product（抽象产品角色）：是工厂类所创建的所有对象的父类，封装了各种产品对象的公有方法。Product会提高系统的灵活性，使得在工厂类只需要定义一个通用的工厂产品方法，因为所有创建的具体产品都是其子类对象</li>
-<li>ConcreteProduct（具体产品角色）：所有被创建的对象都充当这个角色的某个具体类的实例。每一个具体产品角色都继承了抽象产品角色，需要实现在抽象产品中声明的抽象方法</li>
+<li><strong><code>Factory</code>（工厂角色）：即工厂类，负责实现创建所有产品实例的内部逻辑，工厂类可以被外界直接调用，创建所需要的产品对象，在工厂类中提供了一个静态工厂方法用于获取产品</strong></li>
+<li><strong><code>Product</code>（抽象产品角色）：是工厂类所创建的所有对象的父类，封装了各种产品对象的公有方法。Product会提高系统的灵活性，使得在工厂类只需要定义一个通用的工厂产品方法，因为所有创建的具体产品都是其子类对象</strong></li>
+<li><strong><code>ConcreteProduct</code>（具体产品角色）：所有被创建的对象都充当这个角色的某个具体类的实例。每一个具体产品角色都继承了抽象产品角色，需要实现在抽象产品中声明的抽象方法</strong></li>
 </ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象产品角色：定义为抽象类/接口，封装各种产品对象的公有方法</li>
+<li>定义具体产品角色：实现/继承抽象产品角色，实现其中声明的方法</li>
+<li>定义工厂角色：提供静态获取具体产品方法，根据传入参数的不同返回不同的产品</li>
+</ul>
+<h2 id="22-抽象产品角色">2.2 抽象产品角色</h2>
+<p>简单定义如下：</p>
+<pre><code class="language-java">interface Product
+{
+    void method();
+}
+</code></pre>
+<h2 id="23-具体产品角色">2.3 具体产品角色</h2>
+<p>实现抽象产品角色接口：</p>
+<pre><code class="language-java">class ConcreteProductA implements Product
+{
+    public void method()
+    {
+        System.out.println(&quot;具体产品A方法&quot;);
+    }
+}
+
+class ConcreteProductB implements Product
+{
+    public void method()
+    {
+        System.out.println(&quot;具体产品B方法&quot;);
+    }
+}
+</code></pre>
+<h2 id="24-工厂角色">2.4 工厂角色</h2>
+<p>由于工厂角色需要根据传入参数不同返回不同的具体产品，因此通常使用枚举作为传入参数，先定义具体产品的枚举类：</p>
+<pre><code class="language-java">enum ConcreteProduct
+{
+    A,B;
+}
+</code></pre>
+<p>接着定义静态工厂方法：</p>
+<pre><code class="language-java">class Factory
+{
+    public static Product get(ConcreteProduct type)
+    {
+        switch (type) 
+        {
+            case A:
+                return new ConcreteProductA();
+            case B:
+                return new ConcreteProductB();
+            default:
+                return null;
+        }
+    }
+}
+</code></pre>
+<p>根据参数的不同创建不同的具体产品实例并返回。</p>
+<h2 id="25-客户端">2.5 客户端</h2>
+<p>传入不同参数即可获取不同的具体产品：</p>
+<pre><code class="language-java">Product product = Factory.get(ConcreteProduct.A);
+product.method();
+product = Factory.get(ConcreteProduct.B);
+product.method();
+</code></pre>
 <h1 id="3-实例">3 实例</h1>
-<p>某公司需要开发一个图表库，该图表库可以提供各种不同外观的图表，例如柱状图，折线图等等。</p>
-<p>首先可以先设计一个抽象图表类（这里是一个接口）：</p>
-<pre><code class="language-java">interface Chart
+<blockquote>
+<p>某公司需要开发一个图表库，该图表库可以提供各种不同外观的图表，例如柱状图，折线图等等，使用简单工厂模式对其进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象产品类：<code>Chart</code>，这里是一个接口，只有一个<code>display</code>方法</li>
+<li>具体产品类：<code>HistogramChart</code>+<code>PieChart</code>+<code>LineChart</code></li>
+<li>工厂类：<code>Factory</code></li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">//抽象产品类
+interface Chart
 {
 	void display();
 }
-</code></pre>
-<p>接着各种具体产品类（柱状图，折线图，饼状图等）实现该接口即可：</p>
-<pre><code class="language-java">class HistogramChart implements Chart
+
+//具体产品类,柱状图
+class HistogramChart implements Chart
 {
     public HistogramChart()
     {
@@ -162,6 +262,7 @@
     }
 }
 
+//具体产品类,饼状图
 class PieChart implements Chart
 {
     public PieChart()
@@ -175,6 +276,7 @@ class PieChart implements Chart
     }
 }
 
+//具体产品类,折线图
 class LineChart implements Chart
 {
     public LineChart()
@@ -187,9 +289,9 @@ class LineChart implements Chart
         System.out.println(&quot;显示折线图&quot;);
     }
 }
-</code></pre>
-<p>最后是工厂类，为了方便加上了枚举参数：</p>
-<pre><code class="language-java">class Factory
+
+//工厂类
+class Factory
 {
     public static Chart getChart(Charts charts)
     {
@@ -220,7 +322,7 @@ enum Charts
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200713093445437.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h1 id="4-简化">4 简化</h1>
-<p>为了简化简单工厂模式，可以将抽象产品类与工厂类合并，将静态方法移至抽象产品类中：</p>
+<p>为了简化设计，可以将抽象产品类与工厂类合并，将静态方法移至抽象产品类中：</p>
 <figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200713094122200.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>这样可以通过抽象产品类的静态方法获取子类对象，优化代码如下：</p>
 <pre><code class="language-java">interface Chart
@@ -243,19 +345,17 @@ enum Charts
 }
 </code></pre>
 <h1 id="5-主要优点">5 主要优点</h1>
-<p>简单工厂模式的主要优点如下：</p>
 <ul>
 <li>分离职责：简单工厂模式实现了对象创建以及使用的分离，工厂类包含必要的判断逻辑，可以决定在什么时候创建什么哪一个产品的实例，客户端可以免除直接创建产品对象的职责，仅仅是“消费”产品</li>
 <li>简化记忆：客户端无须知道具体产品类的名字，只需要知道对应的参数即可，一般使用常量字符串或者枚举</li>
 <li>提高灵活性：可以引入配置文件（xml等）在不修改客户端代码情况下增加新的具体产品类，提高灵活性</li>
 </ul>
 <h1 id="6-主要缺点">6 主要缺点</h1>
-<p>简单工厂模式的主要缺点如下：</p>
 <ul>
-<li>工厂类集中了所有产品的创建逻辑，一旦不能正常工作，整个系统都要受影响</li>
-<li>由于引入了工厂类会增加系统中类的个数，会增加系统的复杂度和理解难度</li>
-<li>系统扩展困难，一旦添加新产品就不得不修改工厂逻辑，在产品类型过多时，有可能造成工厂逻辑过于复杂，不利于系统的扩展和维护</li>
-<li>简单工厂模式使用了静态工厂方法，造成工厂角色无法基于继承的等级结构</li>
+<li>工厂职责过重：工厂类集中了所有产品的创建逻辑，一旦不能正常工作，整个系统都要受影响</li>
+<li>复杂度增加：由于引入了工厂类会增加系统中类的个数，会增加系统的复杂度和理解难度</li>
+<li>扩展困难：系统扩展困难，一旦添加新产品就不得不修改工厂逻辑，在产品类型过多时，有可能造成工厂逻辑过于复杂，不利于系统的扩展和维护</li>
+<li>无法继承：简单工厂模式使用了静态工厂方法，造成工厂角色无法形成基于继承的等级结构</li>
 </ul>
 <h1 id="7-适用场景">7 适用场景</h1>
 <ul>
@@ -263,7 +363,10 @@ enum Charts
 <li>客户端只需要知道传入工厂类的参数，对如何创建对象不关心</li>
 </ul>
 <h1 id="8-总结">8 总结</h1>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/2020071309592074.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200728175142590.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -343,6 +446,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-44-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-01">2020-08-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/">每日分享 第44期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-43-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-31">2020-07-31</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/">每日分享 第43期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-42-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-42-qi.jpg');"></span>
                     </a>
@@ -357,33 +490,11 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-41-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-29">2020-07-29</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/">每日分享 第41期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-40-qi.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-28">2020-07-28</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/">每日分享 第40期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
+                  
+                  
                   
                   
                   
@@ -964,7 +1075,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 194 篇文章
+          ©2019 共 198 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

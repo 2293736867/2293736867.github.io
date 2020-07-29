@@ -32,12 +32,11 @@
 2.3 具体构件类
 2.4 抽象装饰类
 2.5 具体装饰类
+2.6 客户端
 
 
 3 实例
-4 透明装饰与半透明装饰
-
-4.1 透明..." />
+4 透明装饰与半透明装饰..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -87,7 +86,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595868396969" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596035684254" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -102,7 +101,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi.jpeg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-27"><i class="fa fa-calendar"></i><span class="lately">11 小时前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-27"><i class="fa fa-calendar"></i><span class="lately">2 天前</span></time>
               
               <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/"> </span>
@@ -142,6 +141,7 @@
 <li><a href="#23-%E5%85%B7%E4%BD%93%E6%9E%84%E4%BB%B6%E7%B1%BB">2.3 具体构件类</a></li>
 <li><a href="#24-%E6%8A%BD%E8%B1%A1%E8%A3%85%E9%A5%B0%E7%B1%BB">2.4 抽象装饰类</a></li>
 <li><a href="#25-%E5%85%B7%E4%BD%93%E8%A3%85%E9%A5%B0%E7%B1%BB">2.5 具体装饰类</a></li>
+<li><a href="#26-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.6 客户端</a></li>
 </ul>
 </li>
 <li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
@@ -237,6 +237,15 @@
 }
 </code></pre>
 <p>继承抽象装饰类，在业务方法中首先调用父类（抽象装饰类）的方法再调用新的装饰方法。</p>
+<h2 id="26-客户端">2.6 客户端</h2>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Component component = new ConcreteComponent();
+    Component decorator = new ConcreteDecorator(component);
+    decorator.operation();
+}
+</code></pre>
+<p>客户端针对抽象构件编程即可，无需指定具体装饰类或者具体构件类的类型，使用装饰器时，通过构造方法注入具体构件，直接调用业务方法即可。</p>
 <h1 id="3-实例">3 实例</h1>
 <blockquote>
 <p>设计一个图形界面构件库，具体构件有窗体，文本框以及列表框，装饰方法包括添加滚动条与添加黑边框，使用装饰模式对系统进行设计。</p>
@@ -248,6 +257,7 @@
 <li>抽象装饰类：<code>Decorator</code></li>
 <li>具体装饰类：<code>ScrollBarDecorator</code>+<code>BlackBorderDecorator</code></li>
 </ul>
+<p>代码如下：</p>
 <pre><code class="language-java">public class Test
 {
     public static void main(String[] args) {
@@ -339,9 +349,9 @@ class BlackBorderDecorator extends Decorator
     }
 }
 </code></pre>
-<p>输出如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200726114715991.png" alt="在这里插入图片描述" loading="lazy"><br>
-核心部分就是客户端的代码：</p>
+<p>输出如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200726114715991.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>核心部分就是客户端的代码：</p>
 <pre><code class="language-java">Component component = new Window();
 Component decorator = new ScrollBarDecorator(component);
 decorator.display();
@@ -353,8 +363,8 @@ Component decorator = new ScrollBarDecorator(component);
 decorator = new BlackBorderDecorator(decorator);
 decorator.display();
 </code></pre>
-<p><strong>也就是把已经对具体构件进行装饰之后的具体装饰器，注入到另一个具体装饰器的构造方法再一次装饰。</strong><br>
-<img src="https://img-blog.csdnimg.cn/20200726115214121.png" alt="在这里插入图片描述" loading="lazy"></p>
+<p><strong>也就是把已经对具体构件进行装饰之后的具体装饰器，注入到另一个具体装饰器的构造方法再一次装饰。</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200726115214121.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h1 id="4-透明装饰与半透明装饰">4 透明装饰与半透明装饰</h1>
 <h2 id="41-透明装饰模式">4.1 透明装饰模式</h2>
 <p>标准的装饰模式就是透明装饰，比如上述例子。在透明装饰模式中，要求客户端完全针对抽象构件编程，也就是将对象全部声明为抽象构件类型，而不是具体构件类型或具体装饰器类型。</p>
@@ -395,7 +405,7 @@ ScrollBarDecorator decorator = new ScrollBarDecorator(component);
 decorator.display();
 decorator.addScrollBar();
 </code></pre>
-<p>半透明装饰可以带来更大的灵活性，使用起来更加方便，客户端可以单独调用装饰方法来进行装饰，但是缺点就是不能对同一个对象进行多次装饰，</p>
+<p>半透明装饰可以带来更大的灵活性，使用起来更加方便，客户端可以单独调用装饰方法来进行装饰，但是缺点就是不能对同一个对象进行多次装饰。</p>
 <h1 id="5-注意事项">5 注意事项</h1>
 <ul>
 <li>保持接口相同：尽量保持装饰类的接口与被装饰类的接口相同，这样对客户端而言装饰前/后的对象可以一致对待，也就是尽量使用透明装饰模式</li>
@@ -419,7 +429,10 @@ decorator.addScrollBar();
 <li>在不能采用继承扩展系统或者采用继承不利于对系统扩展和维护时可以使用装饰模式</li>
 </ul>
 <h1 id="9-总结">9 总结</h1>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020072616152713.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200729132833584.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -499,6 +512,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-44-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-01">2020-08-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/">每日分享 第44期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-43-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-31">2020-07-31</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/">每日分享 第43期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-42-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-42-qi.jpg');"></span>
                     </a>
@@ -513,33 +556,11 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-41-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-29">2020-07-29</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/">每日分享 第41期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-40-qi.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-28">2020-07-28</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/">每日分享 第40期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
+                  
+                  
                   
                   
                   
@@ -1120,7 +1141,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 194 篇文章
+          ©2019 共 198 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

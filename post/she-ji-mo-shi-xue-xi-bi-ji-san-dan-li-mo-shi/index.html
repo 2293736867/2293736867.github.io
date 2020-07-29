@@ -17,25 +17,27 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-1 定义
-2 要点
-3 通用步骤
-4 实例
-5 饿汉式单例
-6 懒汉式单例
-7 饿汉式与懒汉式的比较
-8 IoDH
-9 枚举实现单例（推荐）
-10 总结
+1 概述
 
-10.1 优点
-10.2 缺点
-10.3 使用场景
-10.4 思维导图总结
+1.1 引言
+1.2 定义
+1.3 结构图
+1.4 角色
 
 
+2 典型实现
 
-..." />
+2.1 步骤
+2.2 单例角色
+2.3 客户端
+
+
+3 实例
+4 饿汉式单例
+5 懒汉式单例
+6 饿汉式与懒汉式的比较
+7 IoDH
+8 枚举实现单..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -85,7 +87,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595868396969" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596035684254" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -100,7 +102,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-san-dan-li-mo-shi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-12"><i class="fa fa-calendar"></i><span class="lately">16 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-12"><i class="fa fa-calendar"></i><span class="lately">17 天前</span></time>
               
               <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-san-dan-li-mo-shi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-san-dan-li-mo-shi/"> </span>
@@ -125,46 +127,76 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
-<li><a href="#1-%E5%AE%9A%E4%B9%89">1 定义</a></li>
-<li><a href="#2-%E8%A6%81%E7%82%B9">2 要点</a></li>
-<li><a href="#3-%E9%80%9A%E7%94%A8%E6%AD%A5%E9%AA%A4">3 通用步骤</a></li>
-<li><a href="#4-%E5%AE%9E%E4%BE%8B">4 实例</a></li>
-<li><a href="#5-%E9%A5%BF%E6%B1%89%E5%BC%8F%E5%8D%95%E4%BE%8B">5 饿汉式单例</a></li>
-<li><a href="#6-%E6%87%92%E6%B1%89%E5%BC%8F%E5%8D%95%E4%BE%8B">6 懒汉式单例</a></li>
-<li><a href="#7-%E9%A5%BF%E6%B1%89%E5%BC%8F%E4%B8%8E%E6%87%92%E6%B1%89%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83">7 饿汉式与懒汉式的比较</a></li>
-<li><a href="#8-iodh">8 IoDH</a></li>
-<li><a href="#9-%E6%9E%9A%E4%B8%BE%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%8E%A8%E8%8D%90">9 枚举实现单例（推荐）</a></li>
-<li><a href="#10-%E6%80%BB%E7%BB%93">10 总结</a>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
 <ul>
-<li><a href="#101-%E4%BC%98%E7%82%B9">10.1 优点</a></li>
-<li><a href="#102-%E7%BC%BA%E7%82%B9">10.2 缺点</a></li>
-<li><a href="#103-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">10.3 使用场景</a></li>
-<li><a href="#104-%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E6%80%BB%E7%BB%93">10.4 思维导图总结</a></li>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
 </ul>
 </li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E5%8D%95%E4%BE%8B%E8%A7%92%E8%89%B2">2.2 单例角色</a></li>
+<li><a href="#23-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.3 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E9%A5%BF%E6%B1%89%E5%BC%8F%E5%8D%95%E4%BE%8B">4 饿汉式单例</a></li>
+<li><a href="#5-%E6%87%92%E6%B1%89%E5%BC%8F%E5%8D%95%E4%BE%8B">5 懒汉式单例</a></li>
+<li><a href="#6-%E9%A5%BF%E6%B1%89%E5%BC%8F%E4%B8%8E%E6%87%92%E6%B1%89%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83">6 饿汉式与懒汉式的比较</a></li>
+<li><a href="#7-iodh">7 IoDH</a></li>
+<li><a href="#8-%E6%9E%9A%E4%B8%BE%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%8E%A8%E8%8D%90">8 枚举实现单例（推荐）</a></li>
+<li><a href="#9-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">9 主要优点</a></li>
+<li><a href="#10-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">10 主要缺点</a></li>
+<li><a href="#11-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">11 适用场景</a></li>
+<li><a href="#12-%E6%80%BB%E7%BB%93">12 总结</a></li>
 </ul>
 </p>
-<h1 id="1-定义">1 定义</h1>
-<p>有时候为了节约系统资源，需要确保系统中某个类只有唯一一个实例，当这个实例创建成功之后，无法再创建一个同类型的其他对象，所有的操作都只能基于这个唯一的实例，这是单例模式的动机所在。</p>
-<p><strong>单例模式（Singleton Pattern）：确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法。单例模式是一种对象创建型模式。</strong></p>
-<h1 id="2-要点">2 要点</h1>
-<ul>
-<li>某个类只能有一个实例</li>
-<li>它必须自行创建这个实例</li>
-<li>它必须自行向整个系统提供这个实例</li>
-</ul>
-<h1 id="3-通用步骤">3 通用步骤</h1>
-<p>一般来说把一个普通类重构为一个单例类需要以下三步：</p>
-<ul>
-<li>构造函数私有化：也就是禁止外部直接使用new等创建对象</li>
-<li>定义一个静态类成员保存实例</li>
-<li>增加一个类似<code>getInstance()</code>的公有静态方法来获取实例</li>
-</ul>
-<p>因此一般来说单例模式的结构图如下：</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>很多时候为了节约系统资源，需要确保系统中某个类只有一个唯一的实例，当这个唯一实例创建了之后，无法再创建一个同类型的其他对象，所有的操作只能基于这一个唯一实例。这是单例模式的动机所在。</p>
+<p>比如Windows的任务管理器，可以按<code>Ctrl+Shift+Esc</code>启动，而且启动一个，不能启动多个。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>单例模式（Singleton Pattern）：确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法。</strong></p>
+<p>单例模式是一种对象创建型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200712012413110.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-实例">4 实例</h1>
-<p>下面以一个简化的负载均衡器设计进行单例模式的说明。<br>
-某个软件需要使用一个全局唯一的负载均衡器，设计如下：</p>
+<h2 id="14-角色">1.4 角色</h2>
+<p>单例模式只有一个角色：</p>
+<ul>
+<li><strong><code>Singleton</code>（单例角色）：在单例类的内部只生成一个实例，同时它提供一个类似名叫<code>getInstance</code>的静态方法获取实例，同时为了防止外部生成新的实例化对象，构造方法可见性为<code>private</code>，在单例类内部定义了一个<code>Singleton</code>的静态对象，作为供外部访问的唯一实例</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>构造函数私有化：也就是禁止外部直接使用<code>new</code>等方式创建对象</li>
+<li>定义静态成员：定义一个私有静态成员保存实例</li>
+<li>增加公有静态方法：增加一个类似<code>getInstance()</code>的公有静态方法来获取实例</li>
+</ul>
+<h2 id="22-单例角色">2.2 单例角色</h2>
+<p>单例角色通常实现如下：</p>
+<pre><code class="language-java">class Singleton
+{
+	//饿汉式实现
+    private static Singleton instance = new Singleton();
+    private Singleton(){}
+    public static Singleton getInstance()
+    {
+        return instance;
+    }
+}
+</code></pre>
+<h2 id="23-客户端">2.3 客户端</h2>
+<p>客户端直接通过该类获取实例即可：</p>
+<pre><code class="language-java">Singleton singleton = Singleton.getInstance();
+</code></pre>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>某个软件需要使用一个全局唯一的负载均衡器，使用单例模式对其进行设计。</p>
+</blockquote>
+<p>代码如下：</p>
 <pre><code class="language-java">public class LoadBalancer
 {
     private static LoadBalancer instance = null;
@@ -183,13 +215,13 @@
     }
 }
 </code></pre>
-<p>这是最简单的单例类的设计，获取实例时仅仅判断是否为<code>null</code>，没有考虑到线程问题。也就是说，多个线程同时获取实例时，还是会产生多个实例，一般来说，常见的解决方式如下：</p>
+<p>这是最简单的单例类的设计，获取实例时仅仅判断是否为<code>null</code>，没有考虑到线程问题。也就是说，多个线程同时获取实例时，还是有可能会产生多个实例，一般来说，常见的解决方式如下：</p>
 <ul>
 <li>饿汉式单例</li>
 <li>懒汉式单例</li>
 <li>IoDH</li>
 </ul>
-<h1 id="5-饿汉式单例">5 饿汉式单例</h1>
+<h1 id="4-饿汉式单例">4 饿汉式单例</h1>
 <p>饿汉式单例就是在普通的单例类基础上，在定义静态变量时就直接实例化，因此在类加载的时候就已经创建了单例对象，而且在获取实例时不需要进行判空操作直接返回实例即可：</p>
 <pre><code class="language-java">public class LoadBalancer
 {
@@ -204,7 +236,7 @@
 }
 </code></pre>
 <p>当类被加载时，静态变量<code>instance</code>被初始化，类的私有构造方法将被调用，单例类的唯一实例将被创建。</p>
-<h1 id="6-懒汉式单例">6 懒汉式单例</h1>
+<h1 id="5-懒汉式单例">5 懒汉式单例</h1>
 <p>懒汉式单例在类加载时不进行初始化，在需要的时候再初始化，加载实例，同时为了避免多个线程同时调用<code>getInstance()</code>，可以加上<code>synchronized</code>：</p>
 <pre><code class="language-java">public class LoadBalancer
 {
@@ -218,7 +250,8 @@
     }
 }
 </code></pre>
-<p>这种技术又叫延迟加载技术，尽管解决了多个线程同时访问的问题，但是每次调用时都需要进行线程锁定判断，这样会降低效率。事实上，单例的核心在于<code>instance = new LoadBalancer()</code>，因此只需要锁定这行代码，优化如下：</p>
+<p>这种技术又叫延迟加载技术，尽管解决了多个线程同时访问的问题，但是每次调用时都需要进行线程锁定判断，这样会降低效率。</p>
+<p>事实上，单例的核心在于<code>instance = new LoadBalancer()</code>，因此只需要锁定这行代码，优化如下：</p>
 <pre><code class="language-java">public static LoadBalancer getInstance()
 {
 	if(instance == null)
@@ -231,7 +264,8 @@
 	return instance;
 }
 </code></pre>
-<p>但是实际情况中还是有可能出现多个实例，因为如果A和B两个线程同时调用<code>getInstance()</code>，都通过了<code>if(instance == null)</code>的判断，假设线程A先获得锁，创建实例后，A释放锁，接着B获取锁，再次创建了一个实例，这样还是导致产生多个单例对象，因此，通常采用一种叫“<strong>双重检查锁定</strong>”的方式来确保不会产生多个实例：</p>
+<p>但是实际情况中还是有可能出现多个实例，因为如果A和B两个线程同时调用<code>getInstance()</code>，都通过了<code>if(instance == null)</code>的判断，假设线程A先获得锁，创建实例后，A释放锁，接着B获取锁，再次创建了一个实例，这样还是导致产生多个单例对象。</p>
+<p>因此，通常采用一种叫“<strong>双重检查锁定</strong>”的方式来确保不会产生多个实例，一个线程获取锁后再进行一次判空操作：</p>
 <pre><code class="language-java">private volatile static LoadBalancer instance = null;
 public static LoadBalancer getInstance()
 {
@@ -249,16 +283,16 @@ public static LoadBalancer getInstance()
 }
 </code></pre>
 <p>需要注意的是要使用<code>volatile</code>修饰变量，<code>volatile</code>可以保证可见性以及有序性。</p>
-<h1 id="7-饿汉式与懒汉式的比较">7 饿汉式与懒汉式的比较</h1>
+<h1 id="6-饿汉式与懒汉式的比较">6 饿汉式与懒汉式的比较</h1>
 <ul>
-<li>饿汉式单例在类加载时就已经初始化，优点在于无需考虑多线程访问问题，可以确保实例的唯一性</li>
-<li>从调用速度方面来说会优于懒汉式单例，因为在类加载时就已经被创建</li>
-<li>从资源利用效率来说饿汉式单例会劣于懒汉式，因为无论是否需要使用都会加载单例对象，而且由于加载时需要创建实例会导致类加载时间变长</li>
-<li>懒汉式单例实现了延迟加载，无须一直占用系统资源</li>
-<li>懒汉式单例需要处理多线程并发访问问题，需要双重检查锁定，且通常来说初始化过程需要较长时间，会增大多个线程同时首次调用的几率，这会导致系统性能受一定影响</li>
+<li>饿汉式在类加载时就已经初始化，优点在于无需考虑多线程访问问题，可以确保实例的唯一性</li>
+<li>从调用速度方面来说饿汉式会优于懒汉式，因为在类加载时就已经被创建</li>
+<li>从资源利用效率来说饿汉式会劣于懒汉式，因为无论是否需要使用都会加载单例对象，而且由于加载时需要创建实例会导致类加载时间变长</li>
+<li>懒汉式实现了延迟加载，无须一直占用系统资源</li>
+<li>懒汉式需要处理多线程并发访问问题，需要双重检查锁定，且通常来说初始化过程需要较长时间，会增大多个线程同时首次调用的几率，这会导致系统性能受一定影响</li>
 </ul>
-<h1 id="8-iodh">8 IoDH</h1>
-<p>为了克服饿汉式单例不能延迟加载以及懒汉式单例的线程安全控制繁琐问题，可以使用一种叫<code>Initialization on Demand Holder（IoDH）</code>的技术。实现IoDH时，需在单例类增加一个静态内部类，在该内部类中创建单例对象，再将该单例对象通过<code>getInstance()</code>方法返回给外部使用，代码如下：</p>
+<h1 id="7-iodh">7 IoDH</h1>
+<p>为了克服饿汉式不能延迟加载以及懒汉式的线程安全控制繁琐问题，可以使用一种叫<code>Initialization on Demand Holder（IoDH）</code>的技术。实现IoDH时，需在单例类增加一个静态内部类，在该内部类中创建单例对象，再将该单例对象通过<code>getInstance()</code>方法返回给外部使用，代码如下：</p>
 <pre><code class="language-java">public class LoadBalancer
 {
 	private LoadBalancer(){}
@@ -273,62 +307,56 @@ public static LoadBalancer getInstance()
 	}
 }
 </code></pre>
-<p>由于单例对象没有作为<code>LoadBalancer</code>的成员变量直接实例化，因此类加载时不会实例化<code>instance</code>。首次调用<code>getInstance()</code>时，会初始化<code>instance</code>，由JVM保证线程安全性，确保只能被初始化一次。另外相比起懒汉式单例，<code>getInstance()</code>没有线程锁定，因此性能不会有任何影响。<br>
-通过IoDH既可以实现延迟加载，又可以保证线程安全，不影响系统性能，但是缺点是与编程语言本身的特性相关，很多面向对象语言不支持IoDH。另外，还可能引发<code>NoClassDefFoundError</code>（当初始化失败时），例子可以<a href="https://blog.csdn.net/f59130/article/details/80912055">戳这里</a>。</p>
-<h1 id="9-枚举实现单例推荐">9 枚举实现单例（推荐）</h1>
-<p>其中，无论是饿汉式，还是懒汉式，还是IoDH，都有或多或少的问题，并且还可以通过反射以及序列化/反序列化方式去“强制”生成多个单例，有没有更优雅的解决方案呢？<br>
-有！答案就是枚举。<br>
-代码如下：</p>
+<p>由于单例对象没有作为<code>LoadBalancer</code>的成员变量直接实例化，因此类加载时不会实例化<code>instance</code>。首次调用<code>getInstance()</code>时，会初始化<code>instance</code>，由JVM保证线程安全性，确保只能被初始化一次。另外相比起懒汉式单例，<code>getInstance()</code>没有线程锁定，因此性能不会有任何影响。</p>
+<p>通过IoDH既可以实现延迟加载，又可以保证线程安全，不影响系统性能，但是缺点是与编程语言本身的特性相关，很多面向对象语言不支持IoDH。另外，还可能引发<code>NoClassDefFoundError</code>（当初始化失败时），例子可以<a href="https://blog.csdn.net/f59130/article/details/80912055">戳这里</a>。</p>
+<h1 id="8-枚举实现单例推荐">8 枚举实现单例（推荐）</h1>
+<p>其中，无论是饿汉式，还是懒汉式，还是IoDH，都有或多或少的问题，并且还可以通过反射以及序列化/反序列化方式去“强制”生成多个单例，有没有更优雅的解决方案呢？</p>
+<p>有！答案就是枚举。</p>
+<p>代码如下：</p>
 <pre><code class="language-java">public class Test
 {
     public static void main(String[] args) {
-        LoadBalancer balancer1 = SingletonEnum.INSTANCE.getInstance();
-        LoadBalancer balancer2 = SingletonEnum.INSTANCE.getInstance();
+        LoadBalancer balancer1 = LoadBalancer.INSTANCE;
+        LoadBalancer balancer2 = LoadBalancer.INSTANCE;
         System.out.println(balancer1 == balancer2);
     }
 }
 
-class LoadBalancer
-{
-}
-
-enum SingletonEnum
-{
+enum LoadBalancer{
     INSTANCE;
-    private LoadBalancer instance = null;
-    private SingletonEnum()
-    {
-        instance = new LoadBalancer();
-    }
-
-    public LoadBalancer getInstance()
-    {
-        return instance;
-    }
 }
 </code></pre>
-<h1 id="10-总结">10 总结</h1>
-<h2 id="101-优点">10.1 优点</h2>
-<p>单例模式主要优点如下：</p>
+<p>使用枚举实现单例优点如下：</p>
 <ul>
-<li>单例模式提供了对唯一实例的受控访问，可以严格控制客户怎样以及何时访问它</li>
-<li>由于在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象，单例模式可以提高系统性能</li>
-<li>可以扩展成多例类</li>
+<li>代码简洁不易出错</li>
+<li>无须像饿汉式一样直接在类加载时初始化</li>
+<li>也无须像懒汉式一样需要双重检查锁定</li>
+<li>也无须像IoDH一样添加一个静态内部类增加系统中类的数量</li>
+<li>由JVM保证线程安全</li>
+<li>不会因为序列化生成新实例</li>
+<li>也不会因为反射生产新实例</li>
 </ul>
-<h2 id="102-缺点">10.2 缺点</h2>
-<p>单例模式主要缺点如下：</p>
+<h1 id="9-主要优点">9 主要优点</h1>
 <ul>
-<li>没有抽象层，扩展困难</li>
-<li>单例类职责过重，一定程度上违反了单一权责原则，因为既提供了业务方法，也提供了创建对象方法，将对象创建以及对象本身的功能耦合在一起</li>
-<li>很多语言提供了GC机制，实例化的对象长时间不使用将被回收，下次使用需要重新实例化，这回导致共享的单例对象状态丢失</li>
+<li>唯一实例：单例模式提供了对唯一实例的受控访问，可以严格控制客户怎样以及何时访问它</li>
+<li>节约资源：由于在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象，单例模式可以提高系统性能</li>
 </ul>
-<h2 id="103-使用场景">10.3 使用场景</h2>
+<h1 id="10-主要缺点">10 主要缺点</h1>
+<ul>
+<li>扩展困难：没有抽象层，扩展困难</li>
+<li>职责过重：单例类职责过重，一定程度上违反了SRP，因为既提供了业务方法，也提供了创建对象方法，将对象创建以及对象本身的功能耦合在一起</li>
+<li>GC导致重新实例化：很多语言提供了GC机制，实例化的对象长时间不使用将被回收，下次使用需要重新实例化，这回导致共享的单例对象状态丢失</li>
+</ul>
+<h1 id="11-适用场景">11 适用场景</h1>
 <ul>
 <li>系统需要一个实例对象</li>
 <li>客户调用类的单个实例只允许使用一个公共访问点</li>
 </ul>
-<h2 id="104-思维导图总结">10.4 思维导图总结</h2>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020071203301916.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="12-总结">12 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020072816242856.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -408,6 +436,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-44-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-01">2020-08-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/">每日分享 第44期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-43-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-31">2020-07-31</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/">每日分享 第43期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-42-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-42-qi.jpg');"></span>
                     </a>
@@ -422,33 +480,11 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-41-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-29">2020-07-29</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/">每日分享 第41期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-40-qi.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-28">2020-07-28</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/">每日分享 第40期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
+                  
+                  
                   
                   
                   
@@ -1029,7 +1065,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 194 篇文章
+          ©2019 共 198 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

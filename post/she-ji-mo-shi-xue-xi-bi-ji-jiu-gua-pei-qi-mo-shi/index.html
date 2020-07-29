@@ -17,27 +17,27 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
-1 适配器模式
+1 概述
 
-1.1 定义
-1.2 分类
+1.1 引言
+1.2 定义
+1.3 分类
 
-1.2.1 对象适配器模式
-1.2.2 类适配器模式
-
-
-1.3 角色
+1.3.1 对象适配器模式
+1.3.2 类适配器模式
 
 
-2 实例
-
-2.1 对象适配器
-2.2 类适配器
-2.3 Micro USB与Type-C
+1.4 角色
 
 
-3 双向适配器
-4..." />
+2 典型实现
+
+2.1 步骤
+2.2 目标抽象类
+2.3 适配者类
+2.4 适配器类
+
+2.4.1 对象适..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -87,7 +87,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1595868396969" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596035684254" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -102,7 +102,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-jiu-gua-pei-qi-mo-shi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-07-24"><i class="fa fa-calendar"></i><span class="lately">3 天前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-07-24"><i class="fa fa-calendar"></i><span class="lately">5 天前</span></time>
               
               <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-jiu-gua-pei-qi-mo-shi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-jiu-gua-pei-qi-mo-shi/"> </span>
@@ -127,80 +127,93 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
-<li><a href="#1-%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1 适配器模式</a>
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
 <ul>
-<li><a href="#11-%E5%AE%9A%E4%B9%89">1.1 定义</a></li>
-<li><a href="#12-%E5%88%86%E7%B1%BB">1.2 分类</a>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E5%88%86%E7%B1%BB">1.3 分类</a>
 <ul>
-<li><a href="#121-%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1.2.1 对象适配器模式</a></li>
-<li><a href="#122-%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1.2.2 类适配器模式</a></li>
+<li><a href="#131-%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1.3.1 对象适配器模式</a></li>
+<li><a href="#132-%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">1.3.2 类适配器模式</a></li>
 </ul>
 </li>
-<li><a href="#13-%E8%A7%92%E8%89%B2">1.3 角色</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
 </ul>
 </li>
-<li><a href="#2-%E5%AE%9E%E4%BE%8B">2 实例</a>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
 <ul>
-<li><a href="#21-%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8">2.1 对象适配器</a></li>
-<li><a href="#22-%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8">2.2 类适配器</a></li>
-<li><a href="#23-micro-usb%E4%B8%8Etype-c">2.3 Micro USB与Type-C</a></li>
-</ul>
-</li>
-<li><a href="#3-%E5%8F%8C%E5%90%91%E9%80%82%E9%85%8D%E5%99%A8">3 双向适配器</a></li>
-<li><a href="#4-%E7%BC%BA%E7%9C%81%E9%80%82%E9%85%8D%E5%99%A8">4 缺省适配器</a>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E7%9B%AE%E6%A0%87%E6%8A%BD%E8%B1%A1%E7%B1%BB">2.2 目标抽象类</a></li>
+<li><a href="#23-%E9%80%82%E9%85%8D%E8%80%85%E7%B1%BB">2.3 适配者类</a></li>
+<li><a href="#24-%E9%80%82%E9%85%8D%E5%99%A8%E7%B1%BB">2.4 适配器类</a>
 <ul>
-<li><a href="#41-%E5%AE%9A%E4%B9%89">4.1 定义</a></li>
-<li><a href="#42-%E7%BB%93%E6%9E%84%E5%9B%BE">4.2 结构图</a></li>
-<li><a href="#43-%E8%A7%92%E8%89%B2">4.3 角色</a></li>
-<li><a href="#44-%E5%AE%9E%E4%BE%8B">4.4 实例</a></li>
+<li><a href="#241-%E5%AF%B9%E8%B1%A1%E9%80%82%E9%85%8D%E5%99%A8">2.4.1 对象适配器</a></li>
+<li><a href="#242-%E7%B1%BB%E9%80%82%E9%85%8D%E5%99%A8">2.4.2 类适配器</a></li>
 </ul>
 </li>
-<li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
-<li><a href="#6-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">6 主要缺点</a></li>
-<li><a href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">7 适用场景</a></li>
-<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+<li><a href="#25-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.5 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%8F%8C%E5%90%91%E9%80%82%E9%85%8D%E5%99%A8">4 双向适配器</a></li>
+<li><a href="#5-%E7%BC%BA%E7%9C%81%E9%80%82%E9%85%8D%E5%99%A8">5 缺省适配器</a>
+<ul>
+<li><a href="#51-%E5%AE%9A%E4%B9%89">5.1 定义</a></li>
+<li><a href="#52-%E7%BB%93%E6%9E%84%E5%9B%BE">5.2 结构图</a></li>
+<li><a href="#53-%E8%A7%92%E8%89%B2">5.3 角色</a></li>
+<li><a href="#54-%E5%AE%9E%E4%BE%8B">5.4 实例</a></li>
+</ul>
+</li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
 </ul>
 </p>
-<h1 id="1-适配器模式">1 适配器模式</h1>
-<h2 id="11-定义">1.1 定义</h2>
-<p><strong>将一个接口转换为客户希望的另一个接口，使接口不兼容的那些类可以一起工作，别名为包装器。</strong><br>
-适配器中的接口是广义的接口，可以表示一个方法或者方法的集合。</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>有的笔记本电脑工作电压为20V，而我国家庭用电为220V，如何让20V的笔记本在220V的电压下工作？答案就是引入一个电源适配器，有了这个电源适配器笔记本就能在220V的电压下工作。</p>
+<p>在软件开发中，有时也会存在这类不兼容的状况，需要引入一个像电源适配器这样的称之为适配器的角色来协调这些不兼容的结构，这种设计方案就是适配器模式。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>将一个接口转换为客户希望的另一个接口，使接口不兼容的那些类可以一起工作，别名为包装器。</strong></p>
+<p>适配器中的接口是广义的接口，可以表示一个方法或者方法的集合。</p>
 <p>适配器模式既可以作为类结构型模式，也可以作为对象结构型模式。</p>
-<h2 id="12-分类">1.2 分类</h2>
+<h2 id="13-分类">1.3 分类</h2>
 <p>根据适配器与适配者类的关系不同，可以分为对象适配器模式以及类适配器模式。</p>
-<h3 id="121-对象适配器模式">1.2.1 对象适配器模式</h3>
-<p><strong>对象适配器模式就是适配器与适配者之间是关联关系</strong>。<br>
-结构图如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200724211913928.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="122-类适配器模式">1.2.2 类适配器模式</h3>
-<p><strong>类适配器模式就是适配器与适配者之间是继承或实现关系。</strong><br>
-结构图如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200724212614271.png" alt="在这里插入图片描述" loading="lazy"><br>
-由于语言特性的限制，比如Java，C#不支持多重继承，类适配器模式受到很多限制，例如Target如果不是接口而是一个类，就无法使用类适配器模式。此外如果适配者为<code>final</code>类也无法使用适配器模式，在Java等语言中大部分情况下使用对象适配器模式。</p>
-<h2 id="13-角色">1.3 角色</h2>
+<h3 id="131-对象适配器模式">1.3.1 对象适配器模式</h3>
+<p><strong>对象适配器模式就是适配器与适配者之间是关联关系</strong>。</p>
+<p>结构图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200724211913928.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="132-类适配器模式">1.3.2 类适配器模式</h3>
+<p><strong>类适配器模式就是适配器与适配者之间是继承或实现关系。</strong></p>
+<p>结构图如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200724212614271.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于语言特性的限制，比如Java，C#不支持多重继承，类适配器模式受到很多限制，例如Target如果不是接口而是一个类，就无法使用类适配器模式。此外如果适配者为<code>final</code>类也无法使用适配器模式，在Java等语言中大部分情况下使用对象适配器模式。</p>
+<h2 id="14-角色">1.4 角色</h2>
 <ul>
 <li><strong>Target（目标抽象类）：目标抽象类定义客户所需的接口，可以是一个抽象类或接口，也可以是一个具体类</strong></li>
-<li><strong>Adapter（适配器类）：适配器可以调用另一个接口，作为一个转换器，对Adaptee和Target进行适配。适配器类是适配器模式的核心，在对象适配器模式中，它通过继承Target并关联一个Adaptee对象使两者产生联系</strong></li>
+<li><strong>Adapter（适配器类）：适配器可以调用另一个接口，作为一个转换器，对Adaptee和Target进行适配。适配器类是适配器模式的核心，在对象适配器模式中，它通过继承Target并关联一个Adaptee对象使两者产生联系，在类适配器模式，通过继承Adaptee并实现Target使两者产生联系</strong></li>
 <li><strong>Adaptee（适配者类）：适配者即被适配的角色，它定义了一个已经存在的接口，这个接口需要适配，适配者类一般是一个具体类，包含了客户希望使用的业务方法，在某些情况下可能没有适配者类的源代码</strong></li>
 </ul>
-<h1 id="2-实例">2 实例</h1>
-<h2 id="21-对象适配器">2.1 对象适配器</h2>
-<p>Target类以及实现了Target的类：</p>
-<pre><code class="language-java">interface Target
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义目标抽象类：接口/抽象类/具体类，客户端需要的接口，比如上面电源的例子，目标类就是给笔记本充电</li>
+<li>（可选）定义适配者类：定义适配者类，但是一般来说适配者已经存在，比如上面电源的例子，适配者类就是220V的电压，而且对于某些库来说可能没有适配者的源码</li>
+<li>定义适配器类：继承/实现目标抽象类，并通过转发请求到适配者来完成操作</li>
+</ul>
+<h2 id="22-目标抽象类">2.2 目标抽象类</h2>
+<p>这里实现为具体类：</p>
+<pre><code class="language-java">class Target
 {
-    void request();
-}
-
-class ConcreteTarget implements Target
-{
-    @Override
     public void request()
     {
-        System.out.println(&quot;具体Target方法&quot;);
+        System.out.println(&quot;Target方法&quot;);
     }
 }
 </code></pre>
-<p>适配者类：</p>
+<h2 id="23-适配者类">2.3 适配者类</h2>
+<p>适配者一般为具体类，但是很多情况下已经存在并且没有源码实现：</p>
 <pre><code class="language-java">class Adaptee
 {
     public void specificRequest()
@@ -209,8 +222,10 @@ class ConcreteTarget implements Target
     }
 }
 </code></pre>
-<p>适配器类（实现了Target，适配者作为成员变量）：</p>
-<pre><code class="language-java">class Adapter implements Target
+<h2 id="24-适配器类">2.4 适配器类</h2>
+<h3 id="241-对象适配器">2.4.1 对象适配器</h3>
+<p>对象适配器种适配器与适配者是关联关系，适配器中包含一个适配者成员，代码如下：</p>
+<pre><code class="language-java">class Adapter extends Target
 {
     private Adaptee adaptee = new Adaptee();
     @Override
@@ -220,21 +235,23 @@ class ConcreteTarget implements Target
     }
 }
 </code></pre>
-<p>测试：</p>
-<pre><code class="language-java">public class Test
+<p>适配器覆盖目标抽象类的<code>request</code>，并将请求转发，交由适配者完成。</p>
+<h3 id="242-类适配器">2.4.2 类适配器</h3>
+<p>类适配器中适配器与适配者是继承关系，其中适配者为父类，适配器为子类。但是在Java中由于不支持多重继承，因此想要在Java中实现类适配器模式，并且如果适配者是具体类的话，那么必须将目标抽象类指定为接口：</p>
+<pre><code class="language-java">interface Target
 {
-    public static void main(String[] args) 
+    void request();
+}
+
+class Adaptee
+{
+    public void specificRequest()
     {
-        Target target = new ConcreteTarget();
-        target.request();
-        Target adapter = new Adapter();
-        adapter.request();
+        System.out.println(&quot;Adaptee方法&quot;);
     }
 }
-</code></pre>
-<h2 id="22-类适配器">2.2 类适配器</h2>
-<p>在上述对象适配器的基础上，适配者与Target保持不变，适配器继承了适配者并实现了Target，同时取消了适配者作为成员变量，在方法内直接调用<code>super.xxx</code>，也就是适配者的方法：</p>
-<pre><code class="language-java">class Adapter extends Adaptee implements Target
+
+class Adapter extends Adaptee implements Target
 {
     @Override
     public void request()
@@ -243,9 +260,26 @@ class ConcreteTarget implements Target
     }
 }
 </code></pre>
-<h2 id="23-micro-usb与type-c">2.3 Micro USB与Type-C</h2>
-<p>假设目前只有一条Micro USB线以及一台只有Type-C接口的手机，需要对其进行充电，这时候就需要一个转接头把Micro USB转为Type-C接口，才能给手机充电。<br>
-这里的Target就是Type-C，适配者就是Micro USB，适配器就是转接头，简化实现代码如下：</p>
+<p>在上述对象适配器的基础上，将目标抽象类修改为接口，同时适配器继承了适配者并实现了Target，并取消了适配者作为成员变量，在方法内直接调用<code>super.xxx</code>，也就是适配者的方法。</p>
+<h2 id="25-客户端">2.5 客户端</h2>
+<p>客户端的代码很简单，针对目标抽象类进行编程：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Target adapter = new Adapter();
+    adapter.request();
+}
+</code></pre>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>假设目前只有一条Micro USB线以及一台只有Type-C接口的手机，需要对其进行充电，这时候就需要一个转接头把Micro USB转为Type-C接口，才能给手机充电，使用适配器模式对其进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>目标抽象类：<code>TypeC</code></li>
+<li>适配者类：<code>MicroUSB</code></li>
+<li>适配器：<code>MicroUSBToTypeC</code></li>
+</ul>
+<p>简化实现代码如下：</p>
 <pre><code class="language-java">public class Test
 {
     public static void main(String[] args) {
@@ -280,7 +314,7 @@ class MicroUSBToTypeC implements TypeC
     }
 }
 </code></pre>
-<h1 id="3-双向适配器">3 双向适配器</h1>
+<h1 id="4-双向适配器">4 双向适配器</h1>
 <p>在对象适配器的使用过程中，如果在适配器中同时包含对Target类和Adaptee类的引用，Adaptee类可以通过适配器调用Target类中的方法，Target类也可以通过适配器调用Adaptee类的方法，那么该适配器就是一个双向适配器。例子如下：</p>
 <pre><code class="language-java">public class Test
 {
@@ -343,18 +377,18 @@ class Adapter implements Adaptee,Target
     }
 }
 </code></pre>
-<h1 id="4-缺省适配器">4 缺省适配器</h1>
-<h2 id="41-定义">4.1 定义</h2>
+<h1 id="5-缺省适配器">5 缺省适配器</h1>
+<h2 id="51-定义">5.1 定义</h2>
 <p><strong>缺省适配器：当不需要实现一个接口所提供的所有方法时，可先设计一个抽象类实现该接口，并为接口中的每个方法都提供一个默认实现（空实现），那么该抽象类子类可以选择性覆盖父类的某些方法来实现需求，它适用于不想使用一个接口中所有方法的情况，又叫单接口适配器模式。</strong></p>
-<h2 id="42-结构图">4.2 结构图</h2>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200724220658161.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="43-角色">4.3 角色</h2>
+<h2 id="52-结构图">5.2 结构图</h2>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200724220658161.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="53-角色">5.3 角色</h2>
 <ul>
-<li><strong>ServiceInterface（适配者接口）：通常是一个声明了大量方法的接口</strong></li>
-<li><strong>AbstractServiceClass（缺省适配器类）：缺省适配器模式的核心类，使用空方法的形式实现了在ServiceInterface接口中声明的方法，通常定义为抽象类</strong></li>
-<li><strong>ConcreteServiceClass（具体业务类）：是缺省适配器类的子类，只需要有选择性地覆盖适配器者中定义的方法，其他的方法在缺省适配器类中提供了空实现</strong></li>
+<li><strong><code>ServiceInterface</code>（适配者接口）：通常是一个声明了大量方法的接口</strong></li>
+<li><strong><code>AbstractServiceClass</code>（缺省适配器类）：缺省适配器模式的核心类，使用空方法的形式实现了在ServiceInterface接口中声明的方法，通常定义为抽象类</strong></li>
+<li><strong><code>ConcreteServiceClass</code>（具体业务类）：是缺省适配器类的子类，只需要有选择性地覆盖适配器者中定义的方法，其他的方法在缺省适配器类中提供了空实现</strong></li>
 </ul>
-<h2 id="44-实例">4.4 实例</h2>
+<h2 id="54-实例">5.4 实例</h2>
 <p>Java AWT中一般可以通过两种方式来处理窗口事件：</p>
 <ul>
 <li>实现<code>WindowListener</code></li>
@@ -362,7 +396,7 @@ class Adapter implements Adaptee,Target
 </ul>
 <p>其中<code>WindowAdapter</code>实现了<code>WindowListener</code>接口，但是都是提供了空实现，也就是说实现<code>WindowsListener</code>的话需要实现里面所有的方法，而继承<code>WindowAdapter</code>只需要选择性地覆盖方法即可，结构图：<br>
 <img src="https://img-blog.csdnimg.cn/20200724222411465.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h1 id="5-主要优点">5 主要优点</h1>
+<h1 id="6-主要优点">6 主要优点</h1>
 <p>类适配器以及对象适配器的共同优点如下：</p>
 <ul>
 <li>解耦：将Target与Adaptee解耦，引入适配器来重用现有的适配者类，无须修改原有结构</li>
@@ -378,7 +412,7 @@ class Adapter implements Adaptee,Target
 <li>一个对象适配器可以把多个不同的适配者适配到同一个Target</li>
 <li>可以适配一个适配者的子类，由于适配器与适配者之间是关联关系，根据LSP（里氏代换原则），适配者的子类也可以通过该适配器进行适配</li>
 </ul>
-<h1 id="6-主要缺点">6 主要缺点</h1>
+<h1 id="7-主要缺点">7 主要缺点</h1>
 <p>类适配器缺点：</p>
 <ul>
 <li>对于Java，C#等不支持多重继承的语言，一次最多只能适配一个适配者类</li>
@@ -389,13 +423,16 @@ class Adapter implements Adaptee,Target
 <ul>
 <li>置换麻烦：相比起类适配器，在适配器中置换适配者的某些方法比较麻烦，需要先创建一个适配者类的子类，在子类将适配者类的方法置换掉，再把适配者的子类作为真正的适配者类进行适配，实现较为复杂</li>
 </ul>
-<h1 id="7-适用场景">7 适用场景</h1>
+<h1 id="8-适用场景">8 适用场景</h1>
 <ul>
 <li>系统需要使用一些现有的类，而这些类的接口（如方法名）不符合系统的需求，甚至没有这些类的源代码</li>
 <li>想创建一个可以重复使用的类，用于与彼此之间没有太大关联的类，包括可能在将来引进的类一起工作</li>
 </ul>
-<h1 id="8-总结">8 总结</h1>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200724225754968.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200729075145937.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -475,6 +512,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-44-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-01">2020-08-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-44-qi/">每日分享 第44期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-43-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-07-31">2020-07-31</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-43-qi/">每日分享 第43期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-42-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-42-qi.jpg');"></span>
                     </a>
@@ -489,33 +556,11 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-41-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-29">2020-07-29</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-41-qi/">每日分享 第41期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-40-qi.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2020-07-28">2020-07-28</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-40-qi/">每日分享 第40期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
+                  
+                  
                   
                   
                   
@@ -1096,7 +1141,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 194 篇文章
+          ©2019 共 198 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>
