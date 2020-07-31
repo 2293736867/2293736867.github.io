@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-07-29T15:22:15.894Z</updated>
+    <updated>2020-07-31T13:20:34.362Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -207,6 +207,1259 @@
 终于你下定决定来答应<br>
 太动听</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（十六）：职责链模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-liu-zhi-ze-lian-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-liu-zhi-ze-lian-mo-shi/">
+        </link>
+        <updated>2020-07-31T13:20:13.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E5%A4%84%E7%90%86%E8%80%85">2.2 抽象处理者</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E5%A4%84%E7%90%86%E8%80%85">2.3 具体处理者</a></li>
+<li><a href="#24-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.4 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%88%86%E7%B1%BB">4 分类</a>
+<ul>
+<li><a href="#41-%E7%BA%AF%E7%9A%84%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F">4.1 纯的职责链模式</a></li>
+<li><a href="#42-%E4%B8%8D%E7%BA%AF%E7%9A%84%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F">4.2 不纯的职责链模式</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">6 主要缺点</a></li>
+<li><a href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">7 适用场景</a></li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>很多情况下，一个软件系统中可以处理某个请求的对象不知一个，比如采购单的审批，主任，副董事长，董事长，董事会都可以处理采购单，他们可以构成一条处理采购单的链式结构，采购单沿着这条链进行传递，这条链就叫职责链。</p>
+<p>职责链可以是一条直线，一个环或者一个树形结构，最常见的职责链是直线型，即沿着一条单向的链来传递请求。链上的每一个对象都是请求处理者，职责链模式可以将请求的处理者组织成一条链，并让请求沿着链传递，由链上的处理者对请求进行处理，客户端无须关系请求的处理细节以及具体的传递，只需要将请求发送到链上即可，实现请求发送者以及请求处理者的解耦。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>职责链模式：避免将请求发送者与接收者耦合在一起，让多个对象都有机会接收请求，将这些对象连接成一条链，并且沿着这条链传递请求，直到有对象处理它为止。</strong></p>
+<p>职责链模式是一种行为型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200731111207364.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong><code>Handler</code>（抽象处理者）：定义一个处理请求的接口，一般为抽象类。因为每一个处理者的下家还是一个处理者，因此在抽象处理者中定义了一个抽象处理者的对象作为对下一个处理者的引用，通过该引用，处理者可以连成一条链</strong></li>
+<li><strong><code>ConcreteHandler</code>（具体处理者）：抽象处理者的子类，实现具体处理方法，在处理前需要判断是否具有处理权限，如果拥有权限则处理，没有则转发到下一个处理者</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象处理者：定义处理请求接口以及定义一个抽象处理者成员，作为下一个处理者的引用，一般为了让具体处理者方便调用，定义为<code>protected</code></li>
+<li>定义具体处理者：处理/转发请求，处理请求前先判断是否具有权限 ，拥有则处理请求，否则转发请求</li>
+<li>客户端创建职责链：职责链模式并不创建职责链，职责链交由客户端创建，根据实际需要定义职责链顺序</li>
+</ul>
+<h2 id="22-抽象处理者">2.2 抽象处理者</h2>
+<pre><code class="language-java">abstract class Handler
+{
+    protected Handler successor;
+    public void setSuccessor(Handler successor)
+    {
+        this.successor = successor;
+    }
+
+    public abstract void handleRequest(int num);
+}
+</code></pre>
+<p>拥有一个设置下一处理者的对象，可以通过setter注入，同时声明抽象处理方法。</p>
+<h2 id="23-具体处理者">2.3 具体处理者</h2>
+<pre><code class="language-java">class ConcreteHandler1 extends Handler
+{
+    @Override    
+    public void handleRequest(int num)
+    {
+        if(num &lt; 10)
+        {
+            System.out.println(&quot;处理小于10的数字:&quot;+num);
+        }
+        else
+            successor.handleRequest(num);
+    }
+}
+
+class ConcreteHandler2 extends Handler
+{
+    @Override    
+    public void handleRequest(int num)
+    {
+        if(num &lt; 20)
+        {
+            System.out.println(&quot;处理大于等于10且小于20的数字:&quot;+num);
+        }
+        else
+            successor.handleRequest(num);
+    }
+}
+
+class ConcreteHandler3 extends Handler
+{
+    @Override    
+    public void handleRequest(int num)
+    {
+        if(num &lt; 30)
+        {
+            System.out.println(&quot;处理大于等于20且小于30的数字:&quot;+num);
+        }
+        else
+            successor.handleRequest(num);
+    }
+}
+</code></pre>
+<p>继承抽象处理者，首先判断是否拥有权限处理（这里是一个简单的if判断），如果有就处理，没有的话通过<code>protected</code>对象，也就是转发给下一个处理者处理。</p>
+<h2 id="24-客户端">2.4 客户端</h2>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Handler handler = new ConcreteHandler1();
+    Handler handler2 = new ConcreteHandler2();
+    Handler handler3 = new ConcreteHandler3();
+    handler.setSuccessor(handler2);
+    handler2.setSuccessor(handler3);
+
+    handler.handleRequest(3);
+    handler.handleRequest(15);
+    handler.handleRequest(22);
+}
+</code></pre>
+<p>客户端针对抽象处理者编程，需要创建每一个具体处理者对象，并且自定义职责链：</p>
+<pre><code class="language-java">handler.setSuccessor(handler2);
+handler2.setSuccessor(handler3);
+</code></pre>
+<p>接着调用对应的处理者处理即可。</p>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>设计一个采购单审批系统，分级进行，根据金额不同由不同层次的人员审批，主任可以审批5w以下的采购单，副董事长可以审批5w-10w，董事长可以审批10w-50w，50w以上需要由董事会审批，使用职责链模式设计该系统。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象处理者：<code>Approver</code></li>
+<li>具体处理者：<code>Director</code>+<code>VicePresident</code>+<code>President</code>+<code>Congress</code></li>
+<li>采购单请求类：<code>PurchaseRequest</code></li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">//抽象处理者
+abstract class Approver
+{
+    protected Approver successor;
+
+    public void setSuccessor(Approver successor) {
+        this.successor = successor;
+    }
+
+    public abstract void processRequest(PurchaseRequest request);
+}
+
+//具体处理者:主任
+class Director extends Approver
+{
+    @Override
+    public void processRequest(PurchaseRequest request)
+    {
+        if(request.getAmount() &lt; 50000)
+            System.out.println(&quot;主任审批一笔\n金额为&quot;+request.getAmount()+&quot;\nid为&quot;+request.getId()+&quot;\n的采购单\n&quot;);
+        else
+            successor.processRequest(request);
+    }
+}
+
+//具体处理者:副董事长
+class VicePresident extends Approver
+{
+    @Override
+    public void processRequest(PurchaseRequest request)
+    {
+        if(request.getAmount() &lt; 100000)
+            System.out.println(&quot;副董事长审批一笔\n金额为&quot;+request.getAmount()+&quot;\nid为&quot;+request.getId()+&quot;\n的采购单\n&quot;);
+        else
+            successor.processRequest(request);
+    }
+}
+
+//具体处理者:董事长
+class President extends Approver
+{
+    @Override
+    public void processRequest(PurchaseRequest request)
+    {
+        if(request.getAmount() &lt; 500000)
+            System.out.println(&quot;董事长审批一笔\n金额为&quot;+request.getAmount()+&quot;\nid为&quot;+request.getId()+&quot;\n的采购单\n&quot;);
+        else
+            successor.processRequest(request);
+    }
+}
+
+//具体处理者:董事会
+class Congress extends Approver
+{
+    @Override
+    public void processRequest(PurchaseRequest request)
+    {
+        System.out.println(&quot;董事会审批一笔\n金额为&quot;+request.getAmount()+&quot;\nid为&quot;+request.getId()+&quot;\n的采购单\n&quot;);
+    }
+}
+
+//请求类:采购单
+class PurchaseRequest
+{
+    private double amount;
+    private String id;
+    private static final String STR = &quot;xcnvj232cvm&quot;;
+    private static final Random random = new Random();
+
+    public PurchaseRequest(double amount)
+    {
+        this.amount = amount;
+        //简易的随机字符串
+        this.id = STR.substring(0,random.nextInt(STR.length()-1)+1).repeat(random.nextInt(3)+2);
+    }
+
+    public double getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+}
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Approver director = new Director();
+    Approver vicePresident = new VicePresident();
+    Approver president = new President();
+    Approver congress = new Congress();
+
+    director.setSuccessor(vicePresident);
+    vicePresident.setSuccessor(president);
+    president.setSuccessor(congress);
+
+    director.processRequest(new PurchaseRequest(12345));
+    director.processRequest(new PurchaseRequest(54321));
+    director.processRequest(new PurchaseRequest(123456));
+    director.processRequest(new PurchaseRequest(654321));
+}
+</code></pre>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200731134901882.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-分类">4 分类</h1>
+<p>职责链模式可以分为纯的职责链模式与不纯的职责链模式。</p>
+<h2 id="41-纯的职责链模式">4.1 纯的职责链模式</h2>
+<p>一个纯的职责链模式要求一个具体处理者对象只能在两个行为中选择一个，要么承担全部责任，要么将责任推给下家，不允许出现某一个具体处理者对象在承担了一部分或全部责任后又将责任向下传递的情况。</p>
+<p>而且在纯的职责链模式中，要求一个请求必须被某一个处理者对象接收，不能出现某个请求未被任何一个处理者对象处理的情况，比如前面的采购单例子。</p>
+<h2 id="42-不纯的职责链模式">4.2 不纯的职责链模式</h2>
+<p>在一个不纯的职责链模式中，允许某个请求被一个具体处理者部分处理后再向下传递，或者一个具体处理者处理完某请求后其猴戏处理者可以继续处理该请求，而且一个请求可以最终不被任何处理者对象所接收。</p>
+<p>在Java AWT 1.0中的事件处理模型应用就是不纯的职责链模式，基本原理如下：由于窗口组件一般位于容器组件中，当事件发生在窗口组件上时，先通过组件对象的<code>handleEvent()</code>方法传递给相应的事件处理方法，该事件处理方法将处理该事件，然后决定是否将该事件向上一级容器组件传播，上级容器组件在接到事件之后可以继续处理此事件并决定是否继续向上级容器组件传播，直到顶层容器组件为止。如果一直都没有处理方法则不处理该事件。</p>
+<p>这种事件处理机制又叫事件浮升机制，JDK1.1后使用观察者模式来代理职责链模式处理事件。</p>
+<h1 id="5-主要优点">5 主要优点</h1>
+<ul>
+<li>降低耦合：职责链模式使得一个对象无须知道是其他哪一个对象处理请求，对象仅需知道请求会被处理即可，接收者和发送者都没有对方明确信息，且链中对象不需要知道链的结构，由客户端负责链的创建，降低了系统耦合度</li>
+<li>简化对象连接：请求处理对象仅需维持一个指向其后继者的引用，而不需要维持它对所有候选处理者的引用，可简化对象的相互连接</li>
+<li>灵活的职责链：可以在运行时对链进行动态增加或者修改</li>
+<li>符合OCP：系统增加一个新的具体处理者时无须修改源码，只需要客户端重建职责链，符合OCP</li>
+</ul>
+<h1 id="6-主要缺点">6 主要缺点</h1>
+<ul>
+<li>请求可能得不到处理：由于一个请求没有明确的接收者，因此请求不一定会被处理，也有可能因为职责链配置错误而得不到处理</li>
+<li>性能受到影响：对于较长的职责链，请求的处理可能涉及多个处理对象，系统性能会受到一定影响，而且代码调试时可能不方便</li>
+<li>死循环：如果职责链不当，可能会导致死循环调用</li>
+</ul>
+<h1 id="7-适用场景">7 适用场景</h1>
+<ul>
+<li>有多个对象可以处理同一个请求，具体哪个对象处理该请求待运行时刻再确定，客户端只需将请求提交到链上，而无须关心请求的处理对象是谁以及它是如何处理的</li>
+<li>在不明确指定接收者的情况下，向多个对象的一个提交一个请求</li>
+<li>可动态指定一组对象处理请求，客户端可以动态创建职责链来处理请求，还可以改变链中处理请求以及处理者之间的先后次序</li>
+</ul>
+<h1 id="8-总结">8 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020073115020561.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式学习笔记（十五）：代理模式]]></title>
+        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-wu-dai-li-mo-shi/</id>
+        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-wu-dai-li-mo-shi/">
+        </link>
+        <updated>2020-07-31T13:19:07.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+<li><a href="#15-%E5%88%86%E7%B1%BB">1.5 分类</a></li>
+<li><a href="#16-%E4%B8%8E%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%90%8C">1.6 与装饰模式的不同</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E4%B8%BB%E9%A2%98%E8%A7%92%E8%89%B2">2.2 抽象主题角色</a></li>
+<li><a href="#23-%E7%9C%9F%E5%AE%9E%E4%B8%BB%E9%A2%98%E8%A7%92%E8%89%B2">2.3 真实主题角色</a></li>
+<li><a href="#24-%E4%BB%A3%E7%90%86%E4%B8%BB%E9%A2%98%E8%A7%92%E8%89%B2">2.4 代理主题角色</a></li>
+<li><a href="#25-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.5 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%8A%A8%E6%80%81%E4%B8%8E%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86">4 动态与静态代理</a>
+<ul>
+<li><a href="#41-%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86">4.1 静态代理</a></li>
+<li><a href="#42-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86">4.2 动态代理</a>
+<ul>
+<li><a href="#421-proxy">4.2.1 <code>Proxy</code></a></li>
+<li><a href="#422-invocationhandler">4.2.2 <code>InvocationHandler</code></a></li>
+<li><a href="#423-%E5%AE%9E%E4%BE%8B">4.2.3 实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%90%86">5 远程代理</a>
+<ul>
+<li><a href="#51-%E6%A6%82%E8%BF%B0">5.1 概述</a></li>
+<li><a href="#52-rmi%E7%AE%80%E4%BE%8B">5.2 RMI简例</a></li>
+</ul>
+</li>
+<li><a href="#6-%E8%99%9A%E6%8B%9F%E4%BB%A3%E7%90%86">6 虚拟代理</a>
+<ul>
+<li><a href="#61-%E6%A6%82%E8%BF%B0">6.1 概述</a></li>
+<li><a href="#62-%E9%80%82%E7%94%A8%E6%83%85%E5%86%B5">6.2 适用情况</a></li>
+<li><a href="#63-%E4%BC%98%E7%BC%BA%E7%82%B9">6.3 优缺点</a></li>
+<li><a href="#64-%E7%AE%80%E4%BE%8B">6.4 简例</a></li>
+</ul>
+</li>
+<li><a href="#7-%E7%BC%93%E5%AD%98%E4%BB%A3%E7%90%86">7 缓存代理</a>
+<ul>
+<li><a href="#71-%E6%8A%BD%E8%B1%A1%E4%B8%BB%E9%A2%98%E8%A7%92%E8%89%B2">7.1 抽象主题角色</a></li>
+<li><a href="#72-%E7%9C%9F%E5%AE%9E%E4%B8%BB%E9%A2%98%E8%A7%92%E8%89%B2">7.2 真实主题角色</a></li>
+<li><a href="#73-%E4%BB%A3%E7%90%86%E4%B8%BB%E9%A2%98%E8%A7%92%E8%89%B2">7.3 代理主题角色</a></li>
+<li><a href="#74-%E5%85%B6%E4%BB%96">7.4 其他</a></li>
+<li><a href="#75-%E6%B5%8B%E8%AF%95">7.5 测试</a></li>
+</ul>
+</li>
+<li><a href="#8-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">8 主要优点</a></li>
+<li><a href="#9-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">9 主要缺点</a></li>
+<li><a href="#10-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">10 适用场景</a></li>
+<li><a href="#11-%E6%80%BB%E7%BB%93">11 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>所谓代购，就是找人帮忙购买自己需要的商品，代购包括两种类型，一种是在当地买不到商品，或者因为当地该商品价格较高，因此托人在其他地区或者国外购买，另一种类型是消费者对想要购买的商品消息缺乏，只能委托中介或者中间商购买。</p>
+<p>在软件开发中，有时也需要提供与代购类似的功能，由于某些原因，客户端不想或不能直接访问对象，此时可通过一种叫代理的第三者来实现间接访问，这种方案对应的设计模式称为代理模式。</p>
+<p>代理模式是一种应用很广泛的结构型设计模式，而且变化很多。在代理模式中引入了一个新的代理对象，代理对象可以在客户端对象和目标对象之间起到中介的作用，去掉客户不能看到的内容或者增添客户需要的额外服务。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>代理模式：给某一个对象提供一个代理，并由代理对象控制对原对象的引用。</strong></p>
+<p>代理模式是一种对象结构型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200730065334739.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong><code>Subject</code>（抽象主题角色）：声明了真实主题和代理主题的共同接口，客户端通常需要针对抽象主题角色编程</strong></li>
+<li><strong><code>Proxy</code>（代理主题角色）：内部包含了对真实主题的引用，从而可以操作真实主题对象。代理主题角色中提供了一个与真实主题角色相同的接口，以便在任何时候都可以替代真实主题。代理角色还可以控制对真实主题的使用，在需要的时候创建或删除真实主题对象，并对真实主题的使用加以约束。通常在代理主题角色中，客户端调用之前或之后都需要执行特定操作，比如图中的<code>preRequest</code>以及<code>postRequest</code></strong></li>
+<li><strong><code>RealSubject</code>（真实主题角色）：定义了代理角色所代表的真实对象，在真实主题角色中实现了真实的业务操作，客户端可以通过代理角色间接调用真实主题角色中的操作</strong></li>
+</ul>
+<h2 id="15-分类">1.5 分类</h2>
+<p>代理模式根据目的以及实现方式可以分成很多类，常见的几种如下：</p>
+<ul>
+<li>远程代理：为一个位于不同的地址空间的对象提供一个本地的代理对象，这个不同的地址空间可以在同一台主机中，也可以不在同一台主机中。远程代理又叫“大使”（Ambassador）</li>
+<li>虚拟代理：如果需要创建一个资源消耗较大的对象，先创建一个消耗相对较小的对象来表示，真实对象只在需要时才会被真正创建</li>
+<li>保护代理：控制对一个对象的访问，可以给不同的用户提供不同级别的使用权限</li>
+<li>缓存代理：为某一个目标操作的结果提供临时的存储空间，以便多个客户端可以共享这些结果</li>
+<li>智能引用代理：当一个对象被引用时，提供一些额外的操作，比如将对象被调用的次数记录下来等</li>
+</ul>
+<h2 id="16-与装饰模式的不同">1.6 与装饰模式的不同</h2>
+<p>代理模式和装饰模式在实现时类似，主要区别如下：</p>
+<ul>
+<li>增加的职责范围问题域不同：代理模式以及装饰模式都能动态地增加职责，但是代理模式增加的是一些全新的职责，比如权限控制，缓存处理，智能引用，远程访问等，这些职责与原有职责不属于同一个问题域。对于装饰模式，为具体构件类增加一些相关的职责，是原有职责的扩展，这些职责属于同一个问题域</li>
+<li>目的不同：代理模式的目的是控制对对象的访问，而装饰模式是为对象动态增加功能</li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象主题角色：定义为抽象类/接口，声明抽象业务方法</li>
+<li>定义真实主题角色：继承/实现抽象主题角色，实现真实业务操作</li>
+<li>定义代理主题角色：继承/实现抽象主题角色，将客户端的请求转发到真实主题角色进行调用，同时根据需要进行调用前/后的一些相关操作</li>
+</ul>
+<h2 id="22-抽象主题角色">2.2 抽象主题角色</h2>
+<p>这里简单实现为一个接口：</p>
+<pre><code class="language-java">interface Subject
+{
+    void request();
+}
+</code></pre>
+<h2 id="23-真实主题角色">2.3 真实主题角色</h2>
+<p>实现抽象主题接口，执行真正的业务操作：</p>
+<pre><code class="language-java">class RealSubject implements Subject
+{
+    public void request()
+    {
+        System.out.println(&quot;真实主题角色方法&quot;);
+    }
+}
+</code></pre>
+<h2 id="24-代理主题角色">2.4 代理主题角色</h2>
+<p>同样实现抽象主题接口，一般来说在调用真正的业务方法之前或之后会有相关操作：</p>
+<pre><code class="language-java">class Proxy implements Subject
+{
+    private RealSubject subject = new RealSubject();
+    public void pre()
+    {
+        System.out.println(&quot;代理前操作&quot;);
+    }
+
+    public void request()
+    {
+        pre();
+        subject.request();
+        post();
+    }
+
+    public void post()
+    {
+        System.out.println(&quot;代理后操作&quot;);
+    }
+}
+</code></pre>
+<h2 id="25-客户端">2.5 客户端</h2>
+<p>客户端针对抽象主题角色进行编程即可，如果不需要代理，则实例化真实主题角色，如果需要代理则实例化代理主题角色：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Subject subject = new RealSubject();
+    subject.request();
+    System.out.println(&quot;\n使用代理:\n&quot;);
+    subject = new Proxy();
+    subject.request();
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200730140727727.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>一个已具有搜索功能的系统，需要为搜索添加身份认证以及日志记录功能，使用代理模式设计该系统。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象主题角色：<code>Searcher</code></li>
+<li>真实主题角色：<code>RealSearcher</code></li>
+<li>代理主题角色：<code>ProxySearcher</code></li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) 
+    {
+        Searcher subject = new ProxySearcher();
+        subject.search();
+    }
+}
+
+interface Searcher
+{
+    void search();
+}
+
+class RealSearcher implements Searcher
+{
+    public void search()
+    {
+        System.out.println(&quot;搜索&quot;);
+    }
+}
+
+class ProxySearcher implements Searcher
+{
+    private RealSearcher subject = new RealSearcher();
+    public void validate()
+    {
+        System.out.println(&quot;身份验证&quot;);
+    }
+
+    public void search()
+    {
+        validate();
+        subject.search();
+        log();
+    }
+
+    public void log()
+    {
+        System.out.println(&quot;日志记录,查询次数+1&quot;);
+    }
+}
+</code></pre>
+<p>进行搜索之前，先验证用户，接着进行搜索，搜索完成后进行日志记录，这是保护代理以及智能引用代理的例子。</p>
+<h1 id="4-动态与静态代理">4 动态与静态代理</h1>
+<h2 id="41-静态代理">4.1 静态代理</h2>
+<p>通常情况下，每一个代理类编译之后都会生成一个字节码文件，代理所实现的接口和所代理的方法都固定，这种代理称为静态代理。</p>
+<p>静态代理中，客户端通过<code>Proxy</code>调用<code>RealSubject</code>的<code>request</code>方法，同时封装其他方法（代理前/代理后操作），比如上面的查询验证以及日志记录功能。</p>
+<p>静态代理的优点是实现简单，但是，代理类以及真实主题类都需要事先存在，代理类的接口以及代理方法都明确指定，但是如果需要：</p>
+<ul>
+<li>代理不同的真实主题类</li>
+<li>代理一个真实主题类的不同方法</li>
+</ul>
+<p>需要增加新的代理类，这会导致系统中类的个数大大增加。</p>
+<p>这是静态代理最大的缺点，为了减少系统中类的个数，可以采用动态代理。</p>
+<h2 id="42-动态代理">4.2 动态代理</h2>
+<p>动态代理可以让系统根据实际需要动态创建代理类，同一个代理类可以代理多个不同的真实主题类，而且可以代理不同方法，在Java中实现动态代理需要<code>Proxy</code>类以及<code>InvocationHandler</code>接口。</p>
+<h3 id="421-proxy">4.2.1 <code>Proxy</code></h3>
+<p><code>Proxy</code>类提供了用于创建动态代理类和实例对象的方法，最常用的方法包括：</p>
+<ul>
+<li><code>public static Class&lt;?&gt; getProxy(ClassLoader loader,Class&lt;?&gt; ... interfaces)</code>：该方法返回一个<code>Class</code>类型的代理类，在参数中需要提供类加载器并指定代理的接口数组，这个数组应该与真实主题类的接口列表一致</li>
+<li><code>public staitc Object newProxyInstance(ClassLoader loader,Class&lt;?&gt; [] interfaces,InvocationHandler h)</code>：返回一个动态创建的代理类实例，第一个参数是类加载器，第二个参数表示代理类实现的接口列表，同理与真实主题的接口列表一致，第三个参数表示<code>h</code>所指派的调用处理程序类</li>
+</ul>
+<h3 id="422-invocationhandler">4.2.2 <code>InvocationHandler</code></h3>
+<p><code>InvocationHandler</code>接口是代理程序类的实现接口，该接口作为代理实例的调用处理者的公共父类，每一个代理类的实例都可以提供一个相关的具体调用者（也就是实现了<code>InvocationHandler</code>的类），该接口中声明以下方法：</p>
+<ul>
+<li><code>public Object invoke(Object proxy,Method method,Object [] args)</code>：该方法用于处理对代理类实例的方法调用并返回相应结果，当一个代理实例中的业务方法被调用时自动调用该方法。第一个参数表示代理类的实例，第二个参数表示需要代理的方法，第三个参数表示方法的参数数组</li>
+</ul>
+<p>动态代理类需要在运行时指定所代理的真实主题类的接口，客户端在调用动态代理对象的方法时，调用请求会自动转发到<code>InvocationHandler</code>的<code>invoke</code>方法，由<code>invoke</code>实现对请求的统一处理。</p>
+<h3 id="423-实例">4.2.3 实例</h3>
+<blockquote>
+<p>为一个数据访问Dao层增加方法调用日志，记录每一个方法被调用的时间和结果，使用动态代理模式进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象主题角色：<code>AbstractUserDao</code></li>
+<li>真实主题角色：<code>UserDao1</code>+<code>UserDao2</code></li>
+<li>请求处理角色：<code>DAOLogHandler</code></li>
+<li>代理主题角色：无需手动定义，由<code>Proxy.newInstance()</code>生成</li>
+</ul>
+<p>首先设计抽象主题角色：</p>
+<pre><code class="language-java">interface AbstarctUserDao
+{
+    void findUserById(String id);
+}
+</code></pre>
+<p>接着创建两个具体类实现该接口：</p>
+<pre><code class="language-java">class UserDao1 implements AbstarctUserDao
+{
+    public void findUserById(String id)
+    {
+        System.out.println(&quot;1号数据库中查找id&quot; + 
+            (&quot;1&quot;.equals(id) ? &quot;成功&quot; : &quot;失败&quot;));
+    }
+}
+
+
+class UserDao2 implements AbstarctUserDao
+{
+    public void findUserById(String id)
+    {
+        System.out.println(&quot;2号数据库中查找id&quot; + 
+            (&quot;2&quot;.equals(id) ? &quot;成功&quot; : &quot;失败&quot;));
+    }
+}
+</code></pre>
+<p>接着定义请求处理角色：</p>
+<pre><code class="language-java">class DAOLogHandler implements InvocationHandler
+{
+    private Object object;
+    public DAOLogHandler(Object object)
+    {
+        this.object = object;
+    }
+
+    @Override
+    public Object invoke(Object proxy,Method method,Object [] args) throws Throwable
+    {
+        beforeInvoke();
+        Object result = method.invoke(object, args);
+        postInvoke();
+        return result;
+    }
+
+    private void beforeInvoke()
+    {
+        System.out.println(&quot;记录时间&quot;);
+    }
+
+    private void postInvoke()
+    {
+        System.out.println(&quot;记录结果&quot;);
+    }
+}
+</code></pre>
+<p>核心是实现了<code>InvocationHandler</code>的<code>invoke</code>方法，该方法在调用抽象主题角色中的方法时自动转发到该方法处理。</p>
+<p>也就是说，假设抽象主题角色有<code>A(),B(),C()</code>三个方法，当调用<code>A()</code>时，将调用<code>A()</code>替换掉里面的<code>Object result = method.invoke(object.args)</code>，也就是实际上相当调用如下函数：</p>
+<pre><code class="language-java">@Override
+public Object invoke(Object proxy,Method method,Object [] args) throws Throwable
+{
+    beforeInvoke();
+    Object result = A(args);
+    postInvoke();
+    return result;
+}
+</code></pre>
+<p>当调用<code>B()</code>时，相当于调用以下函数：</p>
+<pre><code class="language-java">@Override
+public Object invoke(Object proxy,Method method,Object [] args) throws Throwable
+{
+    beforeInvoke();
+    Object result = B(args);
+    postInvoke();
+    return result;
+}
+</code></pre>
+<p>下面是测试客户端的代码：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    AbstarctUserDao userDao1 = new UserDao1();
+    AbstarctUserDao proxy = null;
+    InvocationHandler handler = new DAOLogHandler(userDao1);
+    proxy = AbstarctUserDao.class.cast(
+        Proxy.newProxyInstance(AbstarctUserDao.class.getClassLoader(), new Class[]{AbstarctUserDao.class}, handler)
+    );
+    proxy.findUserById(&quot;2&quot;);
+
+    AbstarctUserDao userDao2 = new UserDao2();
+    handler = new DAOLogHandler(userDao2);
+    proxy = AbstarctUserDao.class.cast(
+        Proxy.newProxyInstance(AbstarctUserDao.class.getClassLoader(),new Class[]{AbstarctUserDao.class},handler)
+    );
+    proxy.findUserById(&quot;2&quot;);
+}
+</code></pre>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200730155711471.png" alt="在这里插入图片描述" loading="lazy"><br>
+在测试代码中，代理主题角色由以下语句生成：</p>
+<pre><code class="language-java">proxy = AbstarctUserDao.class.cast(
+    Proxy.newProxyInstance(AbstarctUserDao.class.getClassLoader(), new Class[]{AbstarctUserDao.class}, handler)
+);
+</code></pre>
+<p>其中<code>cast()</code>方法相当于是对强制类型转换进行了包装，转换前进行了安全检查。</p>
+<p><strong>在<code>Proxy.newInstance()</code>中，第一个参数是抽象主题角色的类加载器，第二个参数表示抽象主题角色的所有方法都转发请求到第三个参数中的<code>invoke</code>方法处理。第三个参数是自定义的<code>InvocationHandler</code>，通过构造方法注入抽象主题角色，目的是提供一个抽象主题角色的引用，调用代理方法时自动调用抽象主题角色的方法。</strong></p>
+<h1 id="5-远程代理">5 远程代理</h1>
+<h2 id="51-概述">5.1 概述</h2>
+<p>远程代理是一种常见的代理模式，使得客户端程序可以访问在远程主机（或另一个JVM）上的对象，远程代理可以将网络的细节隐藏起来，使得客户端不必考虑网络的存在。客户端完全可以认为被代理的远程业务对象是本地的而不是远程的，远程代理对象承担了大部分的网络通信工作，并负责对远程业务的方法调用。</p>
+<p>远程业务对象在本地主机中有一个代理对象，该代理对象负责对远程业务对象的访问和网络通信，它对于客户端而言是透明的。客户端无须关心实现的具体业务是谁，只需要按照服务接口所定义的方式直接与本地主机中的代理对象交互即可。</p>
+<p>在Java中可以通过<code>RMI(Remote Method Invocation,远程方法调用)</code>机制来实现远程代理，它能够实现一个JVM中的对象调用另一个JVM中的对象，下面看一个简单的例子。</p>
+<h2 id="52-rmi简例">5.2 RMI简例</h2>
+<p>这个简单的例子有以下四个类：</p>
+<ul>
+<li>接口：<code>Hello</code></li>
+<li>接口实现类：<code>HelloImpl</code></li>
+<li>服务端：<code>HelloServer</code></li>
+<li>客户端：<code>HelloClient</code></li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">interface Hello extends Remote
+{
+    String sayHello(String name) throws RemoteException;
+}
+</code></pre>
+<p>一个简单的<code>sayHello</code>方法，注意里面的方法需要声明为抛出<code>RemoteException</code>。</p>
+<p>接着是接口实现类：</p>
+<pre><code class="language-java">public class HelloImpl extends UnicastRemoteObject implements Hello{
+    public HelloImpl() throws RemoteException
+    {
+        super();
+    }
+    public String sayHello(String name) throws RemoteException
+    {
+        System.out.println(&quot;Hello&quot;);
+        return &quot;Hello&quot;+name;
+    }
+}
+</code></pre>
+<p>实现<code>sayHello</code>方法。</p>
+<p>接下来是服务端：</p>
+<pre><code class="language-java">public class HelloServer {
+    public static void main(String[] args) {
+        try {
+            Hello hello = new HelloImpl();
+            LocateRegistry.createRegistry(8888);
+            System.setProperty(&quot;java.rmi.server.hostname&quot;, &quot;127.0.0.1&quot;);
+            Naming.bind(&quot;rmi://localhost:8888/hello&quot;, hello);
+            System.out.println(&quot;远程绑定对象成功&quot;);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>服务端中首先注册了一个本地端口<code>8888</code>，接着设置系统属性rmi服务的主机名为本地地址，也就是<code>127.0.0.1</code>，如果是部署在服务器上修改对应ip即可。下一步是通过<code>Naming</code>的静态方法<code>bind</code>绑定该URL到RMI服务器上，并命名为<code>hello</code>。其中<code>rmi:</code>（RMI协议）可以省略。</p>
+<p>最后是客户端：</p>
+<pre><code class="language-java">public class HelloClient {
+    public static void main(String[] args) {
+        try
+        {
+            Hello hello = Hello.class.cast(
+                Naming.lookup(&quot;rmi://127.0.0.1:8888/hello&quot;)
+            );
+            System.out.println(hello.sayHello(&quot;111&quot;));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>客户端通过<code>Naming</code>的<code>lookup</code>查找参数URL中对应的远程服务对象<code>hello</code>，找到后返回并强制转换为<code>Hello</code>，接着即可调用远程对象的方法<code>sayHello</code>。</p>
+<p>首先运行服务端：<br>
+<img src="https://img-blog.csdnimg.cn/20200730170610622.png" alt="在这里插入图片描述" loading="lazy"><br>
+接着启动客户端：<br>
+<img src="https://img-blog.csdnimg.cn/20200730170843890.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以看到来自服务端的结果。</p>
+<p>再查看服务端：<br>
+<img src="https://img-blog.csdnimg.cn/20200730170953974.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以看到这是调用了<code>sayHello</code>的结果。</p>
+<h1 id="6-虚拟代理">6 虚拟代理</h1>
+<h2 id="61-概述">6.1 概述</h2>
+<p>对于一直占用系统资源较多或者加载时间较长的对象，可以给这些对象提供一个虚拟代理。在真实对象创建成功之前虚拟代理扮<br>
+演真实对象的替身，当真实对象创建之后，虚拟代理将用户的请求转发给真实对象。</p>
+<h2 id="62-适用情况">6.2 适用情况</h2>
+<p>以下两种情况可以考虑使用虚拟代理：</p>
+<ul>
+<li>由于对象本身复杂性或者网络等原因导致一个对象需要较长的加载时间，此时可以用一个加载时间相对较短的代理对象来代表真实对象</li>
+<li>当一个对象的加载十分消耗系统资源的时候，也非常适合使用虚拟代理。虚拟代理可以让那些占用大量内存或处理起来非常复杂的对象推迟到使用到它们的时候才创建，而在此之前用一个相对来说占用资源较少的代理对象来代表真实对象</li>
+</ul>
+<h2 id="63-优缺点">6.3 优缺点</h2>
+<ul>
+<li>优点：由于应用程序启动时由于不需要创建和装载所有的对象，因此加速了应用程序的启动</li>
+<li>缺点：不能保证特定的应用程序对象被创建，在访问这个对象的任何地方都需要提前进行判空操作</li>
+</ul>
+<h2 id="64-简例">6.4 简例</h2>
+<blockquote>
+<p>有一批人找老板谈事情，谈事情之前需要先通过老板的助手进行预约，预约这件事只需要助手完成，真正执行预约列表里面的任务时才需要老板出现，使用虚拟代理模式进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象主题角色：<code>Approvable</code></li>
+<li>真实主题角色：<code>Boss</code></li>
+<li>代理主题角色：<code>Assistant</code></li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">//抽象主题角色
+interface Approvable
+{
+    void approve();
+}
+</code></pre>
+<p>下一步定义真实主题角色<code>Boss</code>：</p>
+<pre><code class="language-java">class Boss implements Approvable
+{
+    private List&lt;String&gt; orders = new LinkedList&lt;&gt;();
+    
+    static
+    {
+        System.out.println(&quot;\n老板来处理了\n&quot;);
+    }
+
+    public Boss(List&lt;String&gt; orders)
+    {
+        this.orders = orders;
+    }
+
+    public void addOrder(String order)
+    {
+        orders.add(order);
+    }
+
+    @Override
+    public void approve()
+    {
+        while(orders.size() &gt; 0)
+        {
+            System.out.println(&quot;老板处理了&lt;&quot;+orders.remove(0)+&quot;&gt;&quot;);
+        }
+    }
+}
+</code></pre>
+<p>使用<code>List</code>存储待处理的事件，<code>approve</code>表示处理所有的事件。</p>
+<p>代理主题角色如下：</p>
+<pre><code class="language-java">class Assistant implements Approvable
+{
+    private List&lt;String&gt; orders = new LinkedList&lt;&gt;();
+    private volatile Boss boss;
+
+    public void addOrder(String order)
+    {
+        if(boss != null)
+        {
+            System.out.println(&quot;老板将&lt;&quot;+order+&quot;&gt;添加到预约列表&quot;);
+            boss.addOrder(order);
+        }
+        else
+        {
+            System.out.println(&quot;助手将&lt;&quot;+order+&quot;&gt;添加到预约列表&quot;);
+            orders.add(order);
+        }
+    }
+
+    @Override
+    public void approve()
+    {
+        if(boss == null)
+        {
+            synchronized(this)
+            {
+                if(boss == null)
+                {
+                    boss = new Boss(orders);
+                }
+            }
+        }
+        boss.approve();       
+    }
+}
+</code></pre>
+<p>在添加事件（<code>addOrder</code>）函数中，首先判断<code>boss</code>是否为<code>null</code>，如果为<code>null</code>表示还没创建<code>老板</code>对象，这时让助手添加到预约列表中去，如果不为<code>null</code>表示已经存在<code>老板</code>对象，直接交由老板加入预约列表。</p>
+<p>对于<code>approve</code>方法，首先判断<code>boss</code>是否为<code>null</code>，不为<code>null</code>表示老板能直接处理所有事件。为<code>null</code>表示<code>老板</code>对象还没有创建，新建一个<code>Boss</code>并将待处理的事件作为参数注入<code>boss</code>中。</p>
+<p>测试类：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Assistant assistant = new Assistant();
+    assistant.addOrder(&quot;找老板面试&quot;);
+    assistant.addOrder(&quot;找老板借钱&quot;);
+    assistant.addOrder(&quot;找老板聊天&quot;);
+    assistant.approve();
+
+    assistant.addOrder(&quot;找老板吃饭&quot;);
+    assistant.addOrder(&quot;找老板喝酒&quot;);
+    assistant.approve();
+}
+</code></pre>
+<p>输出如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200731094308630.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-缓存代理">7 缓存代理</h1>
+<p>缓存代理为某一个目标操作的结果提供临时的存储空间，以便多个客户端可以共享这些结果，在这里使用缓存代理模式模拟YouTube对使用集成的第三方库下载进行缓存。</p>
+<p>设计如下：</p>
+<ul>
+<li>模拟第三方库：<code>ThirdPartyYouTubeLib</code>+<code>ThirdPartyYouTubeClass</code></li>
+<li>模拟视频文件：<code>Video</code></li>
+<li>模拟缓存代理：<code>YouTubeCacheProxy</code></li>
+<li>模拟下载器：<code>YouTubeDownloader</code></li>
+</ul>
+<p>首先是第三方类库，通常情况下是没有源码实现的，其中<code>ThirdPartyYouTubeLib</code>是一个接口，并且<code>ThirdPartyYouTubeClass</code>以及<code>YouTubeCacheProxy</code>实现了它，也就是说：</p>
+<ul>
+<li><code>ThirdPartyYouTubeLib</code>是抽象主题角色</li>
+<li><code>ThirdPartyYouTubeClass</code>是真实主题角色</li>
+<li><code>YouTubeCacheProxy</code>是代理主题角色</li>
+</ul>
+<h2 id="71-抽象主题角色">7.1 抽象主题角色</h2>
+<p>首先定义抽象主题角色：</p>
+<pre><code class="language-java">interface ThirdPartyYouTubeLib
+{
+    HashMap&lt;String,Video&gt; popularVideos();
+    Video getVideo(String videoId);
+}
+</code></pre>
+<p>一个是获取热门视频的方法，一个是根据id获取具体视频的方法。</p>
+<h2 id="72-真实主题角色">7.2 真实主题角色</h2>
+<pre><code class="language-java">class ThirdPartyYouTubeClass implements ThirdPartyYouTubeLib
+{
+    private static final String URL = &quot;https://www.youtube.com&quot;;
+    @Override
+    public HashMap&lt;String,Video&gt; popularVideos()
+    {
+        connectToServer(URL);
+        return getRandomVideos();
+    }
+
+    @Override
+    public Video getVideo(String id)
+    {
+        connectToServer(URL+id);
+        return getSomeVideo(id);
+    }
+
+    private int random(int min,int max)
+    {
+        return min+(int)(Math.random()*((max-min)+1));
+    }
+
+    private void experienceNetworkLatency()
+    {
+        int randomLatency = random(5, 10);
+        for(int i=0;i&lt;randomLatency;++i)
+        {
+            try
+            {
+                Thread.sleep(100);
+            } 
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void connectToServer(String url)
+    {
+        System.out.println(&quot;连接到 &quot; + url + &quot; ...&quot;);
+        experienceNetworkLatency();
+        System.out.println(&quot;连接成功!\n&quot;);
+    }
+
+    private HashMap&lt;String,Video&gt; getRandomVideos()
+    {
+        System.out.println(&quot;正在下载热门视频&quot;);
+        experienceNetworkLatency();
+        HashMap&lt;String,Video&gt; map = new HashMap&lt;&gt;();
+        map.put(&quot;1111111&quot;,new Video(&quot;1111&quot;,&quot;1111.mp4&quot;));
+        map.put(&quot;2222222&quot;,new Video(&quot;2222&quot;,&quot;2222.avi&quot;));
+        map.put(&quot;3333333&quot;,new Video(&quot;3333&quot;,&quot;3333.mov&quot;));
+        map.put(&quot;4444444&quot;,new Video(&quot;4444&quot;,&quot;4444.mkv&quot;));
+        System.out.println(&quot;下载完成!\n&quot;);
+        return map;
+    }
+
+    private Video getSomeVideo(String id)
+    {
+        System.out.println(&quot;正在下载id为&quot;+id+&quot;的视频&quot;);
+        experienceNetworkLatency();
+        System.out.println(&quot;下载完成!\n&quot;);
+        return new Video(id,&quot;title&quot;);
+    }
+}
+</code></pre>
+<p>获取热门视频或者某一个视频时，进行了一个模拟连接到服务器的操作，首先输出提示<code>连接到xxx</code>，接着模拟了网络延迟，最后提示下载完成并返回相应的视频。</p>
+<h2 id="73-代理主题角色">7.3 代理主题角色</h2>
+<pre><code class="language-java">class YouTubeCacheProxy implements ThirdPartyYouTubeLib
+{
+    private ThirdPartyYouTubeLib youtubeService = new ThirdPartyYouTubeClass();
+
+    private HashMap&lt;String,Video&gt; cachePopular = new HashMap&lt;&gt;();
+    private HashMap&lt;String,Video&gt; cacheAll = new HashMap&lt;&gt;();
+
+    @Override
+    public HashMap&lt;String,Video&gt; popularVideos()
+    {
+        if(cachePopular.isEmpty())
+        {
+            cachePopular = youtubeService.popularVideos();
+        }
+        else
+        {
+            System.out.println(&quot;从缓存检索中热门视频&quot;);            
+        }
+        return cachePopular;
+    }
+
+    @Override
+    public Video getVideo(String id)
+    {
+        Video video = cacheAll.get(id);
+        if(video == null)
+        {
+            video = youtubeService.getVideo(id);
+            cacheAll.put(id,video);
+        }
+        else
+        {
+            System.out.println(&quot;从缓存中检索id为&quot;+id+&quot;的视频&quot;);
+        }
+        return video;
+    }
+
+    public void reset()
+    {
+        cachePopular.clear();
+        cacheAll.clear();
+    }
+}
+</code></pre>
+<p>这里的缓存代理角色其实就是在调用真实主题角色的获取视频方法之前，首先判断是否存在缓存，存在的话直接从缓存中获取，不存在的话首先调用获取视频方法并存储在缓存中，下次获取时从缓存中获取。</p>
+<h2 id="74-其他">7.4 其他</h2>
+<pre><code class="language-java">class Video
+{
+    private String id;
+    private String title;
+    private String data;
+    public Video(String id,String title)
+    {
+        this.id = id;
+        this.title = title;
+    }
+    //getter+setter...
+}
+
+class YouTubeDownloader
+{
+    private ThirdPartyYouTubeLib api;
+
+    public YouTubeDownloader(ThirdPartyYouTubeLib api)
+    {
+        this.api = api;
+    }
+
+    public boolean useCacheProxy()
+    {
+        return api instanceof YouTubeCacheProxy;
+    }
+
+    public void renderVideoPage(String id)
+    {
+        Video video = api.getVideo(id);
+        System.out.println(&quot;\n-------------------------------------------&quot;);
+        System.out.println(&quot;ID:&quot;+video.getId());
+        System.out.println(&quot;标题:&quot;+video.getTitle());
+        System.out.println(&quot;数据:&quot;+video.getData());
+        System.out.println(&quot;\n-------------------------------------------&quot;);
+    }
+
+    public void renderPopularVideos()
+    {
+        HashMap&lt;String,Video&gt; list = api.popularVideos();
+        System.out.println(&quot;\n-------------------------------------------&quot;);
+        System.out.println(&quot;热门视频&quot;);
+        list.forEach((k,v)-&gt;System.out.println(&quot;ID:&quot;+v.getId()+&quot;\t标题:&quot;+v.getTitle()));
+        System.out.println(&quot;\n-------------------------------------------&quot;);
+    }
+}
+</code></pre>
+<h2 id="75-测试">7.5 测试</h2>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args) 
+    {
+        YouTubeDownloader naiveDownloader = new YouTubeDownloader(new ThirdPartyYouTubeClass());
+        YouTubeDownloader smartDownloader = new YouTubeDownloader(new YouTubeCacheProxy());
+
+        long navie = test(naiveDownloader);
+        long smart = test(smartDownloader);
+        System.out.println(&quot;缓存代理节约的时间:&quot;+(navie-smart)+&quot;ms&quot;);
+    }
+
+    private static long test(YouTubeDownloader downloader)
+    {
+        long startTime = System.currentTimeMillis();
+        downloader.renderPopularVideos();
+        downloader.renderVideoPage(&quot;1111&quot;);
+        downloader.renderPopularVideos();
+        downloader.renderVideoPage(&quot;2222&quot;);
+        downloader.renderVideoPage(&quot;3333&quot;);
+        downloader.renderVideoPage(&quot;4444&quot;);
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(downloader.useCacheProxy() ? &quot;使用缓存运行时间:&quot; : &quot;不使用缓存运行时间:&quot;);
+        System.out.println(estimatedTime+&quot;ms\n&quot;);
+        return estimatedTime;
+    }
+}
+</code></pre>
+<p>模拟了两个下载器，一个使用原生下载，一个使用缓存代理下载，输出如下：</p>
+<pre><code class="language-bash">连接到 https://www.youtube.com ...
+连接成功!
+
+正在下载热门视频
+下载完成!
+
+
+-------------------------------------------
+热门视频
+ID:4444 标题:4444.mkv
+ID:2222 标题:2222.avi
+ID:3333 标题:3333.mov
+ID:1111 标题:1111.mp4
+
+-------------------------------------------
+连接到 https://www.youtube.com1111 ...
+连接成功!
+
+正在下载id为1111的视频
+下载完成!
+
+
+-------------------------------------------
+ID:1111
+标题:title
+数据:null
+
+-------------------------------------------
+连接到 https://www.youtube.com ...
+连接成功!
+
+正在下载热门视频
+下载完成!
+
+
+-------------------------------------------
+热门视频
+ID:4444 标题:4444.mkv
+ID:2222 标题:2222.avi
+ID:3333 标题:3333.mov
+ID:1111 标题:1111.mp4
+
+-------------------------------------------
+连接到 https://www.youtube.com2222 ...     
+连接成功!
+
+正在下载id为2222的视频
+下载完成!
+
+
+-------------------------------------------
+ID:2222
+标题:title
+数据:null
+
+-------------------------------------------
+连接到 https://www.youtube.com3333 ...     
+连接成功!
+
+正在下载id为3333的视频
+下载完成!
+
+
+-------------------------------------------
+ID:3333
+标题:title
+数据:null
+
+-------------------------------------------
+连接到 https://www.youtube.com4444 ...     
+连接成功!
+
+正在下载id为4444的视频
+下载完成!
+
+
+-------------------------------------------
+ID:4444
+标题:title
+数据:null
+
+-------------------------------------------
+不使用缓存运行时间:
+9312ms
+
+连接到 https://www.youtube.com ...
+连接成功!
+
+正在下载热门视频
+下载完成!
+
+
+-------------------------------------------
+热门视频
+ID:4444 标题:4444.mkv
+ID:2222 标题:2222.avi
+ID:3333 标题:3333.mov
+ID:1111 标题:1111.mp4
+
+-------------------------------------------
+连接到 https://www.youtube.com1111 ...
+连接成功!
+
+正在下载id为1111的视频
+下载完成!
+
+
+-------------------------------------------
+ID:1111
+标题:title
+数据:null
+
+-------------------------------------------
+从缓存检索中热门视频
+
+-------------------------------------------
+热门视频
+ID:4444 标题:4444.mkv
+ID:2222 标题:2222.avi
+ID:3333 标题:3333.mov
+ID:1111 标题:1111.mp4
+
+-------------------------------------------
+连接到 https://www.youtube.com2222 ...
+连接成功!
+
+正在下载id为2222的视频
+下载完成!
+
+
+-------------------------------------------
+ID:2222
+标题:title
+数据:null
+
+-------------------------------------------
+连接到 https://www.youtube.com3333 ...
+连接成功!
+
+正在下载id为3333的视频
+下载完成!
+
+
+-------------------------------------------
+ID:3333
+标题:title
+数据:null
+
+-------------------------------------------
+连接到 https://www.youtube.com4444 ...
+连接成功!
+
+正在下载id为4444的视频
+下载完成!
+
+
+-------------------------------------------
+ID:4444
+标题:title
+数据:null
+
+-------------------------------------------
+使用缓存运行时间:
+7611ms
+
+缓存代理节约的时间:1701ms
+</code></pre>
+<p>可以看到缓存代理是能节省时间的，除了第一次获取视频外，随后的获取视频都是从缓存中直接提取。</p>
+<h1 id="8-主要优点">8 主要优点</h1>
+<ul>
+<li>降低耦合度：代理模式能够协调调用者以及被调用者，一定程度上降低了系统的耦合度</li>
+<li>灵活可扩展：客户端可以针对抽象主题角色进行编程，增加和更换代理类无须修改源码，符合OCP，系统具有较好的灵活性和可扩展性</li>
+<li>提高整体效率（远程代理）：远程代理为位于两个不同的地址空间对象的访问提供了一种实现机制，可以将一些消耗资源较多的对象和操作移至性能更好的计算机上，提高系统整体运行效率</li>
+<li>节约开销（虚拟代理）：虚拟代理通过一个消耗资源较少的对象来代表一个消耗资源较多的对象，可以在一定程度上节省系统的运行开销</li>
+<li>控制权限（保护代理）：保护代理可以控制一个对象的访问权限，为不同用户提供不同级别的使用权限</li>
+</ul>
+<h1 id="9-主要缺点">9 主要缺点</h1>
+<ul>
+<li>速度变慢：由于在客户端以及真实主题之间增加了代理对象，因此可能会造成处理速度变慢，比如保护代理</li>
+<li>实现复杂：实现代理模式需要额外的操作，有些代理模式其实很复杂，比如远程代理</li>
+</ul>
+<h1 id="10-适用场景">10 适用场景</h1>
+<ul>
+<li>客户端需要访问远程主机中的对象，使用远程代理</li>
+<li>需要一个消耗资源较少的对象来代表资源较多的对象时，使用虚拟代理</li>
+<li>需要控制访问权限，使用保护代理</li>
+<li>需要为一个频繁访问的操作结果提供临时存储空间，使用缓存代理</li>
+<li>需要为一个对象的访问（引用）提供额外的操作时，使用智能引用代理</li>
+</ul>
+<h1 id="11-总结">11 总结</h1>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200731145441730.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
@@ -1739,571 +2992,6 @@ white2.display(new Coordinates(2, 3));
 <p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
 <p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
 <figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[设计模式学习笔记（十三）：外观模式]]></title>
-        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/</id>
-        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-san-wai-guan-mo-shi/">
-        </link>
-        <updated>2020-07-27T06:00:47.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
-<ul>
-<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
-<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
-<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
-<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
-</ul>
-</li>
-<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
-<ul>
-<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
-<li><a href="#22-%E5%A4%96%E8%A7%82%E8%A7%92%E8%89%B2">2.2 外观角色</a></li>
-<li><a href="#23-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.3 客户端</a></li>
-</ul>
-</li>
-<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
-<li><a href="#4-%E5%BC%95%E5%85%A5%E6%8A%BD%E8%B1%A1%E5%A4%96%E8%A7%82%E7%B1%BB">4 引入抽象外观类</a>
-<ul>
-<li><a href="#41-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%BC%95%E5%85%A5%E6%8A%BD%E8%B1%A1%E5%A4%96%E8%A7%82%E7%B1%BB">4.1 为什么需要引入抽象外观类？</a></li>
-<li><a href="#42-%E5%A6%82%E4%BD%95%E5%BC%95%E5%85%A5">4.2 如何引入？</a></li>
-</ul>
-</li>
-<li><a href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">5 注意事项</a></li>
-<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
-<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
-<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
-<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<h2 id="11-引言">1.1 引言</h2>
-<p>根据单一权责原则，软件中将一个系统划分为若干个子系统有利于降低整个系统的复杂性，使客户类与子系统之间的通信和相互依赖关系达到最小，方法之一就是引入一个外观角色，为子系统的访问提供一个简单而单一的入口。外观模式通过引入一个新的外观角色来降低原有系统的复杂度，同时降低客户类与子系统类的耦合度。</p>
-<p>（这里的子系统是广义的概念，可以是一个类，一个功能模块，系统的一个组成部分或者一个完整的系统）</p>
-<p>如果没有外观角色，每个客户端可能需要和多个子系统之间进行复杂的交互，系统的耦合度很大，简化示意图如下：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200726194628891.png" alt="" loading="lazy"></figure>
-<p>而引入外观角色后，客户端只需直接与外观角色交互，客户端与子系统之间的原有复杂度由外观角色实现，从而降低系统耦合度，简化示意图如下：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200726195100190.png" alt="" loading="lazy"></figure>
-<p><strong>外观模式要求一个子系统的外部与其内部的通信通过一个统一的外观角色进行，外观角色将客户端与子系统的内部复杂性分隔开，使得客户端只需要与外观角色打交道，而不需要与子系统内部的很多对象打交道。</strong></p>
-<h2 id="12-定义">1.2 定义</h2>
-<p><strong>外观模式：外部与一个子系统的通信通过一个统一的外观角色进行，为子系统中的一组接口提供一个一致的入口。</strong></p>
-<p>外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。</p>
-<p>外观模式又叫门面模式，是一种对象结构型模式。</p>
-<h2 id="13-结构图">1.3 结构图</h2>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200726195644651.png" alt="" loading="lazy"></figure>
-<h2 id="14-角色">1.4 角色</h2>
-<ul>
-<li><strong>Facade（外观角色）：在客户端可以调用这个角色的方法，在外观角色中可以知道相关的一个或多个子系统的功能和责任，正常情况下将来自客户端的请求委派到对应的子系统中去，传递给相应的子系统对象处理</strong></li>
-<li><strong>SubSystem（子系统角色）：每一个子系统是一个单独的类，也可以是一个类的集合，实现子系统的功能。每一个子系统都可以被客户端直接调用，或者被外观角色调用，它处理由外观类传过来的请求，子系统并不知道外观类的存在，对于子系统而已，外观角色仅仅是另一个客户端</strong></li>
-</ul>
-<h1 id="2-典型实现">2 典型实现</h1>
-<h2 id="21-步骤">2.1 步骤</h2>
-<ul>
-<li>定义子系统：首先定义子系统，实现一个单一的功能，处理由客户端传来的请求</li>
-<li>定义外观角色：外观角色可以知道一个或多个子系统的功能和责任，将来自客户端的请求委派到对应的子系统去，外观角色对于子系统而言是另一个客户端</li>
-</ul>
-<h2 id="22-外观角色">2.2 外观角色</h2>
-<p>通常实现如下：</p>
-<pre><code class="language-java">class Facade
-{
-    private SubSystemA subSystemA = new SubSystemA();
-    private SubSystemB subSystemB = new SubSystemB();
-    private SubSystemC subSystemC = new SubSystemC();
-
-    public void method()
-    {
-        subSystemA.method();
-        subSystemB.method();
-        subSystemC.method();
-    }
-}
-
-class SubSystemA
-{
-    public void method()
-    {
-        System.out.println(&quot;子系统A&quot;);
-    }
-}
-
-class SubSystemB
-{
-    public void method()
-    {
-        System.out.println(&quot;子系统B&quot;);
-    }
-}
-
-class SubSystemC
-{
-    public void method()
-    {
-        System.out.println(&quot;子系统C&quot;);
-    }
-}
-</code></pre>
-<h2 id="23-客户端">2.3 客户端</h2>
-<p>使用外观模式的原因就是简化客户端的调用，在这里只需定义外观对象并调用业务方法即可：</p>
-<pre><code class="language-java">Facade facade = new Facade();
-facade.method();
-</code></pre>
-<h1 id="3-实例">3 实例</h1>
-<blockquote>
-<p>设计一个文件加密系统，加密流程包括三部分：读取文件，加密文件，保存文件。这三个操作相对独立，并且封装在三个不同的类中，使用外观模式设计该系统。</p>
-</blockquote>
-<p>设计如下：</p>
-<ul>
-<li>子系统类：<code>FileReader</code>+<code>Encrypt</code>+<code>FileWriter</code></li>
-<li>外观角色类：<code>Facade</code></li>
-<li><code>FileReader</code>：文件读取类</li>
-<li><code>Encrypt</code>：文件加密类</li>
-<li><code>FileWriter</code>：文件保存类</li>
-</ul>
-<p>代码如下：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        Facade facade = new Facade();
-        facade.fileEncrypt(&quot;111&quot;);
-    }
-}
-
-class FileReader
-{
-    public void read(String name)
-    {
-        System.out.println(&quot;读取文件&quot;+name);
-    }
-}
-
-class Encrypt
-{
-    public void encrypt(String name)
-    {
-        System.out.println(&quot;加密文件&quot;+name);
-    }
-}
-
-class FileWriter
-{
-    public void write(String name)
-    {
-        System.out.println(&quot;保存文件&quot;+name);
-    }
-}
-
-class Facade
-{
-    private FileReader reader = new FileReader();
-    private Encrypt encrypt = new Encrypt();
-    private FileWriter writer = new FileWriter();
-
-    public void fileEncrypt(String name)
-    {
-        reader.read(name);
-        encrypt.encrypt(name);
-        writer.write(name);
-    }
-}
-</code></pre>
-<p>这里的例子比较简单，其实就是将读取，加密以及保存操作用外观角色包装起来，方便客户端调用。</p>
-<h1 id="4-引入抽象外观类">4 引入抽象外观类</h1>
-<h2 id="41-为什么需要引入抽象外观类">4.1 为什么需要引入抽象外观类？</h2>
-<p>在标准的外观模式结构中，如果需要增加，删除或修改外观类交互的子系统类，必须修改外观类或客户端的源代码，这将违背开闭原则，比如上面的例子中需要更换一种加密方法，也就是换一个加密类，这样需要直接修改外观类。</p>
-<p>可以通过引入抽象外观类来解决该问题，引入后，客户端可以针对抽象外观类进行编程，对于新的业务需求不需要修改原有的外<br>
-观类，只需要新增一个对应的具体外观类即可。</p>
-<h2 id="42-如何引入">4.2 如何引入？</h2>
-<p>首先定义抽象外观类，接着具体外观类继承或者实线抽象外观类即可。客户端针对抽象外观类进行编程，在运行时再确定具体的外观类，比如在上面例子的基础上修改加密方法，首先定义抽象外观类（这里是接口，只有一个加密方法）：</p>
-<pre><code class="language-java">interface AbstractFacade
-{
-    void encrypt(String name);
-}
-</code></pre>
-<p>接着定义具体外观类：</p>
-<pre><code class="language-java">class Facade1 implements AbstractFacade
-{
-    private FileReader reader = new FileReader();
-    private Encrypt1 encrypt1 = new Encrypt1();
-    private FileWriter writer = new FileWriter();
-
-    @Override
-    public void encrypt(String name)
-    {
-        reader.read(name);
-        encrypt1.encrypt(name);
-        writer.write(name);
-    }
-}
-
-class Facade2 implements AbstractFacade
-{
-    private FileReader reader = new FileReader();
-    private Encrypt2 encrypt2 = new Encrypt2();
-    private FileWriter writer = new FileWriter();
-
-    @Override
-    public void encrypt(String name)
-    {
-        reader.read(name);
-        encrypt2.encrypt(name);
-        writer.write(name);
-    }
-}
-</code></pre>
-<p>这两个类除了加密方法不一样其他都一样，测试：</p>
-<pre><code class="language-java">AbstractFacade facade = new Facade1();
-facade.encrypt(&quot;111&quot;);
-facade = new Facade2();
-facade.encrypt(&quot;222&quot;);
-</code></pre>
-<p>引入抽象外观类后，客户端针对抽象外观类进行编程，运行时确定具体外观类，输出如下：<br>
-<img src="https://img-blog.csdnimg.cn/20200726230649714.png" alt="" loading="lazy"></p>
-<h1 id="5-注意事项">5 注意事项</h1>
-<ul>
-<li><strong>外观单例</strong>：很多情况下为了节约系统资源，系统只需要一个外观类的实例，也就是外观类可以是一个单例类，这样可以降低系统资源的消耗</li>
-<li><strong>多个外观类</strong>：在一个系统中可以设计多个外观类，每个外观类负责和一些特定子对象交互，向客户端提供相应业务功能</li>
-<li><strong>不要通过外观类增加新行为</strong>：外观模式的意图是为子系统提供一个集中简化的沟通渠道，而不是向子系统中增加新行为，新行为的增加应该通过修改原有子系统类或增加新的子系统类来实现而不是通过外观类实现</li>
-</ul>
-<h1 id="6-主要优点">6 主要优点</h1>
-<ul>
-<li>简化处理：对客户端屏蔽了子系统组件，减少了客户端所需处理的对象数目并使得子系统使用起来更加容易，引入外观模式后客户端代码将简化</li>
-<li>松耦合：实现了子系统于客户端之间松耦合关系，使得子系统的变化不会影响到客户端，只需修改外观类</li>
-<li>子系统修改灵活：一个子系统的修改对其他子系统没有影响，而且子系统内部变化也不会影响外观对象</li>
-<li>唯一入口：只提供了一个访问子系统的唯一入口，但不会影响客户端直接使用子系统类</li>
-</ul>
-<h1 id="7-主要缺点">7 主要缺点</h1>
-<ul>
-<li>不能限制客户端使用子系统：外观模式不能很好地限制客户端直接使用子系统，如果客户端对访问子系统做太多的限制就会减少可变性与灵活性</li>
-<li>可能需要修改外观类：如果设计不当，增加新的子系统可能需要外观类，违背OCP</li>
-</ul>
-<h1 id="8-适用场景">8 适用场景</h1>
-<ul>
-<li>当要为访问一系列复杂的子系统提供一个简单的入口时</li>
-<li>客户端与多个子系统存在很大依赖性</li>
-<li>层次化结构中，可以使用外观模式定义系统中每一层的入口，层与层之间不直接产生联系，而通过外观类建立联系，降低层之间的耦合度</li>
-</ul>
-<h1 id="9-总结">9 总结</h1>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200726233051374.png" alt="" loading="lazy"></figure>
-<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
-<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[设计模式学习笔记（十二）：装饰模式]]></title>
-        <id>https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/</id>
-        <link href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/">
-        </link>
-        <updated>2020-07-27T06:00:22.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
-<ul>
-<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
-<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
-<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
-<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
-</ul>
-</li>
-<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
-<ul>
-<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
-<li><a href="#22-%E6%8A%BD%E8%B1%A1%E6%9E%84%E4%BB%B6%E7%B1%BB">2.2 抽象构件类</a></li>
-<li><a href="#23-%E5%85%B7%E4%BD%93%E6%9E%84%E4%BB%B6%E7%B1%BB">2.3 具体构件类</a></li>
-<li><a href="#24-%E6%8A%BD%E8%B1%A1%E8%A3%85%E9%A5%B0%E7%B1%BB">2.4 抽象装饰类</a></li>
-<li><a href="#25-%E5%85%B7%E4%BD%93%E8%A3%85%E9%A5%B0%E7%B1%BB">2.5 具体装饰类</a></li>
-<li><a href="#26-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.6 客户端</a></li>
-</ul>
-</li>
-<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
-<li><a href="#4-%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0%E4%B8%8E%E5%8D%8A%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0">4 透明装饰与半透明装饰</a>
-<ul>
-<li><a href="#41-%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F">4.1 透明装饰模式</a></li>
-<li><a href="#42-%E5%8D%8A%E9%80%8F%E6%98%8E%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F">4.2 半透明装饰模式</a></li>
-</ul>
-</li>
-<li><a href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">5 注意事项</a></li>
-<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
-<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
-<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
-<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<h2 id="11-引言">1.1 引言</h2>
-<p>装饰模式可以在不改变一个对象本身功能的基础上给对象增加额外的新行为。比如，一张照片，不改变照片本身，增加一个相框。</p>
-<p>装饰模式是一种用于替代继承的技术，无须定义子类即可给对象动态增加职责，使用对象之间的关联关系来代替继承关系，在装饰模式中引入了装饰类，在装饰类中既可以调用待装饰的原有类方法，还可以增加新的方法，以扩充原有的类功能。</p>
-<h2 id="12-定义">1.2 定义</h2>
-<p><strong>装饰模式：动态地给对象增加一些额外的职责。</strong></p>
-<p>就增加对象功能来说，装饰模式比生成子类实现更为灵活，装饰模式是一种对象结构型模式。</p>
-<h2 id="13-结构图">1.3 结构图</h2>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200726111630913.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="14-角色">1.4 角色</h2>
-<ul>
-<li><strong>Component（抽象构件类）：是具体构件以及抽象装饰类的父类，声明了在具体构件中实现的业务方法，它的引入可以使客户端以一致的方式处理未被装饰之后的对象，以实现客户端的透明操作</strong></li>
-<li><strong>ConcreteComponent（具体构件类）：是抽象构件类的子类，用于定义具体的构件对象，实现了在抽象构件中声明的方法，装饰器可以给它增加额外的职责</strong></li>
-<li><strong>Decorator（抽象装饰类）：用于给具体构件类增加职责，但是具体职责在子类实现。抽象装饰类维护一个指向抽象构件的引用，通过该引用可以调用装饰之前构件对象的方法，并通过子类扩展该方法以达到装饰的目的</strong></li>
-<li><strong>ConcreteDecorator（具体装饰类）：负责向构件中添加新的职责，每一个具体装饰类都定义了一些新的行为，可以调用抽象装饰类中定义的方法，并可以增加新的职责用以扩充对象的行为</strong></li>
-</ul>
-<h1 id="2-典型实现">2 典型实现</h1>
-<h2 id="21-步骤">2.1 步骤</h2>
-<ul>
-<li>定义抽象构件类：可以是抽象类或者接口，声明业务方法</li>
-<li>定义具体构件类：继承或实现抽象构件，实现具体业务方法</li>
-<li>定义抽象装饰类：继承或实现抽象构件，增加一个抽象构件私有成员，通过该成员可以调用装饰之前具体构件的方法</li>
-<li>定义具体装饰类：继承抽象装饰类，并且增加装饰行为，在装饰之前调用具体构件方法，接着调用装饰方法</li>
-</ul>
-<h2 id="22-抽象构件类">2.2 抽象构件类</h2>
-<p>简化只有一个业务方法：</p>
-<pre><code class="language-java">abstract class Component
-{
-    abstract void operation();
-}
-</code></pre>
-<h2 id="23-具体构件类">2.3 具体构件类</h2>
-<p>继承抽象构件：</p>
-<pre><code class="language-java">class ConcreteComponent extends Component
-{
-    public void operation()
-    {
-        System.out.println(&quot;具体构件方法&quot;);
-    }
-}
-</code></pre>
-<h2 id="24-抽象装饰类">2.4 抽象装饰类</h2>
-<pre><code class="language-java">class Decorator extends Component
-{
-    private Component component;
-
-    public Decorator(Component component)
-    {
-        this.component = component;
-    }
-
-    public void operation()
-    {
-        component.operation();
-    }
-}
-</code></pre>
-<p>抽象装饰类需要包含一个抽象构件的私有成员，以便可以通过setter或构造方法注入不同的具体构件，同时在业务方法中方便调用具体构件未装饰之前的方法。</p>
-<h2 id="25-具体装饰类">2.5 具体装饰类</h2>
-<pre><code class="language-java">class ConcreteDecorator extends Decorator
-{
-    public ConcreteDecorator(Component component)
-    {
-        super(component);
-    }
-
-    public void operation()
-    {
-        super.operation();
-        newBehavior();
-    }
-
-    public void newBehavior()
-    {
-        System.out.println(&quot;装饰方法&quot;);
-    }
-}
-</code></pre>
-<p>继承抽象装饰类，在业务方法中首先调用父类（抽象装饰类）的方法再调用新的装饰方法。</p>
-<h2 id="26-客户端">2.6 客户端</h2>
-<pre><code class="language-java">public static void main(String[] args) 
-{
-    Component component = new ConcreteComponent();
-    Component decorator = new ConcreteDecorator(component);
-    decorator.operation();
-}
-</code></pre>
-<p>客户端针对抽象构件编程即可，无需指定具体装饰类或者具体构件类的类型，使用装饰器时，通过构造方法注入具体构件，直接调用业务方法即可。</p>
-<h1 id="3-实例">3 实例</h1>
-<blockquote>
-<p>设计一个图形界面构件库，具体构件有窗体，文本框以及列表框，装饰方法包括添加滚动条与添加黑边框，使用装饰模式对系统进行设计。</p>
-</blockquote>
-<p>设计如下：</p>
-<ul>
-<li>抽象构件类：<code>Component</code></li>
-<li>具体构件类：<code>Window</code>+<code>TextBox</code>+<code>ListBox</code></li>
-<li>抽象装饰类：<code>Decorator</code></li>
-<li>具体装饰类：<code>ScrollBarDecorator</code>+<code>BlackBorderDecorator</code></li>
-</ul>
-<p>代码如下：</p>
-<pre><code class="language-java">public class Test
-{
-    public static void main(String[] args) {
-        Component component = new Window();
-        Component decorator = new ScrollBarDecorator(component);
-        decorator.display();
-    }
-}
-
-abstract class Component
-{
-    abstract void display();
-}
-
-class Window extends Component
-{
-    public void display()
-    {
-        System.out.println(&quot;显示窗口&quot;);
-    }
-}
-
-class TextBox extends Component
-{
-    public void display()
-    {
-        System.out.println(&quot;显示文本框&quot;);
-    }
-}
-
-class ListBox extends Component
-{
-    public void display()
-    {
-        System.out.println(&quot;显示列表框&quot;);
-    }
-}
-
-class Decorator extends Component
-{
-    private Component component;
-
-    public Decorator(Component component)
-    {
-        this.component = component;
-    }
-
-    public void display()
-    {
-        component.display();
-    }
-}
-
-class ScrollBarDecorator extends Decorator
-{
-    public ScrollBarDecorator(Component component)
-    {
-        super(component);
-    }
-
-    public void display()
-    {
-        addScrollBar();
-        super.display();
-    }
-
-    public void addScrollBar()
-    {
-        System.out.println(&quot;添加滚动条&quot;);
-    }
-}
-
-class BlackBorderDecorator extends Decorator
-{
-    public BlackBorderDecorator(Component component)
-    {
-        super(component);
-    }
-
-    public void display()
-    {
-        addBlackBorder();
-        super.display();
-    }
-
-    public void addBlackBorder()
-    {
-        System.out.println(&quot;添加黑边框&quot;);
-    }
-}
-</code></pre>
-<p>输出如下：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200726114715991.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>核心部分就是客户端的代码：</p>
-<pre><code class="language-java">Component component = new Window();
-Component decorator = new ScrollBarDecorator(component);
-decorator.display();
-</code></pre>
-<p>创建具体构件后，再创建具体装饰器，把具体构件传入具体装饰器的构造方法中，这样具体装饰器就能在装饰之后（在添加滚动条之后）调用具体构件的方法（调用显示窗口）。</p>
-<p>另外，如果向增加新的装饰方法，比如增加了滚动条后，再增加黑边框，只需要将”滚动条装饰器“本身再装饰一次：</p>
-<pre><code class="language-java">Component component = new Window();
-Component decorator = new ScrollBarDecorator(component);
-decorator = new BlackBorderDecorator(decorator);
-decorator.display();
-</code></pre>
-<p><strong>也就是把已经对具体构件进行装饰之后的具体装饰器，注入到另一个具体装饰器的构造方法再一次装饰。</strong></p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200726115214121.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-透明装饰与半透明装饰">4 透明装饰与半透明装饰</h1>
-<h2 id="41-透明装饰模式">4.1 透明装饰模式</h2>
-<p>标准的装饰模式就是透明装饰，比如上述例子。在透明装饰模式中，要求客户端完全针对抽象构件编程，也就是将对象全部声明为抽象构件类型，而不是具体构件类型或具体装饰器类型。</p>
-<p>透明装饰模式的优点如下：</p>
-<ul>
-<li>客户端透明地使用装饰前以及装饰后的对象，无须关心两者区别</li>
-<li>能对已装饰过的对象进行多次装饰</li>
-</ul>
-<p>在实现透明装饰模式时，要求具体装饰类的业务方法覆盖抽象装饰类的业务方法，需要调用原有具体构件对象的业务方法以及新增装饰方法。</p>
-<h2 id="42-半透明装饰模式">4.2 半透明装饰模式</h2>
-<p>对于有时用户需要单独调用装饰方法，这时候需要使用具体装饰类型定义装饰后的对象，而具体构件对象还是可以使用抽象构件定义，这种装饰模式就叫半透明装饰模式。对于客户端来说：</p>
-<ul>
-<li>具体构件类型无需关心，是透明的</li>
-<li>具体装饰类型必须指定，是不透明的</li>
-</ul>
-<p>例子如下，修改上面的滚动条具体装饰类：</p>
-<pre><code class="language-java">class ScrollBarDecorator extends Decorator
-{
-    public ScrollBarDecorator(Component component)
-    {
-        super(component);
-    }
-
-    public void display()
-    {
-        super.display();
-    }
-
-    public void addScrollBar()
-    {
-        System.out.println(&quot;添加滚动条&quot;);
-    }
-}
-</code></pre>
-<p>其中<code>addScrollBar</code>由客户端单独调用：</p>
-<pre><code class="language-java">Component component = new Window();
-ScrollBarDecorator decorator = new ScrollBarDecorator(component);
-decorator.display();
-decorator.addScrollBar();
-</code></pre>
-<p>半透明装饰可以带来更大的灵活性，使用起来更加方便，客户端可以单独调用装饰方法来进行装饰，但是缺点就是不能对同一个对象进行多次装饰。</p>
-<h1 id="5-注意事项">5 注意事项</h1>
-<ul>
-<li>保持接口相同：尽量保持装饰类的接口与被装饰类的接口相同，这样对客户端而言装饰前/后的对象可以一致对待，也就是尽量使用透明装饰模式</li>
-<li>减少具体构件行为：过多的行为不需要放在具体构件类中，通过具体装饰类进行扩展</li>
-<li>去除抽象构件：如果只有一个具体构件类，那么抽象装饰类可以作为该具体构件类的直接子类，也就是说将原来的抽象构件用具体构件代替</li>
-</ul>
-<h1 id="6-主要优点">6 主要优点</h1>
-<ul>
-<li>动态扩展灵活：对于扩展一个对象的功能，装饰模式比继承更加灵活，不会导致类的个数急剧增加。通过选择不同的具体装饰类，可以动态扩展对象的行为</li>
-<li>多次装饰：可以对一个对象进行多次装饰，使用不同的具体装饰类以及这些装饰类的排列组合，可以创造很多不同行为的组合</li>
-<li>构件与装饰类独立变化：具体构件类以及具体装饰类可以独立变化，用户可以根据需要增加新的具体构件类或者具体装饰类，无须修改原有代码，符合开闭原则</li>
-</ul>
-<h1 id="7-主要缺点">7 主要缺点</h1>
-<ul>
-<li>对象较多：使用装饰模式会产生很多小对象，这些对象的区别在于相互连接方式的不同，小对象过多会一定程度上影响性能</li>
-<li>排查繁琐：尽管装饰模式比继承更加灵活，但也意味着比继承更加容易出错，排错也很困难，对于多次装饰后的对象可能需要逐级排查</li>
-</ul>
-<h1 id="8-适用场景">8 适用场景</h1>
-<ul>
-<li>在不影响其他对象的情况下，以动态和透明的方式给单个对象增加职责</li>
-<li>在不能采用继承扩展系统或者采用继承不利于对系统扩展和维护时可以使用装饰模式</li>
-</ul>
-<h1 id="9-总结">9 总结</h1>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200729132833584.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
-<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
