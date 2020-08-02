@@ -1,0 +1,1187 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（十八）：解释器模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+
+1.1 引言
+1.2 相关术语
+
+1.2.1 文法规则
+1.2.2 BNF符号
+1.2.3 终结符与非终结符
+1.2.4 抽象语法树
+
+
+1.3 定义
+1.4 结构图
+1.5 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 环..." />
+    <meta name="keywords" content="设计模式" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1596339158037" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-08-02"><i class="fa fa-calendar"></i><span class="lately">1 小时前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（十八）：解释器模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD">1.2 相关术语</a>
+<ul>
+<li><a href="#121-%E6%96%87%E6%B3%95%E8%A7%84%E5%88%99">1.2.1 文法规则</a></li>
+<li><a href="#122-bnf%E7%AC%A6%E5%8F%B7">1.2.2 BNF符号</a></li>
+<li><a href="#123-%E7%BB%88%E7%BB%93%E7%AC%A6%E4%B8%8E%E9%9D%9E%E7%BB%88%E7%BB%93%E7%AC%A6">1.2.3 终结符与非终结符</a></li>
+<li><a href="#124-%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91">1.2.4 抽象语法树</a></li>
+</ul>
+</li>
+<li><a href="#13-%E5%AE%9A%E4%B9%89">1.3 定义</a></li>
+<li><a href="#14-%E7%BB%93%E6%9E%84%E5%9B%BE">1.4 结构图</a></li>
+<li><a href="#15-%E8%A7%92%E8%89%B2">1.5 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E7%8E%AF%E5%A2%83%E7%B1%BB">2.2 环境类</a></li>
+<li><a href="#23-%E6%8A%BD%E8%B1%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F">2.3 抽象表达式</a></li>
+<li><a href="#24-%E7%BB%88%E7%BB%93%E7%AC%A6%E8%A1%A8%E8%BE%BE%E5%BC%8F">2.4 终结符表达式</a></li>
+<li><a href="#25-%E9%9D%9E%E7%BB%88%E7%BB%93%E7%AC%A6%E8%A1%A8%E8%BE%BE%E5%BC%8F">2.5 非终结符表达式</a></li>
+<li><a href="#26-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.6 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E6%89%A9%E5%B1%95">4 扩展</a></li>
+<li><a href="#5-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">5 主要优点</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">6 主要缺点</a></li>
+<li><a href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">7 适用场景</a></li>
+<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>解释器模式是一种使用频率较低但是学习难度较大的设计模式，用于描述如何使用面向对象语言构成一个简单的语言解释器。某些情况下可能需要自定义一个新语言，这种语言具有自己的文法规则，这时可以使用解释器模式进行设计，比如模拟机器人的控制程序，每一条指令对应一个动作，通过解释输入的指令来实现对机器人的控制。下面先来看一些术语定义。</p>
+<h2 id="12-相关术语">1.2 相关术语</h2>
+<h3 id="121-文法规则">1.2.1 文法规则</h3>
+<p>文法规则是用于描述语言的语法的规则，比如，汉语中一个句子的文法规则为：</p>
+<pre><code class="language-bash">主 谓 宾
+</code></pre>
+<p>这就是句子的文法规则，同样计算机语言也有自己的文法规则。</p>
+<h3 id="122-bnf符号">1.2.2 BNF符号</h3>
+<p>BNF是<code>Backus-Naur Form</code>的缩写，是由<code>John Backus</code>以及<code>Peter Naur</code>首次引入的一种形式化符号来描述给定语言的语法，BNF中定义的部分符号如下：</p>
+<ul>
+<li><code>::=</code>：表示<code>定义为</code>，左边的语言单位可以通过右边进行说明和定义</li>
+<li><code>|</code>：表示<code>或者</code></li>
+<li><code>&quot;</code>或<code>'</code>：双引号或单引号里面的字符串表示字符串本身</li>
+</ul>
+<h3 id="123-终结符与非终结符">1.2.3 终结符与非终结符</h3>
+<p>在以下的模拟描述机器人移动的文法规则中：</p>
+<pre><code class="language-bash">expression ::= direction action distance | composite   //表达式
+composite ::= expression 'and' expression              //复合表达式
+direction ::= 'up' | 'down' | 'left'| 'right'          //移动方向
+action ::= 'move' | 'run'                              //移动方式
+distance ::= an integer                                //移动距离
+</code></pre>
+<p>定义了5条文法规则，对应5个语言单位，这些语言单位可以分为：</p>
+<ul>
+<li>终结符（也叫终结符表达式）：语言的最小组成单位，不能再拆分，比如上面的<code>direction</code>或<code>action</code></li>
+<li>非终结符（也叫非终结符表达式）：一个完整的句子，包含一些列终结符或非终结符</li>
+</ul>
+<h3 id="124-抽象语法树">1.2.4 抽象语法树</h3>
+<p>除了使用文法规则定义一个语言外，还能使用一种叫抽象语法树的直观方式表示，例如表达式：</p>
+<pre><code class="language-bash">1 / 2 * 3 - 4 + 1
+</code></pre>
+<p>可以通过如下抽象语法树定义：<br>
+<img src="https://img-blog.csdnimg.cn/20200801165057650.png" alt="在这里插入图片描述" loading="lazy"><br>
+在该抽象语法树中，可以通过终结符<code>value</code>以及非终结符<code>operation</code>组成复杂的语句，终结符作为抽象语法树的叶子，非终结符作为非叶子节点，可以将终结符或者包含终结符与非终结符的节点作为子节点。</p>
+<h2 id="13-定义">1.3 定义</h2>
+<p><strong>解释器模式：定义一个语言的文法，并且建立一个解释器来解释该语言中的句子。</strong></p>
+<p>这里的语言指的是使用规定格式以及语法的代码。解释器模式是一种类行为型模式。</p>
+<h2 id="14-结构图">1.4 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200801195332936.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="15-角色">1.5 角色</h2>
+<ul>
+<li><strong><code>AbstractExpression</code>（抽象表达式）：声明了抽象的解释操作，是所有终结符表达式以及非终结符表达式的父类</strong></li>
+<li><strong><code>TerminalExpression</code>（终结符表达式）：抽象表达式的子类，实现了与文法规则中的终结符相关联的解释操作，句子中的每一个终结符都是该类的一个实例，通常只有少数几个终结符表达式类</strong></li>
+<li><strong><code>NonterminalExpression</code>（非终结符表达式）：也是抽象表达式的子类，实现了文法规则中非终结符的解释操作，由于非终结符表达式可以包含非终结符表达式以及终结符表达式，因此一般通过递归方式完成解释</strong></li>
+<li><strong><code>Context</code>（环境类）：用于存储解释器之外的一些全局信息，通常它临时存储需要解释的语句</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>（可选）定义环境类：首先对环境类进行定义，使用集合存储相关的全局或公共信息，用于在具体解释时获取，如果无须全局信息则环境类可以省略</li>
+<li>定义抽象表达式类：接口/抽象类，声明抽象解释操作</li>
+<li>定义终结符表达式类：继承/实现抽象表达式，定义终结符的解释操作</li>
+<li>定义非终结符表达式类：继承/实现抽象表达式，定义非终结符解释操作，一般通过递归处理</li>
+</ul>
+<h2 id="22-环境类">2.2 环境类</h2>
+<p>这里暂时不需要环境类，为了兼容定义一个空类：</p>
+<pre><code class="language-java">class Context{}
+</code></pre>
+<h2 id="23-抽象表达式">2.3 抽象表达式</h2>
+<p>包含抽象解释操作方法：</p>
+<pre><code class="language-java">interface AbstractExpression
+{
+    void interpret(Context context);
+}
+</code></pre>
+<h2 id="24-终结符表达式">2.4 终结符表达式</h2>
+<p>解释终结符表达式：</p>
+<pre><code class="language-java">class TerminalExpression implements AbstractExpression
+{
+    @Override
+    public void interpret(Context context)
+    {
+        System.out.println(&quot;终结符解析&quot;);
+    }
+}
+</code></pre>
+<h2 id="25-非终结符表达式">2.5 非终结符表达式</h2>
+<pre><code class="language-java">class NonterminalExpression implements AbstractExpression
+{
+    private AbstractExpression left;
+    private AbstractExpression right;
+
+    public NonterminalExpression(AbstractExpression left,AbstractExpression right)
+    {
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
+    public void interpret(Context context)
+    {
+        System.out.println(&quot;非终结符解析&quot;);
+        if(left != null)
+            left.interpret(context);
+        if(right != null)
+            right.interpret(context);
+    }
+}
+</code></pre>
+<p>解释非终结符时一般需要递归处理，这里模拟了非终结符左右两边的表达式操作。</p>
+<h2 id="26-客户端">2.6 客户端</h2>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    AbstractExpression expression1 = new TerminalExpression();
+    AbstractExpression expression2 = new TerminalExpression();
+    AbstractExpression expression3 = new NonterminalExpression(expression1,expression2);
+    expression3.interpret(null);
+}
+</code></pre>
+<p>定义两个终结符表达式与一个非终结符表达式，最后对非终结符表达式进行解释。</p>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>对机器人移动指令进行解释，移动的语法表达如下：方向 方式 距离，方向包括上下左右四个方向，方式包括跑以及一般移动，距离为一个整数，一条移动指令可以组合多条子移动指令，使用解释器模式进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>环境类：这里为空</li>
+<li>抽象表达式类：<code>AbstractNode</code></li>
+<li>终结符表达式类：<code>DirectionNode</code>+<code>ActionNode</code>+<code>DistanceNode</code></li>
+<li>非终结符表达式类：<code>AndNode</code>+<code>SentenceNode</code></li>
+</ul>
+<p>抽象表达式类如下：</p>
+<pre><code class="language-java">interface AbstractNode
+{
+    String interpret(String str);
+}
+</code></pre>
+<p>终结符表达式类：</p>
+<pre><code class="language-java">class DirectionNode implements AbstractNode
+{
+    private static final Map&lt;String,String&gt; strs;
+    static
+    {
+        strs = new HashMap&lt;&gt;();
+        strs.put(&quot;up&quot;, &quot;向上&quot;);
+        strs.put(&quot;down&quot;, &quot;向下&quot;);
+        strs.put(&quot;left&quot;, &quot;向左&quot;);
+        strs.put(&quot;right&quot;, &quot;向右&quot;);
+    }
+    @Override
+    public String interpret(String str)
+    {
+        return strs.containsKey(str) ? strs.get(str) : &quot;无效操作&quot;;
+    }
+}
+
+class ActionNode implements AbstractNode
+{
+    private static final Map&lt;String,String&gt; strs;
+    static
+    {
+        strs = new HashMap&lt;&gt;();
+        strs.put(&quot;move&quot;, &quot;移动&quot;);
+        strs.put(&quot;run&quot;, &quot;快速移动&quot;);
+    }
+    @Override
+    public String interpret(String str)
+    {
+        return strs.containsKey(str) ? strs.get(str) : &quot;无效操作&quot;;
+    }
+}
+
+class DistanceNode implements AbstractNode
+{
+    @Override
+    public String interpret(String str)
+    {
+        return str;
+    }
+}
+</code></pre>
+<p>根据对应的字符串返回相应的字符串即可。</p>
+<p>非终结符表达式类：</p>
+<pre><code class="language-java">class SentenceNode implements AbstractNode
+{
+    private final AbstractNode direction = new DirectionNode();
+    private final AbstractNode action = new ActionNode();
+    private final AbstractNode distance = new DistanceNode();
+    @Override
+    public String interpret(String s)
+    {
+        String [] str = s.split(&quot; &quot;);
+        return direction.interpret(str[0])+action.interpret(str[1])+distance.interpret(str[2]);
+    }
+}
+
+class AndNode implements AbstractNode
+{
+    @Override
+    public String interpret(String s)
+    {
+        if(s.contains(&quot;and&quot;))
+        {
+            int index = s.indexOf(&quot;and&quot;);
+            String leftStr = s.substring(0, index-1);
+            String rightStr = s.substring(index+4);
+            AbstractNode left = (leftStr.contains(&quot;and&quot;) ? new AndNode() : new SentenceNode());
+            AbstractNode right = (rightStr.contains(&quot;and&quot;) ? new AndNode() : new SentenceNode());
+            return left.interpret(leftStr) + &quot; 再 &quot; + right.interpret(rightStr);
+        }
+        return new SentenceNode().interpret(s);
+    }
+}
+</code></pre>
+<p>其中<code>AndNode</code>采取了递归进行解释操作，如果分割后的字符串还含有<code>and</code>则赋值为<code>AndNode</code>，否则为<code>SentenceNode</code>。</p>
+<p>测试：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    AbstractNode node = new AndNode();
+    System.out.println(node.interpret(&quot;up move 5 and down run 10 and down move 10 and left run -9&quot;));
+}
+</code></pre>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200802015840189.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-扩展">4 扩展</h1>
+<p>如果项目中需要对数据表达式进行分析与计算，可以直接使用现有的库，比如：</p>
+<ul>
+<li>Expression4J</li>
+<li>MESP</li>
+<li>Jep</li>
+<li>Fel</li>
+</ul>
+<p>等等，下面以Jep为例演示该库的使用方法。Jep是<code>Java expression parser</code>的简称，即Java表达式分析器，它是一个用来转换和计算数学表达式的Java库，用户可以以字符串形式输入一个任意公式，然后快速计算出结果。Jep支持用户自定义变量，常量，函数，包括很多常用的数学函数以及常量。</p>
+<p>首先<a href="http://www.singularsys.com/jep/download-trial.php">下载</a>JAR包依赖，例子如下：</p>
+<pre><code class="language-java">import com.singularsys.jep.*;
+
+public class Test
+{
+    public static void main(String[] args) throws Exception
+    {
+        Jep jep=new Jep();
+        //定义要计算的数据表达式
+        String interestOnDeposit=&quot;本金*利率*时间&quot;;
+        //给相关变量赋值
+        jep.addVariable(&quot;本金&quot;,10000);
+        jep.addVariable(&quot;利率&quot;,0.038);
+        jep.addVariable(&quot;时间&quot;,2);
+        jep.parse(interestOnDeposit);     //解析表达式
+        Object accrual=jep.evaluate();    //计算
+        System.out.println(&quot;存款利息：&quot;+accrual);
+    }
+}
+</code></pre>
+<h1 id="5-主要优点">5 主要优点</h1>
+<ul>
+<li>扩展性好：由于解释器中使用类来表示语言的文法规则，因此可以通过继承等机制来改变或扩展文法</li>
+<li>便于实现语言：每一条文法规则都可以表示为一个类，因此可以方便地实现一个简单的语言</li>
+<li>实现文法容易：抽象语法树中每一个表达式节点类的实现方式都是类似的，这些类的代码编写都不会特别复杂，还可以通过一些工具自动生成节点类代码</li>
+<li>增加解释表达式方便：如果用户需要增加新的解释表达式只需要对应增加一个新的终结符表达式或非终结符表达式，原有表达式类无须修改</li>
+</ul>
+<h1 id="6-主要缺点">6 主要缺点</h1>
+<ul>
+<li>复杂文法难以维护：在解释器模式中，每一条规则至少需要定义一个类，因此如果一个语言包含太多文法规则会导致类个数急增，导致系统难以管理和维护，可以考虑使用语法分析程序来取代解释器模式</li>
+<li>执行效率低：由于解释器模式中使用了大量的循环和递归调用，因此在解释较为复杂的句子时速度很慢，而且代码的调试过程也比较麻烦</li>
+</ul>
+<h1 id="7-适用场景">7 适用场景</h1>
+<ul>
+<li>可以将一个需要解释执行的语言中的句子表示为一个抽象语法树</li>
+<li>一些重复出现的问题可以用一种简单的语言来描述</li>
+<li>一个语言的文法较为简单</li>
+<li>执行效率不是关键问题</li>
+</ul>
+<h1 id="8-总结">8 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200802081552906.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-02">2020-08-02</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（十九）：迭代器模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-qi-ming-ling-mo-shi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-qi-ming-ling-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-02">2020-08-02</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（十七）：命令模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-46-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-46-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-03">2020-08-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-46-qi/">每日分享 第46期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-45-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-45-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-02">2020-08-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-45-qi/">每日分享 第45期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-02">2020-08-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/">设计模式学习笔记（十九）：迭代器模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-1 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-3 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-4 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-8 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-9 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-12 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-13 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-14 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-15 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-16 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-17 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-18 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-20 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-21 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-22 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-23 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-24 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-25 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-26 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-27 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-28 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-29 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-30 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-31 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-32 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-33 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-34 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-35 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-36 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-37 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-38 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-39 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-40 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-41 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-42 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-43 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-44 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-45 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-46 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-47 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-48 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-49 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-50 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-51 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-52 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-53 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-54 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-55 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-56 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-57 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-59 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-60 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-61 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-62 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-63 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-64 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-65 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-66 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-67 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-68 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-69 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-70 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-71 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 205 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

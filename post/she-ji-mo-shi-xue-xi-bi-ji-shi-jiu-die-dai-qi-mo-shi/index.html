@@ -1,0 +1,1372 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（十九）：迭代器模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+
+1.1 引言
+1.2 定义
+1.3 结构图
+1.4 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 抽象迭代器
+2.3 抽象聚合类
+2.4 具体聚合类
+2.5 具体迭代器
+2.6 客户端
+
+
+3 实例
+4 内部类实现
+5 JD..." />
+    <meta name="keywords" content="设计模式" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1596339158037" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-08-02"><i class="fa fa-calendar"></i><span class="lately">1 小时前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（十九）：迭代器模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E8%BF%AD%E4%BB%A3%E5%99%A8">2.2 抽象迭代器</a></li>
+<li><a href="#23-%E6%8A%BD%E8%B1%A1%E8%81%9A%E5%90%88%E7%B1%BB">2.3 抽象聚合类</a></li>
+<li><a href="#24-%E5%85%B7%E4%BD%93%E8%81%9A%E5%90%88%E7%B1%BB">2.4 具体聚合类</a></li>
+<li><a href="#25-%E5%85%B7%E4%BD%93%E8%BF%AD%E4%BB%A3%E5%99%A8">2.5 具体迭代器</a></li>
+<li><a href="#26-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.6 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-%E5%86%85%E9%83%A8%E7%B1%BB%E5%AE%9E%E7%8E%B0">4 内部类实现</a></li>
+<li><a href="#5-jdk%E8%BF%AD%E4%BB%A3%E5%99%A8">5 JDK迭代器</a>
+<ul>
+<li><a href="#51-iterator">5.1 <code>Iterator</code></a></li>
+<li><a href="#52-listiterator">5.2 <code>ListIterator</code></a></li>
+</ul>
+</li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>在软件开发中，有一些类可以存储多个成员对象（元素），这些类通常称为聚合类，对应的对象称为聚合对象。聚合对象拥有两个职责，一个是存储数据，一个是遍历数据，前者是聚合对象的基本职责，后者是可以变化以及分离的，因此，可以将遍历数据的行为从聚合对象中分离出来，封装在一个被称之为“迭代器”的对象中，又迭代器来提供遍历聚合对象内部数据的行为。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>迭代器模式：提供一种方法来访问对象，而不用暴露这个对象的内部表示，别名叫游标。</strong></p>
+<p>迭代器模式是一种对象行为型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200801013759371.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong><code>Iterator</code>（抽象迭代器）：定义了访问和遍历元素的接口，声明了用于遍历数据元素的方法，比如<code>first</code>（获取第一个元素），<code>next</code>（获取下一个元素），<code>hasNext</code>（判断是否有下一个元素），<code>currentItem</code>（获取当前元素）</strong></li>
+<li><strong><code>ConcreteIterator</code>（具体迭代器）：实现了抽象迭代器，完成对聚合对象的遍历，同时在具体迭代器中通过游标来记录聚合对象中所处的当前位置，通常游标是一个非负整数</strong></li>
+<li><strong><code>Aggregate</code>（抽象聚合类）：用于存储和管理元素对象，声明一个<code>createIterator</code>方法创建一个迭代器对象，充当抽象迭代器的工厂角色</strong></li>
+<li><strong><code>ConcreteAggregate</code>（具体聚合类）：实现了抽象聚合类中的<code>createIterator</code>方法，返回一个具体迭代器实例</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象迭代器：一般为接口，声明具体迭代器的方法</li>
+<li>定义抽象聚合类：一般为接口，包含管理聚合元素的方法以及创建抽象迭代器的方法</li>
+<li>定义具体聚合类：内部创建集合存储聚合元素，在创建迭代器方法中将集合作为构造方法参数注入到具体迭代器中并返回该具体迭代器</li>
+<li>定义具体迭代器类：实现抽象迭代器的方法，一般包含一个来自具体聚合类的集合引用以及一个表示元素位置的整型的游标</li>
+</ul>
+<h2 id="22-抽象迭代器">2.2 抽象迭代器</h2>
+<pre><code class="language-java">interface Iterator
+{
+    String first();
+    String next();
+    boolean hasNext();
+    String currentItem();
+}
+</code></pre>
+<h2 id="23-抽象聚合类">2.3 抽象聚合类</h2>
+<pre><code class="language-java">interface Aggregate
+{
+    Iterator createIterator();
+    void add(String s);
+}
+</code></pre>
+<p>创建迭代器通过<code>createIterator</code>，<code>add</code>用于增添元素。</p>
+<h2 id="24-具体聚合类">2.4 具体聚合类</h2>
+<pre><code class="language-java">class ConcreteAggregate implements Aggregate
+{
+    List&lt;String&gt; list = new ArrayList&lt;&gt;();
+    @Override
+    public Iterator createIterator()
+    {
+        return new ConcreteIterator(list);
+    }
+    @Override
+    public void add(String s)
+    {
+        list.add(s);
+    }
+}
+</code></pre>
+<p>在创建迭代器方法中，通过构造方法把集合对象注入到具体迭代器中。</p>
+<h2 id="25-具体迭代器">2.5 具体迭代器</h2>
+<pre><code class="language-java">class ConcreteIterator implements Iterator
+{
+    private int cursor;
+    private List&lt;String&gt; list;
+    public ConcreteIterator(List&lt;String&gt; list)
+    {
+        this.list = list;
+        this.cursor = -1;
+    }
+
+    @Override
+    public String first()
+    {
+        return list.size() &gt; 0 ?
+        list.get(cursor = 0) :
+        null;
+    }
+
+    @Override
+    public String next()
+    {
+        return list.get(
+            cursor + 1 &lt; list.size() ? ++cursor : cursor
+        );
+    }
+
+    @Override
+    public boolean hasNext()
+    {
+        return cursor+1 &lt; list.size();
+    }
+
+    @Override
+    public String currentItem()
+    {
+        return list.get(cursor);
+    }
+}
+</code></pre>
+<p>具体迭代器中包含了一个游标，用于记录当前访问的位置。构造方法中将游标初始化为-1而不是初始化为0，这样第一次使用<code>next</code>时便会访问第一个元素。</p>
+<h2 id="26-客户端">2.6 客户端</h2>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Aggregate aggregate = new ConcreteAggregate();
+    aggregate.add(&quot;111&quot;);
+    aggregate.add(&quot;222&quot;);
+    aggregate.add(&quot;jksdfjksdjkfk&quot;);
+    aggregate.add(&quot;m,xcvm,xcm,v&quot;);
+    Iterator iterator = aggregate.createIterator();
+    while(iterator.hasNext())
+    {
+        System.out.println(iterator.next());
+    }
+}
+</code></pre>
+<p>客户端针对抽象聚合类以及抽象迭代器编程，通过聚合对象创建迭代器后，首先使用<code>haxNext</code>判断，接着使用<code>next</code>获取其中元素。</p>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>设计一个系统对客户数据以及商品数据进行遍历，使用迭代器模式进行设计。</p>
+</blockquote>
+<p>这个例子和上面的其实差不多，不过是反向迭代器方法，另外为了更贴近实际环境使用，抽象迭代器以及聚合类都使用了泛型设计：</p>
+<ul>
+<li>抽象迭代器：<code>Iterator&lt;T&gt;</code></li>
+<li>抽象聚合类：<code>AbstarctList&lt;T&gt;</code></li>
+<li>具体聚合类：<code>ObjectList&lt;T&gt;</code></li>
+<li>具体迭代器：<code>ObjectIterator&lt;T&gt;</code></li>
+<li>模拟产品以及顾客类：<code>Product</code>+<code>Customer</code></li>
+</ul>
+<p>首先设计抽象迭代器：</p>
+<pre><code class="language-java">interface Iterator&lt;T&gt;
+{
+    T next();
+    boolean hasNext();
+    String nextName() throws UnsupportedOperationException;
+    boolean hasNextName() throws UnsupportedOperationException;
+    void setProduct();
+}
+</code></pre>
+<p><code>nextName()</code>以及<code>hasNextName()</code>方法是对<code>Customer</code>类型生效的，对于<code>Product</code>会抛出异常。<code>setProduct()</code>表示设置聚合元素的类型为<code>Product</code>。</p>
+<p>接着是抽象聚合类的设计：</p>
+<pre><code class="language-java">interface AbstractList&lt;T&gt;
+{
+    Iterator&lt;T&gt; iterator();
+    Iterator&lt;T&gt; reversedIterator();
+    void add(T s);
+}
+</code></pre>
+<p>添加了一个反向迭代器实现。</p>
+<p>然后是具体聚合类的设计：</p>
+<pre><code class="language-java">class ObjectList&lt;T&gt; implements AbstractList&lt;T&gt;
+{
+    List&lt;T&gt; list = new ArrayList&lt;&gt;();
+    @Override
+    public Iterator&lt;T&gt; iterator()
+    {
+        return new ObjectIterator&lt;T&gt;(list,false);
+    }
+    @Override
+    public void add(T s)
+    {
+        list.add(s);
+    }
+    @Override
+    public Iterator&lt;T&gt; reversedIterator()
+    {
+        return new ObjectIterator&lt;T&gt;(list,true);
+    }
+}
+</code></pre>
+<p>内部还有一个<code>List</code>存储聚合元素，<code>iterator</code>返回正向迭代器，构造方法里面的布尔值表示是否为反向迭代器，<code>reversedIterator</code>表示返回一个单向迭代器，与正向的唯一不同就是传入具体迭代器的构造方法中的布尔值。<code>true</code>表示是反向迭代器，否则是正向。</p>
+<p>最后是具体迭代器类：</p>
+<pre><code class="language-java">class ObjectIterator&lt;T&gt; implements Iterator&lt;T&gt;
+{
+    private int cursor;
+    private List&lt;T&gt; list;
+    private boolean reversed;
+    private boolean isProduct = false;
+    public ObjectIterator(List&lt;T&gt; list,boolean reversed)
+    {
+        this.list = list;
+        this.reversed = reversed;
+        this.cursor = (reversed ? list.size() : -1);
+    }
+
+    @Override
+    public void setProduct()
+    {
+        isProduct = true;
+    }
+
+    @Override
+    public T next()
+    {
+        return list.get(
+            reversed ? 
+            ( cursor - 1 &gt;= 0 ? --cursor : cursor ) :
+            ( cursor + 1 &lt; list.size() ? ++cursor : cursor )
+        );
+    }
+
+    @Override
+    public boolean hasNext()
+    {
+        return reversed ?
+        cursor-1 &gt;= 0 :
+        cursor+1 &lt; list.size();
+    }
+
+    @Override
+    public String nextName() throws UnsupportedOperationException
+    {
+        if(isProduct)
+            throw new UnsupportedOperationException(&quot;商品迭代器不支持该操作&quot;);
+        return ((Customer)next()).getName();
+    }
+
+    @Override
+    public boolean hasNextName() throws UnsupportedOperationException
+    {
+        if(isProduct)
+            throw new UnsupportedOperationException(&quot;商品迭代器不支持该操作&quot;);
+        return hasNext();
+    }
+}
+</code></pre>
+<p>构造方法中初始化聚合元素以及一个布尔值<code>reversed</code>，表示是否为反向迭代器，游标根据<code>reversed</code>设置为<code>-1</code>或<code>list.size()</code>。对于<code>next</code>以及<code>hasNext</code>方法，都需要判断是否为反向迭代器，返回对应的结果。对于<code>nextName</code>以及<code>hasNextName</code>，由于这两个方法仅对<code>Customer</code>类生效，因此如果是<code>Product</code>类直接抛出异常。</p>
+<p>其他：</p>
+<pre><code class="language-java">class Product
+{
+    private String id;
+    private int num;
+
+    public Product(){}
+
+    public Product(String id,int num) {
+        this.id = id;
+        this.num = num;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public int getNum() {
+        return this.num;
+    }
+
+    @Override
+    public String toString()
+    {
+        return &quot;商品id:&quot;+id+&quot;\t商品数量:&quot;+num;
+    }
+}
+
+class Customer
+{
+    private String id;
+    private String name;
+
+    public Customer(String id,String name)
+    {
+        this.id = id;
+        this.name = name;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String toString()
+    {
+        return &quot;顾客id:&quot;+id+&quot;\t顾客名字:&quot;+name;
+    }
+}
+</code></pre>
+<p>测试类：</p>
+<pre><code class="language-java">public static void main(String[] args) 
+{
+    Customer customer1 = new Customer(&quot;id1&quot;,&quot;name1&quot;);
+    Customer customer2 = new Customer(&quot;id2&quot;,&quot;name2&quot;);
+    Customer customer3 = new Customer(&quot;id3&quot;,&quot;name3&quot;);
+    AbstractList&lt;Customer&gt; customerList = new ObjectList&lt;&gt;();
+    customerList.add(customer1);
+    customerList.add(customer2);
+    customerList.add(customer3);
+
+    Iterator&lt;Customer&gt; customerIterator = customerList.iterator();
+    while(customerIterator.hasNext())
+        System.out.println(customerIterator.next());
+    customerIterator = customerList.reversedIterator();
+    while(customerIterator.hasNext())
+        System.out.println(customerIterator.next());
+    System.out.println();
+
+    customerIterator = customerList.iterator();
+    while(customerIterator.hasNextName())
+        System.out.println(customerIterator.nextName());
+    customerIterator = customerList.reversedIterator();
+    while(customerIterator.hasNextName())
+        System.out.println(customerIterator.nextName());
+    System.out.println();
+        
+    Product product1 = new Product(&quot;product id 1&quot;,1);
+    Product product2 = new Product(&quot;product id 2&quot;,2);
+    Product product3 = new Product(&quot;product id 3&quot;,3);
+    AbstractList&lt;Product&gt; productList = new ObjectList&lt;&gt;();
+    productList.add(product1);
+    productList.add(product2);
+    productList.add(product3);
+
+    Iterator&lt;Product&gt; productIterator = productList.iterator();
+    while(productIterator.hasNext())
+        System.out.println(productIterator.next());
+    productIterator = productList.reversedIterator();
+    while(productIterator.hasNext())
+        System.out.println(productIterator.next());
+    System.out.println();
+    try
+    {
+        productIterator = productList.iterator();
+        productIterator.setProduct();
+        while(productIterator.hasNextName())
+            System.out.println(productIterator.nextName());
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+<p>首先创建了三个<code>Customer</code>，接着添加到<code>customerList</code>中，从<code>customerList</code>中的<code>iterator</code>获取正向迭代器以及从<code>reversedIterator</code>获取正向迭代器，两种遍历方式的迭代器可以使用同样的语句实现遍历：</p>
+<pre><code class="language-java">while(customerIterator.hasNext())
+	System.out.println(customerIterator.next());
+</code></pre>
+<p>对于<code>Product</code>，由于<code>hasNextName</code>以及<code>nextName</code>声明了抛出异常，因此测试输出如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200801135447573.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-内部类实现">4 内部类实现</h1>
+<p>上面的例子可以看到在具体聚合类以及具体迭代器之间存在关联关系，具体迭代器需要维持一个对具体聚合对象（或里面的集合）的引用，除了使用关联关系外，还可以将迭代器设计为聚合类的内部类，比如JDK中的<code>AbstractList</code>：</p>
+<pre><code class="language-java">public abstract class AbstractList&lt;E&gt; extends AbstractCollection&lt;E&gt; implements List&lt;E&gt; {
+	//...
+	private class Itr implements Iterator&lt;E&gt; {
+		//...
+	}
+	//...
+}
+</code></pre>
+<p>使用类似的方式重新设计上面的例子：</p>
+<pre><code class="language-java">class ObjectList&lt;T&gt; implements AbstractList&lt;T&gt;
+{
+    List&lt;T&gt; list = new ArrayList&lt;&gt;();
+    @Override
+    public Iterator&lt;T&gt; iterator()
+    {
+        return new ObjectIterator(false);
+    }
+    @Override
+    public void add(T s)
+    {
+        list.add(s);
+    }
+    @Override
+    public Iterator&lt;T&gt; reversedIterator()
+    {
+        return new ObjectIterator(true);
+    }
+
+    private class ObjectIterator implements Iterator&lt;T&gt;
+    {
+        private int cursor;
+        private boolean reversed;
+        private boolean isProduct = false;
+        public ObjectIterator(boolean reversed)
+        {
+            this.reversed = reversed;
+            this.cursor = (reversed ? list.size() : -1);
+        }
+        //...
+    }
+}
+</code></pre>
+<p>改变的就是具体迭代器的构造方法，不需要注入聚合对象了，另外也取消了泛型的声明。</p>
+<h1 id="5-jdk迭代器">5 JDK迭代器</h1>
+<h2 id="51-iterator">5.1 <code>Iterator</code></h2>
+<p>JDK（OpenJDK11.0.2）中的<code>Collection</code>方法摘录如下：</p>
+<pre><code class="language-java">public interface Collection&lt;E&gt; extends Iterable&lt;E&gt; {
+	//...
+	Iterator&lt;E&gt; iterator();
+	//...
+}
+</code></pre>
+<p>该方法用于返回一个迭代器，以便遍历聚合类中的元素，其中<code>Iterator</code>定于如下：</p>
+<pre><code class="language-java">public interface Iterator&lt;E&gt; {
+	boolean hasNext();
+	E next();
+	default void remove() {
+		//...
+	}
+	default void forEachRemaining(Consumer&lt;? super E&gt; action) {
+		//...
+	}
+}
+</code></pre>
+<p>其中：</p>
+<ul>
+<li><code>hasNext</code>：用于判断聚合对象是否存在下一个元素，需要在调用<code>next</code>之前调用</li>
+<li><code>next</code>：将下标移至下一个元素，并返回游标所越过的那个元素的引用，也就是获取下一个元素</li>
+<li><code>remove</code>：删除上一次<code>next</code>的返回的元素</li>
+<li><code>forEachRemaining</code>：用于对剩余元素进行的操作，比如一个集合有10个元素，使用迭代器遍历了前5个，则使用该方法会遍历剩下的元素，也就是后5个</li>
+</ul>
+<p>Java迭代器原理如图：<br>
+<img src="https://img-blog.csdnimg.cn/2020080115523623.png" alt="在这里插入图片描述" loading="lazy"><br>
+第一个<code>next</code>被调用时，迭代器游标由0号位置移到1号位置，也就是移动到元素1以及元素2之间，接着返回游标越过的元素，也就是元素1。下一次调用<code>next</code>时，游标继续移动，从1号位置移动到2号位置，并返回越过的元素，也就是元素2。对于<code>remove</code>来说，删除上一次<code>next</code>返回的元素，也就是如果此时调用<code>remove</code>会删除元素2。</p>
+<p>也就是在调用<code>remove</code>之前至少需要调用一次<code>next</code>，如果不调用<code>next</code>的话，会抛出异常：<br>
+<img src="https://img-blog.csdnimg.cn/20200801155359430.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="52-listiterator">5.2 <code>ListIterator</code></h2>
+<p>JDK中的<code>List</code>接口除了继承<code>Collection</code>接口的<code>iterator</code>外，还增加一个<code>listIterator</code>，专门用于创建<code>ListIterator</code>类型的迭代器。用于遍历集合已经有了<code>Iterator</code>，但是这个迭代器只能用于正向遍历，而<code>ListIterator</code>的出现能解决逆向遍历的问题，因为其中提供了<code>hasPrevious</code>以及<code>previous</code>等方法。例子如下：</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    List&lt;String&gt; s = new ArrayList&lt;&gt;();
+    s.add(&quot;1111&quot;);
+    s.add(&quot;2222&quot;);
+    s.add(&quot;3333&quot;);
+    ListIterator&lt;String&gt; it = s.listIterator();
+    while(it.hasNext())
+        System.out.println(it.next());
+    System.out.println();
+    while(it.hasPrevious())
+        System.out.println(it.previous());
+}
+</code></pre>
+<p>实现完整的逆向遍历时，需要先将游标移动到末尾，也就是不断调用<code>next</code>直到末尾，才能实现调用<code>previous</code>进行逆向遍历。</p>
+<h1 id="6-主要优点">6 主要优点</h1>
+<ul>
+<li>多种遍历方式：支持以不同方式遍历聚合对象，在同一聚合对象上可以定义多种遍历方法，只需要用一个不同的聚合器替换原来的迭代器即可改变遍历算法</li>
+<li>简化聚合类：原有的聚合对象不需要再自行提供数据遍历方法</li>
+<li>满足OCP：由于引入了抽象层，增加新的聚合类以及迭代器类都很方便，无须修改源码</li>
+</ul>
+<h1 id="7-主要缺点">7 主要缺点</h1>
+<ul>
+<li>复杂度增加：迭代器模式将存储数据和遍历数据的职责分离，增加新的聚合类需要对应增加新的迭代器类，增加了复杂性</li>
+<li>抽象迭代器较难设计：考虑到以后的扩展，抽象迭代器的设计难度可能非常大，比如JDK的内置迭代器<code>Iterator</code>就无法实现逆向遍历，设计一个考虑全面的抽象迭代器并不是一件容易的事</li>
+</ul>
+<h1 id="8-适用场景">8 适用场景</h1>
+<ul>
+<li>访问一个聚合对象的内容而无须暴露它的内部表示。将聚合对象的访问与内部数据存储分离，使得访问聚合对象时无须了解内部实现细节</li>
+<li>需要为一个聚合对象提供多种遍历方式</li>
+<li>为遍历不同的聚合结构提供一个统一的接口，在该接口的实现类为不同的聚合结构提供不同的遍历方式，而客户端可以一致性地操作该接口</li>
+</ul>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/2020080116201951.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-45-qi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-45-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-02">2020-08-02</time>
+                  <h4 class="title white no-margin">每日分享 第45期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-02">2020-08-02</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（十八）：解释器模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-46-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-46-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-03">2020-08-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-46-qi/">每日分享 第46期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-45-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-45-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-02">2020-08-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-45-qi/">每日分享 第45期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-02">2020-08-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/">设计模式学习笔记（十九）：迭代器模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-1 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-3 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-4 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-8 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-9 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-12 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-13 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-14 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-15 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-16 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-17 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-18 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-20 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-21 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-22 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-23 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-24 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-25 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-26 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-27 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-28 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-29 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-30 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-31 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-32 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-33 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-34 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-35 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-36 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-37 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-38 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-39 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-40 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-41 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-42 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-43 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-44 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-45 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-46 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-47 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-48 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-49 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-50 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-51 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-52 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-53 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-54 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-55 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-56 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-57 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-59 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-60 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-61 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-62 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-63 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-64 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-65 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-66 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-67 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-68 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-69 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-70 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-71 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 205 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
