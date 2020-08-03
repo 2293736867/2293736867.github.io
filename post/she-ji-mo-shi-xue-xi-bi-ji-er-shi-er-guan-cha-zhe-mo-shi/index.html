@@ -1,0 +1,1718 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（二十二）：观察者模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+1.1 引言
+观察者模式使用频率很高，用于建立一种对象之间的依赖关系，当一个对象发生改变时自动通知其他对象，其他对象将做出相应反应。在观察者模式中，发生改变的对象叫做观察目标，也叫被观察者，而被通知的对象叫做观察者。
+一个观察目标..." />
+    <meta name="keywords" content="设计模式" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1596477567304" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-08-04"><i class="fa fa-calendar"></i><span class="lately">43 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（二十二）：观察者模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>观察者模式使用频率很高，用于建立一种对象之间的依赖关系，当一个对象发生改变时自动通知其他对象，其他对象将做出相应反应。在观察者模式中，<strong>发生改变的对象叫做观察目标，也叫被观察者，而被通知的对象叫做观察者。</strong></p>
+<p>一个观察目标可以对应多个观察者，而且这些观察者之间没有任何相互关联，可以根据需要增加和删除观察者，使得系统便于扩展。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>观察者模式：定义对象之间的一种一对多依赖关系，使得每一个对象状态发生改变时，其相关依赖对象皆得到通知并自动更新。</strong></p>
+<p>观察者模式是一种对象行为型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020080310384888.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong><code>Subejct</code>（抽象目标）：又叫主题，指被观察的对象，也就是被观察者，在目标中定义了一个观察者集合，同时提供一系列方法来增加或者删除观察者对象，也定义了通知方法<code>notify</code></strong></li>
+<li><strong><code>ConcreteSubject</code>（具体目标）：抽象目标的子类，通常包含有经常改变的数据，当状态发生改变时，向各个观察者发出通知，同时还实现了目标类中定义的抽象业务逻辑，如果无须扩展抽象目标类则可以省略具体目标类</strong></li>
+<li><strong><code>Observer</code>（抽象观察者）：对观察目标作出响应，一般定义为接口</strong></li>
+<li><strong><code>ConcreteObserver</code>（具体观察者）：具体观察者中维护一个指向具体目标的引用，存储具体观察者的有关状态，这些状态需要与具体目标的状态保持一致，同时实现了抽象观察者的<code>update</code>方法</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象观察者：接口/抽象类，声明状态更新方法</li>
+<li>定义具体观察者：继承/实现抽象观察者，实现状态更新方法</li>
+<li>定义抽象目标：包含一个存储抽象观察者的集合，与一个类似<code>notifyObserver</code>的通知观察者的抽象方法</li>
+<li>定义具体目标：继承抽象目标类，实现其中通知观察者的方法</li>
+</ul>
+<h2 id="22-抽象观察者">2.2 抽象观察者</h2>
+<pre><code class="language-java">interface Observer
+{
+    void update(String state);
+}
+</code></pre>
+<p>这里实现为一个接口，<code>update</code>方法供抽象目标，也就是供被观察者调用。</p>
+<h2 id="23-具体观察者">2.3 具体观察者</h2>
+<pre><code class="language-java">class ConcreteObserver implements Observer
+{
+    public String state;
+    public ConcreteObserver(String state)
+    {
+        this.state = state;
+    }
+    @Override
+    public void update(String state)
+    {
+        System.out.println(&quot;观察者状态更新为&quot;+state);
+    }
+}
+</code></pre>
+<p>实现其中的<code>update</code>方法，这里只是简单将状态输出。</p>
+<h2 id="24-抽象目标类">2.4 抽象目标类</h2>
+<pre><code class="language-java">abstract class Subject
+{
+    private List&lt;Observer&gt; list = new ArrayList&lt;&gt;();
+    public void attach(Observer observer)
+    {
+        list.add(observer);
+    }
+
+    public void detach(Observer observer)
+    {
+        list.remove(observer);
+    }
+
+    public void notifyObservers(String state)
+    {
+        list.forEach(t-&gt;t.update(state));
+    }
+
+    public abstract void change(String newState);
+}
+</code></pre>
+<p>抽象目标类负责管理观察者集合，使用<code>List</code>存储抽象观察者，包含添加/删除观察者方法。<code>notifyObservers</code>中通知了所有的观察者，将状态作为具体参数进行传递。<code>change</code>作为被观察者的状态改变函数，将新状态作为参数传入。</p>
+<h2 id="25-具体目标类">2.5 具体目标类</h2>
+<pre><code class="language-java">class ConcreteSubject extends Subject
+{
+    private String state;
+    public String getState()
+    {
+        return state;
+    }
+
+	@Override
+    public void change(String newState)
+    {
+        state = newState;
+        System.out.println(&quot;被观察者状态为:&quot;+newState);
+        notifyObservers(newState);
+    }
+}
+</code></pre>
+<p>具体目标类负责实现抽象目标的<code>change</code>方法，保存新状态后，通过抽象目标的<code>notifyObservers</code>通知所有观察者。</p>
+<h2 id="26-客户端">2.6 客户端</h2>
+<pre><code class="language-java">public static void main(String[] args)
+{
+    Observer observer1 = new ConcreteObserver(&quot;111&quot;);
+    Observer observer2 = new ConcreteObserver(&quot;111&quot;);
+    Observer observer3 = new ConcreteObserver(&quot;111&quot;);
+
+    Subject subject = new ConcreteSubject();
+    subject.attach(observer1);
+    subject.attach(observer2);
+    subject.attach(observer3);
+    subject.change(&quot;2222&quot;);        
+}
+</code></pre>
+<p>客户端针对抽象观察者以及抽象目标进行编程，定义好各个观察者后，添加到抽象目标中进行管理，接着更新被观察者的状态。</p>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200803164146531.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>一个多人联机游戏中，拥有战队机制，当基地受到攻击时，将通知该战队所有成员进入警戒状态，使用观察者模式进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>抽象观察者：<code>Observer</code></li>
+<li>具体观察者：<code>Player</code></li>
+<li>抽象目标：<code>Subject</code></li>
+<li>具体目标：<code>Base</code></li>
+</ul>
+<p>抽象观察者：</p>
+<pre><code class="language-java">interface Observer
+{
+    void update(String state);
+}
+</code></pre>
+<p>包含一个供抽象目标调用的<code>update()</code>方法。</p>
+<p>接着是具体观察者：</p>
+<pre><code class="language-java">class Player implements Observer
+{
+    public String state;
+    public String name;
+    public Player(String name,String state)
+    {
+        this.name = name;
+        this.state = state;
+    }
+    @Override
+    public void update(String state)
+    {
+        System.out.println(&quot;战队成员&quot;+name+&quot;状态更新为&quot;+state);
+    }
+}
+</code></pre>
+<p>在<code>update</code>中输出更新的状态。</p>
+<p>抽象目标如下：</p>
+<pre><code class="language-java">abstract class Subject
+{
+    private List&lt;Observer&gt; list = new ArrayList&lt;&gt;();
+    public void attach(Observer observer)
+    {
+        list.add(observer);
+    }
+
+    public void detach(Observer observer)
+    {
+        list.remove(observer);
+    }
+
+    public void notifyObservers(String state)
+    {
+        System.out.println(&quot;基地通知所有战队成员&quot;);
+        list.forEach(t-&gt;t.update(state));
+    }
+
+    public abstract void change(String newState);
+}
+</code></pre>
+<p>使用<code>List</code>存储所有战队成员，在通知方法中通知所有的观察者，<code>change</code>定义为抽象方法供子类实现。</p>
+<p>具体目标（被观察者）如下：</p>
+<pre><code class="language-java">class Base extends Subject
+{
+    private String state;
+    public String getState()
+    {
+        return state;
+    }
+
+    @Override
+    public void change(String newState)
+    {
+        state = newState;
+        System.out.println(&quot;基地状态更新为:&quot;+newState);
+        notifyObservers(newState);
+    }
+}
+</code></pre>
+<p>实现抽象目标的<code>change</code>方法，里面需要调用<code>notifyObservers</code>方法通知所有观察者。</p>
+<p>测试：</p>
+<pre><code class="language-java">public static void main(String[] args)
+{
+    Observer player1 = new Player(&quot;A&quot;,&quot;无警戒状态&quot;);
+    Observer player2 = new Player(&quot;B&quot;,&quot;无警戒状态&quot;);
+    Observer player3 = new Player(&quot;C&quot;,&quot;无警戒状态&quot;);
+
+    Subject subject = new Base();
+    subject.attach(player1);
+    subject.attach(player2);
+    subject.attach(player3);
+    subject.change(&quot;警戒状态&quot;);        
+}
+</code></pre>
+<p>输出如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200803165611601.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-推拉模型">4 推/拉模型</h1>
+<p>在观察者模式中，可以分为推模型以及拉模型。</p>
+<h2 id="41-推模型">4.1 推模型</h2>
+<p>推模型是被观察者向观察者推送观察目标的详细信息，不管观察者是否需要，推送的信息通常是被观察者对象的全部或部分数据。像上面的例子就是推模型，被观察者（基地）主动把状态数据推送给观察者（战队成员）。</p>
+<h2 id="42-拉模型">4.2 拉模型</h2>
+<h3 id="421-概述">4.2.1 概述</h3>
+<p>拉模型当被观察者通知观察者时，只传递少量信息，如果观察者需要更加详细的信息，由观察者主动到观察目标中获取，相当于时观察者从主题对象中拉去数据。这种方式一般把被观察者自身通过<code>update</code>传递给观察者，获取数据时时直接通过这个被观察者引用获取。</p>
+<h3 id="422-实例">4.2.2 实例</h3>
+<p>可以将上面的基地例子修改从推模型修改为拉模型，首先修改观察者中的<code>update()</code>参数：</p>
+<pre><code class="language-java">interface Observer
+{
+    void update(Subject subject);
+}
+</code></pre>
+<p>接着修改具体观察者：</p>
+<pre><code class="language-java">class Player implements Observer
+{
+    public String state;
+    public String name;
+    public Player(String name,String state)
+    {
+        this.name = name;
+        this.state = state;
+    }
+    @Override
+    public void update(Subject subject)
+    {
+        System.out.println(&quot;战队成员&quot;+name+&quot;状态更新为&quot;+subject.getState());
+    }
+}
+</code></pre>
+<p>主要的不同是原来的推模型直接把状态作为参数传递，现在传递一个抽象目标对象，需要具体观察者从中主动获取数据。</p>
+<p>然后是抽象目标：</p>
+<pre><code class="language-java">abstract class Subject
+{
+    private String state;
+    private List&lt;Observer&gt; list = new ArrayList&lt;&gt;();
+    public void attach(Observer observer)
+    {
+        list.add(observer);
+    }
+
+    public void detach(Observer observer)
+    {
+        list.remove(observer);
+    }
+
+    public void notifyObservers()
+    {
+        System.out.println(&quot;基地通知所有战队成员&quot;);
+        list.forEach(t-&gt;t.update(this));
+    }
+
+    public String getState()
+    {
+        return state;
+    }
+
+    public void setState(String state)
+    {
+        this.state = state;
+    }
+
+    public abstract void change(String newState);
+}
+</code></pre>
+<p>主要改变是多了一个<code>state</code>成员，同时去掉<code>notifyObservers()</code>中的参数。</p>
+<p>最后是具体目标：</p>
+<pre><code class="language-java">class Base extends Subject
+{
+    @Override
+    public void change(String newState)
+    {
+        setState(newState);
+        System.out.println(&quot;基地状态更新为:&quot;+newState);
+        notifyObservers();
+    }
+}
+</code></pre>
+<p>客户端代码无须任何修改，测试输出结果一致：<br>
+<img src="https://img-blog.csdnimg.cn/20200803171133817.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="43-两者比较">4.3 两者比较</h2>
+<ul>
+<li>推模型是假定被观察者知道观察者需要的数据，主动推送相关的数据，但是当不同的观察者需要不同的数据时候会出现麻烦，因为不能根据每一个不同的观察者提供不同的数据，或者提供新的<code>update</code>方法</li>
+<li>拉模型是直接把被观察者的引用传递，观察者按需要从中获取数据，适用情况比推模型要广</li>
+</ul>
+<h1 id="5-java中的观察者">5 Java中的观察者</h1>
+<h2 id="51-observer与observable">5.1 <code>Observer</code>与<code>Observable</code></h2>
+<p>观察者模式在Java中非常重要，JDK的<code>java.util</code>提供了<code>Observer</code>以及<code>Observable</code>接口作为对观察者模式的支持。</p>
+<h3 id="511-observer">5.1.1 <code>Observer</code></h3>
+<p><code>java.util.Observer</code>接口充当抽象观察者，只声明了一个方法：</p>
+<pre><code class="language-java">void update(Observable o,Object arg);
+</code></pre>
+<p>当观察目标的状态发生变化时，该方法会被调用，在<code>Observer</code>子类实现<code>update</code>，不同的具体观察者具有不同的更新行为，当调用<code>Observable</code>的<code>notifyObservers()</code>时，将执行<code>update</code>方法。</p>
+<p><code>update</code>的接口两个参数中，一个表示被观察者，一个表示调用<code>notifyObservers</code>的参数，换句话说，这样设计能同时支持推模型与拉模型：</p>
+<ul>
+<li>使用推模型时，被观察者在<code>notifyObervers()</code>中传入<code>arg</code>参数，也就是<code>update</code>中的<code>arg</code>参数</li>
+<li>使用拉模型时，被观察者不需要在<code>notifyObservers</code>中传入参数，但是需要在被观察者中声明获取状态或数据的方法，方便在<code>update</code>中通过被观察者引用<code>o</code>进行强制类型转换后调用</li>
+</ul>
+<h3 id="512-observable">5.1.2 <code>Observable</code></h3>
+<p><code>java.util.Observable</code>充当抽象目标类，其中定义了一个<code>Vector</code>存储观察者对象，包含的方法（OpenJDK11.0.2）如下：</p>
+<pre><code class="language-java">public class Observable {
+    private boolean changed = false;
+    private Vector&lt;Observer&gt; obs;
+    public Observable() {
+		//构造函数，初始化 obs
+    }
+    public synchronized void addObserver(Observer o) {
+    	//注册观察者到obs中
+    }
+    public synchronized void deleteObserver(Observer o) {
+		//删除obs中的某个观察者
+    }
+    public void notifyObservers() {
+    	//通知方法，内部调用每一个观察者的update()
+    }
+    public void notifyObservers(Object arg) {
+    	//类似上面的通知方法，带参数调用update()
+    }
+    public synchronized void deleteObservers() {
+    	//删除所有观察者
+    }
+    protected synchronized void setChanged() {
+    	//设置changed为true，表示观察目标的状态发生变化
+    }
+    protected synchronized void clearChanged() {
+    	//清除changed的状态，表示观察目标状态不再发生改变
+    	//或者已经通知了所有的观察者
+    }
+    public synchronized boolean hasChanged() {
+    	//返回changed，表示观察对象是否发生改变
+    }
+    public synchronized int countObservers() {
+    	//返回观察者数量
+    }
+}
+</code></pre>
+<h3 id="513-例子">5.1.3 例子</h3>
+<p>将上面基地的例子用<code>Observable</code>以及<code>Observer</code>实现如下：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args)
+    {
+        Observer player1 = new Player(&quot;A&quot;,&quot;无警戒状态&quot;);
+        Observer player2 = new Player(&quot;B&quot;,&quot;无警戒状态&quot;);
+        Observer player3 = new Player(&quot;C&quot;,&quot;无警戒状态&quot;);
+
+        Base base = new Base();
+        base.addObserver(player1);
+        base.addObserver(player2);
+        base.addObserver(player3);
+        base.change(&quot;警戒状态&quot;);
+    }
+}
+
+class Player implements Observer
+{
+    private String name;
+    private String state;
+    public Player(String name,String state)
+    {
+        this.name = name;
+        this.state = state;
+    }
+    @Override
+    public void update(Observable o,Object arg)
+    {
+        System.out.println(&quot;战队成员&quot;+name+&quot;更新状态为&quot;+arg);
+    }
+}
+
+class Base extends Observable
+{
+    public void change(String state)
+    {
+        setChanged();
+        notifyObservers(state);
+    }
+}
+</code></pre>
+<p>具体观察者<code>Player</code>实现<code>Observer</code>接口，具体目标<code>Base</code>（被观察者）继承<code>Observable</code>，注意需要在<code>notifyObservers</code>之前，使用<code>Observable</code>的<code>setChanged</code>表示被观察者状态改变，这样使用<code>notifyObservers</code>才能生效，否则认为被观察者没有发生状态改变：<br>
+<img src="https://img-blog.csdnimg.cn/20200803173804871.png" alt="在这里插入图片描述" loading="lazy"><br>
+查看源码发现<code>notifyObservers</code>中先对<code>changed</code>内部布尔变量进行了判断，如果具体目标没有使用<code>setChanged</code>方法，将导致无法通知观察者。</p>
+<p>这里使用了推模型实现，具体目标在<code>notifyObservers</code>中传递状态参数：</p>
+<pre><code class="language-java">class Player implements Observer
+{
+	//...
+    @Override
+    public void update(Observable o,Object arg)
+    {
+        System.out.println(&quot;战队成员&quot;+name+&quot;更新状态为&quot;+arg);
+    }
+}
+
+class Base extends Observable
+{
+    public void change(String state)
+    {
+        setChanged();
+        notifyObservers(state);
+    }
+}
+</code></pre>
+<p>使用拉模型修改如下：</p>
+<pre><code class="language-java">class Player implements Observer
+{
+    //...
+    public void update(Observable o,Object arg)
+    {
+        System.out.println(&quot;战队成员&quot;+name+&quot;更新状态为&quot;+((Base)o).getState());
+    }
+}
+
+class Base extends Observable
+{
+    private String state;
+    public String getState()
+    {
+        return state;
+    }
+    public void change(String state)
+    {
+        this.state = state;
+        setChanged();
+        notifyObservers();
+    }
+}
+</code></pre>
+<p>具体观察者的<code>update</code>中由原来的从<code>arg</code>获取状态变为从<code>Observable</code>中通过getter获取状态，同时具体目标增加了<code>state</code>成员，在<code>notifyObservers</code>中不需手动传入状态参数。</p>
+<h2 id="52-新apiflow-api">5.2 新API——<code>Flow API</code></h2>
+<p>虽然使用JDK的<code>Observable</code>以及<code>Observer</code>实现观察者模式很容易，不需要定义抽象目标以及抽象观察者，但是很遗憾的是从Java9开始标记为过时了（看着一条条横线也挺难受的）：<br>
+<img src="https://img-blog.csdnimg.cn/20200803174359464.png" alt="在这里插入图片描述" loading="lazy"></p>
+<p>查了一下原因，标记为过时主要是因为：</p>
+<ul>
+<li>提供的事件模型不够完善：它们不能提供一个完善的事件模型，比如只能告知观察者某些东西被改变了，但是没有告知什么东西改变了</li>
+<li>不能序列化：<code>Observable</code>没有实现序列化接口</li>
+<li>非线程安全：事件可能在不同的线程中以不同的顺序进行通知</li>
+</ul>
+<h1 id="6-flow-api">6 <code>Flow API</code></h1>
+<p>为了克服原来的缺点，从JDK9开始出现了<code>Flow API</code>，位于<code>java.util.concurrent</code>下。</p>
+<p>在讲<code>Flow API</code>之前，先看一下响应式编程。</p>
+<h2 id="61-响应式编程">6.1 响应式编程</h2>
+<p>响应式编程可以理解为一种处理数据项的异步流，即在数据产生的时候，接收者就对其进行响应。在响应式编程中，会有一个数据发布者（<code>Publisher</code>）以及数据订阅者（<code>Subscriber</code>），后者用于异步接收发布者发布的数据。</p>
+<p>在该模式中，还引入了一个更高级的特性：数据处理器（<code>Processor</code>），用于将数据发布者发布的数据进行某些转换操作，然后再发布给数据订阅者。响应式编程是异步非阻塞编程，能够提升程序性能，可以解决传统编程遇到的困难，基于这个模型实现的有<code>Java 9 Flow API</code>，<code>RxJava</code>，<code>Reactor</code>等。</p>
+<h2 id="62-flow-api">6.2 <code>Flow API</code></h2>
+<p><code>Flow</code>是一个<code>final</code>类，里面定义了四个接口：</p>
+<ul>
+<li><code>Publisher&lt;T&gt;</code>：数据发布者接口</li>
+<li><code>Subscriber&lt;T&gt;</code>：数据订阅者接口</li>
+<li><code>Subscription</code>：发布者和订阅者之间的订阅关系</li>
+<li><code>Processor&lt;T,R&gt;</code>：数据处理器</li>
+<li><code>public static int defaultBufferSize()</code>：返回缓冲区长度，默认256。当发布者发送速率高于接收速率时，数据接收者缓冲区将会被填满，当缓冲区填满后，发布者会停止发送数据，直到订阅者有空闲位置时，发布者才会继续发布数据</li>
+</ul>
+<h3 id="621-publishert">6.2.1 <code>Publisher&lt;T&gt;</code></h3>
+<p><code>Publisher</code>源码如下：</p>
+<pre><code class="language-java">@FunctionalInterface
+public static interface Publisher&lt;T&gt; {
+    public void subscribe(Subscriber&lt;? super T&gt; subscriber);
+}
+</code></pre>
+<p>这是一个函数式接口，只包含一个<code>subscribe</code>方法，通过该方法将数据发布出去。</p>
+<h3 id="622-subscribert">6.2.2 <code>Subscriber&lt;T&gt;</code></h3>
+<p><code>Subscriber</code>源码如下：</p>
+<pre><code class="language-java">public static interface Subscriber&lt;T&gt; 
+{
+    public void onSubscribe(Subscription subscription);
+    public void onNext(T item);
+    public void onError(Throwable throwable);
+    public void onComplete();
+}
+</code></pre>
+<p>方法解释如下：</p>
+<ul>
+<li><code>onSubscribe</code>：订阅成功的回调方法，用于初始化<code>Subscription</code>，表明可以开始接收订阅数据了</li>
+<li><code>onNext</code> ：接收下一项订阅数据的回调方法</li>
+<li><code>onError</code>：在<code>Publisher</code>或<code>Subscriber</code>遇到不可恢复的错误时会调用该方法，<code>Subscriber</code>不再接收订阅信息</li>
+<li><code>onComplete</code>：接收完所有订阅数据，并且发布者已经关闭后会回调该方法</li>
+</ul>
+<h3 id="623-subscription">6.2.3 <code>Subscription</code></h3>
+<p><code>Subscription</code>源码如下：</p>
+<pre><code class="language-java">public static interface Subscription {
+    public void request(long n);
+    public void cancel();
+}
+</code></pre>
+<p>方法解释如下：</p>
+<ul>
+<li><code>request</code>：用于向数据发布者请求n个数据项</li>
+<li><code>cancel</code>：取消消息订阅，订阅者不再接收数据</li>
+</ul>
+<h3 id="624-processortr">6.2.4 <code>Processor&lt;T,R&gt;</code></h3>
+<p><code>Processor</code>源码如下：</p>
+<pre><code class="language-java">public static interface Processor&lt;T,R&gt; 
+extends Subscriber&lt;T&gt;, Publisher&lt;R&gt; 
+{}
+</code></pre>
+<p>这是一个空接口，继承了<code>Subscriber</code>以及<code>Publisher</code>，它既能发布数据也能订阅数据，基于这个特性它可以充当数据转换的角色，先从数据发布者接收数据，经过处理后发布给数据订阅者。</p>
+<h3 id="625-简例">6.2.5 简例</h3>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args)
+    {
+        //JDK9自带的数据发布者,实现了Publisher&lt;T&gt;
+        SubmissionPublisher&lt;String&gt; publisher = new SubmissionPublisher&lt;&gt;();
+        //创建订阅者,用于接收发布者消息
+        Subscriber&lt;String&gt; subscriber = new Subscriber&lt;&gt;()
+        {
+            private Subscription subscription;
+            @Override
+            public void onSubscribe(Subscription subscription)
+            {
+                //通过Subscription和发布者保持订阅关系
+                //并用它来给发布者反馈
+                this.subscription = subscription;
+                //请求一个数据
+                this.subscription.request(1);
+            }
+
+            @Override
+            public void onNext(String item)
+            {
+                //接收发布者发布的信息
+                System.out.println(&quot;订阅者接收消息:&quot;+item);
+                //接收后再次请求一个数据
+                this.subscription.request(1);
+                //如果不想接收直接调用cancel
+                // this.subscription.cancel();
+            }
+
+            @Override
+            public void onError(Throwable throwable)
+            {
+                //异常回调
+                System.out.println(&quot;订阅者接收数据异常:&quot;+throwable);
+                throwable.printStackTrace();
+                this.subscription.cancel();
+            }
+
+            @Override
+            public void onComplete()
+            {
+                //发布者发送的数据都被接收了
+                //并且发布者关闭后就会回调该方法
+                System.out.println(&quot;订阅者接收数据完毕&quot;);
+            }
+        };
+        //建立发布者与订阅者的关系
+        publisher.subscribe(subscriber);
+        //发布数据
+        for(int i=0;i&lt;10;++i)
+        {
+            String message = &quot;flow api &quot;+i;
+            System.out.println(&quot;发布者发布消息:&quot;+message);
+            publisher.submit(message);
+        }
+        //发布结束后关闭发布者
+        publisher.close();
+        //main延迟关闭,否则订阅者没接收完消息线程就被关闭
+        try
+        {
+            Thread.currentThread().join(2000);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>步骤：</p>
+<ul>
+<li>建立消息发布者：使用<code>SubmissionPublisher&lt;String&gt;</code>作为消息发布者</li>
+<li>建立消息订阅者：实现<code>Subscriber&lt;String&gt;</code>作为消息订阅者</li>
+<li>建立订阅关系：通过<code>publisher.subscribe(subsciber)</code>建立</li>
+<li>发布数据：发布者通过<code>submit</code>发布数据</li>
+<li>收尾工作：如果没有出现异常需要调用发布者的<code>close()</code>关闭发布者，同时会回调订阅者的<code>onComplete</code>方法</li>
+</ul>
+<p>输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200803193451206.png" alt="在这里插入图片描述" loading="lazy"><br>
+注意例子中最后需要延迟关闭<code>main</code>线程，如果没有这个操作，订阅者就不能完全接收所有信息：<br>
+<img src="https://img-blog.csdnimg.cn/20200803193607970.png" alt="在这里插入图片描述" loading="lazy"><br>
+可以从输出看到，订阅者接收到第8条消息后，线程就被关闭了。</p>
+<h3 id="626-模拟缓冲区填满">6.2.6 模拟缓冲区填满</h3>
+<p>前面说过<code>Flow</code>中有一个静态方法返回缓冲区大小，下面进行模拟填满，在订阅者中的订阅方法中，加入延迟：</p>
+<pre><code class="language-java">@Override
+public void onNext(String item)
+{
+    //模拟接收数据缓慢填满缓冲池
+    try
+    {
+        TimeUnit.MILLISECONDS.sleep(300);
+    }
+    catch(InterruptedException e)
+    {
+        e.printStackTrace();
+    }
+    System.out.println(&quot;订阅者接收消息:&quot;+item);
+    //接收后再次请求一个数据
+    this.subscription.request(1);
+}
+</code></pre>
+<p>因为默认的缓冲区大小为256，因此，发布256条信息后，可以看到不再发送，直到等到订阅者处理才继续发布：<br>
+<img src="https://img-blog.csdnimg.cn/2020080319450897.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="627-processor">6.2.7 <code>Processor</code></h3>
+<p><code>Processor</code>就是<code>Publisher</code>+<code>Subscriber</code>，通常是用作接收发布者发布的信息，进行相应处理后，再将数据发布，供消息者订阅接收，下面是一个简例：</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args)
+    {
+        //JDK9自带的数据发布者,实现了Publisher&lt;T&gt;
+        SubmissionPublisher&lt;String&gt; publisher = new SubmissionPublisher&lt;&gt;();
+        //创建订阅者,用于接收发布者消息
+        TestProcessor processor = new TestProcessor();
+
+        Subscriber&lt;String&gt; subscriber = new Subscriber&lt;&gt;()
+        {
+            private Subscription subscription;
+            @Override
+            public void onSubscribe(Subscription subscription)
+            {
+                this.subscription = subscription;
+                this.subscription.request(1);
+            }
+
+            @Override
+            public void onNext(String item)
+            {
+                System.out.println(&quot;订阅者接收消息:&quot;+item);
+                this.subscription.request(1);
+            }
+
+            @Override
+            public void onError(Throwable throwable)
+            {
+                System.out.println(&quot;订阅者接收异常&quot;);
+                throwable.printStackTrace();
+                this.subscription.cancel();
+            }
+
+            @Override
+            public void onComplete()
+            {
+                System.out.println(&quot;订阅者接收完毕&quot;);
+            }
+        };
+        publisher.subscribe(processor);
+        processor.subscribe(subscriber);
+        //发布数据
+        for(int i=0;i&lt;10;++i)
+        {
+            String message = &quot;flow api &quot;+i;
+            System.out.println(&quot;发布者发布消息:&quot;+message);
+            publisher.submit(message);
+        }
+        //发布结束后关闭发布者
+        publisher.close();
+        //main延迟关闭,否则订阅者没接收完消息线程就被关闭
+        try
+        {
+            Thread.currentThread().join(2000);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+
+class TestProcessor extends SubmissionPublisher&lt;String&gt; implements Processor&lt;String,String&gt;
+{
+    private Subscription subscription;
+    @Override
+    public void onSubscribe(Subscription subscription)
+    {
+        //通过Subscription和发布者保持订阅关系
+        //并用它来给发布者反馈
+        this.subscription = subscription;
+        //请求一个数据
+        this.subscription.request(1);
+    }
+
+    @Override
+    public void onNext(String item)
+    {
+        //模拟接收数据缓慢填满缓冲池
+        System.out.println(&quot;处理器处理消息:&quot;+item);
+        item = &quot;经过处理器处理的消息:&quot;+item;
+        //接收后再次请求一个数据
+        this.submit(item);
+        this.subscription.request(1);
+    }
+
+    @Override
+    public void onError(Throwable throwable)
+    {
+        //异常回调
+        System.out.println(&quot;处理器处理数据异常:&quot;+throwable);
+        throwable.printStackTrace();
+        this.subscription.cancel();
+    }
+
+    @Override
+    public void onComplete()
+    {
+        System.out.println(&quot;处理者处理数据完毕&quot;);
+        this.close();
+    }
+}
+</code></pre>
+<p>步骤：</p>
+<ul>
+<li>建立消息发布者：同上使用<code>SubmissionPublisher&lt;String&gt;</code></li>
+<li>建立消息处理者：这里使用了一个继承<code>SubmissionPublisher&lt;String&gt;</code>并实现<code>Processor&lt;String,String&gt;</code>的类，在其中的<code>onNext</code>方法中对消息进行处理并调用<code>submit</code>发布给订阅者，在其中的<code>onComplete</code>调用<code>close()</code>关闭处理器</li>
+<li>建立消息订阅者：同上实现了<code>Subscriber&lt;String&gt;</code></li>
+<li>建立订阅关系：处理者订阅发布者，订阅者订阅处理者，也就是处理者相当于中介角色，将消息处理后交给订阅者</li>
+<li>发布消息：发布者发布消息</li>
+<li>收尾工作：首先由于处理者订阅了发布者，因此处理者处理完数据后处理者先关闭，接着订阅者订阅完处理后的数据后订阅者再关闭</li>
+</ul>
+<p>输出：<br>
+<img src="https://img-blog.csdnimg.cn/20200803200433627.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="628-使用flow-api实现例子">6.2.8 使用<code>Flow API</code>实现例子</h3>
+<p>讲了这么多<code>Flow API</code>的例子，下面来看看如何使用<code>Flow API</code>实现基地的例子。</p>
+<pre><code class="language-java">public class Test
+{
+    public static void main(String[] args)
+    {
+        Base base = new Base();
+        Player player1 = new Player(&quot;A&quot;, &quot;非戒备状态&quot;);
+        Player player2 = new Player(&quot;B&quot;, &quot;非戒备状态&quot;);
+        Player player3 = new Player(&quot;C&quot;, &quot;非戒备状态&quot;);
+        base.add(player1);
+        base.add(player2);
+        base.add(player3);
+        base.changed(&quot;戒备状态&quot;);
+        base.close();
+    }
+}
+
+class Base
+{
+    SubmissionPublisher&lt;String&gt; publisher = new SubmissionPublisher&lt;&gt;();
+    private List&lt;Player&gt; players = new ArrayList&lt;&gt;();
+    public void add(Player player)
+    {
+        publisher.subscribe(player);
+        players.add(player);
+    }
+    public void remove(Player player)
+    {
+        player.cancel();
+        players.remove(player);
+    }
+    public void changed(String state)
+    {
+        System.out.println(&quot;基地正在遭受攻击&quot;);
+        publisher.submit(state);
+    }
+    public void close()
+    {
+        publisher.close();
+        try
+        {
+            Thread.currentThread().join(2000);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Player implements Subscriber&lt;String&gt;
+{
+    private Subscription subscription;
+    private String name;
+    private String state;
+    public Player(String name,String state)
+    {
+        this.name = name;
+        this.state = state;
+    }
+    @Override
+    public void onSubscribe(Subscription subscription)
+    {
+        this.subscription = subscription;
+        this.subscription.request(1);
+    }
+
+    @Override
+    public void onNext(String item)
+    {
+        System.out.println(&quot;战队成员&quot;+name+&quot;更新状态:&quot;+item);
+        this.subscription.request(1);
+    }
+
+    @Override
+    public void onError(Throwable throwable)
+    {
+        System.out.println(&quot;战队成员接收异常&quot;);
+        throwable.printStackTrace();
+        this.subscription.cancel();
+    }
+
+    public void cancel()
+    {
+        this.subscription.cancel();
+    }
+
+    @Override
+    public void onComplete()
+    {
+        System.out.println(&quot;战队成员接收完毕&quot;);
+    }
+}
+</code></pre>
+<p>大部分代码都与上面的例子相同，就不解释了，贴一下输出：<br>
+<img src="https://img-blog.csdnimg.cn/20200803203010768.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="7-主要优点">7 主要优点</h1>
+<ul>
+<li>分离表示层与逻辑层：定义了稳定的消息更新传递机制，并抽象了更新接口，使得可以有各种各样不同的表示层充当具体观察者角色</li>
+<li>降低耦合：在抽象目标以及抽象观察者之间建立了一个抽象耦合，观察目标只需要维持一个抽象观察者的集合，无须了解具体观察者，由于观察目标和观察者没有紧密耦合在一起，因此它们可以属于不同的抽象层次</li>
+<li>广播：观察者模式支持广播通信，观察目标会向所有已注册的观察者对象发送通知，简化了一对多的系统设计难度</li>
+<li>满足OCP：观察者模式满足开放闭合原则的要求，增加新的具体观察者无须修改原有系统代码，在具体观察者之间与观察目标之间不存在关联关系的情况下，增加新的观察目标很方便</li>
+</ul>
+<h1 id="8-主要缺点">8 主要缺点</h1>
+<ul>
+<li>通知费时：如果有很多观察者，通知需要耗费较多时间</li>
+<li>循环依赖导致崩溃：如果观察者模式与观察目标之间存在循环依赖，观察目标会导致触发它们之间进行循环调用，可能导致崩溃</li>
+<li>不明确变化内容：观察者模式只是让观察者知道观察目标发生了变化，但是不知道变化的内容是什么</li>
+</ul>
+<h1 id="9-适用场景">9 适用场景</h1>
+<ul>
+<li>一个抽象模型有两个方面，其中一个方面依赖于另一个方面，将这两个方面封装在一个独立的对象中使它们可以独立地改变和复用</li>
+<li>一个对象的改变将导致一个或多个其他对象也发生改变，而并不知道具体有多少对象发生改变，也不知道这些对象是谁</li>
+<li>需要在系统中创建一个触发链，A对象的行为会影响B对象，B对象的行为会影响C对象，可以使用观察者模式创建一种链式触发机制</li>
+</ul>
+<h1 id="10-总结">10 总结</h1>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200803215719507.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-47-qi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-47-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-04">2020-08-04</time>
+                  <h4 class="title white no-margin">每日分享 第47期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-er-shi-yi-bei-wang-lu-mo-shi.png');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-yi-bei-wang-lu-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-04">2020-08-04</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（二十一）：备忘录模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-48-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-48-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-04">2020-08-04</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-48-qi/">每日分享 第48期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-47-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-47-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-04">2020-08-04</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-47-qi/">每日分享 第47期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-04">2020-08-04</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi/">设计模式学习笔记（二十二）：观察者模式</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-1 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-3 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-4 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-8 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-9 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-12 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-13 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-14 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-15 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-16 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-17 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-18 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-20 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-21 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-22 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-23 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-24 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-25 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-26 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-27 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-28 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-29 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-30 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-31 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-32 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-33 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-34 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-35 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-36 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-37 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-38 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-39 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-40 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-41 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-42 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-43 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-44 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-45 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-46 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-47 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-48 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-49 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-50 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-51 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-52 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-53 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-54 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-55 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-56 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-57 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-59 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-60 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-61 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-62 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-63 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-64 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-65 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-66 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-67 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-68 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-69 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-70 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-71 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 210 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
