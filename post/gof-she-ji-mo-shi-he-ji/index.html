@@ -16,17 +16,25 @@
 <script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
-    <meta name="description" content="1 概述
-这篇文章是对GoF23种设计模式+1种非GoF模式的合集，由笔者自己的笔记整理而来，每个模式都详细描述了步骤，角色等，以及使用Java实现的具体的例子，下面是目录：
-基础
+    <meta name="description" content="
+1 概述
+2 基础
 
-设计模式概述
-UML基础
+2.1 设计模式概述
+2.2 UML与面向对象设计原则
 
-创建型模式
 
-单例模式
-简单..." />
+3 创建型模式
+
+3.1 单例模式
+3.2 简单工厂模式
+3.3 工厂方法模式
+3.4 抽象工厂模式
+3.5 原型模式
+3.6 建造者模式
+
+
+4 结构型模..." />
     <meta name="keywords" content="设计模式" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -76,7 +84,7 @@ UML基础
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1596792533019" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1596793345109" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -91,7 +99,7 @@ UML基础
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/gof-she-ji-mo-shi-he-ji.jpeg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2020-08-07"><i class="fa fa-calendar"></i><span class="lately">几秒前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2020-08-07"><i class="fa fa-calendar"></i><span class="lately">14 分钟前</span></time>
               
               <a href="https://2293736867.github.io/post/gof-she-ji-mo-shi-he-ji/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/gof-she-ji-mo-shi-he-ji/"> </span>
@@ -115,102 +123,110 @@ UML基础
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <h1 id="1-概述">1 概述</h1>
-<p>这篇文章是对GoF23种设计模式+1种非GoF模式的合集，由笔者自己的笔记整理而来，每个模式都详细描述了步骤，角色等，以及使用Java实现的具体的例子，下面是目录：</p>
-<h2 id="基础">基础</h2>
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E5%9F%BA%E7%A1%80">2 基础</a>
 <ul>
-<li>设计模式概述</li>
-<li>UML基础</li>
+<li><a href="#21-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%A6%82%E8%BF%B0">2.1 设计模式概述</a></li>
+<li><a href="#22-uml%E4%B8%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99">2.2 UML与面向对象设计原则</a></li>
 </ul>
-<h2 id="创建型模式">创建型模式</h2>
+</li>
+<li><a href="#3-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F">3 创建型模式</a>
 <ul>
-<li>单例模式</li>
-<li>简单工厂模式（非GoF模式）</li>
-<li>工厂方法模式</li>
-<li>抽象工厂模式</li>
-<li>原型模式</li>
-<li>建造者模式</li>
+<li><a href="#31-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F">3.1 单例模式</a></li>
+<li><a href="#32-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">3.2 简单工厂模式</a></li>
+<li><a href="#33-%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F">3.3 工厂方法模式</a></li>
+<li><a href="#34-%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">3.4 抽象工厂模式</a></li>
+<li><a href="#35-%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F">3.5 原型模式</a></li>
+<li><a href="#36-%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F">3.6 建造者模式</a></li>
 </ul>
-<h2 id="结构型模式">结构型模式</h2>
+</li>
+<li><a href="#4-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F">4 结构型模式</a>
 <ul>
-<li>适配器模式</li>
-<li>桥接模式</li>
-<li>组合模式</li>
-<li>装饰模式</li>
-<li>外观模式</li>
-<li>享元模式</li>
-<li>代理模式</li>
+<li><a href="#41-%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F">4.1 适配器模式</a></li>
+<li><a href="#42-%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F">4.2 桥接模式</a></li>
+<li><a href="#43-%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F">4.3 组合模式</a></li>
+<li><a href="#44-%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F">4.4 装饰模式</a></li>
+<li><a href="#45-%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F">4.5 外观模式</a></li>
+<li><a href="#46-%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F">4.6 享元模式</a></li>
+<li><a href="#47-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F">4.7 代理模式</a></li>
 </ul>
-<h2 id="行为型模式">行为型模式</h2>
+</li>
+<li><a href="#5-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F">5 行为型模式</a>
 <ul>
-<li>职责链模式</li>
-<li>命令模式</li>
-<li>解释器模式</li>
-<li>迭代器模式</li>
-<li>中介者模式</li>
-<li>备忘录模式</li>
-<li>观察者模式</li>
-<li>状态模式</li>
-<li>策略模式</li>
-<li>模板方法模式</li>
-<li>访问者模式</li>
+<li><a href="#51-%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F">5.1 职责链模式</a></li>
+<li><a href="#52-%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F">5.2 命令模式</a></li>
+<li><a href="#53-%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F">5.3 解释器模式</a></li>
+<li><a href="#54-%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F">5.4 迭代器模式</a></li>
+<li><a href="#55-%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F">5.5 中介者模式</a></li>
+<li><a href="#56-%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F">5.6 备忘录模式</a></li>
+<li><a href="#57-%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F">5.7 观察者模式</a></li>
+<li><a href="#58-%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F">5.8 状态模式</a></li>
+<li><a href="#59-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F">5.9 策略模式</a></li>
+<li><a href="#510-%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F">5.10 模板方法模式</a></li>
+<li><a href="#511-%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F">5.11 访问者模式</a></li>
 </ul>
+</li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>这篇文章是对GoF23种设计模式+1种非GoF模式的合集，由笔者自己的笔记整理而来，每个模式都详细描述了步骤，角色等，以及使用Java实现的具体的例子。</p>
 <h1 id="2-基础">2 基础</h1>
-<h2 id="21-设计模式概述">2.1 <a href="https://blog.csdn.net/qq_27525611/article/details/107247594">设计模式概述</a></h2>
+<h2 id="21-设计模式概述">2.1 <a href="https://www.bingling.site/post/she-ji-mo-shi-xue-xi-bi-ji-yi-she-ji-mo-shi/">设计模式概述</a></h2>
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200728163506210.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="22-uml与面向对象设计原则">2.2 <a href="https://blog.csdn.net/qq_27525611/article/details/107250163">UML与面向对象设计原则</a></h2>
+<h2 id="22-uml与面向对象设计原则">2.2 <a href="https://www.bingling.site/post/she-ji-mo-shi-xue-xi-bi-ji-er-uml-yu-mian-xiang-dui-xiang-she-ji-yuan-ze/">UML与面向对象设计原则</a></h2>
 <figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200711005605808.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200711094651100.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h1 id="3-创建型模式">3 创建型模式</h1>
-<h2 id="31-单例模式">3.1 <a href="https://blog.csdn.net/qq_27525611/article/details/107294099">单例模式</a></h2>
+<h2 id="31-单例模式">3.1 <a href="https://www.bingling.site/post/she-ji-mo-shi-xue-xi-bi-ji-san-dan-li-mo-shi/">单例模式</a></h2>
 <figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200728163932717.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="32-简单工厂模式">3.2 <a href="https://blog.csdn.net/qq_27525611/article/details/107304159">简单工厂模式</a></h2>
+<h2 id="32-简单工厂模式">3.2 <a href="https://www.bingling.site/post/she-ji-mo-shi-xue-xi-bi-ji-si-jian-dan-gong-han-mo-shi/">简单工厂模式</a></h2>
 <figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200728175216328.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="33-工厂方法模式">3.3 <a href="https://blog.csdn.net/qq_27525611/article/details/107364031">工厂方法模式</a></h2>
+<h2 id="33-工厂方法模式">3.3 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-wu-gong-han-fang-fa-mo-shi/">工厂方法模式</a></h2>
 <figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200728202541743.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="34-抽象工厂模式">3.4 <a href="https://blog.csdn.net/qq_27525611/article/details/107369024">抽象工厂模式</a></h2>
+<h2 id="34-抽象工厂模式">3.4 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-liu-chou-xiang-gong-han-mo-shi/">抽象工厂模式</a></h2>
 <figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200728225937668.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="35-原型模式">3.5 <a href="https://blog.csdn.net/qq_27525611/article/details/107409590">原型模式</a></h2>
+<h2 id="35-原型模式">3.5 <a href="https://2293736867.github.io/post/she-ji-mo-shi-qi-yuan-xing-mo-shi/">原型模式</a></h2>
 <figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200729063842999.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="36-建造者模式">3.6 <a href="https://blog.csdn.net/qq_27525611/article/details/107424630">建造者模式</a></h2>
+<h2 id="36-建造者模式">3.6 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-ba-jian-zao-zhe-mo-shi/">建造者模式</a></h2>
 <figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20200729071550422.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h1 id="4-结构型模式">4 结构型模式</h1>
-<h2 id="41-适配器模式">4.1 <a href="https://blog.csdn.net/qq_27525611/article/details/107542693">适配器模式</a></h2>
+<h2 id="41-适配器模式">4.1 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-jiu-gua-pei-qi-mo-shi/">适配器模式</a></h2>
 <figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20200729075145937.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="42-桥接模式">4.2 <a href="https://blog.csdn.net/qq_27525611/article/details/107573144">桥接模式</a></h2>
+<h2 id="42-桥接模式">4.2 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-qiao-jie-mo-shi/">桥接模式</a></h2>
 <figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200729090053291.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="43-组合模式">4.3 <a href="https://blog.csdn.net/qq_27525611/article/details/107588437">组合模式</a></h2>
+<h2 id="43-组合模式">4.3 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-yi-zu-he-mo-shi/">组合模式</a></h2>
 <figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200729131832481.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="44-装饰模式">4.4 <a href="https://blog.csdn.net/qq_27525611/article/details/107588445">装饰模式</a></h2>
+<h2 id="44-装饰模式">4.4 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-er-zhuang-shi-mo-shi/">装饰模式</a></h2>
 <figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200729132833584.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h2 id="45-外观模式">4.5 <a href="https://blog.csdn.net/qq_27525611/article/details/107588453">外观模式</a></h2>
 <figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200726233051374.png" alt="" loading="lazy"></figure>
 <h2 id="46-享元模式">4.6 <a href="https://blog.csdn.net/qq_27525611/article/details/107588459">享元模式</a></h2>
 <figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200729140109974.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="47-代理模式">4.7 <a href="https://blog.csdn.net/qq_27525611/article/details/107614490">代理模式</a></h2>
+<h2 id="47-代理模式">4.7 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-wu-dai-li-mo-shi/">代理模式</a></h2>
 <figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200806025456945.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h1 id="5-行为型模式">5 行为型模式</h1>
-<h2 id="51-职责链模式">5.1 <a href="https://blog.csdn.net/qq_27525611/article/details/107614581">职责链模式</a></h2>
+<h2 id="51-职责链模式">5.1 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-liu-zhi-ze-lian-mo-shi/">职责链模式</a></h2>
 <figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/2020073115020561.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="52-命令模式">5.2 <a href="https://blog.csdn.net/qq_27525611/article/details/107614816">命令模式</a></h2>
+<h2 id="52-命令模式">5.2 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-qi-ming-ling-mo-shi/">命令模式</a></h2>
 <figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200801012404628.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="53-解释器模式">5.3 <a href="https://blog.csdn.net/qq_27525611/article/details/107614931">解释器模式</a></h2>
+<h2 id="53-解释器模式">5.3 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-ba-jie-shi-qi-mo-shi/">解释器模式</a></h2>
 <figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200802081552906.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="54-迭代器模式">5.4 <a href="https://blog.csdn.net/qq_27525611/article/details/107615004">迭代器模式</a></h2>
+<h2 id="54-迭代器模式">5.4 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-shi-jiu-die-dai-qi-mo-shi/">迭代器模式</a></h2>
 <figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/2020080116201951.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="55-中介者模式">5.5 <a href="https://blog.csdn.net/qq_27525611/article/details/107615079">中介者模式</a></h2>
+<h2 id="55-中介者模式">5.5 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-zhong-jie-zhe-mo-shi/">中介者模式</a></h2>
 <figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200803014225125.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="56-备忘录模式">5.6 <a href="https://blog.csdn.net/qq_27525611/article/details/107615162">备忘录模式</a></h2>
+<h2 id="56-备忘录模式">5.6 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-yi-bei-wang-lu-mo-shi/">备忘录模式</a></h2>
 <figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200803031745173.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="57-观察者模式">5.7 <a href="https://blog.csdn.net/qq_27525611/article/details/107615247">观察者模式</a></h2>
+<h2 id="57-观察者模式">5.7 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-er-guan-cha-zhe-mo-shi/">观察者模式</a></h2>
 <figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200803215719507.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="58-状态模式">5.8 <a href="https://blog.csdn.net/qq_27525611/article/details/107615332">状态模式</a></h2>
+<h2 id="58-状态模式">5.8 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-san-zhuang-tai-mo-shi/2">状态模式</a></h2>
 <figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200804113352370.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="59-策略模式">5.9 <a href="https://blog.csdn.net/qq_27525611/article/details/107615394">策略模式</a></h2>
+<h2 id="59-策略模式">5.9 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-si-ce-lue-mo-shi/">策略模式</a></h2>
 <figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/20200804183310775.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="510-模板方法模式">5.10 <a href="https://blog.csdn.net/qq_27525611/article/details/107615456">模板方法模式</a></h2>
+<h2 id="510-模板方法模式">5.10 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-wu-mo-ban-fang-fa-mo-shi/">模板方法模式</a></h2>
 <figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200805003325546.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="511-访问者模式">5.11 <a href="https://blog.csdn.net/qq_27525611/article/details/107615529">访问者模式</a></h2>
+<h2 id="511-访问者模式">5.11 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-liu-fang-wen-zhe-mo-shi/">访问者模式</a></h2>
 <figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20200805173507935.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
 <p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
