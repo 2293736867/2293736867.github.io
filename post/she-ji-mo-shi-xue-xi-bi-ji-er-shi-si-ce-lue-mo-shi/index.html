@@ -1,0 +1,1151 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式学习笔记（二十四）：策略模式 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+
+1.1 引言
+1.2 定义
+1.3 结构图
+1.4 角色
+
+
+2 典型实现
+
+2.1 步骤
+2.2 抽象策略类
+2.3 具体策略类
+2.4 环境类
+2.5 客户端
+
+
+3 实例
+4 JDK中的策略模式
+5 与状态模式的不同
+6..." />
+    <meta name="keywords" content="设计模式" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1596792533019" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-er-shi-si-ce-lue-mo-shi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-08-07"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-si-ce-lue-mo-shi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/she-ji-mo-shi-xue-xi-bi-ji-er-shi-si-ce-lue-mo-shi/"> </span>
+              </a>
+              <span id="/she-ji-mo-shi-xue-xi-bi-ji-er-shi-si-ce-lue-mo-shi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-0 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">设计模式学习笔记（二十四）：策略模式</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a>
+<ul>
+<li><a href="#11-%E5%BC%95%E8%A8%80">1.1 引言</a></li>
+<li><a href="#12-%E5%AE%9A%E4%B9%89">1.2 定义</a></li>
+<li><a href="#13-%E7%BB%93%E6%9E%84%E5%9B%BE">1.3 结构图</a></li>
+<li><a href="#14-%E8%A7%92%E8%89%B2">1.4 角色</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0">2 典型实现</a>
+<ul>
+<li><a href="#21-%E6%AD%A5%E9%AA%A4">2.1 步骤</a></li>
+<li><a href="#22-%E6%8A%BD%E8%B1%A1%E7%AD%96%E7%95%A5%E7%B1%BB">2.2 抽象策略类</a></li>
+<li><a href="#23-%E5%85%B7%E4%BD%93%E7%AD%96%E7%95%A5%E7%B1%BB">2.3 具体策略类</a></li>
+<li><a href="#24-%E7%8E%AF%E5%A2%83%E7%B1%BB">2.4 环境类</a></li>
+<li><a href="#25-%E5%AE%A2%E6%88%B7%E7%AB%AF">2.5 客户端</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%AE%9E%E4%BE%8B">3 实例</a></li>
+<li><a href="#4-jdk%E4%B8%AD%E7%9A%84%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F">4 JDK中的策略模式</a></li>
+<li><a href="#5-%E4%B8%8E%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%8D%E5%90%8C">5 与状态模式的不同</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BC%98%E7%82%B9">6 主要优点</a></li>
+<li><a href="#7-%E4%B8%BB%E8%A6%81%E7%BC%BA%E7%82%B9">7 主要缺点</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF">8 适用场景</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9 总结</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<h2 id="11-引言">1.1 引言</h2>
+<p>在外出旅游时，很多时候的出行方式都不止一条，通常根据实际情况，比如目的地，预算，旅游时间等确定最适合的出行方式。在软件开发中，也常常会遇到类似的情况，实现某一个功能有多种途径，每一条途径对应一个算法，这时可以使用一种叫做策略模式的设计模式来进行设计。在策略模式中，可以定义一些独立的类来封装不同的算法，每一个类封装一种具体的算法。</p>
+<p>这里<strong>每一个封装的算法可以被称之为一种策略</strong>，为了保证这些策略在使用时具有一致性，一般会提供一个抽象的策略类作为规则的定义，每种具体算法对应于一个具体策略类。</p>
+<p>策略模式的主要目的是将算法的定义与使用分开，也就是将算法的行为和环境分开，将算法的定义放在专门的策略类中，每一个策略类封装了一种实现算法，使用算法的环境类针对抽象策略类进行编程，符合DIP（依赖倒转原则）。出现新算法时只需要定义一个新的具体策略类即可。</p>
+<h2 id="12-定义">1.2 定义</h2>
+<p><strong>策略模式：定义一系列算法类，将每一个算法封装起来，并让他们可以相互替换。</strong></p>
+<p>策略模式也叫政策模式，是一种对象行为型模式。</p>
+<h2 id="13-结构图">1.3 结构图</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200804164612252.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="14-角色">1.4 角色</h2>
+<ul>
+<li><strong><code>Context</code>（环境类）：使用算法的角色，解决了某个问题时可以采用的多种策略，在环境类维持一个抽象策略类的引用实例，用于定义所采用的策略</strong></li>
+<li><strong><code>Strategy</code>（抽象策略类）：为支持的算法声明了抽象方法，是所有策略类的父类，可以是抽象类或具体类，也可以是接口，环境类通过抽象策略类中声明的方法在运行时调用具体策略类中实现的算法</strong></li>
+<li><strong><code>ConcreteStrategy</code>（具体策略类）：实现了抽象策略类中声明的算法，在运行时，具体策略类将覆盖在环境类中定义的抽象策略类对象，使用一种具体的算法实现某个业务处理</strong></li>
+</ul>
+<h1 id="2-典型实现">2 典型实现</h1>
+<h2 id="21-步骤">2.1 步骤</h2>
+<ul>
+<li>定义抽象策略类：一般实现为接口，声明抽象算法</li>
+<li>定义具体策略类：实现抽象策略类，实现其中的具体算法</li>
+<li>定义环境类：维持一个对抽象策略类的引用，通过setter或构造函数注入具体策略类，调用时通过该抽象引用调用相应算法</li>
+</ul>
+<h2 id="22-抽象策略类">2.2 抽象策略类</h2>
+<pre><code class="language-java">interface AbstarctStrategy
+{
+    void algorithm();
+}
+</code></pre>
+<p>这里定义为一个接口，只有一个抽象算法方法。</p>
+<h2 id="23-具体策略类">2.3 具体策略类</h2>
+<pre><code class="language-java">class ConcreteStrategy1 implements AbstarctStrategy
+{
+    @Override
+    public void algorithm()
+    {
+        System.out.println(&quot;具体策略1&quot;);
+    }
+}
+
+class ConcreteStrategy2 implements AbstarctStrategy
+{
+    @Override
+    public void algorithm()
+    {
+        System.out.println(&quot;具体策略2&quot;);
+    }
+}
+</code></pre>
+<p>定义两个具体策略类，分别表示不同的算法。</p>
+<h2 id="24-环境类">2.4 环境类</h2>
+<pre><code class="language-java">class Context
+{
+    private AbstarctStrategy strategy;
+    public void setStrategy(AbstarctStrategy strategy)
+    {
+        this.strategy = strategy;
+    }
+
+    public void algorithm()
+    {
+        strategy.algorithm();
+    }
+}
+</code></pre>
+<p>通过setter注入具体策略类，在调用环境类的方法时通过抽象策略类调用其中的具体策略类的算法。</p>
+<h2 id="25-客户端">2.5 客户端</h2>
+<pre><code class="language-java">public static void main(String[] args)
+{
+    Context context = new Context();
+    context.setStrategy(new ConcreteStrategy1());
+    context.algorithm();
+    context.setStrategy(new ConcreteStrategy2());
+    context.algorithm();
+}
+</code></pre>
+<h1 id="3-实例">3 实例</h1>
+<blockquote>
+<p>设计一个电影票打折系统，有三种不同的打折方式：学生可以享受8折优惠，10周岁以下儿童可以享受减免10元优惠，VIP可以享受半价优惠，使用策略模式进行设计。</p>
+</blockquote>
+<p>设计如下：</p>
+<ul>
+<li>环境类：<code>MovieTicket</code></li>
+<li>抽象策略类：<code>Discount</code></li>
+<li>具体策略类：<code>StudentDiscount</code>+<code>VIPDiscount</code>+<code>ChildrenDiscount</code></li>
+</ul>
+<p>首先是抽象策略类：</p>
+<pre><code class="language-java">interface Discount
+{
+    double calculate(double price);
+}
+</code></pre>
+<p>包含一个计算折扣的方法，接着是具体策略类：</p>
+<pre><code class="language-java">class StudenDiscount implements Discount
+{
+    @Override
+    public double calculate(double price)
+    {
+        System.out.println(&quot;学生票&quot;);
+        return price * 0.8;
+    }
+}
+
+class ChildrenDiscount implements Discount
+{
+    @Override
+    public double calculate(double price)
+    {
+        System.out.println(&quot;儿童票&quot;);
+        return price - 10.0;
+    }
+}
+
+class VIPDiscount implements Discount
+{
+    @Override
+    public double calculate(double price)
+    {
+        System.out.println(&quot;VIP票&quot;);
+        return price * 0.5;
+    }
+}
+</code></pre>
+<p>三个不同的具体策略类表示三种不同的计算折扣方式，根据需要返回对应的折扣价格。</p>
+<p>最后是环境类：</p>
+<pre><code class="language-java">class MovieTicket
+{
+    private Discount discount;
+    private double originalPrice;
+
+    public void setPrice(double price)
+    {
+        this.originalPrice = price;
+    }
+
+    public void setDiscount(Discount discount)
+    {
+        this.discount = discount;
+    }
+
+    public double getDicountPrice()
+    {
+        return discount.calculate(originalPrice);
+    }
+}
+</code></pre>
+<p>环境类通过<code>setPrice</code>设定电影票价格后，在通过<code>setDiscount</code>注入具体策略类，最后使用<code>getDiscountPrice</code>获取折扣后的价格。</p>
+<p>测试：</p>
+<pre><code class="language-java">public static void main(String[] args)
+{
+    MovieTicket movieTicket = new MovieTicket();
+    movieTicket.setPrice(100.0);
+    movieTicket.setDiscount(new StudenDiscount());
+    System.out.println(movieTicket.getDicountPrice());
+    movieTicket.setDiscount(new VIPDiscount());
+    System.out.println(movieTicket.getDicountPrice());
+    movieTicket.setDiscount(new ChildrenDiscount());
+    System.out.println(movieTicket.getDicountPrice());
+}
+</code></pre>
+<p>客户端需要明确知道这三种折扣，也就是打折方式由客户端指定，输出如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200804170700583.png" alt="在这里插入图片描述" loading="lazy"></p>
+<h1 id="4-jdk中的策略模式">4 JDK中的策略模式</h1>
+<p>策略模式实用性强，扩展性好，是使用频率较高的设计模式，下面来看看JDK中的典型应用。</p>
+<p>Java SE容器布局管理器就是策略模式的一个经典应用案例，基本结构如下：<br>
+<img src="https://img-blog.csdnimg.cn/20200804171732649.png" alt="在这里插入图片描述" loading="lazy"><br>
+JavaSE中用户需要对容器对象<code>Container</code>进行布局，在程序运行期间由客户端动态决定一个<code>Container</code>对象如何布局，Java提供了几种不同的布局方式：<code>BorderLayout</code>，<code>FlowLayout</code>，<code>GridLayout</code>，<code>GridBagLayout</code>，<code>CardLayout</code>。在上图结构中：</p>
+<ul>
+<li><code>Container</code>充当了环境角色<code>Context</code></li>
+<li><code>LayoutManager</code>充当了抽象策略角色</li>
+<li><code>LayoutManager</code>的各个子类充当了具体策略类</li>
+</ul>
+<p><code>Container</code>针对<code>LayoutManager</code>进行编程，无须关心具体布局是什么，这样的设计符合里氏替换原则。</p>
+<h1 id="5-与状态模式的不同">5 与状态模式的不同</h1>
+<p>状态模式与策略模式很像，下面是两者的结构图：<br>
+<img src="https://img-blog.csdnimg.cn/20200804164612252.png" alt="在这里插入图片描述" loading="lazy"><br>
+<img src="https://img-blog.csdnimg.cn/20200804023536851.png" alt="在这里插入图片描述" loading="lazy"><br>
+两者的结构图很相似，但是实际上也有很多的不同：</p>
+<ul>
+<li>意图不同：策略模式让客户端指定更换具体策略算法，而状态模式是状态在满足一定条件自动切换，用户无法手动设置状态</li>
+<li>负责范围不同：状态模式负责不同状态下对象行为的处理，而策略模式负责具体算法或策略的处理，对于算法来说都有一个明确的目标，都是在做一件事情，比如上面的电影票打折例子，无论选择何种策略，都是为了打折，但是状态模式在不同的状态下做的事情可能不同</li>
+<li>封装内容不同：状态模式封装了对象的状态，而策略模式封装了具体的算法或策略</li>
+<li>重用性不同：状态是跟对象密切相关的，不能重用，而策略模式的具体策略可以分离出来重用</li>
+<li><code>Context</code>的使用不同：状态模式中每个状态持有<code>Context</code>引用，实现状态切换，但是每个策略不持有<code>Context</code>引用，策略只是被<code>Context</code>使用</li>
+<li>客户端需要考虑的情况不同：对于状态模式来说，状态模式依赖于其内部状态的变化时内部的行为发生变化，状态是系统自身固有的，由系统本身控制，状态对客户端不透明，客户端不需要考虑系统的状态，也不能直接指定或改变系统的状态切换。但是对于策略模式来说，客户端需要知道所有的策略类，明确各种策略的利弊，对其进行权衡并选择策略，也就是策略需要对客户端透明，需要由客户端考虑使用何种策略</li>
+</ul>
+<h1 id="6-主要优点">6 主要优点</h1>
+<ul>
+<li>完美支持OCP：策略模式提供了对开闭原则的完美支持，用户可以在不修改原有系统的基础上选择算法或者行为，也可以灵活提供新的算法或行为</li>
+<li>易于管理和复用算法：策略模式提供了管理相关的算法族的办法，策略类的等级结构定义了一个算法或行为族，恰当使用继承可以把公共代码移到抽象策略类中以简化代码，同时由于算法单独封装在具体策略类中，可以方便复用这些算法</li>
+<li>替换继承：策略模式提供了一种替换继承关系的方法，不使用策略模式的话环境类可能有子类，造成算法的使用和定义混在一起，而且使用继承的话无法实现算法或行为在运行时动态切换</li>
+<li>避免多重<code>else if</code>：多重选择语句不易维护，因为将选择算法的逻辑以及算法本事实现逻辑混在一起，硬编码在一个巨大的<code>if/else if</code>中，使用策略模式可以避免这种结构</li>
+</ul>
+<h1 id="7-主要缺点">7 主要缺点</h1>
+<ul>
+<li>策略类需要对客户端透明：客户端必须知道所有的策略类，并自行决定哪一个策略类，也就是客户端需要理解这些算法的区别以便选择适当的算法</li>
+<li>策略类数量多：策略模式会造成系统产生很多具体策略类，任何细小的变化都会导致系统增加一个新的具体策略类</li>
+<li>客户端无法使用多个策略类：客户端每次只能使用一个策略类，不支持使用一个策略类完成部分功能后再使用另一个策略类来完成剩下的功能</li>
+</ul>
+<h1 id="8-适用场景">8 适用场景</h1>
+<ul>
+<li>一个系统需要动态在几种算法中选择一种，这些算法类均有统一的接口</li>
+<li>一个对象有很多行为，使用策略模式可以将这些行为转移到相应具体策略类中</li>
+<li>不希望客户端知道复杂的，与算法相关的数据结构，在具体策略类中对其进行封装</li>
+</ul>
+<h1 id="9-总结">9 总结</h1>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200804183310775.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200711111358683.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-er-shi-wu-mo-ban-fang-fa-mo-shi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-wu-mo-ban-fang-fa-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-07">2020-08-07</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（二十五）：模板方法模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/she-ji-mo-shi-xue-xi-bi-ji-er-shi-san-zhuang-tai-mo-shi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/she-ji-mo-shi-xue-xi-bi-ji-er-shi-san-zhuang-tai-mo-shi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-07">2020-08-07</time>
+                  <h4 class="title white no-margin">设计模式学习笔记（二十三） 状态模式</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-53-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/media/images/custom-featureImage.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-09">2020-08-09</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-53-qi/">每日分享 第53期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-52-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/media/images/custom-featureImage.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-08">2020-08-08</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-52-qi/">每日分享 第52期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/gof-she-ji-mo-shi-he-ji/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/gof-she-ji-mo-shi-he-ji.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-07">2020-08-07</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/gof-she-ji-mo-shi-he-ji/">GoF设计模式合集</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-1 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-3 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-4 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-6 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-8 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-9 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-11 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-12 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-13 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-14 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-15 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-16 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-17 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-18 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-19 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-20 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-21 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-22 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-23 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-24 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-25 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-26 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-27 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-28 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-29 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-30 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-31 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-32 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-33 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-34 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-35 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-36 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-37 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-38 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-39 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-40 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-41 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-42 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-43 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-44 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-45 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-46 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-47 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-48 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-49 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-50 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-51 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-52 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-53 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-54 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-55 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-56 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-57 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-59 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-60 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-61 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-62 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-63 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-64 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-65 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-66 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-67 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-68 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-69 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-70 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-71 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 220 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
