@@ -1,0 +1,1554 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SpringBoot-如何设计优秀的后端接口? | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 新建工程
+3 参数校验
+
+3.1 Hibernate Validator
+
+3.1.1 介绍
+3.1.2 使用
+3.1.3 测试
+
+
+3.2 校验模式设置
+3.3 @Valid与@Validated
+3.4 分组
+3.5 组..." />
+    <meta name="keywords" content="Spring Boot" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1597651505681" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/springboot-ru-he-she-ji-you-xiu-de-hou-duan-jie-kou.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-08-17"><i class="fa fa-calendar"></i><span class="lately">1 小时前</span></time>
+              
+              <a href="https://2293736867.github.io/post/springboot-ru-he-she-ji-you-xiu-de-hou-duan-jie-kou/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/springboot-ru-he-she-ji-you-xiu-de-hou-duan-jie-kou/"> </span>
+              </a>
+              <span id="/springboot-ru-he-she-ji-you-xiu-de-hou-duan-jie-kou/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-0 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">SpringBoot-如何设计优秀的后端接口?</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B">2 新建工程</a></li>
+<li><a href="#3-%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C">3 参数校验</a>
+<ul>
+<li><a href="#31-hibernate-validator">3.1 <code>Hibernate Validator</code></a>
+<ul>
+<li><a href="#311-%E4%BB%8B%E7%BB%8D">3.1.1 介绍</a></li>
+<li><a href="#312-%E4%BD%BF%E7%94%A8">3.1.2 使用</a></li>
+<li><a href="#313-%E6%B5%8B%E8%AF%95">3.1.3 测试</a></li>
+</ul>
+</li>
+<li><a href="#32-%E6%A0%A1%E9%AA%8C%E6%A8%A1%E5%BC%8F%E8%AE%BE%E7%BD%AE">3.2 校验模式设置</a></li>
+<li><a href="#33-valid%E4%B8%8Evalidated">3.3 <code>@Valid</code>与<code>@Validated</code></a></li>
+<li><a href="#34-%E5%88%86%E7%BB%84">3.4 分组</a></li>
+<li><a href="#35-%E7%BB%84%E5%BA%8F%E5%88%97">3.5 组序列</a></li>
+<li><a href="#36-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%A1%E9%AA%8C">3.6 自定义校验</a>
+<ul>
+<li><a href="#361-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3">3.6.1 自定义注解</a></li>
+<li><a href="#362-%E8%87%AA%E5%AE%9A%E4%B9%89validator">3.6.2 自定义<code>Validator</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86">4 异常处理</a>
+<ul>
+<li><a href="#41-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">4.1 基本使用</a></li>
+<li><a href="#42-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8">4.2 自定义异常</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94">5 数据响应</a>
+<ul>
+<li><a href="#51-%E7%BB%9F%E4%B8%80%E5%93%8D%E5%BA%94%E4%BD%93">5.1 统一响应体</a></li>
+<li><a href="#52-%E5%93%8D%E5%BA%94%E7%A0%81%E6%9E%9A%E4%B8%BE">5.2 响应码枚举</a></li>
+<li><a href="#53-%E5%85%A8%E5%B1%80%E5%8C%85%E8%A3%85%E5%93%8D%E5%BA%94%E4%BD%93">5.3 全局包装响应体</a></li>
+<li><a href="#54-%E7%BB%95%E8%BF%87%E5%85%A8%E5%B1%80%E5%8C%85%E8%A3%85">5.4 绕过全局包装</a></li>
+</ul>
+</li>
+<li><a href="#6-%E6%80%BB%E7%BB%93">6 总结</a></li>
+<li><a href="#7-%E6%BA%90%E7%A0%81">7 源码</a></li>
+<li><a href="#8-%E5%8F%82%E8%80%83">8 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本篇文章以<code>Spring Boot</code>为基础，从以下三个方向讲述了如何设计一个优秀的后端接口体系：</p>
+<ul>
+<li>参数校验：涉及<code>Hibernate Validator</code>的各种注解，快速失败模式，分组，组序列以及自定义注解/<code>Validator</code></li>
+<li>异常处理：涉及<code>ControllerAdvice</code>/<code>@RestControllerAdvice</code>以及<code>@ExceptionHandler</code></li>
+<li>数据响应：涉及如何设计一个响应体以及如何包装响应体</li>
+</ul>
+<p>有了一个优秀的后端接口体系，不仅有了规范，同时扩展新的接口也很容易，本文演示了如何从零一步步构建一个优秀的后端接口体系。</p>
+<h1 id="2-新建工程">2 新建工程</h1>
+<p>打开熟悉的IDEA，选择依赖：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020081219161034.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>首先创建如下文件：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200812195604994.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>TestController.java</code>：</p>
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;/&quot;)
+@CrossOrigin(value = &quot;http://localhost:3000&quot;)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class TestController {
+    private final TestService service;
+    @PostMapping(&quot;test&quot;)
+    public String test(@RequestBody User user)
+    {
+        return service.test(user);
+    }
+}
+</code></pre>
+<p>使用了<code>@RequiredArgsConstructor</code>代替<code>@Autowired</code>，由于笔者使用Postwoman测试，因此需要加上跨域注解<code>@CrossOrigin</code>，默认3000端口（Postwoman端口）。</p>
+<p><code>TestService.java</code>：</p>
+<pre><code class="language-java">@Service
+public class TestService {
+    public String test(User user)
+    {
+        if(StringUtils.isEmpty(user.getEmail()))
+            return &quot;邮箱不能为空&quot;;
+        if(StringUtils.isEmpty(user.getPassword()))
+            return &quot;密码不能为空&quot;;
+        if(StringUtils.isEmpty(user.getPhone()))
+            return &quot;电话不能为空&quot;;
+//        持久化操作
+        return &quot;success&quot;;
+    }
+}
+</code></pre>
+<p>业务层首先进行了参数校验，这里省略了持久化操作。</p>
+<p><code>User.java</code>：</p>
+<pre><code class="language-java">@Data
+public class User {
+    private String phone;
+    private String password;
+    private String email;
+}
+</code></pre>
+<h1 id="3-参数校验">3 参数校验</h1>
+<p>首先来看一下参数校验，上面的例子中在业务层完成参数校验，这是没有问题的，但是，还没进行业务操作就需要进行这么多的校验显然这不是很好，更好的做法是，使用<code>Hibernate Validator</code>。</p>
+<h2 id="31-hibernate-validator">3.1 <code>Hibernate Validator</code></h2>
+<h3 id="311-介绍">3.1.1 介绍</h3>
+<p><code>JSR</code>是<code>Java Specification Requests</code>的缩写，意思是Java规范提案，是指向<code>JCP(Java Community Process)</code>提出新增一个标准化技术规范的正式请求。<code>JSR-303</code>是<code>Java EE6</code>中的一项子规范，叫作<code>Bean Validation</code>，<code>Hibernate Validator</code>是<code>Bean Validator</code>的参考实现，除了实现所有<code>JSR-303</code>规范中的内置<code>constraint</code>实现，还有附加的<code>constraint</code>，详细如下：</p>
+<ul>
+<li><code>@Null</code>：被注解元素必须为<code>null</code>（为了节省篇幅下面用“元素”代表“被注解元素必须为”）</li>
+<li><code>@NotNull</code>：元素不为<code>null</code></li>
+<li><code>@AssertTrue</code>：元素为<code>true</code></li>
+<li><code>@AssertFalse</code>：元素为<code>false</code></li>
+<li><code>@Min(value)</code>：元素大于或等于指定值</li>
+<li><code>@Max(value)</code>：元素小于或等于指定值</li>
+<li><code>@DecimalMin(value)</code>：元素大于指定值</li>
+<li><code>@DecimalMax(value)</code>：元素小于指定值</li>
+<li><code>@Size(max,min)</code>：元素大小在给定范围内</li>
+<li><code>@Digits(integer,fraction)</code>：元素字符串中的整数位数规定最大<code>integer</code>位，小数位数规定最大<code>fraction</code>位</li>
+<li><code>@Past</code>：元素是一个过去日期</li>
+<li><code>@Future</code>：元素是将来日期</li>
+<li><code>@Pattern</code>：元素需要符合正则表达式</li>
+</ul>
+<p>其中<code>Hibernate Validator</code>附加的<code>constraint</code>如下：</p>
+<ul>
+<li><code>@Eamil</code>：元素为邮箱</li>
+<li><code>@Length</code>：字符串大小在指定范围内</li>
+<li><code>@NotEmpty</code>：字符串必须非空（目前最新的<code>6.1.5</code>版本已弃用，建议使用标准的<code>@NotEmpty</code>）</li>
+<li><code>@Range</code>：数字在指定范围内</li>
+</ul>
+<p>而在<code>Spring</code>中，对<code>Hibernate Validation</code>进行了二次封装，添加了自动校验，并且校验信息封装进了特定的<code>BindingResult</code>中。下面看看如何使用。</p>
+<h3 id="312-使用">3.1.2 使用</h3>
+<p>在各个字段加上<code>@NotEmpty</code>，并且邮箱加上<code>@Email</code>，电话加上11位限制，并且在各个注解加上<code>message</code>，表示对应的提示信息：</p>
+<pre><code class="language-java">@Data
+public class User {
+    @NotEmpty(message = &quot;电话不能为空&quot;)
+    @Length(min = 11,max = 11,message = &quot;电话号码必须11位&quot;)
+    private String phone;
+    @NotEmpty(message = &quot;密码不能为空&quot;)
+    @Length(min = 6,max = 20,message = &quot;密码必须为6-20位&quot;)
+    private String password;
+    @NotEmpty(message = &quot;邮箱不能为空&quot;)
+    @Email(message = &quot;邮箱格式不正确&quot;)
+    private String email;
+}
+</code></pre>
+<p>对于<code>String</code>来说有时候会使用<code>@NotNull</code>或<code>@NotBlank</code>，它们的区别如下：</p>
+<ul>
+<li><code>@NotEmpty</code>：不能为<code>null</code>并且长度必须大于0，除了<code>String</code>外，对于<code>Collection</code>/<code>Map</code>/数组也适用</li>
+<li><code>@NotBlank</code>：只用于<code>String</code>，不能为<code>null</code>，并且调用<code>trim()</code>后，长度必须大于0，也就是必须有除空格外的实际字符</li>
+<li><code>@NotNull</code>：不能为<code>null</code></li>
+</ul>
+<p>接着把业务层的参数校验操作删除，并把控制层修改如下：</p>
+<pre><code class="language-java">@PostMapping(&quot;test&quot;)
+public String test(@RequestBody @Valid User user, BindingResult bindingResult)
+{
+    if(bindingResult.hasErrors())
+    {
+        for(ObjectError error:bindingResult.getAllErrors())
+            return error.getDefaultMessage();
+    }
+    return service.test(user);
+}
+</code></pre>
+<p>在需要校验的对象上加上<code>@Valid</code>，并且加上<code>BindingResult</code>参数，可以从中获取错误信息并返回。</p>
+<h3 id="313-测试">3.1.3 测试</h3>
+<p>全部都使用错误的参数设置，返回”邮箱格式不正确“：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200812213449630.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>第二次测试中除了密码都使用正确的参数，返回”密码必须为6-20位“：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200812213537714.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>第三次测试全部使用正确的参数，返回”success“：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200812213700229.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-校验模式设置">3.2 校验模式设置</h2>
+<p><code>Hibernate Validator</code>有两种校验模式：</p>
+<ul>
+<li>普通模式：默认模式，会校验所有属性，然后返回所有的验证失败信息</li>
+<li>快速失败模式：只要有一个验证失败就返回</li>
+</ul>
+<p>使用快速失败模式需要通过<code>HibernateValidateConfiguration</code>以及<code>ValidateFactory</code>创建<code>Validator</code>，并且使用<code>Validator.validate()</code>进行手动验证。</p>
+<p>首先添加一个生成<code>Validator</code>的类：</p>
+<pre><code class="language-java">@Configuration
+public class FailFastValidator&lt;T&gt; {
+    private final Validator validator;
+    public FailFastValidator()
+    {
+        validator = Validation
+        .byProvider(HibernateValidator.class).configure()
+		.failFast(true).buildValidatorFactory()
+		.getValidator();
+    }
+
+    public Set&lt;ConstraintViolation&lt;T&gt;&gt; validate(T user)
+    {
+        return validator.validate(user);
+    }
+}
+</code></pre>
+<p>修改控制层的代码，通过<code>@RequiredArgsConstructor</code>注入<code>FailFastValidator&lt;User&gt;</code>，并把原来的在<code>User</code>上的<code>@Valid</code>去掉，在方法体进行手动验证：</p>
+<pre><code class="language-java">@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class TestController {
+    private final TestService service;
+    private final FailFastValidator&lt;User&gt; validator;
+    @PostMapping(&quot;test&quot;)
+    public String test(@RequestBody User user, BindingResult bindingResult)
+    {
+        Set&lt;ConstraintViolation&lt;User&gt;&gt; message = validator.validate(user);
+        message.forEach(t-&gt; System.out.println(t.getMessage()));
+//        if(bindingResult.hasErrors())
+//        {
+//            bindingResult.getAllErrors().forEach(t-&gt;System.out.println(t.getDefaultMessage()));
+//            for(ObjectError error:bindingResult.getAllErrors())
+//                return error.getDefaultMessage();
+//        }
+        return service.test(user);
+    }
+}
+</code></pre>
+<p>测试（连续三次校验的结果）：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200812223302826.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果是普通模式（修改<code>.failFast(false)</code>），一次校验便会连续输出三个信息：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200812223038484.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="33-valid与validated">3.3 <code>@Valid</code>与<code>@Validated</code></h2>
+<p><code>@Valid</code>是<code>javax.validation</code>包里面的，而<code>@Validated</code>是<code>org.springframework.validation.annotation</code>里面的，是<code>@Valid</code>的一次封装，相当于是<code>@Valid</code>的增强版，供Spring提供的校验机制使用，相比起<code>@Valid</code>，<code>@Validated</code>提供了分组以及组序列的功能。下面分别进行介绍。</p>
+<h2 id="34-分组">3.4 分组</h2>
+<p>当需要在不同的情况下使用不同的校验方式时，可以使用分组校验。比如在注册时不需要校验<code>id</code>，修改信息时需要校验<code>id</code>，但是默认的校验方式在两种情况下全部都校验，这时就需要使用分组校验。</p>
+<p>下面以不同的组别校验电话号码长度的不同进行说明，修改<code>User</code>类如下：</p>
+<pre><code class="language-java">@Data
+public class User {
+    @NotEmpty(message = &quot;电话不能为空&quot;)
+    @Length(min = 11,max = 11,message = &quot;电话号码必须11位&quot;,groups = {GroupA.class})
+    @Length(min = 12,max = 12,message = &quot;电话号码必须12位&quot;,groups = {GroupB.class})
+    private String phone;
+    @NotEmpty(message = &quot;密码不能为空&quot;)
+    @Length(min = 6,max = 20,message = &quot;密码必须为6-20位&quot;)
+    private String password;
+    @NotEmpty(message = &quot;邮箱不能为空&quot;)
+    @Email(message = &quot;邮箱格式不正确&quot;)
+    private String email;
+
+    public interface GroupA{}
+    public interface GroupB{}
+}
+</code></pre>
+<p>在<code>@Length</code>中加入了组别，<code>GroupA</code>表示电话需要为11位，<code>GroupB</code>表示电话需要为12位，<code>GroupA</code>/<code>GroupB</code>是<code>User</code>中的两个空接口，然后修改控制层：</p>
+<pre><code class="language-java">public String test(@RequestBody @Validated({User.GroupB.class}) User user, BindingResult bindingResult)
+{
+    if(bindingResult.hasErrors())
+    {
+        bindingResult.getAllErrors().forEach(t-&gt;System.out.println(t.getDefaultMessage()));
+        for(ObjectError error:bindingResult.getAllErrors())
+            return error.getDefaultMessage();
+    }
+    return service.test(user);
+}
+</code></pre>
+<p>在<code>@Validated</code>中指定为<code>GroupB</code>，电话需要为12位，测试如下：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/202008122243331.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="35-组序列">3.5 组序列</h2>
+<p>默认情况下，不同组别的约束验证的无序的，也就是说，对于下面的<code>User</code>类：</p>
+<pre><code class="language-java">@Data
+public class User {
+    @NotEmpty(message = &quot;电话不能为空&quot;)
+    @Length(min = 11,max = 11,message = &quot;电话号码必须11位&quot;)
+    private String phone;
+    @NotEmpty(message = &quot;密码不能为空&quot;)
+    @Length(min = 6,max = 20,message = &quot;密码必须为6-20位&quot;)
+    private String password;
+    @NotEmpty(message = &quot;邮箱不能为空&quot;)
+    @Email(message = &quot;邮箱格式不正确&quot;)
+    private String email;
+}
+</code></pre>
+<p>每次进行校验的顺序不同，三次测试结果如下：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/2020081223504541.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20200812235126903.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>有些时候顺序并不重要，而有些时候顺序很重要，比如：</p>
+<ul>
+<li>第二个组中的约束验证依赖于一个稳定状态运行，而这个稳定状态由第一个组来进行验证</li>
+<li>某个组的验证比较耗时，CPU和内存的使用率相对较大，最优的选择是将其放在最后进行验证</li>
+</ul>
+<p>因此在进行组验证的时候需要提供一种有序的验证方式，一个组可以定义为其他组的序列，这样就可以固定每次验证的顺序而不是随机顺序，另外如果验证组序列中，前面的组验证失败，则后面的组不会验证。</p>
+<p>例子如下，首先修改<code>User</code>类并定义组序列：</p>
+<pre><code class="language-java">@Data
+public class User {
+    @NotEmpty(message = &quot;电话不能为空&quot;,groups = {First.class})
+    @Length(min = 11,max = 11,message = &quot;电话号码必须11位&quot;,groups = {Second.class})
+    private String phone;
+    @NotEmpty(message = &quot;密码不能为空&quot;,groups = {First.class})
+    @Length(min = 6,max = 20,message = &quot;密码必须为6-20位&quot;,groups = {Second.class})
+    private String password;
+    @NotEmpty(message = &quot;邮箱不能为空&quot;,groups = {First.class})
+    @Email(message = &quot;邮箱格式不正确&quot;,groups = {Second.class})
+    private String email;
+
+    public interface First{}
+    public interface Second{}
+    @GroupSequence({First.class,Second.class})
+    public interface Group{}
+}
+</code></pre>
+<p>定义了两个空接口<code>First</code>和<code>Second</code>表示顺序，同时在<code>Group</code>中使用<code>@GroupSequence</code>指定了顺序。</p>
+<p>接着修改控制层，在<code>@Validated</code>中定义组：</p>
+<pre><code class="language-java">public String test(@RequestBody @Validated({User.Group.class}) User user, BindingResult bindingResult)
+</code></pre>
+<p>这样就能按照固定的顺序进行参数校验了。</p>
+<h2 id="36-自定义校验">3.6 自定义校验</h2>
+<p>尽管<code>Hibernate Validator</code>中的注解适用情况很广了，但是有时候需要特定的校验规则，比如密码强度，人为判定弱密码还是强密码。也就是说，此时需要添加自定义校验的方式，有两种处理方法：</p>
+<ul>
+<li>自定义注解</li>
+<li>自定义<code>Validator</code></li>
+</ul>
+<p>首先来看一下自定义注解的方法。</p>
+<h3 id="361-自定义注解">3.6.1 自定义注解</h3>
+<p>这里添加一个判定弱密码的注解<code>WeakPassword</code>：</p>
+<pre><code class="language-java">@Documented
+@Constraint(validatedBy = WeakPasswordValidator.class)
+@Target({ElementType.METHOD,ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface WeakPassword{
+    String message() default &quot;请使用更加强壮的密码&quot;;
+    Class&lt;?&gt;[] groups() default {};
+    Class&lt;? extends Payload&gt;[] payload() default {};
+}
+</code></pre>
+<p>同时添加一个实现了<code>ConstraintValidator&lt;A,T&gt;</code>的<code>WeakPasswordValidator</code>，当密码长度大于10位时才符合条件，否则返回<code>false</code>表示校验不通过：</p>
+<pre><code class="language-java">public class WeakPasswordValidator implements ConstraintValidator&lt;WeakPassword,String&gt; {
+    @Override
+    public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
+        return s.length() &gt; 10;
+    }
+    @Override
+    public void initialize(WeakPassword constraintAnnotation) {}
+}
+</code></pre>
+<p>接着可以修改<code>User</code>如下，在对应的字段加上自定义注解<code>@WeakPassword</code>：</p>
+<pre><code class="language-java">@Data
+public class User {
+	//...
+    @WeakPassword(groups = {Second.class})
+    private String password;
+    //...
+}
+</code></pre>
+<p>测试如下：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200813004854630.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="362-自定义validator">3.6.2 自定义<code>Validator</code></h3>
+<p>除了自定义注解之外，还可以自定义<code>Validator</code>来实现自定义的参数校验，需要实现<code>Validator</code>接口：</p>
+<pre><code class="language-java">@Component
+public class WeakPasswordValidator implements Validator{
+    @Override
+    public boolean supports(Class&lt;?&gt; aClass) {
+        return User.class.equals(aClass);
+    }
+
+    @Override
+    public void validate(Object o, Errors errors) {
+        ValidationUtils.rejectIfEmpty(errors,&quot;password&quot;,&quot;password.empty&quot;);
+        User user = (User)o;
+        if(user.getPassword().length() &lt;= 10)
+            errors.rejectValue(&quot;password&quot;,&quot;Password is not strong enough!&quot;);
+    }
+}
+</code></pre>
+<p>实现其中的<code>supports</code>以及<code>validate</code>：</p>
+<ul>
+<li><code>support</code>：可以验证该类是否是某个类的实例</li>
+<li><code>validate</code>：当<code>supports</code>返回<code>true</code>后，验证给定对象<code>o</code>，当出现错误时，向<code>errors</code>注册错误</li>
+</ul>
+<p><code>ValidationUtils.rejectIfEmpty</code>校验当对象<code>o</code>中某个字段属性为空时，向其中的<code>errors</code>注册错误，注意并不会中断语句的运行，也就是即使<code>password</code>为空，<code>user.getPassword()</code>还是会运行，这时会抛出空指针异常。下面的<code>errors.rejectValue</code>同样道理，并不会中断语句的运行，只是注册了错误信息，中断的话需要手动抛出异常。</p>
+<p>修改控制层中的返回值，改为<code>getCode()</code>：</p>
+<pre><code class="language-java">if(bindingResult.hasErrors())
+{
+    bindingResult.getAllErrors().forEach(t-&gt; System.out.println(t.getCode()));
+    for(ObjectError error:bindingResult.getAllErrors())
+        return error.getCode();
+}
+return service.test(user);
+</code></pre>
+<p>测试：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200813010112193.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-异常处理">4 异常处理</h1>
+<p>到这里参数校验就完成了，下一步是处理异常。</p>
+<p>如果将参数校验中的<code>BindingResult</code>去掉，就会将整个后端异常返回给前端：</p>
+<pre><code class="language-java">//public String test(@RequestBody @Validated({User.Group.class}) User user, BindingResult bindingResult)
+public String test(@RequestBody @Validated({User.Group.class}) User user)
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200813010442652.png" alt="在这里插入图片描述" loading="lazy"><br>
+这样虽然后端是方便了，不需要每一个接口都加上<code>BindingResult</code>，但是前端不好处理，整个异常都返回了，因此后端需要捕捉这些异常，但是，不能手动去捕捉每一个，这样还不如之前使用<code>BindingResult</code>，这种情况下就需要用到全局的异常处理。</p>
+<h2 id="41-基本使用">4.1 基本使用</h2>
+<p>处理全局异常的步骤如下：</p>
+<ul>
+<li>创建全局异常处理的类：加上<code>@ControllerAdvice</code>/<code>@RestControllerAdvice</code>注解（取决于控制层用的是<code>@Controller</code>/<code>@RestController</code>，<code>@Controller</code>可以跳转到相应页面，返回<code>JSON</code>等加上<code>@ResponseBody</code>即可，而<code>@RestController</code>相当于<code>@Controller</code>+<code>@ResponseBody</code>，返回<code>JSON</code>无需加上<code>@ResponseBody</code>，但是视图解析器无法解析<code>jsp</code>以及<code>html</code>页面）</li>
+<li>创建异常处理方法：加上<code>@ExceptionHandler</code>指定想要处理的异常类型</li>
+<li>处理异常：在对应的处理异常方法中处理异常</li>
+</ul>
+<p>这里增加一个全局异常处理类<code>GlobalExceptionHandler</code>：</p>
+<pre><code class="language-java">@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public String methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e)
+    {
+        ObjectError error = e.getBindingResult().getAllErrors().get(0);
+        return error.getDefaultMessage();
+    }
+}
+</code></pre>
+<p>首先加上<code>@RestControllerAdvice</code>，并在异常处理方法上加上<code>@ExceptionHandler</code>。</p>
+<p>接着修改控制层，去掉其中的<code>BindingResult</code>：</p>
+<pre><code class="language-java">@PostMapping(&quot;test&quot;)
+public String test(@RequestBody @Validated({User.Group.class}) User user)
+{
+    return service.test(user);
+}
+</code></pre>
+<p>然后就可以进行测试了：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200813014101131.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>全局异常处理相比起原来的每一个接口都加上<code>BindingResult</code>方便很多，而且可以集中处理所有异常。</p>
+<h2 id="42-自定义异常">4.2 自定义异常</h2>
+<p>很多时候都会用到自定义异常，这里新增一个测试异常<code>TestException</code>：</p>
+<pre><code class="language-java">@Data
+public class TestException extends RuntimeException{
+    private int code;
+    private String msg;
+
+    public TestException(int code,String msg)
+    {
+        super(msg);
+        this.code = code;
+        this.msg = msg;
+    }
+
+    public TestException()
+    {
+        this(111,&quot;测试异常&quot;);
+    }
+
+    public TestException(String msg)
+    {
+        this(111,msg);
+    }
+}
+</code></pre>
+<p>接着在刚才的全局异常处理类中添加一个处理该异常的方法：</p>
+<pre><code class="language-java">@ExceptionHandler(TestException.class)
+public String testExceptionHandler(TestException e)
+{
+    return e.getMsg();
+}
+</code></pre>
+<p>在控制层进行测试：</p>
+<pre><code class="language-java">@PostMapping(&quot;test&quot;)
+public String test(@RequestBody @Validated({User.Group.class}) User user)
+{
+    throw new TestException(&quot;出现异常&quot;);
+//        return service.test(user);
+}
+</code></pre>
+<p>结果如下：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200813015033222.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-数据响应">5 数据响应</h1>
+<p>在处理好了参数校验以及异常处理之后，下一步就是要设置统一的规范化的响应数据，一般来说无论响应成功还是失败都会有一个状态码，响应成功还会携带响应数据，响应失败则携带相应的失败信息，因此，第一步是设计一个统一的响应体。</p>
+<h2 id="51-统一响应体">5.1 统一响应体</h2>
+<p>统一响应体需要创建响应体类，一般来说，响应体需要包含：</p>
+<ul>
+<li>状态码：<code>String</code>/<code>int</code></li>
+<li>响应信息：<code>String</code></li>
+<li>响应数据：<code>Object</code>/<code>T</code>（泛型）</li>
+</ul>
+<p>这里简单的定义一个统一响应体<code>Result</code>：</p>
+<pre><code class="language-java">@Data
+@AllArgsConstructor
+public class Result&lt;T&gt; {
+    private String code;
+    private String message;
+    private T data;
+}
+</code></pre>
+<p>接着修改全局异常处理类：</p>
+<pre><code class="language-java">@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result&lt;String&gt; methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e)
+    {
+        ObjectError error = e.getBindingResult().getAllErrors().get(0);
+        return new Result&lt;&gt;(error.getCode(),&quot;参数校验失败&quot;,error.getDefaultMessage());
+    }
+
+    @ExceptionHandler(TestException.class)
+    public Result&lt;String&gt; testExceptionHandler(TestException e)
+    {
+        return new Result&lt;&gt;(e.getCode(),&quot;失败&quot;,e.getMsg());
+    }
+}
+</code></pre>
+<p>使用<code>Result&lt;String&gt;</code>封装返回值，测试如下：</p>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200813020245943.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到返回了一个比较友好的信息，无论是响应成功还是响应失败都会返回同一个响应体，当需要返回具体的用户数据时，可以修改控制层接口直接返回<code>Result&lt;User&gt;</code>：</p>
+<pre><code class="language-java">@PostMapping(&quot;test&quot;)
+public Result&lt;User&gt; test(@RequestBody @Validated({User.Group.class}) User user)
+{
+    return service.test(user);
+}
+</code></pre>
+<p>测试：</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200813020749494.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="52-响应码枚举">5.2 响应码枚举</h2>
+<p>通常来说可以把响应码做成枚举类：</p>
+<pre><code class="language-java">@Getter
+public enum ResultCode {
+    SUCCESS(&quot;111&quot;,&quot;成功&quot;),FAILED(&quot;222&quot;,&quot;失败&quot;);
+
+    private final String code;
+    private final String message;
+    ResultCode(String code,String message)
+    {
+        this.code = code;
+        this.message = message;
+    }
+}
+</code></pre>
+<p>枚举类封装了状态码以及信息，这样在返回结果时，只需要传入对应的枚举值以及数据即可：</p>
+<pre><code class="language-java">@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result&lt;String&gt; methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e)
+    {
+        ObjectError error = e.getBindingResult().getAllErrors().get(0);
+        return new Result&lt;&gt;(ResultCode.FAILED,error.getDefaultMessage());
+    }
+
+    @ExceptionHandler(TestException.class)
+    public Result&lt;String&gt; testExceptionHandler(TestException e)
+    {
+        return new Result&lt;&gt;(ResultCode.FAILED,e.getMsg());
+    }
+}
+</code></pre>
+<h2 id="53-全局包装响应体">5.3 全局包装响应体</h2>
+<p>统一响应体是个很好的想法，但是还可以再深入一步去优化，因为每次返回之前都需要对响应体进行包装，虽然只是一行代码但是每个接口都需要包装一下，这是个很麻烦的操作，为了更进一步“偷懒”，可以选择实现<code>ResponseBodyAdvice&lt;T&gt;</code>来进行全局的响应体包装。</p>
+<p>修改原来的全局异常处理类如下：</p>
+<pre><code class="language-java">@RestControllerAdvice
+public class GlobalExceptionHandler implements ResponseBodyAdvice&lt;Object&gt; {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result&lt;String&gt; methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e)
+    {
+        ObjectError error = e.getBindingResult().getAllErrors().get(0);
+        return new Result&lt;&gt;(ResultCode.FAILED,error.getDefaultMessage());
+    }
+
+    @ExceptionHandler(TestException.class)
+    public Result&lt;String&gt; testExceptionHandler(TestException e)
+    {
+        return new Result&lt;&gt;(ResultCode.FAILED,e.getMsg());
+    }
+
+    @Override
+    public boolean supports(MethodParameter methodParameter, Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; aClass) {
+        return !methodParameter.getParameterType().equals(Result.class);
+    }
+
+    @Override
+    public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+        return new Result&lt;&gt;(o);
+    }
+}
+</code></pre>
+<p>实现了<code>ResponseBodyAdvice&lt;Object&gt;</code>：</p>
+<ul>
+<li><code>supports</code>方法：判断是否支持控制器返回方法类型，可以通过<code>supports</code>判断哪些类型需要包装，哪些不需要包装直接返回</li>
+<li><code>beforeBodyWrite</code>方法：当<code>supports</code>返回<code>true</code>后，对数据进行包装，这样在返回数据时就无需使用<code>Result&lt;User&gt;</code>手动包装，而是直接返回<code>User</code>即可</li>
+</ul>
+<p>接着修改控制层，直接返回实体类<code>User</code>而不是响应体包装类<code>Result&lt;User&gt;</code>：</p>
+<pre><code class="language-java">@PostMapping(&quot;test&quot;)
+public User test(@RequestBody @Validated({User.Group.class}) User user)
+{
+    return service.test(user);
+}
+</code></pre>
+<p>测试输出如下：</p>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/2020081302330331.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="54-绕过全局包装">5.4 绕过全局包装</h2>
+<p>虽然按照上面的方式可以使后端的数据全部按照统一的形式返回给前端，但是有时候并不是返回给前端而是返回给其他第三方，这时候不需要<code>code</code>以及<code>msg</code>等信息，只是需要数据，这样的话，可以提供一个在方法上的注解来绕过全局的响应体包装。</p>
+<p>比如添加一个<code>@NotResponseBody</code>注解：</p>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+public @interface NotResponseBody {
+}
+</code></pre>
+<p>接着需要在处理全局包装的类中，在<code>supports</code>中进行判断：</p>
+<pre><code class="language-java">@Override
+public boolean supports(MethodParameter methodParameter, Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; aClass) {
+    return !(
+    	methodParameter.getParameterType().equals(Result.class) 
+    	||
+    	methodParameter.hasMethodAnnotation(NotResponseBody.class)
+    );
+}
+</code></pre>
+<p>最后修改控制层，在需要绕过的方法上添加自定义注解<code>@NotResponseBody</code>即可：</p>
+<pre><code class="language-java">@PostMapping(&quot;test&quot;)
+@NotResponseBody
+public User test(@RequestBody @Validated({User.Group.class}) User user)
+</code></pre>
+<h1 id="6-总结">6 总结</h1>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200813163748104.png#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-源码">7 源码</h1>
+<p>直接clone下来使用IDEA打开即可，每一次优化都做了一次提交，可以看到优化的过程，喜欢的话欢迎给个star：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootValidation-ExceptionHandler-DataResponse">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootValidation-ExceptionHandler-DataResponse">码云</a></li>
+</ul>
+<h1 id="8-参考">8 参考</h1>
+<p>1、<a href="http://unclechen.github.io/2018/12/15/SpringBoot%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">UncleChen的博客-SpringBoot自定义请求参数校验</a><br>
+2、<a href="https://www.jianshu.com/p/1dff31a1649d">简书-@Valid和@Validated的总结区分</a><br>
+3、<a href="https://www.cnblogs.com/shuaifing/p/8119664.html">博客园-@Controller与@RestController的区别</a><br>
+4、<a href="https://www.jianshu.com/p/b5b8613769db">简书-【项目实践】-SpringBoot三招组合拳，手把手教你打出优雅的后端接口</a><br>
+5、<a href="https://www.jianshu.com/p/ecc41e873fe3">简书-【项目实践】后端接口统一规范的同时，如何优雅得扩展规范</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/linux-zhong-duan-geng-gai-zi-ti.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/linux-zhong-duan-geng-gai-zi-ti/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-17">2020-08-17</time>
+                  <h4 class="title white no-margin">Linux终端更改字体</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-61-qi.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-61-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-17">2020-08-17</time>
+                  <h4 class="title white no-margin">每日分享 第61期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-67-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-67-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-23">2020-08-23</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-67-qi/">每日分享 第67期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-66-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-66-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-22">2020-08-22</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-66-qi/">每日分享 第66期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-65-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-65-qi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-21">2020-08-21</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-65-qi/">每日分享 第65期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-1 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-2 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-3 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-4 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-5 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-6 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-7 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-8 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-9 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-10 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-11 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-12 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-13 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-14 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-15 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-16 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-17 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-18 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-19 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-20 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-21 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-22 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-23 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-24 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-25 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-26 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-27 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-28 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-29 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-30 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-31 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-32 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-33 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-34 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-35 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-36 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-37 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-38 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-39 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-40 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-41 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-42 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-43 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-44 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-45 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-46 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-47 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-48 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-49 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-50 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-51 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-52 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-53 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-54 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-55 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-56 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-57 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-58 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-59 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-60 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-61 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-62 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-63 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-64 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-65 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-66 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-67 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-68 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-69 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-70 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-71 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-72 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 237 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
