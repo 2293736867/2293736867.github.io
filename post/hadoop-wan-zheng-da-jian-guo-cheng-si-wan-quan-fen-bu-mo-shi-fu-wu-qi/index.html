@@ -1,0 +1,1200 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hadoop完整搭建过程（四）：完全分布模式（服务器） | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 约定
+3 （可选）本地Host
+4  ssh
+5 主机名
+6 配置基本环境
+
+6.1 JDK
+6.2 Hadoop
+
+6.2.1 hadoop-env.sh
+6.2.2 core-site.xml
+6.2.3 hdfs-si..." />
+    <meta name="keywords" content="Hadoop" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1598111995177" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/hadoop-wan-zheng-da-jian-guo-cheng-si-wan-quan-fen-bu-mo-shi-fu-wu-qi.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-08-22"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/hadoop-wan-zheng-da-jian-guo-cheng-si-wan-quan-fen-bu-mo-shi-fu-wu-qi/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/hadoop-wan-zheng-da-jian-guo-cheng-si-wan-quan-fen-bu-mo-shi-fu-wu-qi/"> </span>
+              </a>
+              <span id="/hadoop-wan-zheng-da-jian-guo-cheng-si-wan-quan-fen-bu-mo-shi-fu-wu-qi/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-0 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Hadoop完整搭建过程（四）：完全分布模式（服务器）</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%BA%A6%E5%AE%9A">2 约定</a></li>
+<li><a href="#3-%E5%8F%AF%E9%80%89%E6%9C%AC%E5%9C%B0host">3 （可选）本地<code>Host</code></a></li>
+<li><a href="#4-ssh">4  <code>ssh</code></a></li>
+<li><a href="#5-%E4%B8%BB%E6%9C%BA%E5%90%8D">5 主机名</a></li>
+<li><a href="#6-%E9%85%8D%E7%BD%AE%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83">6 配置基本环境</a>
+<ul>
+<li><a href="#61-jdk">6.1 <code>JDK</code></a></li>
+<li><a href="#62-hadoop">6.2 <code>Hadoop</code></a>
+<ul>
+<li><a href="#621-hadoop-envsh">6.2.1 <code>hadoop-env.sh</code></a></li>
+<li><a href="#622-core-sitexml">6.2.2 <code>core-site.xml</code></a></li>
+<li><a href="#623-hdfs-sitexml">6.2.3 <code>hdfs-site.xml</code></a></li>
+<li><a href="#624-workers">6.2.4 <code>workers</code></a></li>
+<li><a href="#625-%E5%A4%8D%E5%88%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">6.2.5 复制配置文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-%E5%90%AF%E5%8A%A8">7 启动</a>
+<ul>
+<li><a href="#71-%E6%A0%BC%E5%BC%8F%E5%8C%96hdfs">7.1 格式化<code>HDFS</code></a></li>
+<li><a href="#72-hadoop-envsh">7.2 <code>hadoop-env.sh</code></a></li>
+<li><a href="#73-%E5%90%AF%E5%8A%A8">7.3 启动</a></li>
+</ul>
+</li>
+<li><a href="#8-yarn">8 <code>YARN</code></a>
+<ul>
+<li><a href="#81-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">8.1 环境变量</a></li>
+<li><a href="#82-yarn%E9%85%8D%E7%BD%AE">8.2 <code>YARN</code>配置</a></li>
+<li><a href="#83-%E5%BC%80%E5%90%AFyarn">8.3 开启<code>YARN</code></a></li>
+<li><a href="#84-%E6%B5%8B%E8%AF%95">8.4 测试</a></li>
+</ul>
+</li>
+<li><a href="#9-%E5%8F%82%E8%80%83">9 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>上一篇文章介绍了如何使用虚拟机搭建集群，到了这篇文章就是实战了，使用真实的三台不同服务器进行<code>Hadoop</code>集群的搭建。具体步骤其实与虚拟机的差不多，但是由于安全组以及端口等等一些列的问题，会与虚拟机有所不同，废话不多说，下面正式开始。</p>
+<h1 id="2-约定">2 约定</h1>
+<ul>
+<li><code>Master</code>节点的<code>ip</code>用<code>MasterIP</code>表示，主机名用<code>master</code>表示</li>
+<li>两个<code>Worker</code>节点的<code>ip</code>用<code>Worker1IP</code>/<code>Worker2IP</code>表示，主机名用<code>worker1</code>/<code>worker2</code>表示</li>
+<li>这里为了演示方便统一使用<code>root</code>用户登录，当然生产环境不会这样</li>
+</ul>
+<h1 id="3-可选本地host">3 （可选）本地<code>Host</code></h1>
+<p>修改本地<code>Host</code>，方便使用主机名来进行操作：</p>
+<pre><code class="language-bash">sudo vim /etc/hosts
+# 添加
+MaterIP master
+Worker1IP worker1
+Worker2IP worker2
+</code></pre>
+<h1 id="4-ssh">4  <code>ssh</code></h1>
+<p>本机生成密钥对后复制公钥到三台服务器上：</p>
+<pre><code class="language-bash">ssh-keygen -t ed25519 -a 100 # 使用更快更安全的ed25519算法而不是传统的RSA-3072/4096
+ssh-copy-id root@master
+ssh-copy-id root@worker1
+ssh-copy-id root@worker2
+</code></pre>
+<p>这时可以直接使用<code>root@host</code>进行连接了：</p>
+<pre><code class="language-bash">ssh root@master
+ssh root@worker1
+ssh root@worker2
+</code></pre>
+<p>不需要输入密码，如果不能连接或者需要输入密码请检查<code>/etc/ssh/sshd_config</code>或系统日志。</p>
+<h1 id="5-主机名">5 主机名</h1>
+<p>修改<code>Master</code>节点的主机名为<code>master</code>，两个<code>Worker</code>节点的主机名为<code>worker1</code>、<code>worker2</code>：</p>
+<pre><code class="language-bash"># Master节点
+vim /etc/hostname
+master
+# Worker1节点
+# worker1
+# Worker2节点
+# worker2
+</code></pre>
+<p>同时修改<code>Host</code>：</p>
+<pre><code class="language-bash"># Master节点
+vim /etc/hosts
+Worker1IP worker1
+Worker2IP worker2
+
+# Worker1节点
+vim /etc/hosts
+MasterIP master
+Worker2IP worker2
+
+# Worker1节点
+vim /etc/hosts
+MasterIP master
+Worker1IP worker1
+</code></pre>
+<p>修改完成之后需要互<code>ping</code>测试：</p>
+<pre><code class="language-bash">ping master
+ping worker1
+ping worker2
+</code></pre>
+<p><code>ping</code>不通的话应该是安全组的问题，开放<code>ICMP</code>协议即可：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200821110732939.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-配置基本环境">6 配置基本环境</h1>
+<h2 id="61-jdk">6.1 <code>JDK</code></h2>
+<p><code>scp</code>上传<code>OpenJDK 11</code>，解压并放置于<code>/usr/local/java</code>下，同时修改<code>PATH</code>：</p>
+<pre><code class="language-bash">export PATH=$PATH:/usr/local/java/bin
+</code></pre>
+<p>如果原来的服务器装有了其他版本的<code>JDK</code>可以先卸载：</p>
+<pre><code class="language-bash">yum remove java
+</code></pre>
+<p>注意设置环境变量后需要测试以下<code>java</code>，因为不同服务器的架构可能不一样：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200821133211530.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200821133227441.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>比如笔者的<code>Master</code>节点为<code>aarch64</code>架构，而两个<code>Worker</code>都是<code>x86_64</code>架构，因此<code>Master</code>节点执行<code>java</code>时报错如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200821133338136.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>解决办法是通过<code>yum install</code>安装<code>OpenJDK11</code>：</p>
+<pre><code class="language-bash">yum install java-11-openjdk
+</code></pre>
+<h2 id="62-hadoop">6.2 <code>Hadoop</code></h2>
+<p><code>scp</code>上传<code>Hadoop 3.3.0</code>，解压并放置于<code>/usr/local/hadoop</code>下，注意选择对应的架构：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200821143835137.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>解压后修改以下四个配置文件：</p>
+<ul>
+<li><code>etc/hadoop/hadoop-env.sh</code></li>
+<li><code>etc/hadoop/core-site.xml</code></li>
+<li><code>etc/hadoop/hdfs-site.xml</code></li>
+<li><code>etc/hadoop/workers</code></li>
+</ul>
+<h3 id="621-hadoop-envsh">6.2.1 <code>hadoop-env.sh</code></h3>
+<p>修改<code>JAVA_HOME</code>环境变量即可：</p>
+<pre><code class="language-bash">export JAVA_HOME=/usr/local/java # 修改为您的Java目录
+</code></pre>
+<h3 id="622-core-sitexml">6.2.2 <code>core-site.xml</code></h3>
+<pre><code class="language-xml">&lt;configuration&gt;
+	&lt;property&gt;
+		&lt;name&gt;fs.defaultFS&lt;/name&gt;
+		&lt;value&gt;hdfs://master:9000&lt;/value&gt;
+	&lt;/property&gt;
+	&lt;property&gt;
+		&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+		&lt;value&gt;/usr/local/hadoop/data/tmp&lt;/value&gt;
+	&lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>具体选项与虚拟机方式的设置相同，这里不再重复叙述。</p>
+<h3 id="623-hdfs-sitexml">6.2.3 <code>hdfs-site.xml</code></h3>
+<pre><code class="language-xml">&lt;configuration&gt;
+	&lt;property&gt;
+		&lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;
+		&lt;value&gt;/usr/local/hadoop/data/namenode&lt;/value&gt;
+	&lt;/property&gt;
+	&lt;property&gt;
+		&lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;
+		&lt;value&gt;/usr/local/hadoop/data/datanode&lt;/value&gt;
+	&lt;/property&gt;
+	&lt;property&gt;
+		&lt;name&gt;dfs.replication&lt;/name&gt;
+		&lt;value&gt;2&lt;/value&gt;
+	&lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+<h3 id="624-workers">6.2.4 <code>workers</code></h3>
+<pre><code class="language-bash">worker1
+worker2
+</code></pre>
+<h3 id="625-复制配置文件">6.2.5 复制配置文件</h3>
+<pre><code class="language-bash"># 如果设置了端口以及私钥
+# 加上 -P 端口 -i 私钥
+scp /usr/local/hadoop/etc/hadoop/* worker1:/usr/local/hadoop/etc/hadoop/
+scp /usr/local/hadoop/etc/hadoop/* worker2:/usr/local/hadoop/etc/hadoop/
+</code></pre>
+<h1 id="7-启动">7 启动</h1>
+<h2 id="71-格式化hdfs">7.1 格式化<code>HDFS</code></h2>
+<p>在<code>Master</code>中，首先格式化<code>HDFS</code></p>
+<pre><code class="language-bash">cd /usr/local/hadoop
+bin/hdfs namenode -format
+</code></pre>
+<p>如果配置文件没错的话就格式化成功了。</p>
+<h2 id="72-hadoop-envsh">7.2 <code>hadoop-env.sh</code></h2>
+<p>还是在<code>Master</code>中，修改<code>/usr/local/hadoop/etc/hadoop/hadoop-env.sh</code>，末尾添加：</p>
+<pre><code class="language-bash">HDFS_DATANODE_USER=root
+HDFS_NAMENODE_USER=root
+HDFS_SECONDARYNAMENODE_USER=root
+</code></pre>
+<h2 id="73-启动">7.3 启动</h2>
+<p>首先<code>Master</code>开放<code>9000</code>以及<code>9870</code>端口（一般安全组开放即可，如果开启了防火墙<code>firewalld/iptables</code>则添加相应规则），并在<code>Master</code>节点中启动：</p>
+<pre><code class="language-bash">sbin/start-dfs.sh
+</code></pre>
+<p>浏览器输入：</p>
+<pre><code class="language-bash">MasterIP:9870
+</code></pre>
+<p>即可看到如下页面：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200821153852312.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果看到<code>Live Nodes</code>数量为0请查看<code>Worker</code>的日志，这里发现是端口的问题：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200821154029794.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>并且在配置了安全组，关闭了防火墙的情况下还是如此，则有可能是<code>Host</code>的问题，可以把<code>Master</code>节点中的：</p>
+<pre><code class="language-bash"># /etc/hosts
+127.0.0.1 master
+</code></pre>
+<p>删去，同样道理删去两个<code>Worker</code>中的：</p>
+<pre><code class="language-bash"># /etc/hosts
+127.0.0.1 worker1
+127.0.0.1 worker2
+</code></pre>
+<h1 id="8-yarn">8 <code>YARN</code></h1>
+<h2 id="81-环境变量">8.1 环境变量</h2>
+<p>修改<code>/usr/local/hadoop/etc/hadoop/hadoop-env.sh</code>，添加：</p>
+<pre><code class="language-bash">export YARN_RESOURCEMANAGER_USER=root
+export YARN_NODEMANAGER_USER=root
+</code></pre>
+<h2 id="82-yarn配置">8.2 <code>YARN</code>配置</h2>
+<p>在两个<code>Worker</code>节点中修改<code>/usr/local/hadoop/etc/hadoop/yarn-site.xml</code>：</p>
+<pre><code class="language-xml">&lt;property&gt;
+	&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;
+	&lt;value&gt;master&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+<h2 id="83-开启yarn">8.3 开启<code>YARN</code></h2>
+<p><code>Master</code>节点中开启<code>YARN</code>：</p>
+<pre><code class="language-bash">cd /usr/local/hadoop
+sbin/start-yarn.sh
+</code></pre>
+<p>同时<code>Master</code>的安全组开放<code>8088</code>以及<code>8031</code>端口。</p>
+<h2 id="84-测试">8.4 测试</h2>
+<p>浏览器输入：</p>
+<pre><code class="language-bash">MasterIP:8088
+</code></pre>
+<p>应该就可以访问如下页面了：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200821154539965.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>至此集群正式搭建完成。</p>
+<h1 id="9-参考">9 参考</h1>
+<ul>
+<li><a href="https://www.cnblogs.com/duanxz/p/5142535.html">博客园-HDFS之五：Hadoop 拒绝远程 9000 端口访问</a></li>
+<li><a href="https://medium.com/@jootorres_11979/how-to-set-up-a-hadoop-3-2-1-multi-node-cluster-on-ubuntu-18-04-2-nodes-567ca44a3b12">How To Set Up a Hadoop 3.2.1 Multi-Node Cluster on Ubuntu 18.04 (2 Nodes)</a></li>
+<li><a href="https://www.linode.com/docs/databases/hadoop/how-to-install-and-set-up-hadoop-cluster/">How to Install and Set Up a 3-Node Hadoop Cluster</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/ben-di-fen-bu-shi-hadoop-wan-zheng-da-jian-guo-cheng.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/ben-di-fen-bu-shi-hadoop-wan-zheng-da-jian-guo-cheng/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-22">2020-08-22</time>
+                  <h4 class="title white no-margin">本地+分布式Hadoop完整搭建过程</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/hadoop-wan-zheng-da-jian-guo-cheng-san-wan-quan-fen-bu-mo-shi-xu-ni-ji.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/hadoop-wan-zheng-da-jian-guo-cheng-san-wan-quan-fen-bu-mo-shi-xu-ni-ji/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-08-22">2020-08-22</time>
+                  <h4 class="title white no-margin">Hadoop完整搭建过程（三）：完全分布模式（虚拟机）</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-71-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/media/images/custom-featureImage.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-26">2020-08-26</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-71-qi/">每日分享 第71期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-70-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('/media/images/custom-featureImage.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-26">2020-08-26</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-70-qi/">每日分享 第70期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-69-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-69-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-08-25">2020-08-25</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-69-qi/">每日分享 第69期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-1 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-2 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-3 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-4 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-5 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-6 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-7 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-8 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-9 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-10 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-11 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-12 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-13 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-14 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-15 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-16 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-17 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-18 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-19 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-20 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-21 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-22 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-23 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-24 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-25 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-26 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-27 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-28 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-29 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-30 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-31 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-32 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-33 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-34 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-35 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-36 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-37 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-38 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-39 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-40 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-41 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-42 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-43 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-44 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-45 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-46 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-47 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-48 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-49 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-50 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-51 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-52 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-53 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-54 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-55 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-56 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-57 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-58 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-59 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-60 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-61 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-62 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-63 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-64 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-65 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-66 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-67 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-68 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-69 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-70 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-71 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-72 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-73 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-74 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 247 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
