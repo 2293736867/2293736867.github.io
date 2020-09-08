@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-09-07T17:15:22.396Z</updated>
+    <updated>2020-09-08T09:20:34.788Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -224,6 +224,135 @@
 向着我爱的人<br>
 追吧</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring 学习笔记（二）：SpringIoC]]></title>
+        <id>https://2293736867.github.io/post/spring-xue-xi-bi-ji-er-springioc/</id>
+        <link href="https://2293736867.github.io/post/spring-xue-xi-bi-ji-er-springioc/">
+        </link>
+        <updated>2020-09-08T09:18:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-ioc与di">1 <code>IoC</code>与<code>DI</code></h1>
+<p><code>IoC</code>是<code>Inversion of Control</code>的简称，也就是控制反转。通常来说，创建对象需要调用者手动创建，也就是<code>new XXX()</code>的方式。当<code>Spring</code>框架出现后，对象的实例不再由调用者创建，而是由<code>Spring</code>容器创建，这样控制权就由调用者转移到<code>Spring</code>容器，控制权发生了反转，这就是<code>Spring</code>的控制反转。从<code>Spring</code>容器来看，<code>Spring</code>容器负责将被依赖对象赋值给调用者的成员变量，相当于为调用者注入它所依赖的实例，这就是<code>Spring</code>的依赖注入（<code>Dependency Injection</code>，<code>DI</code>）。</p>
+<p>一句话总结：</p>
+<ul>
+<li><strong><code>IoC</code>：控制权由调用者交由<code>Spring</code>容器，控制发生了反转</strong></li>
+<li><strong><code>DI</code>：由<code>Spring</code>容器注入需要的值到对象中</strong></li>
+</ul>
+<h1 id="2-spring-ioc容器">2 <code>Spring IoC</code>容器</h1>
+<p><code>Spring</code>中实现<code>IoC</code>的是<code>Spring IoC</code>容器，主要基于以下两个接口：</p>
+<ul>
+<li><code>BeanFactory</code></li>
+<li><code>ApplicationContext</code></li>
+</ul>
+<h2 id="21-beanfactory">2.1 <code>BeanFactory</code></h2>
+<p>位于<code>org.springframework.beans.factory</code>下，提供了完整的<code>IoC</code>服务支持，是一个管理<code>Bean</code>工厂，主要负责初始化各种<code>Bean</code>。可以通过<code>XmlBeanFactory</code>来获取<code>XML</code>文件中的<code>Bean</code>并进行装配，例子如下：</p>
+<pre><code class="language-java">BeanFactory factory = new XmlBeanFactory(new FileSystemResource(&quot;/xxx/xxx/xxx/xxx/applicationContext.xml&quot;));
+TestInterface test = (TestInterface)factory.getBean(&quot;test&quot;);
+test.hello();
+</code></pre>
+<p>需要使用绝对路径，而且，该方法已经过时了：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200908123818784.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>因此不推荐使用。</p>
+<h2 id="22-applicationcontext">2.2 <code>ApplicationContext</code></h2>
+<p><code>ApplicationContext</code>是<code>BeanFactory</code>的子接口，也称为应用上下文，除了包含<code>BeanFactory</code>的功能外还添加了国际化、资源访问、事件传播等的支持，创建<code>ApplicationContext</code>的实例有以下三种方法：</p>
+<ul>
+<li><code>ClassPathXmlApplicationContext</code></li>
+<li><code>FileSystemXmlApplicationContext</code></li>
+<li><code>Web</code>服务器实例化</li>
+</ul>
+<h3 id="221-classpathxmlapplicationcontext">2.2.1 <code>ClassPathXmlApplicationContext</code></h3>
+<p>该类从<code>resources</code>下寻找指定的<code>XML</code>文件：</p>
+<pre><code class="language-java">ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+TestInterface test = (TestInterface)context.getBean(&quot;test&quot;);
+test.hello();
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/202009081242295.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="222-filesystemxmlapplicationcontext">2.2.2 <code>FileSystemXmlApplicationContext</code></h3>
+<p>该类读取配置文件需要加上前缀：</p>
+<ul>
+<li><code>classpath:</code>：该前缀表示从类路径读取，对于<code>Maven</code>项目来说就是<code>resources</code></li>
+<li><code>file:</code>：该前缀表示从绝对路径获取</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-java">ApplicationContext context = new FileSystemXmlApplicationContext(&quot;classpath:applicationContext.xml&quot;);
+//ApplicationContext context = new FileSystemXmlApplicationContext(&quot;file:/xxx/xxx/xxx/xxxx/xxx/applicationContext.xml&quot;);
+</code></pre>
+<h3 id="223-web服务器实例化">2.2.3 <code>Web</code>服务器实例化</h3>
+<p>一般使用基于<code>ContextLoaderListener</code>的实现方式，修改<code>web.xml</code>，添加如下代码：</p>
+<pre><code class="language-xml">&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;
+            org.springframework.web.context.ContextLoaderListener
+        &lt;/listener-class&gt;
+    &lt;/listener&gt;
+&lt;/context-param&gt;
+</code></pre>
+<h1 id="3-di的两种方法">3 <code>DI</code>的两种方法</h1>
+<p><code>DI</code>通常有两种实现方式：</p>
+<ul>
+<li>构造方法注入</li>
+<li><code>setter</code>注入</li>
+</ul>
+<p>下面分别来看一下。</p>
+<h2 id="31-构造方法注入">3.1 构造方法注入</h2>
+<p><code>Spring</code>可以利用反射机制通过构造方法完成注入，比如有以下三个类：</p>
+<pre><code class="language-java">public interface TestInterface {
+    void hello();
+}
+
+public class TestA implements TestInterface {
+    @Override
+    public void hello() {
+        System.out.println(&quot;Test A&quot;);
+    }
+}
+
+public class TestB {
+    private TestInterface test;
+
+    public TestB(TestInterface test)
+    {
+        this.test = test;
+    }
+
+    public void method()
+    {
+        test.hello();
+    }
+}
+</code></pre>
+<p><code>TestInterface</code>是一个简单的接口，而<code>TestA</code>实现了该接口，<code>TestB</code>需要一个<code>TestInterface</code>类型的对象，因此可以先注入一个<code>TestA</code>，再将该<code>TestA</code>注入到<code>TestB</code>的构造方法中：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;testA&quot; class=&quot;TestA&quot;/&gt; &lt;!--注入一个TestA对象--&gt;
+&lt;bean id=&quot;testB&quot; class=&quot;TestB&quot;&gt;
+	&lt;constructor-arg index=&quot;0&quot; ref=&quot;testA&quot; /&gt; &lt;!--将上面注入的TestA作为参数传入构造方法中，在传给TestB的私有成员--&gt;
+&lt;/bean&gt;
+</code></pre>
+<p><code>constructor-arg</code>是用于定义通过构造方法的方式进行注入的标签，<code>index</code>定义位置，从<code>0</code>开始，<code>ref</code>是某个<code>Bean</code>的引用，值为该<code>Bean</code>的<code>id</code>。</p>
+<h2 id="32-通过setter注入">3.2 通过<code>setter</code>注入</h2>
+<p>在上面的例子中，修改<code>TestB</code>如下：</p>
+<pre><code class="language-java">public class TestB {
+    private TestInterface test;
+
+    public void setTest(TestInterface test) {
+        this.test = test;
+    }
+
+    public void method()
+    {
+        test.hello();
+    }
+}
+</code></pre>
+<p>其实就是添加了一个<code>setter</code>，接着修改配置文件：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;testA&quot; class=&quot;TestA&quot;/&gt;
+&lt;bean id=&quot;testB&quot; class=&quot;TestB&quot;&gt;
+    &lt;property name=&quot;test&quot; ref=&quot;testA&quot; /&gt;
+&lt;/bean&gt;
+</code></pre>
+<p><code>&lt;property&gt;</code>表示通过<code>setter</code>注入，<code>name</code>是私有成员的名字，<code>ref</code>是被传入<code>setter</code>的<code>Bean</code>的<code>id</code>值。</p>
 ]]></content>
     </entry>
     <entry>
@@ -1361,79 +1490,6 @@ class DemoApplicationTests {
 <li><a href="https://github.com/2293736867/SpringBootDemoKotlin">Github</a></li>
 <li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin">码云</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第81期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-81-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-81-qi/">
-        </link>
-        <updated>2020-09-05T06:17:00.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>减肥，你想要坚持，但坚持不想要你。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>蜜蜂能够飞的比喜马拉雅山还要高。蜜蜂能够飞到海平面以上9000米的高度——比地球上的最高峰还要高。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>阴生古苔绿，色染秋烟碧。<br>
-——李白《南轩松》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我一直注视着你，似近，似远。但你永远，看不见我......</p>
-</blockquote>
-<h1 id="每日音乐">每日音乐</h1>
-<blockquote>
-<p><a href="https://music.163.com/#/song?id=1466598056">Lemon-米津玄師</a></p>
-</blockquote>
-<blockquote>
-<p>夢ならばどれほどよかったでしょう<br>
-未だにあなたのことを夢にみる<br>
-忘れた物を取りに帰るように<br>
-古びた思い出の埃を払う<br>
-戻らない幸せがあることを<br>
-最後にあなたが教えてくれた<br>
-言えずに隠してた昏い過去も<br>
-あなたがいなきゃ永遠に昏いまま<br>
-きっともうこれ以上 傷つくことなど<br>
-ありはしないとわかっている<br>
-あの日の悲しみさえ<br>
-あの日の苦しみさえ<br>
-そのすべてを愛してた あなたとともに<br>
-胸に残り離れない<br>
-苦いレモンの匂い<br>
-雨が降り止むまでは帰れない<br>
-今でもあなたはわたしの光<br>
-暗闇であなたの背をなぞった<br>
-その輪郭を鮮明に覚えている<br>
-受け止めきれないものと出会うたび<br>
-溢れてやまないのは涙だけ<br>
-何をしていたの<br>
-何を見ていたの<br>
-わたしの知らない横顔で<br>
-どこかであなたが今<br>
-わたしと同じ様な<br>
-涙にくれ 淋しさの中にいるなら<br>
-わたしのことなどどうか 忘れてください<br>
-そんなことを心から願うほどに<br>
-今でもあなたはわたしの光<br>
-自分が思うより 恋をしていたあなたに<br>
-あれから思うように 息ができない<br>
-あんなに側にいたのにまるで嘘みたい<br>
-とても忘れられないそれだけが確か<br>
-あの日の悲しみさえ<br>
-あの日の苦しみさえ<br>
-その全てを愛してたあなたと共に<br>
-胸に残り離れない<br>
-苦いレモンの匂い<br>
-雨が降り止むまでは帰れない<br>
-切り分けた果実の片方の様に<br>
-今でもあなたはわたしの光</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>
