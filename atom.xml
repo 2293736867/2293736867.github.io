@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-09-14T17:30:55.332Z</updated>
+    <updated>2020-09-15T19:16:59.964Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -136,6 +136,703 @@
 </blockquote>
 <h1 id="关于aarch64">关于<code>aarch64</code></h1>
 <p>发现<code>aarch64</code>真的带给笔者不少的坑，因为很多软件什么的都“默认”<code>x86</code>，害。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring 学习笔记（四）：Spring AOP]]></title>
+        <id>https://2293736867.github.io/post/spring-xue-xi-bi-ji-si-spring-aop/</id>
+        <link href="https://2293736867.github.io/post/spring-xue-xi-bi-ji-si-spring-aop/">
+        </link>
+        <updated>2020-09-15T19:12:40.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-aop">2 <code>AOP</code></a></li>
+<li><a href="#3-aop%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">3 <code>AOP</code>实现方式</a></li>
+<li><a href="#4-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0">4 动态代理实现</a>
+<ul>
+<li><a href="#41-jdk%E5%AE%9E%E7%8E%B0">4.1 <code>JDK</code>实现</a></li>
+<li><a href="#42-cglib%E5%AE%9E%E7%8E%B0">4.2 <code>CGLIB</code>实现</a></li>
+</ul>
+</li>
+<li><a href="#5-%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD">5 相关术语</a></li>
+<li><a href="#6-spring-aop%E5%AE%9E%E7%8E%B0">6 <code>Spring AOP</code>实现</a>
+<ul>
+<li><a href="#61-%E4%BB%A3%E7%90%86%E7%B1%BB%E5%AE%9E%E7%8E%B0">6.1 代理类实现</a>
+<ul>
+<li><a href="#611-spring-aop%E9%80%9A%E7%9F%A5%E7%B1%BB%E5%9E%8B">6.1.1 <code>Spring AOP</code>通知类型</a></li>
+<li><a href="#612-proxyfactorybean">6.1.2 <code>ProxyFactoryBean</code></a></li>
+<li><a href="#613-%E5%AE%9E%E7%8E%B0">6.1.3 实现</a></li>
+</ul>
+</li>
+<li><a href="#62-xml%E9%85%8D%E7%BD%AE%E7%9A%84aspectj%E5%AE%9E%E7%8E%B0">6.2 <code>XML</code>配置的<code>AspectJ</code>实现</a>
+<ul>
+<li><a href="#621-aspectj">6.2.1 <code>AspectJ</code></a></li>
+<li><a href="#622-xml%E5%85%83%E7%B4%A0">6.2.2 <code>XML</code>元素</a></li>
+<li><a href="#623-%E5%AE%9E%E7%8E%B0">6.2.3 实现</a></li>
+<li><a href="#624-%E8%BE%93%E5%87%BA">6.2.4 输出</a></li>
+</ul>
+</li>
+<li><a href="#63-%E6%B3%A8%E8%A7%A3%E9%85%8D%E7%BD%AE%E7%9A%84aspectj%E5%AE%9E%E7%8E%B0%E6%8E%A8%E8%8D%90">6.3 注解配置的<code>AspectJ</code>实现（推荐）</a>
+<ul>
+<li><a href="#631-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3">6.3.1 常用注解</a></li>
+<li><a href="#632-%E5%AE%9E%E7%8E%B0">6.3.2. 实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-%E5%8F%82%E8%80%83%E6%BA%90%E7%A0%81">7 参考源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文主要讲述了<code>AOP</code>的基本概念以及在<code>Spring</code>中<code>AOP</code>的几种实现方式。</p>
+<h1 id="2-aop">2 <code>AOP</code></h1>
+<p><code>AOP</code>，即<code>Aspect-Oriented Programming</code>，面向切面编程，与<code>OOP</code>相辅相成。类似的，在<code>OOP</code>中，以类为程序的基本单元，在<code>AOP</code>中的基本单元是<code>Aspect</code>（切面）。<code>AOP</code>采用横向抽取的机制，将分散在各个方法中重复的代码提取出来，然后在程序编译或运行阶段将这些抽取出来的代码应用到需要执行的地方，这种横向抽取机制是<code>OOP</code>无法办到的。</p>
+<p><code>AOP</code>最典型的一个应用就是抽离出业务模块中与业务不相关的代码，比如，日志记录，性能统计，安全控制，事务处理等。假设业务代码如下：</p>
+<pre><code class="language-java">public void save()
+{
+	saveUser();
+}
+</code></pre>
+<p>但是随着软件开发越来越复杂，业务代码变成了下面的样子：</p>
+<pre><code class="language-java">public void save()
+{
+	//安全控制
+	//性能统计
+	//事务处理
+	//日志记录
+	saveUser();
+}
+</code></pre>
+<p>这样业务类就回混杂很多业务无关的代码，不仅会显得类臃肿不堪，同时也难于开发人员进行维护。因此，引入<code>AOP</code>后，可以将安全控制等的代码抽取出来，交给<code>AOP</code>机制在编译时或运行时再将这些代码进行动态“织入”，这样就可以让业务层专注于业务代码，而不用混杂其他逻辑的代码。</p>
+<h1 id="3-aop实现方式">3 <code>AOP</code>实现方式</h1>
+<p><code>AOP</code>的实现方式主要有以下几种：</p>
+<ul>
+<li>动态代理：<code>JDK</code>、<code>CGLIB</code>、<code>Javassist</code>、<code>ASM</code>等</li>
+<li><code>Spring</code>中<code>AOP</code>实现：基于代理类/<code>AspectJ</code>实现</li>
+</ul>
+<p>下面先来看一个简单的例子。</p>
+<h1 id="4-动态代理实现">4 动态代理实现</h1>
+<p><code>Java</code>中有多种动态代理技术，比如：</p>
+<ul>
+<li><code>JDK</code></li>
+<li><code>CGLIB</code></li>
+<li><code>Javassist</code></li>
+<li><code>ASM</code></li>
+</ul>
+<p>等等，在<code>Spring AOP</code>中常用的有<code>JDK</code>和<code>CGLIB</code>，先看一下最经典的<code>JDK</code>动态代理的实现。</p>
+<h2 id="41-jdk实现">4.1 <code>JDK</code>实现</h2>
+<p>结构：</p>
+<ul>
+<li><code>JDKInterface</code>：测试接口，含三个方法</li>
+<li><code>JDKImpl</code>：测试接口实现类</li>
+<li><code>JDKAspect</code>：切面类</li>
+<li><code>JDKProxy</code>：代理类</li>
+<li><code>JDKTest</code>：测试类</li>
+</ul>
+<p>首先对接口类进行编写，包含三个方法：</p>
+<pre><code class="language-java">public interface JDKInterface {
+    void save();
+    void modify();
+    void delete();
+}
+</code></pre>
+<p>编写实现类：</p>
+<pre><code class="language-java">public class JDKImpl implements JDKInterface {
+    @Override
+    public void save() {
+        System.out.println(&quot;保存&quot;);
+    }
+
+    @Override
+    public void modify() {
+        System.out.println(&quot;修改&quot;);
+    }
+
+    @Override
+    public void delete() {
+        System.out.println(&quot;删除&quot;);
+    }
+}
+</code></pre>
+<p>接下来是定义切面类，模拟上面提到的异常处理等功能：</p>
+<pre><code class="language-java">public class JDKAspect {
+    public void check()
+    {
+        System.out.println(&quot;模拟权限控制&quot;);
+    }
+
+    public void except()
+    {
+        System.out.println(&quot;模拟异常处理&quot;);
+    }
+
+    public void log()
+    {
+        System.out.println(&quot;模拟日志记录&quot;);
+    }
+
+    public void monitor()
+    {
+        System.out.println(&quot;模拟性能监测&quot;);
+    }
+}
+
+</code></pre>
+<p>再接着是很关键的代理类，该类的任务是创建代理对象，并且负责如何对被代理对象进行增强处理：</p>
+<pre><code class="language-java">public class JDKProxy implements InvocationHandler {
+    public JDKInterface testInterface;
+    public Object createProxy(JDKInterface testInterface)
+    {
+        this.testInterface = testInterface;
+        //获取代理类的类加载器
+        ClassLoader loader = JDKProxy.class.getClassLoader();
+        //获取被代理对象（目标对象）的接口
+        Class&lt;?&gt;[] classes = testInterface.getClass().getInterfaces();
+        //创建代理后的对象
+        return Proxy.newProxyInstance(loader,classes,this);
+    }
+    @Override
+    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+    	//创建一个切面
+        JDKAspect aspect = new JDKAspect();
+        //前增强
+        aspect.check();
+        aspect.except();
+        //调用被代理对象的方法，这里指的是testInterface的方法，objects是参数，obj是返回值
+        Object obj = method.invoke(testInterface,objects);
+        //后增强
+        aspect.log();
+        aspect.monitor();
+        return obj;
+    }
+}
+</code></pre>
+<p>创建代理对象时，需要指定代理类的类加载器以及被代理对象的接口，接着通过<code>Proxy.newProxyInstance</code>创建代理对象。</p>
+<p>测试：</p>
+<pre><code class="language-java">public class JDKTest {
+    public static void test()
+    {
+        JDKProxy proxy = new JDKProxy();
+        JDKInterface testInterface = (JDKInterface) proxy.createProxy(new JDKImpl());
+        testInterface.save();
+        testInterface.modify();
+        testInterface.delete();
+    }
+}
+</code></pre>
+<p>输出：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200915172558491.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到：</p>
+<ul>
+<li>在执行真正的业务操作之前，被动态织入了权限控制，异常处理功能</li>
+<li>在执行业务操作后被织入了日志记录和性能监测功能</li>
+</ul>
+<p>这就是<code>AOP</code>的一种最典型的应用。</p>
+<h2 id="42-cglib实现">4.2 <code>CGLIB</code>实现</h2>
+<p>首先添加依赖（由于这是新建的工程需要手动添加<code>CGLIB</code>，在<code>Spring Core</code>中已经包含了<code>CGLIB</code>无需手动添加）：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;cglib&lt;/groupId&gt;
+    &lt;artifactId&gt;cglib&lt;/artifactId&gt;
+    &lt;version&gt;3.3.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>结构与上面的类似：</p>
+<ul>
+<li><code>CGLibInterface</code>：一个简单的接口</li>
+<li><code>CGLibImpl</code>：接口实现类</li>
+<li><code>CGLibProxy</code>：代理对象创建类</li>
+<li><code>CGLibAspect</code>：切面类</li>
+<li><code>CGLibTest</code>：测试类</li>
+</ul>
+<p>首先是接口类和接口实现类，与上面的一样：</p>
+<pre><code class="language-java">public interface CGLibTestInterface {
+    void save();
+    void modify();
+    void delete();
+}
+
+public class CGLibImpl implements CGLibTestInterface{
+    @Override
+    public void save() {
+        System.out.println(&quot;保存&quot;);
+    }
+
+    @Override
+    public void modify() {
+        System.out.println(&quot;修改&quot;);
+    }
+
+    @Override
+    public void delete() {
+        System.out.println(&quot;删除&quot;);
+    }
+}
+</code></pre>
+<p>切面类也一样：</p>
+<pre><code class="language-java">public class CGLibAspect {
+    public void check()
+    {
+        System.out.println(&quot;模拟权限控制&quot;);
+    }
+
+    public void except()
+    {
+        System.out.println(&quot;模拟异常处理&quot;);
+    }
+
+    public void log()
+    {
+        System.out.println(&quot;模拟日志记录&quot;);
+    }
+
+    public void monitor()
+    {
+        System.out.println(&quot;模拟性能监测&quot;);
+    }
+}
+</code></pre>
+<p>唯一不同的是代理类，需要实现<code>MethodInterceptor</code>接口：</p>
+<pre><code class="language-java">public class CGLibProxy implements MethodInterceptor {
+    public Object createProxy(Object target)
+    {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(target.getClass());
+        enhancer.setCallback(this);
+        return enhancer.create();
+    }
+
+    @Override
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        CGLibAspect aspect = new CGLibAspect();
+        aspect.check();
+        aspect.except();
+        Object obj = methodProxy.invokeSuper(o,objects);
+        aspect.log();
+        aspect.monitor();
+        return obj;
+    }
+}
+</code></pre>
+<p>其中代理对象创建过程如下：</p>
+<pre><code class="language-java">Enhancer enhancer = new Enhancer();
+enhancer.setSuperclass(target.getClass());
+enhancer.setCallback(this);
+return enhancer.create();
+</code></pre>
+<p>首先使用<code>Enhancer</code>生成一个代理类，该代理类的父类通过<code>setSuperclass</code>设置，回调函数通过<code>setCallback</code>设置，其中<code>setCallback</code>的参数为<code>MethodInterceptor</code>，也就是实现了该接口的类，最后通过<code>create</code>创建代理对象。</p>
+<p>接着在<code>intercept</code>对方法进行织入，过程与<code>JDK</code>的实现类似。</p>
+<p>测试：</p>
+<pre><code class="language-java">public class CGLibTest {
+    public static void test() {
+        CGLibProxy proxy = new CGLibProxy();
+        CGLibTestInterface cgLibTestInterface = (CGLibTestInterface) proxy.createProxy(new CGLibImpl());
+        cgLibTestInterface.delete();
+        cgLibTestInterface.modify();
+        cgLibTestInterface.save();
+    }
+}
+</code></pre>
+<p>输出也是一致：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200915175316334.png" alt="在这里插入图片描述" loading="lazy">的</p>
+<p>这里因为笔者用的是<code>OpenJDK11</code>，使用<code>CGLIB</code>包时会有非法反射访问警告：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200915175746580.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>加上<code>JVM</code>参数就好了：</p>
+<pre><code class="language-bash">--illegal-access=deny --add-opens java.base/java.lang=ALL-UNNAMED
+</code></pre>
+<h1 id="5-相关术语">5 相关术语</h1>
+<p>看了两个<code>Demo</code>后应该可以大概知道<code>AOP</code>的作用了，下面正式介绍相关术语：</p>
+<ul>
+<li><strong><code>Join Pont</code>：<code>连接点</code>，可能需要注入<code>切面</code>的地方，包括方法调用的前后等等</strong></li>
+<li><strong><code>Pointcut</code>：<code>切点</code>，需要特殊处理的<code>连接点</code>，通过<code>切点</code>确定哪些<code>连接点</code>需要处理，比如上面的两个接口<code>JDKInterface</code>和</strong><code>CGLibInterface</code>中的方法就是<code>切点</code>，当调用这些接口中的方法（也就是<code>切点</code>）时需要进行特殊的处理</li>
+<li><strong><code>Advice</code>：<code>通知</code>，定义在什么时候做什么事情，上面的例子没有提到，下面<code>Spring AOP</code>的例子会有体现</strong></li>
+<li><strong><code>Aspect</code>：<code>切面</code>，<code>通知+切点</code>的集合，类似于<code>Java</code>中的类声明，比如上面的<code>JDKAspect</code>以及<code>CGLibAspect</code>就相当于<code>切面</code></strong></li>
+<li><strong><code>Target</code>：<code>目标对象</code>，需要被通知的对象，比如上面的<code>new CGLibImpl()</code>以及<code>new JDKImpl()</code>，也就是实现了接口的对象</strong></li>
+<li><strong><code>Proxy</code>：<code>代理</code>，通知应用到<code>目标对象</code>后被创建的对象，比如上面的通过<code>createProxy</code>创建的对象</strong></li>
+<li><strong><code>Weaving</code>：<code>织入</code>，把<code>切面</code>代码插入到<code>目标对象</code>后生成<code>代理</code>对象的过程，比如上面的把<code>check</code>、<code>except</code>等代码插入到<code>目标对象</code>（<code>new CGLibImpl()</code>以及<code>new JDKImpl()</code>）后，生成代理对象（通过<code>Proxy.newInsatnce()</code>或<code>enhancer.create()</code>）的过程。<code>织入</code>有三种方式，一种是<code>编译器织入</code>，需要有特殊的编译器，一种是<code>类装载期织入</code>，需要有特殊的类装载器，一种是<code>动态代理织入</code>，在运行时期为目标类添加通知生成子类的方式，<code>Spring AOP</code>默认使用<code>动态代理织入</code>，<code>AspectJ</code>采用<code>编译器织入</code>和<code>类装载期织入</code></strong></li>
+</ul>
+<p>如果还是不明白就自己动手多实现几次，<code>AOP</code>确实是有点难理解，笔者也只能帮大家到这了。</p>
+<h1 id="6-spring-aop实现">6 <code>Spring AOP</code>实现</h1>
+<p><code>Spring</code>中<code>AOP</code>实现主要有两种方式：</p>
+<ul>
+<li>使用<code>JDK</code>自带的动态代理，配合<code>ProxyFactoryBean</code>实现</li>
+<li>使用<code>AspectJ</code>实现，可以通过<code>XML</code>或注解配置实现</li>
+</ul>
+<p>先来看一下代理类实现的方式。</p>
+<h2 id="61-代理类实现">6.1 代理类实现</h2>
+<p>使用代理类实现需要<code>ProxyFactoryBean</code>类，同时也需要了解一下<code>AOP</code>中的通知类型。</p>
+<h3 id="611-spring-aop通知类型">6.1.1 <code>Spring AOP</code>通知类型</h3>
+<p>6种：</p>
+<ul>
+<li>环绕通知：目标方法执行前和执行后实施的增强</li>
+<li>前置通知：目标方法执行前实施增强</li>
+<li>后置返回通知：目标方法执行成功后实施增强，发生异常不执行</li>
+<li>后置最终通知：目标方法执行后实施增强，不管是否发生异常都要执行</li>
+<li>异常通知：抛出异常后实施增强</li>
+<li>引入通知：在目标类添加一些新的方法和属性，可用于修改目标类</li>
+</ul>
+<p>流程如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200915185146968.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="612-proxyfactorybean">6.1.2 <code>ProxyFactoryBean</code></h3>
+<p><code>ProxyFactoryBean</code>是<code>FactoryBean</code>的一个实现类，负责为其他<code>Bean</code>实例创建代理实例，<code>XML</code>配置中常用属性如下：</p>
+<ul>
+<li><code>target</code>：代理的目标对象</li>
+<li><code>proxyInterfaces</code>：代理需要实现的接口列表</li>
+<li><code>interceptorNames</code>：需要织入目标的<code>Advice</code></li>
+<li><code>proxyTargetClass</code>：是否对类代理而不是接口，默认为<code>false</code>，使用<code>JDK</code>动态代理，为<code>true</code>时使用<code>CGLIB</code></li>
+<li><code>singleton</code>：代理类是否为单例，默认<code>true</code></li>
+<li><code>optimize</code>：设置为<code>true</code>时强制使用<code>CGLIB</code></li>
+</ul>
+<h3 id="613-实现">6.1.3 实现</h3>
+<p>依赖：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+    &lt;version&gt;5.2.8.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>结构类似：</p>
+<ul>
+<li><code>ProxyClassInterface</code>：一个简单的接口</li>
+<li><code>ProxyClassImpl</code>：接口实现类</li>
+<li><code>ProxyClassAspect</code>：切面类</li>
+<li><code>ProxyTest</code>：测试类</li>
+</ul>
+<p>其中接口类与接口实现类与上面一致：</p>
+<pre><code class="language-java">public interface ProxyInterface {
+    void save();
+    void modify();
+    void delete();
+}
+
+public class ProxyClassImpl implements ProxyInterface{
+    @Override
+    public void save() {
+        System.out.println(&quot;保存&quot;);
+    }
+
+    @Override
+    public void modify() {
+        System.out.println(&quot;修改&quot;);
+    }
+
+    @Override
+    public void delete() {
+        System.out.println(&quot;删除&quot;);
+    }
+}
+</code></pre>
+<p>切面类实现了<code>MethodInterceptor</code>（<code>org.aopalliance.intercept.MethodInterceptor</code>），同时指定了增强方法：</p>
+<pre><code class="language-java">public class ProxyClassAspect implements MethodInterceptor {
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        check();
+        expect();
+        Object obj = methodInvocation.proceed();
+        log();
+        monitor();
+        return obj;
+    }
+
+    private void check()
+    {
+        System.out.println(&quot;模拟权限控制&quot;);
+    }
+
+    private void expect()
+    {
+        System.out.println(&quot;模拟异常处理&quot;);
+    }
+
+    private void log()
+    {
+        System.out.println(&quot;模拟日志记录&quot;);
+    }
+
+    private void monitor()
+    {
+        System.out.println(&quot;性能监测&quot;);
+    }
+}
+</code></pre>
+<p>这里调用目标方法相比起<code>CGLIB</code>以及<code>JDK</code>简单了很多，无需参数，返回<code>Object</code>，接着是测试类：</p>
+<pre><code class="language-java">public class ProxyClassTest {
+    public static void test()
+    {
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        ProxyInterface proxyInterface = (ProxyInterface)context.getBean(&quot;factory&quot;);
+        proxyInterface.delete();
+        proxyInterface.save();
+        proxyInterface.modify();
+    }
+}
+</code></pre>
+<p>配置文件：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+    &lt;bean id=&quot;impl&quot; class=&quot;com.proxyclass.ProxyClassImpl&quot;/&gt;
+    &lt;bean id=&quot;aspect&quot; class=&quot;com.proxyclass.ProxyClassAspect&quot; /&gt;
+    &lt;bean id=&quot;factory&quot; class=&quot;org.springframework.aop.framework.ProxyFactoryBean&quot;&gt;
+        &lt;property name=&quot;proxyInterfaces&quot; value=&quot;com.proxyclass.ProxyInterface&quot;/&gt;
+        &lt;property name=&quot;target&quot; ref=&quot;impl&quot; /&gt;
+        &lt;property name=&quot;interceptorNames&quot; value=&quot;aspect&quot;/&gt;
+        &lt;property name=&quot;proxyTargetClass&quot; value=&quot;true&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>配置文件说明：</p>
+<ul>
+<li><code>impl</code>：接口实现类<code>Bean</code></li>
+<li><code>aspect</code>：切面类<code>Bean</code></li>
+<li><code>factory</code>：代理<code>Bean</code>，<code>proxyInterfaces</code>指定代理实现的接口，<code>target</code>指定目标对象，<code>interceptorNames</code>指定切面，<code>proxyTargetClass</code>设置为<code>true</code>，指定使用<code>CGLIB</code></li>
+</ul>
+<p>输出：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200915190943743.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="62-xml配置的aspectj实现">6.2 <code>XML</code>配置的<code>AspectJ</code>实现</h2>
+<h3 id="621-aspectj">6.2.1 <code>AspectJ</code></h3>
+<p><code>AspectJ</code>是一个基于<code>Java</code>的<code>AOP</code>框架，使用<code>AspectJ</code>实现<code>Spring AOP</code>的方法有两种，一种是基于<code>XML</code>配置，一种是基于注解配置，先来看基于<code>XML</code>配置的实现。</p>
+<h3 id="622-xml元素">6.2.2 <code>XML</code>元素</h3>
+<p>基于<code>XML</code>配置的<code>AspectJ</code>需要在其中定义切面，切点以及通知，需要定义在<code>&lt;aop:config&gt;</code>内。</p>
+<p><code>&lt;aop:config&gt;</code>是<code>AspectJ</code>顶层配置元素，子元素如下：</p>
+<ul>
+<li><code>&lt;aop:aspect&gt;</code>：定义切面</li>
+<li><code>&lt;aop:pointcut&gt;</code>：定义切点</li>
+<li><code>&lt;aop:before&gt;</code>：定义前置通知</li>
+<li><code>&lt;aop:after-returning&gt;</code>：定义后置返回通知</li>
+<li><code>&lt;aop:around&gt;</code>：定义环绕通知</li>
+<li><code>&lt;aop:after-throwing&gt;</code>：定义异常通知</li>
+<li><code>&lt;aop:after&gt;</code>：定义后置最终通知</li>
+</ul>
+<h3 id="623-实现">6.2.3 实现</h3>
+<p>依赖：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;
+    &lt;version&gt;5.2.8.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>接口与实现类：</p>
+<pre><code class="language-java">public interface XMLInterface {
+    void save();
+    void modify();
+    void delete();
+}
+
+public class XMLImpl implements XMLInterface {
+    @Override
+    public void save() {
+        System.out.println(&quot;保存&quot;);
+    }
+
+    @Override
+    public void modify() {
+        System.out.println(&quot;修改&quot;);
+    }
+
+    @Override
+    public void delete() {
+        System.out.println(&quot;删除&quot;);
+    }
+}
+</code></pre>
+<p>切面类：</p>
+<pre><code class="language-java">public class XMLAspect {
+    public void before()
+    {
+        System.out.println(&quot;前置通知&quot;);
+    }
+
+    public void afterReturning()
+    {
+        System.out.println(&quot;后置返回通知&quot;);
+    }
+
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable
+    {
+        System.out.println(&quot;环绕通知开始&quot;);
+        Object object = proceedingJoinPoint.proceed();
+        System.out.println(&quot;环绕通知结束&quot;);
+        return object;
+    }
+
+    public void expect(Throwable e)
+    {
+        System.out.println(&quot;异常通知&quot;);
+    }
+
+    public void after()
+    {
+        System.out.println(&quot;后置最终通知&quot;);
+    }
+}
+</code></pre>
+<p>提供了更加精细的方法，比如前置通知以及后置通知。在环绕通知中，简化了目标方法的调用，只需要通过<code>proceed</code>调用即可获取返回值，测试类如下：</p>
+<pre><code class="language-java">public class XMLTest {
+    public static void test()
+    {
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        XMLInterface xmlInterface = (XMLInterface)context.getBean(&quot;xmlImpl&quot;);
+        xmlInterface.delete();
+        xmlInterface.modify();
+        xmlInterface.save();
+    }
+}
+</code></pre>
+<p>配置文件：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;xmlImpl&quot; class=&quot;com.aspectj_xml.XMLImpl&quot;/&gt;
+&lt;bean id=&quot;xmlAspect&quot; class=&quot;com.aspectj_xml.XMLAspect&quot; /&gt;
+&lt;aop:config&gt;
+    &lt;aop:pointcut id=&quot;pointCut&quot; expression=&quot;execution(* com.aspectj_xml.XMLInterface.*(..))&quot;/&gt;
+    &lt;aop:aspect ref=&quot;xmlAspect&quot;&gt;
+        &lt;aop:before method=&quot;before&quot; pointcut-ref=&quot;pointCut&quot;  /&gt;
+        &lt;aop:after-returning method=&quot;afterReturning&quot; pointcut-ref=&quot;pointCut&quot; /&gt;
+        &lt;aop:around method=&quot;around&quot; pointcut-ref=&quot;pointCut&quot; /&gt;
+        &lt;aop:after-throwing method=&quot;expect&quot; pointcut-ref=&quot;pointCut&quot; throwing=&quot;e&quot;/&gt;
+        &lt;aop:after method=&quot;after&quot; pointcut-ref=&quot;pointCut&quot;/&gt;
+    &lt;/aop:aspect&gt;
+&lt;/aop:config&gt;
+</code></pre>
+<p>说明如下：</p>
+<ul>
+<li><code>pointCut</code>定义了一个切点，<code>expression</code>是切点表达式</li>
+<li><code>expression</code>中第一个<code>*</code>表示返回类型，使用<code>*</code>表示任意类型</li>
+<li>注意第一个<code>*</code>与后面的包名有空格</li>
+<li>第二个<code>*</code>表示该接口/类中的所有方法</li>
+<li><code>(..)</code>表示方法的参数，<code>..</code>表示任意参数</li>
+</ul>
+<p>关于<code>expression</code>更详细的例子请查看文档，<a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html#aop-api">戳这里</a>：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200916002529989.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li><code>&lt;aop:aspect&gt;</code>定义了一个切面，里面包含了前置通知/后置通知/异常通知等等，<code>method</code>表示的是调用的方法，<code>pointcut-ref</code>是切点的引用，表示在哪一个切点上进行增强处理</li>
+</ul>
+<h3 id="624-输出">6.2.4 输出</h3>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200916002830767.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到执行顺序为：</p>
+<pre><code class="language-bash">前置通知-&gt;环绕通知开始-&gt;目标方法-&gt;后置最终通知-&gt;环绕通知结束-&gt;后置返回通知
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200916002954562.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到顺序为：</p>
+<pre><code class="language-bash">前置通知-&gt;环绕通知开始-&gt;目标方法-后置最终通知-&gt;异常通知
+</code></pre>
+<p>与上面的执行流程图一致。</p>
+<h2 id="63-注解配置的aspectj实现推荐">6.3 注解配置的<code>AspectJ</code>实现（推荐）</h2>
+<h3 id="631-常用注解">6.3.1 常用注解</h3>
+<p>基于注解开发是目前最常用的方式，比<code>XML</code>要便捷很多，常见的注解如下：</p>
+<ul>
+<li><code>@Aspect</code>：定义一个切面，注解在切面类上</li>
+<li><code>@Pointcut</code>：定义切点表达式，需要一个返回值与方法体都为空的方法，并将<code>@Pointcut</code>注解在该空方法上</li>
+<li><code>@Before</code>：定义前置通知，值可以是切点或切点表达式</li>
+<li><code>@AfterReturning</code>：定义后置返回通知</li>
+<li><code>@Around</code>：定义环绕通知</li>
+<li><code>@AfterThrowing</code>：定义异常通知</li>
+<li><code>@After</code>：定义后置最终通知</li>
+</ul>
+<h3 id="632-实现">6.3.2. 实现</h3>
+<p>接口与实现类：</p>
+<pre><code class="language-java">public interface AnnotationInterface {
+    void save();
+    void modify();
+    void delete();
+}
+
+@Component
+public class AnnotationImpl implements AnnotationInterface {
+    @Override
+    public void save() {
+        System.out.println(&quot;保存&quot;);
+    }
+
+    @Override
+    public void modify() {
+        System.out.println(&quot;修改&quot;);
+    }
+
+    @Override
+    public void delete() {
+        System.out.println(&quot;删除&quot;);
+//        注释下面这行语句开启异常通知
+//        int a = 1/0;
+    }
+}
+</code></pre>
+<p>切面类：</p>
+<pre><code class="language-java">@Aspect
+@Component
+public class AnnotationAspect {
+
+    @Pointcut(&quot;execution(* com.aspectj_annotation.AnnotationInterface.*(..))&quot;)
+    public void pointcut(){}
+
+    @Before(&quot;pointcut()&quot;)
+    public void before()
+    {
+        System.out.println(&quot;前置通知&quot;);
+    }
+
+    @AfterReturning(value = &quot;pointcut()&quot;)
+    public void afterReturning()
+    {
+        System.out.println(&quot;后置返回通知&quot;);
+    }
+
+    @Around(&quot;pointcut()&quot;)
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable
+    {
+        System.out.println(&quot;环绕通知开始&quot;);
+        Object object = proceedingJoinPoint.proceed();
+        System.out.println(&quot;环绕通知结束&quot;);
+        return object;
+    }
+
+    @AfterThrowing(value = &quot;pointcut()&quot;,throwing = &quot;e&quot;)
+    public void except(Throwable e)
+    {
+        System.out.println(&quot;异常通知&quot;);
+    }
+
+    @After(&quot;pointcut()&quot;)
+    public void after()
+    {
+        System.out.println(&quot;后置最终通知&quot;);
+    }
+
+}
+</code></pre>
+<p>测试类：</p>
+<pre><code class="language-java">public class AnnotationTest {
+    public static void test()
+    {
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        AnnotationInterface annotationInterface = (AnnotationInterface)context.getBean(&quot;annotationImpl&quot;);
+        annotationInterface.delete();
+        annotationInterface.modify();
+        annotationInterface.save();
+    }
+}
+</code></pre>
+<p>配置文件：</p>
+<pre><code class="language-xml">&lt;context:component-scan base-package=&quot;com.aspectj_annotation&quot;/&gt;
+&lt;aop:aspectj-autoproxy/&gt;
+</code></pre>
+<p>输出：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200916005627584.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>值得注意的是输出的顺序变动了，首先是环绕通知而不是前置通知。至于为什么这样笔者也不是很清楚，欢迎大神留言补充。</p>
+<h1 id="7-参考源码">7 参考源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter4/java_demo">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter4/java_demo">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter4/java_demo">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter4/kotlin_demo">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter4/kotlin_demo">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter4/kotlin_demo">CODE.CHINA</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -438,31 +1135,6 @@ ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;]
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>我于杀戮之中盛放，亦如黎明中的花朵。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第88期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-88-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-88-qi/">
-        </link>
-        <updated>2020-09-12T00:47:55.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>我一般说话都会给人留面子，万一我怼你了，没错我就是故意的。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>有一种叫作疯狂蜂蜜的蜂蜜会让人产生幻觉。由于售价高达每磅80美元，因此尼泊尔采蜜人会为了收获这种蜂蜜而进行危险的垂直攀爬。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>青青园中葵，朝露待日晞。<br>
-——佚名《长歌行》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>机场永远等不到船，就像我永远等不到你。</p>
 </blockquote>
 ]]></content>
     </entry>
