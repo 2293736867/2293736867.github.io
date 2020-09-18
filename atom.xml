@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-09-18T04:48:01.221Z</updated>
+    <updated>2020-09-18T15:18:39.200Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -59,6 +59,215 @@
 <blockquote>
 <p>就像那句狠话：有一天，我一定会后悔的。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot demo系列（七）：邮件服务]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-qi-you-jian-fu-wu/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-qi-you-jian-fu-wu/">
+        </link>
+        <updated>2020-09-18T15:12:04.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p><code>Spring Boot</code>整合邮件服务，包括发送普通的文本邮件以及带附件的邮件。</p>
+<h1 id="2-邮箱选择">2 邮箱选择</h1>
+<p>这里选择的是<code>QQ</code>邮箱作为发送的邮箱，当然也可以选择其他的邮箱，只是具体的配置不一样。</p>
+<p>使用<code>QQ</code>邮箱的话，需要在个人设置中开启<code>SMTP</code>服务：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200918163806172.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200918163831675.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>发送短信后完成验证即可，会有一个授权码，先复制下来保存。</p>
+<h1 id="3-具体实现">3 具体实现</h1>
+<h2 id="31-依赖">3.1 依赖</h2>
+<p>提供了<code>starter</code>：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-mail&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>gradle</code>：</p>
+<pre><code class="language-bash">implementation 'org.springframework.boot:spring-boot-starter-mail'
+</code></pre>
+<h2 id="32-邮件接口">3.2 邮件接口</h2>
+<p>只有两个简单的接口，一个是发送纯文本的，一个是发送带附件的：</p>
+<pre><code class="language-java">public interface MailService {
+    void sendSimpleMail(String to,String subject,String content);
+    void sendAttachmentMail(String to, String subject, String content, Path file) throws MessagingException;
+}
+</code></pre>
+<h2 id="33-接口实现">3.3 接口实现</h2>
+<pre><code class="language-java">@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class MailServiceImpl implements MailService{
+    private final JavaMailSender sender;
+
+    @Value(&quot;${spring.mail.username}&quot;)
+    private String from;
+
+    @Override
+    public void sendSimpleMail(String to, String subject, String content) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(content);
+        sender.send(message);
+    }
+
+    @Override
+    public void sendAttachmentMail(String to, String subject, String content, Path file) throws MessagingException {
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        helper.setFrom(from);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(content);
+        helper.addAttachment(file.getFileName().toString(),new FileSystemResource(file));
+        sender.send(message);
+    }
+}
+</code></pre>
+<p><code>JavaMailSender</code>是<code>Spring Boot</code>携带的邮件发送接口，注入后可以发送<code>SimpleMailMessage</code>以及<code>MimeMessage</code>类型的信息。</p>
+<ul>
+<li><code>SimpleMailMessage</code>：简单的邮件信息对象，封装了一些常见的属性，比如寄信地址以及收信地址，发送日期，主题，内容等</li>
+<li><code>MimeMessage</code>：发送<code>MIME</code>类型的邮件信息，<code>MIME</code>指的是<code>Multipurpose Internet Mail Extensiosns</code>，是描述消息内容类型的因特网标准，能包含文本，图像，音频，视频以及其他应用程序专用的数据</li>
+<li><code>MimeMessageHelper</code>：用于设置<code>MimeMessage</code>属性的类，可以利用其中的<code>addAttachment</code>添加附件</li>
+<li><code>setFrom</code>/<code>setTo</code>/<code>setSubject</code>/<code>setText</code>：分别表示设置<code>寄信地址</code>/<code>收信地址</code>/<code>主题</code>/<code>内容</code></li>
+</ul>
+<h2 id="34-测试类">3.4 测试类</h2>
+<pre><code class="language-java">@SpringBootTest
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+class DemoApplicationTests {
+	private final MailService service;
+
+	@Test
+	void contextLoads() throws URISyntaxException, MessagingException {
+		service.sendSimpleMail(&quot;xxx@xxx.com&quot;,&quot;这是主题&quot;,&quot;这是内容&quot;);
+		service.sendAttachmentMail(&quot;xxxx@xx.com&quot;,&quot;这是主题&quot;,&quot;这是内容&quot;, Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource(&quot;pic/1.jpg&quot;)).toURI()));
+		//附件为resources下pic/1.jpg
+		service.sendAttachmentMail(&quot;xxxx@xxx.com&quot;,&quot;这是主题&quot;,&quot;这是内容&quot;, Path.of(&quot;/&quot;,&quot;srv&quot;,&quot;http&quot;,&quot;1.jpg&quot;));
+		//附件为/srv/http/1.jpg
+	}
+</code></pre>
+<p>发送文本直接指定主题和内容即可，发送带附件的话：</p>
+<ul>
+<li>如果是<code>resources</code>下的内容，使用<code>getClass().getClassLoader().getReource(&quot;xxx/xxx&quot;)</code></li>
+<li>如果是绝对路径，使用<code>Path.of(&quot;/&quot;,&quot;path1&quot;,&quot;path2&quot;,...,&quot;filename&quot;)</code></li>
+</ul>
+<h2 id="35-配置文件">3.5 配置文件</h2>
+<pre><code class="language-yaml">spring:
+  mail:
+    host: smtp.qq.com
+    username: xxxxxxx@qq.com
+    password: xxxxxxxxxx
+    port: 465
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+          auth: true
+          starttls:
+            enable: true
+            required: true
+</code></pre>
+<p>作为<code>Demo</code>使用只需要修改<code>username</code>以及<code>password</code>即可。</p>
+<ul>
+<li><code>username</code>：发送的用户邮箱</li>
+<li><code>password</code>：不是邮箱密码，而是授权码，就是刚才开启<code>SMTP</code>服务出现的授权码</li>
+</ul>
+<p>其他配置说明：</p>
+<ul>
+<li><code>host</code>：<code>SMTP</code>服务器地址</li>
+<li><code>port</code>：端口，可以选择<code>465</code>/<code>587</code>，<code>host</code>以及<code>port</code>可以参考<code>QQ</code>邮箱<a href="https://service.mail.qq.com/cgi-bin/help?subtype=1&amp;&amp;id=28&amp;&amp;no=371">文档</a></li>
+<li><code>properties</code>：里面都是一些安全设置，开启<code>SSL</code>以及认证等</li>
+</ul>
+<h2 id="36-测试">3.6 测试</h2>
+<p>修改测试类的邮箱，运行单元测试即可。</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/2020091822073816.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果没通过，可以参考<a href="https://blog.csdn.net/wangyanming123/article/details/52734334">这里</a>，罗列了常见的错误码以及可能的解决方案。</p>
+<h1 id="4-加密">4 加密</h1>
+<p>由于用户名以及密码都直接写在了配置文件中，如果泄露的话会很危险，因此需要对配置文件进行加密。</p>
+<p>具体的话可以参考笔者之前的原力计划文章，<a href="https://blog.csdn.net/qq_27525611/article/details/105797382">戳这里</a>。</p>
+<h2 id="41-依赖">4.1 依赖</h2>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;
+    &lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.0.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>gradle</code>：</p>
+<pre><code class="language-bash">implementation(&quot;com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3&quot;)
+</code></pre>
+<h2 id="42-配置文件">4.2 配置文件</h2>
+<p>配置文件只需要加上加密口令即可：</p>
+<pre><code class="language-yaml">jasypt:
+  encryptor:
+    password: test
+</code></pre>
+<p>默认使用的是<code>PBE</code>加密算法，<code>PBE</code>其实是一种组合加密算法，默认是采用<code>HCMA</code>算法（混合<code>CMA-ES</code>算法）+<code>SHA512</code>消息摘要算法+<code>AES256</code>对称加密算法。</p>
+<p>另外，如果不想在配置文件直接写上加密的口令，可以使用以下三种方法对口令进行参数化：</p>
+<p>命令行参数（运行时设置）：</p>
+<pre><code class="language-bash">java -jar xxx.jar --jasypt.encryptor.password=test
+</code></pre>
+<p>应用环境变量（运行时设置）：</p>
+<pre><code class="language-bash">java -Djasypt.encryptor.password=test -jar xxx.jar
+</code></pre>
+<p>系统环境变量（在配置文件中设置）：</p>
+<pre><code class="language-bash">jasypt:
+  encryptor:
+    password: ${TEST}
+# 表示获取环境变量TEST的值作为加密口令
+</code></pre>
+<h2 id="43-测试类">4.3 测试类</h2>
+<p>新建一个测试类：</p>
+<pre><code class="language-java">@SpringBootTest
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class EncryptAndDecrypt {
+    private final StringEncryptor encryptor;
+    @Value(&quot;${spring.mail.username}&quot;)
+    private String username;
+    @Value(&quot;${spring.mail.password}&quot;)
+    private String password;
+
+    @Test
+    public void encrypt()
+    {
+        System.out.println(encryptor.encrypt(username));
+        System.out.println(encryptor.encrypt(password));
+    }
+
+    @Test
+    public void decrypt()
+    {
+        System.out.println(username);
+        System.out.println(password);
+    }
+}
+</code></pre>
+<h2 id="44-获取密文">4.4 获取密文</h2>
+<p>假设明文如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200918221733675.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>运行<code>encrypt</code>即可，输出如下：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200918222337765.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="45-替换明文">4.5 替换明文</h2>
+<p>加上前缀<code>ENC(</code>以及后缀<code>)</code>去替换明文：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200918222455717.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="46-测试">4.6 测试</h2>
+<p>获取明文直接运行<code>decrypt</code>即可，输出：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200918222538977.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样就完成加密了。</p>
+<h1 id="5-源码">5 源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/master/Mail">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/master/Mail">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/master/Mail">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/master/Mail">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/master/Mail">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/master/Mail">CODE.CHINA</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -1158,31 +1367,6 @@ ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;]
 <li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin">CODE.CHINA</a></li>
 </ul>
 <p>（<code>CODE.CHINA</code>是<code>CSDN</code>于<code>2020.09.11</code>发布的开源代码托管平台）</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第90期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-90-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-90-qi/">
-        </link>
-        <updated>2020-09-14T00:48:37.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>很多人觉得自己活得太累，实际上，他们可能只是睡得太晚。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>作为地球上最高大、最古老的生物之一，颤抖居人正慢慢死于骡鹿之口。这片位于犹他州的颤杨群面积达到106英亩，拥有近80000年的历史，目前正因被骡鹿吞食新茎而日益稀疏。与此同时，骡鹿目前正因为没有天敌而蓬勃繁衍。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>阴生古苔绿，色染秋烟碧。<br>
-——李白《南轩松》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>死去的人不需要花。被花所拯救的是留下的人。</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>
