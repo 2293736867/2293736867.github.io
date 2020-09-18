@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-09-15T19:16:59.964Z</updated>
+    <updated>2020-09-18T04:43:53.638Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -59,6 +59,78 @@
 <blockquote>
 <p>就像那句狠话：有一天，我一定会后悔的。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot demo系列（六）：HTTPS]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-liu-https/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-liu-https/">
+        </link>
+        <updated>2020-09-18T04:39:22.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>本文演示了如何给<code>Spring Boot</code>应用加上<code>HTTPS</code>的过程。</p>
+<h1 id="2-证书">2 证书</h1>
+<p>虽然证书能自己生成，使用<code>JDK</code>自带的<code>keytool</code>即可，但是生产环境是不可能使用自己生成的证书的，因此这里使用的证书是购买过来的，具体流程就不说了，去云厂商处购买即可。</p>
+<h1 id="3-配置文件">3 配置文件</h1>
+<p>新建一个<code>Spring Boot</code>工程，在配置文件添加如下参数：</p>
+<pre><code class="language-bash">server.ssl.key-store=classpath:crt/xxx.pfx
+server.ssl.key-store-type=PKCS12
+server.ssl.key-store-password=xxxx
+</code></pre>
+<p>具体配置需要结合云厂商的文档，笔者在阿里云上买的证书，下载的是<code>Tomcat</code>的版本，参照里面的帮助设置以上三个参数。</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200918075422879.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li><code>server.ssl.key-store</code>：证书文件的位置，为<code>classpath:crt/xxx</code>，其中<code>classpath:</code>表示使用<code>resources</code>下的路径，但是需要加上一个文件夹，比如，假设证书文件名为<code>1.pfx</code>，直接放在<code>resources</code>下的话，路径就是<code>classpath:1.pfx</code>，这样是访问不了的，但是加上目录后，也就是如果放在<code>resources/crt</code>下，路径就是<code>classpath:crt/1.pfx</code>，这样就可以访问了</li>
+<li><code>server.ssl.key-store-type</code>：<code>PKCS12</code>，根据阿里云的<code>Tomcat</code>配置文档得出，具体的话根据自己的云厂商证书部署文档决定</li>
+<li><code>server.ssl.key-store-password</code>：证书下载后有两个文件，一个是证书，一个是<code>pfx-password.txt</code>，这里的密码就是<code>pfx-password.txt</code>的内容</li>
+</ul>
+<h1 id="4-本地测试">4 本地测试</h1>
+<p>直接<code>run</code>即可，首先可以试一下用<code>HTTP</code>访问：</p>
+<pre><code class="language-bash">http://localhost:8080
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200918080936613.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>会提示需要使用<code>HTTPS</code>，改为<code>HTTPS</code>后：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200918113622156.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这是因为笔者的证书绑定了域名的缘故，没有使用域名访问，修改本地<code>host</code>：</p>
+<pre><code class="language-bash">127.0.0.1 www.xxx.xxx
+</code></pre>
+<p>这样使用域名访问就不会显示不安全了：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200918113841823.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-docker部署">5 <code>Docker</code>部署</h1>
+<p>打包，改名为<code>demo.jar</code>，上传到服务器。</p>
+<p>其他更详细的<code>Docker</code>部署操作请查看笔者之前的博客，<a href="https://blog.csdn.net/qq_27525611/article/details/108571663">戳这里</a>。</p>
+<p>这里给出<code>Dockerfile</code>：</p>
+<pre><code class="language-bash">FROM adoptopenjdk/openjdk11:aarch64-centos-jdk-11.0.8_10
+
+MAINTAINER test &lt;test@qq.com&gt;
+
+VOLUME /tmp
+
+EXPOSE 8080
+
+ADD demo.jar demo.jar
+
+ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;]
+</code></pre>
+<p>创建镜像与容器并运行：</p>
+<pre><code class="language-bash">docker build -t demo .
+docker run -d -p 8888:8080 demo
+</code></pre>
+<p>测试：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200918120313108.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-源码">6 源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/master/HTTPS">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/master/HTTPS">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/master/HTTPS">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/master/HTTPS">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/master/HTTPS">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/master/HTTPS">CODE.CHINA</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -1110,31 +1182,6 @@ ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;]
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>死去的人不需要花。被花所拯救的是留下的人。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第89期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-89-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-89-qi/">
-        </link>
-        <updated>2020-09-13T00:48:16.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>装逼只是瞬间，不要脸那才是永恒。</p>
-</blockquote>
-<h1 id="每日冷知识">每日冷知识</h1>
-<blockquote>
-<p>与居住在核电厂附近相比，居住在煤电厂附近所受的辐射剂量更高。这是因为煤电厂所排粉煤灰的辐射量是类似核电厂废料的100倍。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>洞庭青草，近中秋，更无一点风色。<br>
-——张孝祥《念奴娇·过洞庭》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我于杀戮之中盛放，亦如黎明中的花朵。</p>
 </blockquote>
 ]]></content>
     </entry>
