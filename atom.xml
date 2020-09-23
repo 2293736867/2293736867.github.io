@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-09-21T08:40:56.756Z</updated>
+    <updated>2020-09-23T15:48:30.157Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -53,6 +53,146 @@
 </blockquote>
 <h1 id="100期纪念">100期纪念</h1>
 <p>打个卡。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot demo系列（七）：Swagger]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-qi-swagger/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-qi-swagger/">
+        </link>
+        <updated>2020-09-23T15:47:21.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p><code>Swagger</code>主要用于生成<code>API</code>文档，本文演示了如何使用目前最新的<code>OpenAPI3</code>以及<code>Swagger</code>来进行接口文档的生成。</p>
+<h1 id="2-依赖">2 依赖</h1>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springdoc&lt;/groupId&gt;
+    &lt;artifactId&gt;springdoc-openapi-ui&lt;/artifactId&gt;
+    &lt;version&gt;1.4.7&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>Gradle</code>：</p>
+<pre><code class="language-bash">implementation( &quot;org.springdoc:springdoc-openapi-ui:1.4.7&quot;)
+</code></pre>
+<h1 id="3-配置">3 配置</h1>
+<p><code>Swagger</code>的配置很简单，仅需要一个<code>@OpenAPIDefinition</code>即可，<code>@OpenAPIDefinition</code>用于描述全局的配置信息，参考配置如下：</p>
+<ul>
+<li><code>info</code>表示基本信息，比如标题，版本，描述等</li>
+<li><code>externalDocs</code>是参考文档</li>
+<li><code>servers</code>是服务器地址</li>
+</ul>
+<pre><code class="language-java">@OpenAPIDefinition(info = @Info(title = &quot;标题&quot;,version = &quot;版本&quot;,description = &quot;描述&quot;),
+        externalDocs = @ExternalDocumentation(description = &quot;参考文档&quot;,url = &quot;https://www.baidu.com&quot;),
+        servers = @Server(url = &quot;http://localhost:8080&quot;))
+public class SwaggerConfig {
+}
+</code></pre>
+<p>接着在配置文件写上文档路径：</p>
+<pre><code class="language-yaml">springdoc:
+  api-docs:
+    path: /doc
+</code></pre>
+<h1 id="4-访问">4 访问</h1>
+<p>运行后直接访问</p>
+<pre><code class="language-bash">localhost:8080/swagger-ui/index.html/
+</code></pre>
+<p>会出现如下界面：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2020092320230770.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>搜索栏中输入配置文件中的路径<code>/doc</code>搜索即可：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200923202415449.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>或者直接访问：</p>
+<pre><code class="language-bash">http://localhost:8080/swagger-ui/index.html?url=/doc
+</code></pre>
+<h1 id="5-控制器">5 控制器</h1>
+<p>下一步就是添加具体的接口，先来看一个简单的例子：</p>
+<pre><code class="language-java">@RestController
+@Tag(name = &quot;测试Controller&quot;)
+@RequestMapping(&quot;/&quot;)
+public class TestController {
+    @GetMapping(&quot;test&quot;)
+    @Operation(description = &quot;测试接口&quot;,tags = &quot;测试Controller&quot;)
+    public String test()
+    {
+        return &quot;success&quot;;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200923202627787.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>运行后可以看到多了一个接口，也就是<code>@Tag</code>与<code>@Operation</code>起作用了，注解说明如下：</p>
+<ul>
+<li><code>@Tag</code>表示标签，<code>name</code>指定标签的值，也可以加上<code>description</code>等属性</li>
+<li><code>@Operation</code>作用在方法上，可以指定描述以及标签，也可以指定参数以及返回值等信息</li>
+</ul>
+<p>类似的注解还有很多，比如：</p>
+<ul>
+<li><code>@Parameter</code>：指定参数属性，比如<code>description</code>、<code>name</code>等</li>
+<li><code>@ApiResponse</code>：指定返回值，常用的属性有<code>responseCode</code>以及<code>description</code></li>
+<li><code>@Schema</code>：用在实体类上以及实体类字段上，在接口上可以显示对应的值</li>
+</ul>
+<h1 id="6-完整示例">6 完整示例</h1>
+<p>下面是一个接口控制器的完整示例：</p>
+<pre><code class="language-java">@RestController
+@Tag(name = &quot;测试Controller&quot;)
+@RequestMapping(&quot;/&quot;)
+public class TestController {
+    @GetMapping(&quot;test&quot;)
+    @Operation(description = &quot;测试接口&quot;,tags = {&quot;测试Controller&quot;,&quot;测试&quot;})
+    public String test()
+    {
+        return &quot;success&quot;;
+    }
+
+    @GetMapping(&quot;test2&quot;)
+    @Operation(description = &quot;这个也是测试接口&quot;,tags = {&quot;测试Controller&quot;,&quot;2号测试接口&quot;})
+    @Parameter(description = &quot;必要参数&quot;,name = &quot;parm&quot;)
+    public String test2(@RequestParam String parm)
+    {
+        return &quot;需要参数&quot;;
+    }
+
+    @GetMapping(&quot;test3&quot;)
+    @Operation(description = &quot;带有返回状态的接口&quot;,tags = {&quot;测试Controller&quot;})
+    @ApiResponse(responseCode = &quot;111&quot;,description = &quot;测试成功&quot;)
+    @ApiResponse(responseCode = &quot;222&quot;,description = &quot;测试失败&quot;)
+    public void test3(@RequestBody String body)
+    {
+    }
+
+    @GetMapping(&quot;test4&quot;)
+    @Operation(description = &quot;User接口&quot;,tags = {&quot;测试Controller&quot;})
+    @ApiResponse(responseCode = &quot;100&quot;,description = &quot;添加成功&quot;)
+    public void test4(@RequestBody User user)
+    {
+    }
+}
+</code></pre>
+<p>实体类：</p>
+<pre><code class="language-java">@Getter
+@Schema(description = &quot;用户&quot;)
+public class User {
+    @Schema(description = &quot;用户名&quot;)
+    private String name;
+    @Schema(description = &quot;主键&quot;)
+    private String id;
+}
+</code></pre>
+<p>效果如图：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200923204821839.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200923204838123.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2020092320485282.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200923204905817.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-参考源码">7 参考源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/master/Swagger">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/master/Swagger">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/master/Swagger">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/master/Swagger">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/master/Swagger">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/master/Swagger">CODE.CHINA</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -431,78 +571,6 @@ public class EncryptAndDecrypt {
 <li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/master/Mail">Github</a></li>
 <li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/master/Mail">码云</a></li>
 <li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/master/Mail">CODE.CHINA</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Spring Boot demo系列（六）：HTTPS]]></title>
-        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-liu-https/</id>
-        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-liu-https/">
-        </link>
-        <updated>2020-09-18T04:39:22.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>本文演示了如何给<code>Spring Boot</code>应用加上<code>HTTPS</code>的过程。</p>
-<h1 id="2-证书">2 证书</h1>
-<p>虽然证书能自己生成，使用<code>JDK</code>自带的<code>keytool</code>即可，但是生产环境是不可能使用自己生成的证书的，因此这里使用的证书是购买过来的，具体流程就不说了，去云厂商处购买即可。</p>
-<h1 id="3-配置文件">3 配置文件</h1>
-<p>新建一个<code>Spring Boot</code>工程，在配置文件添加如下参数：</p>
-<pre><code class="language-bash">server.ssl.key-store=classpath:crt/xxx.pfx
-server.ssl.key-store-type=PKCS12
-server.ssl.key-store-password=xxxx
-</code></pre>
-<p>具体配置需要结合云厂商的文档，笔者在阿里云上买的证书，下载的是<code>Tomcat</code>的版本，参照里面的帮助设置以上三个参数。</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200918075422879.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li><code>server.ssl.key-store</code>：证书文件的位置，为<code>classpath:crt/xxx</code>，其中<code>classpath:</code>表示使用<code>resources</code>下的路径，但是需要加上一个文件夹，比如，假设证书文件名为<code>1.pfx</code>，直接放在<code>resources</code>下的话，路径就是<code>classpath:1.pfx</code>，这样是访问不了的，但是加上目录后，也就是如果放在<code>resources/crt</code>下，路径就是<code>classpath:crt/1.pfx</code>，这样就可以访问了</li>
-<li><code>server.ssl.key-store-type</code>：<code>PKCS12</code>，根据阿里云的<code>Tomcat</code>配置文档得出，具体的话根据自己的云厂商证书部署文档决定</li>
-<li><code>server.ssl.key-store-password</code>：证书下载后有两个文件，一个是证书，一个是<code>pfx-password.txt</code>，这里的密码就是<code>pfx-password.txt</code>的内容</li>
-</ul>
-<h1 id="4-本地测试">4 本地测试</h1>
-<p>直接<code>run</code>即可，首先可以试一下用<code>HTTP</code>访问：</p>
-<pre><code class="language-bash">http://localhost:8080
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200918080936613.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>会提示需要使用<code>HTTPS</code>，改为<code>HTTPS</code>后：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200918113622156.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这是因为笔者的证书绑定了域名的缘故，没有使用域名访问，修改本地<code>host</code>：</p>
-<pre><code class="language-bash">127.0.0.1 www.xxx.xxx
-</code></pre>
-<p>这样使用域名访问就不会显示不安全了：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200918113841823.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-docker部署">5 <code>Docker</code>部署</h1>
-<p>打包，改名为<code>demo.jar</code>，上传到服务器。</p>
-<p>其他更详细的<code>Docker</code>部署操作请查看笔者之前的博客，<a href="https://blog.csdn.net/qq_27525611/article/details/108571663">戳这里</a>。</p>
-<p>这里给出<code>Dockerfile</code>：</p>
-<pre><code class="language-bash">FROM adoptopenjdk/openjdk11:aarch64-centos-jdk-11.0.8_10
-
-MAINTAINER test &lt;test@qq.com&gt;
-
-VOLUME /tmp
-
-EXPOSE 8080
-
-ADD demo.jar demo.jar
-
-ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;]
-</code></pre>
-<p>创建镜像与容器并运行：</p>
-<pre><code class="language-bash">docker build -t demo .
-docker run -d -p 8888:8080 demo
-</code></pre>
-<p>测试：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200918120313108.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6-源码">6 源码</h1>
-<p><code>Java</code>版：</p>
-<ul>
-<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/master/HTTPS">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/master/HTTPS">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/master/HTTPS">CODE.CHINA</a></li>
-</ul>
-<p><code>Kotlin</code>版：</p>
-<ul>
-<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/master/HTTPS">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/master/HTTPS">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/master/HTTPS">CODE.CHINA</a></li>
 </ul>
 ]]></content>
     </entry>
