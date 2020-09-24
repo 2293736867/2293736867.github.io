@@ -1,0 +1,1307 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring Boot demo系列（八）：Jasypt | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+Jasypt是一个加密库，Github上有一个集成了Jasypt的Spring Boot库，叫jasypt-spring-boot，本文演示了如何使用该库对配置文件进行加密。
+2 依赖
+首先添加依赖：
+&lt;dependency..." />
+    <meta name="keywords" content="Demo,Spring Boot" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1600943745910" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/spring-boot-demo-xi-lie-ba-jasypt.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-09-24"><i class="fa fa-calendar"></i><span class="lately">几秒前</span></time>
+              
+              <a href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-ba-jasypt/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/spring-boot-demo-xi-lie-ba-jasypt/"> </span>
+              </a>
+              <span id="/spring-boot-demo-xi-lie-ba-jasypt/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-0 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-1 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Spring Boot demo系列（八）：Jasypt</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p><code>Jasypt</code>是一个加密库，<code>Github</code>上有一个集成了<code>Jasypt</code>的<code>Spring Boot</code>库，叫<code>jasypt-spring-boot</code>，本文演示了如何使用该库对配置文件进行加密。</p>
+<h1 id="2-依赖">2 依赖</h1>
+<p>首先添加依赖：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;
+    &lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.0.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>Gradle</code>：</p>
+<pre><code class="language-bash">implementation(&quot;com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3&quot;)
+</code></pre>
+<h1 id="3-简单加密">3 简单加密</h1>
+<p>简单加密就是直接把加密口令（注意不是加密密码）以明文形式写在配置文件中，步骤如下：</p>
+<ul>
+<li>配置文件配置加密口令</li>
+<li>获取密文</li>
+<li>替换明文</li>
+</ul>
+<h2 id="31-加密口令">3.1 加密口令</h2>
+<p>在配置文件加上如下参数：</p>
+<pre><code class="language-yaml">jasypt:
+  encryptor:
+    password: test
+</code></pre>
+<p>其中<code>test</code>就是加密的口令。</p>
+<h2 id="32-获取密文">3.2 获取密文</h2>
+<p>比如配置文件需要加密的值如下：</p>
+<pre><code class="language-yaml">test: value
+</code></pre>
+<p>在测试类对<code>StringEncryptor</code>进行注入并使用其中的<code>encrypt</code>加密通过<code>@Value</code>获取的值：</p>
+<pre><code class="language-java">@SpringBootTest
+class DemoApplicationTests {
+    @Autowired
+    private StringEncryptor encryptor;
+
+    @Value(&quot;${test}&quot;)
+    private String value;
+
+    @Test
+    void contextLoads() {
+        System.out.println(encryptor.encrypt(value));
+    }
+}
+</code></pre>
+<p>点击旁边的绿色小三角形即可运行，输出如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200924000606468.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这个就是对应的密文。</p>
+<h2 id="33-替换明文">3.3 替换明文</h2>
+<p>把密文加上前缀<code>ENC(</code>与后缀<code>)</code>替换明文：</p>
+<pre><code class="language-yaml">test: ENC(IlEvyvcULhZJrHLDtPun2ut433RvAdpaNJ9IZt9uNUk3hDSKQsdOXLEkWyiK6QR3)
+</code></pre>
+<p>这样就完成了对属性<code>test</code>进行加密。</p>
+<h2 id="34-测试">3.4 测试</h2>
+<p>直接通过<code>@Value</code>获取的值即为明文：</p>
+<pre><code class="language-java">@SpringBootTest
+class DemoApplicationTests {
+
+    @Autowired
+    private StringEncryptor encryptor;
+
+    @Value(&quot;${test}&quot;)
+    private String value;
+
+    @Test
+    void contextLoads() {
+        System.out.println(encryptor.encrypt(value));
+    }
+
+    @Test
+    void decrypt()
+    {
+        System.out.println(value);
+    }
+}
+</code></pre>
+<p>直接运行其中的<code>decrypt</code>即可输出明文。</p>
+<h1 id="4-自定义加密">4 自定义加密</h1>
+<h2 id="41-自定义加密类">4.1 自定义加密类</h2>
+<p>默认采用的加密算法为<code>PBE</code>算法，如果觉得不能符合要求可以自定义加密类。</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200924064738911.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>自定义加密类实现<code>StringEncrypto</code>接口即可，需要在配置文件写上<code>Bean</code>的名称：</p>
+<pre><code class="language-java">@Component
+public class Encryptor implements StringEncryptor{
+
+    @Override
+    public String encrypt(String s) {
+        return s+&quot;111&quot;;
+    }
+
+    @Override
+    public String decrypt(String s) {
+        return s.substring(0,s.indexOf(&quot;111&quot;));
+    }
+}
+</code></pre>
+<p>这里的加密很简单，直接在明文后面加上<code>111</code>，解密的话去掉<code>111</code>。另外在配置文件上写上<code>Bean</code>的名称：</p>
+<pre><code class="language-yaml">jasypt:
+  encryptor:
+#    password: test
+    bean: encryptor
+</code></pre>
+<p>同时可以把口令注释掉，因为此时已经不需要使用口令进行加密了。</p>
+<p>测试：</p>
+<pre><code class="language-java">@SpringBootTest
+class DemoApplicationTests {
+
+    @Autowired
+    private StringEncryptor encryptor;
+
+    @Value(&quot;${test}&quot;)
+    private String value;
+
+    @Test
+    void contextLoads() {
+        System.out.println(encryptor.encrypt(value));
+    }
+
+    @Test
+    void decrypt()
+    {
+        System.out.println(encryptor.decrypt(value));
+    }
+
+}
+</code></pre>
+<h2 id="42-非对称加密">4.2 非对称加密</h2>
+<p>生成公钥与私钥借助了工具类库<code>Hutool</code>，依赖如下：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;cn.hutool&lt;/groupId&gt;
+    &lt;artifactId&gt;hutool-crypto&lt;/artifactId&gt;
+    &lt;version&gt;5.4.3&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.bouncycastle&lt;/groupId&gt;
+    &lt;artifactId&gt;bcprov-jdk15on&lt;/artifactId&gt;
+    &lt;version&gt;1.66&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>Gradle</code>：</p>
+<pre><code class="language-bash">implementation(&quot;cn.hutool:hutool-crypto:5.4.3&quot;)
+implementation(&quot;org.bouncycastle:bcprov-jdk15on:1.66&quot;)
+</code></pre>
+<p>生成公钥私钥：</p>
+<pre><code class="language-java">KeyPair pair = SecureUtil.generateKeyPair(&quot;RSA&quot;);
+System.out.println(Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()));
+System.out.println(Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
+</code></pre>
+<p>生成后添加到<code>jasypt.encryptor.public-key-string</code>与<code>jasypt.encryptor.private-key-string</code>：</p>
+<pre><code class="language-yaml">jasypt:
+  encryptor:
+#    password: test
+#    bean: encryptor
+    public-key-string: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCZV5U0+Ck4AEpawUoiHOkG4ZNC6EeEvFZVCcyaIM0MiusGMM6ye9ZT6Ok756/vQsJbsYDGDtIDX82TsmYbZkN7QPuclABSL5SmaDYdJM/MeYKfMwrDb0lWARqF5ql9Rgol7Agq4ef8yQEbSmUDW/LQe+xXtCTer5MoJViUHV56MwIDAQAB
+    private-key-string: MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJlXlTT4KTgASlrBSiIc6Qbhk0LoR4S8VlUJzJogzQyK6wYwzrJ71lPo6Tvnr+9CwluxgMYO0gNfzZOyZhtmQ3tA+5yUAFIvlKZoNh0kz8x5gp8zCsNvSVYBGoXmqX1GCiXsCCrh5/zJARtKZQNb8tB77Fe0JN6vkyglWJQdXnozAgMBAAECgYA8syFCrwtt+ht00ne8ijIqQagP/6+z2PPZxL/DsUFJ+kGvmSlxGLlOTO/qgTuxG/2g22JsxFgY8tcHZMKrjO8f4TLKPsaFgX1OwNhJO4SoMlfUUAR9HSMv49vx5mOvh2QUrC5+4rIQI1Rm8zbKyAqCjHIKr8hA6bIKEHO2qXK05QJBANhAA+djwrr3orIIBTRp+H6/JChH76XtoQfcQyT+CrEu/4tHVkbO2cEqcdKDScswHyTPu5UaSU2HFW/0Lj8Kg40CQQC1h1YMysd51djCf/Ud7L2sSIduy3DUSLc6XRX1IWAqxO+8gkvknDW7QztNES9YqwYEkLNLAjp1v8Gq+o2JQKS/AkAENCpfQycz70BwaYuAW1cDT7/qMIvOE/J/bp63h2C51QoOsRJSSg8dnC+eQgMbOhJA6vDgkyQ9p5SZGowTmaa5AkEAneQAIZJC3KL3LX20ivm+pFpVijXjhpFU5avPjG4iQjEXQISoVEjWp3G747V91Aa1bkUZ3bUref13Cytw7h/O6wJBAJHNIHKKTAkmslguJU5hll1HqrzyI9lcB5XqcgvdsxijUkZ95FThk6hNQuNV0sO/itUijQsJAtNdDITKmdcPMWg=
+</code></pre>
+<p>然后就可以像加密得到密文并替换明文了。</p>
+<h1 id="5-非明文口令">5 非明文口令</h1>
+<p>对于<code>jasypt.encryptor.password</code>，可以使用非明文口令，这样口令的传递方式有三种：</p>
+<ul>
+<li>通过命令行参数传递</li>
+<li>通过应用环境变量传递</li>
+<li>通过系统环境变量传递</li>
+</ul>
+<h2 id="51-通过命令行参数传递">5.1 通过命令行参数传递</h2>
+<p>首先先写上明文口令，得到密文：</p>
+<pre><code class="language-yaml">jasypt:
+  encryptor:
+    password: test
+test: value
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200924080510685.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>加上前后缀替换明文后，去掉加密口令：</p>
+<pre><code class="language-yaml">#jasypt:
+#  encryptor:
+#    password: test
+
+test: ENC(quCu1b+Z7SPHmgVsmbkeyNZmNe1LJw+SxjmwwLjNaWoH/ce3r6iHGvaMN5eQcu0P)
+</code></pre>
+<p>并在测试类的参数类加上</p>
+<pre><code class="language-bash">--jasypt.encryptor.password=test
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200924080917909.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于这里是测试类命令行参数添加不了，但是在启动类是可以添加的：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200924081009860.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这种方法就跳过演示了。</p>
+<p>对于<code>Gradle</code>，测试的时候需要在<code>build.gradle</code>/<code>build.gradle.kts</code>添加参数：</p>
+<pre><code class="language-java">tasks.withType&lt;Test&gt; {
+    useJUnitPlatform()
+    jvmArgs(&quot;-Djasypt.encryptor.password=test&quot;)
+    // 不能是jvmArgs(&quot;--jasypt.encryptor.password=test&quot;)
+}
+</code></pre>
+<h2 id="52-通过应用环境变量传递">5.2 通过应用环境变量传递</h2>
+<p>和第一种方式差不多，第一种在<code>Program arguments</code>设置，而这种方法在<code>VM options</code>中设置：</p>
+<pre><code class="language-bash">-Djasypt.encryptor.password=test
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200924081304896.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200924081352130.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="53-系统环境变量方式传递">5.3 系统环境变量方式传递</h2>
+<p>通过系统环境变量方式传递<code>jasypt.encryptor.password</code>时，需要指定是哪一个环境变量：</p>
+<pre><code class="language-yaml">jasypt:
+  encryptor:
+    password: ${ENCRYPT}
+</code></pre>
+<p>比如这里指定的是<code>ENCRYPT</code>环境变量，设置好环境变量后就可以直接加密解密了。</p>
+<h1 id="6-部署注意事项">6 部署注意事项</h1>
+<h2 id="61-打包">6.1 打包</h2>
+<p>因为在配置文件中缺少了<code>jasypt.encryptor.password</code>，因此使用<code>Maven</code>打包时会出错：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200924152313685.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在<code>Maven</code>打包配置中加上参数即可：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20200924152518468.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>但是使用<code>Gradle</code>打包时不需要添加额外的参数。</p>
+<h2 id="62-部署">6.2 部署</h2>
+<p>现在一般通过<code>JAR</code>直接部署即可，也就是通过</p>
+<pre><code class="language-bash">java -jar demo.jar
+</code></pre>
+<p>部署，这时候根据需要加上对应的参数即可，比如：</p>
+<pre><code class="language-bash">java -jar demo.jar --jasypt.encryptor.password=test
+java -Djasypt.encryptor.password=test -jar demo.jar
+</code></pre>
+<p>如果通过系统变量获取加密口令，请确保对应的环境变量存在。</p>
+<p>另外，如果通过<code>Docker</code>部署，请在<code>ENTRYPOINT</code>加上对应参数，比如：</p>
+<pre><code class="language-java">ENTRYPOINT [&quot;java&quot;,&quot;-Djasypt.encryptor.password=test&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;]
+ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;demo.jar&quot;,,&quot;--jasypt.encryptor.password=test&quot;,]
+</code></pre>
+<p>通过系统环境变量获取请加上<code>ENV</code>：</p>
+<pre><code class="language-bash">ENV ENCRYPT=&quot;test&quot;
+</code></pre>
+<h1 id="7-参考源码">7 参考源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/master/Jasypt">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/master/Jasypt">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/master/Jasypt">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/master/Jasypt">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/master/Jasypt">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/master/Jasypt">CODE.CHINA</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-101-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-101-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-09-25">2020-09-25</time>
+                  <h4 class="title white no-margin">每日分享 第101期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-100-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-100-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-09-24">2020-09-24</time>
+                  <h4 class="title white no-margin">每日分享 第100期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-101-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-101-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-25">2020-09-25</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-101-qi/">每日分享 第101期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-ba-jasypt/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-boot-demo-xi-lie-ba-jasypt.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-24">2020-09-24</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-ba-jasypt/">Spring Boot demo系列（八）：Jasypt</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-100-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-100-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-24">2020-09-24</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-100-qi/">每日分享 第100期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-1 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-2 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-3 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-4 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-5 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-6 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-7 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-8 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-9 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-10 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-11 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-12 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-13 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-14 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-15 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-16 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-17 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-18 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-19 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-20 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-21 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-22 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-23 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-24 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-25 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-26 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-27 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-28 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-29 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-30 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-31 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-32 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-33 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-34 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-35 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-36 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-37 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-38 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-39 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-40 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-41 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-42 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-43 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-44 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-45 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-46 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-47 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-48 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-49 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-50 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-51 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-52 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-53 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-54 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-55 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-56 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-57 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-58 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-59 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-60 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-61 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-62 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-63 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-64 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-65 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-66 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-67 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-68 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-69 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-70 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-71 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-72 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-73 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-74 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-75 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-76 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-77 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-78 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-79 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 294 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
