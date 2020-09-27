@@ -1,0 +1,1499 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring学习笔记（五）：JDBCTemplate+事务管理 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+Spring为开发者提供了JDBCTemplate，可以简化很多数据库操作相关的代码，本文主要介绍JDBCTemplate的使用以及事务管理功能。
+2 JDBC Template
+2.1 配置
+配置的话主要配置以下几项：
+
+数据源..." />
+    <meta name="keywords" content="JDBCTemplate,Spring" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1601203656859" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/spring-xue-xi-bi-ji-wu-jdbctemplateshi-wu-guan-li.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-09-27"><i class="fa fa-calendar"></i><span class="lately">19 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/spring-xue-xi-bi-ji-wu-jdbctemplateshi-wu-guan-li/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/spring-xue-xi-bi-ji-wu-jdbctemplateshi-wu-guan-li/"> </span>
+              </a>
+              <span id="/spring-xue-xi-bi-ji-wu-jdbctemplateshi-wu-guan-li/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-0 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-1 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Spring学习笔记（五）：JDBCTemplate+事务管理</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p><code>Spring</code>为开发者提供了<code>JDBCTemplate</code>，可以简化很多数据库操作相关的代码，本文主要介绍<code>JDBCTemplate</code>的使用以及事务管理功能。</p>
+<h1 id="2-jdbc-template">2 <code>JDBC Template</code></h1>
+<h2 id="21-配置">2.1 配置</h2>
+<p>配置的话主要配置以下几项：</p>
+<ul>
+<li>数据源：<code>org.springframework.jdbc.datasource.DriverManager.DataSource</code></li>
+<li>数据库驱动：<code>com.cj.mysql.jdbc.Driver</code>，这里采用的是<code>MySQL 8</code>，注意<code>MySQL 5.7</code>以下的驱动名字不同，另外若是其他数据库请对应修改</li>
+<li>数据库<code>URL</code>：<code>jdbc:mysql://localhost:3306/test</code>，<code>MySQL</code>默认的<code>3306</code>端口，数据库<code>test</code></li>
+<li>数据库用户名</li>
+<li>数据库密码</li>
+<li><code>JDBC</code>模板：<code>org.springframework.jdbc.core.jdbcTemplate</code></li>
+</ul>
+<p>参考配置如下：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+    &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+    &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/test&quot;/&gt;
+    &lt;property name=&quot;username&quot; value=&quot;test&quot;/&gt; 
+    &lt;property name=&quot;password&quot; value=&quot;test&quot;/&gt;
+&lt;/bean&gt;
+&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+&lt;/bean&gt;
+&lt;context:component-scan base-package=&quot;pers.dao&quot;/&gt;
+</code></pre>
+<h2 id="22-常用方法">2.2 常用方法</h2>
+<ul>
+<li><code>int update(String sql,Object args[])</code>：增/删/改操作，使用<code>args</code>设置其中的参数，返回更新的行数</li>
+<li><code>List&lt;T&gt; query(String sql,RowMapper&lt;T&gt; rowMapper,Object []args)</code>：查询操作，<code>rowMapper</code>将结果集映射到用户自定义的类中</li>
+</ul>
+<h2 id="23-示例">2.3 示例</h2>
+<h3 id="231-依赖">2.3.1 依赖</h3>
+<p>首先导入依赖：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;8.0.21&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>MySQL</code>的版本请根据个人需要更改，或使用其他数据库的驱动。</p>
+<h3 id="232-配置文件">2.3.2 配置文件</h3>
+<p>完整配置文件如下：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd 
+       http://www.springframework.org/schema/context 
+       https://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/test&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;test&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;test&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;context:component-scan base-package=&quot;pers.dao&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<h3 id="233-实体类">2.3.3 实体类</h3>
+<pre><code class="language-java">public class MyUser {
+    private Integer id;
+    private String uname;
+    private String usex;
+}
+</code></pre>
+<h3 id="234-数据访问层">2.3.4 数据访问层</h3>
+<p>添加<code>@Repository</code>以及<code>@RequiredArgsConstructor</code>：</p>
+<pre><code class="language-java">@Repository
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class TestDao {
+    private final JdbcTemplate template;
+
+    public int update(String sql,Object[] args)
+    {
+        return template.update(sql,args);
+    }
+
+    public List&lt;MyUser&gt; query(String sql, Object[] args)
+    {
+        RowMapper&lt;MyUser&gt; mapper = new BeanPropertyRowMapper&lt;&gt;(MyUser.class);
+        return template.query(sql,mapper,args);
+    }
+}
+</code></pre>
+<p>因为直接使用<code>@Autowired</code>的话会提示不推荐：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200926223252663.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>所以利用了<code>Lombok</code>的注解<code>@RequiredArgsConstructor</code>，效果相当如下构造方法，只不过是简化了一点：</p>
+<pre><code class="language-java">@Autowired
+public TestDao(JdbcTemplate template)
+{
+    this.template = template;
+}
+</code></pre>
+<h3 id="235-测试">2.3.5 测试</h3>
+<p>测试之前先建表：</p>
+<pre><code class="language-sql">create table MyUser(
+    id INT AUTO_INCREMENT PRIMARY KEY ,
+    uname varchar(20),
+    usex varchar(20)
+)
+</code></pre>
+<p>测试类：</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        TestDao dao = (TestDao)context.getBean(&quot;testDao&quot;);
+        String insertSql = &quot;insert into MyUser(uname,usex) values(?,?)&quot;;
+        String[] param1 = {&quot;chenhengfa1&quot;,&quot;男&quot;};
+        String[] param2 = {&quot;chenhengfa2&quot;,&quot;男&quot;};
+        String[] param3 = {&quot;chenhengfa3&quot;,&quot;男&quot;};
+        String[] param4 = {&quot;chenhengfa4&quot;,&quot;男&quot;};
+
+        dao.update(insertSql,param1);
+        dao.update(insertSql,param2);
+        dao.update(insertSql,param3);
+        dao.update(insertSql,param4);
+
+        String selectSql = &quot;select * from MyUser&quot;;
+        List&lt;MyUser&gt; list = dao.query(selectSql,null);
+        for(MyUser mu:list)
+        {
+            System.out.println(mu);
+        }
+    }
+}
+</code></pre>
+<p>输出：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200926225137360.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果出现异常或插入不成功等其他情况，请检查<code>SQL</code>语句是否编写正确，包括表名以及字段名。</p>
+<h1 id="3-事务管理">3 事务管理</h1>
+<p><code>Spring</code>中的事务管理有两种方法：</p>
+<ul>
+<li>编程式事务管理：代码中显式调用<code>beginTransaction</code>、<code>commit</code>、<code>rollback</code>等就是编程式事务管理</li>
+<li>声明式事务管理：通过<code>AOP</code>实现，不需要通过编程方式管理事务，因此不需要再业务逻辑代码中掺杂事务处理的代码，开发更加简单，便于后期维护</li>
+</ul>
+<p>下面先来看一下编程式事务管理的实现。</p>
+<h2 id="31-编程式事务管理">3.1 编程式事务管理</h2>
+<p>编程式事务管理的配置又有两种方法：</p>
+<ul>
+<li>基于底层<code>API</code></li>
+<li>基于<code>TransactionTemplate</code></li>
+</ul>
+<p>需要的依赖如下：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-expression&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+    &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+    &lt;version&gt;1.9.6&lt;/version&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h3 id="311-底层api实现">3.1.1 底层<code>API</code>实现</h3>
+<p>根据<code>PlatformTransactionManager</code>、<code>TransactionDefinition</code>、<code>TransactionStatus</code>几个核心接口，通过编程方式进行事务管理，首先配置事务管理器：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;txManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>接着修改数据库访问类：</p>
+<pre><code class="language-java">@Repository
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class TestDao {
+    private final JdbcTemplate template;
+    private final DataSourceTransactionManager manager;
+
+    public int update(String sql,Object[] args)
+    {
+        return template.update(sql,args);
+    }
+
+    public List&lt;MyUser&gt; query(String sql,Object[] args)
+    {
+        RowMapper&lt;MyUser&gt; mapper = new BeanPropertyRowMapper&lt;&gt;(MyUser.class);
+        return template.query(sql,mapper,args);
+    }
+
+    public void testTransaction()
+    {
+        TransactionDefinition definition = new DefaultTransactionDefinition();
+        TransactionStatus status = manager.getTransaction(definition);
+        String message = &quot;执行成功，没有事务回滚&quot;;
+
+        try
+        {
+            String sql1 = &quot;delete from MyUser&quot;;
+            String sql2 = &quot;insert into MyUser(id,uname,usex) values(?,?,?)&quot;;
+            Object [] param2 = {1,&quot;张三&quot;,&quot;男&quot;};
+            template.update(sql1);
+            template.update(sql2,param2);
+            template.update(sql2,param2);
+            manager.commit(status);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            manager.rollback(status);
+            message = &quot;主键重复，事务回滚&quot;;
+        }
+        System.out.println(message);
+    }
+}
+</code></pre>
+<h4 id="3111-事务定义">3.1.1.1 事务定义</h4>
+<p><code>TransactionDefinition</code>是事务定义，是一个接口：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200927075442740.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>主要定义了：</p>
+<ul>
+<li>事务隔离级别</li>
+<li>事务传播行为</li>
+<li>事务超时时间</li>
+<li>是否为只读事务</li>
+</ul>
+<p>而<code>DefaultTransactionDefinition</code>就是上面属性的一些默认配置，比如：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200927075731236.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>也就是定义了：</p>
+<ul>
+<li>传播行为为<code>0</code>：也就是常量<code>PROPAGATION_REQUIREDE</code>，表示如果当前存在一个事务，则加入当前事务，如果不存在任何事务，就创建一个新事务</li>
+<li>隔离级别为<code>-1</code>：这个也是<code>TransactionDefinition</code>的默认参数，表示使用数据库的默认隔离级别，通常情况下为<code>Read Committed</code></li>
+<li>超时为<code>-1</code>：默认设置不超时，如需要设置超时请调用<code>setTimeout</code>方法，比如如果设置为了<code>60</code>，那么相当于如果操作时间超过了<code>60s</code>，而且后面还涉及到<code>CRUD</code>操作，那么会抛出超时异常并回滚，如果超时操作的后面没有涉及到<code>CRUD</code>操作，那么不会回滚</li>
+<li>只读事务为<code>false</code>：默认为<code>false</code>，但是该变量不是表明“不能”进行修改等操作，而是一种暗示，如果不包含修改操作，那么<code>JDBC</code>驱动和数据库就有可能针对该事务进行一些特定的优化</li>
+</ul>
+<h4 id="3112-具体执行流程">3.1.1.2 具体执行流程</h4>
+<p>具体执行流程如下：</p>
+<ul>
+<li>定义事务：实例类为<code>DefaultTransactionDefinition</code></li>
+<li>开启事务：通过<code>getTransaction(TransactionDefinition)</code>开启</li>
+<li>执行业务方法</li>
+<li>根据业务方法是否出现异常手动调用<code>DataSourceTransaction</code>的<code>commit(TransactionStatus)</code>进行提交</li>
+<li>出现异常调用<code>rollback(TransactionStatus)</code>进行回滚</li>
+</ul>
+<p>测试如下：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200926230605773.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="312-基于transactiontemplate">3.1.2 基于<code>TransactionTemplate</code></h3>
+<p>步骤：</p>
+<ul>
+<li>通过调用<code>TransactionTemplate</code>的<code>execute</code>实现</li>
+<li><code>execute</code>接受一个<code>TransactionCallback</code>接口参数</li>
+<li><code>TransactionCallback</code>定义了一个<code>doInTransaction</code>方法</li>
+<li>通常以匿名内部类的方式实现<code>TransactionCallback</code>接口，在其中的<code>doInTransaction</code>编写业务逻辑代码</li>
+<li><code>doInTransaction</code>有一个<code>TransactionStatus</code>的参数，可以调用<code>setRollbackOnly</code>进行回滚</li>
+</ul>
+<p>默认的回滚规则如下：</p>
+<ul>
+<li>如果抛出未检查异常或者手动调用<code>setRollbackOnly</code>，则回滚</li>
+<li>如果执行完成或抛出检查异常，则提交事务</li>
+</ul>
+<p>示例如下，首先编写配置文件对<code>Bean</code>进行注入：</p>
+<pre><code class="language-xml">&lt;!--事务管理器--&gt;
+&lt;bean id=&quot;txManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+&lt;/bean&gt;
+&lt;!--事务模板--&gt;
+&lt;bean id=&quot;transactionTemplate&quot; class=&quot;org.springframework.transaction.support.TransactionTemplate&quot;&gt;
+    &lt;property name=&quot;transactionManager&quot; ref=&quot;txManager&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>其次修改数据访问类，添加一个测试方法：</p>
+<pre><code class="language-java">public void testTransactionTemplate()
+{
+    System.out.println(transactionTemplate.execute((TransactionCallback&lt;Object&gt;) transactionStatus -&gt; {
+        String deleteSql = &quot;delete from MyUser&quot;;
+        String insertSql = &quot;insert into MyUser(id,uname,usex) values(?,?,?)&quot;;
+        Object[] parm = {1, &quot;张三&quot;, &quot;男&quot;};
+        try {
+            template.update(deleteSql);
+            template.update(insertSql, parm);
+            template.update(insertSql, parm);
+        } catch (Exception e) {
+            message = &quot;主键重复，事务回滚&quot;;
+            e.printStackTrace();
+        }
+        return message;
+    }));
+}
+</code></pre>
+<p>大部分代码与第一个例子类似就不解释了，结果也是因为主键重复出现异常，造成事务回滚：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200926231620192.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-声明式事务管理">3.2 声明式事务管理</h2>
+<p><code>Spring</code>声明式事务管理通过<code>AOP</code>实现，本质是在方法前后进行拦截，在目标方法开始之前创建或加入一个事务，执行目标方法完成之后根据执行情况提交或回滚事务。相比起编程式事务管理，声明式最大的优点就是不需要通过编程的方式管理事务，业务逻辑代码无需混杂事务代码，但是唯一不足的地方就是最细粒度只能作用到方法上，而不能做到代码块级别。</p>
+<p>实现方式有如下两种：</p>
+<ul>
+<li>基于<code>XML</code>实现</li>
+<li>基于<code>@Transactional</code>实现</li>
+</ul>
+<h3 id="321-基于xml">3.2.1 基于<code>XML</code></h3>
+<p><code>Spring</code>提供了<code>tx</code>命令空间来配置事务：</p>
+<ul>
+<li><code>&lt;tx:advice&gt;</code>：配置事务通知，一般需要指定<code>id</code>以及<code>transaction-manager</code></li>
+<li><code>&lt;tx:attributes&gt;</code>：配置多个<code>&lt;tx:method&gt;</code>指定执行事务的细节</li>
+</ul>
+<h4 id="3211-配置文件">3.2.1.1 配置文件</h4>
+<p>完整配置文件如下：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xmlns:cache=&quot;http://www.springframework.org/schema/cache&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/cache
+       http://www.springframework.org/schema/cache/spring-cache.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd&quot;
+&gt;
+
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/test&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;test&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;test&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;context:component-scan base-package=&quot;pers.dao&quot;/&gt;
+    &lt;!--事务管理器--&gt;
+    &lt;bean id=&quot;txManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;transactionTemplate&quot; class=&quot;org.springframework.transaction.support.TransactionTemplate&quot;&gt;
+        &lt;property name=&quot;transactionManager&quot; ref=&quot;txManager&quot;/&gt;
+    &lt;/bean&gt;
+
+	&lt;!--声明式事务--&gt;
+    &lt;tx:advice id=&quot;myAdvice&quot; transaction-manager=&quot;txManager&quot;&gt;
+        &lt;tx:attributes&gt;
+        	&lt;!--任意方法--&gt;
+            &lt;tx:method name=&quot;*&quot; /&gt;
+        &lt;/tx:attributes&gt;
+    &lt;/tx:advice&gt;
+    &lt;!--aop配置，具体可以看笔者之前的文章--&gt;
+    &lt;aop:config&gt;
+    	&lt;!--定义切点，执行testXMLTranscation()时进行增强--&gt;
+        &lt;aop:pointcut id=&quot;txPointCut&quot; expression=&quot;execution(* pers.dao.TestDao.testXMLTransaction())&quot;/&gt;
+        &lt;!--切面--&gt;
+        &lt;aop:advisor advice-ref=&quot;myAdvice&quot; pointcut-ref=&quot;txPointCut&quot;/&gt;
+    &lt;/aop:config&gt;
+&lt;/beans&gt;
+</code></pre>
+<h4 id="3212-测试">3.2.1.2 测试</h4>
+<p>测试方法如下：</p>
+<pre><code class="language-java">public void testXMLTransaction()
+{
+    String deleteSql = &quot;delete from MyUser&quot;;
+    String saveSql = &quot;insert into MyUser(id,uname,usex) values(?,?,?)&quot;;
+    Object [] parm = {1,&quot;张三&quot;,&quot;男&quot;};
+    template.update(deleteSql);
+    template.update(saveSql,parm);
+    template.update(saveSql,parm);
+}
+</code></pre>
+<p>运行结果：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200927071730346.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到提示主键重复了。</p>
+<h3 id="322-基于transactional">3.2.2 基于<code>@Transactional</code></h3>
+<p><code>@Transactional</code>一般作用于类上，使得该类所有<code>public</code>方法都具有该类型的事务属性。下面创建一个示例。</p>
+<h4 id="3221-配置文件">3.2.2.1 配置文件</h4>
+<p>将上一个例子中的<code>&lt;aop:config&gt;</code>以及<code>&lt;tx:advice&gt;</code>注释掉，同时添加：</p>
+<pre><code class="language-xml">&lt;!--事务管理的注解驱动器--&gt;
+&lt;tx:annotation-driven transaction-manager=&quot;txManager&quot;/&gt;
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200927071953724.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h4 id="3222-测试">3.2.2.2 测试</h4>
+<p>测试方法与上一个例子一致，结果也是如此：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/2020092707204691.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-参考源码">4 参考源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter5/JavaSpringInit">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter5/JavaSpringInit">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter5/JavaSpringInit">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter5/KotlinSpringInit">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter5/KotlinSpringInit">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter5/KotlinSpringInit">CODE.CHINA</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-103-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-103-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-09-27">2020-09-27</time>
+                  <h4 class="title white no-margin">每日分享 第103期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-102-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-102-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-09-26">2020-09-26</time>
+                  <h4 class="title white no-margin">每日分享 第102期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-106-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-106-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-30">2020-09-30</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-106-qi/">每日分享 第106期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-105-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-105-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-29">2020-09-29</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-105-qi/">每日分享 第105期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-104-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-104-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-28">2020-09-28</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-104-qi/">每日分享 第104期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-1 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-2 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-3 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-4 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-5 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-6 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-7 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-8 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-9 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-10 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-11 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-12 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-13 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-14 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-15 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-16 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-17 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-18 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-19 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-20 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-21 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-22 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-23 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-24 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-25 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-26 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-27 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-28 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-29 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-30 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-31 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-32 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-33 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-34 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-35 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-36 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-37 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-38 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-39 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-40 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-41 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-42 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-43 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-44 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-45 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-46 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-47 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-48 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-49 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-50 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-51 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-52 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-53 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-54 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-55 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-56 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-57 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-58 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-59 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-60 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-61 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-62 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-63 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-64 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-65 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-66 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-67 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-68 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-69 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-70 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-71 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-72 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-73 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-74 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-75 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-76 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-77 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-78 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-79 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-80 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 301 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
