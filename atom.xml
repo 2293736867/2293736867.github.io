@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-09-29T11:29:52.646Z</updated>
+    <updated>2020-09-29T12:18:38.329Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -72,6 +72,31 @@
 <blockquote>
 <p>昭昭若日月之明，离离如星辰之行。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[@Transactional+@Autowired出现的lateinit property xx has not been initialized错误]]></title>
+        <id>https://2293736867.github.io/post/transactionalautowired-chu-xian-de-lateinit-property-xx-has-not-been-initialized-cuo-wu/</id>
+        <link href="https://2293736867.github.io/post/transactionalautowired-chu-xian-de-lateinit-property-xx-has-not-been-initialized-cuo-wu/">
+        </link>
+        <updated>2020-09-29T12:15:49.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>用<code>Kotlin</code>编写<code>Spring Boot</code>，在业务层中使用<code>@Transactional</code>+<code>@Autowired</code>时出现如下错误：</p>
+<pre><code class="language-bash">lateinit property dao has not been initialized
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200929195612704.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>出错代码如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200929195755150.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="2-解决办法">2 解决办法</h1>
+<p>因为<code>Kotlin</code>类默认是<code>final</code>的，加上<code>@Transactional</code>后编译器提示需要<code>open</code>：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/2020092919590790.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>但是加上<code>open</code>后没用，因此把<code>@Transactional</code>去掉后发现不会报错：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200929200033828.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>因此怀疑是<code>@Transactional</code>的问题，因为需要在类上加上<code>open</code>，所以尝试性地在对应的方法上面也加上<code>open</code>：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200929200209915.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>问题得到解决。</p>
+<h1 id="3-原因">3 原因</h1>
+<p>因为<code>@Transactional</code>实际上是通过反射获取<code>Bean</code>的注解信息，利用<code>AOP</code>实现的，而在<code>Kotlin</code>中使用<code>AOP</code>需要在类或方法上加上<code>open</code>。</p>
 ]]></content>
     </entry>
     <entry>
@@ -1111,34 +1136,6 @@ public class TestDao {
 <blockquote>
 <p>光，火交错，诞生了夕阳。</p>
 </blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[为Github的README.md生成目录的小工具]]></title>
-        <id>https://2293736867.github.io/post/wei-github-de-readmemd-sheng-cheng-mu-lu-de-xiao-gong-ju/</id>
-        <link href="https://2293736867.github.io/post/wei-github-de-readmemd-sheng-cheng-mu-lu-de-xiao-gong-ju/">
-        </link>
-        <updated>2020-09-26T06:03:35.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>因为<code>Github</code>的<code>README.md</code>文件<code>[TOC]</code>不生效，因此封装了一个别人已<a href="https://github.com/houbb/markdown-toc">封装好的<code>JAR</code>包</a>供大家使用。</p>
-<h1 id="2-使用方法">2 使用方法</h1>
-<p>用<code>Java</code>做的，只需要<code>JDK11</code>以上的环境：</p>
-<pre><code class="language-bash">java -jar toc.jar 1.md  # 为1.md文件生成目录
-java -jar toc.jar 1     # 为文件夹1内的.md生成目录
-</code></pre>
-<h1 id="3-jar包下载">3 <code>JAR</code>包下载</h1>
-<ul>
-<li><a href="https://github.com/2293736867/MarkdownTOCJava">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/MarkdownTOCJava">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/MarkdownTOCJava">CODE.CHINA</a></li>
-</ul>
-<h1 id="4-其他">4 其他</h1>
-<p>其实生成的方法不只一种，下面提供几个供参考：</p>
-<ul>
-<li><a href="https://github.com/ekalinin/github-markdown-toc">Go生成的，2.2k star</a></li>
-<li><a href="https://github.com/jonschlinkert/markdown-toc">JS生成的，1.1k star</a></li>
-<li><a href="https://www.jianshu.com/p/5294e0b3f9c0">通过脚本生成的</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
