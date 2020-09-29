@@ -1,0 +1,1620 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring学习笔记（六）：MyBatis集成 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 MyBatis简介
+3 工作原理
+4 MyBatis示例
+
+4.1 依赖
+4.2 实体类
+4.3 映射文件
+4.4 配置文件
+4.5 测试
+
+
+5 Spring整合示例
+
+5.1 依赖
+5.2 配置文件
+
+5.2.1 MyB..." />
+    <meta name="keywords" content="Demo,Spring" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1601378983202" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/spring-xue-xi-bi-ji-liu-mybatis-ji-cheng.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-09-29"><i class="fa fa-calendar"></i><span class="lately">几秒前</span></time>
+              
+              <a href="https://2293736867.github.io/post/spring-xue-xi-bi-ji-liu-mybatis-ji-cheng/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/spring-xue-xi-bi-ji-liu-mybatis-ji-cheng/"> </span>
+              </a>
+              <span id="/spring-xue-xi-bi-ji-liu-mybatis-ji-cheng/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-0 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-1 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Spring学习笔记（六）：MyBatis集成</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-mybatis%E7%AE%80%E4%BB%8B">2 <code>MyBatis</code>简介</a></li>
+<li><a href="#3-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86">3 工作原理</a></li>
+<li><a href="#4-mybatis%E7%A4%BA%E4%BE%8B">4 <code>MyBatis</code>示例</a>
+<ul>
+<li><a href="#41-%E4%BE%9D%E8%B5%96">4.1 依赖</a></li>
+<li><a href="#42-%E5%AE%9E%E4%BD%93%E7%B1%BB">4.2 实体类</a></li>
+<li><a href="#43-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">4.3 映射文件</a></li>
+<li><a href="#44-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">4.4 配置文件</a></li>
+<li><a href="#45-%E6%B5%8B%E8%AF%95">4.5 测试</a></li>
+</ul>
+</li>
+<li><a href="#5-spring%E6%95%B4%E5%90%88%E7%A4%BA%E4%BE%8B">5 <code>Spring</code>整合示例</a>
+<ul>
+<li><a href="#51-%E4%BE%9D%E8%B5%96">5.1 依赖</a></li>
+<li><a href="#52-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.2 配置文件</a>
+<ul>
+<li><a href="#521-mybatis%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">5.2.1 <code>MyBatis</code>映射文件</a></li>
+<li><a href="#522-mybatis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.2.2 <code>MyBatis</code>配置文件</a></li>
+<li><a href="#523-spring%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.2.3 <code>Spring</code>配置文件</a></li>
+</ul>
+</li>
+<li><a href="#53-%E6%8C%81%E4%B9%85%E5%B1%82">5.3 持久层</a></li>
+<li><a href="#54-%E4%B8%9A%E5%8A%A1%E5%B1%82">5.4 业务层</a></li>
+</ul>
+</li>
+<li><a href="#6-%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81">6 自动生成代码</a>
+<ul>
+<li><a href="#61-%E4%BE%9D%E8%B5%96">6.1 依赖</a></li>
+<li><a href="#62-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">6.2 配置文件</a></li>
+<li><a href="#63-%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81">6.3 生成代码</a></li>
+</ul>
+</li>
+<li><a href="#7-%E5%8F%82%E8%80%83%E6%BA%90%E7%A0%81">7 参考源码</a></li>
+<li><a href="#8-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">8 参考链接</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p><code>MyBaits</code>是一个著名的持久层框架，本文首先介绍了<code>MyBatis</code>的简单使用，接着与<code>Spring</code>进行整合，最后简单地使用了<code>Generator</code>去自动生成代码。</p>
+<h1 id="2-mybatis简介">2 <code>MyBatis</code>简介</h1>
+<p><code>MyBatis</code>本来是<code>Apache</code>的一个开源项目——<code>iBatis</code>，2010年由<code>Apaceh Software Foundation</code>迁移到了<code>Google Code</code>，并改名为<code>MyBatis</code>。</p>
+<p><code>MyBatis</code>是一个基于<code>Java</code>的持久层框架，提供的持久层框架包括<code>SQL Maps</code>和<code>Data Access Objects</code>，使用简单的<code>XML</code>或者注解用于配置映射，将接口和<code>POJO</code>映射成数据库中的记录，是一个小巧、方便、高效、简单、直接、半自动化的持久层框架。</p>
+<h1 id="3-工作原理">3 工作原理</h1>
+<p>上图：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200929080425358.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>读取配置文件：<code>mybatis-config.xml</code>是全局<code>MyBatis</code>配置文件，配置了<code>MyBatis</code>运行环境信息</li>
+<li>加载映射文件：也就是<code>SQL</code>映射文件，配置了操作数据库的<code>SQL</code>语句</li>
+<li>构造会话工厂：通过配置文件构造会话工厂<code>SqlSessionFactory</code></li>
+<li>创建会话对象：由上一步的会话工厂创建会话对象<code>SqlSession</code></li>
+<li>获取<code>MapperStatement</code>：通过用户调用的<code>api</code>的<code>Statement ID</code>获取<code>MapperStatement</code>对象</li>
+<li>输入参数映射：通过<code>Executor</code>对<code>MapperStatement</code>进行解析，将各种<code>Java</code>基本类型转化为<code>SQL</code>操作语句中的类型</li>
+<li>输出结果映射：<code>JDBC</code>执行<code>SQL</code>后，借助<code>MapperStatement</code>的映射关系将返回结果转化为<code>Java</code>基本类型并返回</li>
+</ul>
+<h1 id="4-mybatis示例">4 <code>MyBatis</code>示例</h1>
+<p>首先先来看一下纯<code>MyBaits</code>的示例，没有整合<code>Spring</code>，一个简单的<code>Maven</code>工程，项目结构如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200928184105917.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="41-依赖">4.1 依赖</h2>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+    &lt;version&gt;3.5.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+    &lt;version&gt;1.18.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!--驱动用的是MySQL，版本请自行修改--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;8.0.21&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>Gradle</code>：</p>
+<pre><code class="language-bash">compile group: 'org.mybatis', name: 'mybatis', version: '3.5.5'
+compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+</code></pre>
+<h2 id="42-实体类">4.2 实体类</h2>
+<pre><code class="language-java">@Setter
+@Getter
+@Builder
+public class User {
+    private Integer id;
+    private String name;
+
+    @Override
+    public String toString() {
+        return &quot;id:&quot;+id+&quot;\tname:&quot;+name;
+    }
+}
+</code></pre>
+<h2 id="43-映射文件">4.3 映射文件</h2>
+<p>新建一个叫<code>UserMapper.xml</code>的映射文件：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;UserMapper&quot;&gt;
+    &lt;select id=&quot;selectById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.entity.User&quot;&gt;
+        select * from user where id=#{id}
+    &lt;/select&gt;
+    &lt;select id=&quot;selectAll&quot; resultType=&quot;pers.entity.User&quot;&gt;
+        select * from user
+    &lt;/select&gt;
+
+    &lt;insert id=&quot;insert&quot; parameterType=&quot;pers.entity.User&quot;&gt;
+        INSERT INTO `user` (`id`,`name`)
+        VALUES (#{id},#{name})
+    &lt;/insert&gt;
+
+    &lt;update id=&quot;update&quot; parameterType=&quot;pers.entity.User&quot;&gt;
+        UPDATE `user` set `name`=#{name} where id=#{id}
+    &lt;/update&gt;
+
+    &lt;delete id=&quot;delete&quot; parameterType=&quot;Integer&quot;&gt;
+        DELETE FROM `user` WHERE `id` = #{id}
+    &lt;/delete&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>映射文件是一个<code>XML</code>文件，根元素为<code>&lt;mapper&gt;</code>，需要注意其中的<code>namespace</code>属性，调用的时候通过该<code>namespace</code>调用。其中的子元素表示<code>SQL</code>语句：</p>
+<ul>
+<li><code>&lt;select&gt;</code>：查询，<code>id</code>指定了这条语句的<code>id</code>号，调用时通过<code>namespace.id</code>的方式调用，比如该条<code>select</code>需要通过<code>UserMapper.selectById</code>调用，<code>parameterType</code>指定参数类型，这里是一个<code>Integer</code>的参数，<code>resultType</code>指定返回类型，实体类</li>
+<li><code>&lt;insert&gt;</code>/<code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code>：对应的插入/修改/删除语句</li>
+<li>关于占位符：<code>#{}</code>表示是占位符，相当于传统<code>JDBC</code>中的<code>?</code>，<code>#{id}</code>表示该占位符等待接收的参数名称为<code>id</code></li>
+</ul>
+<h2 id="44-配置文件">4.4 配置文件</h2>
+<p><code>MyBatis</code>的配置文件，叫<code>mybatis-config.xml</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE configuration PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+&lt;configuration&gt;
+    &lt;environments default=&quot;development&quot;&gt;
+        &lt;environment id=&quot;development&quot;&gt;
+            &lt;transactionManager type=&quot;JDBC&quot; /&gt;
+            &lt;dataSource type=&quot;POOLED&quot;&gt;
+                &lt;property name=&quot;driver&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+                &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/test&quot;/&gt;
+                &lt;property name=&quot;username&quot; value=&quot;test&quot;/&gt;
+                &lt;property name=&quot;password&quot; value=&quot;test&quot;/&gt;
+            &lt;/dataSource&gt;
+        &lt;/environment&gt;
+    &lt;/environments&gt;
+
+    &lt;mappers&gt;
+        &lt;mapper resource=&quot;mapper/UserMapper.xml&quot; /&gt;
+    &lt;/mappers&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>指定了数据库的一些连接属性还有<code>mapper</code>的位置。</p>
+<h2 id="45-测试">4.5 测试</h2>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        try
+        {
+            InputStream inputStream = Resources.getResourceAsStream(&quot;config/mybatis-config.xml&quot;);
+            SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+            SqlSession session = factory.openSession();
+            User user = session.selectOne(&quot;UserMapper.selectById&quot;,1);
+            System.out.println(user);
+            User user1 = User.builder().name(&quot;test&quot;).build();
+            session.insert(&quot;UserMapper.insert&quot;,user1);
+            user1.setName(&quot;222&quot;);
+            session.update(&quot;UserMapper.update&quot;,user1);
+            List&lt;User&gt; list = session.selectList(&quot;UserMapper.selectAll&quot;);
+            list.forEach(System.out::println);
+            session.delete(&quot;UserMapper.delete&quot;,1);
+            session.commit();
+            session.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>主要流程如下：</p>
+<ul>
+<li>读取配置文件：根据<code>org.apache.ibatis.io.Resources</code>读取配置文件<code>mybatis-config.xml</code>，请注意配置文件的位置正确，这里的配置文件都放在<code>resources</code>下，<code>mybatis-config.xml</code>放在其中的<code>config</code>下</li>
+<li>构建<code>Session</code>：根据配置文件构建<code>SqlSessionFactory</code>后，通过<code>openSession</code>创建<code>Session</code></li>
+<li>业务操作：通过<code>session</code>的<code>selectOne/insert/update</code>等进行业务操作，这类操作带两个参数，第一个参数是<code>String</code>，表示配置文件中的<code>SQL</code>语句，采用<code>namespace.id</code>的形式，比如这里的<code>UserMapper.xml</code>中声明<code>namespace</code>为<code>UserMapper</code>，其中带有一条<code>id</code>为<code>selectById</code>的<code>select</code>语句，因此调用时使用<code>UserMapper.selectById</code>的形式，第二个参数是一个<code>Object</code>，表示要传递的参数，也就是绑定到配置文件中对应占位符的值</li>
+<li>提交与关闭：业务操作完成后提交事务并关闭<code>session</code></li>
+</ul>
+<p>示例测试结果：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200928183501487.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-spring整合示例">5 <code>Spring</code>整合示例</h1>
+<p>上面的例子只是为了演示<code>MyBatis</code>的基本使用，没有整合<code>Spring</code>，这里的例子是把<code>Spring</code>整合进来，流程也大概差不多，项目结构如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200929070913641.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="51-依赖">5.1 依赖</h2>
+<p>分为5类<code>JAR</code>：</p>
+<ul>
+<li><code>MyBatis</code>需要的<code>JAR</code></li>
+<li><code>Spring</code>需要的<code>JAR</code></li>
+<li><code>MyBatis</code>与<code>Spring</code>整合的中间<code>JAR</code></li>
+<li>数据库驱动<code>JAR</code></li>
+<li>数据源<code>JAR</code></li>
+</ul>
+<p>完整依赖如下：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+    &lt;version&gt;1.18.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;8.0.21&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+    &lt;version&gt;5.2.9.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+    &lt;version&gt;3.5.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+    &lt;version&gt;2.0.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-dbcp2&lt;/artifactId&gt;
+    &lt;version&gt;2.8.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>Gradle</code>：</p>
+<pre><code class="language-bash">compile group: 'org.springframework', name: 'spring-beans', version: '5.2.9.RELEASE'
+compile group: 'org.springframework', name: 'spring-context', version: '5.2.9.RELEASE'
+compile group: 'org.springframework', name: 'spring-core', version: '5.2.9.RELEASE'
+compile group: 'org.springframework', name: 'spring-tx', version: '5.2.9.RELEASE'
+compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.9.RELEASE'
+compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.8.0'
+compile group: 'org.mybatis', name: 'mybatis', version: '3.5.5'
+compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.5'
+</code></pre>
+<h2 id="52-配置文件">5.2 配置文件</h2>
+<p>配置文件分为三类：</p>
+<ul>
+<li><code>MyBatis</code>映射文件：编写<code>mapper</code>的地方，也就是业务需要的<code>SQL</code>语句</li>
+<li><code>MyBatis</code>全局配置文件：由于整合了<code>Spring</code>，数据源的配置放在了<code>Spring</code>的配置文件中，而只需要保留<code>mapper</code>的查找位置</li>
+<li><code>Spring</code>配置文件：配置数据源+事务管理+<code>MyBaits</code>的<code>sqlSssionFactory</code>+组件扫描</li>
+</ul>
+<h3 id="521-mybatis映射文件">5.2.1 <code>MyBatis</code>映射文件</h3>
+<p>与上面的例子差不多，只是修改了<code>namespace</code>为<code>包名.类名</code>的形式：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.dao.UserDao&quot;&gt;
+    &lt;select id=&quot;selectById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.entity.User&quot;&gt;
+        select * from user where id=#{id}
+    &lt;/select&gt;
+    &lt;select id=&quot;selectAll&quot; resultType=&quot;pers.entity.User&quot;&gt;
+        select * from user
+    &lt;/select&gt;
+
+    &lt;insert id=&quot;insert&quot; parameterType=&quot;pers.entity.User&quot;&gt;
+        INSERT INTO `user` (`id`,`name`)
+        VALUES (#{id},#{name})
+    &lt;/insert&gt;
+
+    &lt;update id=&quot;update&quot; parameterType=&quot;pers.entity.User&quot;&gt;
+        UPDATE `user` set `name`=#{name} where id=#{id}
+    &lt;/update&gt;
+
+    &lt;delete id=&quot;delete&quot; parameterType=&quot;Integer&quot;&gt;
+        DELETE FROM `user` WHERE `id` = #{id}
+    &lt;/delete&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p><code>namespace</code>需要与对应包名的带有<code>@Mapper</code>的类配置一致。</p>
+<h3 id="522-mybatis配置文件">5.2.2 <code>MyBatis</code>配置文件</h3>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE configuration PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+&lt;configuration&gt;
+    &lt;mappers&gt;
+        &lt;mapper resource=&quot;mapper/UserMapper.xml&quot; /&gt;
+    &lt;/mappers&gt;
+&lt;/configuration&gt;
+</code></pre>
+<h3 id="523-spring配置文件">5.2.3 <code>Spring</code>配置文件</h3>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd&quot;
+       &gt;
+
+    &lt;context:component-scan base-package=&quot;pers.dao&quot;/&gt;
+    &lt;context:component-scan base-package=&quot;pers.service&quot;/&gt;
+    &lt;!--数据源--&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp2.BasicDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/test&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;test&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;test&quot;/&gt;
+        &lt;!--最大连接数+最大空闲数+初始连接数--&gt;
+        &lt;property name=&quot;maxTotal&quot; value=&quot;30&quot;/&gt;
+        &lt;property name=&quot;maxIdle&quot; value=&quot;10&quot;/&gt;
+        &lt;property name=&quot;initialSize&quot; value=&quot;5&quot;/&gt;
+    &lt;/bean&gt;
+    
+    &lt;!--事务管理--&gt;
+    &lt;bean id=&quot;txManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+        &lt;property name=&quot;dataSource&quot;  ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+
+	&lt;!--开启事务注解--&gt;
+    &lt;tx:annotation-driven transaction-manager=&quot;txManager&quot; /&gt;
+
+	&lt;!--创建SqlSessionFactory Bean--&gt;
+    &lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+        &lt;property name=&quot;configLocation&quot; value=&quot;classpath:config/mybatis-config.xml&quot;/&gt;
+    &lt;/bean&gt;
+
+	&lt;!--注解扫描，主要用于@Mapper，会扫描basePackge下的@Mapper注解的接口并自动装配为MyBatis的映射接口--&gt;
+    &lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
+        &lt;property name=&quot;basePackage&quot; value=&quot;pers.dao&quot;/&gt;
+        &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<h2 id="53-持久层">5.3 持久层</h2>
+<p>需要加上<code>@Mapper</code>注解，表示自动装配为<code>MyBatis</code>的映射接口，注意：</p>
+<ul>
+<li>映射文件中的<code>namespace</code>需要与<code>包名.类名</code>对应，比如这里的包为<code>pers.dao</code>，类名为<code>UserDao</code>，那么映射文件中的<code>namespace</code>为<code>pers.dao.UserDao</code></li>
+<li><code>id</code>需要与方法名对应，比如映射文件中的有一条<code>select</code>语句的<code>id</code>为<code>selectById</code>，那么方法就需要命名为<code>selectById</code>，且参数类型需要对应一致</li>
+</ul>
+<pre><code class="language-java">@Repository
+@Mapper
+public interface UserDao {
+    User selectById(Integer id);
+    List&lt;User&gt; selectAll();
+    int insert(User user);
+    int update(User user);
+    int delete(Integer id);
+}
+</code></pre>
+<h2 id="54-业务层">5.4 业务层</h2>
+<pre><code class="language-java">@Service
+@Transactional
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class MyBatisService {
+    private final UserDao dao;
+
+    public void test(){
+        User user = dao.selectById(13);
+        System.out.println(user);
+        dao.insert(User.builder().name(&quot;333&quot;).build());
+        dao.update(User.builder().name(&quot;88888&quot;).id(13).build());
+        dao.selectAll().forEach(System.out::println);
+        dao.delete(12);
+        dao.selectAll().forEach(System.out::println);
+    }
+}
+</code></pre>
+<p>注入<code>UserDao</code>后进行简单的测试，结果如下：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200929070332272.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-自动生成代码">6 自动生成代码</h1>
+<p>相信很多程序员也讨厌写又长又麻烦的<code>XML</code>配置文件，因此，<code>MyBatis</code>也提供了一个生成器插件，可以直接从表中生成实体类、<code>dao</code>接口以及映射文件，可以省去很多操作。</p>
+<p>步骤如下：</p>
+<ul>
+<li>导入依赖</li>
+<li>编写<code>Generator</code>配置文件</li>
+<li>生成代码</li>
+</ul>
+<h2 id="61-依赖">6.1 依赖</h2>
+<p>其实就是加入一个插件：</p>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;1.4.0&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;!-- 在控制台打印执行日志 --&gt;
+                &lt;verbose&gt;true&lt;/verbose&gt;
+                &lt;!-- 重复生成时会覆盖之前的文件--&gt;
+                &lt;overwrite&gt;true&lt;/overwrite&gt;
+                &lt;configurationFile&gt;src/main/resources/generatorConfig.xml&lt;/configurationFile&gt;
+            &lt;/configuration&gt;
+            &lt;dependencies&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;mysql&lt;/groupId&gt;
+                    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+                    &lt;version&gt;8.0.21&lt;/version&gt;
+                &lt;/dependency&gt;
+            &lt;/dependencies&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<p>数据库驱动请对应修改。</p>
+<p>至于<code>Gradle</code>版请看<code>Kotlin</code>版源码。</p>
+<h2 id="62-配置文件">6.2 配置文件</h2>
+<p>这里是参考别人的配置文件，修改数据库连接、表名、包名即可：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE generatorConfiguration
+        PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
+&lt;generatorConfiguration&gt;
+    &lt;!-- context 是逆向工程的主要配置信息 --&gt;
+    &lt;!-- id：起个名字 --&gt;
+    &lt;!-- targetRuntime：设置生成的文件适用于那个 mybatis 版本 --&gt;
+    &lt;context id=&quot;default&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+        &lt;!--optional,指在创建class时，对注释进行控制--&gt;
+        &lt;commentGenerator&gt;
+            &lt;property name=&quot;suppressDate&quot; value=&quot;true&quot;/&gt;
+            &lt;!-- 是否去除自动生成的注释 true：是 ： false:否 --&gt;
+            &lt;property name=&quot;suppressAllComments&quot; value=&quot;true&quot;/&gt;
+        &lt;/commentGenerator&gt;
+        &lt;!--jdbc的数据库连接 wg_insert 为数据库名字--&gt;
+        &lt;jdbcConnection driverClass=&quot;com.mysql.cj.jdbc.Driver&quot; connectionURL=&quot;jdbc:mysql://localhost:3306/test&quot; userId=&quot;test&quot; password=&quot;test&quot; /&gt;
+        &lt;!--非必须，类型处理器，在数据库类型和java类型之间的转换控制--&gt;
+        &lt;javaTypeResolver&gt;
+            &lt;!-- 默认情况下数据库中的 decimal，bigInt 在 Java 对应是 sql 下的 BigDecimal 类 --&gt;
+            &lt;!-- 不是 double 和 long 类型 --&gt;
+            &lt;!-- 使用常用的基本类型代替 sql 包下的引用类型 --&gt;
+            &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot;/&gt;
+        &lt;/javaTypeResolver&gt;
+        &lt;!-- targetPackage：生成的实体类所在的包 --&gt;
+        &lt;!-- targetProject：生成的实体类所在的硬盘位置 --&gt;
+        &lt;javaModelGenerator targetPackage=&quot;pers.entity&quot;
+                            targetProject=&quot;src/main/java&quot;&gt;
+            &lt;!-- 是否允许子包 --&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;false&quot;/&gt;
+            &lt;!-- 是否对modal添加构造函数 --&gt;
+            &lt;property name=&quot;constructorBased&quot; value=&quot;true&quot;/&gt;
+            &lt;!-- 是否清理从数据库中查询出的字符串左右两边的空白字符 --&gt;
+            &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot;/&gt;
+            &lt;!-- 建立modal对象是否不可改变 即生成的modal对象不会有setter方法，只有构造方法 --&gt;
+            &lt;property name=&quot;immutable&quot; value=&quot;false&quot;/&gt;
+        &lt;/javaModelGenerator&gt;
+        &lt;!-- targetPackage 和 targetProject：生成的 mapper 文件的包和位置 --&gt;
+        &lt;sqlMapGenerator targetPackage=&quot;mapper&quot;
+                         targetProject=&quot;src/main/resources&quot;&gt;
+            &lt;!-- 针对数据库的一个配置，是否把 schema 作为字包名 --&gt;
+            &lt;property name=&quot;enableSubPackages&quot; value=&quot;false&quot;/&gt;
+        &lt;/sqlMapGenerator&gt;
+        &lt;!-- targetPackage 和 targetProject：生成的 interface 文件的包和位置 --&gt;
+        &lt;javaClientGenerator type=&quot;XMLMAPPER&quot;
+                             targetPackage=&quot;pers.dao&quot; targetProject=&quot;src/main/java&quot;&gt;
+        &lt;/javaClientGenerator&gt;
+        &lt;!-- tableName是数据库中的表名，domainObjectName是生成的JAVA模型名，后面的参数不用改，要生成更多的表就在下面继续加table标签 --&gt;
+        &lt;table tableName=&quot;user&quot; domainObjectName=&quot;User&quot;
+               enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;
+               enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot;
+               selectByExampleQueryId=&quot;false&quot; /&gt;
+    &lt;/context&gt;
+&lt;/generatorConfiguration&gt;
+</code></pre>
+<h2 id="63-生成代码">6.3 生成代码</h2>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200929073850261.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>双击生成即可：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200929074012121.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>生成了实体类、<code>dao</code>接口以及<code>mapper</code>文件。</p>
+<h1 id="7-参考源码">7 参考源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter6/JavaDemo">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter6/JavaDemo">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter6/JavaDemo">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter6/KotlinDemo">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter6/KotlinDemo">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter6/KotlinDemo">CODE.CHINA</a></li>
+</ul>
+<h1 id="8-参考链接">8 参考链接</h1>
+<ul>
+<li><a href="https://www.jianshu.com/p/b519e9ef605f">简书-IDEA使用mybatis-generator</a></li>
+<li><a href="https://github.com/Hinsteny/mybatis-generator-plugin">Github-mybatis-generator-plugin</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-106-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-106-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-09-30">2020-09-30</time>
+                  <h4 class="title white no-margin">每日分享 第106期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-105-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-105-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-09-29">2020-09-29</time>
+                  <h4 class="title white no-margin">每日分享 第105期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-108-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-108-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-02">2020-10-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-108-qi/">每日分享 第108期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-107-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-107-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-01">2020-10-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-107-qi/">每日分享 第107期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-106-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-106-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-09-30">2020-09-30</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-106-qi/">每日分享 第106期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-1 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-2 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-3 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-4 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-5 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-6 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-7 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-8 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-9 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-10 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-11 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-12 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-13 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-14 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-15 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-16 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-17 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-18 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-19 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-20 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-21 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-22 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-23 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-24 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-25 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-26 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-27 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-28 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-29 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-30 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-31 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-32 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-33 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-34 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-35 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-36 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-37 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-38 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-39 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-40 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-41 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-42 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-43 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-44 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-45 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-46 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-47 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-48 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-49 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-50 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-51 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-52 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-53 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-54 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-55 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-56 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-57 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-58 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-59 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-60 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-61 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-62 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-63 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-64 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-65 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-66 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-67 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-68 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-69 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-70 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-71 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-72 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-73 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-74 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-75 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-76 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-77 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-78 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-79 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-80 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 304 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
