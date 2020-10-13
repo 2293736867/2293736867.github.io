@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-10-13T00:57:28.926Z</updated>
+    <updated>2020-10-13T03:05:57.601Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -30,6 +30,63 @@
 <blockquote>
 <p>别丧了，说不定你也是别人心中偷偷藏起来的光。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[解决SQLPLUS无法使用上下箭头]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-sqlplus-wu-fa-shi-yong-shang-xia-jian-tou/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-sqlplus-wu-fa-shi-yong-shang-xia-jian-tou/">
+        </link>
+        <updated>2020-10-13T03:01:21.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p><code>SQLPLUS</code>中使用上下箭头无法获取历史命令，如下图所示：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201013102350970.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>按上下箭头会显示<code>^[[A</code>/<code>^[[B</code>。</p>
+<h1 id="2-解决方案">2 解决方案</h1>
+<p>需要安装<code>rlwrap</code>，可以的话可以用包管理器安装，笔者环境<code>CentOS</code>，这里从源码编译安装。</p>
+<h2 id="21-下载源码">2.1 下载源码</h2>
+<p>官方<code>Github</code>可以<a href="https://github.com/hanslub42/rlwrap">戳这里</a>，目前最新的版本为<code>0.43</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201013102629669.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="22-安装">2.2 安装</h2>
+<p>上传到服务器后，解压编译安装：</p>
+<pre><code class="language-bash">tar -zxvf rlwrap-0.43.tar.gz
+cd rlwrap-0.43
+./configure
+make 
+make install
+</code></pre>
+<p>笔者在<code>./configure</code>这步遇到以下错误：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201013102832121.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>安装一个库解决：</p>
+<pre><code class="language-bash">yum install readline-devel
+</code></pre>
+<p>再次<code>./configure</code>就没有问题了：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201013102925705.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="23-测试">2.3 测试</h2>
+<p>使用<code>rlwrap sqlplus</code>代替原来的<code>sqlplus</code>登录：</p>
+<pre><code class="language-bash">rlwrap sqlplus xxx/xxx as sysdba
+</code></pre>
+<p>这样就可以使用上下箭头了。</p>
+<p>因为笔者在<code>root</code>上进行测试，在<code>oracle</code>用户上进行测试可能会出现权限问题，如图：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201013103730406.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>到对应目录下创建该文件：</p>
+<pre><code class="language-bash">cd /home/oracle
+sudo touch .sqlplus_history
+</code></pre>
+<p>创建了之后还是不能执行：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201013105510268.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>修改组权限即可：</p>
+<pre><code class="language-bash">sudo chmod g+w .sqlplus_history
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201013105705417.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="24-别名">2.4 别名</h2>
+<p>为了方便使用可以加上一个别名：</p>
+<pre><code class="language-bash">alias sp='rlwrap sqlplus'
+</code></pre>
+<p>这样下次就可以使用</p>
+<pre><code class="language-bash">sp xxx/xxx as sysdba
+</code></pre>
+<p>登录了。</p>
 ]]></content>
     </entry>
     <entry>
@@ -259,27 +316,6 @@ spring.security.user.password=test
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>因为痛苦太有价值，因为回忆太珍贵，所以我们更要继续往前走。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第113期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-113-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-113-qi/">
-        </link>
-        <updated>2020-10-06T04:42:00.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你知道投资和投机的区别吗？一个是普通话，一个是广东话。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>晴云满户团倾盖，秋水浮阶溜决渠。<br>
-——杜甫《柏学士茅屋》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>何其有幸，我们相遇。</p>
 </blockquote>
 ]]></content>
     </entry>
