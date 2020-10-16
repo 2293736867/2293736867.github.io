@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-10-16T06:54:44.209Z</updated>
+    <updated>2020-10-16T12:07:50.347Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -255,6 +255,103 @@
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Linux Nvidia显卡驱动安装]]></title>
+        <id>https://2293736867.github.io/post/linux-nvidia-xian-qia-qu-dong-an-zhuang/</id>
+        <link href="https://2293736867.github.io/post/linux-nvidia-xian-qia-qu-dong-an-zhuang/">
+        </link>
+        <updated>2020-10-16T12:06:31.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E4%B8%8B%E8%BD%BD%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E5%8C%85">3 下载驱动安装包</a></li>
+<li><a href="#4-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">4 准备工作</a>
+<ul>
+<li><a href="#41-%E5%AE%89%E8%A3%85linux-header">4.1 安装<code>linux-header</code></a></li>
+<li><a href="#42-%E7%A6%81%E7%94%A8nouveau">4.2 禁用<code>Nouveau</code></a></li>
+<li><a href="#43-%E9%87%8D%E5%90%AF">4.3 重启</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%AD%A3%E5%BC%8F%E5%AE%89%E8%A3%85">5 正式安装</a></li>
+<li><a href="#6-%E6%94%B6%E5%B0%BE%E5%B7%A5%E4%BD%9C">6 收尾工作</a></li>
+<li><a href="#7-%E5%85%B3%E4%BA%8E%E7%94%BB%E9%9D%A2%E6%92%95%E8%A3%82">7 关于画面撕裂</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>因为某些需要需要在<code>Linux</code>上安装显卡驱动，这里记录一下安装过程。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>Manjaro</code></li>
+<li><code>RTX 2060</code></li>
+</ul>
+<h1 id="3-下载驱动安装包">3 下载驱动安装包</h1>
+<p>到官网上搜索下载即可，可以<a href="https://www.nvidia.cn/geforce/drivers/">戳这里</a>：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201017020328834.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>选择自己的显卡型号即可，笔者选择参考如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201017021313658.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>搜索下载即可，下载之后是一个<code>.run</code>文件，加上执行权限：</p>
+<pre><code class="language-bash">sudo chmod u+x NVIDIA-Linux-x86_64-455.28.run
+</code></pre>
+<h1 id="4-准备工作">4 准备工作</h1>
+<h2 id="41-安装linux-header">4.1 安装<code>linux-header</code></h2>
+<p>安装之前先安装<code>linux-header</code>，首先获取内核版本号：</p>
+<pre><code class="language-bash">uname -a
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201017021549735.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>笔者这里是<code>5.8</code>版本的，搜索<code>linux-header</code>并选择<code>5.8</code>版本进行安装：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201017021715293.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>命令如下：</p>
+<pre><code class="language-bash">pacman -Ss linux-header
+sudo pacman -S linux58-headers
+</code></pre>
+<h2 id="42-禁用nouveau">4.2 禁用<code>Nouveau</code></h2>
+<p>一般来说安装<code>Manjaro</code>会自动安装开源显卡驱动<code>Nouveau</code>，需要手动禁用才能安装<code>Nvidia</code>驱动，创建如下文件：</p>
+<pre><code class="language-bash">sudo vim /etc/modprobe.d/blacklist.conf
+</code></pre>
+<p>输入如下内容：</p>
+<pre><code class="language-bash">blacklist nouveau
+</code></pre>
+<p>添加<code>blacklist</code>后是不能进入图形界面的，为了保险起见可以先不删除<code>Nouveau</code>驱动以防误操作无法进入图形界面。</p>
+<h2 id="43-重启">4.3 重启</h2>
+<p>重启之后，正常来说是不能进入图形界面的（笔者单显卡环境是不能进入的，双显卡的不确定请自行测试），通过<code>Ctrl+Alt+F2</code>切换到终端后输入：</p>
+<pre><code class="language-bash">lsmod | grep nouveau
+</code></pre>
+<p>若没有任何输出则表明已经禁用了<code>Nouveau</code>。</p>
+<p>注意这一步很重要，一定要禁用，否则无法安装<code>Nvidia</code>驱动。</p>
+<h1 id="5-正式安装">5 正式安装</h1>
+<p>下面进行正式安装操作，重启并通过<code>Ctrl+Alt+F2</code>切换到终端后，并以<code>root</code>登录后，进入安装包对应文件夹，安装即可：</p>
+<pre><code class="language-bash"> ./NVIDIA-Linux-x86_64-455.28.run 
+</code></pre>
+<p>如果在终端出现如下情况：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201017022948308.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>表明没有关闭图形界面，因为上面禁用了<code>Nouveau</code>，是无法进入图形界面的，这种情况一般出现在双显卡的电脑上，手动关闭图形界面即可：</p>
+<pre><code class="language-bash">systemctl status lightdm
+systemctl stop lightdm
+</code></pre>
+<p>安装有几个简单的选项根据个人需要选择是或否即可，安装过程非常快，完成后会提示安装完成<code>xxx complete</code>，重启即可进入图形界面。</p>
+<h1 id="6-收尾工作">6 收尾工作</h1>
+<p>重启进入图形界面后可以输入</p>
+<pre><code class="language-bash">nvidia-smi
+</code></pre>
+<p>查看显卡运行状况，输入</p>
+<pre><code class="language-bash">nvidia-settings
+</code></pre>
+<p>可以查看图形界面的配置：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201017023501830.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样就算安装完成了，另外笔者测试的时候发现双屏显示需要进行手动的设置，如下图所示：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/2020101702383560.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>需要手动设置一下双屏的位置，不然的话会重叠在一起。</p>
+<p>另外<code>nvidia-settings</code>的设置是临时的，想要保存到文件需要<code>root</code>写入权限：</p>
+<pre><code class="language-bash">sudo nvidia-settings
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20201017030335303.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-关于画面撕裂">7 关于画面撕裂</h1>
+<p>安装驱动后，笔者使用<code>flameshot</code>截个图都难受了，鼠标基本动不了，以为是截图工具的问题，换了<code>deepin-screenshot</code>也是这样，接着去查了一下这应该是一个叫“画面撕裂”的现象，笔者通过一个简单的设置解决了：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/2020101702515826.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20201017025143887.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>记得保存到文件。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Linux下Matlab的安装]]></title>
         <id>https://2293736867.github.io/post/linux-xia-matlab-de-an-zhuang/</id>
         <link href="https://2293736867.github.io/post/linux-xia-matlab-de-an-zhuang/">
@@ -462,27 +559,6 @@ sudo touch .sqlplus_history
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>如果温柔是罪，那就只能用拳头来洗清我们犯下的罪孽。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第119期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-119-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-119-qi/">
-        </link>
-        <updated>2020-10-11T23:30:27.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>别人复习看书，都是看着看着就看懂了，我是看着看着就看开了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>长风万里送秋雁，对此可以酣高楼。<br>
-——李白《宣州谢朓楼饯别校书叔云》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>再强的敌人在最后一集的主角面前也是渣渣。</p>
 </blockquote>
 ]]></content>
     </entry>
