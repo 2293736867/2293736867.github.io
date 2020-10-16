@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-10-15T17:15:06.038Z</updated>
+    <updated>2020-10-16T00:50:58.734Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -375,89 +375,6 @@ sudo touch .sqlplus_history
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Spring Security学习笔记（一）]]></title>
-        <id>https://2293736867.github.io/post/spring-security-xue-xi-bi-ji-yi/</id>
-        <link href="https://2293736867.github.io/post/spring-security-xue-xi-bi-ji-yi/">
-        </link>
-        <updated>2020-10-13T00:49:05.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-spring-security">1 <code>Spring Security</code></h1>
-<h2 id="11-简介">1.1 简介</h2>
-<p><code>Spring Security</code>是一个强大和高度可定制的认证和控制访问框架，是基于<code>Spring</code>应用的事实上的安全标准，主要聚焦于为<code>Java</code>应用提供授权和认证功能，主要功能如下：</p>
-<ul>
-<li>对认证和授权的全面和可扩展支持</li>
-<li>防止诸如<code>Session Fixation</code>、点击劫持、跨站点请求伪造攻击</li>
-<li><code>Servlet API</code>集成</li>
-<li><code>Spring MVC</code>可选集成</li>
-</ul>
-<h2 id="12-已集成的认证技术">1.2 已集成的认证技术</h2>
-<ul>
-<li><code>HTTP BASIC authentication headers</code>/<code>HTTP Digest authentication headers</code>/<code>HTTP X.509 client certificate exchange</code>：基于<code>IETF RFC</code>的标准</li>
-<li><code>LDAP</code>：常见的跨平台身份验证方式</li>
-<li><code>Form-based authentication</code>：用于简单的用户界面需求</li>
-<li><code>OpenID authentication</code>：一种去中心化的身份认证方式</li>
-<li><code>Authentication based on pre-established request headers</code>：一种用户身份验证以及授权的集中式安全基础方案</li>
-<li><code>Jasig Central Authentication Service</code>：单点登录方案</li>
-<li><code>Transparent authentication context propagation for Remote Method Invocation and HttpInvoker</code>：一个<code>Spring</code>远程调用协议</li>
-<li><code>Automatic &quot;remember-me&quot; authentication</code>：允许在指定到期时间前自行重新登录系统</li>
-<li><code>Anonymous authentication</code>：允许匿名用户使用特定身份安全访问资源</li>
-<li><code>Run-as authentication</code>：允许在一个会话中变换用户身份的机制</li>
-<li><code>Java Authentication and Authorization</code>：<code>JASS</code>，<code>Java</code>验证和授权<code>API</code></li>
-<li><code>Java EE container authentication</code>：允许系统继续使用容器管理这种身份验证方式</li>
-<li><code>Kerberos</code>：一种使用对称密钥机制，允许客户端和服务器相互确认身份的认证协议</li>
-</ul>
-<p>除此之外还引入了其他第三方包，比如<code>JOSSO</code>，另外如果都无法满足需求，<code>Spring Security</code>也允许开发人员自己编写认证技术。</p>
-<h1 id="2-简单demo">2 简单<code>Demo</code></h1>
-<p>下面来动手做一个简单的<code>Demo</code>去体验一下<code>Spring Security</code>。</p>
-<h2 id="21-新建工程">2.1 新建工程</h2>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201012075800260.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>默认即可：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201012075824621.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>依赖选择<code>Spring Web</code>和<code>Spring Secutiry</code>：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201013073435791.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="22-启动类">2.2 启动类</h2>
-<p>修改启动类，使其作为<code>Controller</code>类：</p>
-<pre><code class="language-java">@SpringBootApplication
-@RestController
-public class DemoApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-
-    @GetMapping(&quot;/&quot;)
-    public String hello(){
-        return &quot;Hello, Spring Security.&quot;;
-    }
-}
-</code></pre>
-<h2 id="23-运行">2.3 运行</h2>
-<p>运行后可以看见控制台有一串自动生成的密码：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201013073732646.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>浏览器访问</p>
-<pre><code class="language-bash">http://localhost:8080
-</code></pre>
-<p>会自动跳转到</p>
-<pre><code class="language-bash">http://localhost:8080/login
-</code></pre>
-<p>密码输入控制台中的密码，用户名默认为<code>user</code>，就可以登录了：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201013074024977.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>成功后会自动跳转到</p>
-<pre><code class="language-bash">http://localhost:8080
-</code></pre>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201013074042400.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="23-修改基本认证用户名与密码">2.3 修改基本认证用户名与密码</h2>
-<p>修改<code>application.properties</code>/<code>application.yaml</code>，添加如下属性：</p>
-<pre><code class="language-bash">spring.security.user.name=test
-spring.security.user.password=test
-</code></pre>
-<p>该认证方式实质上是<code>HTTP</code>基本认证方式，只需要用户名和密码，而上面的两项属性可以自定义基本认证的用户名和密码，测试：</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201013074624172.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-参考">3 参考</h1>
-<ul>
-<li><a href="https://spring.io/projects/spring-security">Spring Security官网</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[每日分享 第120期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-120-qi/</id>
         <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-120-qi/">
@@ -496,6 +413,27 @@ spring.security.user.password=test
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>再强的敌人在最后一集的主角面前也是渣渣。</p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第118期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-118-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-118-qi/">
+        </link>
+        <updated>2020-10-11T04:03:05.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>忍无可忍，就重新再忍。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>晴浦晚风寒，青山玉骨瘦。<br>
+——董以宁《卜雪子·雪江晴月》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>要保持希望在每天清晨太阳升起。</p>
 </blockquote>
 ]]></content>
     </entry>
