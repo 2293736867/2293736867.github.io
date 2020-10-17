@@ -1,0 +1,1323 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Docker下MySQL的安装 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 安装Docker
+3 拉取MySQL镜像
+4 运行容器
+5 测试
+6 配置文件
+
+6.1 容器内修改
+6.2 运行容器时挂载
+
+
+7 参考
+
+
+1 概述
+本文讲述了如何利用Docker去安装MySQL，以及MySQL自定义配..." />
+    <meta name="keywords" content="Docker,MySQL" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1602961928922" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/docker-xia-mysql-de-an-zhuang.png');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-10-18"><i class="fa fa-calendar"></i><span class="lately">16 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/docker-xia-mysql-de-an-zhuang/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/docker-xia-mysql-de-an-zhuang/"> </span>
+              </a>
+              <span id="/docker-xia-mysql-de-an-zhuang/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-0 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Docker下MySQL的安装</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85docker">2 安装<code>Docker</code></a></li>
+<li><a href="#3-%E6%8B%89%E5%8F%96mysql%E9%95%9C%E5%83%8F">3 拉取<code>MySQL</code>镜像</a></li>
+<li><a href="#4-%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8">4 运行容器</a></li>
+<li><a href="#5-%E6%B5%8B%E8%AF%95">5 测试</a></li>
+<li><a href="#6-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">6 配置文件</a>
+<ul>
+<li><a href="#61-%E5%AE%B9%E5%99%A8%E5%86%85%E4%BF%AE%E6%94%B9">6.1 容器内修改</a></li>
+<li><a href="#62-%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8%E6%97%B6%E6%8C%82%E8%BD%BD">6.2 运行容器时挂载</a></li>
+</ul>
+</li>
+<li><a href="#7-%E5%8F%82%E8%80%83">7 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文讲述了如何利用<code>Docker</code>去安装<code>MySQL</code>，以及<code>MySQL</code>自定义配置文件的相关设置。</p>
+<h1 id="2-安装docker">2 安装<code>Docker</code></h1>
+<p>首先安装<code>Docker</code>并开启服务：</p>
+<pre><code class="language-bash">systemctl start docker
+</code></pre>
+<p>如果没有添加国内源的话建议添加一下，新增/修改<code>/etc/docker/daemon.json</code>，添加如下内容：</p>
+<pre><code class="language-json">{
+    &quot;registry-mirrors&quot;: [&quot;http://hub-mirror.c.163.com&quot;]
+}
+</code></pre>
+<p>这里用的是网易的源，其他源如下：</p>
+<ul>
+<li><code>Docker</code>中国区官方镜像：<code>https://registry.docker-cn.com</code></li>
+<li><code>ustc</code>：<code>https://docker.mirrors.ustc.edu.cn</code></li>
+<li>中科大：<code>https://docker.mirrors.ustc.edu.cn</code></li>
+<li>阿里云：每个人不同，需要到阿里云容器服务创建，具体请查看文档</li>
+</ul>
+<h1 id="3-拉取mysql镜像">3 拉取<code>MySQL</code>镜像</h1>
+<pre><code class="language-bash">docker pull mysql:latest
+</code></pre>
+<p>权限不够请加<code>sudo</code>，另外这一步需要一点时间，请耐心等待。</p>
+<p>拉取完成后可以查看镜像：</p>
+<pre><code class="language-bash">docker images
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201018070322755.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-运行容器">4 运行容器</h1>
+<pre><code class="language-bash">docker run -itd -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-latest mysql
+</code></pre>
+<p>参数说明：</p>
+<ul>
+<li><code>-i</code>：以交互模式运行，通常配合<code>-t</code></li>
+<li><code>-t</code>：为容器重新分配一个伪输入终端，通常配合<code>-i</code></li>
+<li><code>-d</code>：后台运行容器</li>
+<li><code>-p</code>：端口映射，格式为<code>主机端口:容器端口</code></li>
+<li><code>-e</code>：设置环境变量，这里设置的是<code>root</code>密码</li>
+<li><code>--name</code>：设置容器别名</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201018070421690.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>运行之后会返回一个容器<code>ID</code>。</p>
+<h1 id="5-测试">5 测试</h1>
+<p>先查看运行状态：</p>
+<pre><code class="language-bash">docker ps 
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201018070526811.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着连接到容器的伪终端上：</p>
+<pre><code class="language-bash">docker exec -it mysql-latest /bin/bash
+</code></pre>
+<p>其中<code>mysql-latest</code>是执行运行命令时创建的别名，同时使用<code>mysql</code>测试连接：</p>
+<pre><code class="language-bash">mysql -u root -p
+</code></pre>
+<p>输入环境变量传递的<code>root</code>密码后就可以连接上<code>MySQL</code>了：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201018070736288.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>也可以在<code>IDEA</code>中添加<code>MySQL</code>数据源并测试连接：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201018071325369.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-配置文件">6 配置文件</h1>
+<p>一般来说仅仅安装完<code>MySQL</code>是不够的，还需要自定义一些配置文件，自定义配置文件有两种方法，一种是进入容器并修改里面的<code>my.cnf</code>，另一种是容器启动的时候使用<code>-v</code>参数挂载配置文件的目录。</p>
+<h2 id="61-容器内修改">6.1 容器内修改</h2>
+<p>首先进入容器：</p>
+<pre><code class="language-bash">docker exec -it mysql-latest /bin/bash
+</code></pre>
+<p>请把<code>mysql-latest</code>修改为对应的容器别名，进入后可以通过</p>
+<pre><code class="language-bash">mysql --help | grep my.cnf
+</code></pre>
+<p>查看配置文件的位置：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201018073440805.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这几个文件存在读取顺序，可以使用</p>
+<pre><code class="language-bash">mysqld --verbose --help --pid-file=/var/run/mysqld/mysqld.pid | grep -A 1 &quot;Default options&quot;
+</code></pre>
+<p>查看：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201018075143282.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里修改的是<code>/etc/mysql/my.cnf</code>，但是。。。</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20201018073623127.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>没有<code>vim</code>？关系不大先用<code>vi</code>将就一下：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20201018073747433.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>当时就人傻了居然<code>vi</code>都没有，行，关系不大，安装就行了：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20201018073827582.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这都什么玩意。。。包都搜不到。。。</p>
+<p>查看了一下系统的版本，是<code>Debian 10</code>：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20201018073951555.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>于是就找了对应的源：</p>
+<pre><code class="language-bash">deb http://mirrors.aliyun.com/debian/ buster main non-free contrib
+deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib
+deb http://mirrors.aliyun.com/debian-security buster/updates main
+deb-src http://mirrors.aliyun.com/debian-security buster/updates main
+deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+</code></pre>
+<p>先备份：</p>
+<pre><code class="language-bash">cp /etc/apt/sources.list /etc/apt/sources.list.bak
+</code></pre>
+<p>然后修改添加即可：</p>
+<pre><code class="language-bash">vim /etc/apt/sources.list
+</code></pre>
+<p>但是没有这个命令。。。</p>
+<p>没办法了手动<code>echo</code>添加：</p>
+<pre><code class="language-bash">echo deb http://mirrors.aliyun.com/debian/ buster main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib deb http://mirrors.aliyun.com/debian-security buster/updates main deb-src http://mirrors.aliyun.com/debian-security buster/updates main deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib &gt; sources.list
+</code></pre>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20201018074234904.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>然后更新：</p>
+<pre><code class="language-bash">apt update
+apt upgrade
+</code></pre>
+<p>安装<code>vim</code>：</p>
+<pre><code class="language-bash">apt install vim
+</code></pre>
+<p>接着修改配置文件即可：</p>
+<pre><code class="language-bash">vim /etc/mysql/my.cnf
+</code></pre>
+<p>下面是示例常用参数：</p>
+<pre><code class="language-bash">[mysqld]
+character-set-server=utf8mb4
+[client]
+default-character-set=utf8mb4
+[mysql]
+default-character-set=utf8mb4
+</code></pre>
+<h2 id="62-运行容器时挂载">6.2 运行容器时挂载</h2>
+<p>先查看一下原来容器的字符集：</p>
+<pre><code class="language-bash">show variables like '%character%';
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20201018085315924.png?" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>未修改之前的字符集如图，下面使用<code>-v</code>参数挂载配置文件目录并对字符集进行修改，首先先把原来的容器停止掉，以免端口占用：</p>
+<pre><code class="language-bash">docker stop mysql-latest
+</code></pre>
+<p>接着在宿主机目录<code>/etc/mysql</code>下创建一个配置文件<code>my.cnf</code>：</p>
+<pre><code class="language-bash">vim /etc/mysql/my.cnf
+# 添加如下内容
+[mysqld]
+character-set-server=utf8mb4
+[client]
+default-character-set=utf8mb4
+[mysql]
+default-character-set=utf8mb4
+</code></pre>
+<p>重新创建并运行容器，并同时挂载目录：</p>
+<pre><code class="language-bash">docker run -itd -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v /etc/mysql:/etc/mysql/conf.d --name mysql mysql
+</code></pre>
+<p>其中<code>-v</code>参数是挂载宿主机的一个目录，把宿主机的一个目录挂载到容器上，注意需要修改<code>--name</code>，不允许重复。</p>
+<p>根据官网文档（链接<a href="https://hub.docker.com/_/mysql">戳这里</a>），默认的配置文件位置为<code>/etc/mysql/my.cnf</code>，自定义的配置文件位置可以为<code>/etc/mysql/conf.d</code>或<code>/etc/mysql/mysql.conf.d</code>，因此将宿主机的<code>/etc/mysql</code>挂载到容器的<code>/etc/mysql/conf.d</code>，<code>MySQL</code>会自动合并默认的配置文件<code>/etc/mysql/my.cnf</code>与自定义的配置文件（这里是<code>/etc/mysql/conf.d/my.cnf</code>）。</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20201018092838676.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再次进入容器查看字符集：</p>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20201018090452164.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到字符集被修改为了<code>utf8bm4</code>。</p>
+<h1 id="7-参考">7 参考</h1>
+<ul>
+<li><a href="https://hub.docker.com/_/mysql">Docker Hub MySQL</a></li>
+<li><a href="https://www.cnblogs.com/feipeng8848/p/10470655.html">博客园-Docker安装mysql</a></li>
+<li><a href="https://www.cnblogs.com/shix0909/p/11124466.html">博客园-Docker -V详解</a></li>
+<li><a href="https://www.cnblogs.com/yangmingxianshen/p/7999428.html">博客园-MySQL查看和修改字符集的方法</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-125-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-125-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-10-18">2020-10-18</time>
+                  <h4 class="title white no-margin">每日分享 第125期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-yi-ju-3-50-qi-he-ji.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-yi-ju-3-50-qi-he-ji/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-10-17">2020-10-17</time>
+                  <h4 class="title white no-margin">每日一句 3-50期合集</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-126-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-126-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-19">2020-10-19</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-126-qi/">每日分享 第126期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-125-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-125-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-18">2020-10-18</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-125-qi/">每日分享 第125期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/docker-xia-mysql-de-an-zhuang/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/docker-xia-mysql-de-an-zhuang.png');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-18">2020-10-18</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/docker-xia-mysql-de-an-zhuang/">Docker下MySQL的安装</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-1 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-2 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-3 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-4 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-5 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-6 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-7 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-8 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-9 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-11 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-12 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-13 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-14 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-15 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-16 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-17 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-18 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-19 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-20 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-21 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-22 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-23 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-24 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-25 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-26 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-27 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-28 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-29 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-30 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-31 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-32 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-33 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-34 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-35 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-36 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-37 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-38 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-39 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-40 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-41 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-42 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-43 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-44 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-45 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-46 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-47 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-48 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-49 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-50 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-51 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-52 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-53 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-54 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-55 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-56 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-57 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-58 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-59 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-60 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-61 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-62 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-63 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-64 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-65 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-66 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-67 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-68 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-69 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-70 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-71 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-72 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-73 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-74 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-75 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-76 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-77 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-78 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-79 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-80 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-81 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-82 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-83 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 330 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
