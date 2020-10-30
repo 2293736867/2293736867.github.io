@@ -1,0 +1,2122 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>【长文】Spring学习笔记（七）：Mybatis映射器+动态SQL | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 MyBatis配置文件概览
+3 准备步骤
+4 映射器概述
+
+4.1 &lt;select&gt;
+4.2 传递参数
+
+4.2.1 Map
+4.1.2 使用JavaBean
+
+
+4.2 &lt;insert&gt;
+4.3 &..." />
+    <meta name="keywords" content="MyBaits,Spring" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1604042774008" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-10-30"><i class="fa fa-calendar"></i><span class="lately">2 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/"> </span>
+              </a>
+              <span id="/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-0 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-1 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">【长文】Spring学习笔记（七）：Mybatis映射器+动态SQL</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-mybatis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%A6%82%E8%A7%88">2 <code>MyBatis</code>配置文件概览</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E6%AD%A5%E9%AA%A4">3 准备步骤</a></li>
+<li><a href="#4-%E6%98%A0%E5%B0%84%E5%99%A8%E6%A6%82%E8%BF%B0">4 映射器概述</a>
+<ul>
+<li><a href="#41-select">4.1 <code>&lt;select&gt;</code></a></li>
+<li><a href="#42-%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0">4.2 传递参数</a>
+<ul>
+<li><a href="#421-map">4.2.1 <code>Map</code></a></li>
+<li><a href="#412-%E4%BD%BF%E7%94%A8javabean">4.1.2 使用<code>JavaBean</code></a></li>
+</ul>
+</li>
+<li><a href="#42-insert">4.2 <code>&lt;insert&gt;</code></a></li>
+<li><a href="#43-updatedelete">4.3 <code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code></a></li>
+<li><a href="#44-sql">4.4 <code>&lt;sql&gt;</code></a></li>
+</ul>
+</li>
+<li><a href="#5-resultmap">5 <code>&lt;resultMap&gt;</code></a>
+<ul>
+<li><a href="#51-%E4%BD%BF%E7%94%A8map">5.1 使用<code>Map</code></a></li>
+<li><a href="#52-%E4%BD%BF%E7%94%A8pojo">5.2 使用<code>POJO</code></a></li>
+</ul>
+</li>
+<li><a href="#6-%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2">6 级联查询</a>
+<ul>
+<li><a href="#61-%E4%B8%80%E5%AF%B9%E4%B8%80">6.1 一对一</a>
+<ul>
+<li><a href="#611-%E6%95%B0%E6%8D%AE%E8%A1%A8">6.1.1 数据表</a></li>
+<li><a href="#612-%E5%AE%9E%E4%BD%93%E7%B1%BB">6.1.2 实体类</a></li>
+<li><a href="#613-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">6.1.3 映射文件</a></li>
+<li><a href="#614-dao%E6%8E%A5%E5%8F%A3">6.1.4 <code>Dao</code>接口</a></li>
+<li><a href="#615-%E6%B5%8B%E8%AF%95">6.1.5 测试</a></li>
+</ul>
+</li>
+<li><a href="#62-%E4%B8%80%E5%AF%B9%E5%A4%9A">6.2 一对多</a>
+<ul>
+<li><a href="#621-%E6%95%B0%E6%8D%AE%E8%A1%A8">6.2.1 数据表</a></li>
+<li><a href="#622-%E5%AE%9E%E4%BD%93%E7%B1%BB">6.2.2 实体类</a></li>
+<li><a href="#623-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">6.2.3 映射文件</a></li>
+<li><a href="#624-dao%E6%8E%A5%E5%8F%A3">6.2.4 <code>Dao</code>接口</a></li>
+<li><a href="#625-%E6%B5%8B%E8%AF%95">6.2.5 测试</a></li>
+</ul>
+</li>
+<li><a href="#63-%E5%A4%9A%E5%AF%B9%E5%A4%9A">6.3 多对多</a>
+<ul>
+<li><a href="#631-%E6%95%B0%E6%8D%AE%E8%A1%A8">6.3.1 数据表</a></li>
+<li><a href="#632-%E5%AE%9E%E4%BD%93%E7%B1%BB">6.3.2 实体类</a></li>
+<li><a href="#633-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">6.3.3 映射文件</a></li>
+<li><a href="#634-dao%E6%8E%A5%E5%8F%A3">6.3.4 <code>Dao</code>接口</a></li>
+<li><a href="#635-%E6%B5%8B%E8%AF%95">6.3.5 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-%E5%8A%A8%E6%80%81sql">7 动态<code>SQL</code></a>
+<ul>
+<li><a href="#71-if">7.1 <code>&lt;if&gt;</code></a></li>
+<li><a href="#72-choosewhenotherwise">7.2 <code>&lt;choose&gt;</code>+<code>&lt;when&gt;</code>+<code>&lt;otherwise&gt;</code></a></li>
+<li><a href="#73-trim">7.3 <code>&lt;trim&gt;</code></a></li>
+<li><a href="#74-where">7.4 <code>&lt;where&gt;</code></a></li>
+<li><a href="#75-set">7.5 <code>&lt;set&gt;</code></a></li>
+<li><a href="#76-foreach">7.6 <code>&lt;foreach&gt;</code></a></li>
+<li><a href="#77-bind">7.7 <code>&lt;bind&gt;</code></a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%BA%90%E7%A0%81">8 源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文主要讲述了如何使用<code>MyBatis</code>中的映射器以及动态<code>SQL</code>的配置。</p>
+<h1 id="2-mybatis配置文件概览">2 <code>MyBatis</code>配置文件概览</h1>
+<p><code>MyBatis</code>配置文件主要属性如下：</p>
+<ul>
+<li><code>&lt;settings&gt;</code>：相关设置，键值对形式</li>
+<li><code>&lt;typeAliases&gt;</code>：类型别名</li>
+<li><code>&lt;typeHandlers&gt;</code>：类型处理器</li>
+<li><code>&lt;objectFactory&gt;</code>：对象工厂</li>
+<li><code>&lt;plugins&gt;</code>：插件，包含若干个<code>&lt;plugin&gt;</code></li>
+<li><code>&lt;environments&gt;</code>：环境配置，包含若干个<code>&lt;environment&gt;</code>，在<code>&lt;environment&gt;</code>中可以指定事务管理器<code>&lt;transactionManager&gt;</code>以及数据源<code>&lt;dataSource&gt;</code></li>
+<li><code>&lt;databaseIdProvider&gt;</code>：数据库厂商标识</li>
+<li><code>&lt;mappers&gt;</code>：映射器，包含若干个<code>&lt;mapper&gt;</code></li>
+</ul>
+<p>注意顺序不能颠倒，否则启动时会发生异常。</p>
+<h1 id="3-准备步骤">3 准备步骤</h1>
+<p>由于本文大部分的代码都只给出了关键的语句而没有完整的工程，因此如果想要实现一遍请<code>clone</code><a href="https://github.com/2293736867/SpringInitProjectJavaAndKotlin/tree/master/MyBatisSpringJavaInit">此处</a>的代码（<code>Kotlin</code>请<code>clone</code><a href="https://github.com/2293736867/SpringInitProjectJavaAndKotlin/tree/master/MyBatisSpringKotlinInit">此处</a>），并：</p>
+<ul>
+<li>利用<code>resources/sql</code>下的脚本文件创建数据库以及数据表，并插入相应数据</li>
+<li>修改<code>MyBatis</code>、<code>Spring</code>、<code>dhcp2</code>等依赖为最新版本并修改<code>MySQL</code>驱动为对应版本</li>
+<li>修改<code>applicationContext.xml</code>文件中的数据库用户名，密码以及数据库<code>URL</code>，可能需要修改驱动</li>
+<li>开启数据库服务并进行测试，运行<code>MainTest</code>中的测试方法即可，正常来说会出现如下结果：</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201028140955357.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-映射器概述">4 映射器概述</h1>
+<p><code>MyBatis</code>的映射器由一个接口加上<code>XML</code>映射文件组成，是最复杂的组件，映射文件常用元素如下：</p>
+<ul>
+<li><code>&lt;select&gt;</code>：查询语句</li>
+<li><code>&lt;insert&gt;</code>/<code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code>：<code>插入</code>/<code>更新</code>/<code>删除</code>语句，返回操作所影响的行数，比如插入了两行，操作成功了影响的行数则为两行，返回整数2</li>
+<li><code>&lt;sql&gt;</code>：自定义的<code>SQL</code></li>
+<li><code>&lt;resultMap&gt;</code>：提供映射规则</li>
+</ul>
+<p>下面先来看一下最常用的<code>&lt;select&gt;</code>。</p>
+<h2 id="41-select">4.1 <code>&lt;select&gt;</code></h2>
+<p>示例（在<code>mapper/UserDao.xml</code>直接添加即可）：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user where id = #{id}
+&lt;/select&gt;
+</code></pre>
+<p>其中<code>id</code>是唯一标识符，接受一个<code>Integer</code>，返回<code>com.pojo.User</code>对象，结果集自动映射到<code>com.pojo.User</code>中。</p>
+<p>常用属性如下：</p>
+<ul>
+<li><code>id</code>：<code>&lt;select&gt;</code>语句的全局唯一标识符</li>
+<li><code>paramterType</code>：表示传入<code>SQL</code>语句的参数类型的全限定名或别名，可选，能自动推断</li>
+<li><code>resultType</code>：执行<code>SQL</code>后返回的类型</li>
+<li><code>resultMap</code>：与<code>resultType</code>类似，<code>resultType</code>默认一一对应映射，比如表字段名为<code>id</code>，则映射到实体类的<code>id</code>中，而<code>resultMap</code>需要手动定义映射关系，这样就可以把表字段中的<code>id</code>映射到实体类的<code>id1</code>，或<code>id2</code>，或<code>id3</code>，<code>resultType</code>与<code>resultMap</code>两者需要指定一个，不能同时存在</li>
+<li><code>flushCache</code>：设置调用<code>SQL</code>后是否要求<code>MyBatis</code>清空之前查询的本地缓存以及二级缓存，默认<code>false</code></li>
+<li><code>useCache</code>：启动二级缓存，默认<code>true</code></li>
+<li><code>timeout</code>：超时参数，单位秒</li>
+<li><code>fetchSize</code>：获取记录的总条数设定</li>
+<li><code>statementType</code>：使用哪个<code>JDBC</code>的<code>Statement</code>，取值可以为<code>STATEMENT</code>/<code>PREPARED</code>/<code>CALLABLE</code>，分别表示<code>Statement</code>/<code>PreparedStatement</code>/<code>CallableStatement</code></li>
+<li><code>resultSetType</code>：针对<code>JDBC</code>的<code>ResultSet</code>，可设置为<code>FORWARD_ONLY</code>/<code>SCROLL_SENSITIVE</code>/<code>SCROLL_INSENSITIVE</code>，分别表示<code>只允许向前访问</code>/<code>双向滚动，不及时更新</code>/<code>双向滚动，及时更新</code></li>
+</ul>
+<p>并修改<code>UserDao</code>，添加一个<code>selectById</code>方法：</p>
+<pre><code class="language-java">User selectById(Integer id);
+</code></pre>
+<p>可以直接测试了：</p>
+<pre><code class="language-java">@Test
+public void selectById()
+{
+    System.out.println(dao.selectById(1));
+}
+</code></pre>
+<p>下面来看一下如何传递多个参数。</p>
+<h2 id="42-传递参数">4.2 传递参数</h2>
+<p>有了最基本的<code>select</code>后，传递<code>id</code>这种单一参数很容易，但是实际情况中很多时候需要传递多个参数，<code>MyBatis</code>中传递多个参数有两种方式：</p>
+<ul>
+<li>通过<code>Map</code>传递</li>
+<li>通过<code>JavaBean</code>传递</li>
+</ul>
+<h3 id="421-map">4.2.1 <code>Map</code></h3>
+<p>可以使用<code>Map</code>传递多个参数，示例<code>&lt;select&gt;</code>如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByMap&quot; resultType=&quot;pers.init.entity.User&quot; parameterType=&quot;map&quot;&gt;
+    select * from user where name like concat('%', #{name}, '%') and age = #{age}
+&lt;/select&gt;
+</code></pre>
+<p>参数名<code>name</code>以及<code>age</code>是<code>Map</code>的键。</p>
+<p>接着在<code>UserDao</code>下添加：</p>
+<pre><code class="language-java">User selectByMap(Map&lt;String,String&gt; map);
+</code></pre>
+<p>然后在主类中使用<code>Map</code>添加键值对：</p>
+<pre><code class="language-java">@Test
+public void selectByMap()
+{
+    Map&lt;String,String&gt; map = new HashMap&lt;&gt;();
+    map.put(&quot;name&quot;,&quot;111&quot;);
+    map.put(&quot;age&quot;,&quot;33&quot;);
+    System.out.println(dao.selectByMap(map));
+}
+</code></pre>
+<p>这样就能传递多个参数进行查询了。</p>
+<h3 id="412-使用javabean">4.1.2 使用<code>JavaBean</code></h3>
+<p>传递多个参数的另一种方法是利用<code>JavaBean</code>传递，创建一个<code>POJO</code>类：</p>
+<pre><code class="language-java">@Getter
+@Setter
+@Builder
+@ToString
+public class UserPOJO {
+    private String name;
+    private Integer age;
+}
+</code></pre>
+<p>修改<code>UserDao</code>接口方法：</p>
+<pre><code class="language-java">public User selectByPOJO(UserPOJO user)
+</code></pre>
+<p>接着修改映射文件，实际上修改<code>parameterType</code>即可：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByPOJO&quot; resultType=&quot;pers.init.entity.User&quot; parameterType=&quot;pers.init.pojo.UserPOJO&quot;&gt;
+    select * from user where name like concat('%', #{name}, '%') and age = #{age}
+&lt;/select&gt;
+</code></pre>
+<p>注意访问传递的参数时直接使用<code>POJO</code>类的属性名即可，无须加上类似<code>UserPOJO.</code>的前缀。</p>
+<p>最后进行测试：</p>
+<pre><code class="language-java">@Test
+public void selectByPOJO()
+{
+    UserPOJO pojo = UserPOJO.builder().age(33).name(&quot;111&quot;).build();
+    System.out.println(dao.selectByPOJO(pojo));
+}
+</code></pre>
+<h2 id="42-insert">4.2 <code>&lt;insert&gt;</code></h2>
+<p><code>&lt;insert&gt;</code>用于插入，大部分属性与<code>&lt;select&gt;</code>相同，下面是几个特有属性：</p>
+<ul>
+<li><code>keyProperty</code>：将插入操作的返回值赋给<code>POJO</code>类的某个属性</li>
+<li><code>keyColumn</code>：用于设置主键列的位置，当表中第1列不是主键时需要设置该参数，联合主键可以使用逗号分隔</li>
+<li><code>useGeneratedKeys</code>：使用<code>JDBC</code>的<code>getGeneratedKeys</code>获取数据库内部产生的主键，默认<code>false</code></li>
+</ul>
+<p>比如典型的主键回填<code>&lt;insert&gt;</code>如下：</p>
+<pre><code class="language-xml">&lt;insert id=&quot;insertUser1&quot; parameterType=&quot;pers.init.entity.User&quot; keyProperty=&quot;id&quot; useGeneratedKeys=&quot;true&quot;&gt;
+    insert into user(name, age) values (#{name}, #{id})
+&lt;/insert&gt;
+</code></pre>
+<p>这样就会利用数据库生成的自增主键回填到<code>User</code>的<code>id</code>属性中，<code>UserDao</code>接口如下：</p>
+<pre><code class="language-java">int insertUser1(User user);
+</code></pre>
+<p>一般来说插入操作返回一个整数，表示操作影响的行数，因此可以设置返回值为<code>int</code>，测试如下：</p>
+<pre><code class="language-java">@Test
+public void insertUser1()
+{
+    User user = User.builder().age((short) 88).name(&quot;test1&quot;).build();
+    System.out.println(dao.insertUser1(user));
+    System.out.println(user.getId());
+}
+</code></pre>
+<p>另外如果不支持自增主键，可以使用<code>selectKey</code>自定义生成主键，比如：</p>
+<pre><code class="language-xml">&lt;insert id=&quot;insertUser2&quot; parameterType=&quot;pers.init.entity.User&quot;&gt;
+    &lt;selectKey keyProperty=&quot;id&quot; resultType=&quot;integer&quot; order=&quot;BEFORE&quot;&gt;
+        select if(max(id) is null,1,max(id)+1) as newId from user
+    &lt;/selectKey&gt;
+    insert into user(id,name,age) values(#{id},#{name},#{age})
+&lt;/insert&gt;
+</code></pre>
+<p><code>&lt;selectKey&gt;</code>中的<code>keyProperty</code>指定了新主键<code>newId</code>返回给<code>pers.pojo.User</code>的<code>id</code>属性，<code>order</code>设置执行顺序，<code>BEFORE</code>/<code>AFTER</code>表示执行<code>&lt;selectKey&gt;</code>之后/之前再执行插入语句。</p>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void insertUser2()
+{
+    User user = User.builder().age((short) 10).name(&quot;test2&quot;).build();
+    System.out.println(dao.insertUser2(user));
+    System.out.println(user.getId());
+}
+</code></pre>
+<h2 id="43-updatedelete">4.3 <code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code></h2>
+<p>返回一个整数，属性与<code>&lt;insert&gt;</code>/<code>&lt;select&gt;</code>类似，简单示例如下：</p>
+<pre><code class="language-xml">&lt;update id=&quot;updateUser&quot; parameterType=&quot;pers.init.entity.User&quot;&gt;
+    update user set name=#{name}, age=#{age} where id = #{id}
+&lt;/update&gt;
+
+&lt;delete id=&quot;deleteUser&quot; parameterType=&quot;Integer&quot;&gt;
+    delete from user where id = #{id}
+&lt;/delete&gt;
+</code></pre>
+<p>同理<code>update/delete</code>返回一个整数，表示操作影响的行数，因此设置<code>UserDao</code>接口如下：</p>
+<pre><code class="language-java">int updateUser(User user);
+int deleteUser(Integer id);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void updateUser()
+{
+    User user = User.builder().id(3).name(&quot;3333333&quot;).age((short)11).build();
+    selectAll();
+    System.out.println(dao.updateUser(user));
+    selectAll();
+}
+
+@Test
+public void deleteUser()
+{
+    selectAll();
+    System.out.println(dao.deleteUser(3));
+    selectAll();
+}
+</code></pre>
+<h2 id="44-sql">4.4 <code>&lt;sql&gt;</code></h2>
+<p>用于定义<code>SQL</code>的一部分，以方便后面的<code>SQL</code>语句引用，比如：</p>
+<pre><code class="language-xml">&lt;sql id=&quot;column&quot;&gt;
+    id,name,age
+&lt;/sql&gt;
+&lt;select id=&quot;selectBySqlColumn&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select &lt;include refid=&quot;column&quot;/&gt; from user
+&lt;/select&gt;
+</code></pre>
+<p><code>UserDao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectBySqlColumn();
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void selectBySqlColumn()
+{
+    System.out.println(dao.selectBySqlColumn());
+}
+</code></pre>
+<h1 id="5-resultmap">5 <code>&lt;resultMap&gt;</code></h1>
+<p>上面提高过，<code>&lt;resultMap&gt;</code>比<code>&lt;resultType&gt;</code>要强大，但是需要手动定义映射关系，一个常见的<code>&lt;resultMap&gt;</code>如下：</p>
+<pre><code class="language-xml">&lt;resultMap type=&quot;package1.package2.package3.POJO&quot; id=&quot;resultMapId&quot;&gt;
+	&lt;constrcutor&gt;                       &lt;!--实例化时将结果注入到构造方法中--&gt;
+		&lt;idArg /&gt;                       &lt;!--ID参数--&gt;
+		&lt;arg /&gt;                         &lt;!--普通参数--&gt;
+	&lt;/constrcutor&gt;
+	&lt;id /&gt;                              &lt;!--表示哪个列是主键--&gt;
+	&lt;result /&gt;                          &lt;!--注入到字段/JavaBean属性的普通结果--&gt;
+	&lt;association property=&quot;&quot;&gt;           &lt;!--一对一关联--&gt;
+	&lt;collection property=&quot;&quot;&gt;            &lt;!--一对多关联--&gt;
+	&lt;discriminator javaType=&quot;&quot;&gt;         &lt;!--使用结果值决定哪个结果映射--&gt;
+		&lt;case value=&quot;&quot;&gt;                 &lt;!--基于某些值的结果映射--&gt;
+	&lt;/discriminator&gt;
+&lt;/resultMap&gt;
+</code></pre>
+<h2 id="51-使用map">5.1 使用<code>Map</code></h2>
+<p>查询<code>SQL</code>的结果可以使用<code>Map</code>/<code>POJO</code>存储，使用<code>Map</code>存储不需要手动编写<code>&lt;resultMap&gt;</code>，默认表属性名是键值对的键：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectReturnMap&quot; resultType=&quot;Map&quot;&gt;
+    select * from user
+&lt;/select&gt;
+</code></pre>
+<p>可用<code>List&lt;Map&gt;</code>来接收返回结果，一条记录映射到一个<code>Map</code>对象，<code>Map</code>中的<code>key</code>是<code>select</code>的字段名。</p>
+<p>示例的<code>UserDao</code>方法如下：</p>
+<pre><code class="language-java">List&lt;Map&lt;String,Object&gt;&gt; selectReturnMap();
+</code></pre>
+<p>其中<code>Map</code>类型为<code>Map&lt;String,Object&gt;</code>，测试方法如下：</p>
+<pre><code class="language-java"> @Test
+public void selectReturnMap()
+{
+    dao.selectReturnMap().forEach(System.out::println);
+}
+</code></pre>
+<h2 id="52-使用pojo">5.2 使用<code>POJO</code></h2>
+<p>如果使用<code>POJO</code>存储返回的对象时，需要先定义一个<code>POJO</code>类，可以在上面的<code>UserPOJO</code>基础上加上一个<code>id</code>属性：</p>
+<pre><code class="language-java">@Getter
+@Setter
+@Builder
+@ToString
+public class UserPOJO {
+    private Integer id;
+    private String name;
+    private Integer age;
+}
+</code></pre>
+<p>接着编写映射文件：</p>
+<pre><code class="language-xml">&lt;resultMap id=&quot;testPOJO&quot; type=&quot;pers.init.pojo.UserPOJO&quot;&gt;
+    &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+    &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+    &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+&lt;/resultMap&gt;
+</code></pre>
+<p>其中<code>property</code>指定<code>POJO</code>的属性，<code>column</code>是表字段名，最后配合<code>&lt;select&gt;</code>使用，指定<code>resultMap</code>为对应<code>id</code>：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectReturnPOJO&quot; resultMap=&quot;testPOJO&quot;&gt;
+	select * from user
+&lt;/select&gt;
+</code></pre>
+<p>返回结果可以用<code>List&lt;UserPOJO&gt;</code>接收：</p>
+<pre><code class="language-java">List&lt;UserPOJO&gt; selectReturnPOJO();
+</code></pre>
+<p>测试方法：</p>
+<pre><code class="language-java">@Test
+public void selectReturnPOJO()
+{
+    dao.selectReturnPOJO().forEach(System.out::println);
+}
+</code></pre>
+<h1 id="6-级联查询">6 级联查询</h1>
+<p>级联查询就是利用主键与外键的关系进行组合查询，比如表<code>A</code>的一个外键引用了表<code>B</code>的一个主键，查询<code>A</code>时，通过<code>A</code>的外键将<code>B</code>的相关记录返回，这就是级联查询。常见的级联查询有三种：</p>
+<ul>
+<li>一对一</li>
+<li>一对多</li>
+<li>多对多</li>
+</ul>
+<p><code>MyBatis</code>支持一对一以及一对多级联，没有对多对多级联提供支持，但是可以用多个一对多级联实现多对多级联。下面分别来看一下。</p>
+<h2 id="61-一对一">6.1 一对一</h2>
+<p>一对一级联查询是最常见的级联查询，可以通过<code>&lt;resultMap&gt;</code>中的<code>&lt;association&gt;</code>进行配置，通常使用的属性如下：</p>
+<ul>
+<li><code>property</code>：映射到实体类的对象属性</li>
+<li><code>column</code>：指定表中对应的字段</li>
+<li><code>javaType</code>：指定映射到实体对象属性的类型</li>
+<li><code>select</code>：指定引入嵌套查询的子<code>SQL</code>语句，用于关联映射中的嵌套查询</li>
+</ul>
+<p>下面通过一个例子进行说明，例子分五步：</p>
+<ul>
+<li>创建数据表</li>
+<li>创建实体类</li>
+<li>编写映射文件</li>
+<li>修改持久层接口</li>
+<li>添加测试方法</li>
+</ul>
+<h3 id="611-数据表">6.1.1 数据表</h3>
+<p>为了方便新增表以及数据都写在一起：</p>
+<pre><code class="language-sql">use test;
+
+drop table if exists idcard;
+drop table if exists person;
+
+create table idcard(
+    id int(10) primary key auto_increment,
+    code char(18) collate utf8mb4_unicode_ci default null
+);
+
+create table person(
+    id int(10) primary key,
+    name varchar(20) collate utf8mb4_unicode_ci default null,
+    age smallint default null,
+    idcard_id int(10) default null,
+    key idcard_id(idcard_id),
+    constraint idcard_id foreign key (idcard_id) references idcard(id)
+);
+
+insert into idcard(`code`) values('123456789123456789');
+
+insert into person(`id`,`name`,`age`,`idcard_id`) values (1,'111',22,1);
+</code></pre>
+<h3 id="612-实体类">6.1.2 实体类</h3>
+<pre><code class="language-java">@Data
+public class IdCard {
+    private Integer id;
+    private String code;
+}
+
+@Data
+public class Person {
+    private Integer id;
+    private String name;
+    private Integer age;
+    private IdCard card;
+}
+</code></pre>
+<p>另外还需要创建一个映射结果的<code>POJO</code>类：</p>
+<pre><code class="language-java">@Data
+public class PersonPOJO {
+    private Integer id;
+    private String name;
+    private Short age;
+    private String code;
+}
+</code></pre>
+<h3 id="613-映射文件">6.1.3 映射文件</h3>
+<p>映射文件分为两个：</p>
+<ul>
+<li><code>IdCardMapper.xml</code></li>
+<li><code>PersonMapper.xml</code></li>
+</ul>
+<p>首先是<code>IdCardMapper.xml</code>，加上一个<code>&lt;select&gt;</code>即可，注意<code>namespace</code>的位置填写正确，对应<code>dao</code>的位置。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToOne.dao.IdCardDao&quot;&gt;
+    &lt;select id=&quot;selectCodeById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToOne.entity.IdCard&quot;&gt;
+        select * from idcard where id = #{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>其次是<code>PersonMapper.xml</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToOne.dao.PersonDao&quot;&gt;
+    &lt;resultMap id=&quot;personMap1&quot; type=&quot;pers.oneToOne.entity.Person&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+        &lt;association property=&quot;card&quot; column=&quot;idcard_id&quot; javaType=&quot;pers.oneToOne.entity.IdCard&quot;
+                     select=&quot;pers.oneToOne.dao.IdCardDao.selectCodeById&quot;/&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectPersonById1&quot; parameterType=&quot;Integer&quot; resultMap=&quot;personMap1&quot;&gt;
+        select *
+        from person
+        where id = #{id}
+    &lt;/select&gt;
+
+    &lt;resultMap id=&quot;personMap2&quot; type=&quot;pers.oneToOne.entity.Person&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+        &lt;association property=&quot;card&quot; javaType=&quot;pers.oneToOne.entity.IdCard&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;idcard_id&quot;/&gt;
+            &lt;result property=&quot;code&quot; column=&quot;code&quot;/&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+
+    &lt;select id=&quot;selectPersonById2&quot; parameterType=&quot;Integer&quot; resultMap=&quot;personMap2&quot;&gt;
+        select p.*, ic.code
+        from person p,
+             idcard ic
+        where p.idcard_id = ic.id
+          and p.id = #{id}
+    &lt;/select&gt;
+
+    &lt;select id=&quot;selectPersonById3&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToOne.pojo.PersonPOJO&quot;&gt;
+        select p.*, ic.code
+        from person p,
+             idcard ic
+        where p.idcard_id = ic.id
+          and p.id = #{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>首先第一个<code>&lt;resultMap&gt;</code>先指定<code>id</code>等属性，接着是<code>&lt;association&gt;</code>：</p>
+<ul>
+<li><code>property</code>是实体类属性，注意类型为<code>IdCard</code></li>
+<li><code>column</code>是表字段名，类型为<code>int(10)</code></li>
+<li><code>javaType</code>是通过后面的<code>select</code>返回的类型，可以理解成是<code>property</code>的类型，也就是<code>IdCard</code></li>
+<li><code>select</code>指定嵌套查询使用的<code>SQL</code>，对应于<code>IdCardDao.xml</code>中的<code>selectCodeById</code></li>
+</ul>
+<p>接着在一个<code>&lt;select&gt;</code>中的<code>resultMap</code>指定该<code>map</code>的<code>id</code>即可。使用这种方法执行的是两次<code>SQL</code>：</p>
+<ul>
+<li>一次是<code>select * from person where id=?</code></li>
+<li>一次是<code>select * from idcard where id=?</code></li>
+</ul>
+<p>最后再把结果整起起来，开启调试可以发现实际上也是执行了两条<code>SQL</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201030170004401.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而第二个<code>&lt;resultMap&gt;</code>中，在<code>&lt;association&gt;</code>里面没有了<code>select</code>属性，直接将结果映射到<code>SelectPersonById</code>中，这是执行一条<code>SQL</code>语句的结果：</p>
+<pre><code class="language-sql">select p.*,ic.code from person p,idcard ic where p.idcard_id = ic.id and p.id=#{id}
+</code></pre>
+<p>实际查询如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201030212207860.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果需要重要可以将其配置成<code>&lt;resultMap&gt;</code>，比如：</p>
+<pre><code class="language-xml">&lt;association property=&quot;card&quot; resultMap=&quot;resultMap&quot; /&gt;
+&lt;resultMap id=&quot;resultMap&quot;&gt;
+	&lt;id property=&quot;id&quot; column=&quot;idcard_id&quot;/&gt;
+	&lt;result property=&quot;code&quot; column=&quot;code&quot;/&gt;
+&lt;/resultMap&gt;
+</code></pre>
+<p>而最后一个<code>&lt;select&gt;</code>是进行连接查询，无需额外的<code>&lt;resultMap&gt;</code>，实际执行情况如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201030212511565.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="614-dao接口">6.1.4 <code>Dao</code>接口</h3>
+<p>这个比较简单：</p>
+<pre><code class="language-java">public interface PersonDao {
+    Person selectPersonById1(Integer id);
+    Person selectPersonById2(Integer id);
+    PersonPOJO selectPersonById3(Integer id);
+}
+</code></pre>
+<h3 id="615-测试">6.1.5 测试</h3>
+<pre><code class="language-java">@Test
+public void selectPersonById()
+{
+    System.out.println(dao.selectPersonById1(1));
+    System.out.println(dao.selectPersonById2(1));
+    System.out.println(dao.selectPersonById3(1));
+}
+</code></pre>
+<p>注意在测试之前，需要修改配置文件<code>mybatis-config.xml</code>：</p>
+<pre><code class="language-xml">&lt;configuration&gt;
+    &lt;settings&gt;
+        &lt;!--延迟加载--&gt;
+        &lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;/&gt;
+        &lt;!--按需加载--&gt;
+        &lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;true&quot;/&gt;
+        &lt;!--调试开关，打印执行的SQL--&gt;
+&lt;!--        &lt;setting name=&quot;logImpl&quot; value=&quot;STDOUT_LOGGING&quot;/&gt;--&gt;
+    &lt;/settings&gt;
+    &lt;mappers&gt;
+        &lt;!--initMapper--&gt;
+        &lt;mapper resource=&quot;mapper/init/UserMapper.xml&quot; /&gt;
+        &lt;mapper resource=&quot;mapper/init/TestMapper.xml&quot; /&gt;
+        &lt;!--一对一级联Mapper--&gt;
+        &lt;mapper resource=&quot;mapper/oneToOne/PersonMapper.xml&quot; /&gt;
+        &lt;mapper resource=&quot;mapper/oneToOne/IdCardMapper.xml&quot; /&gt;
+    &lt;/mappers&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>前两个<code>&lt;setting&gt;</code>表示开启延迟加载以及按需加载，后面一个是设置调试开关，最后在下面的<code>&lt;mappers&gt;</code>加上<code>&lt;mapper&gt;</code>对应的<code>xml</code>的位置。</p>
+<p>要注意的一个是<code>&lt;settings&gt;</code>需要写在<code>&lt;mappers&gt;</code>的前面。</p>
+<p>另外因为<code>Dao</code>接口没有加上<code>@Mapper</code>注解，因此需要在<code>applicationContext.xml</code>中手动加上<code>Dao</code>位置：</p>
+<pre><code class="language-xml">&lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
+    &lt;property name=&quot;basePackage&quot; value=&quot;pers.oneToOne.dao&quot;/&gt;
+    &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sql.SessionFactory&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>测试结果：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/2020102908000335.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="62-一对多">6.2 一对多</h2>
+<p>一对多的级联查询与一对一处理有相似之处，主要是映射文件中的<code>&lt;collection&gt;</code>配置，例子也是和上面一样分五步。</p>
+<h3 id="621-数据表">6.2.1 数据表</h3>
+<p>需要两张表：</p>
+<ul>
+<li><code>user</code></li>
+<li><code>order</code></li>
+</ul>
+<p><code>user</code>可以沿用前面的<code>user</code>表，而<code>order</code>表如下：</p>
+<pre><code class="language-sql">use test;
+drop table if exists orders;
+
+create table orders(
+    id int(10) primary key auto_increment,
+    ordersn varchar(10) collate utf8mb4_unicode_ci default null,
+    user_id int(10) default null,
+    key user_id(user_id),
+    constraint user_id foreign key (user_id) references user(id)
+);
+
+insert into orders(`ordersn`,`user_id`) values ('testorder1',1),('testorder2',1),('testorder3',1);
+</code></pre>
+<h3 id="622-实体类">6.2.2 实体类</h3>
+<p>添加实体类<code>Orders</code>：</p>
+<pre><code class="language-java">@Data
+public class Orders {
+    private Integer id;
+    private String ordersn;
+}
+</code></pre>
+<p>同时创建一个带<code>Orders</code>的<code>User</code>：</p>
+<pre><code class="language-java">@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserWithOrders {
+    private Integer id;
+    private String name;
+    private Short age;
+    private List&lt;Orders&gt; ordersList;
+}
+</code></pre>
+<h3 id="623-映射文件">6.2.3 映射文件</h3>
+<p>两个：</p>
+<ul>
+<li><code>OrdersMapper.xml</code></li>
+<li><code>UserWithOrdersMapper.xml</code></li>
+</ul>
+<p>首先是<code>OrdersMapper.xml</code>，只有一个简单的<code>&lt;select&gt;</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToMany.dao.OrdersDao&quot;&gt;
+    &lt;select id=&quot;selectOrdersById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToMany.entity.Orders&quot;&gt;
+        select * from orders where user_id=#{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>接着是<code>UserWithOrdersMapper.xml</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToMany.dao.UserWithOrdersDao&quot;&gt;
+
+    &lt;resultMap id=&quot;userAndOrder1&quot; type=&quot;pers.oneToMany.entity.UserWithOrders&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+        &lt;collection property=&quot;ordersList&quot; ofType=&quot;pers.oneToMany.entity.Orders&quot; column=&quot;id&quot; select=&quot;pers.oneToMany.dao.OrdersDao.selectOrdersById&quot;/&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectUserOrders1&quot; parameterType=&quot;Integer&quot; resultMap=&quot;userAndOrder1&quot;&gt;
+        select * from user where id=#{id}
+    &lt;/select&gt;
+
+    &lt;resultMap id=&quot;userAndOrder2&quot; type=&quot;pers.oneToMany.entity.UserWithOrders&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot; /&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot; /&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot; /&gt;
+        &lt;collection property=&quot;ordersList&quot; ofType=&quot;pers.oneToMany.entity.Orders&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;id&quot; /&gt;
+            &lt;result property=&quot;ordersn&quot; column=&quot;ordersn&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectUserOrders2&quot; parameterType=&quot;Integer&quot; resultMap=&quot;userAndOrder2&quot;&gt;
+        select u.*,o.id,o.ordersn from user u,orders o where u.id = o.user_id and u.id = #{id}
+    &lt;/select&gt;
+
+    &lt;select id=&quot;selectUserOrders3&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToMany.pojo.UserOrdersPOJO&quot;&gt;
+        select u.*,o.id,o.ordersn from user u,orders o where u.id = o.user_id and u.id = #{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>相比起一对一的级联，重点改变的就是其中的<code>&lt;collection&gt;</code>，重要属性如下：</p>
+<ul>
+<li><code>property</code>：指定实体类的属性字段</li>
+<li><code>ofType</code>：指定集合中的类型</li>
+<li><code>column</code>：将哪些值传递给<code>select</code>中的方法</li>
+<li><code>select</code>：嵌套查询的语句</li>
+</ul>
+<p>第二个<code>&lt;collection&gt;</code>类似，将查询的结果直接映射到<code>Orders</code>的属性上面。最后一种是直接使用连接查询。</p>
+<h3 id="624-dao接口">6.2.4 <code>Dao</code>接口</h3>
+<pre><code class="language-java">public interface OrdersDao {
+    List&lt;Orders&gt; selectOrdersById(Integer id);
+}
+
+public interface UserWithOrdersDao {
+    UserWithOrders selectUserOrders1(Integer id);
+    UserWithOrders selectUserOrders2(Integer id);
+    List&lt;UserOrdersPOJO&gt; selectUserOrders3(Integer id);
+}
+</code></pre>
+<h3 id="625-测试">6.2.5 测试</h3>
+<pre><code class="language-java">@Test
+public void selectUserOrders()
+{
+    System.out.println(dao.selectUserOrders1(1));
+    System.out.println(dao.selectUserOrders2(1));
+    System.out.println(dao.selectUserOrders3(1));
+}
+</code></pre>
+<h2 id="63-多对多">6.3 多对多</h2>
+<p><code>MyBaits</code>其实不支持多对多级联，但是可以通过多个一对多级联实现，比如一个订单对应多个商品，一个商品对应多个订单，这样两者就是多对多级联关系，这样使用一个中间表，就可以转换为两个一对多关系。</p>
+<p>下面同样通过五个步骤实现多对多级联。</p>
+<h3 id="631-数据表">6.3.1 数据表</h3>
+<p>需要订单表、商品表以及一个中间表，由于订单表<code>Orders</code>之前已创建，这里只需要创建两个表：</p>
+<pre><code class="language-sql">use test;
+
+create table product(
+    id int(10) primary key auto_increment,
+    name varchar(10) collate utf8mb4_unicode_ci default null,
+    price double default null
+);
+
+create table orders_detail(
+    id int(10) primary key auto_increment,
+    orders_id int(10) default null,
+    product_id int(10) default null,
+    key orders_id(orders_id),
+    key product_id(product_id),
+    constraint orders_id foreign key (orders_id) references orders(id),
+    constraint product_id foreign key (product_id) references product(id)
+);
+
+insert into product(`name`,`price`) values('product1',1.1),('product2',2.2),('product3',3.3);
+insert into orders_detail(`orders_id`,`product_id`) values(1,1),(1,2),(1,3),(2,1),(2,3);
+</code></pre>
+<h3 id="632-实体类">6.3.2 实体类</h3>
+<p>订单类可以沿用之前的，只需要两个实体类：</p>
+<pre><code class="language-java">@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product {
+    private Integer id;
+    private String name;
+    private Double price;
+    private List&lt;Orders&gt; orders;
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrdersWithProduct {
+    private Integer id;
+    private String ordersn;
+    private List&lt;Product&gt; products;
+}
+</code></pre>
+<h3 id="633-映射文件">6.3.3 映射文件</h3>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.manyToMany.dao.OrdersWithProductDao&quot;&gt;
+    &lt;resultMap id=&quot;ordersAndProduct&quot; type=&quot;pers.manyToMany.entity.OrdersWithProduct&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;ordersn&quot; column=&quot;ordersn&quot;/&gt;
+        &lt;collection property=&quot;products&quot; ofType=&quot;pers.manyToMany.entity.Product&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;pid&quot;/&gt;
+            &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+            &lt;result property=&quot;price&quot; column=&quot;price&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectOrdersAndProduct&quot; resultMap=&quot;ordersAndProduct&quot;&gt;
+        select o.*,p.id as pid ,p.name,p.price from orders o,orders_detail od, product p where o.id = od.orders_id and od.product_id = p.id
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>这里的多对多级联实质上是通过每次指定不同的<code>OrdersId</code>去查询对应的<code>Product</code>实现的，也就是分成了多次的一对多级联。</p>
+<h3 id="634-dao接口">6.3.4 <code>Dao</code>接口</h3>
+<pre><code class="language-java">public interface OrdersWithProductDao {
+    List&lt;OrdersWithProduct&gt; selectOrdersAndProduct();
+}
+</code></pre>
+<h3 id="635-测试">6.3.5 测试</h3>
+<pre><code class="language-java">@Test
+public void test()
+{
+    ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+    OrdersWithProductDao dao = context.getBean(OrdersWithProductDao.class);
+    System.out.println(dao.selectOrdersAndProduct());
+}
+</code></pre>
+<h1 id="7-动态sql">7 动态<code>SQL</code></h1>
+<p>最后来看一下动态<code>SQL</code>，动态<code>SQL</code>可以避免手动拼接<code>SQL</code>语句，比如在某些条件成立的情况下添加<code>and xxx=xxxx</code>之类的操作。先来看一下最常用的<code>&lt;if&gt;</code>。</p>
+<h2 id="71-if">7.1 <code>&lt;if&gt;</code></h2>
+<p><code>&lt;if&gt;</code>类似<code>Java</code>中的<code>if</code>语句，最简单的例子如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByIf&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user where 1=1
+    &lt;if test=&quot;name != null and name != ''&quot;&gt;
+        and name like concat('%',#{name},'%')
+    &lt;/if&gt;
+    &lt;if test=&quot;age != null and age&gt;0&quot;&gt;
+        and age = #{age}
+    &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<p>也就是说当<code>test</code>中的条件成立时，便添加<code>and xxx</code>语句。注意<code>test</code>这个属性是<code>&lt;if&gt;</code>必须的，不能省略。</p>
+<p>（注这里用到了一个关键的<code>1=1</code>，仅作说明使用，实际开发请勿使用<code>1=1</code>进行拼接）</p>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByIf(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testIf()
+{
+    System.out.println(dao.selectByIf(User.builder().age((short) 33).name(&quot;111&quot;).build()));
+}
+</code></pre>
+<h2 id="72-choosewhenotherwise">7.2 <code>&lt;choose&gt;</code>+<code>&lt;when&gt;</code>+<code>&lt;otherwise&gt;</code></h2>
+<p>类似<code>Java</code>中的<code>switch</code>语句：</p>
+<ul>
+<li><code>&lt;choose&gt;</code>类似<code>switch</code></li>
+<li><code>&lt;when&gt;</code>类似<code>case</code></li>
+<li><code>&lt;otherwise&gt;</code>类似<code>default</code></li>
+</ul>
+<p>当其中一个<code>&lt;when&gt;</code>成立时，语句便结束，类似于自动加上了<code>&quot;break&quot;</code>。</p>
+<p>示例：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByChoose&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user where 1=1
+    &lt;choose&gt;
+        &lt;when test=&quot;name != null and name != ''&quot;&gt;
+            and name like concat('%',#{name},'%')
+        &lt;/when&gt;
+        &lt;when test=&quot;age != null and age&gt;0&quot;&gt;
+            and age=#{age}
+        &lt;/when&gt;
+        &lt;otherwise&gt;
+            and id != 3
+        &lt;/otherwise&gt;
+    &lt;/choose&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByChoose(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testChoose()
+{
+    System.out.println(dao.selectByChoose(User.builder().age((short)33).build()));
+}
+</code></pre>
+<h2 id="73-trim">7.3 <code>&lt;trim&gt;</code></h2>
+<p>主要功能：</p>
+<ul>
+<li>加前缀</li>
+<li>加后缀</li>
+<li>替换某些首部/尾部内容</li>
+</ul>
+<p>这里是一个使用<code>&lt;trim&gt;</code>来实现<code>&lt;where&gt;</code>的例子：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByTrim&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user
+    &lt;trim prefix=&quot;where&quot; prefixOverrides=&quot;and&quot;&gt;
+        &lt;if test=&quot;name != null and name != ''&quot;&gt;
+            and name like concat('%',#{name},'%')
+        &lt;/if&gt;
+    &lt;/trim&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByTrim(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testTrim()
+{
+    System.out.println(dao.selectByTrim(User.builder().build()));
+    System.out.println(dao.selectByTrim(User.builder().name(&quot;test2&quot;).build()));
+}
+</code></pre>
+<h2 id="74-where">7.4 <code>&lt;where&gt;</code></h2>
+<p><code>&lt;where&gt;</code>最常用的就是拼接查询条件，比如有多个查询条件，仅仅使用多个<code>&lt;if&gt;</code>的话会出现首个<code>&lt;if&gt;</code>有一个多余的<code>and</code>的问题，而使用<code>&lt;where&gt;</code>会进行智能处理，当然也对<code>or</code>适用，例子如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByWhere&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user
+    &lt;where&gt;
+        &lt;if test=&quot;name != null and name != ''&quot;&gt;
+            and name like concat('%',#{name},'%')
+        &lt;/if&gt;
+        &lt;if test=&quot;age != null and age&gt;0&quot;&gt;
+            and age=#{age}
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByWhere(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testWhere()
+{
+    System.out.println(dao.selectByWhere(User.builder().build()));
+    System.out.println(dao.selectByWhere(User.builder().name(&quot;111&quot;).build()));
+    System.out.println(dao.selectByWhere(User.builder().age((short)-3).build()));
+}
+</code></pre>
+<h2 id="75-set">7.5 <code>&lt;set&gt;</code></h2>
+<p><code>&lt;set&gt;</code>一般配合<code>update</code>语句使用，比如：</p>
+<pre><code class="language-xml">&lt;update id=&quot;updateBySet&quot; parameterType=&quot;pers.init.entity.User&quot;&gt;
+    update user
+    &lt;set&gt;
+        &lt;if test=&quot;name != null and name != ''&quot;&gt;
+            name = #{name},
+        &lt;/if&gt;
+        &lt;if test=&quot;age != null and age &gt; 0&quot;&gt;
+            age = #{age}
+        &lt;/if&gt;
+    &lt;/set&gt;
+    where id=#{id}
+&lt;/update&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">int updateBySet(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testSet()
+{
+    System.out.println(dao.updateBySet(User.builder().name(&quot;999999&quot;).age((short)39).id(1).build()));
+    System.out.println(dao.selectByWhere(User.builder().build()));
+}
+</code></pre>
+<h2 id="76-foreach">7.6 <code>&lt;foreach&gt;</code></h2>
+<p><code>&lt;foreach&gt;</code>主要用于<code>in</code>中，可以认为是一个集合，典型的使用场景是<code>select xxx from xxx where xxx in &lt;foreach&gt;</code>。</p>
+<p><code>&lt;foreach&gt;</code>的主要属性有：</p>
+<ul>
+<li><code>item</code>：每个元素的别名</li>
+<li><code>index</code>：每个元素的下标</li>
+<li><code>collection</code>：<code>&lt;foreach&gt;</code>的类型，有<code>list</code>、<code>array</code>、<code>map</code>三种，当传入单个参数且该参数类型为<code>List</code>时，则为<code>list</code>，传入单个参数且该参数类型为数组时，则为<code>array</code>，否则应将其封装成<code>Map</code>，并设置属性值为<code>map</code></li>
+<li><code>open</code>：语句开始标志</li>
+<li><code>close</code>：语句结束标志</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByForeach&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+  select * from user where id in
+    &lt;foreach collection=&quot;list&quot; item=&quot;item&quot; index=&quot;index&quot; open=&quot;(&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;#{item}&lt;/foreach&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByForeach(List&lt;Integer&gt; id);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testForeach()
+{
+    System.out.println(dao.selectByForeach(List.of(1,2,3)));
+}
+</code></pre>
+<h2 id="77-bind">7.7 <code>&lt;bind&gt;</code></h2>
+<p><code>&lt;bind&gt;</code>可用于对字符串进行拼接，对于字符串拼接，<code>MySQL</code>使用的是<code>concat</code>，而<code>Oracle</code>使用的是<code>||</code>，而<code>MyBatis</code>提供了<code>&lt;bind&gt;</code>可以屏蔽这种<code>DBMS</code>之间的差异，无需修改<code>xml</code>即可进行移植，例子如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByBind&quot; parameterType=&quot;pers.init.entity.User&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    &lt;bind name=&quot;new_name&quot; value=&quot;'%'+name+'%'&quot;/&gt;
+    select * from user where name like #{new_name}
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByBind(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testBind()
+{
+    System.out.println(dao.selectByBind(User.builder().name(&quot;test1&quot;).build()));
+}
+</code></pre>
+<h1 id="8-源码">8 源码</h1>
+<p>此处给出了实现所有例子后的代码，仅供参考，但不建议直接<code>clone</code>，建议从初始化工程开始逐步实现。</p>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringJavaInit">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringJavaInit">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter7/MyBatisSpringJavaInit">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringKotlinInit">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringKotlinInit">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter7/MyBatisSpringKotlinInit">CODE.CHINA</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-137-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-137-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-10-30">2020-10-30</time>
+                  <h4 class="title white no-margin">每日分享 第137期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-30">2020-10-30</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/">【长文】Spring学习笔记（七）：Mybatis映射器+动态SQL</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-137-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-137-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-30">2020-10-30</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-137-qi/">每日分享 第137期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/linux-xia-ping-mu-liang-du-de-diao-jie/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/linux-xia-ping-mu-liang-du-de-diao-jie.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-10-29">2020-10-29</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/linux-xia-ping-mu-liang-du-de-diao-jie/">Linux下屏幕亮度的调节</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-0 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-1 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-2 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-3 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-4 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-5 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-6 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-7 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-8 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-9 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-10 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-11 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-12 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-13 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-14 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-15 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-16 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-17 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-18 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-19 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-20 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-21 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-22 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-23 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-24 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-25 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-26 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-27 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-28 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-29 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-30 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-31 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-32 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-33 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-34 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-35 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-36 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-37 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-38 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-39 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-40 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-41 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-42 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-43 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-44 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-45 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-46 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-47 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-48 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-49 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-50 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-51 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-52 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-53 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-54 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-55 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-56 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-57 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-58 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-59 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-60 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-61 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-62 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-63 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-64 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-65 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-66 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-67 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-68 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-69 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-70 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-71 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-72 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-73 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-74 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-75 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-76 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-77 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-78 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-79 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-80 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-81 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-82 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-83 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 346 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

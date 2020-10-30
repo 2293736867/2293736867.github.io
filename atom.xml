@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-10-29T20:57:59.640Z</updated>
+    <updated>2020-10-30T07:26:19.115Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,964 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[【长文】Spring学习笔记（七）：Mybatis映射器+动态SQL]]></title>
+        <id>https://2293736867.github.io/post/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/</id>
+        <link href="https://2293736867.github.io/post/chang-wen-spring-xue-xi-bi-ji-qi-mybatis-ying-she-qi-dong-tai-sql/">
+        </link>
+        <updated>2020-10-30T07:24:24.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-mybatis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%A6%82%E8%A7%88">2 <code>MyBatis</code>配置文件概览</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E6%AD%A5%E9%AA%A4">3 准备步骤</a></li>
+<li><a href="#4-%E6%98%A0%E5%B0%84%E5%99%A8%E6%A6%82%E8%BF%B0">4 映射器概述</a>
+<ul>
+<li><a href="#41-select">4.1 <code>&lt;select&gt;</code></a></li>
+<li><a href="#42-%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0">4.2 传递参数</a>
+<ul>
+<li><a href="#421-map">4.2.1 <code>Map</code></a></li>
+<li><a href="#412-%E4%BD%BF%E7%94%A8javabean">4.1.2 使用<code>JavaBean</code></a></li>
+</ul>
+</li>
+<li><a href="#42-insert">4.2 <code>&lt;insert&gt;</code></a></li>
+<li><a href="#43-updatedelete">4.3 <code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code></a></li>
+<li><a href="#44-sql">4.4 <code>&lt;sql&gt;</code></a></li>
+</ul>
+</li>
+<li><a href="#5-resultmap">5 <code>&lt;resultMap&gt;</code></a>
+<ul>
+<li><a href="#51-%E4%BD%BF%E7%94%A8map">5.1 使用<code>Map</code></a></li>
+<li><a href="#52-%E4%BD%BF%E7%94%A8pojo">5.2 使用<code>POJO</code></a></li>
+</ul>
+</li>
+<li><a href="#6-%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2">6 级联查询</a>
+<ul>
+<li><a href="#61-%E4%B8%80%E5%AF%B9%E4%B8%80">6.1 一对一</a>
+<ul>
+<li><a href="#611-%E6%95%B0%E6%8D%AE%E8%A1%A8">6.1.1 数据表</a></li>
+<li><a href="#612-%E5%AE%9E%E4%BD%93%E7%B1%BB">6.1.2 实体类</a></li>
+<li><a href="#613-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">6.1.3 映射文件</a></li>
+<li><a href="#614-dao%E6%8E%A5%E5%8F%A3">6.1.4 <code>Dao</code>接口</a></li>
+<li><a href="#615-%E6%B5%8B%E8%AF%95">6.1.5 测试</a></li>
+</ul>
+</li>
+<li><a href="#62-%E4%B8%80%E5%AF%B9%E5%A4%9A">6.2 一对多</a>
+<ul>
+<li><a href="#621-%E6%95%B0%E6%8D%AE%E8%A1%A8">6.2.1 数据表</a></li>
+<li><a href="#622-%E5%AE%9E%E4%BD%93%E7%B1%BB">6.2.2 实体类</a></li>
+<li><a href="#623-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">6.2.3 映射文件</a></li>
+<li><a href="#624-dao%E6%8E%A5%E5%8F%A3">6.2.4 <code>Dao</code>接口</a></li>
+<li><a href="#625-%E6%B5%8B%E8%AF%95">6.2.5 测试</a></li>
+</ul>
+</li>
+<li><a href="#63-%E5%A4%9A%E5%AF%B9%E5%A4%9A">6.3 多对多</a>
+<ul>
+<li><a href="#631-%E6%95%B0%E6%8D%AE%E8%A1%A8">6.3.1 数据表</a></li>
+<li><a href="#632-%E5%AE%9E%E4%BD%93%E7%B1%BB">6.3.2 实体类</a></li>
+<li><a href="#633-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6">6.3.3 映射文件</a></li>
+<li><a href="#634-dao%E6%8E%A5%E5%8F%A3">6.3.4 <code>Dao</code>接口</a></li>
+<li><a href="#635-%E6%B5%8B%E8%AF%95">6.3.5 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-%E5%8A%A8%E6%80%81sql">7 动态<code>SQL</code></a>
+<ul>
+<li><a href="#71-if">7.1 <code>&lt;if&gt;</code></a></li>
+<li><a href="#72-choosewhenotherwise">7.2 <code>&lt;choose&gt;</code>+<code>&lt;when&gt;</code>+<code>&lt;otherwise&gt;</code></a></li>
+<li><a href="#73-trim">7.3 <code>&lt;trim&gt;</code></a></li>
+<li><a href="#74-where">7.4 <code>&lt;where&gt;</code></a></li>
+<li><a href="#75-set">7.5 <code>&lt;set&gt;</code></a></li>
+<li><a href="#76-foreach">7.6 <code>&lt;foreach&gt;</code></a></li>
+<li><a href="#77-bind">7.7 <code>&lt;bind&gt;</code></a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%BA%90%E7%A0%81">8 源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文主要讲述了如何使用<code>MyBatis</code>中的映射器以及动态<code>SQL</code>的配置。</p>
+<h1 id="2-mybatis配置文件概览">2 <code>MyBatis</code>配置文件概览</h1>
+<p><code>MyBatis</code>配置文件主要属性如下：</p>
+<ul>
+<li><code>&lt;settings&gt;</code>：相关设置，键值对形式</li>
+<li><code>&lt;typeAliases&gt;</code>：类型别名</li>
+<li><code>&lt;typeHandlers&gt;</code>：类型处理器</li>
+<li><code>&lt;objectFactory&gt;</code>：对象工厂</li>
+<li><code>&lt;plugins&gt;</code>：插件，包含若干个<code>&lt;plugin&gt;</code></li>
+<li><code>&lt;environments&gt;</code>：环境配置，包含若干个<code>&lt;environment&gt;</code>，在<code>&lt;environment&gt;</code>中可以指定事务管理器<code>&lt;transactionManager&gt;</code>以及数据源<code>&lt;dataSource&gt;</code></li>
+<li><code>&lt;databaseIdProvider&gt;</code>：数据库厂商标识</li>
+<li><code>&lt;mappers&gt;</code>：映射器，包含若干个<code>&lt;mapper&gt;</code></li>
+</ul>
+<p>注意顺序不能颠倒，否则启动时会发生异常。</p>
+<h1 id="3-准备步骤">3 准备步骤</h1>
+<p>由于本文大部分的代码都只给出了关键的语句而没有完整的工程，因此如果想要实现一遍请<code>clone</code><a href="https://github.com/2293736867/SpringInitProjectJavaAndKotlin/tree/master/MyBatisSpringJavaInit">此处</a>的代码（<code>Kotlin</code>请<code>clone</code><a href="https://github.com/2293736867/SpringInitProjectJavaAndKotlin/tree/master/MyBatisSpringKotlinInit">此处</a>），并：</p>
+<ul>
+<li>利用<code>resources/sql</code>下的脚本文件创建数据库以及数据表，并插入相应数据</li>
+<li>修改<code>MyBatis</code>、<code>Spring</code>、<code>dhcp2</code>等依赖为最新版本并修改<code>MySQL</code>驱动为对应版本</li>
+<li>修改<code>applicationContext.xml</code>文件中的数据库用户名，密码以及数据库<code>URL</code>，可能需要修改驱动</li>
+<li>开启数据库服务并进行测试，运行<code>MainTest</code>中的测试方法即可，正常来说会出现如下结果：</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201028140955357.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-映射器概述">4 映射器概述</h1>
+<p><code>MyBatis</code>的映射器由一个接口加上<code>XML</code>映射文件组成，是最复杂的组件，映射文件常用元素如下：</p>
+<ul>
+<li><code>&lt;select&gt;</code>：查询语句</li>
+<li><code>&lt;insert&gt;</code>/<code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code>：<code>插入</code>/<code>更新</code>/<code>删除</code>语句，返回操作所影响的行数，比如插入了两行，操作成功了影响的行数则为两行，返回整数2</li>
+<li><code>&lt;sql&gt;</code>：自定义的<code>SQL</code></li>
+<li><code>&lt;resultMap&gt;</code>：提供映射规则</li>
+</ul>
+<p>下面先来看一下最常用的<code>&lt;select&gt;</code>。</p>
+<h2 id="41-select">4.1 <code>&lt;select&gt;</code></h2>
+<p>示例（在<code>mapper/UserDao.xml</code>直接添加即可）：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user where id = #{id}
+&lt;/select&gt;
+</code></pre>
+<p>其中<code>id</code>是唯一标识符，接受一个<code>Integer</code>，返回<code>com.pojo.User</code>对象，结果集自动映射到<code>com.pojo.User</code>中。</p>
+<p>常用属性如下：</p>
+<ul>
+<li><code>id</code>：<code>&lt;select&gt;</code>语句的全局唯一标识符</li>
+<li><code>paramterType</code>：表示传入<code>SQL</code>语句的参数类型的全限定名或别名，可选，能自动推断</li>
+<li><code>resultType</code>：执行<code>SQL</code>后返回的类型</li>
+<li><code>resultMap</code>：与<code>resultType</code>类似，<code>resultType</code>默认一一对应映射，比如表字段名为<code>id</code>，则映射到实体类的<code>id</code>中，而<code>resultMap</code>需要手动定义映射关系，这样就可以把表字段中的<code>id</code>映射到实体类的<code>id1</code>，或<code>id2</code>，或<code>id3</code>，<code>resultType</code>与<code>resultMap</code>两者需要指定一个，不能同时存在</li>
+<li><code>flushCache</code>：设置调用<code>SQL</code>后是否要求<code>MyBatis</code>清空之前查询的本地缓存以及二级缓存，默认<code>false</code></li>
+<li><code>useCache</code>：启动二级缓存，默认<code>true</code></li>
+<li><code>timeout</code>：超时参数，单位秒</li>
+<li><code>fetchSize</code>：获取记录的总条数设定</li>
+<li><code>statementType</code>：使用哪个<code>JDBC</code>的<code>Statement</code>，取值可以为<code>STATEMENT</code>/<code>PREPARED</code>/<code>CALLABLE</code>，分别表示<code>Statement</code>/<code>PreparedStatement</code>/<code>CallableStatement</code></li>
+<li><code>resultSetType</code>：针对<code>JDBC</code>的<code>ResultSet</code>，可设置为<code>FORWARD_ONLY</code>/<code>SCROLL_SENSITIVE</code>/<code>SCROLL_INSENSITIVE</code>，分别表示<code>只允许向前访问</code>/<code>双向滚动，不及时更新</code>/<code>双向滚动，及时更新</code></li>
+</ul>
+<p>并修改<code>UserDao</code>，添加一个<code>selectById</code>方法：</p>
+<pre><code class="language-java">User selectById(Integer id);
+</code></pre>
+<p>可以直接测试了：</p>
+<pre><code class="language-java">@Test
+public void selectById()
+{
+    System.out.println(dao.selectById(1));
+}
+</code></pre>
+<p>下面来看一下如何传递多个参数。</p>
+<h2 id="42-传递参数">4.2 传递参数</h2>
+<p>有了最基本的<code>select</code>后，传递<code>id</code>这种单一参数很容易，但是实际情况中很多时候需要传递多个参数，<code>MyBatis</code>中传递多个参数有两种方式：</p>
+<ul>
+<li>通过<code>Map</code>传递</li>
+<li>通过<code>JavaBean</code>传递</li>
+</ul>
+<h3 id="421-map">4.2.1 <code>Map</code></h3>
+<p>可以使用<code>Map</code>传递多个参数，示例<code>&lt;select&gt;</code>如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByMap&quot; resultType=&quot;pers.init.entity.User&quot; parameterType=&quot;map&quot;&gt;
+    select * from user where name like concat('%', #{name}, '%') and age = #{age}
+&lt;/select&gt;
+</code></pre>
+<p>参数名<code>name</code>以及<code>age</code>是<code>Map</code>的键。</p>
+<p>接着在<code>UserDao</code>下添加：</p>
+<pre><code class="language-java">User selectByMap(Map&lt;String,String&gt; map);
+</code></pre>
+<p>然后在主类中使用<code>Map</code>添加键值对：</p>
+<pre><code class="language-java">@Test
+public void selectByMap()
+{
+    Map&lt;String,String&gt; map = new HashMap&lt;&gt;();
+    map.put(&quot;name&quot;,&quot;111&quot;);
+    map.put(&quot;age&quot;,&quot;33&quot;);
+    System.out.println(dao.selectByMap(map));
+}
+</code></pre>
+<p>这样就能传递多个参数进行查询了。</p>
+<h3 id="412-使用javabean">4.1.2 使用<code>JavaBean</code></h3>
+<p>传递多个参数的另一种方法是利用<code>JavaBean</code>传递，创建一个<code>POJO</code>类：</p>
+<pre><code class="language-java">@Getter
+@Setter
+@Builder
+@ToString
+public class UserPOJO {
+    private String name;
+    private Integer age;
+}
+</code></pre>
+<p>修改<code>UserDao</code>接口方法：</p>
+<pre><code class="language-java">public User selectByPOJO(UserPOJO user)
+</code></pre>
+<p>接着修改映射文件，实际上修改<code>parameterType</code>即可：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByPOJO&quot; resultType=&quot;pers.init.entity.User&quot; parameterType=&quot;pers.init.pojo.UserPOJO&quot;&gt;
+    select * from user where name like concat('%', #{name}, '%') and age = #{age}
+&lt;/select&gt;
+</code></pre>
+<p>注意访问传递的参数时直接使用<code>POJO</code>类的属性名即可，无须加上类似<code>UserPOJO.</code>的前缀。</p>
+<p>最后进行测试：</p>
+<pre><code class="language-java">@Test
+public void selectByPOJO()
+{
+    UserPOJO pojo = UserPOJO.builder().age(33).name(&quot;111&quot;).build();
+    System.out.println(dao.selectByPOJO(pojo));
+}
+</code></pre>
+<h2 id="42-insert">4.2 <code>&lt;insert&gt;</code></h2>
+<p><code>&lt;insert&gt;</code>用于插入，大部分属性与<code>&lt;select&gt;</code>相同，下面是几个特有属性：</p>
+<ul>
+<li><code>keyProperty</code>：将插入操作的返回值赋给<code>POJO</code>类的某个属性</li>
+<li><code>keyColumn</code>：用于设置主键列的位置，当表中第1列不是主键时需要设置该参数，联合主键可以使用逗号分隔</li>
+<li><code>useGeneratedKeys</code>：使用<code>JDBC</code>的<code>getGeneratedKeys</code>获取数据库内部产生的主键，默认<code>false</code></li>
+</ul>
+<p>比如典型的主键回填<code>&lt;insert&gt;</code>如下：</p>
+<pre><code class="language-xml">&lt;insert id=&quot;insertUser1&quot; parameterType=&quot;pers.init.entity.User&quot; keyProperty=&quot;id&quot; useGeneratedKeys=&quot;true&quot;&gt;
+    insert into user(name, age) values (#{name}, #{id})
+&lt;/insert&gt;
+</code></pre>
+<p>这样就会利用数据库生成的自增主键回填到<code>User</code>的<code>id</code>属性中，<code>UserDao</code>接口如下：</p>
+<pre><code class="language-java">int insertUser1(User user);
+</code></pre>
+<p>一般来说插入操作返回一个整数，表示操作影响的行数，因此可以设置返回值为<code>int</code>，测试如下：</p>
+<pre><code class="language-java">@Test
+public void insertUser1()
+{
+    User user = User.builder().age((short) 88).name(&quot;test1&quot;).build();
+    System.out.println(dao.insertUser1(user));
+    System.out.println(user.getId());
+}
+</code></pre>
+<p>另外如果不支持自增主键，可以使用<code>selectKey</code>自定义生成主键，比如：</p>
+<pre><code class="language-xml">&lt;insert id=&quot;insertUser2&quot; parameterType=&quot;pers.init.entity.User&quot;&gt;
+    &lt;selectKey keyProperty=&quot;id&quot; resultType=&quot;integer&quot; order=&quot;BEFORE&quot;&gt;
+        select if(max(id) is null,1,max(id)+1) as newId from user
+    &lt;/selectKey&gt;
+    insert into user(id,name,age) values(#{id},#{name},#{age})
+&lt;/insert&gt;
+</code></pre>
+<p><code>&lt;selectKey&gt;</code>中的<code>keyProperty</code>指定了新主键<code>newId</code>返回给<code>pers.pojo.User</code>的<code>id</code>属性，<code>order</code>设置执行顺序，<code>BEFORE</code>/<code>AFTER</code>表示执行<code>&lt;selectKey&gt;</code>之后/之前再执行插入语句。</p>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void insertUser2()
+{
+    User user = User.builder().age((short) 10).name(&quot;test2&quot;).build();
+    System.out.println(dao.insertUser2(user));
+    System.out.println(user.getId());
+}
+</code></pre>
+<h2 id="43-updatedelete">4.3 <code>&lt;update&gt;</code>/<code>&lt;delete&gt;</code></h2>
+<p>返回一个整数，属性与<code>&lt;insert&gt;</code>/<code>&lt;select&gt;</code>类似，简单示例如下：</p>
+<pre><code class="language-xml">&lt;update id=&quot;updateUser&quot; parameterType=&quot;pers.init.entity.User&quot;&gt;
+    update user set name=#{name}, age=#{age} where id = #{id}
+&lt;/update&gt;
+
+&lt;delete id=&quot;deleteUser&quot; parameterType=&quot;Integer&quot;&gt;
+    delete from user where id = #{id}
+&lt;/delete&gt;
+</code></pre>
+<p>同理<code>update/delete</code>返回一个整数，表示操作影响的行数，因此设置<code>UserDao</code>接口如下：</p>
+<pre><code class="language-java">int updateUser(User user);
+int deleteUser(Integer id);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void updateUser()
+{
+    User user = User.builder().id(3).name(&quot;3333333&quot;).age((short)11).build();
+    selectAll();
+    System.out.println(dao.updateUser(user));
+    selectAll();
+}
+
+@Test
+public void deleteUser()
+{
+    selectAll();
+    System.out.println(dao.deleteUser(3));
+    selectAll();
+}
+</code></pre>
+<h2 id="44-sql">4.4 <code>&lt;sql&gt;</code></h2>
+<p>用于定义<code>SQL</code>的一部分，以方便后面的<code>SQL</code>语句引用，比如：</p>
+<pre><code class="language-xml">&lt;sql id=&quot;column&quot;&gt;
+    id,name,age
+&lt;/sql&gt;
+&lt;select id=&quot;selectBySqlColumn&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select &lt;include refid=&quot;column&quot;/&gt; from user
+&lt;/select&gt;
+</code></pre>
+<p><code>UserDao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectBySqlColumn();
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void selectBySqlColumn()
+{
+    System.out.println(dao.selectBySqlColumn());
+}
+</code></pre>
+<h1 id="5-resultmap">5 <code>&lt;resultMap&gt;</code></h1>
+<p>上面提高过，<code>&lt;resultMap&gt;</code>比<code>&lt;resultType&gt;</code>要强大，但是需要手动定义映射关系，一个常见的<code>&lt;resultMap&gt;</code>如下：</p>
+<pre><code class="language-xml">&lt;resultMap type=&quot;package1.package2.package3.POJO&quot; id=&quot;resultMapId&quot;&gt;
+	&lt;constrcutor&gt;                       &lt;!--实例化时将结果注入到构造方法中--&gt;
+		&lt;idArg /&gt;                       &lt;!--ID参数--&gt;
+		&lt;arg /&gt;                         &lt;!--普通参数--&gt;
+	&lt;/constrcutor&gt;
+	&lt;id /&gt;                              &lt;!--表示哪个列是主键--&gt;
+	&lt;result /&gt;                          &lt;!--注入到字段/JavaBean属性的普通结果--&gt;
+	&lt;association property=&quot;&quot;&gt;           &lt;!--一对一关联--&gt;
+	&lt;collection property=&quot;&quot;&gt;            &lt;!--一对多关联--&gt;
+	&lt;discriminator javaType=&quot;&quot;&gt;         &lt;!--使用结果值决定哪个结果映射--&gt;
+		&lt;case value=&quot;&quot;&gt;                 &lt;!--基于某些值的结果映射--&gt;
+	&lt;/discriminator&gt;
+&lt;/resultMap&gt;
+</code></pre>
+<h2 id="51-使用map">5.1 使用<code>Map</code></h2>
+<p>查询<code>SQL</code>的结果可以使用<code>Map</code>/<code>POJO</code>存储，使用<code>Map</code>存储不需要手动编写<code>&lt;resultMap&gt;</code>，默认表属性名是键值对的键：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectReturnMap&quot; resultType=&quot;Map&quot;&gt;
+    select * from user
+&lt;/select&gt;
+</code></pre>
+<p>可用<code>List&lt;Map&gt;</code>来接收返回结果，一条记录映射到一个<code>Map</code>对象，<code>Map</code>中的<code>key</code>是<code>select</code>的字段名。</p>
+<p>示例的<code>UserDao</code>方法如下：</p>
+<pre><code class="language-java">List&lt;Map&lt;String,Object&gt;&gt; selectReturnMap();
+</code></pre>
+<p>其中<code>Map</code>类型为<code>Map&lt;String,Object&gt;</code>，测试方法如下：</p>
+<pre><code class="language-java"> @Test
+public void selectReturnMap()
+{
+    dao.selectReturnMap().forEach(System.out::println);
+}
+</code></pre>
+<h2 id="52-使用pojo">5.2 使用<code>POJO</code></h2>
+<p>如果使用<code>POJO</code>存储返回的对象时，需要先定义一个<code>POJO</code>类，可以在上面的<code>UserPOJO</code>基础上加上一个<code>id</code>属性：</p>
+<pre><code class="language-java">@Getter
+@Setter
+@Builder
+@ToString
+public class UserPOJO {
+    private Integer id;
+    private String name;
+    private Integer age;
+}
+</code></pre>
+<p>接着编写映射文件：</p>
+<pre><code class="language-xml">&lt;resultMap id=&quot;testPOJO&quot; type=&quot;pers.init.pojo.UserPOJO&quot;&gt;
+    &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+    &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+    &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+&lt;/resultMap&gt;
+</code></pre>
+<p>其中<code>property</code>指定<code>POJO</code>的属性，<code>column</code>是表字段名，最后配合<code>&lt;select&gt;</code>使用，指定<code>resultMap</code>为对应<code>id</code>：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectReturnPOJO&quot; resultMap=&quot;testPOJO&quot;&gt;
+	select * from user
+&lt;/select&gt;
+</code></pre>
+<p>返回结果可以用<code>List&lt;UserPOJO&gt;</code>接收：</p>
+<pre><code class="language-java">List&lt;UserPOJO&gt; selectReturnPOJO();
+</code></pre>
+<p>测试方法：</p>
+<pre><code class="language-java">@Test
+public void selectReturnPOJO()
+{
+    dao.selectReturnPOJO().forEach(System.out::println);
+}
+</code></pre>
+<h1 id="6-级联查询">6 级联查询</h1>
+<p>级联查询就是利用主键与外键的关系进行组合查询，比如表<code>A</code>的一个外键引用了表<code>B</code>的一个主键，查询<code>A</code>时，通过<code>A</code>的外键将<code>B</code>的相关记录返回，这就是级联查询。常见的级联查询有三种：</p>
+<ul>
+<li>一对一</li>
+<li>一对多</li>
+<li>多对多</li>
+</ul>
+<p><code>MyBatis</code>支持一对一以及一对多级联，没有对多对多级联提供支持，但是可以用多个一对多级联实现多对多级联。下面分别来看一下。</p>
+<h2 id="61-一对一">6.1 一对一</h2>
+<p>一对一级联查询是最常见的级联查询，可以通过<code>&lt;resultMap&gt;</code>中的<code>&lt;association&gt;</code>进行配置，通常使用的属性如下：</p>
+<ul>
+<li><code>property</code>：映射到实体类的对象属性</li>
+<li><code>column</code>：指定表中对应的字段</li>
+<li><code>javaType</code>：指定映射到实体对象属性的类型</li>
+<li><code>select</code>：指定引入嵌套查询的子<code>SQL</code>语句，用于关联映射中的嵌套查询</li>
+</ul>
+<p>下面通过一个例子进行说明，例子分五步：</p>
+<ul>
+<li>创建数据表</li>
+<li>创建实体类</li>
+<li>编写映射文件</li>
+<li>修改持久层接口</li>
+<li>添加测试方法</li>
+</ul>
+<h3 id="611-数据表">6.1.1 数据表</h3>
+<p>为了方便新增表以及数据都写在一起：</p>
+<pre><code class="language-sql">use test;
+
+drop table if exists idcard;
+drop table if exists person;
+
+create table idcard(
+    id int(10) primary key auto_increment,
+    code char(18) collate utf8mb4_unicode_ci default null
+);
+
+create table person(
+    id int(10) primary key,
+    name varchar(20) collate utf8mb4_unicode_ci default null,
+    age smallint default null,
+    idcard_id int(10) default null,
+    key idcard_id(idcard_id),
+    constraint idcard_id foreign key (idcard_id) references idcard(id)
+);
+
+insert into idcard(`code`) values('123456789123456789');
+
+insert into person(`id`,`name`,`age`,`idcard_id`) values (1,'111',22,1);
+</code></pre>
+<h3 id="612-实体类">6.1.2 实体类</h3>
+<pre><code class="language-java">@Data
+public class IdCard {
+    private Integer id;
+    private String code;
+}
+
+@Data
+public class Person {
+    private Integer id;
+    private String name;
+    private Integer age;
+    private IdCard card;
+}
+</code></pre>
+<p>另外还需要创建一个映射结果的<code>POJO</code>类：</p>
+<pre><code class="language-java">@Data
+public class PersonPOJO {
+    private Integer id;
+    private String name;
+    private Short age;
+    private String code;
+}
+</code></pre>
+<h3 id="613-映射文件">6.1.3 映射文件</h3>
+<p>映射文件分为两个：</p>
+<ul>
+<li><code>IdCardMapper.xml</code></li>
+<li><code>PersonMapper.xml</code></li>
+</ul>
+<p>首先是<code>IdCardMapper.xml</code>，加上一个<code>&lt;select&gt;</code>即可，注意<code>namespace</code>的位置填写正确，对应<code>dao</code>的位置。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToOne.dao.IdCardDao&quot;&gt;
+    &lt;select id=&quot;selectCodeById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToOne.entity.IdCard&quot;&gt;
+        select * from idcard where id = #{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>其次是<code>PersonMapper.xml</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToOne.dao.PersonDao&quot;&gt;
+    &lt;resultMap id=&quot;personMap1&quot; type=&quot;pers.oneToOne.entity.Person&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+        &lt;association property=&quot;card&quot; column=&quot;idcard_id&quot; javaType=&quot;pers.oneToOne.entity.IdCard&quot;
+                     select=&quot;pers.oneToOne.dao.IdCardDao.selectCodeById&quot;/&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectPersonById1&quot; parameterType=&quot;Integer&quot; resultMap=&quot;personMap1&quot;&gt;
+        select *
+        from person
+        where id = #{id}
+    &lt;/select&gt;
+
+    &lt;resultMap id=&quot;personMap2&quot; type=&quot;pers.oneToOne.entity.Person&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+        &lt;association property=&quot;card&quot; javaType=&quot;pers.oneToOne.entity.IdCard&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;idcard_id&quot;/&gt;
+            &lt;result property=&quot;code&quot; column=&quot;code&quot;/&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+
+    &lt;select id=&quot;selectPersonById2&quot; parameterType=&quot;Integer&quot; resultMap=&quot;personMap2&quot;&gt;
+        select p.*, ic.code
+        from person p,
+             idcard ic
+        where p.idcard_id = ic.id
+          and p.id = #{id}
+    &lt;/select&gt;
+
+    &lt;select id=&quot;selectPersonById3&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToOne.pojo.PersonPOJO&quot;&gt;
+        select p.*, ic.code
+        from person p,
+             idcard ic
+        where p.idcard_id = ic.id
+          and p.id = #{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>首先第一个<code>&lt;resultMap&gt;</code>先指定<code>id</code>等属性，接着是<code>&lt;association&gt;</code>：</p>
+<ul>
+<li><code>property</code>是实体类属性，注意类型为<code>IdCard</code></li>
+<li><code>column</code>是表字段名，类型为<code>int(10)</code></li>
+<li><code>javaType</code>是通过后面的<code>select</code>返回的类型，可以理解成是<code>property</code>的类型，也就是<code>IdCard</code></li>
+<li><code>select</code>指定嵌套查询使用的<code>SQL</code>，对应于<code>IdCardDao.xml</code>中的<code>selectCodeById</code></li>
+</ul>
+<p>接着在一个<code>&lt;select&gt;</code>中的<code>resultMap</code>指定该<code>map</code>的<code>id</code>即可。使用这种方法执行的是两次<code>SQL</code>：</p>
+<ul>
+<li>一次是<code>select * from person where id=?</code></li>
+<li>一次是<code>select * from idcard where id=?</code></li>
+</ul>
+<p>最后再把结果整起起来，开启调试可以发现实际上也是执行了两条<code>SQL</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201030170004401.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而第二个<code>&lt;resultMap&gt;</code>中，在<code>&lt;association&gt;</code>里面没有了<code>select</code>属性，直接将结果映射到<code>SelectPersonById</code>中，这是执行一条<code>SQL</code>语句的结果：</p>
+<pre><code class="language-sql">select p.*,ic.code from person p,idcard ic where p.idcard_id = ic.id and p.id=#{id}
+</code></pre>
+<p>实际查询如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201030212207860.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果需要重要可以将其配置成<code>&lt;resultMap&gt;</code>，比如：</p>
+<pre><code class="language-xml">&lt;association property=&quot;card&quot; resultMap=&quot;resultMap&quot; /&gt;
+&lt;resultMap id=&quot;resultMap&quot;&gt;
+	&lt;id property=&quot;id&quot; column=&quot;idcard_id&quot;/&gt;
+	&lt;result property=&quot;code&quot; column=&quot;code&quot;/&gt;
+&lt;/resultMap&gt;
+</code></pre>
+<p>而最后一个<code>&lt;select&gt;</code>是进行连接查询，无需额外的<code>&lt;resultMap&gt;</code>，实际执行情况如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201030212511565.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="614-dao接口">6.1.4 <code>Dao</code>接口</h3>
+<p>这个比较简单：</p>
+<pre><code class="language-java">public interface PersonDao {
+    Person selectPersonById1(Integer id);
+    Person selectPersonById2(Integer id);
+    PersonPOJO selectPersonById3(Integer id);
+}
+</code></pre>
+<h3 id="615-测试">6.1.5 测试</h3>
+<pre><code class="language-java">@Test
+public void selectPersonById()
+{
+    System.out.println(dao.selectPersonById1(1));
+    System.out.println(dao.selectPersonById2(1));
+    System.out.println(dao.selectPersonById3(1));
+}
+</code></pre>
+<p>注意在测试之前，需要修改配置文件<code>mybatis-config.xml</code>：</p>
+<pre><code class="language-xml">&lt;configuration&gt;
+    &lt;settings&gt;
+        &lt;!--延迟加载--&gt;
+        &lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;/&gt;
+        &lt;!--按需加载--&gt;
+        &lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;true&quot;/&gt;
+        &lt;!--调试开关，打印执行的SQL--&gt;
+&lt;!--        &lt;setting name=&quot;logImpl&quot; value=&quot;STDOUT_LOGGING&quot;/&gt;--&gt;
+    &lt;/settings&gt;
+    &lt;mappers&gt;
+        &lt;!--initMapper--&gt;
+        &lt;mapper resource=&quot;mapper/init/UserMapper.xml&quot; /&gt;
+        &lt;mapper resource=&quot;mapper/init/TestMapper.xml&quot; /&gt;
+        &lt;!--一对一级联Mapper--&gt;
+        &lt;mapper resource=&quot;mapper/oneToOne/PersonMapper.xml&quot; /&gt;
+        &lt;mapper resource=&quot;mapper/oneToOne/IdCardMapper.xml&quot; /&gt;
+    &lt;/mappers&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>前两个<code>&lt;setting&gt;</code>表示开启延迟加载以及按需加载，后面一个是设置调试开关，最后在下面的<code>&lt;mappers&gt;</code>加上<code>&lt;mapper&gt;</code>对应的<code>xml</code>的位置。</p>
+<p>要注意的一个是<code>&lt;settings&gt;</code>需要写在<code>&lt;mappers&gt;</code>的前面。</p>
+<p>另外因为<code>Dao</code>接口没有加上<code>@Mapper</code>注解，因此需要在<code>applicationContext.xml</code>中手动加上<code>Dao</code>位置：</p>
+<pre><code class="language-xml">&lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
+    &lt;property name=&quot;basePackage&quot; value=&quot;pers.oneToOne.dao&quot;/&gt;
+    &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sql.SessionFactory&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>测试结果：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/2020102908000335.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="62-一对多">6.2 一对多</h2>
+<p>一对多的级联查询与一对一处理有相似之处，主要是映射文件中的<code>&lt;collection&gt;</code>配置，例子也是和上面一样分五步。</p>
+<h3 id="621-数据表">6.2.1 数据表</h3>
+<p>需要两张表：</p>
+<ul>
+<li><code>user</code></li>
+<li><code>order</code></li>
+</ul>
+<p><code>user</code>可以沿用前面的<code>user</code>表，而<code>order</code>表如下：</p>
+<pre><code class="language-sql">use test;
+drop table if exists orders;
+
+create table orders(
+    id int(10) primary key auto_increment,
+    ordersn varchar(10) collate utf8mb4_unicode_ci default null,
+    user_id int(10) default null,
+    key user_id(user_id),
+    constraint user_id foreign key (user_id) references user(id)
+);
+
+insert into orders(`ordersn`,`user_id`) values ('testorder1',1),('testorder2',1),('testorder3',1);
+</code></pre>
+<h3 id="622-实体类">6.2.2 实体类</h3>
+<p>添加实体类<code>Orders</code>：</p>
+<pre><code class="language-java">@Data
+public class Orders {
+    private Integer id;
+    private String ordersn;
+}
+</code></pre>
+<p>同时创建一个带<code>Orders</code>的<code>User</code>：</p>
+<pre><code class="language-java">@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserWithOrders {
+    private Integer id;
+    private String name;
+    private Short age;
+    private List&lt;Orders&gt; ordersList;
+}
+</code></pre>
+<h3 id="623-映射文件">6.2.3 映射文件</h3>
+<p>两个：</p>
+<ul>
+<li><code>OrdersMapper.xml</code></li>
+<li><code>UserWithOrdersMapper.xml</code></li>
+</ul>
+<p>首先是<code>OrdersMapper.xml</code>，只有一个简单的<code>&lt;select&gt;</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToMany.dao.OrdersDao&quot;&gt;
+    &lt;select id=&quot;selectOrdersById&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToMany.entity.Orders&quot;&gt;
+        select * from orders where user_id=#{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>接着是<code>UserWithOrdersMapper.xml</code>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.oneToMany.dao.UserWithOrdersDao&quot;&gt;
+
+    &lt;resultMap id=&quot;userAndOrder1&quot; type=&quot;pers.oneToMany.entity.UserWithOrders&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot;/&gt;
+        &lt;collection property=&quot;ordersList&quot; ofType=&quot;pers.oneToMany.entity.Orders&quot; column=&quot;id&quot; select=&quot;pers.oneToMany.dao.OrdersDao.selectOrdersById&quot;/&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectUserOrders1&quot; parameterType=&quot;Integer&quot; resultMap=&quot;userAndOrder1&quot;&gt;
+        select * from user where id=#{id}
+    &lt;/select&gt;
+
+    &lt;resultMap id=&quot;userAndOrder2&quot; type=&quot;pers.oneToMany.entity.UserWithOrders&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot; /&gt;
+        &lt;result property=&quot;name&quot; column=&quot;name&quot; /&gt;
+        &lt;result property=&quot;age&quot; column=&quot;age&quot; /&gt;
+        &lt;collection property=&quot;ordersList&quot; ofType=&quot;pers.oneToMany.entity.Orders&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;id&quot; /&gt;
+            &lt;result property=&quot;ordersn&quot; column=&quot;ordersn&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectUserOrders2&quot; parameterType=&quot;Integer&quot; resultMap=&quot;userAndOrder2&quot;&gt;
+        select u.*,o.id,o.ordersn from user u,orders o where u.id = o.user_id and u.id = #{id}
+    &lt;/select&gt;
+
+    &lt;select id=&quot;selectUserOrders3&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.oneToMany.pojo.UserOrdersPOJO&quot;&gt;
+        select u.*,o.id,o.ordersn from user u,orders o where u.id = o.user_id and u.id = #{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>相比起一对一的级联，重点改变的就是其中的<code>&lt;collection&gt;</code>，重要属性如下：</p>
+<ul>
+<li><code>property</code>：指定实体类的属性字段</li>
+<li><code>ofType</code>：指定集合中的类型</li>
+<li><code>column</code>：将哪些值传递给<code>select</code>中的方法</li>
+<li><code>select</code>：嵌套查询的语句</li>
+</ul>
+<p>第二个<code>&lt;collection&gt;</code>类似，将查询的结果直接映射到<code>Orders</code>的属性上面。最后一种是直接使用连接查询。</p>
+<h3 id="624-dao接口">6.2.4 <code>Dao</code>接口</h3>
+<pre><code class="language-java">public interface OrdersDao {
+    List&lt;Orders&gt; selectOrdersById(Integer id);
+}
+
+public interface UserWithOrdersDao {
+    UserWithOrders selectUserOrders1(Integer id);
+    UserWithOrders selectUserOrders2(Integer id);
+    List&lt;UserOrdersPOJO&gt; selectUserOrders3(Integer id);
+}
+</code></pre>
+<h3 id="625-测试">6.2.5 测试</h3>
+<pre><code class="language-java">@Test
+public void selectUserOrders()
+{
+    System.out.println(dao.selectUserOrders1(1));
+    System.out.println(dao.selectUserOrders2(1));
+    System.out.println(dao.selectUserOrders3(1));
+}
+</code></pre>
+<h2 id="63-多对多">6.3 多对多</h2>
+<p><code>MyBaits</code>其实不支持多对多级联，但是可以通过多个一对多级联实现，比如一个订单对应多个商品，一个商品对应多个订单，这样两者就是多对多级联关系，这样使用一个中间表，就可以转换为两个一对多关系。</p>
+<p>下面同样通过五个步骤实现多对多级联。</p>
+<h3 id="631-数据表">6.3.1 数据表</h3>
+<p>需要订单表、商品表以及一个中间表，由于订单表<code>Orders</code>之前已创建，这里只需要创建两个表：</p>
+<pre><code class="language-sql">use test;
+
+create table product(
+    id int(10) primary key auto_increment,
+    name varchar(10) collate utf8mb4_unicode_ci default null,
+    price double default null
+);
+
+create table orders_detail(
+    id int(10) primary key auto_increment,
+    orders_id int(10) default null,
+    product_id int(10) default null,
+    key orders_id(orders_id),
+    key product_id(product_id),
+    constraint orders_id foreign key (orders_id) references orders(id),
+    constraint product_id foreign key (product_id) references product(id)
+);
+
+insert into product(`name`,`price`) values('product1',1.1),('product2',2.2),('product3',3.3);
+insert into orders_detail(`orders_id`,`product_id`) values(1,1),(1,2),(1,3),(2,1),(2,3);
+</code></pre>
+<h3 id="632-实体类">6.3.2 实体类</h3>
+<p>订单类可以沿用之前的，只需要两个实体类：</p>
+<pre><code class="language-java">@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product {
+    private Integer id;
+    private String name;
+    private Double price;
+    private List&lt;Orders&gt; orders;
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrdersWithProduct {
+    private Integer id;
+    private String ordersn;
+    private List&lt;Product&gt; products;
+}
+</code></pre>
+<h3 id="633-映射文件">6.3.3 映射文件</h3>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;pers.manyToMany.dao.OrdersWithProductDao&quot;&gt;
+    &lt;resultMap id=&quot;ordersAndProduct&quot; type=&quot;pers.manyToMany.entity.OrdersWithProduct&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;ordersn&quot; column=&quot;ordersn&quot;/&gt;
+        &lt;collection property=&quot;products&quot; ofType=&quot;pers.manyToMany.entity.Product&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;pid&quot;/&gt;
+            &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+            &lt;result property=&quot;price&quot; column=&quot;price&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+    &lt;select id=&quot;selectOrdersAndProduct&quot; resultMap=&quot;ordersAndProduct&quot;&gt;
+        select o.*,p.id as pid ,p.name,p.price from orders o,orders_detail od, product p where o.id = od.orders_id and od.product_id = p.id
+    &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>这里的多对多级联实质上是通过每次指定不同的<code>OrdersId</code>去查询对应的<code>Product</code>实现的，也就是分成了多次的一对多级联。</p>
+<h3 id="634-dao接口">6.3.4 <code>Dao</code>接口</h3>
+<pre><code class="language-java">public interface OrdersWithProductDao {
+    List&lt;OrdersWithProduct&gt; selectOrdersAndProduct();
+}
+</code></pre>
+<h3 id="635-测试">6.3.5 测试</h3>
+<pre><code class="language-java">@Test
+public void test()
+{
+    ApplicationContext context = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+    OrdersWithProductDao dao = context.getBean(OrdersWithProductDao.class);
+    System.out.println(dao.selectOrdersAndProduct());
+}
+</code></pre>
+<h1 id="7-动态sql">7 动态<code>SQL</code></h1>
+<p>最后来看一下动态<code>SQL</code>，动态<code>SQL</code>可以避免手动拼接<code>SQL</code>语句，比如在某些条件成立的情况下添加<code>and xxx=xxxx</code>之类的操作。先来看一下最常用的<code>&lt;if&gt;</code>。</p>
+<h2 id="71-if">7.1 <code>&lt;if&gt;</code></h2>
+<p><code>&lt;if&gt;</code>类似<code>Java</code>中的<code>if</code>语句，最简单的例子如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByIf&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user where 1=1
+    &lt;if test=&quot;name != null and name != ''&quot;&gt;
+        and name like concat('%',#{name},'%')
+    &lt;/if&gt;
+    &lt;if test=&quot;age != null and age&gt;0&quot;&gt;
+        and age = #{age}
+    &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<p>也就是说当<code>test</code>中的条件成立时，便添加<code>and xxx</code>语句。注意<code>test</code>这个属性是<code>&lt;if&gt;</code>必须的，不能省略。</p>
+<p>（注这里用到了一个关键的<code>1=1</code>，仅作说明使用，实际开发请勿使用<code>1=1</code>进行拼接）</p>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByIf(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testIf()
+{
+    System.out.println(dao.selectByIf(User.builder().age((short) 33).name(&quot;111&quot;).build()));
+}
+</code></pre>
+<h2 id="72-choosewhenotherwise">7.2 <code>&lt;choose&gt;</code>+<code>&lt;when&gt;</code>+<code>&lt;otherwise&gt;</code></h2>
+<p>类似<code>Java</code>中的<code>switch</code>语句：</p>
+<ul>
+<li><code>&lt;choose&gt;</code>类似<code>switch</code></li>
+<li><code>&lt;when&gt;</code>类似<code>case</code></li>
+<li><code>&lt;otherwise&gt;</code>类似<code>default</code></li>
+</ul>
+<p>当其中一个<code>&lt;when&gt;</code>成立时，语句便结束，类似于自动加上了<code>&quot;break&quot;</code>。</p>
+<p>示例：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByChoose&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user where 1=1
+    &lt;choose&gt;
+        &lt;when test=&quot;name != null and name != ''&quot;&gt;
+            and name like concat('%',#{name},'%')
+        &lt;/when&gt;
+        &lt;when test=&quot;age != null and age&gt;0&quot;&gt;
+            and age=#{age}
+        &lt;/when&gt;
+        &lt;otherwise&gt;
+            and id != 3
+        &lt;/otherwise&gt;
+    &lt;/choose&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByChoose(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testChoose()
+{
+    System.out.println(dao.selectByChoose(User.builder().age((short)33).build()));
+}
+</code></pre>
+<h2 id="73-trim">7.3 <code>&lt;trim&gt;</code></h2>
+<p>主要功能：</p>
+<ul>
+<li>加前缀</li>
+<li>加后缀</li>
+<li>替换某些首部/尾部内容</li>
+</ul>
+<p>这里是一个使用<code>&lt;trim&gt;</code>来实现<code>&lt;where&gt;</code>的例子：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByTrim&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user
+    &lt;trim prefix=&quot;where&quot; prefixOverrides=&quot;and&quot;&gt;
+        &lt;if test=&quot;name != null and name != ''&quot;&gt;
+            and name like concat('%',#{name},'%')
+        &lt;/if&gt;
+    &lt;/trim&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByTrim(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testTrim()
+{
+    System.out.println(dao.selectByTrim(User.builder().build()));
+    System.out.println(dao.selectByTrim(User.builder().name(&quot;test2&quot;).build()));
+}
+</code></pre>
+<h2 id="74-where">7.4 <code>&lt;where&gt;</code></h2>
+<p><code>&lt;where&gt;</code>最常用的就是拼接查询条件，比如有多个查询条件，仅仅使用多个<code>&lt;if&gt;</code>的话会出现首个<code>&lt;if&gt;</code>有一个多余的<code>and</code>的问题，而使用<code>&lt;where&gt;</code>会进行智能处理，当然也对<code>or</code>适用，例子如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByWhere&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    select * from user
+    &lt;where&gt;
+        &lt;if test=&quot;name != null and name != ''&quot;&gt;
+            and name like concat('%',#{name},'%')
+        &lt;/if&gt;
+        &lt;if test=&quot;age != null and age&gt;0&quot;&gt;
+            and age=#{age}
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByWhere(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testWhere()
+{
+    System.out.println(dao.selectByWhere(User.builder().build()));
+    System.out.println(dao.selectByWhere(User.builder().name(&quot;111&quot;).build()));
+    System.out.println(dao.selectByWhere(User.builder().age((short)-3).build()));
+}
+</code></pre>
+<h2 id="75-set">7.5 <code>&lt;set&gt;</code></h2>
+<p><code>&lt;set&gt;</code>一般配合<code>update</code>语句使用，比如：</p>
+<pre><code class="language-xml">&lt;update id=&quot;updateBySet&quot; parameterType=&quot;pers.init.entity.User&quot;&gt;
+    update user
+    &lt;set&gt;
+        &lt;if test=&quot;name != null and name != ''&quot;&gt;
+            name = #{name},
+        &lt;/if&gt;
+        &lt;if test=&quot;age != null and age &gt; 0&quot;&gt;
+            age = #{age}
+        &lt;/if&gt;
+    &lt;/set&gt;
+    where id=#{id}
+&lt;/update&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">int updateBySet(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testSet()
+{
+    System.out.println(dao.updateBySet(User.builder().name(&quot;999999&quot;).age((short)39).id(1).build()));
+    System.out.println(dao.selectByWhere(User.builder().build()));
+}
+</code></pre>
+<h2 id="76-foreach">7.6 <code>&lt;foreach&gt;</code></h2>
+<p><code>&lt;foreach&gt;</code>主要用于<code>in</code>中，可以认为是一个集合，典型的使用场景是<code>select xxx from xxx where xxx in &lt;foreach&gt;</code>。</p>
+<p><code>&lt;foreach&gt;</code>的主要属性有：</p>
+<ul>
+<li><code>item</code>：每个元素的别名</li>
+<li><code>index</code>：每个元素的下标</li>
+<li><code>collection</code>：<code>&lt;foreach&gt;</code>的类型，有<code>list</code>、<code>array</code>、<code>map</code>三种，当传入单个参数且该参数类型为<code>List</code>时，则为<code>list</code>，传入单个参数且该参数类型为数组时，则为<code>array</code>，否则应将其封装成<code>Map</code>，并设置属性值为<code>map</code></li>
+<li><code>open</code>：语句开始标志</li>
+<li><code>close</code>：语句结束标志</li>
+</ul>
+<p>例子：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByForeach&quot; parameterType=&quot;Integer&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+  select * from user where id in
+    &lt;foreach collection=&quot;list&quot; item=&quot;item&quot; index=&quot;index&quot; open=&quot;(&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;#{item}&lt;/foreach&gt;
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByForeach(List&lt;Integer&gt; id);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testForeach()
+{
+    System.out.println(dao.selectByForeach(List.of(1,2,3)));
+}
+</code></pre>
+<h2 id="77-bind">7.7 <code>&lt;bind&gt;</code></h2>
+<p><code>&lt;bind&gt;</code>可用于对字符串进行拼接，对于字符串拼接，<code>MySQL</code>使用的是<code>concat</code>，而<code>Oracle</code>使用的是<code>||</code>，而<code>MyBatis</code>提供了<code>&lt;bind&gt;</code>可以屏蔽这种<code>DBMS</code>之间的差异，无需修改<code>xml</code>即可进行移植，例子如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;selectByBind&quot; parameterType=&quot;pers.init.entity.User&quot; resultType=&quot;pers.init.entity.User&quot;&gt;
+    &lt;bind name=&quot;new_name&quot; value=&quot;'%'+name+'%'&quot;/&gt;
+    select * from user where name like #{new_name}
+&lt;/select&gt;
+</code></pre>
+<p><code>Dao</code>接口：</p>
+<pre><code class="language-java">List&lt;User&gt; selectByBind(User user);
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-java">@Test
+public void testBind()
+{
+    System.out.println(dao.selectByBind(User.builder().name(&quot;test1&quot;).build()));
+}
+</code></pre>
+<h1 id="8-源码">8 源码</h1>
+<p>此处给出了实现所有例子后的代码，仅供参考，但不建议直接<code>clone</code>，建议从初始化工程开始逐步实现。</p>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringJavaInit">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringJavaInit">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter7/MyBatisSpringJavaInit">CODE.CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringKotlinInit">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/CSBookNotes/tree/master/Spring/Chapter7/MyBatisSpringKotlinInit">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/CSBookNotes/-/tree/master/Spring/Chapter7/MyBatisSpringKotlinInit">CODE.CHINA</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第137期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-137-qi/</id>
@@ -420,517 +1378,6 @@
 <figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20201025081605673.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>重启即可进入系统：</p>
 <figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20201025081725330.jpg" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[真 ● 禁秘技 ● 奥义 ● 终端美化（改）]]></title>
-        <id>https://2293736867.github.io/post/zhen-jin-mi-ji-ao-yi-zhong-duan-mei-hua-gai/</id>
-        <link href="https://2293736867.github.io/post/zhen-jin-mi-ji-ao-yi-zhong-duan-mei-hua-gai/">
-        </link>
-        <updated>2020-10-24T15:33:39.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
-<li><a href="#3-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">3 准备工作</a>
-<ul>
-<li><a href="#31-zsh">3.1 <code>zsh</code></a></li>
-<li><a href="#32-zinitoh-my-zsh">3.2 <code>zinit</code>/<code>oh-my-zsh</code></a>
-<ul>
-<li><a href="#321-zinit">3.2.1 <code>zinit</code></a></li>
-<li><a href="#322-omz">3.2.2 <code>OMZ</code></a></li>
-</ul>
-</li>
-<li><a href="#33-%E5%AD%97%E4%BD%93">3.3 字体</a></li>
-</ul>
-</li>
-<li><a href="#4-p10k%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">4 <code>p10k</code>基本配置</a></li>
-<li><a href="#5-p10k%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE">5 <code>p10k</code>自定义配置</a>
-<ul>
-<li><a href="#51-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.1 如何修改配置文件？</a></li>
-<li><a href="#52-%E6%8F%90%E7%A4%BA%E6%AE%B5">5.2 提示段</a>
-<ul>
-<li><a href="#521-%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%E6%95%B4%E4%B8%AA%E6%8F%90%E7%A4%BA%E6%AE%B5">5.2.1 开启/关闭整个提示段</a></li>
-<li><a href="#522-%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3">5.2.2 系统相关</a></li>
-<li><a href="#523-%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3">5.2.3 语言相关</a></li>
-<li><a href="#524-%E4%BA%91%E7%9B%B8%E5%85%B3">5.2.4 云相关</a></li>
-<li><a href="#525-%E5%85%B6%E4%BB%96">5.2.5 其他</a></li>
-</ul>
-</li>
-<li><a href="#53-%E9%A2%9C%E8%89%B2">5.3 颜色</a></li>
-<li><a href="#54-%E4%BD%8D%E7%BD%AE">5.4 位置</a></li>
-<li><a href="#55-%E5%9B%BE%E6%A0%87">5.5 图标</a></li>
-</ul>
-</li>
-<li><a href="#6-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">6 配置文件</a></li>
-<li><a href="#7-%E6%9D%82%E9%A1%B9">7 杂项</a>
-<ul>
-<li><a href="#71-%E6%96%87%E7%AB%A0%E6%9B%B4%E6%96%B0">7.1 文章更新</a></li>
-<li><a href="#72-%E5%85%B3%E4%BA%8Ep9k">7.2 关于<code>p9k</code></a></li>
-<li><a href="#73-%E6%8F%90%E7%A4%BA%E5%BB%B6%E8%BF%9F">7.3 提示延迟</a></li>
-<li><a href="#74-%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6">7.4 加载速度</a></li>
-<li><a href="#75-%E5%85%B6%E4%BB%96">7.5 其他</a></li>
-</ul>
-</li>
-<li><a href="#8-%E5%85%B3%E4%BA%8Etty">8 关于<code>tty</code></a></li>
-<li><a href="#9-%E6%9C%80%E5%90%8E">9 最后</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>作为一个程序员，可以没钱，没车，没房，没老婆，没女朋友。</p>
-<p>但是，一定要有一个漂亮骚气的终端。</p>
-<p><s>没错，大骚特骚。</s></p>
-<p><s>说什么大实话。</s></p>
-<p>先来看看原生的终端：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200512153727942.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p><s>真漂亮啊。</s></p>
-<p>再看看美化过的：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200512133828301.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200512133937571.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200512133340522.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200512171351446.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p><s>这才叫终端嘛。</s></p>
-<p>美化过的就是不一样。</p>
-<p>如果您也想要这样的终端，那这篇文章要仔细看，同时顺手点个赞。</p>
-<p>文章讲述了如何使用<code>zsh</code>，配合主题<code>Powerlevel10k</code>（以下简称<code>p10k</code>）进行终端美化的过程，不废话了，进入正题。</p>
-<h1 id="2-环境">2 环境</h1>
-<p>笔者环境：</p>
-<ul>
-<li><code>Manjaro</code></li>
-<li><code>Xfce</code></li>
-<li>自带的<code>Xfce terminal</code></li>
-</ul>
-<p>其他<code>Linux</code>基本适用，安装<code>zsh</code>+<code>zinit</code>/<code>oh-my-zsh</code>即可，<code>Mac</code>用户可以通过<code>homebrew</code>安装<code>zsh</code>+<code>p10k</code>，至于<code>Win</code>用户，可以尝试<code>WSL</code>+图形界面。</p>
-<h1 id="3-准备工作">3 准备工作</h1>
-<p>安装<code>zsh</code>+<code>zinit</code>/<code>oh-my-zsh</code></p>
-<h2 id="31-zsh">3.1 <code>zsh</code></h2>
-<p><code>Manjaro/Arch</code>：</p>
-<pre><code class="language-bash">yay -S zsh
-</code></pre>
-<p><code>Debian</code>系：</p>
-<pre><code class="language-bash">sudo apt install zsh
-</code></pre>
-<p><code>RedHat</code>系：</p>
-<pre><code class="language-bash">sudo yum install -y zsh
-</code></pre>
-<p>其他可以来到官方<code>Github</code>安装，<a href="https://github.com/zsh-users/zsh">戳这里</a>。</p>
-<p>设为默认shell：</p>
-<pre><code class="language-bash">chsh -s $(which zsh)
-</code></pre>
-<p>再把原来的别名复制到</p>
-<pre><code class="language-bash">~/.zshrc
-</code></pre>
-<h2 id="32-zinitoh-my-zsh">3.2 <code>zinit</code>/<code>oh-my-zsh</code></h2>
-<p>其实<code>p10k</code>安装有很多种方式，如图：</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201024160220464.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里演示的是通过<code>zinit</code>或<code>oh-my-zsh</code>（以下简称<code>OMZ</code>安装）。</p>
-<h3 id="321-zinit">3.2.1 <code>zinit</code></h3>
-<p><code>zinit</code>是一个强大的<code>zsh</code>插件管理器，安装：</p>
-<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)&quot;
-</code></pre>
-<p>接着在<code>~/.zshrc</code>加上：</p>
-<pre><code class="language-bash">zinit ice depth=1; 
-zinit light romkatv/powerlevel10k
-</code></pre>
-<p>即可完成<code>p10k</code>的安装。</p>
-<h3 id="322-omz">3.2.2 <code>OMZ</code></h3>
-<p>首先安装<code>OMZ</code>：</p>
-<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
-#或
-sh -c &quot;$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
-</code></pre>
-<p>失败的话可以<code>clone</code>仓库安装，<a href="https://github.com/ohmyzsh/ohmyzsh">戳这里</a>。</p>
-<p>接着安装<code>p10k</code>：</p>
-<pre><code class="language-bash">git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-</code></pre>
-<p>最后在<code>~/.zshrc</code>中定义加上主题：</p>
-<pre><code class="language-bash">ZSH_THEME=&quot;powerlevel10k/powerlevel10k&quot;
-</code></pre>
-<h2 id="33-字体">3.3 字体</h2>
-<p><code>Manjaro/Arch</code>用户：</p>
-<pre><code class="language-bash">yay -S nerd-fonts-meslo
-</code></pre>
-<p>或手动安装：</p>
-<ul>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf">MesloLGS NF Regular.ttf</a></li>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf">MesloLGS NF Bold.ttf</a></li>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf">MesloLGS NF Italic.ttf</a></li>
-<li><a href="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf">MesloLGS NF Bold Italic.ttf</a></li>
-</ul>
-<p>其他系统的字体安装请参考其他博客，比如：</p>
-<ul>
-<li><a href="https://blog.csdn.net/bitcarmanlee/article/details/79729634"><code>Ubuntu</code>系</a></li>
-<li><a href="https://www.cnblogs.com/lichmama/p/4160201.html"><code>RedHat</code>系</a></li>
-</ul>
-<h1 id="4-p10k基本配置">4 <code>p10k</code>基本配置</h1>
-<p>如果是使用<code>zinit</code>安装的<code>p10k</code>，重新启动<code>zsh</code>即可，如果是<code>OMZ</code>安装的<code>p10k</code>，请手动输入：</p>
-<pre><code class="language-bash">p10k configure
-</code></pre>
-<p>就会出现图形化配置向导。首先会问几个问题：</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200511213925189.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/2020051121395215.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20200511214010451.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20200512135516854.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>会问三个图标：钻石，锁与Debian，这个是测试有没有安装对应的字体，如果没有安装的话应该是不能正常显示图标的，然后会问图标是否会重叠，接着有四种风格可以选择：</p>
-<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200512141652442.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>从这里开始就是自定义配置了，笔者选的3 ，接着可以选择：</p>
-<ul>
-<li>编码（<code>Unicode</code>/<code>ASCII</code>）</li>
-<li>时间（不显示/12小时制/24小时制）</li>
-<li>提示段分隔符（三角/垂直/斜线/圆角）</li>
-<li>提示段头部（三角/渐隐/斜线/垂直）</li>
-<li>提示段尾部（垂直/渐隐/三角/倾斜/圆角）</li>
-<li>高度（一行/两行）</li>
-<li>左右提示段连接方式（无/点状连接/实线连接）</li>
-<li>提示段旁的命令提示符（无/左/右/左+右）</li>
-<li>颜色（最亮/亮/暗/最暗）</li>
-<li>空格（稀疏/紧密）</li>
-<li>图标（少/多）</li>
-<li>提示段流（<code>Prompt Flow</code>）（简洁/流畅，相比起简洁模式，对于时间、<code>Git</code>分支等流畅模式会显示更多文字或图标）</li>
-<li>临时提示（开启/关闭）</li>
-<li>即时提示模式（关闭/安静模式/啰嗦模式，官方是推荐啰嗦模式的，关闭是已经尝试过即时提示模式，但是不兼容zsh配置，需要关闭，安静模式建议已经阅读了即时提示模式文档后使用）</li>
-</ul>
-<ul>
-<li>覆盖p10k配置文件（如果p10k配置文件已存在，会提示是否覆盖，不覆盖的话也就是相当于此次配置无效，需要覆盖才能生效），覆盖之前原文件会备份</li>
-</ul>
-<p>简单配置的效果：</p>
-<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200512143546614.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-p10k自定义配置">5 <code>p10k</code>自定义配置</h1>
-<p>由于<code>p10k</code>是<code>p9k</code>的一个分支（关于<code>p9k</code>的相关描述请看文末），对于<code>p9k</code>的配置大部分都是兼容的，因此这里以<code>p9k</code>的配置为例进行说明。</p>
-<h2 id="51-如何修改配置文件">5.1 如何修改配置文件？</h2>
-<p>首先要知道配置文件的默认位置为：</p>
-<pre><code class="language-bash">~/.p10k.zsh
-</code></pre>
-<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20201024165513119.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这是默认的配置，在<code>vcs</code>下面添加一个<code>time</code>：</p>
-<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20201024165636984.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>就会看到左边也多了一个时间：</p>
-<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20201024165655426.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这样提示段就可以很轻松地进行自定义了。</p>
-<h2 id="52-提示段">5.2 提示段</h2>
-<h3 id="521-开启关闭整个提示段">5.2.1 开启/关闭整个提示段</h3>
-<p>关闭左边/右边整个提示段：</p>
-<pre><code class="language-bash"># 左
-# 注左边的提示段测试关闭失败，可能是p10k强制不允许关闭左边提示段的原因
-typeset -g POWERLEVEL9K_DISABLE_PROMPT=true
-#右
-typeset -g POWERLEVEL9K_DISABLE_RPROMPT=true
-</code></pre>
-<h3 id="522-系统相关">5.2.2 系统相关</h3>
-<ul>
-<li><code>background_jobs</code>：后台任务</li>
-<li><code>battery</code>：电池状态</li>
-<li><code>context</code>：用户名+主机名，基于<code>USER</code>环境变量以及<code>SSH</code>状态</li>
-<li><code>date</code>：日期</li>
-<li><code>dir</code>：当前工作目录</li>
-<li><code>dir_writable</code>：当前目录可写状态，可写时为空，不可写时有一个锁</li>
-<li><code>disk_usage</code>：当前分区的磁盘使用百分比</li>
-<li><code>history</code>：历史命令记录数量</li>
-<li><code>host</code>：主机名</li>
-<li><code>ip</code>：内网<code>ip</code></li>
-<li><code>vpn_ip</code>：<code>vpn_ip</code></li>
-<li><code>public_ip</code>：公网<code>ip</code></li>
-<li><code>load</code>：机器的平均负载</li>
-<li><code>os_icon</code>：操作系统图标，支持的系统有<code>Apline</code>、<code>AOSC</code>、<code>Arch</code>、<code>CentOS</code>、<code>CoreOS</code>、<code>Debian</code>、<code>Devuan</code>、<code>Elementary</code>、<code>Fedora</code>、<code>Gentoo</code>、<code>Mageia</code>、<code>Manjaro</code>、<code>Mint</code>、<code>NixOS</code>、<code>OpenSUSE</code>、<code>Sabayon</code>、<code>Slackware</code>、<code>Ubuntu</code></li>
-<li><code>ram</code>：可用内存大小</li>
-<li><code>root_indicator</code>：拥有<code>root</code>权限的提示符</li>
-<li><code>status</code>：前一条命令的结果状态码</li>
-<li><code>swap</code>：交换分区使用情况</li>
-<li><code>time</code>：时间</li>
-<li><code>user</code>：当前用户</li>
-<li><code>vi_mode</code>：<code>vi</code>模式</li>
-<li><code>ssh</code>：<code>ssh</code>状态</li>
-</ul>
-<h3 id="523-语言相关">5.2.3 语言相关</h3>
-<ul>
-<li><code>go_version</code>：<code>Go</code>版本</li>
-<li><code>node_version</code>：<code>Node.js</code>版本</li>
-<li><code>nodeenv</code>：<code>nodeenv</code>显示的<code>Node</code>版本</li>
-<li><code>nvm</code>：<code>NVM</code>显示的<code>Node</code>版本</li>
-<li><code>php_version</code>：<code>php</code>版本</li>
-<li><code>laravel_version</code>：<code>Laravel</code>版本</li>
-<li><code>symfony2_test2</code>：<code>Symfony2</code>测试类与代码类的比率</li>
-<li><code>symfony2_version</code>：<code>Symfony2</code>版本</li>
-<li><code>virtualenv</code>：<code>Python</code>的<code>VirtualEnv</code>环境</li>
-<li><code>anaconda</code>：<code>Anaconda</code>环境</li>
-<li><code>pyenv</code>：<code>pyenv version</code>命令显示的第一个单词，但是如果是<code>system</code>将不会显示</li>
-<li><code>chruby</code>：使用<code>chruby</code>的<code>Ruby</code>环境</li>
-<li><code>rbenv</code>：使用<code>rbenv</code>的<code>Ruby</code>环境</li>
-<li><code>rspec_status</code>：<code>RSpec</code>中测试类与代码类的比率</li>
-<li><code>rvm</code>：使用<code>GEM_HOME</code>环境变量或者<code>MY_RUBY_HOME</code>环境变量显示的<code>Ruby</code>信息</li>
-<li><code>rust_version</code>：<code>Rust</code>版本</li>
-<li><code>swift_version</code>：<code>Swift</code>版本</li>
-<li><code>java_version</code>：<code>Java</code>版本</li>
-<li><code>openfoam</code>：<code>OpenFOAM</code>库版本</li>
-</ul>
-<p>笔者认为这类提示符的用处不是很大，因为具体环境的话自己应该是清楚的，因此笔者没有选择这类进行配置。</p>
-<h3 id="524-云相关">5.2.4 云相关</h3>
-<ul>
-<li><code>aws</code>：当前的<code>AWS</code>配置</li>
-<li><code>aws_eb_env</code>：当前的<code>Elastic Beanstalk</code>环境</li>
-<li><code>docker_machine</code>：当前的<code>Docker Machine</code></li>
-<li><code>docker_machine</code>：<code>kubectl</code>配置</li>
-<li><code>dropbox</code>：<code>Dropbox</code>目录以及使用<code>dropbox-cli</code>的同步状态</li>
-</ul>
-<h3 id="525-其他">5.2.5 其他</h3>
-<ul>
-<li><code>vcs</code>：<code>git</code>/<code>hg</code>仓库的信息</li>
-<li><code>command_execution_time</code>：命令执行时间</li>
-<li><code>todo</code>：<a href="http://todotxt.org/">todo.txt</a>文件中任务数量</li>
-<li><code>detect_virt</code>：使用<code>systemd</code>进行虚拟化检测</li>
-<li><code>newline</code>：另起一行</li>
-<li><code>custom_command</code>：自定义命令，需要以<code>custom_</code>开头</li>
-</ul>
-<p>比如，利用</p>
-<pre><code class="language-bash">nmcli device wifi
-</code></pre>
-<p>显示wifi速率，首先添加一个函数：</p>
-<pre><code class="language-bash">wifi_rate(){
-	local rate=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $6}') #awk后面的数字可能每个人不同
-	echo &quot;\uf0e7 $rate Mbit/s&quot;
-}
-</code></pre>
-<p>其次添加自定义提示段（以custom开头）：</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_CUSTOM_WIFI_RATE=&quot;wifi_rate&quot;
-</code></pre>
-<p>最后在</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS
-#或
-typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS
-</code></pre>
-<p>加上即可，演示效果：</p>
-<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200512041033356.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>需要的话，可以根据信号状态定义不同的颜色：</p>
-<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200512041421959.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>完整配置文件如下，加上了<code>wifi</code>名字：</p>
-<pre><code class="language-bash">set_wifi()
-{
-  wifi_signal=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $8}')
-  typeset -g POWERLEVEL9K_CUSTOM_WIFI_NAME_FOREGROUND=&quot;black&quot;
-  typeset -g POWERLEVEL9K_CUSTOM_WIFI_RATE_FOREGROUND=&quot;black&quot;
-  typeset -g POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_FOREGROUND=&quot;black&quot;
-
-  typeset -g POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;green&quot; 
-  typeset -g POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;green&quot;
-  typeset -g POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;green&quot;
-
-  if [[ $wifi_signal -lt 50 ]] ; then 
-    typeset -g POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;red&quot;
-    typeset -g POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;red&quot;
-    typeset -g POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;red&quot;
-  elif [[ $wifi_signal -lt 75 ]] ; then 
-    typeset -g POWERLEVEL9K_CUSTOM_WIFI_NAME_BACKGROUND=&quot;yellow&quot;
-    typeset -g POWERLEVEL9K_CUSTOM_WIFI_RATE_BACKGROUND=&quot;yellow&quot;
-    typeset -g POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL_BACKGROUND=&quot;yellow&quot;
-  fi
-}
-set_wifi
-
-wifi_name(){
-  local name=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $3}')
-  echo &quot;\uf502 $name&quot;
-}
-wifi_rate(){
-  local rate=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $6}')
-  echo &quot;\uf0e7 $rate Mbit/s&quot;
-}
-wifi_bars_and_signal(){
-  local bars=$(nmcli device wifi | grep -E &quot;\*&quot; | awk '{print $9}')
-  echo &quot;$bars $wifi_signal %%&quot;
-}
-
-typeset -g POWERLEVEL9K_CUSTOM_WIFI_NAME=&quot;wifi_name&quot;
-typeset -g POWERLEVEL9K_CUSTOM_WIFI_RATE=&quot;wifi_rate&quot;
-typeset -g POWERLEVEL9K_CUSTOM_WIFI_BARS_AND_SIGNAL=&quot;wifi_bars_and_signal&quot;
-
-typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-  # =========================[ Line #1 ]=========================
-  date
-  dir                     # current directory
-  dir_writable
-  vcs                     # git status
-  newline
-  # =========================[ Line #2 ]=========================
-  ram
-  # prompt_char           # prompt symbol
-  custom_wifi_name 
-  custom_wifi_rate 
-  custom_wifi_bars_and_signal 
-)
-</code></pre>
-<p>注意提示段并不是越多越好，太多的话会有点显得过于花里胡哨，而且会影响速度。</p>
-<h2 id="53-颜色">5.3 颜色</h2>
-<p>修改提示段的前景/背景，直接修改即可，一般的格式为：</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_NAME_STATUS_BACKGROUND=
-typeset -g POWERLEVEL9K_NAME_STATUS_FOREGROUND=
-</code></pre>
-<p>其中<code>NAME</code>为5.1小节中对应的提示段，比如可以修改：</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=&quot;green&quot;
-typeset -g POWERLEVEL9K_PHP_VERSION_BACKGROUND=&quot;010&quot;
-</code></pre>
-<p>颜色可以使用一些常见的<code>red</code>/<code>green</code>等等，也可以使用序号，可以查看这张图：</p>
-<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200512104645305.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>也可以使用如下命令显示颜色：</p>
-<pre><code class="language-bash">for i in {0..255}; do print -Pn &quot;%K{$i}  %k%F{$i}${(l:3::0:)i}%f &quot; ${${(M)$((i%6)):#3}:+$'\n'}; done
-</code></pre>
-<p><code>STATUS</code>不是每个提示段都有的，拥有<code>STATUS</code>的提示段如下：</p>
-<ul>
-<li><code>battery</code>：<code>LOW</code>、<code>CHARGING</code>、<code>CHAGED</code>、<code>DISCONNECTED</code></li>
-<li><code>context</code>：<code>DEFAULT</code>、<code>ROOT</code>、<code>SUDO</code>、<code>REMOTE</code>、<code>REMOTE_SUDO</code></li>
-<li><code>dir</code>：<code>HOME</code>、<code>HOME_SUBFOLDER</code>、<code>DEFAULT</code>、<code>ETC</code>、<code>NOT_WRITABLE</code></li>
-<li><code>dir_writable</code>：<code>FORBIDDEN</code></li>
-<li><code>disk_usage</code>：<code>NORMAL</code>、<code>WARNING</code>、<code>CRITICAL</code></li>
-<li><code>host</code>：<code>LOCAL</code>、<code>REMOTE</code></li>
-<li><code>load</code>：<code>CRITICAL</code>、<code>WARNING</code>、<code>NORMAL</code></li>
-<li><code>rspec_stats</code>：<code>STATS_GOOD</code>、<code>STATS_AVG</code>、<code>STATS_BAD</code></li>
-<li><code>symfony2_test</code>：<code>TESTS_GOOD</code>、<code>TESTS_AVG</code>、<code>TESTS_BAD</code></li>
-<li><code>user</code>：<code>DEFAULT</code>、<code>SUDO</code>、<code>ROOT</code></li>
-<li><code>vcs</code>：<code>CLEAN</code>、<code>UNTRACKED</code>、<code>MODIFIED</code></li>
-<li><code>vi_mode</code>：<code>NORMAL</code>、<code>INSERT</code>、<code>VISUAL</code></li>
-</ul>
-<p>大部分都可以很容易理解，这里以最简单的为例：</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='166'
-typeset -g POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='000'
-typeset -g POWERLEVEL9K_DIR_ETC_BACKGROUND='226'
-typeset -g POWERLEVEL9K_DIR_ETC_FOREGROUND='000'
-typeset -g POWERLEVEL9K_DIR_HOME_BACKGROUND='044'
-typeset -g POWERLEVEL9K_DIR_HOME_FOREGROUND='000'
-</code></pre>
-<p>设置<code>home</code>目录，<code>etc</code>目录以及默认目录的前景与背景。</p>
-<p>另外需要注意的是显示的颜色还与终端本身的设置颜色有关，请到具体的终端配置去修改：</p>
-<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20201024194935194.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="54-位置">5.4 位置</h2>
-<p>可以加上</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-</code></pre>
-<p>使输入的命令显示在新的一行。</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
-</code></pre>
-<p>让右边的提示段在新的一行。<br>
-在</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMETS
-#或
-typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMETS
-</code></pre>
-<p>中，可以配合<code>newline</code>以及5.1中的提示段自定义位置，示例如下：</p>
-<pre><code class="language-bash">POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-	os_icon date time newline 
-	custom_wifi_rate custom_wifi_bars_and_signal newline
-	background_jobs ram load swap disk_usage newline 
-	php_version java_version node_version newline 
-	dir dir_writable vcs 
-)
-</code></pre>
-<h2 id="55-图标">5.5 图标</h2>
-<p>使用</p>
-<pre><code class="language-bash">get_icon_names
-</code></pre>
-<p>可以查看内置的图标。<br>
-<img src="https://img-blog.csdnimg.cn/20200512110355831.png" alt="在这里插入图片描述" loading="lazy"></p>
-<p>注意这个和字体有关，如果使用默认的<code>PowerlineFonts</code>或者使用<code>AwesomeFonts</code>可能不会完整显示所有图标，请使用Nerd-Fonts。</p>
-<p><a href="https://www.oschina.net/p/nerd-fonts">戳这里</a>查看Nerd-fonts的部分图标，<a href="https://www.nerdfonts.com/cheat-sheet">戳这里</a>（国外网站）搜索所有的图标。</p>
-<p>官方的例子是自定义<code>vcs</code>的图标：</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=$'\uF126'
-</code></pre>
-<p>F126可以通过上面的网站搜索得到，是一个分支的图标：</p>
-<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/2020051211145535.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>其他<code>git</code>相关图标：</p>
-<ul>
-<li><code>Github</code>：<code>VCS_GIT_GITHUB_ICON</code></li>
-<li><code>BitBucket</code>：<code>VCS_GIT_BITBUCKET_ICON</code></li>
-<li><code>GitLab</code>：<code>VCS_GIT_GITLAB_ICON</code></li>
-<li>其他：<code>VCS_GIT_ICON</code></li>
-</ul>
-<p>另外还可以修改提示段前的图标：</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=&quot;↱&quot;
-typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=&quot;↳ &quot;
-typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX=&quot;xxx&quot;
-</code></pre>
-<p>还可以根据<code>get_icon_names</code>修改默认图标，比如，修改</p>
-<pre><code class="language-bash">typeset -g POWERLEVEL9K_HOME_SUB_ICON=$'\uf74b'
-</code></pre>
-<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200512114150180.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>但是直接改<code>icon</code>的话图标会显示得很小，可以在函数中像上面的<code>wifi</code>一样使用<code>echo</code>自定义。</p>
-<h1 id="6-配置文件">6 配置文件</h1>
-<p>笔者的配置文件，仅供参考：</p>
-<ul>
-<li><a href="https://github.com/2293736867/BeautifulP10KConfig">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/BeautifulP10KConfig">码云</a></li>
-</ul>
-<h1 id="7-杂项">7 杂项</h1>
-<h2 id="71-文章更新">7.1 文章更新</h2>
-<p>这篇文章其实是从笔者之前的文章修改更新过来的，由于之前的那一篇写得有点混乱，这里重新排版并修正了一些错误。</p>
-<h2 id="72-关于p9k">7.2 关于<code>p9k</code></h2>
-<p><strong>（以下部分针对<code>p9k</code>的老用户，刚接触<code>p10k</code>的可以略过）</strong></p>
-<p>前面提到<code>p10k</code>是<code>p9k</code>的一个分支，<code>p10k</code>是2019年3月从<code>p9k</code>的仓库<code>fork</code>而来的。<code>p9k</code>已经是一个拥有大量用户的成熟的工程。<code>p10k</code>被分离出来，以更快的速度迭代更新，添加新特性以及改进性能。</p>
-<p><code>p9k</code>与<code>p10k</code>是独立的项目，只能安装其中一个，但是<code>p10k</code>会识别<code>p9k</code>的所有参数。</p>
-<p><strong>目前<code>p9k</code>已经不再维护更新，推荐使用<code>p10k</code>。</strong></p>
-<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200511095752966.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="73-提示延迟">7.3 提示延迟</h2>
-<p>笔者认为出现<code>p10k</code>的主要原因就是<code>p9k</code>很慢，比如这是<code>p9k</code>的<code>issue</code>：</p>
-<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200511100009605.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>具体内容请查看<code>p9k</code>官方<code>issue</code>，<code>p10k</code>改进了性能，<code>p10k Github</code>有一个演示视频，展示了<code>p10k</code>的速度，在<code>Intel i9-7900X+Ubuntu 18.04</code>上，测试提示延迟如下：</p>
-<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200511100206835.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p><strong>（来源官方测试）</strong></p>
-<p>相对来说，<code>p9k</code>具有可接受的延迟，如果只是需要当前目录而不需要截断或缩短，<code>p9k</code>可以17ms内渲染完成，<code>p10k</code>可以将其提高30倍的渲染速度，但实际上并不需要，因为延迟变得明显的阀值为50ms。官方建议必须小心使用<code>p9k</code>的配置，因为很容易使得提示变慢，但是<code>p10k</code>在任何配置中几乎都是即时的，可以保持远低于50ms。</p>
-<p>另外笔者的系统上也测试过，<code>p9k</code>确实要比<code>p10k</code>慢，添加了很多设置后，<code>p9k</code>在终端中连续按Enter，松手之后还在提示，甚至一个普通的<code>ls</code>也有明显的延迟，但是<code>p10k</code>没有这样的问题，很流畅。</p>
-<h2 id="74-加载速度">7.4 加载速度</h2>
-<p><code>p10k</code>比<code>p9k</code>能更快加载，前提是，<code>zsh</code>版本5.4+。</p>
-<p>官方建议使用下面的命令测试：</p>
-<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source ~/powerlevel10k/powerlevel10k.zsh-theme')
-</code></pre>
-<p>但是笔者没有这个文件，怀疑是位置给错了，修改如下：</p>
-<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k/powerlevel10k.zsh-theme')
-</code></pre>
-<p>笔者的系统上耗时如下：</p>
-<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/2020051120031034.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>换了<code>p9k</code>后：</p>
-<pre><code class="language-bash">time (repeat 1000 zsh -dfis &lt;&lt;&lt; 'source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme')
-</code></pre>
-<p>耗时如下：</p>
-<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200511201744364.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>不过好像没快多少的样子，可能是<code>zsh</code>版本的问题，装的是目前最新的<code>5.8</code>，可能老一点的版本区别会明显一点。</p>
-<p>官方的测试是<code>p10k</code>用了29s，比相同环境下的<code>p9k master</code>分支大约快6倍，比<code>p9k next</code>分支快17倍。笔者认为仅供参考吧，用<code>p10k</code>就对了，毕竟比<code>p9k</code>快。</p>
-<h2 id="75-其他">7.5 其他</h2>
-<ul>
-<li><code>p10k</code>默认只开启<code>vcs</code>中<code>git</code>后端的支持，如果需要<code>svn</code>/<code>hg</code>，需要添加到<code>typeset -g POWERLEVEL9K_VCS_BACKENDS</code>。但是<code>p10k</code>还没有针对<code>svn</code>/<code>hg</code>优化，所以添加的话会让提示变慢</li>
-<li><code>p10k</code>不支持<code>typeset -g POWERLEVEL9K_VCS_SHOW_SUBMODULE_DIRTY=true</code></li>
-<li><code>p10k</code>会兼容<code>p9k</code>的所有选项，因此，相同配置下如果<code>p9k</code>与<code>p10k</code>看到的图标不一样，可能是设置了<code>typeset -g POWERLEVEL9K_MODE</code>的原因，请去掉<code>typeset -g POWERLEVEL9K_MODE</code></li>
-<li><code>p9k</code>不识别<code>typeset -g ZLE_RPROMPT_INDENT</code>，因此<code>p10k</code>相比起<code>p9k</code>会有额外的空格。如果不想要可以设置<code>typeset -g ZLE_RPROMPT_INDENT=0</code></li>
-</ul>
-<figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20200512145835247.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li><code>p9k</code>在图标附近有不一致的空格，在<code>p10k</code>已经不存在了，不过可以设置<code>typeset -g POWERLEVEL9K_LEGACY_ICON_SPACING=true</code>显示与p9k中一样的空格</li>
-</ul>
-<figure data-type="image" tabindex="28"><img src="https://img-blog.csdnimg.cn/20200512145806760.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li><code>p10k</code>修正了<code>p9k</code>的许多bugs，除了修复空格问题等，最主要是极大地提高了速度</li>
-</ul>
-<h1 id="8-关于tty">8 关于<code>tty</code></h1>
-<p>由于<code>p10k</code>可以配置得非常炫酷，因此想要在<code>tty</code>上显示是几乎不现实的，这里建议的做法是，准备两套主题，一套在<code>GUI</code>使用，一套在<code>tty</code>使用，建议的做法是先备份在<code>GUI</code>上的主题（<code>~/.p10.zsh</code>）：</p>
-<pre><code class="language-bash">cp ~/.p10k.zsh ~/.p10k.zsh.gui
-</code></pre>
-<p>然后再运行一次<code>p10k configure</code>选择<code>Lean</code>：</p>
-<figure data-type="image" tabindex="29"><img src="https://img-blog.csdnimg.cn/20201024225845776.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>注意字符集需要选择<code>ASCII</code>：</p>
-<figure data-type="image" tabindex="30"><img src="https://img-blog.csdnimg.cn/20201024225957945.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>颜色不能选择256，否则显示不出来：</p>
-<figure data-type="image" tabindex="31"><img src="https://img-blog.csdnimg.cn/20201024230012233.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>简单配置后的效果：</p>
-<figure data-type="image" tabindex="32"><img src="https://img-blog.csdnimg.cn/20201024231946709.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>虽然确实是普通了一点，但胜在通用。</p>
-<p>首先备份生成的主题：</p>
-<pre><code class="language-bash">cp ~/.p10k.zsh ~/.p10k.zsh.tty
-</code></pre>
-<p>这样需要的时候进行手动切换即可：</p>
-<pre><code class="language-bash"># GUI
-cp ~/.p10k.zsh.gui ~/.p10k.zsh
-# tty
-cp ~/.p10k.zsh.tty ~/.p10k.zsh
-</code></pre>
-<h1 id="9-最后">9 最后</h1>
-<p>首先本文写作日期是10月24日，先祝所有的程序员节日快乐，写的代码永远没有bug。</p>
-<p>说了这么多，如果是<code>p9k</code>的用户强烈建议迁移到<code>p10k</code>，官方有迁移指南，<a href="https://github.com/romkatv/powerlevel10k#im-using-powerlevel9k-with-oh-my-zsh-how-do-i-migrate">戳这里</a>。</p>
-<p>另外如果想配置一个真正漂亮实用又快速高效的终端是真的需要一点动手能力的，希望看完这篇文章的读者能收到启发，去配置一个自己专属的终端。</p>
 ]]></content>
     </entry>
 </feed>
