@@ -1,0 +1,1688 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vue+Spring Boot简单用户登录Demo | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+前后端分离的一个简单用户登录Demo。
+2 技术栈
+
+Vue
+BootstrapVue
+Kotlin
+Spring Boot
+MyBatis Plus
+
+3 前端
+3.1 创建工程
+使用vue-cli创建，没安装的可以先安装：
+s..." />
+    <meta name="keywords" content="BootstrapVue,Vue,Spring Boot" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1605088336049" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/vuespring-boot-jian-dan-yong-hu-deng-lu-demo.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-11-11"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/vuespring-boot-jian-dan-yong-hu-deng-lu-demo/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/vuespring-boot-jian-dan-yong-hu-deng-lu-demo/"> </span>
+              </a>
+              <span id="/vuespring-boot-jian-dan-yong-hu-deng-lu-demo/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-0 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-1 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-2 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Vue+Spring Boot简单用户登录Demo</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p>前后端分离的一个简单用户登录<code>Demo</code>。</p>
+<h1 id="2-技术栈">2 技术栈</h1>
+<ul>
+<li><code>Vue</code></li>
+<li><code>BootstrapVue</code></li>
+<li><code>Kotlin</code></li>
+<li><code>Spring Boot</code></li>
+<li><code>MyBatis Plus</code></li>
+</ul>
+<h1 id="3-前端">3 前端</h1>
+<h2 id="31-创建工程">3.1 创建工程</h2>
+<p>使用<code>vue-cli</code>创建，没安装的可以先安装：</p>
+<pre><code class="language-bash">sudo cnpm install -g vue @vue/cli
+</code></pre>
+<p>查看版本：</p>
+<pre><code class="language-bash">vue -V
+</code></pre>
+<p>出现版本就安装成功了。</p>
+<p>创建初始工程：</p>
+<pre><code class="language-bash">vue create bvdemo
+</code></pre>
+<p>由于目前<code>Vue3</code>还没有发布正式版本，推荐使用<code>Vue2</code>：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201111075536833.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>等待一段时间构建好了之后会提示进行文件夹并直接运行：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201111075804673.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<pre><code class="language-bash">cd bvdemo
+yarn serve
+</code></pre>
+<p>直接通过本地的<code>8080</code>端口即可访问：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201111075857540.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201111075935937.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-依赖">3.2 依赖</h2>
+<p>进入项目文件夹：</p>
+<pre><code class="language-bash">cd bvdemo
+</code></pre>
+<p>安装依赖：</p>
+<pre><code class="language-bash">cnpm install bootstrap-vue axios jquery vue-router
+</code></pre>
+<p>应该会出现<code>popper.js</code>过期的警告，这是<code>bootstrap-vue</code>的原因，可以忽略：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201111141109622.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>依赖说明如下：</p>
+<ul>
+<li><code>bootstrap-vue</code>：一个结合了<code>Vue</code>与<code>Bootstrap</code>的前端<code>UI</code>框架</li>
+<li><code>axios</code>是一个简洁易用高效的<code>http</code>库，本项目使用其发送登录请求</li>
+<li><code>jquery</code>：一个强大的<code>JS</code>库</li>
+<li><code>vue-router</code>：<code>Vue</code>的官方路由管理器</li>
+</ul>
+<h2 id="33-开启补全">3.3 开启补全</h2>
+<p>在正式编写代码之前开启对<code>bootstrap-vue</code>的补全支持，打开设置：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201111142136472.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>将项目路径下的<code>node_modules</code>添加到库中，把前面的勾给勾上，接着更新缓存并重启（<code>File-&gt;Invalidate Cache/Restart</code>）。</p>
+<h2 id="34-appvue">3.4 <code>App.vue</code></h2>
+<p>去掉默认的<code>HelloWorld</code>组件，并修改<code>App.vue</code>如下：</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div id=&quot;app&quot;&gt;
+        &lt;router-view&gt;&lt;/router-view&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    name: 'App',
+}
+&lt;/script&gt;
+
+&lt;style&gt;
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+}
+&lt;/style&gt;
+</code></pre>
+<p><code>&lt;router-view&gt;</code>是一个<code>functional</code>组件，渲染路径匹配到的视图组件，这里使用<code>&lt;router-view&gt;</code>根据访问路径（路由）的不同显示（渲染）相应的组件。</p>
+<h2 id="35-新建vue组件">3.5 新建<code>vue</code>组件</h2>
+<p>删除默认的<code>HelloWorld.vue</code>，新建<code>Index.vue</code>以及<code>Login.vue</code>：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201111143038399.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="36-添加路由">3.6 添加路由</h2>
+<p>在<code>main.js</code>同级目录下新建<code>router.js</code>，内容如下：</p>
+<pre><code class="language-js">import Vue from &quot;vue&quot;
+import VueRouter from &quot;vue-router&quot;
+import Login from &quot;@/components/Login&quot;
+import Index from &quot;@/components/Index&quot;
+
+Vue.use(VueRouter)
+
+const routes = [
+    {
+        path: '/',
+        component: Login,
+        props: true
+    },
+    {
+        path:'/index/:val',
+        name:'index',
+        component: Index,
+        props: true
+    }
+]
+
+const router = new VueRouter({
+    mode:'history',
+    routes:routes
+})
+
+export default router
+</code></pre>
+<p><code>routes</code>表示路由，其中包含了两个路由，一个是<code>Login</code>组件的路由<code>/</code>，一个是<code>Index</code>组件的路由<code>/index/:val</code>，后者中的<code>:val</code>是占位符，用于传递参数。<code>router</code>表示路由器，<code>mode</code>可以选择<code>hash</code>或<code>history</code>：</p>
+<ul>
+<li><code>hash</code>会使用<code>URL</code>的<code>hash</code>来模拟一个完整的<code>URL</code>，当<code>URL</code>改变时页面不会重新加载</li>
+<li><code>history</code>就是普通的正常<code>URL</code></li>
+</ul>
+<p><code>router</code>中的<code>routes</code>参数声明了对应的路由，最后要记得把<code>router</code>添加到<code>main.js</code>中。</p>
+<h2 id="37-vueconfigjs">3.7 <code>vue.config.js</code></h2>
+<p>在<code>package.json</code>同级目录下创建<code>vue.config.js</code>，内容如下：</p>
+<pre><code class="language-js">module.exports = {
+    chainWebpack: config =&gt; {
+        config.module
+            .rule('vue')
+            .use('vue-loader')
+            .loader('vue-loader')
+            .tap(options =&gt; {
+                options.transformAssetUrls = {
+                    img: 'src',
+                    image: 'xlink:href',
+                    'b-img': 'src',
+                    'b-img-lazy': ['src', 'blank-src'],
+                    'b-card': 'img-src',
+                    'b-card-img': 'src',
+                    'b-card-img-lazy': ['src', 'blank-src'],
+                    'b-carousel-slide': 'img-src',
+                    'b-embed': 'src'
+                }
+                return options
+            })
+    }
+}
+</code></pre>
+<p>使用该配置文件主要是因为<code>&lt;b-img&gt;</code>的<code>src</code>属性不能正常读取图片，添加了该配置文件后即可按路径正常读取。</p>
+<h2 id="38-mainjs">3.8 <code>main.js</code></h2>
+<p>添加依赖以及路由：</p>
+<pre><code class="language-js">import Vue from 'vue'
+import App from './App.vue'
+
+import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
+import router from &quot;@/router&quot;;
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
+Vue.config.productionTip = false
+
+new Vue({
+    render: h =&gt; h(App),
+    router
+}).$mount('#app')
+</code></pre>
+<p>引入<code>BootstrapVue</code>，并把路由注册到<code>Vue</code>实例中（就是倒数第2行，作为创建<code>Vue</code>实例的参数，注意这个很重要，不然路由功能不能正常使用）。</p>
+<h2 id="39-登录组件">3.9 登录组件</h2>
+<p>也就是<code>Login.vue</code>，内容如下：</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div&gt;
+        &lt;b-img src=&quot;../assets/logo.png&quot;&gt;&lt;/b-img&gt;
+        &lt;br&gt;
+        &lt;b-container&gt;
+            &lt;b-row&gt;
+                &lt;b-col offset=&quot;3&quot; cols=&quot;6&quot;&gt;
+                    &lt;b-input-group size=&quot;lg&quot;&gt;
+                        &lt;b-input-group-text&gt;用户名&lt;/b-input-group-text&gt;
+                        &lt;b-form-input type=&quot;text&quot; v-model=&quot;username&quot;&gt;&lt;/b-form-input&gt;
+                    &lt;/b-input-group&gt;
+                &lt;/b-col&gt;
+            &lt;/b-row&gt;
+            &lt;br&gt;
+            &lt;b-row&gt;
+                &lt;b-col offset=&quot;3&quot; cols=&quot;6&quot;&gt;
+                    &lt;b-input-group size=&quot;lg&quot;&gt;
+                        &lt;b-input-group-text&gt;密码&lt;/b-input-group-text&gt;
+                        &lt;b-form-input type=&quot;password&quot; v-model=&quot;password&quot;&gt;&lt;/b-form-input&gt;
+                    &lt;/b-input-group&gt;
+                &lt;/b-col&gt;
+            &lt;/b-row&gt;
+            &lt;br&gt;
+            &lt;b-row&gt;
+                &lt;b-col offset=&quot;3&quot; cols=&quot;6&quot;&gt;
+                    &lt;b-button variant=&quot;success&quot; @click=&quot;login&quot;&gt;
+                        一键注册/登录
+                    &lt;/b-button&gt;
+                &lt;/b-col&gt;
+            &lt;/b-row&gt;
+        &lt;/b-container&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import axios from 'axios'
+import router from &quot;@/router&quot;
+
+export default {
+    name: &quot;Login.vue&quot;,
+    data:function (){
+        return{
+            username:'',
+            password:''
+        }
+    },
+    methods:{
+        login:function(){
+            axios.post(&quot;http://localhost:8080/login&quot;,{
+                username:this.username,
+                password:this.password
+            }).then(function (res){
+                router.push({
+                    name:&quot;index&quot;,
+                    params:{
+                        val:res.data.code === 1
+                    }
+                })
+            })
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+
+&lt;/style&gt;
+</code></pre>
+<p>采用了网格系统布局<code>&lt;b-row&gt;</code>+<code>&lt;b-col&gt;</code>，其他组件就不说了，大部分组件官网都有说明（可以<a href="https://code.z01.com/bootstrap-vue/docs/components/">戳这里</a>），发送请求采用了<code>axios</code>，参数包装在请求体中，注意需要与后端（<code>@RequestBody</code>，写在请求头请使用<code>@RequestParm</code>）对应。</p>
+<p>另外还需要注意的是跨域问题，这里的跨域问题交给后端处理：</p>
+<pre><code class="language-java">@CrossOrigin(&quot;http://localhost:8081&quot;)
+</code></pre>
+<p>（本地测试中后端运行在<code>8080</code>端口，而前端运行在<code>8081</code>端口）</p>
+<p>发送请求后使用路由进行跳转，携带的是<code>res.data.code</code>参数 ，其中<code>res.data</code>是响应中的数据，后面的<code>code</code>是后端自定义的数据，返回<code>1</code>表示注册成功，返回<code>2</code>表示登录成功。</p>
+<h2 id="310-首页组件">3.10 首页组件</h2>
+<p>首页简单地显示了登录或注册成功：</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div&gt;
+        &lt;b-img src=&quot;../assets/logo.png&quot;&gt;&lt;/b-img&gt;
+        &lt;b-container&gt;
+            &lt;b-row align-h=&quot;center&quot;&gt;
+                &lt;b-col&gt;
+                    &lt;b-jumbotron header=&quot;注册成功&quot; lead=&quot;欢迎&quot; v-if=&quot;val&quot;&gt;&lt;/b-jumbotron&gt;
+                    &lt;b-jumbotron header=&quot;登录成功&quot; lead=&quot;欢迎&quot; v-else&gt;&lt;/b-jumbotron&gt;
+                &lt;/b-col&gt;
+            &lt;/b-row&gt;
+        &lt;/b-container&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    name: &quot;Index.vue&quot;,
+    props:['val']
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+
+&lt;/style&gt;
+</code></pre>
+<p><code>props</code>表示<code>val</code>是来自其他组件的参数，并将其作为在<code>v-if</code>中进行条件渲染的参数。</p>
+<p>这样前端就做好了。下面开始介绍后端。</p>
+<h1 id="4-后端">4 后端</h1>
+<h2 id="41-创建工程">4.1 创建工程</h2>
+<p>采用<code>Kotlin</code>+<code>Gradle</code>+<code>MyBatisPlus</code>构建，新建工程如下：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20201111154530471.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20201111153017637.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20201111154601137.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-依赖">4.2 依赖</h2>
+<p>引入<code>MyBatis Plus</code>依赖即可：</p>
+<pre><code class="language-bash">implementation(&quot;com.baomidou:mybatis-plus-boot-starter:3.4.0&quot;)
+</code></pre>
+<h2 id="43-数据表">4.3 数据表</h2>
+<pre><code class="language-sql">create database if not exists test;
+use test;
+drop table if exists user;
+create table user(
+    id int auto_increment primary key ,
+    username varchar(30) default '',
+    password varchar(30) default ''
+)
+</code></pre>
+<h2 id="44-配置文件">4.4 配置文件</h2>
+<p>数据库用户名+密码+<code>url</code>：</p>
+<pre><code class="language-yaml">spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 123456
+</code></pre>
+<h2 id="45-新建包">4.5 新建包</h2>
+<p>新建如下六个包，分别表示配置类、控制层、持久层、实体类、响应类、业务层。</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20201111160519944.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="46-实体类">4.6 实体类</h2>
+<pre><code class="language-kotlin">package com.example.demo.entity
+
+class User(var username:String,var password:String)
+</code></pre>
+<h2 id="47-持久层">4.7 持久层</h2>
+<pre><code class="language-kotlin">package com.example.demo.dao
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
+import com.example.demo.entity.User
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Select
+
+@Mapper
+interface DemoMapper :BaseMapper&lt;User&gt;{
+    @Select(&quot;select * from user where username=#{username} and password = #{password}&quot;)
+    fun selectByUsernameAndPassword(username:String,password:String):List&lt;User&gt;
+}
+</code></pre>
+<p><code>@Mapper</code>表示给<code>Mapper</code>接口生成一个实现类，并且不需要编写<code>xml</code>配置文件。<code>@Select</code>表示进行查询的<code>sql</code>语句。</p>
+<h2 id="48-响应体">4.8 响应体</h2>
+<pre><code class="language-kotlin">package com.example.demo.response
+
+class DemoResponse
+{
+    var data = Any()
+    var code = 0
+    var message = &quot;&quot;
+}
+</code></pre>
+<pre><code class="language-kotlin">package com.example.demo.response
+
+class DemoResponseBuilder {
+    private var response = DemoResponse()
+
+    fun data(t:Any): DemoResponseBuilder
+    {
+        response.data = t
+        return this
+    }
+    fun code(t:Int): DemoResponseBuilder
+    {
+        response.code = t
+        return this
+    }
+    fun message(t:String): DemoResponseBuilder
+    {
+        response.message = t
+        return this
+    }
+    fun build() = response
+}
+</code></pre>
+<p>这里响应体分为：</p>
+<ul>
+<li>响应码</li>
+<li>响应体数据</li>
+<li>其他信息</li>
+</ul>
+<p>与前端约定即可。生成响应体通过一个<code>Builder</code>类生成。</p>
+<h2 id="49-业务层">4.9 业务层</h2>
+<pre><code class="language-kotlin">package com.example.demo.service
+
+import com.demo.response.DemoResponse
+import com.demo.response.DemoResponseBuilder
+import com.example.demo.dao.DemoMapper
+import com.example.demo.entity.User
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+@Transactional
+class DemoService
+{
+    @Autowired
+    lateinit var mapper: DemoMapper
+
+    fun login(username:String, password:String): DemoResponse
+    {
+        val result = mapper.selectByUsernameAndPassword(username,password).size
+        if(result == 0)
+            mapper.insert(User(username,password))
+        return DemoResponseBuilder().code(if(result == 0) 1 else 2).message(&quot;&quot;).data(true).build()
+    }
+}
+</code></pre>
+<p><code>@Service</code>标记为业务层，<code>@Transactional</code>表示添加了事务管理，持久层操作失败会进行回滚。<code>@Autowired</code>表示自动注入，在<code>Java</code><br>
+中可以使用直接使用<code>@Autowired</code>，而在<code>Kotlin</code>中需要使用<code>lateinit var</code>。</p>
+<h2 id="410-控制层">4.10 控制层</h2>
+<pre><code class="language-kotlin">package com.example.demo.controller
+
+import com.demo.response.DemoResponse
+import com.example.demo.entity.User
+import com.example.demo.service.DemoService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping(&quot;/&quot;)
+@CrossOrigin(&quot;http://localhost:8081&quot;)
+class DemoController {
+    @Autowired
+    lateinit var service: DemoService
+
+    @PostMapping(&quot;login&quot;)
+    fun login(@RequestBody user: User):DemoResponse
+    {
+        return service.login(user.username, user.password)
+    }
+}
+</code></pre>
+<p>主要就是添加了一个跨域处理<code>@CrossOrigin</code>，开发时请对应上前端的端口。</p>
+<h2 id="411-配置类">4.11 配置类</h2>
+<pre><code class="language-kotlin">package com.example.demo.config
+
+import org.mybatis.spring.annotation.MapperScan
+import org.springframework.context.annotation.Configuration
+
+@Configuration
+@MapperScan(&quot;com.example.demo.dao&quot;)
+class MyBatisConfig
+</code></pre>
+<p><code>@MapperScan</code>表示扫描对应包下的<code>@Mapper</code>。</p>
+<h2 id="412-测试">4.12 测试</h2>
+<pre><code class="language-kotlin">package com.example.demo
+
+import com.example.demo.service.DemoService
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+
+@SpringBootTest
+class DemoApplicationTests {
+
+    @Autowired
+    lateinit var service: DemoService
+
+    @Test
+    fun contextLoads() {
+        println(service.login(&quot;123&quot;, &quot;456&quot;))
+    }
+
+}
+</code></pre>
+<p>测试通过后后端就算完成了。</p>
+<h1 id="5-总测试">5 总测试</h1>
+<p>先运行后端，<code>Kotlin</code>不像<code>Java</code>，生成工程时能自动配置了启动配置，需要手动运行启动类中的<code>main</code>：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20201111161821428.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再运行前端：</p>
+<pre><code class="language-bash">npm run serve
+</code></pre>
+<p>不想用命令行的话可以使用图形界面配置一下：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20201111162013408.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>根据控制台输出打开<code>localhost:8081</code>：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20201111162049656.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/2020111116212940.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>随便输入用户名与密码，不存在则创建，存在则登录：</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20201111162149278.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20201111162249361.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>注册的同时后端数据库会生成一条记录：</p>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20201111162522626.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再次输入相同的用户名和密码会显示登录成功：</p>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20201111162335626.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样就正式完成了一个简单的前后端分离登录<code>Demo</code>。</p>
+<h1 id="5-源码">5 源码</h1>
+<ul>
+<li><a href="https://github.com/2293736867/VueSpringBootLoginDemo">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/VueSpringBootLoginDemo">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/VueSpringBootLoginDemo">CODE.CHINA</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-151-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-151-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-11-12">2020-11-12</time>
+                  <h4 class="title white no-margin">每日分享 第151期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-150-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-150-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-11-11">2020-11-11</time>
+                  <h4 class="title white no-margin">每日分享 第150期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-151-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-151-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-11-12">2020-11-12</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-151-qi/">每日分享 第151期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/vuespring-boot-jian-dan-yong-hu-deng-lu-demo/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/vuespring-boot-jian-dan-yong-hu-deng-lu-demo.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-11-11">2020-11-11</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/vuespring-boot-jian-dan-yong-hu-deng-lu-demo/">Vue+Spring Boot简单用户登录Demo</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-150-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-150-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-11-11">2020-11-11</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-150-qi/">每日分享 第150期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-1 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-2 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-4 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-5 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-6 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-7 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-8 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-9 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-10 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-11 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-12 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-13 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-14 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-15 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-16 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-17 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-18 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-19 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-20 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-21 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-22 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-23 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-24 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-25 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-26 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-27 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-28 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-29 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-30 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-31 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-32 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-33 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-34 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-35 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-36 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-37 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-38 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-39 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-40 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-41 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-42 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-43 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-44 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-45 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-46 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-47 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-48 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-49 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-50 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-51 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-52 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-53 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-54 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-55 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-56 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-57 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-58 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-59 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-60 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-61 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-62 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-63 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-64 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-65 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-66 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-67 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-68 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-69 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-70 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-71 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-72 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-73 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-74 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-75 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-76 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-77 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-78 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-79 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-80 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-81 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-82 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-83 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-84 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 361 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
