@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-11-20T05:26:07.011Z</updated>
+    <updated>2020-11-20T05:38:40.979Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -72,6 +72,50 @@
 <blockquote>
 <p>从善如登，从恶如崩。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[解决Linux无法读写U盘中的NTFS问题]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-linux-wu-fa-du-xie-u-pan-zhong-de-ntfs-wen-ti/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-linux-wu-fa-du-xie-u-pan-zhong-de-ntfs-wen-ti/">
+        </link>
+        <updated>2020-11-20T05:36:52.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>由于笔者因为某些需要把<code>Windows</code>装在了<code>U盘</code>上面（在这里建议一下如果有需要请使用固态<code>U盘</code>），在<code>Linux</code>下挂载时，能读取但并不能写。</p>
+<h1 id="2-尝试的解决方案">2 尝试的解决方案</h1>
+<h2 id="21-remount">2.1 <code>remount</code></h2>
+<p>一开始是因为没有读写权限，所以就重新挂载，命令如下：</p>
+<pre><code class="language-bash">mount -o rw,remount /dev/sda2
+</code></pre>
+<p>（<code>/dev/sda2</code>是因为笔者的<code>U盘</code>大小<code>64G</code>，把<code>Windows</code>直接装在了里面，默认分了两个分区，一个是启动分区<code>/dev/sda1</code>，一个是系统分区<code>/dev/sda2</code>）</p>
+<p>但是还是不能写入。</p>
+<h2 id="22-ntfs-3g">2.2 <code>ntfs-3g</code></h2>
+<p>首先安装了<code>ntfs-3g</code>，然后再次尝试挂载：</p>
+<pre><code class="language-bash">sudo mount -t ntfs-3g /dev/sda2 /run/media/point
+sudo ntfs-3g /dev/sda2 /run/media/point
+</code></pre>
+<p>还是不能写入。</p>
+<h2 id="23-ntfsfix">2.3 <code>ntfsfix</code></h2>
+<p><code>ntfsfix</code>能修复常见的错误以及<code>NTFS</code>分区不一致的问题，尝试了一下：</p>
+<pre><code class="language-bash">sudo ntfsfix /dev/sda2
+</code></pre>
+<p>还是不能写入。</p>
+<h1 id="3-最终解决方案">3 最终解决方案</h1>
+<p>再次查了一下资料（<a href="https://itsfoss.com/solve-ntfs-mount-problem-ubuntu-windows-8-dual-boot/">戳这里</a>）发现这个可能是因为<code>Windows</code>的快速启动导致的：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201120111553555.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>把快速启动关了就行。</p>
+<p>但是这<code>U盘</code>里面的快速启动貌似关闭不了。。。</p>
+<p>最后在<code>StackExchange</code>（<a href="https://unix.stackexchange.com/questions/107978/cant-access-windows-drive-windows-is-hibernated-refused-to-mount">戳这里</a>）上找到了答案：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020112011181392.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>核心是<code>remove_hiberfile</code>这个挂载选项，同时也查了一下<code>man</code>：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201120112112981.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在启动<code>Linux</code>时，<code>Windows</code>是有可能处于<code>hibernate</code>状态的，该状态下是不能写的并且强制只读挂载，加入<code>remove_hiberfile</code>参数后，去除了<code>hibernation file</code>，这样在笔者的环境上测试就能正常写入了，但是要注意使用该参数可能会导致保存的<code>Windows session</code><br>
+数据全部丢失：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201120112642753.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>所以最终挂载命令如下：</p>
+<pre><code class="language-bash">sudo ntfs-3g -o remove_hiberfile /dev/sda2 /run/media/point
+</code></pre>
+<p>测试了一下<code>Windows</code>并没有任何损坏，因此如果出现上述的问题可以尝试加上<code>remove_hiberfile</code>参数。</p>
 ]]></content>
     </entry>
     <entry>
@@ -302,27 +346,6 @@
 <p>害。</p>
 <p>最近事多。</p>
 <p>请见谅。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第154期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-154-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-154-qi/">
-        </link>
-        <updated>2020-11-14T17:14:28.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>虽然脑子和肠子长得像，但你也不能老是用来装屎啊！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>躲进小楼成一统，管他冬夏与春秋。<br>
-——鲁迅《自嘲》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>何必怕鬼，折磨你的永远是人。何必怕死，折磨你的是生。</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>
