@@ -1,0 +1,1708 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java实现操作系统中四种动态内存分配算法：BF+NF+WF+FF | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+本文是利用Java实现操作系统中的四种动态内存分配方式 ，分别是：
+
+BF
+NF
+WF
+FF
+
+分两部分，第一部分是介绍四种分配方式的概念以及例子，第二部分是代码实现以及讲解。
+2 四种分配方式
+2.1 概念
+操作系统中有一个动态..." />
+    <meta name="keywords" content="Java" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1605934634805" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/java-shi-xian-cao-zuo-xi-tong-zhong-si-chong-dong-tai-nei-cun-fen-pei-suan-fa-bfnfwfff.jpg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2020-11-21"><i class="fa fa-calendar"></i><span class="lately">1 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/java-shi-xian-cao-zuo-xi-tong-zhong-si-chong-dong-tai-nei-cun-fen-pei-suan-fa-bfnfwfff/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/java-shi-xian-cao-zuo-xi-tong-zhong-si-chong-dong-tai-nei-cun-fen-pei-suan-fa-bfnfwfff/"> </span>
+              </a>
+              <span id="/java-shi-xian-cao-zuo-xi-tong-zhong-si-chong-dong-tai-nei-cun-fen-pei-suan-fa-bfnfwfff/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Java实现操作系统中四种动态内存分配算法：BF+NF+WF+FF</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p>本文是利用<code>Java</code>实现操作系统中的四种动态内存分配方式 ，分别是：</p>
+<ul>
+<li><code>BF</code></li>
+<li><code>NF</code></li>
+<li><code>WF</code></li>
+<li><code>FF</code></li>
+</ul>
+<p>分两部分，第一部分是介绍四种分配方式的概念以及例子，第二部分是代码实现以及讲解。</p>
+<h1 id="2-四种分配方式">2 四种分配方式</h1>
+<h2 id="21-概念">2.1 概念</h2>
+<p>操作系统中有一个动态分区分配的概念，内存在初始化的时候不会划分区域，而是在进程装入的时候，根据所要装入的进程动态地对内存空间进行划分，以提高内存空间的利用率，降低碎片的大小，主要的方法有一下四种：</p>
+<ul>
+<li>首次适应算法（<code>First Fit</code>）：从空闲分区链首开始查找，直到找到一个满足其大小要求的空闲分区为止</li>
+<li>循环首次适应算法（<code>Next Fit</code>）：从上次找到的空闲分区的下一个开始查找</li>
+<li>最佳适应算法（<code>Best Fit</code>）：把空闲分区按大小递增的方式形成分区链，找到第一个能满足要求的空闲分区就进行分配</li>
+<li>最坏适应算法（<code>Worst Fit</code>）：与最佳适应算法相反，把空闲分区按大小递减的方式形成分区链，找到第一个能满足要求的空闲分区就进行分配</li>
+</ul>
+<h2 id="22-例子">2.2 例子</h2>
+<p>假设现在有<code>100MB</code>的内存空间，某一时刻先后分配了<code>20MB</code>、<code>4MB</code>、<code>10MB</code>内存，示意图如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201121154826958.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>现在需要再分配<code>5MB</code>内存。</p>
+<p>若采用<code>FF</code>，因为<code>FF</code>是直接按顺序分配内存，从低地址开始搜索空闲分区，因此便会从第一块空闲分区分配<code>5MB</code>（地址<code>0-5</code>），示意图：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2020112115543974.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>若采用<code>NF</code>，<code>NF</code>与<code>FF</code>类似，只不过<code>NF</code>是从上一次找到的空闲分区的下一块开始查找，因为上一次分配的是<code>10MB</code>，因此会从最后一块空闲分区（地址<code>80-100</code>）分配内存：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201121155703771.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>若采用<code>BF</code>，<code>BF</code>是遍历所有空闲分区并找到一个能满足要求的最小分区，也就会找到一个比<code>5MB</code>大的空闲分区，且该空闲分区是所有空闲分区中最小的，也就是地址为<code>64-70</code>的空闲分区：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201121155908288.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>若采用<code>WF</code>，<code>WF</code>与<code>BF</code>相反，总是从最大的空闲分区开始分配，因此会从地址为<code>30-60</code>的空闲分区进行分配：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201121160047113.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-代码实现">3 代码实现</h1>
+<h2 id="31-总览">3.1 总览</h2>
+<p>代码分成了四个类：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2020112116032076.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li><code>Main</code>：测试</li>
+<li><code>Print</code>：输出打印</li>
+<li><code>Table</code>：表示每一个分区</li>
+<li><code>TableList</code>：对分区进行控制，包括初始化，分配，回收等</li>
+</ul>
+<h2 id="32-main">3.2 <code>Main</code></h2>
+<p><code>Main</code>是测试类，代码如下：</p>
+<pre><code class="language-java">public class Main {
+
+    private final static TableList list = new TableList(64);
+
+    public static void main(String[] args) {
+        list.useWF();
+//        list.useBF();
+//        list.useNF();
+//        list.useFF();
+
+        list.allocate(10);
+        list.allocate(20);
+        list.free(10);
+        list.show();
+        list.allocate(8);
+        list.show();
+        list.allocate(13);
+        list.allocate(1);
+        list.show();
+        list.free(1);
+        list.allocate(9);
+        list.free(13);
+        list.show();
+        list.allocate(18);
+        list.show();
+        list.allocate(3);
+        list.allocate(4);
+        list.free(20);
+        list.free(8);
+        list.show();
+        list.allocate(8);
+        list.free(9);
+        list.show();
+        list.clear();
+        list.show();
+    }
+}
+</code></pre>
+<p>通过<code>TableList</code>对内存进行分配以及释放，初始化分配<code>64MB</code>大小内存，切换分配算法时使用前四行的其中一行即可。</p>
+<h2 id="33-table">3.3 <code>Table</code></h2>
+<p><code>Table</code>类表示每一个分区，无论是空闲的还是已分配的，成员变量有四个，分别是：</p>
+<ul>
+<li>起始地址</li>
+<li>大小</li>
+<li>是否空闲（只有两种状态，空闲或分配）</li>
+<li>是否是上一次分配（<code>NF</code>专用）</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">@AllArgsConstructor
+public class Table {
+    @Getter
+    @Setter
+    private int address;
+    @Setter
+    @Getter
+    private int size;
+    private boolean free;
+    @Getter
+    @Setter
+    private boolean lastAllocated;
+
+    public static Table freeTable(int address,int size)
+    {
+        return new Table(address,size,true,false);
+    }
+
+    public static Table allocatedTable(int address,int size)
+    {
+        return new Table(address,size,false,false);
+    }
+
+    public boolean isFree()
+    {
+        return free;
+    }
+
+    public boolean isAllocated()
+    {
+        return !isFree();
+    }
+
+    public void setFree()
+    {
+        free = true;
+    }
+}
+</code></pre>
+<p>只有一些<code>Getter</code>和<code>Setter</code>，为了方便提供了一个创建空闲分区或已分配分区的静态方法，指定起始地址和大小即可。</p>
+<h2 id="34-tablelist">3.4 <code>TableList</code></h2>
+<p><code>TableList</code>是整个算法的核心类，成员变量如下：</p>
+<pre><code class="language-java">private final List&lt;Table&gt; list = new ArrayList&lt;&gt;();
+private final int totalSize;
+private boolean ff = false;
+private boolean nf = false;
+private boolean bf = false;
+private boolean wf = false;
+private boolean first = true;
+private final static Print print = new Print();
+</code></pre>
+<p><code>list</code>就是所有的空闲分区与已分配分区组成的数组，<code>totalSize</code>是总大小，接着是四个控制算法的布尔变量，<code>first</code>表示是否是第一次分配内存，因为第一次的话四种算法都是固定的从地址为<code>0</code>处开始分配。</p>
+<p>接下来就是内存分配算法以及释放算法。</p>
+<h3 id="341-ff">3.4.1 <code>FF</code></h3>
+<pre><code class="language-java">if (ff)
+{
+    for (int i = 0; i &lt; list.size(); i++) {
+        Table table = list.get(i);
+        if(table.isFree() &amp;&amp; table.getSize() &gt;= size)
+        {
+            int address = table.getAddress();
+            Table allocated = Table.allocatedTable(address,size);
+            table.setAddress(address+size);
+            table.setSize(table.getSize()-size);
+            list.add(i,allocated);
+            return;
+        }
+    }
+}
+</code></pre>
+<p><code>FF</code>的实现还是比较简单的，直接遍历列表，如果是空闲分区并满足大小要求，直接进行分配，修改空闲分区的起始地址和大小并插入一个新的已分配分区到列表中即可。</p>
+<h3 id="342-nf">3.4.2 <code>NF</code></h3>
+<pre><code class="language-java">else if (nf)
+{
+    int lastNFIndex = findLastAllocated();
+    int i = lastNFIndex;
+    do
+    {
+        if(i == list.size())
+            i = 0;
+        Table table = list.get(i);
+        if(table.isFree() &amp;&amp; table.getSize() &gt;= size)
+        {
+            int address = table.getAddress();
+            Table allocated = Table.allocatedTable(address,size);
+            table.setAddress(address+size);
+            table.setSize(table.getSize()-size);
+            list.get(lastNFIndex).setLastAllocated(false);
+            table.setLastAllocated(true);
+            list.add(i,allocated);
+            return;
+        }
+        ++i;
+    }
+    while (i != lastNFIndex);
+}
+</code></pre>
+<p><code>NF</code>的话需要提前记录上一次分配的位置，通过<code>Table</code>中的<code>lastAllocated</code>确定上一次分配的位置，找到后从该位置开始遍历列表，注意需要进行绕回处理，因为到末尾位置后有可能还没有能满足的空闲分区，此时需要将下标绕回到<code>0</code>并再次遍历直到到达上一次分配的位置。</p>
+<h3 id="343-bfwf">3.4.3 <code>BF</code>+<code>WF</code></h3>
+<p>由于<code>BF</code>与<code>WF</code>都需要遍历所有的空闲分区，只是前者是选择最小满足要求的，后者是选择最大满足要求的，因此两者的实现差别在于一个判断大小的符号，代码如下：</p>
+<pre><code class="language-java">else
+{
+    int i;
+    int target = -1;
+    for (i = 0; i &lt; list.size(); i++) {
+        Table table = list.get(i);
+        if(table.isFree())
+        {
+            if(table.getSize() &gt;= size)
+            {
+                if(target == -1)
+                    target = i;
+                else
+                {
+                    if(bf)
+                    {
+                        if(list.get(target).getSize() &gt; table.getSize())
+                            target = i;
+                    }
+                    else
+                    {
+                        if(list.get(target).getSize() &lt; table.getSize())
+                            target = i;
+                    }
+                }
+            }
+        }
+    }
+    if(target != -1)
+    {
+        Table table = list.get(target);
+        int address = table.getAddress();
+        table.setAddress(address+size);
+        table.setSize(table.getSize()-size);
+        list.add(target,Table.allocatedTable(address,size));
+        return;
+    }
+}
+</code></pre>
+<p>首先遍历找到符合条件的空闲分区的下标，接着通过判断<code>target</code>，也就是目标空闲分区的下标，如果为<code>-1</code>表示没有找到符合条件的空闲分区，如果不为<code>-1</code>直接分配空间。</p>
+<h3 id="344-释放算法">3.4.4 释放算法</h3>
+<p>释放算法的设计是比较复杂的，代码如下：</p>
+<pre><code class="language-java">public void free(int size)
+{
+    int index = 0;
+    while(index &lt; list.size())
+    {
+        if(list.get(index).isAllocated() &amp;&amp; list.get(index).getSize() == size)
+            break;
+        ++index;
+    }
+    if(index &gt;= list.size())
+    {
+        print.freeFailed(size);
+        return;
+    }
+    int address = list.get(index).getAddress();
+    if(index == 0)
+    {
+        list.get(0).setFree();
+        if(index+1 &lt; list.size())
+        {
+            Table nextTable = list.get(index+1);
+            if(nextTable.isFree())
+            {
+                list.get(0).setSize(nextTable.getSize()+size);
+                list.remove(index+1);
+            }
+        }
+    }
+    else if(index == list.size()-1)
+    {
+        list.get(index).setFree();
+        Table lastTable = list.get(index-1);
+        if(lastTable.isFree())
+        {
+            lastTable.setSize(lastTable.getSize()+size);
+            list.remove(index);
+        }
+    }
+    else
+    {
+        Table before = list.get(index-1);
+        Table after = list.get(index+1);
+
+        if(before.isFree() &amp;&amp; after.isFree())
+        {
+            before.setSize(before.getSize()+size+after.getSize());
+            list.remove(index+1);
+            list.remove(index);
+        }
+        else if(before.isFree() &amp;&amp; after.isAllocated())
+        {
+            before.setSize(before.getSize()+size);
+            list.remove(index);
+        }
+        else if(before.isAllocated() &amp;&amp; after.isFree())
+        {
+            after.setSize(after.getSize()+size);
+            after.setAddress(address);
+            list.remove(index);
+        }
+        else
+        {
+            list.get(index).setFree();
+        }
+    }
+}
+</code></pre>
+<p>主要考虑了六种情况（黄色代表需要释放的空间，橙色是已分配的内存空间）：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201121170701544.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li>第一种情况就是需要释放首部的分区，此时需要修改后面空闲分区的起始地址和大小，并删除目标分区</li>
+<li>第二种情况是释放尾部的分区，此时需要修改前面空闲分区的大小即可，无需修改起始地址，并删除目标分区</li>
+<li>第三种情况是后面是已分配的分区，前面的空闲分区，需要修改前面空闲分区的大小，并删除目标分区</li>
+<li>第四种情况是前面是已分配的分区，后面是空闲分区，需要修改后面的空闲分区的起始地址以及大小，并删除目标分区</li>
+<li>第五种情况是前后都是已分配的分区，此时只需要修改目标分区的标志为空闲即可，无需额外操作</li>
+<li>第六种情况是前后都是空闲分区，这种情况下需要进行连接操作，具体来说就是先修改前面空闲分区的大小，接着删除目标分区以及后面的空闲分区</li>
+</ul>
+<p>下面回到代码，首先是判断第一种情况：</p>
+<pre><code class="language-java">if(index == 0)
+{
+    list.get(0).setFree();
+    if(index+1 &lt; list.size())
+    {
+        Table nextTable = list.get(index+1);
+        if(nextTable.isFree())
+        {
+            list.get(0).setSize(nextTable.getSize()+size);
+            list.remove(index+1);
+        }
+    }
+}
+</code></pre>
+<p>也就是需要释放首部的分区，通过<code>setFree()</code>设置标志位表示空闲状态，接着判断是否需要修改后面空闲分区的大小，因为有可能后面是一个已分配的分区而不是空闲分区。</p>
+<pre><code class="language-java">else if(index == list.size()-1)
+{
+    list.get(index).setFree();
+    Table lastTable = list.get(index-1);
+    if(lastTable.isFree())
+    {
+        lastTable.setSize(lastTable.getSize()+size);
+        list.remove(index);
+    }
+}
+</code></pre>
+<p>这里是判断第二种情况，也就是释放尾部的分区，同样需要判断前一个分区是已分配的分区还是空闲的分区，是空闲分区的话修改大小并移除目标分区。</p>
+<pre><code class="language-java">else
+{
+    Table before = list.get(index-1);
+    Table after = list.get(index+1);
+
+    if(before.isFree() &amp;&amp; after.isFree())
+    {
+        before.setSize(before.getSize()+size+after.getSize());
+        list.remove(index+1);
+        list.remove(index);
+    }
+    else if(before.isFree() &amp;&amp; after.isAllocated())
+    {
+        before.setSize(before.getSize()+size);
+        list.remove(index);
+    }
+    else if(before.isAllocated() &amp;&amp; after.isFree())
+    {
+        after.setSize(after.getSize()+size);
+        after.setAddress(address);
+        list.remove(index);
+    }
+    else
+    {
+        list.get(index).setFree();
+    }
+}
+</code></pre>
+<p>接下来是最后四种情况的判断，首先获取前一个以及后一个分区，接着按上面算法的思路进行判断即可。</p>
+<h1 id="4-测试">4 测试</h1>
+<p>以<code>WF</code>为例，默认大小<code>64MB</code>，测试顺序如下：</p>
+<ul>
+<li>分配<code>10MB</code></li>
+<li>分配<code>20MB</code></li>
+<li>释放<code>10MB</code></li>
+<li>打印结果</li>
+<li>分配<code>8MB</code></li>
+<li>打印结果</li>
+<li>分配<code>13MB</code></li>
+<li>分配<code>1MB</code></li>
+<li>打印结果</li>
+<li>释放<code>1MB</code></li>
+<li>分配<code>9MB</code></li>
+<li>释放<code>13MB</code></li>
+<li>打印结果</li>
+<li>分配<code>18MB</code></li>
+<li>打印结果</li>
+<li>分配<code>3MB</code></li>
+<li>分配<code>4MB</code></li>
+<li>释放<code>20MB</code></li>
+<li>释放<code>8MB</code></li>
+<li>打印结果</li>
+<li>分配<code>8MB</code></li>
+<li>释放<code>9MB</code></li>
+<li>打印结果</li>
+<li>清空</li>
+<li>打印结果</li>
+</ul>
+<p>输出：</p>
+<pre><code class="language-java">Free           :      0-10MB
+Allocated      :      10-30MB
+Free           :      30-64MB
+
+----------------------------------------------------------------
+
+Free           :      0-10MB
+Allocated      :      10-30MB
+Allocated      :      30-38MB
+Free           :      38-64MB
+
+----------------------------------------------------------------
+
+Free           :      0-10MB
+Allocated      :      10-30MB
+Allocated      :      30-38MB
+Allocated      :      38-51MB
+Allocated      :      51-52MB
+Free           :      52-64MB
+
+----------------------------------------------------------------
+
+Free           :      0-10MB
+Allocated      :      10-30MB
+Allocated      :      30-38MB
+Free           :      38-51MB
+Allocated      :      51-60MB
+Free           :      60-64MB
+
+----------------------------------------------------------------
+
+Do nothing.
+Allocated failed, out of memory
+Free           :      0-10MB
+Allocated      :      10-30MB
+Allocated      :      30-38MB
+Free           :      38-51MB
+Allocated      :      51-60MB
+Free           :      60-64MB
+
+----------------------------------------------------------------
+
+Allocated      :      0-4MB
+Free           :      4-38MB
+Allocated      :      38-41MB
+Free           :      41-51MB
+Allocated      :      51-60MB
+Free           :      60-64MB
+
+----------------------------------------------------------------
+
+Allocated      :      0-4MB
+Allocated      :      4-12MB
+Free           :      12-38MB
+Allocated      :      38-41MB
+Free           :      41-64MB
+
+----------------------------------------------------------------
+
+Free           :      0-64MB
+
+----------------------------------------------------------------
+</code></pre>
+<p>读者可以自行画图验证。</p>
+<h1 id="5-源码">5 源码</h1>
+<ul>
+<li><a href="https://github.com/2293736867/FourDynamicAllocatedAlgorithm">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/FourDynamicAllocatedAlgorithm">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/FourDynamicAllocatedAlgorithm">CODE.CHINA</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-160-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-160-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-11-21">2020-11-21</time>
+                  <h4 class="title white no-margin">每日分享 第160期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/jie-jue-linux-wu-fa-du-xie-u-pan-zhong-de-ntfs-wen-ti.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/jie-jue-linux-wu-fa-du-xie-u-pan-zhong-de-ntfs-wen-ti/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2020-11-20">2020-11-20</time>
+                  <h4 class="title white no-margin">解决Linux无法读写U盘中的NTFS问题</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-162-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-162-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-11-23">2020-11-23</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-162-qi/">每日分享 第162期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-161-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-161-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-11-22">2020-11-22</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-161-qi/">每日分享 第161期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-160-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-160-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2020-11-21">2020-11-21</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-160-qi/">每日分享 第160期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-1 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-2 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-3 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-4 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-5 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-6 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-7 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-8 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-9 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-10 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-11 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-12 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-13 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-14 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-15 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-16 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-17 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-18 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-19 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-20 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-21 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-22 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-23 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-24 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-25 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-26 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-27 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-28 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-29 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-30 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-31 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-32 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-33 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-34 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-35 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-36 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-37 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-38 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-39 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-40 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-41 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-42 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-43 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-44 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-45 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-46 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-47 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-48 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-49 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-50 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-51 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-52 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-53 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-54 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-55 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-56 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-57 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-58 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-59 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-60 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-61 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-62 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-63 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-64 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-65 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-66 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-67 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-68 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-69 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-70 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-71 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-72 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-73 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-74 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-75 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-76 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-77 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-78 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-79 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-80 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-81 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-82 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-83 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-84 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-85 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 375 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
