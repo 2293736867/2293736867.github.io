@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-11-21T04:57:22.528Z</updated>
+    <updated>2020-11-21T22:24:41.586Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -51,6 +51,151 @@
 <blockquote>
 <p>不管风吹浪打，胜似闲庭信步。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Windows Terminal 安装与配置]]></title>
+        <id>https://2293736867.github.io/post/windows-terminal-an-zhuang-yu-pei-zhi/</id>
+        <link href="https://2293736867.github.io/post/windows-terminal-an-zhuang-yu-pei-zhi/">
+        </link>
+        <updated>2020-11-21T22:24:15.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-安装">1 安装</h1>
+<p>安装可以从应用商店安装（直接搜索即可）或者<code>Github</code>安装（可以<a href="https://github.com/microsoft/terminal/releases">戳这里</a>）：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201122072848904.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>下载<code>msixbundle</code>格式的文件即可直接打开安装。</p>
+<h1 id="2-配置前准备">2 配置前准备</h1>
+<h2 id="21-下载字体">2.1 下载字体</h2>
+<p>推荐使用<code>FiraCode</code>，下载链接<a href="https://github.com/tonsky/FiraCode/releases">戳这里</a>。</p>
+<p>解压后选择其中一个<code>ttf</code>安装即可：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201122073318304.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="22-安装powershell-core">2.2 安装<code>PowerShell Core</code></h2>
+<p>这里的<code>PowerShell Core</code>与自带的<code>PowerShell</code>不是同一个东西，前者是能跨平台的，下载链接<a href="https://github.com/PowerShell/PowerShell/releases">戳这里</a>。</p>
+<p><code>Windows</code>下可以直接选择<code>msi</code>格式下载：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201122073833531.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>安装好后可以对比一下新的<code>PowerShell Core</code>默认是黑底的，而且标题也不一样：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201122084405269.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-配置">3 配置</h1>
+<h2 id="31-模块">3.1 模块</h2>
+<pre><code class="language-bash"># PSReadline
+Install-Module -Name PSReadLine -AllowPrerelease -Force
+
+# posh-git
+Install-Module posh-git -Scope CurrentUser
+
+# oh-my-posh
+Install-Module oh-my-posh -Scope CurrentUser
+</code></pre>
+<p>安装过程中可能会卡住，稍等即可。</p>
+<p>另外有可能会提示不信任的仓库，选择<code>y</code>即可：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201122084754503.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-修改pwsh为默认终端">3.2 修改<code>PWSH</code>为默认终端</h2>
+<p>打开<code>Window Terminal</code>的配置文件，查看<code>list</code>中有无<code>PowerShell Core</code>，如果没有，请手动添加到<code>list</code>中：</p>
+<pre><code class="language-json">{
+    &quot;guid&quot;: &quot;{60c54bbd-c2c6-5271-96e7-009a87ff44bf}&quot;,
+    &quot;name&quot;: &quot;PowerShell Core&quot;,
+    //&quot;icon&quot;:&quot;C:\\My\\PowerShell\\7\\ps_black_64-svg.ico&quot;,
+    &quot;commandline&quot;: &quot;pwsh.exe --nologo&quot;,
+    &quot;hidden&quot;: false
+},
+</code></pre>
+<p>其中<code>guid</code>可以从<code>cmd</code>复制过来并修改其中一个字符即可，<code>commandLine</code>直接填<code>pwsh.exe</code>，后面的<code>--nologo</code>参数可以去掉烦人的提示。至于图标，默认是没有图标的，需要手动添加，可以从<code>PowerShell</code>的<code>Github</code>下载，并转换为<code>ico</code>格式，最后填上路径就可以正常显示了：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201122095928888.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201122095958565.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="33-美化">3.3 美化</h2>
+<p>由于安装了<code>oh-my-posh</code>，可以使用<code>Set-Theme</code>切换主题，比如：</p>
+<pre><code class="language-bash">Set-Theme Agnoster
+</code></pre>
+<p>输入<code>Set-Theme</code>即可按<code>Tab</code>补全主题。</p>
+<p>另外这样修改的主题只是临时生效，想要永久生效需要写入配置文件中，输入：</p>
+<pre><code class="language-bash">$profile
+</code></pre>
+<p>会显示配置文件的位置，每个人不一样，没有的话就新建，在其中输入：</p>
+<pre><code class="language-bash">Import-Module posh-git
+Import-Module oh-my-posh
+Import-Module PSReadLine
+Set-Theme Agnoster
+</code></pre>
+<p>即可使主题永久生效。</p>
+<p>另外，如果主题的颜色不满意，可以配合<code>Show-Colors</code>与<code>Show-ThemeColors</code>修改主题颜色。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Window下Python+CUDA+PyTorch安装]]></title>
+        <id>https://2293736867.github.io/post/window-xia-pythoncudapytorch-an-zhuang/</id>
+        <link href="https://2293736867.github.io/post/window-xia-pythoncudapytorch-an-zhuang/">
+        </link>
+        <updated>2020-11-21T22:23:08.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p><code>Windows</code>下<code>Python+CUDA+PyTorch</code>安装，步骤都很详细，特此记录下来，帮助读者少走弯路。</p>
+<h1 id="2-python">2 <code>Python</code></h1>
+<p><code>Python</code>的安装还是比较简单的，从<a href="https://www.python.org/downloads/windows/">官网</a>下载<code>exe</code>安装包即可：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201122090347592.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>因为目前最新的<code>torch</code>版本只支持到<code>Python 3.8</code>，因此为了不会出现版本兼容问题建议安装<code>Python 3.8</code>。</p>
+<p>下载中间的那个<code>executable installer</code>并安装，打开会建议选择自定义：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201122125346381.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>选择需要的组件：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20201122125405751.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>选择位置：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201122125434926.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20201122125518138.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>安装完后可以从命令行查看是否安装成功（一般默认会把路径添加到环境变量中）：</p>
+<pre><code class="language-bash">python --version
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20201122125550824.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于该安装包会自动把<code>pip</code>也一起安装，因此在使用时会提示<code>pip</code>需要升级，请使用如下命令升级<code>pip</code>：</p>
+<pre><code class="language-bash">python -m pip install --upgrade pip
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20201122125631452.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在安装前建议添加国内源，在用户目录下新建一个<code>pip</code>文件夹，并在其中新建一个叫<code>pip.ini</code>的文件，输入如下内容：</p>
+<pre><code class="language-bash">[global]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+[install]
+trusted-host = https://pypi.tuna.tsinghua.edu.cn
+</code></pre>
+<h1 id="3-cuda">3 <code>CUDA</code></h1>
+<p><code>CUDA</code>的安装也不难，一般<code>Windows</code>会在装系统的时候自动安装好对应的<code>N卡</code>驱动，从<a href="https://developer.nvidia.com/cuda-downloads">官网</a>下载对应的<code>CUDA Toolkit</code>：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20201122085450915.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>下载好后打开（实际上是一个压缩包，这里是解压路径）：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20201122075536401.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20201122080106156.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>解压完成后会自动打开安装界面：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20201122085245286.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>没特殊需求可以直接使用默认安装选项，否则请选择自定义组件进行安装：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20201122085653698.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于笔者没有安装<code>VS</code>，这里会提示找不到<code>VS</code>，忽略即可：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20201122085731986.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接下来就是等待安装：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20201122085917820.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20201122090931273.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>安装完成：</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/2020112209100961.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>打开<code>cmd</code>输入<code>nvcc --version</code>，显示版本号即为安装成功：</p>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20201122091150326.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-pytorch">4 <code>PyTorch</code></h1>
+<h2 id="41-下载">4.1 下载</h2>
+<p><code>PyTorch</code>建议使用离线方式手动安装，<a href="https://download.pytorch.org/whl/torch_stable.html">戳这里</a>下载对应<code>CUDA</code>版本与对应<code>Python</code>版本的<code>torch</code>以及<code>torchvision</code>：</p>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20201122102935438.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最前面的<code>cu110</code>表示<code>cuda 11.0</code>，接着是<code>torch/torchvision</code>，再接着是版本，后面的<code>cp</code>表示<code>Python</code>版本，比如<code>cp36</code>表示<code>Python 3.6</code>，接着是系统和架构。</p>
+<h2 id="42-安装">4.2 安装</h2>
+<p>下载完成后使用<code>pip</code>安装即可：</p>
+<pre><code class="language-bash">pip install torch-1.7.0+cu110-cp38-cp38-win_amd64.whl
+pip install torchvision-0.8.1+cu110-cp38-cp38-win_amd64.whl
+</code></pre>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20201122130514235.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>注意如果是<code>Windows 2004</code>版本可能会出现如下问题：</p>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20201122135440480.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这是<code>numpy 19.0.4</code>版本的问题，详情可以<a href="https://developercommunity.visualstudio.com/content/problem/1207405/fmod-after-an-update-to-windows-2004-is-causing-a.html">戳这里</a>。</p>
+<p>解决方法是安装<code>19.0.3</code>版本：</p>
+<pre><code class="language-bash">pip uninstall numpy
+pip install numpy==19.0.3
+</code></pre>
+<p>接着进行测试，打开<code>python</code>：</p>
+<pre><code class="language-bash">python
+import torch
+print(torch.__version__)
+</code></pre>
+<p>输出<code>torch</code>版本即表示成功：</p>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20201122135552214.png" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
@@ -653,147 +798,6 @@ sudo ntfs-3g /dev/sda2 /run/media/point
 <blockquote>
 <p>一个人有一个故事，别让你的故事留白。</p>
 </blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第156期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-156-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-156-qi/">
-        </link>
-        <updated>2020-11-16T23:54:56.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>别说自己是单身狗，狗还可以三清四妾。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>休问梁园旧宾客，茂陵秋雨病相如。<br>
-——李商隐《寄令狐郎中》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>时代变了，但有些事情可还没变呢，大人。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日一句 151-200期合集]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-yi-ju-151-200-qi-he-ji/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-yi-ju-151-200-qi-he-ji/">
-        </link>
-        <updated>2020-11-15T23:57:24.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="第151期">第151期</h1>
-<blockquote>
-<p>你说过等我的......</p>
-</blockquote>
-<h1 id="第152期">第152期</h1>
-<blockquote>
-<p>今日的余晖和你最后那天给我的拥抱，同一个温度。</p>
-</blockquote>
-<h1 id="第153期">第153期</h1>
-<blockquote>
-<p>她爱海只爱海的惊涛骇浪，爱青草仅仅爱青草遍生于废墟之间。</p>
-</blockquote>
-<h1 id="第154期">第154期</h1>
-<blockquote>
-<p>何必怕鬼，折磨你的永远是人。何必怕死，折磨你的是生。</p>
-</blockquote>
-<h1 id="第155期">第155期</h1>
-<blockquote>
-<p>梦里与现实的距离，仅仅是双眸的一合一闭。</p>
-</blockquote>
-<h1 id="第156期">第156期</h1>
-<blockquote>
-<p>时代变了，但有些事情可还没变呢，大人。</p>
-</blockquote>
-<h1 id="第157期">第157期</h1>
-<blockquote></blockquote>
-<h1 id="第158期">第158期</h1>
-<blockquote></blockquote>
-<h1 id="第159期">第159期</h1>
-<blockquote></blockquote>
-<h1 id="第160期">第160期</h1>
-<blockquote></blockquote>
-<h1 id="第161期">第161期</h1>
-<blockquote></blockquote>
-<h1 id="第162期">第162期</h1>
-<blockquote></blockquote>
-<h1 id="第163期">第163期</h1>
-<blockquote></blockquote>
-<h1 id="第164期">第164期</h1>
-<blockquote></blockquote>
-<h1 id="第165期">第165期</h1>
-<blockquote></blockquote>
-<h1 id="第166期">第166期</h1>
-<blockquote></blockquote>
-<h1 id="第167期">第167期</h1>
-<blockquote></blockquote>
-<h1 id="第168期">第168期</h1>
-<blockquote></blockquote>
-<h1 id="第169期">第169期</h1>
-<blockquote></blockquote>
-<h1 id="第170期">第170期</h1>
-<blockquote></blockquote>
-<h1 id="第171期">第171期</h1>
-<blockquote></blockquote>
-<h1 id="第172期">第172期</h1>
-<blockquote></blockquote>
-<h1 id="第173期">第173期</h1>
-<blockquote></blockquote>
-<h1 id="第174期">第174期</h1>
-<blockquote></blockquote>
-<h1 id="第175期">第175期</h1>
-<blockquote></blockquote>
-<h1 id="第176期">第176期</h1>
-<blockquote></blockquote>
-<h1 id="第177期">第177期</h1>
-<blockquote></blockquote>
-<h1 id="第178期">第178期</h1>
-<blockquote></blockquote>
-<h1 id="第179期">第179期</h1>
-<blockquote></blockquote>
-<h1 id="第180期">第180期</h1>
-<blockquote></blockquote>
-<h1 id="第181期">第181期</h1>
-<blockquote></blockquote>
-<h1 id="第182期">第182期</h1>
-<blockquote></blockquote>
-<h1 id="第183期">第183期</h1>
-<blockquote></blockquote>
-<h1 id="第184期">第184期</h1>
-<blockquote></blockquote>
-<h1 id="第185期">第185期</h1>
-<blockquote></blockquote>
-<h1 id="第186期">第186期</h1>
-<blockquote></blockquote>
-<h1 id="第187期">第187期</h1>
-<blockquote></blockquote>
-<h1 id="第188期">第188期</h1>
-<blockquote></blockquote>
-<h1 id="第189期">第189期</h1>
-<blockquote></blockquote>
-<h1 id="第190期">第190期</h1>
-<blockquote></blockquote>
-<h1 id="第191期">第191期</h1>
-<blockquote></blockquote>
-<h1 id="第192期">第192期</h1>
-<blockquote></blockquote>
-<h1 id="第193期">第193期</h1>
-<blockquote></blockquote>
-<h1 id="第194期">第194期</h1>
-<blockquote></blockquote>
-<h1 id="第195期">第195期</h1>
-<blockquote></blockquote>
-<h1 id="第196期">第196期</h1>
-<blockquote></blockquote>
-<h1 id="第197期">第197期</h1>
-<blockquote></blockquote>
-<h1 id="第198期">第198期</h1>
-<blockquote></blockquote>
-<h1 id="第199期">第199期</h1>
-<blockquote></blockquote>
-<h1 id="第200期">第200期</h1>
-<blockquote></blockquote>
 ]]></content>
     </entry>
 </feed>
