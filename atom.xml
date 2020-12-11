@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-12-11T03:46:57.048Z</updated>
+    <updated>2020-12-11T08:05:50.514Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,39 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[解决Spring中使用Example无法查询到Mongodb中的数据问题]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-spring-zhong-shi-yong-example-wu-fa-cha-xun-dao-mongodb-zhong-de-shu-ju-wen-ti/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-spring-zhong-shi-yong-example-wu-fa-cha-xun-dao-mongodb-zhong-de-shu-ju-wen-ti/">
+        </link>
+        <updated>2020-12-11T08:01:29.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>在<code>Spring Boot</code>中使用<code>Mongodb</code>中的<code>Example</code>查询数据时查询不到，示例代码如下：</p>
+<pre><code class="language-java">ExampleMatcher matcher = ExampleMatcher.matching()
+.withMatcher(&quot;username&quot;, ExampleMatcher.GenericPropertyMatchers.exact())
+.withIgnorePaths(&quot;id&quot;,&quot;password&quot;);
+</code></pre>
+<h1 id="2-问题分析">2 问题分析</h1>
+<p>在<code>Spring Data</code>中使用<code>Mongodb</code>时，插入数据会添加一个<code>_class</code>字段，这个字段是用来映射<code>POJO</code>的，也就是说，如果一个实体类如下：</p>
+<pre><code class="language-java">@Document(collection = &quot;user&quot;)
+class User{
+	@Id
+	private String id;
+	private String username;
+	private String password;
+}
+</code></pre>
+<p>则存进数据库的字段如下：</p>
+<pre><code class="language-bash">_id,_class,username,password
+</code></pre>
+<p>而使用<code>ExampleMatcher</code>，默认情况下会匹配所有字段，因此，如果实体类的包名改变了，<code>_class</code>字段就不会匹配，这样就无法正确地得到查询结果。</p>
+<h1 id="3-解决方案">3 解决方案</h1>
+<p>把<code>_class</code>添加进<code>IgnorePath</code>即可：</p>
+<pre><code class="language-java">.withIgnorePaths(&quot;_class&quot;,&quot;id&quot;,&quot;password&quot;)
+</code></pre>
+<p>如果不想在插入数据时自动添加<code>_class</code>字段，可以修改<code>MongoTemplate</code>或者<code>MappingMongoConverter</code>，由于此超出本文范围，仅给出参考链接，戳<a href="https://www.cnblogs.com/keeya/p/9969535.html">这里</a>或<a href="https://stackoverflow.com/questions/6810488/spring-data-mongodb-mappingmongoconverter-remove-class/">这里</a>。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第180期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-180-qi/</id>
@@ -304,27 +337,6 @@ nmcli c add type ethernet con-name connect_name_2 ifname ens33 ipv4.method auto
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>曾盛开过一朵，曾不会败落，曾在他眼中流淌过浩瀚的银河。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第172期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-172-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-172-qi/">
-        </link>
-        <updated>2020-12-03T14:48:38.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>少小离家老大回，骚话学了一大堆。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>西风吹老洞庭波，一夜湘君白发多。<br>
-——唐珙《题龙阳县青草湖》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>太想伸手摘取星星的人，常常忘记脚下的鲜花。</p>
 </blockquote>
 ]]></content>
     </entry>
