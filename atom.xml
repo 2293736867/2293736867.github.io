@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-12-13T17:24:55.961Z</updated>
+    <updated>2020-12-15T18:11:33.592Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,44 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Java实现简单计算器]]></title>
+        <id>https://2293736867.github.io/post/java-shi-xian-jian-dan-ji-suan-qi-1/</id>
+        <link href="https://2293736867.github.io/post/java-shi-xian-jian-dan-ji-suan-qi-1/">
+        </link>
+        <updated>2020-12-15T18:09:45.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p><code>Java AWT+Swing</code>实现的简单计算器，功能如下：</p>
+<ul>
+<li>支持加减乘除</li>
+<li>支持小数运算</li>
+<li>键盘监听</li>
+<li>鼠标监听</li>
+</ul>
+<h1 id="2-效果演示">2 效果演示</h1>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201216012859251.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201216012913957.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-一些细节">3 一些细节</h1>
+<h2 id="31-运算">3.1 运算</h2>
+<p>运算用到了一个<code>ExpressionHandle</code>的静态类，用来计算字符串表达式的值。</p>
+<p>其实运算不难，就是基本的运算符以及操作数的入栈出栈操作，就不细说了。</p>
+<h2 id="32-base64">3.2 <code>Base64</code></h2>
+<p>图标是使用<code>Base64</code>处理的，因为是只有一个图片资源，而且使用图片的话比较容易出现路径问题，就使用了<code>Java</code>自带的<code>Base64.Decoder</code>进行处理，<code>decode</code>后生成得到字节数组并作为<code>ImageIcon</code>的参数，即可正确显示图片。</p>
+<h2 id="33-字体">3.3 字体</h2>
+<p>字体使用了微软雅黑字体，默认加粗，字号17号，使用了反射获取<code>setFont</code>进行设置。</p>
+<h2 id="34-鼠标监听">3.4 鼠标监听</h2>
+<p>核心就是<code>MouseListner</code>，在<code>mouseEntered</code>/<code>mouseExited</code>设置进入和离开时的背景颜色，同时在<code>mouseClicked</code>设置响应事件，对等于号、退格以及<code>Esc</code>进行特判，其他的直接相应输入框添加字符即可。</p>
+<h2 id="35-键盘监听">3.5 键盘监听</h2>
+<p>核心是<code>KeyListner</code>，<code>keyPressed</code>设置响应事件，对回车、退格以及等于号进行特判，另外还需要注意组合键，比如<code>Shift</code>+<code>8</code>表示的是乘号，要利用<code>keyEvent.isShiftDown</code>判断<code>shift</code>是否按下，同时设置对应的按键背景颜色。<code>keyReleased</code>中设置按键释放事件，在这里就是设置背景，本来想是设置某个按键的，但是可能因为键盘事件响应不灵敏的原因，当按键过快时就会出现按键被“持续按下”的假象，因此对所有按键进行了响应。</p>
+<h2 id="36-限制输入字符">3.6 限制输入字符</h2>
+<p>利用了<code>JTextField.setDocument()</code>以及<code>PlainDocument</code>，当输入非法时进行提示，并忽略对应的输入，核心就是<code>insertString()</code>。</p>
+<h1 id="4-源码">4 源码</h1>
+<ul>
+<li><a href="">Github</a></li>
+<li><a href="">码云</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第184期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-184-qi/</id>
@@ -306,38 +344,6 @@ nmcli c add type ethernet con-name connect_name_2 ifname ens33 ipv4.method auto
 <p>如果还是没有<code>ip</code>可以尝试手动连接设备：</p>
 <pre><code class="language-bash">nmcli d connect ens33 
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第177期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-177-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-177-qi/">
-        </link>
-        <updated>2020-12-08T01:20:23.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>想要逼死一个强迫症，那实在是太简了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>雪照山城玉指寒，一声羌管怨楼间。<br>
-——刘著《鹧鸪天·雪照山城玉指寒》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>不逆 不耻 不憾</p>
-</blockquote>
-<h1 id="k231"><code>K231</code></h1>
-<p>周末去见了女朋友</p>
-<p>然而行程并不太顺利</p>
-<p>也不知道自己搞什么</p>
-<p>同一辆火车居然也能错过两次</p>
-<p>感觉自己拖累了女朋友</p>
-<p>我很内疚</p>
-<p>真的</p>
-<p>害</p>
-<p>这</p>
-<p>该死的爱情</p>
 ]]></content>
     </entry>
 </feed>
