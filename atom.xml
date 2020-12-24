@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-12-23T11:37:41.620Z</updated>
+    <updated>2020-12-24T14:29:57.848Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -55,6 +55,58 @@
 <p>害。</p>
 <p>不关程序员的事。</p>
 <p>修个圣诞Bug。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Github仓库master分支到main分支迁移指南]]></title>
+        <id>https://2293736867.github.io/post/github-cang-ku-master-fen-zhi-dao-main-fen-zhi-qian-yi-zhi-nan/</id>
+        <link href="https://2293736867.github.io/post/github-cang-ku-master-fen-zhi-dao-main-fen-zhi-qian-yi-zhi-nan/">
+        </link>
+        <updated>2020-12-24T14:28:33.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>2020年10月1日后，<code>Github</code>会将所有新建的仓库的默认分支从<code>master</code>修改为<code>main</code>，这就导致了一些旧仓库主分支是<code>master</code>，新仓库主分支是<code>main</code>的问题，这在有时候会带来一些麻烦，因此这里提供一种方案将旧仓库的<code>master</code>分支迁移到<code>main</code>分支。</p>
+<h1 id="2-具体步骤">2 具体步骤</h1>
+<p>四步：</p>
+<ul>
+<li>克隆原仓库</li>
+<li>创建并推送<code>main</code>分支</li>
+<li>修改默认分支</li>
+<li>删除<code>master</code>分支</li>
+</ul>
+<h2 id="21-克隆">2.1 克隆</h2>
+<p>首先克隆一份原仓库到本地进行操作：</p>
+<pre><code class="language-bash">git clone xxxxxxx.git
+</code></pre>
+<h2 id="22-创建并推送main">2.2 创建并推送<code>main</code></h2>
+<p>创建并切换到<code>main</code>：</p>
+<pre><code class="language-bash">git checkout -b main
+</code></pre>
+<p>推送<code>main</code>：</p>
+<pre><code class="language-bash">git push origin main
+</code></pre>
+<h2 id="23-修改默认分支">2.3 修改默认分支</h2>
+<p>这一步需要到<code>Github</code>中进行操作，进入仓库的设置，点击分支选项：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201224220523300.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>将其中的默认分支修改为<code>main</code>，并点击右边的<code>Update</code>，点击<code>Update</code>后会有提示有可能会影响<code>PR</code>和克隆：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201224220523170.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>确认修改后可以看到默认分支已经修改为了<code>main</code>：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/2020122422152362.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20201224220523165.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="24-删除master">2.4 删除<code>master</code></h2>
+<p>删除本地<code>master</code>：</p>
+<pre><code class="language-bash">git branch -d master
+</code></pre>
+<p>删除远程<code>master</code>：</p>
+<pre><code class="language-bash">git push origin :master
+</code></pre>
+<p>这样就算成功迁移到<code>main</code>分支了。</p>
+<h2 id="25-测试">2.5 测试</h2>
+<p>在仓库做一些修改后进行提交：</p>
+<pre><code class="language-bash">git add -A 
+git commit -m &quot;test main branch&quot;
+git push origin main
+</code></pre>
+<p>可以看到<code>Github</code>上会有对应更新。</p>
 ]]></content>
     </entry>
     <entry>
@@ -201,27 +253,6 @@
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>虽然我和他已十年不见，但我知道我会永远怀念他。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第186期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-186-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-186-qi/">
-        </link>
-        <updated>2020-12-16T18:53:41.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>感觉这辈子，最深情绵长的注视，都给了手机。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>飞絮飞花何处是，层冰积雪摧残，疏疏一树五更寒。<br>
-——纳兰性德《临江仙·寒柳》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>此时此刻的咱啊，能和汝在一起，是最幸福的了。</p>
 </blockquote>
 ]]></content>
     </entry>
