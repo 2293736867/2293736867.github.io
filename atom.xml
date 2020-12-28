@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2020-12-27T03:37:31.949Z</updated>
+    <updated>2020-12-28T00:32:56.713Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -51,6 +51,134 @@
 <blockquote>
 <p>一场秋雨一场凉，秋心酌满泪为霜。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Node.js/Vue.js使用jsSHA库进行SHA1/2/3加密]]></title>
+        <id>https://2293736867.github.io/post/nodejsvuejs-shi-yong-jssha-ku-jin-xing-sha123-jia-mi/</id>
+        <link href="https://2293736867.github.io/post/nodejsvuejs-shi-yong-jssha-ku-jin-xing-sha123-jia-mi/">
+        </link>
+        <updated>2020-12-28T00:29:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p><code>jsSHA</code>是一个用<code>JS</code>+<code>TS</code>实现完整<code>SHA</code>系列加密算法的加密库，包括：</p>
+<ul>
+<li><code>SHA1</code></li>
+<li><code>SHA-224/256/384/512</code></li>
+<li><code>SHA3-224/256/384/512</code></li>
+<li><code>SHAKE128/256</code></li>
+<li><code>cSHAKE128/256</code></li>
+<li><code>KMAC128/256</code></li>
+</ul>
+<p>官方Github<a href="https://github.com/Caligatio/jsSHA">戳这里</a>，目前已有2k的star，这里是一些使用加密算法的例子。</p>
+<h1 id="2-安装并引入">2 安装并引入</h1>
+<p>安装使用<code>npm</code>或<code>cnpm</code>：</p>
+<pre><code class="language-bash">npm install --save jssha
+# 或
+cnpm install --save jssha
+</code></pre>
+<p>引入时，根据<code>package.json</code>中的<code>type</code>进行相应引入：</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;) //commonjs
+import jsSHA from &quot;jssha&quot;      //module
+</code></pre>
+<p>若为</p>
+<pre><code class="language-js">&quot;type&quot;:&quot;commonjs&quot;
+</code></pre>
+<p>则使用</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;)
+</code></pre>
+<h1 id="3-哈希">3 哈希</h1>
+<p>一个简单的例子如下：</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;)
+const shaObj = new jsSHA(&quot;SHA-512&quot;,&quot;TEXT&quot;,{encoding:&quot;UTF8&quot;})
+
+shaObj.update(&quot;test&quot;)
+console.log(shaObj.getHash(&quot;HEX&quot;))
+</code></pre>
+<p>首先声明了一个<code>shaObj</code>，通过<code>update</code>传递明文，并通过<code>getHash(&quot;HEX&quot;)</code>即得到哈希值，另外<code>update</code>可以调用多次，最后使用<code>getHash</code>即可。</p>
+<p><code>jsSHA()</code>有三个参数：哈希算法、输入格式以及参数设置（可选）。</p>
+<h2 id="31-哈希算法">3.1 哈希算法</h2>
+<p>第一个参数是哈希算法，支持的算法如下：</p>
+<ul>
+<li><code>SHA-1</code></li>
+<li><code>SHA-224</code></li>
+<li><code>SHA-256</code></li>
+<li><code>SHA-384</code></li>
+<li><code>SHA-512</code></li>
+<li><code>SHA3-224</code></li>
+<li><code>SHA3-256</code></li>
+<li><code>SHA3-384</code></li>
+<li><code>SHA3-512</code></li>
+<li><code>SHAKE128</code></li>
+<li><code>SHAKE256</code></li>
+</ul>
+<p>目前不建议使用<code>SHA-1</code>，建议使用<code>SHA-2</code>（<code>SHA-224、256/384/512</code>）或<code>SHA-3</code>（<code>SHA3-224/256/384/512</code>）。</p>
+<p>而<code>SHAKE</code>是<code>Secure Hash Algorithm and KECCAK</code>的缩写，在<code>FISP 202</code><a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf">标准</a>中定义，与<code>SHA-3</code>类似，但是输出是无限位数的。因此定义的时候需要指定输出的位数，不然的话会得到如下报错：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20201227165049196.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在<code>getHash</code>中加上参数即可：</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;)
+const shaObj = new jsSHA(&quot;SHAKE128&quot;,&quot;TEXT&quot;,{encoding:&quot;UTF8&quot;})
+
+shaObj.update(&quot;test&quot;)
+console.log(shaObj.getHash(&quot;HEX&quot;,{outputLen:1024}))
+</code></pre>
+<h2 id="32-输入格式">3.2 输入格式</h2>
+<p>输入格式的取值如下：</p>
+<ul>
+<li><code>HEX</code></li>
+<li><code>TEXT</code></li>
+<li><code>B64</code></li>
+<li><code>BYTES</code></li>
+<li><code>ARRAYBUFFER</code></li>
+<li><code>UNIT8ARRAY</code></li>
+</ul>
+<h2 id="33-参数选项">3.3 参数选项</h2>
+<p>一般常用两个：</p>
+<ul>
+<li><code>encoding</code>：编码，允许取值<code>UTF8</code>/<code>UTF16BE</code>/<code>UTF16LE</code></li>
+<li><code>numRounds</code>：哈希轮数</li>
+</ul>
+<p>其他的参数可以查看源码。</p>
+<h2 id="34-gethash">3.4 <code>getHash</code></h2>
+<p><code>getHash</code>是获取哈希结果的函数，第一个参数可以是：</p>
+<ul>
+<li><code>HEX</code></li>
+<li><code>B64</code></li>
+<li><code>BYTES</code></li>
+<li><code>UINT8ARRAY</code></li>
+<li><code>ARRAYBUFFER</code></li>
+</ul>
+<p>与上面的输入格式对应，可以带上输出长度选项，对于<code>HEX</code>可以带上<code>outputUpper</code>表示是否大写：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20201227170912988.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-hmac">4 <code>HMAC</code></h1>
+<p><code>HMAC</code>是一种基于哈希函数和密钥进行消息认证的方法，使用时需要指定密钥：</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;)
+const shaObj = new jsSHA(&quot;SHA3-512&quot;,&quot;TEXT&quot;,{
+    hmacKey:{value:'secret key',format:'TEXT'}
+})
+
+shaObj.update(&quot;test&quot;)
+console.log(shaObj.getHash(&quot;HEX&quot;))
+</code></pre>
+<h1 id="5-cshake">5 <code>cSHAKE</code></h1>
+<p><code>cSHAKE</code>可以看作一个&quot;定制版&quot;的<code>SHAKE</code>，需要使用额外的<code>customization</code>参数：</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;)
+const shaObj = new jsSHA(&quot;CSHAKE128&quot;,&quot;TEXT&quot;,{
+    customization:{value:&quot;test&quot;,format:&quot;TEXT&quot;}
+})
+
+shaObj.update(&quot;test&quot;)
+console.log(shaObj.getHash(&quot;HEX&quot;,{outputLen:1024}))
+</code></pre>
+<h1 id="6-kmac">6 <code>KMAC</code></h1>
+<p><code>KMAC</code>（<code>KECCAK Message Authentication Code</code>）是一个基于<code>KECCAK</code>的算法，需要提供<code></code>kmacKey`参数：</p>
+<pre><code class="language-js">const jsSHA = require(&quot;jssha&quot;)
+const shaObj = new jsSHA(&quot;KMAC128&quot;,&quot;TEXT&quot;,{
+    kmacKey:{value:&quot;secret key&quot;,format:&quot;TEXT&quot;}
+})
+
+shaObj.update(&quot;test&quot;)
+console.log(shaObj.getHash(&quot;HEX&quot;,{outputLen:1024}))
+</code></pre>
 ]]></content>
     </entry>
     <entry>
@@ -232,27 +360,6 @@ git push origin main
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>爱，其实很简单，困难的是去接受它。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第190期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-190-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-190-qi/">
-        </link>
-        <updated>2020-12-21T15:54:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>身在福中不知福是什么？就是发福快发成猪了，还觉得自己身材蛮OK。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>昨夜风兼雨，帘帏飒飒秋声。<br>
-——李煜《乌夜啼·昨夜风兼雨》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>比起担心会后悔而什么都不做，还不如做完了再去后悔。</p>
 </blockquote>
 ]]></content>
     </entry>
