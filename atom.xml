@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-01-04T08:23:46.916Z</updated>
+    <updated>2021-01-04T13:16:57.146Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,48 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Vue3+Vite引入Echarts5.0图表库]]></title>
+        <id>https://2293736867.github.io/post/vue3vite-yin-ru-echarts50-tu-biao-ku/</id>
+        <link href="https://2293736867.github.io/post/vue3vite-yin-ru-echarts50-tu-biao-ku/">
+        </link>
+        <updated>2021-01-04T13:16:31.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>环境<code>Vue3</code>+<code>Vite</code>，需要引入<code>ECharts</code>库。</p>
+<h1 id="2-尝试">2 尝试</h1>
+<p>目前<code>ECharts</code>已更新到<code>5.0</code>版本，在<code>Vue</code>中引入并不难，<code>npm</code>/<code>cnpm</code>安装后在需要的组件中引入：</p>
+<pre><code class="language-js">import echarts from 'echarts'
+</code></pre>
+<p>即可。</p>
+<p>但，</p>
+<p>问题是这是以前的版本可行的，更新到<code>5.0</code>版本后需要使用其他方法。</p>
+<p>另一方面官方文档是使用<code>require</code>引入：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2021010421031267.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>但是，这是在<code>Webpack</code>的情况下，在<code>Vite</code>中并不能直接使用<code>require</code>，官方<code>issue</code>有<a href="https://github.com/vitejs/vite/issues/986">讨论</a>，明说了<code>require</code>不支持，这是一个<code>Node</code>的特性，建议使用<code>import</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210104210508846.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-解决方案">3 解决方案</h1>
+<p>先安装：</p>
+<pre><code class="language-bash">npm install --save echarts
+#或
+cnpm install --save echarts
+</code></pre>
+<p>安装后在需要使用的组件中使用<code>import</code>引入：</p>
+<pre><code class="language-js">import * as echarts from 'echarts'
+...
+mounted(){
+	var myChart = echarts.init(document.getElementById('main'))
+	//...
+}
+</code></pre>
+<p>这样就能正常使用了。</p>
+<p>最重要的就是将以前的</p>
+<pre><code class="language-js">import echarts from 'echarts'
+</code></pre>
+<p>改为</p>
+<pre><code class="language-js">import * as echarts from 'echarts'
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Linux下禁用笔记本触摸板]]></title>
         <id>https://2293736867.github.io/post/linux-xia-jin-yong-bi-ji-ben-hong-mo-ban/</id>
@@ -520,27 +562,6 @@ public class PemUtils {
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>如果忘记你那么容易，那我爱你干嘛！</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第198期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-198-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-198-qi/">
-        </link>
-        <updated>2020-12-29T03:35:25.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你虽有没有出过国，但是你每天都在倒时差。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>青青园中葵，朝露待日晞。<br>
-——佚名《长歌行》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>你凭什么喜欢我，就凭你眼光好吗？</p>
 </blockquote>
 ]]></content>
     </entry>
