@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-01-04T05:32:38.081Z</updated>
+    <updated>2021-01-04T08:23:46.916Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,59 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Linux下禁用笔记本触摸板]]></title>
+        <id>https://2293736867.github.io/post/linux-xia-jin-yong-bi-ji-ben-hong-mo-ban/</id>
+        <link href="https://2293736867.github.io/post/linux-xia-jin-yong-bi-ji-ben-hong-mo-ban/">
+        </link>
+        <updated>2021-01-04T08:19:52.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>在<code>Linux</code>下禁用触摸板的方法有很多，这里列举三种：</p>
+<ul>
+<li>图形界面配置关闭</li>
+<li><code>modprobe</code>关闭</li>
+<li><code>xinput</code>关闭</li>
+</ul>
+<h1 id="2-图形界面配置关闭">2 图形界面配置关闭</h1>
+<p>笔者的环境为<code>Manjaro</code>+<code>Xfce</code>，其他的桌面也应该类似，开始菜单搜索<code>touchpad</code>即可出现相应选项：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210104160521375.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>关闭即可：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210104160558108.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-modprobe">3 <code>modprobe</code></h1>
+<p>关闭：</p>
+<pre><code class="language-bash">sudo modprobe -r psmouse
+</code></pre>
+<p>开启：</p>
+<pre><code class="language-bash">sudo modprobe -a psmous
+</code></pre>
+<p>这种方式在笔者测试的时候失败了，提示说该模块是内置模块无法关闭：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210104160805785.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>该关闭方法仅供参考，不行的话建议选择下面的使用<code>xinput</code>关闭。</p>
+<h1 id="4-xinput">4 <code>xinput</code></h1>
+<p><code>xinput</code>命令是用来配置和测试<code>X</code>输入设备的工具，包括但不限于键盘，鼠标等，在这里用作关闭触摸板，基于同样的道理可以关闭键盘等。</p>
+<p>首先使用：</p>
+<pre><code class="language-bash">xinput list
+</code></pre>
+<p>查看设备列表：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210104161255938.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到<code>id=12</code>的就是触摸板设备，使用</p>
+<pre><code class="language-bash">xinput list-props 12
+</code></pre>
+<p>查看设备的详细信息：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210104161404497.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>把其中的<code>Device Enabled</code>设置为<code>0</code>即可禁用：</p>
+<pre><code class="language-bash">xinput set-prop 12 'Device Enabled' 0
+</code></pre>
+<p>或者使用<code>Device Enabled</code>后面的数字也可以禁用：</p>
+<pre><code class="language-bash">xinput set-prop 12 154 0
+</code></pre>
+<p>启用进行相反的处理即可，设置为<code>1</code>：</p>
+<pre><code class="language-bash">xinput set-prop 12 'Device Enabled' 1
+# 或
+xinput set-prop 12 154 1
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第204期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-204-qi/</id>
@@ -488,27 +541,6 @@ public class PemUtils {
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>你凭什么喜欢我，就凭你眼光好吗？</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第197期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-197-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-197-qi/">
-        </link>
-        <updated>2020-12-28T03:32:57.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>熟练地运用，关我屁事和关你屁事，可以节省人生80%的时间。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>早杨柳，趁晴飞絮。<br>
-——杨炎正《贺新郎》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>一场秋雨一场凉，秋心酌满泪为霜。</p>
 </blockquote>
 ]]></content>
     </entry>
