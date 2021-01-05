@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-01-05T00:49:27.193Z</updated>
+    <updated>2021-01-05T02:41:25.284Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -30,6 +30,93 @@
 <blockquote>
 <p>在人间有谁活着不像是一场炼狱，我不哭我已经没有尊严能放弃。</p>
 </blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[解决Echarts+<el-tab-pane>的警告：Can't get DOM width or height]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-echartslessel-tab-panegreaterde-jing-gao-cant-get-dom-width-or-height/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-echartslessel-tab-panegreaterde-jing-gao-cant-get-dom-width-or-height/">
+        </link>
+        <updated>2021-01-05T02:34:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>环境：</p>
+<ul>
+<li><code>Chrome 87</code></li>
+<li><code>Element-Plus</code></li>
+<li><code>Vue3.0.5</code></li>
+<li><code>&lt;el-tab&gt;</code>+<code>&lt;el-tab-pane&gt;</code>中使用<code>Echarts</code></li>
+</ul>
+<p>警告如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2021010510082882.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="2-代码">2 代码</h1>
+<pre><code class="language-html">&lt;el-tabs type=&quot;border-card&quot;&gt;
+    &lt;el-tab-pane label=&quot;xxx&quot;&gt;
+        &lt;div id=&quot;main&quot; style=&quot;width: 500px;height: 500px;&quot;&gt;
+        &lt;/div&gt;
+    &lt;/el-tab-pane&gt;
+&lt;/el-tabs&gt;
+</code></pre>
+<pre><code class="language-js">export default {
+    mounted() {
+        var category = echarts.init(document.getElementById('main'))
+        //...
+    }
+}
+</code></pre>
+<h1 id="3-原因分析">3 原因分析</h1>
+<p>原因是<code>&lt;el-tab-pane&gt;</code>，具体可以查看<a href="https://github.com/apache/incubator-echarts/issues/6528">这里</a>的<code>issue</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210105101341938.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>Echarts</code>警告的关键是<code>clientWidth</code>和<code>clienHeight</code>，直接在代码中固定高宽时：</p>
+<pre><code class="language-html">&lt;div id=&quot;main&quot; style=&quot;width: 500px;height: 500px;&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>控制台打印为<code>clientHeight</code>/<code>clientWidth</code>：</p>
+<pre><code class="language-js">console.log(document.getElementById('main').clientWidth)
+console.log(document.getElementById('main').clientHeight)
+</code></pre>
+<p>两者均为<code>0</code>，原因在于<code>&lt;el-tab-pane&gt;</code>，将图表放到外面时并没有警告：</p>
+<pre><code class="language-html">&lt;el-tabs type=&quot;border-card&quot;&gt;
+    &lt;div id=&quot;main&quot; style=&quot;width: 500px;height: 500px;&quot;&gt;
+    &lt;/div&gt;
+    &lt;el-tab-pane label=&quot;xxx&quot;&gt;
+    &lt;/el-tab-pane&gt;
+&lt;/el-tabs&gt;
+</code></pre>
+<p>初始化<code>Echarts</code>时，<code>&lt;el-tab-pane&gt;</code>并没有让<code>Echarts</code>获取正确的<code>clientHeight</code>以及<code>clientWidth</code>，尝试过的解决方法是监听<code>tab-click</code>：</p>
+<pre><code class="language-html">&lt;el-tabs type=&quot;border-card&quot; @tab-click=&quot;xxx&quot;&gt;
+    &lt;el-tab-pane label=&quot;xxx&quot;&gt;
+        &lt;div id=&quot;main&quot; style=&quot;width: 500px;height: 500px;&quot;&gt;
+        &lt;/div&gt;
+    &lt;/el-tab-pane&gt;
+&lt;/el-tabs&gt;
+</code></pre>
+<p>但是这需要手动点击<code>tab</code>才能监听到，也就是如果设置了默认<code>tab</code>这是无法监听到的。</p>
+<p>另一个尝试过的方案是手动设置<code>width</code>/<code>height</code>：</p>
+<pre><code class="language-html">&lt;el-tabs type=&quot;border-card&quot;&gt;
+    &lt;el-tab-pane label=&quot;xxx&quot;&gt;
+        &lt;div id=&quot;main&quot; ref=&quot;main&quot; style=&quot;width: 500px;height: 500px;&quot;&gt;
+        &lt;/div&gt;
+    &lt;/el-tab-pane&gt;
+&lt;/el-tabs&gt;
+</code></pre>
+<pre><code class="language-js">mounted(){
+    this.$refs.main.style.width=500
+    this.$refs.main.style.height=500
+    var chart = echarts.init(document.getElementById('main'))
+}
+</code></pre>
+<p>也是不行。</p>
+<h1 id="4-解决方案">4 解决方案</h1>
+<p>使用<code>Object.defineProperty</code>设置<code>clientWidth</code>/<code>clientHeight</code>：</p>
+<pre><code class="language-js">mounted(){
+    Object.defineProperty(document.getElementById('main'),'clientWidth',{get:function(){return 500;}})
+    Object.defineProperty(document.getElementById('main'),'clientHeight',{get:function(){return 500;}})
+    var chart = echarts.init(document.getElementById('main'))
+}
+</code></pre>
+<p>同时也可以把<code>div</code>上的<code>style</code>去掉：</p>
+<pre><code class="language-html">&lt;div id=&quot;main&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>这样就不会出现警告了。</p>
 ]]></content>
     </entry>
     <entry>
@@ -346,42 +433,6 @@ xinput set-prop 12 154 1
 <blockquote>
 <p>忘掉生日，忘掉青涩的诗，忘掉他不厌其烦夜夜追逐他影子。</p>
 </blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第200期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-200-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-200-qi/">
-        </link>
-        <updated>2020-12-31T12:50:00.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你要是喜欢一个女生，就好好学习找个好工作挣好多好多钱，等她结婚的时候多出点份子钱。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>石燕拂云晴亦雨，江豚吹浪夜还风。<br>
-——许浑《金陵怀古》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>跌跌撞撞的成长，又美又疼才是本质。</p>
-</blockquote>
-<h1 id="跨年">跨年</h1>
-<p>2020，就是结束了啊。</p>
-<p>感觉，过得很快。</p>
-<p>害。</p>
-<p>又，</p>
-<p>老了一年。</p>
-<p>青春啊。</p>
-<h1 id="200期总结">200期总结</h1>
-<p>不知不觉，这东西已经，200期了。</p>
-<p>有时需要做不到日更，但是有空还是补了回来。</p>
-<p>虽然不知道这东西有多少读者看，</p>
-<p>但是起码也是一种坚持吧。</p>
-<p>当然有时候在这里写一些感叹还是挺合适的，</p>
-<p>哈哈哈哈。</p>
-<h1 id="祝各位读者新年快乐啦">祝各位读者新年快乐啦！</h1>
 ]]></content>
     </entry>
 </feed>
