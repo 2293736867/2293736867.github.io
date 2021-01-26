@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-01-21T04:31:32.410Z</updated>
+    <updated>2021-01-26T13:07:49.821Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -90,6 +90,7 @@
 <li><a href="#311-%E9%A9%B1%E5%8A%A8">3.1.1 驱动</a></li>
 <li><a href="#312-%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E6%9D%83%E9%99%90">3.1.2 用户名/密码/权限</a></li>
 <li><a href="#313-spring-boot%E4%B8%AD%E7%9A%84%E5%8A%A0%E5%AF%86%E9%85%8D%E7%BD%AE">3.1.3 <code>Spring Boot</code>中的加密配置</a></li>
+<li><a href="#314-maven">3.1.4 <code>Maven</code></a></li>
 </ul>
 </li>
 <li><a href="#32-%E5%AE%89%E5%85%A8%E7%BB%84%E9%98%B2%E7%81%AB%E5%A2%99">3.2 安全组/防火墙</a>
@@ -160,6 +161,9 @@
 <h3 id="313-spring-boot中的加密配置">3.1.3 <code>Spring Boot</code>中的加密配置</h3>
 <p>在<code>application.yaml</code>/<code>application.yml</code>/<code>application.properties</code>中配置对应的用户名以及密码，一般明文是没问题的，这里是针对使用了<code>Jasypt</code>加密库（<code>Jasypt</code>可以加密<code>Spring Boot</code>中的配置文件，使用可以参考<a href="https://blog.csdn.net/qq_27525611/article/details/105797382">这里</a>）来说的。</p>
 <p>因为使用<code>Jasypt</code>后配置文件为密文，如果此时的加密口令不能正确读取会直接报错，因此可以针对<code>Jasypt</code>的加密方式（简单口令加密、非明文口令、非对称加密等）查看配置文件是否有错漏，或者是否配置了对应的环境变量等。</p>
+<h3 id="314-maven">3.1.4 <code>Maven</code></h3>
+<p><code>Maven</code>的<code>WAR</code>打包插件不能将新修改的文件编译为字节码并打包，因此，如果修改了数据库的密码后，需要重新编译，一般步骤是先<code>clean</code>，再编译最后打包：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210126103651188.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h2 id="32-安全组防火墙">3.2 安全组/防火墙</h2>
 <h3 id="321-不带防火墙">3.2.1 不带防火墙</h3>
 <p>查看防火墙可以使用：</p>
@@ -169,7 +173,7 @@ systemctl status iptables
 </code></pre>
 <p>如果是没有开启，那就只需要处理安全组就可以了。</p>
 <p>一般服务器厂商都会提供安全组，开放对应的端口以及<code>IP</code>即可：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210121121059632.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210121121059632.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <h3 id="322-带防火墙">3.2.2 带防火墙</h3>
 <h4 id="3221-firewalld">3.2.2.1 <code>firewalld</code></h4>
 <p>带防火墙的话，可以先查看开启了哪些服务以及规则：</p>
@@ -210,7 +214,7 @@ firewall-cmd --reload
 </ul>
 <h3 id="331-servlet">3.3.1 <code>Servlet</code></h3>
 <p>使用<code>Servlet</code>的话，本地运行需要配置<code>Tomcat</code>或其他<code>Web</code>服务器，因此如果在<code>IDEA</code>中配置<code>Tomcat</code>的话，需要在<code>Application context</code>这里配置路径：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210121104131489.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210121104131489.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>当然不配置也不是不可以，默认有一个项目名的路径，通常会很长难以记忆，建议修改为一个容易记忆的路径。</p>
 <p>如果是部署在服务器上的<code>Tomcat</code>，需要注意打包后的<code>WAR</code>包名字，比如打包后为<code>demo.war</code>，放置<code>webapps</code>后，启动<code>Tomcat</code>会自动解包为<code>webapps/demo</code>，这时候的路径需要对应<code>demo</code>进行访问，比如：</p>
 <pre><code class="language-bash">http://www.example.com:8080/demo
@@ -270,9 +274,9 @@ public class NetworkThread implements Callable&lt;String&gt; {
 </code></pre>
 <h2 id="44-avd">4.4 <code>AVD</code></h2>
 <p>出错日志如下：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210118055800483.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210118055800483.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p><code>StackOverflow</code>上的方案是<code>卸载APP并重启AVD</code>：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210118055847547.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210118055847547.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>这个方法笔者测试是有效的但不确保百分百有效，估计这个是<code>AVD</code>的问题。</p>
 <h2 id="45-ip">4.5 <code>IP</code></h2>
 <p>对于<code>Android</code>来说，本地测试不能使用<code>localhost</code>或<code>127.0.0.1</code>，也就是不能使用：</p>
@@ -337,7 +341,7 @@ public class ResponseBody{
 <pre><code class="language-kotlin">class ResponseBody(var code:Int,var data:Any)
 </code></pre>
 <p>这样是无法正常工作的，添加默认值就可以了：</p>
-<pre><code class="language-kotlin">class ResponseBody(var code:Int,var data:Any)
+<pre><code class="language-kotlin">class ResponseBody(var code:Int=0,var data:Any=&quot;&quot;)
 </code></pre>
 <h1 id="6-最后">6 最后</h1>
 <p>希望读者看到最后能解决问题，另外如果还有其他问题或一些解决问题的其他方案欢迎评论补充。</p>
