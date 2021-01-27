@@ -1,0 +1,2241 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Android+Java Web+MySQL实现登录注册 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 前言&amp;概述
+2 环境
+3 环境准备
+
+3.1 IDE准备
+3.2 MySQL
+
+3.2.1 安装概述
+3.2.2 安装开始
+
+3.2.2.1 下载并安装
+3.2.2.2 启动服务并查看初始化密码
+3.2.2.3 创建外部访问用..." />
+    <meta name="keywords" content="Java Web,MySQL,Android" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1611719036808" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/androidjava-webmysql-shi-xian-deng-lu-zhu-ce.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2021-01-27"><i class="fa fa-calendar"></i><span class="lately">几秒前</span></time>
+              
+              <a href="https://2293736867.github.io/post/androidjava-webmysql-shi-xian-deng-lu-zhu-ce/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/androidjava-webmysql-shi-xian-deng-lu-zhu-ce/"> </span>
+              </a>
+              <span id="/androidjava-webmysql-shi-xian-deng-lu-zhu-ce/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-0 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Android+Java Web+MySQL实现登录注册</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E5%89%8D%E8%A8%80%E6%A6%82%E8%BF%B0">1 前言&amp;概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">3 环境准备</a>
+<ul>
+<li><a href="#31-ide%E5%87%86%E5%A4%87">3.1 <code>IDE</code>准备</a></li>
+<li><a href="#32-mysql">3.2 <code>MySQL</code></a>
+<ul>
+<li><a href="#321-%E5%AE%89%E8%A3%85%E6%A6%82%E8%BF%B0">3.2.1 安装概述</a></li>
+<li><a href="#322-%E5%AE%89%E8%A3%85%E5%BC%80%E5%A7%8B">3.2.2 安装开始</a>
+<ul>
+<li><a href="#3221-%E4%B8%8B%E8%BD%BD%E5%B9%B6%E5%AE%89%E8%A3%85">3.2.2.1 下载并安装</a></li>
+<li><a href="#3222-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%B9%B6%E6%9F%A5%E7%9C%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%86%E7%A0%81">3.2.2.2 启动服务并查看初始化密码</a></li>
+<li><a href="#3223-%E5%88%9B%E5%BB%BA%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE%E7%94%A8%E6%88%B7">3.2.2.3 创建外部访问用户</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#33-tomcat">3.3 <code>Tomcat</code></a>
+<ul>
+<li><a href="#331-%E6%9C%AC%E5%9C%B0tomcat">3.3.1 本地<code>Tomcat</code></a></li>
+<li><a href="#332-%E6%9C%8D%E5%8A%A1%E5%99%A8tomcat">3.3.2 服务器<code>Tomcat</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8">4 建库建表</a>
+<ul>
+<li><a href="#41-%E7%94%A8%E6%88%B7%E8%A1%A8">4.1 用户表</a></li>
+<li><a href="#42-%E5%AF%BC%E5%85%A5">4.2 导入</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%90%8E%E7%AB%AF%E9%83%A8%E5%88%86">5 后端部分</a>
+<ul>
+<li><a href="#51-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E5%AF%BC%E5%BA%93">5.1 创建项目+导库</a></li>
+<li><a href="#52-%E7%BB%93%E6%9E%84">5.2 结构</a></li>
+<li><a href="#53-dbutils">5.3 <code>DBUtils</code></a></li>
+<li><a href="#54-user">5.4 <code>User</code></a></li>
+<li><a href="#55-dao">5.5 <code>Dao</code></a></li>
+<li><a href="#56-%E5%93%8D%E5%BA%94%E4%BD%93">5.6 响应体</a></li>
+<li><a href="#57-servlet">5.7 <code>Servlet</code></a></li>
+<li><a href="#58-%E8%BF%90%E8%A1%8C">5.8 运行</a></li>
+</ul>
+</li>
+<li><a href="#6-android%E7%AB%AF">6 <code>Android</code>端</a>
+<ul>
+<li><a href="#61-%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE">6.1 新建项目</a></li>
+<li><a href="#62-%E4%BE%9D%E8%B5%96%E6%9D%83%E9%99%90">6.2 依赖/权限</a></li>
+<li><a href="#63-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84">6.3 项目结构</a></li>
+<li><a href="#64-responsebody">6.4 <code>ResponseBody</code></a></li>
+<li><a href="#65-networksettings">6.5 <code>NetworkSettings</code></a></li>
+<li><a href="#66-networkthread">6.6 <code>NetworkThread</code></a></li>
+<li><a href="#67-mainactivity">6.7 <code>MainActivity</code></a></li>
+<li><a href="#68-%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6">6.8 资源文件</a></li>
+</ul>
+</li>
+<li><a href="#7-%E6%B5%8B%E8%AF%95">7 测试</a>
+<ul>
+<li><a href="#71-%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95">7.1 本地测试</a></li>
+<li><a href="#72-%E9%83%A8%E7%BD%B2%E6%B5%8B%E8%AF%95">7.2 部署测试</a></li>
+</ul>
+</li>
+<li><a href="#8-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">8 注意事项</a></li>
+<li><a href="#9-%E6%BA%90%E7%A0%81">9 源码</a></li>
+</ul>
+</p>
+<h1 id="1-前言概述">1 前言&amp;概述</h1>
+<p>这篇文章是基于<a href="https://blog.csdn.net/qq_27525611/article/details/102493643">此处文章</a>的更新，更新了一些技术栈，更加贴近实际需要，以及修复了若干的错误。</p>
+<p>这是一个前端<code>Android</code>+后端<code>Java/Kotlin</code>通过<code>Servelt</code>进行后台数据库（<code>MySQL</code>）交互的详细步骤以及源码实现，技术栈：</p>
+<ul>
+<li><code>Android</code>基础</li>
+<li>原生<code>JDBC</code>+原生<code>Servlet</code></li>
+<li><code>Tomcat</code>+<code>MySQL</code>（<code>Docker</code>）</li>
+</ul>
+<p>当然现在的很多<code>Java</code>后端开发都使用了<code>Spring Boot</code>而不是原生的<code>Servlet</code>，所以使用<code>Spring Boot</code>实现的可以笔者的<a href="https://blog.csdn.net/qq_27525611/article/details/112996966">另一篇文章</a>。</p>
+<p>尽管基于<code>Spring Boot</code>实现非常的简便，但是使用原生的<code>Servlet</code>更能理解底层的原理。另外本篇文章是偏基础向的教程，很多步骤都会比较详细而且附上了图，好了废话不说，正文开始。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>Android Studio 4.1.2</code></li>
+<li><code>IntelliJ IDEA 2020.3</code></li>
+<li><code>MySQL 8.0.23</code></li>
+<li><code>Tomcat 10.0</code></li>
+<li><code>Docker 20.10.1</code></li>
+<li>服务器<code>CentOS 8.1.1911</code></li>
+</ul>
+<h1 id="3-环境准备">3 环境准备</h1>
+<h2 id="31-ide准备">3.1 <code>IDE</code>准备</h2>
+<p>官网安装<code>Android Studio</code>+<code>IDEA</code>，这部分就省略了。</p>
+<h2 id="32-mysql">3.2 <code>MySQL</code></h2>
+<h3 id="321-安装概述">3.2.1 安装概述</h3>
+<p>这里的<code>MySQL</code>若无特殊说明指的是<code>MySQL Community</code>。</p>
+<p>首先，在<code>Windows</code>下，<code>MySQL</code>提供了<code>exe</code>安装包：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210117151541790.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>macOS</code>下提供了<code>dmg</code>安装包：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210117151638129.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以<a href="https://dev.mysql.com/downloads/mysql/">戳这里</a>下载。</p>
+<p><code>Linux</code>下一般来说<code>MySQL</code>安装有如下方式：</p>
+<ul>
+<li>软件包安装（<code>apt/apt-get</code>、<code>yum</code>、<code>dnf</code>、<code>pacman</code>等）</li>
+<li>下载压缩包安装</li>
+<li>源码编译安装</li>
+<li><code>Docker</code>安装</li>
+</ul>
+<p>其中相对省事的安装方式为<code>Docker</code>安装以及软件包安装，其次是压缩包方式安装，特别不建议源码安装（当然如果喜欢挑战的话可以参考笔者的一篇编译安装<a href="https://blog.csdn.net/qq_27525611/article/details/104622673">8.0.19</a>以及编译安装<a href="https://blog.csdn.net/qq_27525611/article/details/105902643">8.0.20</a>）。</p>
+<h3 id="322-安装开始">3.2.2 安装开始</h3>
+<p>这里笔者本地测试选择的是使用<code>Docker</code>安装，步骤可以查看<a href="https://blog.csdn.net/qq_27525611/article/details/109140988">这里</a>。</p>
+<p>另外对于服务器，也可以使用<code>Docker</code>安装，如果使用软件包安装的话，这里以笔者的<code>CentOS8</code>为例，其他系统的参考如下：</p>
+<ul>
+<li><a href="https://blog.csdn.net/LaySwift/article/details/81036746">Fedroa</a></li>
+<li><a href="https://www.cnblogs.com/levia/p/11396512.html">RedHat</a></li>
+<li><a href="https://blog.csdn.net/wm609972715/article/details/83759266">Ubuntu</a></li>
+</ul>
+<h4 id="3221-下载并安装">3.2.2.1 下载并安装</h4>
+<p>添加仓库：</p>
+<pre><code class="language-bash">sudo yum install https://repo.mysql.com/mysql80-community-release-el8-1.noarch.rpm
+</code></pre>
+<p>禁用默认<code>MySQL</code>模块（<code>CentOS8</code>中会包含一个默认的<code>MySQL</code>模块，不禁用的话没办法使用上面添加的仓库安装）：</p>
+<pre><code class="language-bash">sudo yum module disable mysql
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210117155447859.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>安装：</p>
+<pre><code class="language-bash">sudo yum install mysql-community-server
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/2021011715552837.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h4 id="3222-启动服务并查看初始化密码">3.2.2.2 启动服务并查看初始化密码</h4>
+<p>启动服务：</p>
+<pre><code class="language-bash">systemctl start mysqld
+</code></pre>
+<p>查看临时密码：</p>
+<pre><code class="language-bash">sudo grep 'temporary password' /var/log/mysqld.log
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210117155859461.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>输入临时密码登录：</p>
+<pre><code class="language-bash">mysql -u root -p
+</code></pre>
+<p>修改密码：</p>
+<pre><code class="language-bash">alter user 'root'@'localhost' identified by 'PASSWORD'
+</code></pre>
+<h4 id="3223-创建外部访问用户">3.2.2.3 创建外部访问用户</h4>
+<p>不建议在<code>Java</code>中直接访问<code>root</code>用户，一般是新建一个对应权限的用户并进行访问，这里就为了方便就省略了。</p>
+<h2 id="33-tomcat">3.3 <code>Tomcat</code></h2>
+<h3 id="331-本地tomcat">3.3.1 本地<code>Tomcat</code></h3>
+<p><code>Tomcat</code>安装不难，直接从<a href="https://downloads.apache.org/tomcat/tomcat-10/v10.0.0/bin/apache-tomcat-10.0.0.tar.gz">官网</a>下载即可：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210117160750365.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>解压：</p>
+<pre><code class="language-bash">tar -zxvf apache-tomcat-10.0.0.tar.gz
+</code></pre>
+<p>进入<code>bin</code>目录运行<code>startup.sh</code>：</p>
+<pre><code class="language-bash">cd apache-tomcat-10.0.0/bin
+./startup.sh
+</code></pre>
+<p>本地访问<code>localhost:8080</code>：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210117161016685.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样就算成功了。对于<code>Windows</code>的读者，可以<a href="https://downloads.apache.org/tomcat/tomcat-10/v10.0.0/bin/apache-tomcat-10.0.0-windows-x64.zip">戳这里下载</a>，解压步骤类似，解压后运行<code>startup.bat</code>即可访问<code>localhost:8080</code>。</p>
+<h3 id="332-服务器tomcat">3.3.2 服务器<code>Tomcat</code></h3>
+<p>服务器的话可以直接使用<code>wget</code>安装：</p>
+<pre><code class="language-bash">wget https://downloads.apache.org/tomcat/tomcat-10/v10.0.0/bin/apache-tomcat-10.0.0.tar.gz
+</code></pre>
+<p>但是这样速度很慢，建议下载到本地再使用<code>scp</code>上传：</p>
+<pre><code class="language-bash">scp apache-tomcat-10.0.0.tar.gz username@xxx.xxx.xxx.xxx:/
+</code></pre>
+<p>一样按照上面的方法解压后运行<code>startup.sh</code>，访问<code>公网IP:8080</code>即可观察是否成功。</p>
+<h1 id="4-建库建表">4 建库建表</h1>
+<h2 id="41-用户表">4.1 用户表</h2>
+<p>这里使用到的<code>MySQL</code>脚本如下：</p>
+<pre><code class="language-sql">CREATE DATABASE userinfo;
+USE userinfo;
+CREATE TABLE user
+(
+    id          INT     NOT NULL    PRIMARY KEY   AUTO_INCREMENT,
+    name        CHAR(30)    NULL,
+    password    CHAR(30)    NULL
+)
+</code></pre>
+<h2 id="42-导入">4.2 导入</h2>
+<pre><code class="language-bash">mysql -u root -p &lt; user.sql
+</code></pre>
+<h1 id="5-后端部分">5 后端部分</h1>
+<p>因为是比较基础向的教程，所以先从创建项目开始吧。</p>
+<h2 id="51-创建项目导库">5.1 创建项目+导库</h2>
+<p>选择对应<code>Java Enterprise</code>，默认是选中了其中的<code>Web application</code>，构建工具默认<code>Maven</code>，测试工具<code>JUnit</code>，如果需要<code>Gradle</code>或<code>Kotlin</code>的话自行勾选即可：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210117144342434.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>2020.3</code>版本的<code>IDEA</code>相比起以前，更加人性化的添加了选择库的功能，默认是选中了<code>Servlet</code>，需要其他库的话自行选择即可。</p>
+<p>另外一个要注意的是<code>JavaEE</code>已经更名为<code>JakartaEE</code>，因此版本这里可以选择<code>JakartaEE</code>：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210118082114998.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>填上对应包名并选择位置：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210125173220709.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>创建完成后，这里笔者遇到了一个错误，找不到对应的<code>Servlet</code>包：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/2021011714531718.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在设置中选择更新中心仓库即可：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20210117145419694.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>创建后的目录如图所示：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20210118082337224.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着添加依赖，用到的依赖包括：</p>
+<ul>
+<li><code>MySQL</code></li>
+<li><code>Jackson</code></li>
+<li><code>Lombok</code></li>
+</ul>
+<p>添加到<code>pom.xml</code>中即可（注意版本，MySQL不同版本可以查看<a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java">这里</a>）：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;8.0.23&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+    &lt;version&gt;1.18.16&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+    &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+    &lt;version&gt;2.12.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>这样第一步就完成了。</p>
+<h2 id="52-结构">5.2 结构</h2>
+<p>项目结构如下：</p>
+<ul>
+<li>持久层操作：<code>Dao</code></li>
+<li>实体类：<code>User</code></li>
+<li>响应体：<code>ResponseBody</code></li>
+<li><code>Servlet</code>层：<code>SignIn</code>/<code>SignUp</code>/<code>Test</code></li>
+<li>工具类：<code>DBUtils</code></li>
+<li><s>启动类</s>：不需要，因为在<code>Web</code>服务器中运行</li>
+</ul>
+<p>先创建好文件以及目录：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20210125173509880.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="53-dbutils">5.3 <code>DBUtils</code></h2>
+<p>原生<code>JDBC</code>获取连接工具类：</p>
+<pre><code class="language-java">package com.example.javawebdemo.utils;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBUtils {
+    private static Connection connection = null;
+
+    public static Connection getConnection() {
+        try {
+            Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);
+            final String url = &quot;jdbc:mysql://127.0.0.1:3306/userinfo&quot;;
+            final String username = &quot;root&quot;;
+            final String password = &quot;123456&quot;;
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return connection;
+    }
+
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre>
+<p>重点在这四行：</p>
+<pre><code class="language-java">Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);
+String url = &quot;jdbc:mysql://127.0.0.1:3306/userinfo&quot;;
+String username = &quot;root&quot;;
+String password = &quot;123456&quot;;
+</code></pre>
+<p>根据个人需要修改，注意<code>MySQL8</code>注册驱动与旧版的区别，旧版的是：</p>
+<pre><code class="language-java">Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+</code></pre>
+<h2 id="54-user">5.4 <code>User</code></h2>
+<p>三字段+<code>@Getter</code>：</p>
+<pre><code class="language-java">package com.example.javawebdemo.entity;
+
+import lombok.Getter;
+
+@Getter
+public class User {
+    private final String name;
+    private final String password;
+
+    public User(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+}
+</code></pre>
+<h2 id="55-dao">5.5 <code>Dao</code></h2>
+<p>数据库操作层：</p>
+<pre><code class="language-java">package com.example.javawebdemo.dao;
+
+import com.example.javawebdemo.entity.User;
+import com.example.javawebdemo.utils.DBUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Dao {
+    public boolean select(User user) {
+        final Connection connection = DBUtils.getConnection();
+        final String sql = &quot;select * from user where name = ? and password = ?&quot;;
+        try {
+            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            DBUtils.closeConnection();
+        }
+    }
+
+    public boolean insert(User user) {
+        final Connection connection = DBUtils.getConnection();
+        final String sql = &quot;insert into user(name,password) values(?,?)&quot;;
+        try {
+            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.executeUpdate();
+            return preparedStatement.getUpdateCount() != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            DBUtils.closeConnection();
+        }
+    }
+}
+</code></pre>
+<p>两个操作：</p>
+<ul>
+<li>查询：存在该用户返回<code>true</code>，否则<code>false</code></li>
+<li>插入：添加用户</li>
+</ul>
+<p><strong>注意插入操作中使用<code>executeUpdate()</code>进行插入，同时使用<code>getUpdateCount() != 0</code>判断插入的结果，而不能直接使用</strong></p>
+<pre><code class="language-java">return preparedStatement.execute();
+</code></pre>
+<p>一般来说：</p>
+<ul>
+<li><code>select</code>：<code>executeQuery()</code>，<code>executeQuery()</code>返回<code>ResultSet</code>，表示结果集，保存了<code>select</code>语句的执行结果，配合<code>next()</code>使用</li>
+<li><code>delete</code>/<code>insert</code>/<code>update</code>：使用<code>executeUpdate()</code>，<code>executeUpdate()</code>返回的是一个整数，表示受影响的行数，即<code>delete</code>/<code>insert</code>/<code>update</code>修改的行数，对于<code>drop</code>/<code>create</code>操作返回<code>0</code></li>
+<li><code>create</code>/<code>drop</code>：使用<code>execute()</code>，<code>execute()</code>的返回值是这样的，如果第一个结果是<code>ResultSet</code>对象，则返回<code>true</code>，如果第一个结果是更新计数或者没有结果则返回<code>false</code></li>
+</ul>
+<p>所以在这个例子中</p>
+<pre><code class="language-java">return preparedStatement.execute();
+</code></pre>
+<p>肯定返回<code>false</code>，不能直接判断是否插入成功。</p>
+<h2 id="56-响应体">5.6 响应体</h2>
+<p>添加一个响应体类方便设置返回码以及数据：</p>
+<pre><code class="language-java">package com.example.javawebdemo.response;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class ResponseBody{
+    private Object data;
+    private int code;
+}
+</code></pre>
+<h2 id="57-servlet">5.7 <code>Servlet</code></h2>
+<ul>
+<li><code>SingIn</code>类用于处理登录，调用<code>JDBC</code>查看数据库是否有对应的用户</li>
+<li><code>SignUp</code>类用于处理注册，把<code>User</code>添加到数据库中</li>
+<li><code>Test</code>为测试<code>Servlet</code>，返回固定字符串</li>
+</ul>
+<p>先上<code>SignIn.java</code></p>
+<pre><code class="language-java">package com.example.javawebdemo.servlet;
+
+import com.example.javawebdemo.dao.Dao;
+import com.example.javawebdemo.entity.User;
+import com.example.javawebdemo.response.ResponseBody;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+@WebServlet(&quot;/sign/in&quot;)
+public class SignIn extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding(&quot;utf-8&quot;);
+        resp.setCharacterEncoding(&quot;utf-8&quot;);
+        resp.setContentType(&quot;application/json;charset=utf-8&quot;);
+
+        String name = req.getParameter(&quot;name&quot;);
+        String password = req.getParameter(&quot;password&quot;);
+
+        Dao dao = new Dao();
+        User user = new User(name,password);
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseBody body = new ResponseBody();
+
+        if (dao.select(user)) {
+            body.setCode(200);
+            body.setData(&quot;success&quot;);
+        } else {
+            body.setCode(404);
+            body.setData(&quot;failed&quot;);
+        }
+        mapper.writeValue(resp.getWriter(), body);
+    }
+}
+</code></pre>
+<p>注意点：</p>
+<ul>
+<li><code>@WebServlet</code>：定义<code>Servlet</code>（不加这个注解也是可以的但是需要在<code>web.xml</code>中手工定义<code>Servlet</code>），默认的属性为<code>value</code>，表示<code>Servlet</code>路径</li>
+<li>编码：<code>HttpServletRequest</code>/<code>HttpServletResponse</code>均设置<code>UTF8</code>（虽然在这个例子中并不是必要的因为没有中文字符）</li>
+<li>获取参数：<code>request.getParameter</code>，从请求中获取参数，传入的参数是键值</li>
+<li>写响应体：利用<code>Jackson</code>，将<code>response.getWriter</code>以及响应体传入，接着交给<code>mapper.writeValue</code>进行写响应体</li>
+</ul>
+<p>下面是<code>SignUp.java</code>，大部分代码类似：</p>
+<pre><code class="language-java">package com.example.javawebdemo.servlet;
+
+import com.example.javawebdemo.dao.Dao;
+import com.example.javawebdemo.entity.User;
+import com.example.javawebdemo.response.ResponseBody;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+@WebServlet(&quot;/sign/up&quot;)
+public class SignUp extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding(&quot;utf-8&quot;);
+        resp.setCharacterEncoding(&quot;utf-8&quot;);
+        resp.setContentType(&quot;application/json;charset=utf-8&quot;);
+
+        String name = req.getParameter(&quot;name&quot;);
+        String password = req.getParameter(&quot;password&quot;);
+        Dao dao = new Dao();
+        User user = new User(name,password);
+        ResponseBody body = new ResponseBody();
+        ObjectMapper mapper = new ObjectMapper();
+        if (dao.insert(user)) {
+            body.setCode(200);
+            body.setData(&quot;success&quot;);
+        } else {
+            body.setCode(500);
+            body.setData(&quot;failed&quot;);
+        }
+        mapper.writeValue(resp.getWriter(), body);
+    }
+}
+</code></pre>
+<p>测试<code>Servlet</code>：</p>
+<pre><code class="language-java">package com.example.javawebdemo.servlet;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+@WebServlet(&quot;/test&quot;)
+public class Test extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.getWriter().print(&quot;Hello, Java Web&quot;);
+    }
+}
+</code></pre>
+<h2 id="58-运行">5.8 运行</h2>
+<p>需要借助<code>Tomcat</code>运行，选择运行配置中的<code>Tomcat Server</code>：</p>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20210119150129749.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>设置<code>Tomcat</code>根目录：</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/2021011915024037.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着在<code>Deployment</code>选择<code>+</code>后，选择第二个带<code>exploded</code>的（当然第一个也不是不可以，不过第一个一般是发布到远程版本，是以<code>WAR</code>形式的，而第二个是直接将所有文件以当前目录形式复制到<code>webapps</code>下，并且在调试模式下支持热部署）：</p>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20210119150346979.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>另外可以把这个路径修改为一个比较简单的路径，方便操作：</p>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20210119150549373.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>调试（运行不能进行热部署）：</p>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20210119151417365.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>访问<code>localhost:8080/demo</code>（<code>IDEA</code>应该会自动打开）会出现如下页面：</p>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20210119151505998.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>访问路径下的<code>test</code>会出现：</p>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/2021011915155217.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样后端就处理完成了，下面处理<code>Android</code>端。</p>
+<h1 id="6-android端">6 <code>Android</code>端</h1>
+<h2 id="61-新建项目">6.1 新建项目</h2>
+<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20210119160857732.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/2021011916095936.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="62-依赖权限">6.2 依赖/权限</h2>
+<p>依赖如下：</p>
+<pre><code class="language-bash">implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.1'
+</code></pre>
+<p>在<code>build.gradle</code>中加上即可，另外，再加上：</p>
+<pre><code class="language-bash">buildFeatures{
+    viewBinding = true
+}
+</code></pre>
+<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20210125200352874.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>viewBinding</code>就是视图绑定功能，以前是通过<code>findViewById</code>获取对应的组件，后面就有了<a href="https://github.com/JakeWharton/butterknife">Butter Knife</a>，到现在<code>Butter Knife</code>过期了，推荐使用<code>view binding</code>。</p>
+<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/20210125201007899.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>另外在<code>AndroidManifest.xml</code>中加入网络权限：</p>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
+</code></pre>
+<p>还需要添加<code>HTTP</code>的支持，因为这是一个示例<code>Demo</code>就不上<code>HTTPS</code>了，但是目前<code>Android</code>的版本默认不支持，因此需要在<code>&lt;application&gt;</code>添加：</p>
+<pre><code class="language-xml">android:usesCleartextTraffic=&quot;true&quot;
+</code></pre>
+<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20210125202934109.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="63-项目结构">6.3 项目结构</h2>
+<p>四个文件：</p>
+<ul>
+<li><code>MainActivity</code>：核心<code>Activity</code></li>
+<li><code>NetworkSettings</code>：请求<code>URL</code>，常量</li>
+<li><code>NetworkThread</code>：网络请求线程</li>
+<li><code>ResponseBody</code>：请求体</li>
+</ul>
+<figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20210125203105817.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="64-responsebody">6.4 <code>ResponseBody</code></h2>
+<pre><code class="language-java">package com.example.androiddemo;
+
+public class ResponseBody {
+    private int code;
+    private Object data;
+
+    public int getCode() {
+        return code;
+    }
+
+    public Object getData() {
+        return data;
+    }
+}
+</code></pre>
+<p>响应体，一个返回码字段+一个数据字段。</p>
+<h2 id="65-networksettings">6.5 <code>NetworkSettings</code></h2>
+<pre><code class="language-java">package com.example.androiddemo;
+
+public class NetworkSettings {
+    private static final String HOST = &quot;192.168.43.35&quot;;
+    private static final String PORT = &quot;8080&quot;;
+    public static final String SIGN_IN = &quot;http://&quot;+ HOST +&quot;:&quot;+PORT + &quot;/demo/sign/in&quot;;
+    public static final String SIGN_UP = &quot;http://&quot;+ HOST +&quot;:&quot;+PORT + &quot;/demo/sign/up&quot;;
+}
+</code></pre>
+<p>请求<code>URL</code>常量，<code>HOST</code>请修改为自己的内网<code>IP</code>，<strong>注意不能使用<code>localhost</code>/<code>127.0.0.1</code></strong>。</p>
+<p>可以使用<code>ip addr</code>/<code>ifconfig</code>/<code>ipconfig</code>等查看自己的内网<code>IP</code>：</p>
+<figure data-type="image" tabindex="28"><img src="https://img-blog.csdnimg.cn/20210126092346825.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="66-networkthread">6.6 <code>NetworkThread</code></h2>
+<pre><code class="language-java">package com.example.androiddemo;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Callable;
+
+public class NetworkThread implements Callable&lt;String&gt; {
+    private final String name;
+    private final String password;
+    private final String url;
+
+    public NetworkThread(String name, String password, String url) {
+        this.name = name;
+        this.password = password;
+        this.url = url;
+    }
+
+    @Override
+    public String call(){
+        try {
+        	//开启连接
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            //拼接数据
+            String data = &quot;name=&quot;+ URLEncoder.encode(name, StandardCharsets.UTF_8.toString())+&quot;&amp;password=&quot;+URLEncoder.encode(password,StandardCharsets.UTF_8.toString());
+            //设置请求方法
+            connection.setRequestMethod(&quot;POST&quot;);
+            //允许输入输出
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            //写数据（也就是发送数据）
+            connection.getOutputStream().write(data.getBytes(StandardCharsets.UTF_8));
+            byte [] bytes = new byte[1024];
+            //获取返回的数据
+            int len = connection.getInputStream().read(bytes);
+            return new String(bytes,0,len,StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return &quot;&quot;;
+        }
+    }
+}
+</code></pre>
+<p>发送网络请求的线程类，由于是异步操作的线程，实现了<code>Callable&lt;String&gt;</code>接口，表示返回的是<code>String</code>类型的数据，主线程可通过<code>get()</code>阻塞获取返回值。</p>
+<h2 id="67-mainactivity">6.7 <code>MainActivity</code></h2>
+<pre><code class="language-java">package com.example.androiddemo;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.androiddemo.databinding.ActivityMainBinding;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.concurrent.FutureTask;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+    }
+
+    public void signIn(View view){
+        String name = binding.editTextName.getText().toString();
+        String password = binding.editTextPassword.getText().toString();
+        FutureTask&lt;String&gt; signInTask = new FutureTask&lt;&gt;(new NetworkThread(name,password,NetworkSettings.SIGN_IN));
+        Thread thread = new Thread(signInTask);
+        thread.start();
+        try{
+        	//get获取线程返回值，通过ObjectMapper反序列化为ResponseBody
+            ResponseBody body = mapper.readValue(signInTask.get(),ResponseBody.class);
+            //根据返回码确定提示信息
+            Toast.makeText(getApplicationContext(),body.getCode() == 200 ? &quot;登录成功&quot; : &quot;登录失败&quot;,Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void signUp(View view){
+        String name = binding.editTextName.getText().toString();
+        String password = binding.editTextPassword.getText().toString();
+        FutureTask&lt;String&gt; signUpTask = new FutureTask&lt;&gt;(new NetworkThread(name,password,NetworkSettings.SIGN_UP));
+        Thread thread = new Thread(signUpTask);
+        thread.start();
+        try{
+            ResponseBody body = mapper.readValue(signUpTask.get(),ResponseBody.class);
+            Toast.makeText(getApplicationContext(),body.getCode() == 200 ? &quot;注册成功&quot; : &quot;注册失败&quot;,Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>说一下<code>viewBinding</code>，在<code>onCreate</code>中：</p>
+<pre><code class="language-java">super.onCreate(savedInstanceState);
+binding = ActivityMainBinding.inflate(getLayoutInflater());
+setContentView(binding.getRoot());
+</code></pre>
+<p>通过<code>ActivityMainBinding</code>的静态方法获取<code>binding</code>，注意<code>ActivityMainBinding</code>这个类的类名不是固定的，比如<a href="https://developer.android.com/topic/libraries/view-binding">Android官方的文档</a>中就是：</p>
+<figure data-type="image" tabindex="29"><img src="https://img-blog.csdnimg.cn/2021012609320157.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="68-资源文件">6.8 资源文件</h2>
+<p>两个：</p>
+<ul>
+<li><code>activity_main.xml</code></li>
+<li><code>strings.xml</code></li>
+</ul>
+<p>分别如下，不细说了：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot;&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/textViewName&quot;
+        android:layout_width=&quot;45dp&quot;
+        android:layout_height=&quot;38dp&quot;
+        android:layout_marginStart=&quot;24dp&quot;
+        android:layout_marginTop=&quot;92dp&quot;
+        android:text=&quot;@string/name&quot;
+        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+
+    &lt;EditText
+        android:id=&quot;@+id/editTextName&quot;
+        android:layout_width=&quot;300dp&quot;
+        android:layout_height=&quot;40dp&quot;
+        android:layout_marginStart=&quot;64dp&quot;
+        android:layout_marginTop=&quot;84dp&quot;
+        android:autofillHints=&quot;&quot;
+        android:inputType=&quot;text&quot;
+        app:layout_constraintLeft_toLeftOf=&quot;@id/textViewName&quot;
+        app:layout_constraintTop_toTopOf=&quot;parent&quot;
+        tools:ignore=&quot;LabelFor&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/textViewPassword&quot;
+        android:layout_width=&quot;45dp&quot;
+        android:layout_height=&quot;36dp&quot;
+        android:layout_marginStart=&quot;24dp&quot;
+        android:layout_marginTop=&quot;72dp&quot;
+        android:text=&quot;@string/password&quot;
+        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;
+        app:layout_constraintTop_toTopOf=&quot;@id/textViewName&quot; /&gt;
+
+    &lt;EditText
+        android:id=&quot;@+id/editTextPassword&quot;
+        android:layout_width=&quot;300dp&quot;
+        android:layout_height=&quot;40dp&quot;
+        android:layout_marginStart=&quot;64dp&quot;
+        android:layout_marginTop=&quot;72dp&quot;
+        android:autofillHints=&quot;&quot;
+        android:inputType=&quot;textPassword&quot;
+        app:layout_constraintLeft_toLeftOf=&quot;@id/textViewPassword&quot;
+        app:layout_constraintTop_toTopOf=&quot;@id/editTextName&quot;
+        tools:ignore=&quot;LabelFor&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/buttonSignUp&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginStart=&quot;56dp&quot;
+        android:layout_marginTop=&quot;32dp&quot;
+        android:onClick=&quot;signUp&quot;
+        android:text=&quot;@string/signUp&quot;
+        app:layout_constraintStart_toStartOf=&quot;parent&quot;
+        app:layout_constraintTop_toBottomOf=&quot;@+id/textViewPassword&quot;
+        tools:ignore=&quot;ButtonStyle&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/buttonSignIn&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;36dp&quot;
+        android:layout_marginEnd=&quot;52dp&quot;
+        android:onClick=&quot;signIn&quot;
+        android:text=&quot;@string/signIn&quot;
+        app:layout_constraintEnd_toEndOf=&quot;parent&quot;
+        app:layout_constraintTop_toBottomOf=&quot;@+id/editTextPassword&quot;
+        tools:ignore=&quot;ButtonStyle&quot; /&gt;
+&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;
+</code></pre>
+<pre><code class="language-xml">&lt;resources&gt;
+    &lt;string name=&quot;app_name&quot;&gt;AndroidDemo&lt;/string&gt;
+    &lt;string name=&quot;name&quot;&gt;用户名&lt;/string&gt;
+    &lt;string name=&quot;password&quot;&gt;密码&lt;/string&gt;
+    &lt;string name=&quot;signUp&quot;&gt;注册&lt;/string&gt;
+    &lt;string name=&quot;signIn&quot;&gt;登录&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+<h1 id="7-测试">7 测试</h1>
+<h2 id="71-本地测试">7.1 本地测试</h2>
+<p>首先运行<code>Java Web</code>端，应该会自动打开如下界面：</p>
+<figure data-type="image" tabindex="30"><img src="https://img-blog.csdnimg.cn/20210126093855408.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>附加<code>test</code>后：</p>
+<figure data-type="image" tabindex="31"><img src="https://img-blog.csdnimg.cn/20210126093910584.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>运行<code>Android</code>端，先输入一个不存在的用户名或密码，提示登录失败，再进行注册，然后登录成功：</p>
+<figure data-type="image" tabindex="32"><img src="https://img-blog.csdnimg.cn/20210126094304508.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>同时查看后端数据库如下：</p>
+<figure data-type="image" tabindex="33"><img src="https://img-blog.csdnimg.cn/20210126094248855.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="72-部署测试">7.2 部署测试</h2>
+<p><strong>首先确保本地数据库的用户名与密码与服务器的用户名与密码一致。同时存在对应的表以及库</strong></p>
+<p>部署<code>Java Web</code>端之前先在<code>pom.xml</code>中加入一个<code>&lt;finalName&gt;</code>：</p>
+<figure data-type="image" tabindex="34"><img src="https://img-blog.csdnimg.cn/2021012609450577.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在右侧的工具栏先选择<code>clean</code>，再选择编译，最后选择打包：</p>
+<figure data-type="image" tabindex="35"><img src="https://img-blog.csdnimg.cn/20210126103651188.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>之所以这样做是因为如果更新了文件，打包不会把文件更新再打包进去，因此需要先清除原来的字节码文件，再编译最后打包。</p>
+<p>完成后会出现一个<code>demo.war</code>位于<code>target</code>下：</p>
+<figure data-type="image" tabindex="36"><img src="https://img-blog.csdnimg.cn/20210126094641295.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>scp</code>（或其他工具）上传到服务器，并移动到<code>Tomcat</code>的<code>webapps</code>（为了方便说明以下假设服务器的<code>IP</code>为<code>8.8.8.8</code>）：</p>
+<pre><code class="language-bash">scp demo.war 8.8.8.8/xxx
+# 通过ssh连接服务器后
+cp demo.war /usr/local/tomcat/webapps
+</code></pre>
+<p>启动<code>Tomcat</code>：</p>
+<pre><code class="language-bash">cd /usr/local/tomcat/bin
+./startup.sh
+</code></pre>
+<p>启动后就可以看见在<code>webapps</code>下多了一个<code>demo</code>的文件夹：</p>
+<figure data-type="image" tabindex="37"><img src="https://img-blog.csdnimg.cn/20210126095034620.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>访问<code>8.8.8.8/demo</code>看到本地测试的页面就可以了。接着修改<code>Android</code>端的<code>NetworkSettings</code>中的<code>HOST</code>为<code>8.8.8.8</code>，如果没问题的话就能正常访问了：</p>
+<figure data-type="image" tabindex="38"><img src="https://img-blog.csdnimg.cn/20210126103518386.gif" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>服务器数据库：</p>
+<figure data-type="image" tabindex="39"><img src="https://img-blog.csdnimg.cn/20210126103458178.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="8-注意事项">8 注意事项</h1>
+<p>注意事项比较琐碎而且有点多，因此另开了一篇博客，<a href="https://blog.csdn.net/qq_27525611/article/details/112744223">戳这里</a>。</p>
+<p>如果还有其他问题欢迎留言。</p>
+<h1 id="9-源码">9 源码</h1>
+<p>提供了<code>Java</code>+<code>Kotlin</code>两种语言实现：</p>
+<ul>
+<li><a href="https://github.com/2293736867/AndroidWebMysql">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/AndroidWebMysql">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/AndroidWebMysql">CODE.CHINA</a></li>
+</ul>
+<p><strong>如果觉得文章好看，欢迎点赞。</strong></p>
+<p><strong>同时欢迎关注微信公众号：氷泠之路。</strong></p>
+<figure data-type="image" tabindex="40"><img src="https://img-blog.csdnimg.cn/20200806194605566.gif" alt="" loading="lazy"></figure>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai-javakotlin-shi-xian.jpeg');"></div>
+                 <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai-javakotlin-shi-xian/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-01-27">2021-01-27</time>
+                  <h4 class="title white no-margin">后端Spring Boot+前端Android交互+MySQL增删查改（Java+Kotlin实现）</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/androidjava-webmysql-shi-xian-deng-lu-zhu-ce/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/androidjava-webmysql-shi-xian-deng-lu-zhu-ce.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-01-27">2021-01-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/androidjava-webmysql-shi-xian-deng-lu-zhu-ce/">Android+Java Web+MySQL实现登录注册</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai-javakotlin-shi-xian/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai-javakotlin-shi-xian.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-01-27">2021-01-27</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/hou-duan-spring-bootqian-duan-android-jiao-hu-mysql-zeng-shan-cha-gai-javakotlin-shi-xian/">后端Spring Boot+前端Android交互+MySQL增删查改（Java+Kotlin实现）</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-224-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-224-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-01-24">2021-01-24</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-224-qi/">每日分享 第224期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-0 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-1 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-2 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-4 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-5 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HaIBKIG-Y/" class="ctag ctag-6 ctag-HaIBKIG-Y" aria-label="">Debian</a>
+                    
+                      <a href="https://2293736867.github.io/tag/fFCOUCKJji/" class="ctag ctag-7 ctag-fFCOUCKJji" aria-label="">MyCLI</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ODfvYwg3O/" class="ctag ctag-8 ctag-ODfvYwg3O" aria-label="">地图</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OykyL0ueI/" class="ctag ctag-9 ctag-OykyL0ueI" aria-label="">Vue3</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YdNb8nB1n/" class="ctag ctag-10 ctag-YdNb8nB1n" aria-label="">Element-Plus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/87dRXt1l_8/" class="ctag ctag-11 ctag-87dRXt1l_8" aria-label="">Echarts</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-12 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TFZz0NHYM/" class="ctag ctag-13 ctag-TFZz0NHYM" aria-label="">Token</a>
+                    
+                      <a href="https://2293736867.github.io/tag/v6JZElgCrM/" class="ctag ctag-14 ctag-v6JZElgCrM" aria-label="">ECC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sYkFqGm0dQ/" class="ctag ctag-15 ctag-sYkFqGm0dQ" aria-label="">ECDSA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8dOYqqfXPD/" class="ctag ctag-16 ctag-8dOYqqfXPD" aria-label="">Auth0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bK7AXA8PC/" class="ctag ctag-17 ctag-bK7AXA8PC" aria-label="">Vue.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/NxCZbHQqot/" class="ctag ctag-18 ctag-NxCZbHQqot" aria-label="">Node.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Nr-J-3R61V/" class="ctag ctag-19 ctag-Nr-J-3R61V" aria-label="">SHA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SqY3UeW8b/" class="ctag ctag-20 ctag-SqY3UeW8b" aria-label="">Github</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-21 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lE7-ZBoCn/" class="ctag ctag-22 ctag-lE7-ZBoCn" aria-label="">MongoDB</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-23 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/mIpAXBTpr/" class="ctag ctag-24 ctag-mIpAXBTpr" aria-label="">虚拟机</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-25 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/PPNnoV579/" class="ctag ctag-26 ctag-PPNnoV579" aria-label="">CUDA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eGsE7XySYo/" class="ctag ctag-27 ctag-eGsE7XySYo" aria-label="">PyTorch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-28 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-29 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-30 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-31 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-32 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-33 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-34 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-35 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-36 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-37 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-38 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-39 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-40 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-41 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-42 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-43 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-44 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-45 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-46 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-47 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-48 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-49 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-50 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-51 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-52 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-53 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-54 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-55 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-56 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-57 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-58 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-59 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-60 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-61 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-62 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-63 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-64 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-65 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-66 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-67 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-68 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-69 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-70 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-71 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-72 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-73 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-74 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-75 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-76 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-77 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-78 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-79 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-80 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-81 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-82 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-83 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-84 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-85 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-86 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-87 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-88 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-89 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-90 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-91 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-92 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-93 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-94 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-95 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-96 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-97 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-98 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-99 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-100 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-101 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-102 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-103 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-104 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 453 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
