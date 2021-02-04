@@ -1,0 +1,1575 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python多环境管理——pyenv | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 背景&amp;概述
+因某些需求，需要安装TensorFlow，很自然地在终端敲下了以下命令：
+pip install tensorflow
+
+然后。。。
+
+好家伙？？？
+居然没有？？
+因为是Python 3.9，去pypi搜索了，居然还..." />
+    <meta name="keywords" content="pyenv,Python" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1612443724871" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/python-duo-huan-jing-guan-li-pyenv.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2021-02-04"><i class="fa fa-calendar"></i><span class="lately">几秒前</span></time>
+              
+              <a href="https://2293736867.github.io/post/python-duo-huan-jing-guan-li-pyenv/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/python-duo-huan-jing-guan-li-pyenv/"> </span>
+              </a>
+              <span id="/python-duo-huan-jing-guan-li-pyenv/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/3qNOu3uvC/" class="ctag ctag-0 ctag-3qNOu3uvC" aria-label="">pyenv</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-1 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Python多环境管理——pyenv</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-背景概述">1 背景&amp;概述</h1>
+<p>因某些需求，需要安装<code>TensorFlow</code>，很自然地在终端敲下了以下命令：</p>
+<pre><code class="language-bash">pip install tensorflow
+</code></pre>
+<p>然后。。。</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210204170856776.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><s>好家伙？？？</s></p>
+<p>居然没有？？</p>
+<p>因为是<code>Python 3.9</code>，去<code>pypi</code>搜索了，居然还真没有支持的，最高只有<code>Python 3.8</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210204170823200.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>于是便考虑一个多版本的<code>Python</code>环境，碰巧就在<code>Github</code>上看到了一个<a href="https://github.com/pyenv/pyenv">22.3k</a>的东西：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210204171125437.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这就是<code>pyenv</code>，一个简单的<code>Python</code>版本管理器，可以轻松地在各个<code>Python</code>版本之间进行切换。</p>
+<p>好了废话不说，进入正题。</p>
+<h1 id="2-安装">2 安装</h1>
+<p>安装有两种方式：</p>
+<ul>
+<li>自动安装</li>
+<li>手动安装</li>
+</ul>
+<h2 id="21-自动安装">2.1 自动安装</h2>
+<pre><code class="language-bash">curl https://pyenv.run | bash
+# 或
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+</code></pre>
+<h2 id="22-手动安装">2.2 手动安装</h2>
+<p>手动安装大致分为三步：</p>
+<ul>
+<li>安装<code>pyenv</code></li>
+<li>配置环境变量</li>
+<li>初始化</li>
+</ul>
+<h3 id="221-安装pyenv">2.2.1 安装<code>pyenv</code></h3>
+<p>笔者系统<code>Manjaro</code>，可以直接<code>yay</code>安装：</p>
+<pre><code class="language-bash">yay -S pyenv
+</code></pre>
+<p>其他系统的可以使用<code>apt search</code>/<code>yum search</code>等看看软件包仓库有没有，有的话直接安装即可，没有的话，可以<code>clone</code>安装：</p>
+<pre><code class="language-bash">git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+</code></pre>
+<p>（<strong>这一步是可选的</strong>）接着就是编译动态<code>bash</code>扩展进行加速：</p>
+<pre><code class="language-bash">cd ~/.pyenv &amp;&amp; src/configure &amp;&amp; make -C src
+</code></pre>
+<p>官方解释说，不用害怕编译失败，因为仍然会正常工作。</p>
+<h3 id="222-配置环境变量">2.2.2 配置环境变量</h3>
+<p>这一步就是把<code>PYENV</code>以及更新后的<code>PATH</code>配置成环境变量，官方文档按照<code>shell</code>类型进行了分类，根据自己情况选择即可。</p>
+<h4 id="2221-bash">2.2.2.1 <code>bash</code></h4>
+<pre><code class="language-bash">echo 'export PYENV_ROOT=&quot;$HOME/.pyenv&quot;' &gt;&gt; ~/.bash_profile
+echo 'export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;' &gt;&gt; ~/.bash_profile
+</code></pre>
+<h4 id="2222-zsh">2.2.2.2 <code>Zsh</code></h4>
+<pre><code class="language-bash">echo 'export PYENV_ROOT=&quot;$HOME/.pyenv&quot;' &gt;&gt; ~/.zshrc
+echo 'export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;' &gt;&gt; ~/.zshrc
+</code></pre>
+<h4 id="2223-fish-shell">2.2.2.3 <code>Fish shell</code></h4>
+<pre><code class="language-bash">set -Ux PYENV_ROOT $HOME/.pyenv
+set -Ux fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+</code></pre>
+<h3 id="223-初始化">2.2.3 初始化</h3>
+<p>配置完环境变量后还要进行初始化操作，文档同样按<code>shell</code>类型进行了分类。</p>
+<h4 id="2231-bash">2.2.3.1 <code>bash</code></h4>
+<pre><code class="language-bash">echo -e 'if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval &quot;$(pyenv init -)&quot;\nfi' &gt;&gt; ~/.bash_profile
+</code></pre>
+<h4 id="2232-zsh">2.2.3.2 <code>Zsh</code></h4>
+<pre><code class="language-bash">echo -e 'if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval &quot;$(pyenv init -)&quot;\nfi' &gt;&gt; ~/.zshrc
+</code></pre>
+<h4 id="2233-fish-shell">2.2.3.3 <code>Fish shell</code></h4>
+<pre><code class="language-bash">echo -e '\n\n# pyenv init\nif command -v pyenv 1&gt;/dev/null 2&gt;&amp;1\n  pyenv init - | source\nend' &gt;&gt; ~/.config/fish/config.fish
+</code></pre>
+<h3 id="23-测试">2.3 测试</h3>
+<p>重新开启一个终端，输入<code>pyenv</code>，输出如下信息就表明安装成功了：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210204172438108.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-基本使用">3 基本使用</h1>
+<ul>
+<li><code>pyenv commands</code>：查看所有<code>pyenv</code>命令</li>
+<li><code>pyenv exec</code>：使用特定<code>Python</code>版本执行某条命令</li>
+<li><code>pyenv global</code>：设置或查看全局<code>Python</code>版本</li>
+<li><code>pyenv hooks</code>：列出给出的<code>pyenv</code>命令的钩子脚本</li>
+<li><code>pyenv init</code>：配置<code>shell</code>环境</li>
+<li><code>pyenv install</code>：安装某个版本的<code>Python</code></li>
+<li><code>pyenv local</code>：为某个应用设置特定的<code>Python</code>版本</li>
+<li><code>pyenv prefix</code>：显示对应<code>Python</code>版本的路径前缀</li>
+<li><code>pyenv rehash</code>：再哈希<code>pyenv shims</code>（不清楚有什么用，欢迎评论补充）</li>
+<li><code>pyenv root</code>：显示<code>pyenv</code>根目录</li>
+<li><code>pyenv shell</code>：为某个<code>shell</code>设置特定的<code>Python</code>版本（与<code>pyenv local</code>类似）</li>
+<li><code>pyenv shims</code>：列出当前存在的<code>shims</code>（<code>pyenv</code>的工作原理就是在一个叫<code>shims</code>的目录下创建<code>Python</code>解释器的“假版本”，寻找<code>Python</code>应用时先从该目录查找）</li>
+<li><code>pyenv uninstall</code>：卸载某个版本<code>Python</code></li>
+<li><code>pyenv --version</code>：显示<code>pyenv</code>版本</li>
+<li><code>pyenv version</code>：显示当前<code>Python</code>版本，等价于<code>pyenv version-name</code>+<code>pyenv version-file</code></li>
+<li><code>pyenv version-file/version-name/version-origin</code>：当前<code>Python</code>版本对应的文件/名字/位置</li>
+<li><code>pyenv whence</code>：列出已安装的一个范围内的<code>Python</code>版本，比如列出本地安装的<code>Python2</code>到<code>Python3</code>的版本，可以使用<code>pyenv whence 2to3</code></li>
+<li><code>pyenv which</code>：列出可执行文件的绝对路径，比如<code>pyenv which python</code>可以列出<code>python</code>命令的绝对路径</li>
+</ul>
+<h1 id="4-实际应用">4 实际应用</h1>
+<p>虽然上面说了这么多命令，但实际使用频率高的命令并不多，主要有以下几个：</p>
+<ul>
+<li><code>pyenv version</code></li>
+<li><code>pyenv install</code></li>
+<li><code>pyenv global</code></li>
+</ul>
+<p>一般安装的步骤如下，先使用</p>
+<pre><code class="language-bash">pyenv install -l
+</code></pre>
+<p>查找需要安装的<code>Python</code>版本：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210204203338711.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里还有一大串，就不全部截图了，比如需要安装<code>3.6.12</code>版本：</p>
+<pre><code class="language-bash">pyenv install 3.6.12
+</code></pre>
+<p>安装之后可以使用</p>
+<pre><code class="language-bash">pyenv versions
+</code></pre>
+<p>查看安装的版本，这里笔者安装有两个，一个是系统自带的<code>Python3.9</code>，一个是<code>pyenv</code>安装的<code>Python3.6</code>：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210204203630707.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着使用</p>
+<pre><code class="language-bash">pyenv global 3.6.12
+</code></pre>
+<p>切换到新安装的版本：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210204203802731.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样就切换到了新安装的版本，如果不是全局替换而是局部替换的话可以使用<code>pyenv local</code>/<code>pyenv shell</code>。</p>
+<p>要注意的是切换版本后<code>pip</code>的版本也会不一样，而且两个版本使用<code>pip</code>安装的包也是独立的：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210204204223400.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210204204236190.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-参考">5 参考</h1>
+<p>1、<a href="https://github.com/pyenv/pyenv">Github-pyenv</a></p>
+<p>2、<a href="https://github.com/pyenv/pyenv-installer">Github-pyenv-installer</a></p>
+<p>3、<a href="https://zhuanlan.zhihu.com/p/60841150">知乎-Python环境Memo</a></p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-235-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-235-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-02-04">2021-02-04</time>
+                  <h4 class="title white no-margin">每日分享 第235期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/python-duo-huan-jing-guan-li-pyenv/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/python-duo-huan-jing-guan-li-pyenv.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-02-04">2021-02-04</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/python-duo-huan-jing-guan-li-pyenv/">Python多环境管理——pyenv</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-235-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-235-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-02-04">2021-02-04</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-235-qi/">每日分享 第235期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/virtualbox-xu-ni-ji-du-qu-u-pan/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/virtualbox-xu-ni-ji-du-qu-u-pan.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-02-03">2021-02-03</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/virtualbox-xu-ni-ji-du-qu-u-pan/">VirtualBox虚拟机读取U盘</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/3qNOu3uvC/" class="ctag ctag-0 ctag-3qNOu3uvC" aria-label="">pyenv</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-1 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-2 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-3 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-4 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-5 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-6 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-7 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HaIBKIG-Y/" class="ctag ctag-8 ctag-HaIBKIG-Y" aria-label="">Debian</a>
+                    
+                      <a href="https://2293736867.github.io/tag/fFCOUCKJji/" class="ctag ctag-9 ctag-fFCOUCKJji" aria-label="">MyCLI</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ODfvYwg3O/" class="ctag ctag-10 ctag-ODfvYwg3O" aria-label="">地图</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OykyL0ueI/" class="ctag ctag-11 ctag-OykyL0ueI" aria-label="">Vue3</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YdNb8nB1n/" class="ctag ctag-12 ctag-YdNb8nB1n" aria-label="">Element-Plus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/87dRXt1l_8/" class="ctag ctag-13 ctag-87dRXt1l_8" aria-label="">Echarts</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-14 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TFZz0NHYM/" class="ctag ctag-15 ctag-TFZz0NHYM" aria-label="">Token</a>
+                    
+                      <a href="https://2293736867.github.io/tag/v6JZElgCrM/" class="ctag ctag-16 ctag-v6JZElgCrM" aria-label="">ECC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sYkFqGm0dQ/" class="ctag ctag-17 ctag-sYkFqGm0dQ" aria-label="">ECDSA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8dOYqqfXPD/" class="ctag ctag-18 ctag-8dOYqqfXPD" aria-label="">Auth0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bK7AXA8PC/" class="ctag ctag-19 ctag-bK7AXA8PC" aria-label="">Vue.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/NxCZbHQqot/" class="ctag ctag-20 ctag-NxCZbHQqot" aria-label="">Node.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Nr-J-3R61V/" class="ctag ctag-21 ctag-Nr-J-3R61V" aria-label="">SHA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SqY3UeW8b/" class="ctag ctag-22 ctag-SqY3UeW8b" aria-label="">Github</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-23 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lE7-ZBoCn/" class="ctag ctag-24 ctag-lE7-ZBoCn" aria-label="">MongoDB</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-25 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/mIpAXBTpr/" class="ctag ctag-26 ctag-mIpAXBTpr" aria-label="">虚拟机</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-27 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/PPNnoV579/" class="ctag ctag-28 ctag-PPNnoV579" aria-label="">CUDA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eGsE7XySYo/" class="ctag ctag-29 ctag-eGsE7XySYo" aria-label="">PyTorch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-30 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-31 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-32 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-33 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-34 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-35 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-36 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-37 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-38 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-39 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-40 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-41 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-42 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-43 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-44 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-45 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-46 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-47 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-48 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-49 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-50 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-51 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-52 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-53 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-54 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-55 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-56 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-57 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-58 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-59 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-60 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-61 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-62 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-63 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-64 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-65 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-66 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-67 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-68 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-69 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-70 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-71 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-72 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-73 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-74 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-75 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-76 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-77 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-78 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-79 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-80 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-81 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-82 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-83 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-84 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-85 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-86 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-87 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-88 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-89 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-90 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-91 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-92 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-93 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-94 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-95 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-96 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-97 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-98 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-99 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-100 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-101 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-102 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-103 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-104 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-105 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 466 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
