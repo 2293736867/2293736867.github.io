@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-02-13T03:00:51.868Z</updated>
+    <updated>2021-02-13T05:35:01.138Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,122 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[人生第一个扩展——Github1s]]></title>
+        <id>https://2293736867.github.io/post/ren-sheng-di-yi-ge-kuo-zhan-github1s/</id>
+        <link href="https://2293736867.github.io/post/ren-sheng-di-yi-ge-kuo-zhan-github1s/">
+        </link>
+        <updated>2021-02-13T05:34:40.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-灵感">1 灵感</h1>
+<p>某天看到了一个叫<a href="https://github.com/conwnet/github1s">github1s</a>的仓库：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210213100150724.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>基于<code>Node.JS</code>、<code>Yarn</code>、<code>Python</code>等技术栈，在<code>github.com</code>上面加上“一秒”，也就是<code>github1s.com</code>，就能在<code>VSCode</code>中打开该仓库，非常好用。</p>
+<p>同时笔者安装有一个叫<code>Sourcegraph</code>的扩展，就是下面这个：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210213100435129.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>用过的同学都知道这个扩展是干嘛的，于是笔者就想类似的在这个扩展旁边加一个超链接的扩展直接打开<code>github1s.com</code>，效果图已经在上面了，点击那个<code>VSCode</code>的图标就可以直接打开。</p>
+<h1 id="2-动手">2 动手</h1>
+<p>由于笔者并没有扩展开发的经验，因此先去看了一下<code>Chrome</code>扩展开发的文档并留下了一篇<a href="https://blog.csdn.net/qq_27525611/article/details/113791799">基础教程博客</a>，然后就可以开始动手了，项目结构如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210213101228391.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-图标">3 图标</h1>
+<p>关于图标，其实是花了一点时间的，比如，受到<a href="https://github.com/bestony/logoly">该仓库</a>的影响，一开始定的图标是下面这样子的：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210213101431248.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>然后想了一下好像不太对劲，就改成了这样子的：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210213101502695.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>至于在扩展管理中显示的图片，改成了一个比较简单的：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210213101556477.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样图标的问题就解决了。</p>
+<h1 id="4-显示">4 显示</h1>
+<p>下一步就是添加功能到扩展中并且让其显示在<code>Sourcegraph</code>的旁边，首先<code>manifest.json</code>如下：</p>
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;Github1s&quot;,
+    &quot;description&quot;: &quot;One second to read GitHub code with VS Code.(https://github.com/conwnet/github1s)&quot;,
+    &quot;version&quot;: &quot;1.0&quot;,
+    &quot;manifest_version&quot;: 3,
+    &quot;content_scripts&quot;: [{
+        &quot;matches&quot;: [&quot;https://github.com/*/*&quot;],
+        &quot;js&quot;: [&quot;/js/icon.js&quot;,&quot;/js/init.js&quot;]
+    }],
+    &quot;action&quot;: {
+        &quot;default_icon&quot;: {
+            &quot;16&quot;: &quot;/icons/logo16.png&quot;,
+            &quot;32&quot;: &quot;/icons/logo32.png&quot;,
+            &quot;48&quot;: &quot;/icons/logo48.png&quot;,
+            &quot;128&quot;: &quot;/icons/logo128.png&quot;
+        }
+    },
+    &quot;icons&quot;: {
+        &quot;16&quot;: &quot;/icons/logo16.png&quot;,
+        &quot;32&quot;: &quot;/icons/logo32.png&quot;,
+        &quot;48&quot;: &quot;/icons/logo48.png&quot;,
+        &quot;128&quot;: &quot;/icons/logo128.png&quot;
+    }
+}
+</code></pre>
+<p>解释一下<code>content_scripts</code>，当匹配到<code>matches</code>中的<code>URL</code>时，便会自动执行<code>js</code>里面的脚本，先来看一下<code>init.js</code>，这个脚本的作用就是添加把图标添加到<code>Sourcegraph</code>的旁边：</p>
+<pre><code class="language-js">let list = document.getElementsByClassName(&quot;pagehead-actions&quot;)
+
+if (list.length &gt; 0) {
+    list = list[0]
+    const li = document.createElement('li')
+    const a = document.createElement('a')
+
+    a.href = 'https://github1s.com/' + window.location.href.split('github.com')[1]
+    a.target = '_black'
+    a.className = 'btn btn-sm tooltipped tooltipped-s'
+    a.style.height = '28px'
+    a.style.paddingBottom = '0'
+    a.style.paddingTop = '2px'
+    a.innerHTML = base64Logo
+    a.setAttribute('aria-label','Open with VSCode')
+
+    li.append(a)
+    list.insertBefore(li, list.getElementsByTagName(&quot;li&quot;)[0])
+}
+</code></pre>
+<p>因为看了一下这里的代码：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210213102148821.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>就是一个<code>&lt;ul&gt;</code>包含<code>&lt;li&gt;</code>，于是就手动添加了一个<code>&lt;li&gt;</code>，里面包含一个<code>&lt;a&gt;</code>，加上样式、超链接以及一个叫<code>ariaLabel</code>的属性，这个属性会在光标悬浮的时候显示：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210213102326903.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210213102423911.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样功能就实现了，剩下的问题就是图标的显示，因为不能直接插入图片：</p>
+<pre><code class="language-js">a.innerHTML = '&lt;img src=&quot;/icons/code20.png&quot;&gt;'
+</code></pre>
+<p>因为这样会被解析成：</p>
+<pre><code class="language-html">&lt;img src=&quot;https://github.com/icons/code20.png&quot;&gt;
+</code></pre>
+<p>另外也考虑到缩放的问题，因此采用了<code>base64</code>+<code>svg</code>显示：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210213102750335.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样扩展就开发完成了。</p>
+<h1 id="5-测试">5 测试</h1>
+<p>测试环境：</p>
+<ul>
+<li><code>Chrome 88.0.4324.150</code></li>
+<li><code>Chromium 88.0.4324.150</code></li>
+<li><code>Brave 1.19.92</code></li>
+<li><code>FireFox 85.0.1</code></li>
+</ul>
+<p>安装的时候开启开发者模式，选择<code>Load unpacked</code>即可。火狐的话打开<code>about:debugging#/runtime/this-firefox</code>，选择<code>Load Temporary Add-on</code>，接着选择<code>manifest.json</code>即可。</p>
+<p><code>Brave</code>测试：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20210213113036762.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>Chrome</code>测试：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20210213113141665.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>Chromium</code>测试：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20210213113247658.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>FireFox</code>测试失败，因为目前版本（<code>85.0.1</code>）不支持<code>Manifest V3</code>，只支持<code>Manifest V2</code>，修改为<code>V2</code>版本后成功：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20210213113518283.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-关于firefox">6 关于<code>FireFox</code></h1>
+<p>上面也说了目前<code>FireFox</code>不支持<code>Manifest V3</code>版本，因此如果需要使用<code>Manifest V2</code>版本，两者比较可以参考<a href="https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/">官方文档</a>。</p>
+<h1 id="7-发布">7 发布</h1>
+<p>发布很简单，扩展管理页面选择<code>Pack Extension</code>即可。</p>
+<p>如果需要发布到<code>Chrome Web Store</code>，需要注册成为<code>Chrome</code>网上应用商店开发者，可以参考<a href="https://developer.chrome.com/docs/extensions/mv3/hosting/">官方文档</a>。</p>
+<h1 id="8-源码">8 源码</h1>
+<ul>
+<li><a href="https://github.com/2293736867/Github1sExtension">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/Github1sExtension">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/Github1sExtension">CODECHINA</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第244期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-244-qi/</id>
@@ -378,27 +494,6 @@ cd FirstExtension
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>人总是害怕死亡，却殊不知有出生之时必有死亡之日。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第236期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-236-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-236-qi/">
-        </link>
-        <updated>2021-02-04T18:58:13.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>没有什么可以将你大白，因为你从未成功过。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>朔风吹散三更雪，倩魂犹恋桃花月。<br>
-——纳兰性德《菩萨蛮·朔风吹散三更雪》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>奇迹，只不过是努力的另一个名字罢了。</p>
 </blockquote>
 ]]></content>
     </entry>
