@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-02-15T17:35:48.986Z</updated>
+    <updated>2021-02-15T19:29:37.855Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,112 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[ElementPlusViteStarterPnpm版本]]></title>
+        <id>https://2293736867.github.io/post/elementplusvitestarterpnpm-ban-ben/</id>
+        <link href="https://2293736867.github.io/post/elementplusvitestarterpnpm-ban-ben/">
+        </link>
+        <updated>2021-02-15T19:24:33.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-起因">1 起因</h1>
+<p>由于最近<code>Vite</code>升级了2.x版本，项目中需要改动的东西有点多，本来想基于官方给出的<a href="https://github.com/element-plus/element-plus-vite-starter">starter</a>重做，但是又看到了一个叫<code>pnpm</code>的仓库，构建速度会比原生<code>npm/yarn</code>快两倍以上：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210216024507800.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>因此模仿官方starter做了一个<code>pnpm</code>版本的starter，希望能帮助到需要的同学。</p>
+<h1 id="2-环境准备">2 环境准备</h1>
+<ul>
+<li><code>Node.js</code></li>
+<li><code>npm</code></li>
+<li><code>pnpm</code></li>
+</ul>
+<p><code>Node.js</code>与<code>npm</code>的安装就不说了，本来笔者使用的是<code>cnpm</code>，虽然速度上相比起<code>npm</code>有所改进，而且<code>cnpm</code>的输出也更加友好，但是使用了<code>pnpm</code>，相比起来感觉还是差了那么一点。</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210216024839751.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>安装<code>pnpm</code>之前，可以先把<code>cnpm</code>卸载（当然也可以选择不卸载）：</p>
+<pre><code class="language-bash">npm uninstall -g cnpm
+</code></pre>
+<p>再设置一下淘宝镜像：</p>
+<pre><code class="language-bash">npm config set registry https://registry.npm.taobao.org
+</code></pre>
+<p>然后安装<code>pnpm</code>（笔者系统<code>Manjaro</code>，<code>aur</code>已经提供了，可以直接<code>yay</code>安装）：</p>
+<pre><code class="language-bash">yay -S pnpm
+# 也可以使用npm安装
+npm install -g pnpm
+</code></pre>
+<p>测试：</p>
+<pre><code class="language-bash">pnpm -v
+</code></pre>
+<p>使用<code>pnpm</code>命令时，只需替换原生的<code>npm</code>命令即可，比如使用</p>
+<pre><code class="language-bash">pnpm install
+</code></pre>
+<p>去代替</p>
+<pre><code class="language-bash">npm install
+</code></pre>
+<p>同理<code>npx</code>的代替品是<code>pnpx</code>。</p>
+<h1 id="3-初始化">3 初始化</h1>
+<p>基于<a href="https://vitejs.dev/guide/">Vite Getting Started</a>文档，输入</p>
+<pre><code class="language-bash">pnpm init @vitejs/app
+</code></pre>
+<p>接着输入项目名字，并选择模板：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210216025554661.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>默认提供的模板如图所示，选择完成后即可。</p>
+<p>也可以一步创建完成：</p>
+<pre><code class="language-bash">pnpm init @vitejs/app my-vue-app --template vue
+</code></pre>
+<p>接着安装依赖：</p>
+<pre><code class="language-bash">pnpm install 
+pnpm install --save element-plus
+</code></pre>
+<p>这样就完成了初始化工作，项目结构如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210216030013804.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-引入elementplus">4 引入<code>ElementPlus</code></h1>
+<p>按照<a href="https://element-plus.gitee.io/#/zh-CN/component/installation">ElementPlus</a>文档引入，修改<code>main.js</code>如下：</p>
+<pre><code class="language-js">import { createApp } from 'vue'
+import App from './App.vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/lib/theme-chalk/index.css'
+
+createApp(App).use(ElementPlus).mount('#app')
+</code></pre>
+<p>将以下图片覆盖<code>logo.png</code>：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210216030316778.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>下一步就是修改<code>HelloWorld.vue</code>中的<code>button</code>，并把<code>&lt;h1&gt;</code>下面的<code>&lt;p&gt;</code>注释掉：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210216031129947.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后修改<code>App.vue</code>，改动其中的<code>&lt;image&gt;</code>大小，以及<code>&lt;HelloWorld&gt;</code>中的标题文字：</p>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;img alt=&quot;Vue logo&quot; src=&quot;./assets/logo.png&quot; id=&quot;img&quot;/&gt;
+  &lt;HelloWorld msg=&quot;Hello Vue 3.0 + Element Plus + Vite + pnpm&quot; /&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import HelloWorld from './components/HelloWorld.vue'
+
+&lt;/script&gt;
+
+&lt;style&gt;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+#img{
+  width: 50%;
+}
+&lt;/style&gt;
+</code></pre>
+<h1 id="5-运行">5 运行</h1>
+<p>终端运行可以直接输入<code>vite</code>即可，需要制定端口可以修改为<code>vite --port xxxx</code>，<code>WebStorm</code>运行建议先添加一个<code>npm</code>运行配置：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210216031011815.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>左边是自制的starter，右边是官方的，可以看到基本一致：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/2021021603124533.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-源码">6 源码</h1>
+<ul>
+<li><a href="https://github.com/2293736867/ElementPlusViteStarterPnpm">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/ElementPlusViteStarterPnpm">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/ElementPlusViteStarterPnpm">CODECHINA</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第247期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-247-qi/</id>
@@ -475,27 +581,6 @@ cd FirstExtension
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>就算风吹散了冰雪，想念也会留存下来。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第240期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-240-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-240-qi/">
-        </link>
-        <updated>2021-02-09T02:31:45.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>穷不可怕，可怕的是，最穷的人是我。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>溪云初起日沉阁，山雨欲来风满楼。<br>
-——许浑《咸阳城东楼/咸阳城西楼晚眺》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>快乐，至少比富裕要好。</p>
 </blockquote>
 ]]></content>
     </entry>
