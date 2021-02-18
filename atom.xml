@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-02-18T02:21:16.530Z</updated>
+    <updated>2021-02-18T08:46:28.579Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,34 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[解决IDEA Gradle构建报错"Cause: zip END header not found"]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-idea-gradle-gou-jian-bao-cuo-cause-zip-end-header-not-found/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-idea-gradle-gou-jian-bao-cuo-cause-zip-end-header-not-found/">
+        </link>
+        <updated>2021-02-18T08:45:04.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p>某天使用<code>Gradle</code>构建项目时，<code>IDEA</code>报错如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210218103240572.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="2-原因">2 原因</h1>
+<p>原因是下载的<code>Gradle</code>，也就是<code>zip</code>压缩包不完整，导致无法使用<code>Gradle</code>构建。</p>
+<h1 id="3-解决方法">3 解决方法</h1>
+<h2 id="31-删除本地缓存重新下载">3.1 删除本地缓存重新下载</h2>
+<p>首先打开<code>IDEA</code>设置中的<code>Gradle</code>，找到<code>Gradle user home</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210218103500710.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>比如笔者的是<code>~/.gradle</code>，打开其中的<code>wrapper/dists</code>，就可以看到缓存的<code>Gradle</code>：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210218104307551.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>删除对应版本的<code>Gradle</code>即可，<code>IDEA</code>会自动重新下载。</p>
+<h2 id="32-设置特定版本的gradle">3.2 设置特定版本的<code>Gradle</code></h2>
+<p>如果清除缓存重新下载不行，可以设置特定版本的<code>Gradle</code>，首先下载<a href="https://services.gradle.org/distributions/">Gradle</a>到本地，下载最新版的<code>xxx-all.zip</code>即可：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210218104832815.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>下载后修改项目文件夹下的<code>gradle/wrapper/gradle-wrapper.properties</code>，参考<a href="https://blog.buercheng.space/posts/3790347158/#2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">此处</a>修改<code>distributionUrl</code>为本地路径：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210218104942158.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>默认<code>Gradle</code>配置如下：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210218105247997.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>一般来说修改<code>distributionUrl</code>即可，如果请查看报错修改设置。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第249期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-249-qi/</id>
@@ -392,123 +420,6 @@ if (list.length &gt; 0) {
 <blockquote>
 <p>永远别放弃一个每天都在想念的人。</p>
 </blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Chrome扩展开发基础教程（附HelloWorld）]]></title>
-        <id>https://2293736867.github.io/post/chrome-kuo-zhan-kai-fa-ji-chu-jiao-cheng-fu-helloworld/</id>
-        <link href="https://2293736867.github.io/post/chrome-kuo-zhan-kai-fa-ji-chu-jiao-cheng-fu-helloworld/">
-        </link>
-        <updated>2021-02-12T12:15:20.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p><code>Chrome</code>扩展开发的基础教程，代码基于原生<code>JS+H5</code>，教程内容基于谷歌扩展开发<a href="https://developer.chrome.com/docs/extensions/mv3/getstarted/">官方文档</a>。</p>
-<h1 id="2-环境">2 环境</h1>
-<ul>
-<li><code>Chrome 88.0.4324.96</code></li>
-<li><code>Chromium 87.0.4280.141</code></li>
-<li><code>Brave 1.19.84</code></li>
-<li><code>FireFox 85.0</code></li>
-<li><code>WebStorm 2020.3.2</code></li>
-<li><code>Manifest V3</code></li>
-</ul>
-<h1 id="3-开发环境准备">3 开发环境准备</h1>
-<p>开发扩展建议使用<code>WebStorm</code>，推荐<code>WebStorm</code>的原因是能够补全，在设置中的<code>Libraries</code>中可以下载<code>chrome</code>的库，这样就能够补全了：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210211204114366.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210212015801882.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>另一个建议使用的是<code>VSCode</code>，但是笔者目前没有找到让<code>VSCode</code>补全的方式，希望知道的可以在评论指出补充一下。</p>
-<p>当然其实扩展开发并没有规定使用哪一个<code>IDE</code>，常用的<code>Web</code>开发<code>IDE</code>比如<code>HBuilder</code>也是可以的，看个人喜好了。</p>
-<h1 id="4-创建manifestjson">4 创建<code>manifest.json</code></h1>
-<p>首先创建一个空白文件夹：</p>
-<pre><code class="language-bash">mkdir FirstExtension
-cd FirstExtension
-</code></pre>
-<p>接着创建一个叫<code>manifest.json</code>的文件，直接在<code>WebStorm</code>中创建即可，文件内容如下：</p>
-<pre><code class="language-json">{
-    &quot;name&quot;: &quot;First Extension&quot;,
-    &quot;description&quot;: &quot;This is my first extension&quot;,
-    &quot;version&quot;: &quot;1.0&quot;,
-    &quot;manifest_version&quot;: 3
-}
-</code></pre>
-<p>打开浏览器进入管理扩展程序，并开启开发者模式，选择<code>Load unpacked</code>，打开刚才创建的<code>FirstExtension</code>文件夹：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210212021125773.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这样就可以看到扩展了。</p>
-<p>事实上最简单的扩展只需要一个<code>manifest.json</code>，来描述扩展最基本的一些属性以及行为，因此这样就算完成HelloWorld了。</p>
-<h1 id="5-添加弹出界面">5 添加弹出界面</h1>
-<p>现在扩展什么界面也没有，现在可以尝试着给扩展添加一个点击就弹出的界面，首先修改<code>manifest.json</code>，添加<code>action</code>：</p>
-<pre><code class="language-json">{
-    &quot;name&quot;: &quot;First Extension&quot;,
-    &quot;description&quot;: &quot;This is my first extension&quot;,
-    &quot;version&quot;: &quot;1.0&quot;,
-    &quot;manifest_version&quot;: 3,
-    &quot;action&quot;: {
-        &quot;default_popup&quot;: &quot;popup.html&quot;
-    }
-}
-</code></pre>
-<p>在与<code>manifest.json</code>同级目录下创建<code>popup.html</code>文件：</p>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;title&gt;Title&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;h1&gt;Hello World!&lt;/h1&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>这样点击扩展就会弹出对应文字了：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210212145215388.gif" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6-添加图标">6 添加图标</h1>
-<p>在<code>manifest.json</code>中添加<code>icons</code>字段：</p>
-<pre><code class="language-json">{
-    &quot;name&quot;: &quot;First Extension&quot;,
-    &quot;description&quot;: &quot;This is my first extension&quot;,
-    &quot;version&quot;: &quot;1.0&quot;,
-    &quot;manifest_version&quot;: 3,
-    &quot;action&quot;: {
-        &quot;default_popup&quot;: &quot;popup.html&quot;
-    },
-    &quot;icons&quot;: {
-        &quot;16&quot;: &quot;icons/16.png&quot;,
-        &quot;32&quot;: &quot;icons/32.png&quot;,
-        &quot;48&quot;: &quot;icons/48.png&quot;,
-        &quot;128&quot;: &quot;icons/128.png&quot;
-    }
-}
-</code></pre>
-<p>图标文件可以从文末的源码处获取，重新加载后就可以看到扩展的图标改变了。</p>
-<p>图标一共有四个，<code>16*16</code>是扩展页面中显示的图标：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210212145824197.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>而<code>32*32</code>是可选的，为了防止从<code>48*48</code>的大小中缩小造成失真，<code>48*48</code>是在扩展管理页面中显示的，例如：</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210212145602728.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>而<code>128*128</code>是<code>Chrome Web Store</code>中显示的。</p>
-<h1 id="7-发布">7 发布</h1>
-<p>最后一步是发布，扩展有两种安装方式，一种是通过本地安装，一种是通过<code>Chrome Web Store</code>安装，使用后一种方式的话，需要注册成为<code>Chrome</code>网上应用开发者：</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/2021021215045827.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里为了方便就本地打包发布了，在插件管理页面选择<code>Pack extension</code>：</p>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210212150700581.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>选择包含了<code>manifest.json</code>的文件夹，在这里就是刚才创建的<code>FirstExtension</code>：</p>
-<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/2021021215080146.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>点击打包后，会出现两个文件：</p>
-<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210212150957128.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>一个是<code>crx</code>，就是扩展的打包文件，一个是<code>pem</code>，创建新版本的扩展时需要使用。</p>
-<p>浏览器中拖拽<code>crx</code>文件就可以安装了，一般来说<code>Chrome/Chromium/Brave</code>因为基于相同内核应该都不会出现问题，至于<code>FireFox</code>，可以参考一下文末的附录。</p>
-<h1 id="8-源码">8 源码</h1>
-<ul>
-<li><a href="https://github.com/2293736867/FirstExtension">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/FirstExtension">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/FirstExtension">CODECHINA</a></li>
-</ul>
-<h1 id="9-附录firefox">9 附录：<code>FireFox</code></h1>
-<p><code>FireFox</code>目前最新版本（<code>85.0</code>）的扩展目前不支持<code>Manifest V3</code>，因此如果需要开发<code>FireFox</code>扩展，需要使用<code>Manifest V2</code>版本，也就是：</p>
-<pre><code class="language-json">&quot;manifest_version&quot;: 2
-</code></pre>
-<p>当然还有一些字段上的区别，具体可以参考<a href="https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/">这里</a>的文档。</p>
-<p>另外笔者测试了一下<code>FireFox</code>安装这个<code>Demo</code>扩展好像不能直接拖拽<code>crx</code>文件，需要打开一个叫<code>about:debugging</code>的链接，在设置中选择<code>Load Temporary Add-on</code>:</p>
-<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20210212200931560.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>选择<code>manifest.json</code>文件即可安装。</p>
 ]]></content>
     </entry>
 </feed>
