@@ -17,21 +17,24 @@
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
     <meta name="description" content="
+2021.2.20 更新
 1 概述
-2 安装vsftpd
-3 开启服务
-4 设置开机启动
-5 修改/etc/vsftpd/vsftpd.conf
-6 创建测试文件
-7 测试
+2 安装
 
-7.1 浏览器测试
-
-7.1.1 匿名测试
-7.1.2 用户登录测试
+2.1 安装vsftpd+ftp
+2.2 开启服务
+2.3 设置开机启动（可选）
+2.4 修改配置文件
 
 
-7.2 ftp..." />
+3 测试准备
+4 浏览器测试
+
+4.1 匿名测试
+4.2 用户登录测试
+
+
+5 f..." />
     <meta name="keywords" content="CentOS,FTP" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -81,7 +84,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1613712389405" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1613786957588" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -123,190 +126,218 @@
               <section class="post-content">
                 <div class="text">
                   <p><ul class="markdownIt-TOC">
+<li><a href="#2021220-%E6%9B%B4%E6%96%B0">2021.2.20 更新</a></li>
 <li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85vsftpd">2 安装vsftpd</a></li>
-<li><a href="#3-%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1">3 开启服务</a></li>
-<li><a href="#4-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">4 设置开机启动</a></li>
-<li><a href="#5-%E4%BF%AE%E6%94%B9etcvsftpdvsftpdconf">5 修改/etc/vsftpd/vsftpd.conf</a></li>
-<li><a href="#6-%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6">6 创建测试文件</a></li>
-<li><a href="#7-%E6%B5%8B%E8%AF%95">7 测试</a>
+<li><a href="#2-%E5%AE%89%E8%A3%85">2 安装</a>
 <ul>
-<li><a href="#71-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B5%8B%E8%AF%95">7.1 浏览器测试</a>
-<ul>
-<li><a href="#711-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.1.1 匿名测试</a></li>
-<li><a href="#712-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.1.2 用户登录测试</a></li>
+<li><a href="#21-%E5%AE%89%E8%A3%85vsftpdftp">2.1 安装<code>vsftpd</code>+<code>ftp</code></a></li>
+<li><a href="#22-%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1">2.2 开启服务</a></li>
+<li><a href="#23-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E5%8F%AF%E9%80%89">2.3 设置开机启动（可选）</a></li>
+<li><a href="#24-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">2.4 修改配置文件</a></li>
 </ul>
 </li>
-<li><a href="#72-ftp%E5%91%BD%E4%BB%A4%E6%B5%8B%E8%AF%95">7.2 ftp命令测试</a>
+<li><a href="#3-%E6%B5%8B%E8%AF%95%E5%87%86%E5%A4%87">3 测试准备</a></li>
+<li><a href="#4-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B5%8B%E8%AF%95">4 浏览器测试</a>
 <ul>
-<li><a href="#721-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.2.1 匿名测试</a>
-<ul>
-<li><a href="#7211-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">7.2.1.1 上传测试</a></li>
-<li><a href="#7212-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">7.2.1.2 下载测试</a></li>
+<li><a href="#41-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">4.1 匿名测试</a></li>
+<li><a href="#42-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">4.2 用户登录测试</a></li>
 </ul>
 </li>
-<li><a href="#722-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.2.2 用户登录测试</a>
+<li><a href="#5-ftp%E5%91%BD%E4%BB%A4%E6%B5%8B%E8%AF%95">5 <code>ftp</code>命令测试</a>
 <ul>
-<li><a href="#7221-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">7.2.2.1 上传测试</a></li>
-<li><a href="#7222-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">7.2.2.2 下载测试</a></li>
+<li><a href="#51-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">5.1 匿名测试</a>
+<ul>
+<li><a href="#511-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.1.1 上传测试</a></li>
+<li><a href="#512-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.1.2 下载测试</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#73-wget%E6%B5%8B%E8%AF%95">7.3 wget测试</a>
+<li><a href="#52-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">5.2 用户登录测试</a>
 <ul>
-<li><a href="#731-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">7.3.1 匿名测试</a></li>
-<li><a href="#732-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">7.3.2 用户登录测试</a></li>
+<li><a href="#521-%E4%B8%8A%E4%BC%A0%E6%B5%8B%E8%AF%95">5.2.1 上传测试</a></li>
+<li><a href="#522-%E4%B8%8B%E8%BD%BD%E6%B5%8B%E8%AF%95">5.2.2 下载测试</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#8-%E6%80%BB%E7%BB%93">8 总结</a></li>
+<li><a href="#6-wget%E6%B5%8B%E8%AF%95">6 <code>wget</code>测试</a>
+<ul>
+<li><a href="#61-%E5%8C%BF%E5%90%8D%E6%B5%8B%E8%AF%95">6.1 匿名测试</a></li>
+<li><a href="#62-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95">6.2 用户登录测试</a></li>
+</ul>
+</li>
+<li><a href="#7-%E6%80%BB%E7%BB%93">7 总结</a></li>
+<li><a href="#8-%E8%BF%98%E6%9C%89%E7%96%91%E9%97%AE">8 还有疑问？</a></li>
 </ul>
 </p>
+<h1 id="2021220-更新">2021.2.20 更新</h1>
 <h1 id="1-概述">1 概述</h1>
-<p>文章主要讲了CentOS8如何利用vsftpd搭建一个FTP服务器,然后进行简单的匿名上传/下载与用户上传/下载测试,还有使用了wget测试.</p>
-<h1 id="2-安装vsftpd">2 安装vsftpd</h1>
-<pre><code class="language-bash">yum install -y vsftpd
+<p>文章核心：</p>
+<ul>
+<li><code>CentOS8</code>使用<code>vsftpd</code>搭建<code>FTP</code>服务器</li>
+<li>安装以及测试的详细过程</li>
+</ul>
+<h1 id="2-安装">2 安装</h1>
+<h2 id="21-安装vsftpdftp">2.1 安装<code>vsftpd</code>+<code>ftp</code></h2>
+<pre><code class="language-bash">sudo yum install -y vsftpd
+sudo yum install -y ftp # 测试使用，搭建FTP服务器只需要vsftpd
 </code></pre>
-<h1 id="3-开启服务">3 开启服务</h1>
-<pre><code class="language-bash">service httpd start
+<h2 id="22-开启服务">2.2 开启服务</h2>
+<pre><code class="language-bash">systemctl start vsftpd
 </code></pre>
-<h1 id="4-设置开机启动">4 设置开机启动</h1>
+<h2 id="23-设置开机启动可选">2.3 设置开机启动（可选）</h2>
 <p>可以用</p>
 <pre><code class="language-bash">systemctl list-unit-files | grep vsftpd
 </code></pre>
-<p>查看是否开机启动.显示disabled.<br>
-<img src="https://img-blog.csdnimg.cn/20200101030147305.png" alt="在这里插入图片描述" loading="lazy"><br>
-通过</p>
+<p>查看是否开机启动，笔者机器上显示<code>disabled</code>：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200101030147305.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>通过</p>
 <pre><code class="language-bash">chkconfig vsftpd on
 </code></pre>
-<p>开启自启,再次执行systemctl,可以看到变成了enabled.</p>
-<h1 id="5-修改etcvsftpdvsftpdconf">5 修改/etc/vsftpd/vsftpd.conf</h1>
+<p>开启自启，再次执行<code>systemctl</code>，可以看到变成了<code>enabled</code>。</p>
+<h2 id="24-修改配置文件">2.4 修改配置文件</h2>
+<p>配置文件默认为<code>/etc/vsftpd/vsftpd.conf</code>：</p>
 <pre><code class="language-bash">sudo vim /etc/vsftpd/vsftpd.conf
 </code></pre>
-<p>首先修改<br>
-<img src="https://img-blog.csdnimg.cn/20200101030618606.png" alt="在这里插入图片描述" loading="lazy"><br>
-为YES.<br>
-再添加一行anon_upload_enable=YES<br>
-<img src="https://img-blog.csdnimg.cn/20200101030851708.png" alt="在这里插入图片描述" loading="lazy"><br>
-第一行的意思是允许匿名登录,第二行的意思是允许匿名上传.<br>
-重启服务.</p>
-<pre><code class="language-bash">service vsftpd restart
+<p>首先修改<code>anonymouse enable=YES</code>，再添加一行<code>anon_upload_enable=YES</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20200101030851708.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>第一行的意思是允许匿名登录，第二行的意思是允许匿名上传，接着重启服务：</p>
+<pre><code class="language-bash">systemctl restart vsftpd
 </code></pre>
-<h1 id="6-创建测试文件">6 创建测试文件</h1>
+<h1 id="3-测试准备">3 测试准备</h1>
+<p>安装部分就算完成了，下面是测试。测试分为：</p>
+<ul>
+<li>浏览器测试</li>
+<li><code>ftp</code>命令测试</li>
+</ul>
+<p>而为了测试权限，两者又分为：</p>
+<ul>
+<li>匿名测试</li>
+<li>用户登录测试</li>
+</ul>
+<p>另外为了测试的完整还加入了<code>wget</code>的下载测试。</p>
+<p>在测试之前先创建测试文件：</p>
 <pre><code class="language-bash">cd /var/ftp/pub
 sudo vim test
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200101031249233.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="7-测试">7 测试</h1>
-<h2 id="71-浏览器测试">7.1 浏览器测试</h2>
-<h3 id="711-匿名测试">7.1.1 匿名测试</h3>
-<p>ifconfig获取内网ip,在浏览器中输入ftp://ip.<br>
-<img src="https://img-blog.csdnimg.cn/20200101031730471.png" alt="在这里插入图片描述" loading="lazy"><br>
-可以看到有一个pub文件夹,里面有刚才新建的test文件.<br>
-<img src="https://img-blog.csdnimg.cn/20200101031838167.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101031849294.png" alt="在这里插入图片描述" loading="lazy"><br>
-右键保存即可下载文件.<br>
-<img src="https://img-blog.csdnimg.cn/20200101031948461.png" alt="在这里插入图片描述" loading="lazy"><br>
-下载完成.<br>
-<img src="https://img-blog.csdnimg.cn/20200101032047324.png" alt="在这里插入图片描述" loading="lazy"><br>
-去终端看看.<br>
-<img src="https://img-blog.csdnimg.cn/20200101032137819.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="712-用户登录测试">7.1.2 用户登录测试</h3>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200101031249233.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-浏览器测试">4 浏览器测试</h1>
+<h2 id="41-匿名测试">4.1 匿名测试</h2>
+<p><code>ifconfig</code>获取内网<code>ip</code>，在浏览器中输入<code>ftp://ip</code>：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200101031730471.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到有一个<code>pub</code>文件夹，里面有刚才新建的<code>test</code>文件：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200101031838167.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20200101031849294.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>右键保存即可下载文件：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20200101031948461.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>下载完成。</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20200101032047324.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>去终端看看：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20200101032137819.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-用户登录测试">4.2 用户登录测试</h2>
 <p>输入</p>
 <pre><code class="language-bash">ftp://username@ip
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101032238241.png" alt="在这里插入图片描述" loading="lazy"><br>
-再输入用户密码.<br>
-默认访问的是用户根目录下的文件,这里显示出来了.<br>
-<img src="https://img-blog.csdnimg.cn/20200101032414278.png" alt="在这里插入图片描述" loading="lazy"><br>
-下载的话同上,右键选择即可.</p>
-<h2 id="72-ftp命令测试">7.2 ftp命令测试</h2>
-<p>首先安装ftp:</p>
-<pre><code class="language-bash">sudo yum install ftp
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20200101032238241.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再输入用户密码即可登录成功。默认访问的是用户根目录下的文件：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20200101032414278.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>下载的话同上，右键选择下载即可。</p>
+<h1 id="5-ftp命令测试">5 <code>ftp</code>命令测试</h1>
+<p>首先安装<code>ftp</code>：</p>
+<pre><code class="language-bash">
 </code></pre>
-<h3 id="721-匿名测试">7.2.1 匿名测试</h3>
+<h2 id="51-匿名测试">5.1 匿名测试</h2>
 <pre><code class="language-bash">ftp ip
 </code></pre>
-<p>这里用户名选择ftp,密码为空,表示匿名登录.ftp为默认的匿名登录用户名,至于密码,可以在/etc/vsftpd/vsftpd.conf中设置一个</p>
+<p><code>ftp</code>为默认的匿名登录用户名，至于密码，可以在<code>/etc/vsftpd/vsftpd.conf</code>中设置一个</p>
 <pre><code>no_anon_password=YES
 </code></pre>
-<p>这样匿名用户可以不用密码登录.<br>
-<img src="https://img-blog.csdnimg.cn/20200101033958446.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h4 id="7211-上传测试">7.2.1.1 上传测试</h4>
-<p>直接使用put命令,后面接上文件,这里的upload.txt是执行ftp之前的所在文件夹下的upload.txt<br>
-<img src="https://img-blog.csdnimg.cn/20200101034153782.png" alt="在这里插入图片描述" loading="lazy"><br>
-这里提示不能创建文件,是权限的原因,要确保/var/ftp/pub对&quot;other&quot;用户有写权限.<br>
-<img src="https://img-blog.csdnimg.cn/20200101034507850.png" alt="在这里插入图片描述" loading="lazy"><br>
-默认的/var/ftp/pub的权限是644,修改成647.</p>
+<p>这样匿名用户可以空密码登录。</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20200101033958446.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="511-上传测试">5.1.1 上传测试</h3>
+<p>直接使用<code>put</code>命令，后面接上文件，这里的<code>upload.txt</code>是执行<code>ftp</code>之前的所在文件夹下的<code>upload.txt</code>：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20200101034153782.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里提示不能创建文件，是权限的原因，要确保<code>/var/ftp/pub</code>对<code>other</code>用户有写权限：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20200101034507850.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>默认的<code>/var/ftp/pub</code>的权限是<code>644</code>，修改成<code>647</code>：</p>
 <pre><code class="language-bash">sudo chmod 647 /var/ftp/pub
 </code></pre>
-<p>同时修改上传文件的权限,允许other用户可读.</p>
+<p>同时修改上传文件的权限，允许<code>other</code>用户可读：</p>
 <pre><code class="language-bash">sudo chmod 644 /root/upload.txt
 </code></pre>
-<p>如果不行,使用selinux设置.</p>
+<p>如果不行，可以使用<code>selinux</code>设置<code>ftpd_full_access</code>：</p>
 <pre><code class="language-bash">getsebool -a | grep ftp
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101041509763.png" alt="在这里插入图片描述" loading="lazy"><br>
-把ftpd_full_access开启:</p>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20200101041509763.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>把<code>ftpd_full_access</code>开启：</p>
 <pre><code class="language-bash">setsebool ftpd_full_access on
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101041325973.png" alt="在这里插入图片描述" loading="lazy"><br>
-再进入upload.txt所在的文件夹,执行ftp,再次put.<br>
-<img src="https://img-blog.csdnimg.cn/20200101041756274.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功!<br>
-<img src="https://img-blog.csdnimg.cn/20200101041850446.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h4 id="7212-下载测试">7.2.1.2 下载测试</h4>
-<p>直接get文件即可,由于上面已经设置好了权限,所以不会出现问题.<br>
-<img src="https://img-blog.csdnimg.cn/20200101042052729.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101042158684.png" alt="在这里插入图片描述" loading="lazy"><br>
-若出现权限问题可从三方面入手:</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20200101041325973.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再进入<code>upload.txt</code>所在的文件夹，执行<code>ftp</code>，再次<code>put</code>：</p>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20200101041756274.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>成功!</p>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20200101041850446.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="512-下载测试">5.1.2 下载测试</h3>
+<p>直接<code>get</code>文件即可，由于上面已经设置好了权限，所以不会出现问题。</p>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20200101042052729.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20200101042158684.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>若出现权限问题可从三方面入手：</p>
 <ul>
-<li>(1)<strong>/var/ftp/pub的对other用户的可读权限:因为是下载,而且匿名,所以只需要对other用户的可读权限</strong></li>
-<li>(2)<strong>被下载文件的对other用户的可读权限</strong></li>
-<li>(3)<strong>selinux的问题,设置ftpd_full_access为on</strong></li>
+<li><strong><code>/var/ftp/pub</code>的对<code>other</code>用户的可读权限：因为是下载，而且匿名，所以只需要对<code>other</code>用户的可读权限</strong></li>
+<li><strong>被下载文件的对<code>other</code>用户的可读权限</strong></li>
+<li><strong><code>selinux</code>的问题，设置<code>ftpd_full_access</code>为<code>on</code></strong></li>
 </ul>
-<h3 id="722-用户登录测试">7.2.2 用户登录测试</h3>
-<p>执行ftp时用对应用户名与密码登录.<br>
-<img src="https://img-blog.csdnimg.cn/20200101042624970.png" alt="在这里插入图片描述" loading="lazy"><br>
-默认进入了用户根目录.</p>
-<h4 id="7221-上传测试">7.2.2.1 上传测试</h4>
-<p>直接put即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200101042824793.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101042907482.png" alt="在这里插入图片描述" loading="lazy"><br>
-若出现权限问题参照上面7.2.1.2的那三条方法.</p>
-<h4 id="7222-下载测试">7.2.2.2 下载测试</h4>
-<p>随便在用户根目录新建一个文件,这里是kr.<br>
-<img src="https://img-blog.csdnimg.cn/20200101043238911.png" alt="在这里插入图片描述" loading="lazy"><br>
-直接get即可.<br>
-<img src="https://img-blog.csdnimg.cn/20200101043337444.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101043424416.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h2 id="73-wget测试">7.3 wget测试</h2>
-<p>wget用来下载文件,初始下载的目录与ftp登录时的目录一致,比如匿名登录ftp,登录的是/var/ftp目录,则wget会从这个/var/ftp目录下载文件,下载到执行wget命令所在的目录.使用用户&quot;kr&quot;登录ftp,则登录的是/home/kr目录,wget会从/home/kr下载文件.</p>
-<h3 id="731-匿名测试">7.3.1 匿名测试</h3>
-<p>注意,请确保被下载文件对other用户有可读权限.</p>
+<h2 id="52-用户登录测试">5.2 用户登录测试</h2>
+<p>执行<code>ftp</code>时用对应用户名与密码登录：</p>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/20200101042624970.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>默认进入了用户根目录。</p>
+<h3 id="521-上传测试">5.2.1 上传测试</h3>
+<p>直接<code>put</code>即可：</p>
+<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20200101042824793.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20200101042907482.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>若出现权限问题参照上面<code>5.1.2</code>的那三种方法。</p>
+<h3 id="522-下载测试">5.2.2 下载测试</h3>
+<p>随便在用户根目录新建一个文件，这里是kr：</p>
+<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20200101043238911.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>直接<code>get</code>即可：</p>
+<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/20200101043337444.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20200101043424416.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-wget测试">6 <code>wget</code>测试</h1>
+<p><code>wget</code>用来下载文件，初始下载的目录与<code>ftp</code>登录时的目录一致：</p>
+<ul>
+<li>匿名登录<code>ftp</code>，登录的是<code>/var/ftp</code>目录，则<code>wget</code>会从这个<code>/var/ftp</code>目录下载文件，下载到执行<code>wget</code>命令所在的目录</li>
+<li>使用用户kr登录<code>ftp</code>，则登录的是<code>/home/kr</code>目录，<code>wget</code>会从<code>/home/kr</code>下载文件</li>
+</ul>
+<h2 id="61-匿名测试">6.1 匿名测试</h2>
+<p>注意，请确保被下载文件对<code>other</code>用户有可读权限：</p>
 <pre><code class="language-bash">sudo chmod o+w xxxxxx
 </code></pre>
-<p>然后使用wget</p>
+<p>然后使用<code>wget</code>：</p>
 <pre><code class="language-bash">wget ftp://ip/pub/xxxx
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101044803421.png" alt="在这里插入图片描述" loading="lazy"><br>
-<img src="https://img-blog.csdnimg.cn/20200101044830152.png" alt="在这里插入图片描述" loading="lazy"></p>
-<h3 id="732-用户登录测试">7.3.2 用户登录测试</h3>
-<p>使用--ftp-user,--ftp-password指定用户名与密码,其余同上.</p>
+<figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20200101044803421.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="28"><img src="https://img-blog.csdnimg.cn/20200101044830152.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="62-用户登录测试">6.2 用户登录测试</h2>
+<p>使用<code>--ftp-user</code>，<code>--ftp-password</code>指定用户名与密码，其余同上：</p>
 <pre><code class="language-bash">wget ftp://ip/xxx --ftp-user=xxxx --ftp-password=xxxx
 </code></pre>
-<p><img src="https://img-blog.csdnimg.cn/20200101045316791.png" alt="在这里插入图片描述" loading="lazy"><br>
-成功.</p>
-<h1 id="8-总结">8 总结</h1>
-<p>呃....简单来说,就是先安装好ftp与vsftpd,然后修改/etc/vsftpd/vsftpd.conf添加相应权限,对于不能上传与下载的原因,基本上都是权限的问题,主要就是三方面:</p>
+<figure data-type="image" tabindex="29"><img src="https://img-blog.csdnimg.cn/20200101045316791.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>成功。</p>
+<h1 id="7-总结">7 总结</h1>
+<p>总结一下步骤：</p>
 <ul>
-<li><strong>(1)ftp目录的权限:比如可以是/var/ftp/pub没有对应的写权限导致上传失败,没有对应读权限导致下载失败.</strong></li>
-<li><strong>(2)被上传文件的权限:比如上传的文件没有读权限导致上传失败.</strong></li>
-<li><strong>(3)selinux:使用setsebool设置为on.</strong></li>
+<li>安装好<code>ftp</code>与<code>vsftpd</code></li>
+<li>修改配置文件（<code>/etc/vsftpd/vsftpd.conf</code>）</li>
+<li>添加对操作的文件的相应权限</li>
 </ul>
-<p>解决权限问题后,基本就可以通过ftp或wget顺利地使用这个ftp服务器上传/下载文件了.</p>
+<p>对于不能上传与下载的原因，基本上都是权限的问题，主要就是三方面：</p>
+<ul>
+<li><strong><code>ftp</code>目录的权限：比如可以是<code>/var/ftp/pub</code>没有对应的写权限导致上传失败，没有对应读权限导致下载失败</strong></li>
+<li><strong>被上传文件的权限：比如被上传的文件没有读权限导致上传失败</strong></li>
+<li><strong><code>selinux</code>：使用<code>setsebool</code>设置<code>ftpd_full_access</code>为<code>on</code></strong></li>
+</ul>
+<p>解决权限问题后，基本就可以通过<code>ftp</code>/<code>wget</code>顺利地使用这个<code>ftp</code>服务器上传/下载文件了。</p>
+<h1 id="8-还有疑问">8 还有疑问？</h1>
+<p>可以在评论留言大家一起讨论。</p>
 
                 </div>
                 <div class="clear"></div>
@@ -386,6 +417,21 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-251-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-251-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-02-20">2021-02-20</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-251-qi/">每日分享 第251期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-yi-ju-251-300-qi-he-ji/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-yi-ju-251-300-qi-he-ji.jpeg');"></span>
                     </a>
@@ -400,7 +446,7 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-250-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-250-qi.jpg');"></span>
                     </a>
@@ -414,19 +460,6 @@ jQuery(document).ready(function($){
                   </article>
                   
                   
-                  
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/jie-jue-idea-gradle-gou-jian-bao-cuo-cause-zip-end-header-not-found/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jie-jue-idea-gradle-gou-jian-bao-cuo-cause-zip-end-header-not-found.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-02-18">2021-02-18</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/jie-jue-idea-gradle-gou-jian-bao-cuo-cause-zip-end-header-not-found/">解决IDEA Gradle构建报错&#34;Cause: zip END header not found&#34;</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
@@ -1667,7 +1700,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 487 篇文章
+          ©2019 共 488 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>
