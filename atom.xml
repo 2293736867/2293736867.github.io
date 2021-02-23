@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-02-23T02:57:15.967Z</updated>
+    <updated>2021-02-23T03:19:33.435Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,37 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[解决Docker MySQL无法被宿主机访问的问题]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-docker-mysql-wu-fa-bei-su-zhu-ji-fang-wen-de-wen-ti/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-docker-mysql-wu-fa-bei-su-zhu-ji-fang-wen-de-wen-ti/">
+        </link>
+        <updated>2021-02-23T03:16:22.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-问题描述">1 问题描述</h1>
+<p><code>Docker</code>启动<code>MySQL</code>容器后，创建一个<code>localhost</code>访问的用户：</p>
+<pre><code class="language-bash">create user test@localhost identified by 'test';
+</code></pre>
+<p>但是在宿主机中无法通过该用户登录：</p>
+<pre><code class="language-bash">mycli -u test
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210223110510684.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="2-原因">2 原因</h1>
+<p>在<code>Docker</code>中的<code>MySQL</code>创建<code>localhost</code>的用户只能在<code>Docker</code>内部访问，而不能通过外部访问。</p>
+<p>至于为什么能在宿主机访问<code>root</code>，是因为默认存在两个<code>root</code>，分别是：</p>
+<ul>
+<li><code>root@localhost</code></li>
+<li><code>root@%</code></li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210223110858572.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而<code>test</code>只有一个<code>localhost</code>：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210223110928695.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-解决方案">3 解决方案</h1>
+<p>创建<code>test@%</code>或者创建<code>test@172.17.0.1</code>即可：</p>
+<pre><code class="language-bash">create user test@% identified by 'test';
+create user test@172.17.0.1 identified by 'test';
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第254期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-254-qi/</id>
@@ -309,27 +340,6 @@
 <p>标记为<code>Not Excluded</code>后，就不是红色了：</p>
 <figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210217130650155.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>因此解决并不难，只是无法正确识别的原因。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第248期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-248-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-248-qi/">
-        </link>
-        <updated>2021-02-16T17:43:57.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>我虽然不能来一场，说走就走的旅行，但我有一个说胖就胖的体质。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>一片砧敲千里白，半轮鸡唱五更残。<br>
-——曹雪芹《香菱咏月·其三》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>爸爸我也不是一生下来就是爸爸，爸爸也是头一次当爸爸。</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>
