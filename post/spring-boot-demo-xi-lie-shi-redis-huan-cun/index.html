@@ -16,21 +16,24 @@
 <script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
-    <meta name="description" content="1 概述
-本文演示了如何在Spring Boot中将Redis作为缓存使用，具体的内容包括：
-
-环境搭建
-项目搭建
-测试
-
+    <meta name="description" content="
+1 概述
 2 环境
-
-Redis
-MySQL
-MyBatis Plus
-
 3 Redis安装
-Redis安装非常简单，以笔者的..." />
+4 新建项目
+5 配置类
+6 实体类
+7 持久层
+8 业务层
+9 配置文件
+10 启动Redis
+
+10.1 启动Redis服务器
+10.2 连接服务器
+
+
+11 测试
+12 附录：Kotlin中的..." />
     <meta name="keywords" content="Redis,Demo,Spring Boot" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -80,7 +83,7 @@ Redis安装非常简单，以笔者的..." />
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1614145394520" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1614337073925" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -95,7 +98,7 @@ Redis安装非常简单，以笔者的..." />
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/spring-boot-demo-xi-lie-shi-redis-huan-cun.jpeg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2021-02-24"><i class="fa fa-calendar"></i><span class="lately">9 分钟前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2021-02-24"><i class="fa fa-calendar"></i><span class="lately">2 天前</span></time>
               
               <a href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-redis-huan-cun/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/spring-boot-demo-xi-lie-shi-redis-huan-cun/"> </span>
@@ -123,7 +126,38 @@ Redis安装非常简单，以笔者的..." />
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <h1 id="1-概述">1 概述</h1>
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-redis%E5%AE%89%E8%A3%85">3 <code>Redis</code>安装</a></li>
+<li><a href="#4-%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE">4 新建项目</a></li>
+<li><a href="#5-%E9%85%8D%E7%BD%AE%E7%B1%BB">5 配置类</a></li>
+<li><a href="#6-%E5%AE%9E%E4%BD%93%E7%B1%BB">6 实体类</a></li>
+<li><a href="#7-%E6%8C%81%E4%B9%85%E5%B1%82">7 持久层</a></li>
+<li><a href="#8-%E4%B8%9A%E5%8A%A1%E5%B1%82">8 业务层</a></li>
+<li><a href="#9-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">9 配置文件</a></li>
+<li><a href="#10-%E5%90%AF%E5%8A%A8redis">10 启动<code>Redis</code></a>
+<ul>
+<li><a href="#101-%E5%90%AF%E5%8A%A8redis%E6%9C%8D%E5%8A%A1%E5%99%A8">10.1 启动<code>Redis</code>服务器</a></li>
+<li><a href="#102-%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8">10.2 连接服务器</a></li>
+</ul>
+</li>
+<li><a href="#11-%E6%B5%8B%E8%AF%95">11 测试</a></li>
+<li><a href="#12-%E9%99%84%E5%BD%95kotlin%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%86%E8%8A%82">12 附录：<code>Kotlin</code>中的一些细节</a>
+<ul>
+<li><a href="#121-string%E6%95%B0%E7%BB%84">12.1 <code>String</code>数组</a></li>
+<li><a href="#122-class">12.2 <code>@class</code></a>
+<ul>
+<li><a href="#1221-%E6%89%8B%E5%8A%A8%E6%B7%BB%E5%8A%A0class">12.2.1 手动添加<code>@class</code></a></li>
+<li><a href="#1222-%E5%B0%86%E5%AE%9E%E4%BD%93%E7%B1%BB%E8%AE%BE%E7%BD%AE%E4%B8%BAopen">12.2.2 将实体类设置为<code>open</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#13-%E5%8F%82%E8%80%83%E6%BA%90%E7%A0%81">13 参考源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
 <p>本文演示了如何在<code>Spring Boot</code>中将<code>Redis</code>作为缓存使用，具体的内容包括：</p>
 <ul>
 <li>环境搭建</li>
@@ -427,6 +461,19 @@ data class User(var id:Int?=null, var name:String=&quot;&quot;)
 
             <section class="related section">
               
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-256-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-256-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-02-25">2021-02-25</time>
+                  <h4 class="title white no-margin">每日分享 第256期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
               
               <article class="next grid-50 tablet-grid-50 grid-parent">
                 <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-255-qi.jpg');"></div>
@@ -484,6 +531,36 @@ jQuery(document).ready(function($){
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-257-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-257-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-02-26">2021-02-26</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-257-qi/">每日分享 第257期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-256-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-256-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-02-25">2021-02-25</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-256-qi/">每日分享 第256期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-redis-huan-cun/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/spring-boot-demo-xi-lie-shi-redis-huan-cun.jpeg');"></span>
                     </a>
@@ -498,33 +575,7 @@ jQuery(document).ready(function($){
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-255-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-255-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-02-24">2021-02-24</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-255-qi/">每日分享 第255期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
-                  
-                  
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/jie-jue-docker-mysql-wu-fa-bei-su-zhu-ji-fang-wen-de-wen-ti/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jie-jue-docker-mysql-wu-fa-bei-su-zhu-ji-fang-wen-de-wen-ti.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-02-23">2021-02-23</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/jie-jue-docker-mysql-wu-fa-bei-su-zhu-ji-fang-wen-de-wen-ti/">解决Docker MySQL无法被宿主机访问的问题</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
@@ -1518,13 +1569,13 @@ jQuery(document).ready(function($){
                   <h4 class="widget-title title white bordered">标签云</h4>
                   <div class="tagcloud">
                     
-                      <a href="https://2293736867.github.io/tag/1bPjb7633/" class="ctag ctag-0 ctag-1bPjb7633" aria-label="">Redis</a>
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
-                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-1 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                      <a href="https://2293736867.github.io/tag/1bPjb7633/" class="ctag ctag-1 ctag-1bPjb7633" aria-label="">Redis</a>
                     
-                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-2 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-2 ctag-HhAuEu6wC" aria-label="">Demo</a>
                     
-                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-3 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
                     
                       <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-4 ctag-4z8YfVN_z" aria-label="">Docker</a>
                     
@@ -1781,7 +1832,7 @@ jQuery(document).ready(function($){
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 494 篇文章
+          ©2019 共 496 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>
