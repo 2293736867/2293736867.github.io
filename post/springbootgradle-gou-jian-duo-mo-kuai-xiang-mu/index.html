@@ -1,0 +1,1877 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SpringBoot+Gradle构建多模块项目 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 环境
+3 Java + Gradle
+
+3.1 创建项目
+3.2 修改build.gradle
+3.3 创建模块
+3.4 编写模块
+
+3.4.1 service模块
+3.4.2 app模块
+
+
+3.5 运行
+3.6 测试
+
+..." />
+    <meta name="keywords" content="Kotlin DSL,Gradle,Kotlin,Spring Boot,Java" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="/post/about" class="menu">
+                      关于
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1614689891341" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2021-03-02"><i class="fa fa-calendar"></i><span class="lately">4 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu/"> </span>
+              </a>
+              <span id="/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/jEhLpTJ4y/" class="ctag ctag-0 ctag-jEhLpTJ4y" aria-label="">Kotlin DSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-1 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-2 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-4 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">SpringBoot+Gradle构建多模块项目</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-java-gradle">3 <code>Java + Gradle</code></a>
+<ul>
+<li><a href="#31-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">3.1 创建项目</a></li>
+<li><a href="#32-%E4%BF%AE%E6%94%B9buildgradle">3.2 修改<code>build.gradle</code></a></li>
+<li><a href="#33-%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9D%97">3.3 创建模块</a></li>
+<li><a href="#34-%E7%BC%96%E5%86%99%E6%A8%A1%E5%9D%97">3.4 编写模块</a>
+<ul>
+<li><a href="#341-service%E6%A8%A1%E5%9D%97">3.4.1 <code>service</code>模块</a></li>
+<li><a href="#342-app%E6%A8%A1%E5%9D%97">3.4.2 <code>app</code>模块</a></li>
+</ul>
+</li>
+<li><a href="#35-%E8%BF%90%E8%A1%8C">3.5 运行</a></li>
+<li><a href="#36-%E6%B5%8B%E8%AF%95">3.6 测试</a></li>
+</ul>
+</li>
+<li><a href="#4-kotlin-gradle-kotlin-dsl">4 <code>Kotlin + Gradle + Kotlin DSL</code></a>
+<ul>
+<li><a href="#41-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">4.1 创建项目</a></li>
+<li><a href="#42-%E4%BF%AE%E6%94%B9buildgradlekts">4.2 修改<code>build.gradle.kts</code></a></li>
+<li><a href="#43-%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9D%97">4.3 创建模块</a></li>
+<li><a href="#44-%E7%BC%96%E5%86%99%E6%A8%A1%E5%9D%97">4.4 编写模块</a>
+<ul>
+<li><a href="#441-service%E6%A8%A1%E5%9D%97">4.4.1 <code>service</code>模块</a></li>
+<li><a href="#442-app%E6%A8%A1%E5%9D%97">4.4.2 <code>app</code>模块</a></li>
+</ul>
+</li>
+<li><a href="#45-%E8%BF%90%E8%A1%8C">4.5 运行</a></li>
+<li><a href="#46-%E6%B5%8B%E8%AF%95">4.6 测试</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5 总结</a></li>
+<li><a href="#6-%E6%BA%90%E7%A0%81">6 源码</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p><code>Gradle</code>由于构建速度比<code>Maven</code>快，且比<code>Maven</code>灵活，因此很多后端的应用都使用了<code>Gradle</code>进行构建，但一个问题是，<code>Gradle</code>的多模块项目比较难构建，再加上<code>Gradle</code>的更新非常快，这就给构建一个多模块<code>Gradle</code>项目造成了不少的困难。</p>
+<p>基于此出发点，本文提供了两种形式的使用<code>Gradle</code>构建的<code>Spring Boot</code>多模块项目：</p>
+<ul>
+<li><code>Java + Gradle</code></li>
+<li><code>Kotlin + Gradle + Kotlin DSL</code></li>
+</ul>
+<p>为了减少出现各种错误的概率，步骤做得非常详细（多图预警），文末也附上了源码，下面就一起来看看吧。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>Gradle 6.8.2</code></li>
+<li><code>Spring Boot 2.4.3</code></li>
+<li><code>Kotlin 1.4.30</code></li>
+<li><code>Open JDK 11</code></li>
+</ul>
+<h1 id="3-java-gradle">3 <code>Java + Gradle</code></h1>
+<p>主要步骤：</p>
+<ul>
+<li>使用<code>Spring Initializer</code>创建项目</li>
+<li>修改<code>build.gradle</code></li>
+<li>创建模块</li>
+<li>编写模块</li>
+<li>运行</li>
+<li>测试</li>
+</ul>
+<h2 id="31-创建项目">3.1 创建项目</h2>
+<p>直接使用<code>IDEA</code>提供的<code>Spring Initializer</code>即可，构建工具选择<code>Gradle</code>：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210302182258479.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>依赖：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210302203252834.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>构建完成后删除<code>src</code>目录</strong>，因为根目录属于管理模块目录不提供运行的应用：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210302182628108.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="32-修改buildgradle">3.2 修改<code>build.gradle</code></h2>
+<p>这是最复杂的一步，并且<code>Gradle</code>版本更新的话步骤可能会不一样，<strong>首先在底部添加一个空的<code>subprojects</code></strong>：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/2021030218292823.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着<strong>把<code>dependencies</code>以及<code>test</code>移动进去</strong>：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210302183050141.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后一步是，<strong>在<code>subprojects</code>开头，添加插件<code>apply</code>，根据默认初始化创建的<code>plugins</code>，逐一添加</strong>。</p>
+<p>比如这里默认使用了三个插件：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210302183301588.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>apply</code>到<code>subprojects</code>中：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210302183725544.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="33-创建模块">3.3 创建模块</h2>
+<p><code>File -&gt; New -&gt; Module</code>：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210302183544698.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>输入模块名即可，这里的例子是创建两个模块：</p>
+<ul>
+<li><strong><code>service</code></strong></li>
+<li><strong><code>app</code></strong></li>
+</ul>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/2021030218391243.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210302183958660.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>创建好后如图所示：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/2021030218410737.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>完成创建之后，<strong>把两个模块中的<code>build.gradle</code>除了<code>repositories</code>之外的全部删去</strong>，仅保留<code>repositories</code>：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20210302184254983.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20210302184353774.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="34-编写模块">3.4 编写模块</h2>
+<h3 id="341-service模块">3.4.1 <code>service</code>模块</h3>
+<p>首先<strong>创建包</strong>，根据根目录中的<code>group</code>创建：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/20210302184845857.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://img-blog.csdnimg.cn/20210302184922482.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着编写一个叫<code>TestService</code>的带<code>@Service</code>注解的类，里面包含一个<code>test</code>方法：</p>
+<figure data-type="image" tabindex="16"><img src="https://img-blog.csdnimg.cn/20210302185028647.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>同时修改<code>service</code>模块的<code>build.gradle</code>，<strong>添加<code>bootJar</code>以及<code>jar</code>选项</strong>：</p>
+<pre><code class="language-bash">bootJar{
+    enabled = false
+}
+
+jar{
+    enabled = true
+}
+</code></pre>
+<figure data-type="image" tabindex="17"><img src="https://img-blog.csdnimg.cn/20210302184713211.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="342-app模块">3.4.2 <code>app</code>模块</h3>
+<p>同样先根据根目录的<code>group</code><strong>创建包</strong>：</p>
+<figure data-type="image" tabindex="18"><img src="https://img-blog.csdnimg.cn/20210302185147370.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>接着在<code>app</code>模块的<code>build.gradle</code><strong>添加<code>service</code>模块的依赖</strong>：</p>
+<figure data-type="image" tabindex="19"><img src="https://img-blog.csdnimg.cn/20210302185447644.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再创建启动类以及一个<code>Controller</code>：</p>
+<figure data-type="image" tabindex="20"><img src="https://img-blog.csdnimg.cn/20210302185526487.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>代码如下：</p>
+<pre><code class="language-java">package com.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class,args);
+    }
+}
+</code></pre>
+<pre><code class="language-java">package com.example.controller;
+
+import com.example.service.TestService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class TestController {
+    private final TestService service;
+    @GetMapping(&quot;/test&quot;)
+    public String test(){
+        return service.test();
+    }
+}
+</code></pre>
+<h2 id="35-运行">3.5 运行</h2>
+<p>接下来就可以运行了，可以直接点击<code>Application</code>旁边的绿色小三角：</p>
+<figure data-type="image" tabindex="21"><img src="https://img-blog.csdnimg.cn/2021030218570925.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>或者从运行配置中选择<code>Application</code>运行（<code>IDEA</code>自动创建的，原来的那个<code>DemoApplication</code>带一个×是因为启动文件已经删除了，可以顺便把该配置删除）：</p>
+<figure data-type="image" tabindex="22"><img src="https://img-blog.csdnimg.cn/20210302185745193.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>没问题的话就可以成功运行了：</p>
+<figure data-type="image" tabindex="23"><img src="https://img-blog.csdnimg.cn/20210302185917750.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>同时浏览器访问<code>localhost:8080/test</code>会出现<code>test</code>字样：</p>
+<figure data-type="image" tabindex="24"><img src="https://img-blog.csdnimg.cn/20210302190006675.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="36-测试">3.6 测试</h2>
+<p>在创建测试类之前，也需要<strong>先创建包，且需要确保包名与启动类的包名一致</strong>：</p>
+<figure data-type="image" tabindex="25"><img src="https://img-blog.csdnimg.cn/20210302202906337.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再创建测试类：</p>
+<figure data-type="image" tabindex="26"><img src="https://img-blog.csdnimg.cn/20210302203102853.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<pre><code class="language-java">package com.example;
+
+import com.example.service.TestService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+public class JavaTest {
+    @Autowired
+    private TestService service;
+    @Test
+    public void test(){
+        System.out.println(service.test());
+    }
+}
+</code></pre>
+<p>接着进行测试：</p>
+<figure data-type="image" tabindex="27"><img src="https://img-blog.csdnimg.cn/20210302203048671.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样使用<code>Java</code>+<code>Gradle</code>构建一个多模块的<code>Spring Boot</code>项目就成功了。</p>
+<h1 id="4-kotlin-gradle-kotlin-dsl">4 <code>Kotlin + Gradle + Kotlin DSL</code></h1>
+<p><code>Kotlin DSL</code>在原生<code>Gradle</code>（<code>Groovy DSL</code>）的基础上进行改进，但同时语法也变得更加陌生，难度因此也加大了不少，不过这并没有难倒笔者。构建多模块的基本步骤与上面类似：</p>
+<ul>
+<li>使用<code>Spring Initializer</code>创建项目</li>
+<li>修改<code>build.gradle.kts</code></li>
+<li>创建模块</li>
+<li>编写模块</li>
+<li>运行</li>
+<li>测试</li>
+</ul>
+<h2 id="41-创建项目">4.1 创建项目</h2>
+<p>选择<code>Kotlin</code>+<code>Gradle</code>：</p>
+<figure data-type="image" tabindex="28"><img src="https://img-blog.csdnimg.cn/20210302191228379.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>依赖：</p>
+<figure data-type="image" tabindex="29"><img src="https://img-blog.csdnimg.cn/20210302191254471.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>同样<strong>删除<code>src</code></strong>：</p>
+<figure data-type="image" tabindex="30"><img src="https://img-blog.csdnimg.cn/20210302194145804.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-修改buildgradlekts">4.2 修改<code>build.gradle.kts</code></h2>
+<p>同样在尾部<strong>添加一个空的<code>subprojects</code></strong>：</p>
+<figure data-type="image" tabindex="31"><img src="https://img-blog.csdnimg.cn/20210302191442159.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>把<code>dependencies</code>以及<code>tasks</code>移动进去</strong>：</p>
+<figure data-type="image" tabindex="32"><img src="https://img-blog.csdnimg.cn/20210302191518343.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="33"><img src="https://img-blog.csdnimg.cn/20210302191614874.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后<strong>在<code>subprojects</code>开始处<code>apply</code>插件</strong>，<strong>根据默认的插件进行<code>apply</code></strong>：</p>
+<figure data-type="image" tabindex="34"><img src="https://img-blog.csdnimg.cn/20210302194246705.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>代码如下：</p>
+<pre><code class="language-bash">apply{
+    plugin(&quot;io.spring.dependency-management&quot;)
+    plugin(&quot;org.springframework.boot&quot;)
+    plugin(&quot;org.jetbrains.kotlin.plugin.spring&quot;)
+    plugin(&quot;org.jetbrains.kotlin.jvm&quot;)
+}
+</code></pre>
+<p><strong><code>plugins</code>中的<code>kotlin</code>是<code>org.jetbrains.kotlin</code>的简写</strong>，在<code>subprjects</code>中注意加上即可。</p>
+<h2 id="43-创建模块">4.3 创建模块</h2>
+<p><code>File -&gt; New -&gt; Module</code>，把一些必要选项勾选上：</p>
+<figure data-type="image" tabindex="35"><img src="https://img-blog.csdnimg.cn/20210302194457119.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里同样创建两个模块：</p>
+<ul>
+<li><code>app</code></li>
+<li><code>service</code></li>
+</ul>
+<figure data-type="image" tabindex="36"><img src="https://img-blog.csdnimg.cn/2021030219454215.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://img-blog.csdnimg.cn/20210302194600752.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>同样把两个模块中的**<code>build.gradle.kts</code>删除其他部分留下<code>repositories</code>**：</p>
+<figure data-type="image" tabindex="38"><img src="https://img-blog.csdnimg.cn/2021030219473681.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="44-编写模块">4.4 编写模块</h2>
+<h3 id="441-service模块">4.4.1 <code>service</code>模块</h3>
+<p>首先根据根目录的<code>build.gradle.kts</code><strong>创建包</strong>：</p>
+<figure data-type="image" tabindex="39"><img src="https://img-blog.csdnimg.cn/2021030219485442.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="40"><img src="https://img-blog.csdnimg.cn/20210302194928711.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>编写<code>TestService</code>：</p>
+<figure data-type="image" tabindex="41"><img src="https://img-blog.csdnimg.cn/20210302195018197.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>最后修改<code>build.gradle.kts</code>，<strong>加上<code>tasks.bootJar</code>与<code>tasks.jar</code></strong>：</p>
+<pre><code class="language-bash">tasks.bootJar{
+    enabled = false
+}
+
+tasks.jar{
+    enabled = true
+}
+</code></pre>
+<figure data-type="image" tabindex="42"><img src="https://img-blog.csdnimg.cn/20210302195205578.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="442-app模块">4.4.2 <code>app</code>模块</h3>
+<p>先<strong>创建包</strong>：</p>
+<figure data-type="image" tabindex="43"><img src="https://img-blog.csdnimg.cn/20210302195304362.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><strong>添加对<code>service</code>模块的依赖</strong>：</p>
+<figure data-type="image" tabindex="44"><img src="https://img-blog.csdnimg.cn/20210302195354683.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再创建一个启动类以及一个<code>Controller</code>：</p>
+<figure data-type="image" tabindex="45"><img src="https://img-blog.csdnimg.cn/20210302195607272.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>代码如下：</p>
+<pre><code class="language-kotlin">package com.example
+
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
+
+@SpringBootApplication
+class Application
+
+fun main(args:Array&lt;String&gt;) {
+    SpringApplication.run(Application::class.java,*args)
+}
+</code></pre>
+<pre><code class="language-kotlin">package com.example.controller
+
+import com.example.service.TestService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+class TestController {
+    @Autowired
+    lateinit var service: TestService
+    @GetMapping(&quot;/test&quot;)
+    fun test() = service.test()
+}
+</code></pre>
+<h2 id="45-运行">4.5 运行</h2>
+<p>点击<code>main</code>旁边的绿色小三角即可：</p>
+<figure data-type="image" tabindex="46"><img src="https://img-blog.csdnimg.cn/20210302195715732.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>运行成功：</p>
+<figure data-type="image" tabindex="47"><img src="https://img-blog.csdnimg.cn/2021030219575668.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>同样可以访问<code>localhost:8080/test</code>：</p>
+<figure data-type="image" tabindex="48"><img src="https://img-blog.csdnimg.cn/20210302195852323.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="46-测试">4.6 测试</h2>
+<p>注意在编写测试之前需要保证测试类与启动类在同一个包下，也就是需要<strong>先创建包</strong>：</p>
+<figure data-type="image" tabindex="49"><img src="https://img-blog.csdnimg.cn/20210302201002664.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再创建测试类：</p>
+<figure data-type="image" tabindex="50"><img src="https://img-blog.csdnimg.cn/20210302201052939.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<pre><code class="language-kotlin">package com.example
+
+import com.example.service.TestService
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+
+@SpringBootTest
+class KotlinTest {
+    @Autowired
+    lateinit var service: TestService
+    @Test
+    fun test(){
+        println(service.test())
+    }
+}
+</code></pre>
+<p>直接点击小三角测试即可：</p>
+<figure data-type="image" tabindex="51"><img src="https://img-blog.csdnimg.cn/20210302201159661.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>测试通过，这样<code>Kotlin+Gradle+Kotlin DSL</code>的多模块<code>Spring Boot</code>项目就算创建完成了。</p>
+<h1 id="5-总结">5 总结</h1>
+<p>笔者在实践的过程中也遇到了无数的错误，比如找不到类，或者<code>build.gradle</code>/<code>build.gradle.kts</code>文件错误，幸好有万能的搜索引擎，帮笔者解决了错误，最后才成功写下这篇文章。</p>
+<p>总的来说，<code>Gradle</code>创建多模块项目要比<code>Maven</code>要难，而且<code>Gradle</code>的更新速度很快，语法变化较大，相比之下<code>Maven</code>非常稳定，最新的<code>Maven 3.6.3</code>还是19年11月发布的，然而<code>Gradle</code>都准备<code>7.0</code>了：</p>
+<figure data-type="image" tabindex="52"><img src="https://img-blog.csdnimg.cn/20210302201723618.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="53"><img src="https://img-blog.csdnimg.cn/20210302201753711.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>笔者建议，如果是真的需要使用<code>Gradle</code>，需要考虑一下团队的状况，毕竟上手难度要大于<code>Maven</code>，如果在<code>Gradle</code>创建多模块的过程中遇到一些极其难以解决的问题，转为<code>Maven</code>不失为一个好办法。</p>
+<h1 id="6-源码">6 源码</h1>
+<p>附上两个例子的源码：</p>
+<ul>
+<li><a href="https://github.com/2293736867/JavaAndKotlinMultiModulesGradleSpringBootProjectDemo">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/JavaAndKotlinMultiModulesGradleSpringBootProjectDemo">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/JavaAndKotlinMultiModulesGradleSpringBootProjectDemo">CODE CHINA</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/jvm-xue-xi-bi-ji-yi-jvm-chu-tan.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-yi-jvm-chu-tan/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-03-02">2021-03-02</time>
+                  <h4 class="title white no-margin">JVM学习笔记（一）：JVM初探</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                <div class="clear"></div>
+<script>
+jQuery(document).ready(function($){
+    $('.vemoji-btn').text('😀');
+    $("#comments").on('click', 'span.vat',function(){
+        $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+        $('textarea#veditor').focus();
+    })
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+                $('html, body').animate({scrollTop: $(window.location.hash).offset().top-200}, 600);
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+})
+</script>
+
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-03-02">2021-03-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/springbootgradle-gou-jian-duo-mo-kuai-xiang-mu/">SpringBoot+Gradle构建多模块项目</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-yi-jvm-chu-tan/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jvm-xue-xi-bi-ji-yi-jvm-chu-tan.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-03-02">2021-03-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-yi-jvm-chu-tan/">JVM学习笔记（一）：JVM初探</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/sha256sum-xi-lie-ming-ling-jian-ce-wen-jian-wan-zheng-xing/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/sha256sum-xi-lie-ming-ling-jian-ce-wen-jian-wan-zheng-xing.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-03-02">2021-03-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/sha256sum-xi-lie-ming-ling-jian-ce-wen-jian-wan-zheng-xing/">SHA256sum系列命令检测文件完整性</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/jEhLpTJ4y/" class="ctag ctag-0 ctag-jEhLpTJ4y" aria-label="">Kotlin DSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-1 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-2 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-3 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-4 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hmN5f1Dgf/" class="ctag ctag-5 ctag-hmN5f1Dgf" aria-label="">JVM</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j27TsowsQ/" class="ctag ctag-6 ctag-j27TsowsQ" aria-label="">SHA256</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-7 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/1bPjb7633/" class="ctag ctag-8 ctag-1bPjb7633" aria-label="">Redis</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-9 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-10 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-11 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-12 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/k_kTITP45/" class="ctag ctag-13 ctag-k_kTITP45" aria-label="">WebStorm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OykyL0ueI/" class="ctag ctag-14 ctag-OykyL0ueI" aria-label="">Vue3</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lAlW3LzZy/" class="ctag ctag-15 ctag-lAlW3LzZy" aria-label="">Vite</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-16 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/3qNOu3uvC/" class="ctag ctag-17 ctag-3qNOu3uvC" aria-label="">pyenv</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-18 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-19 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-20 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-21 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HaIBKIG-Y/" class="ctag ctag-22 ctag-HaIBKIG-Y" aria-label="">Debian</a>
+                    
+                      <a href="https://2293736867.github.io/tag/fFCOUCKJji/" class="ctag ctag-23 ctag-fFCOUCKJji" aria-label="">MyCLI</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ODfvYwg3O/" class="ctag ctag-24 ctag-ODfvYwg3O" aria-label="">地图</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YdNb8nB1n/" class="ctag ctag-25 ctag-YdNb8nB1n" aria-label="">Element-Plus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/87dRXt1l_8/" class="ctag ctag-26 ctag-87dRXt1l_8" aria-label="">Echarts</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-27 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TFZz0NHYM/" class="ctag ctag-28 ctag-TFZz0NHYM" aria-label="">Token</a>
+                    
+                      <a href="https://2293736867.github.io/tag/v6JZElgCrM/" class="ctag ctag-29 ctag-v6JZElgCrM" aria-label="">ECC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sYkFqGm0dQ/" class="ctag ctag-30 ctag-sYkFqGm0dQ" aria-label="">ECDSA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8dOYqqfXPD/" class="ctag ctag-31 ctag-8dOYqqfXPD" aria-label="">Auth0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bK7AXA8PC/" class="ctag ctag-32 ctag-bK7AXA8PC" aria-label="">Vue.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/NxCZbHQqot/" class="ctag ctag-33 ctag-NxCZbHQqot" aria-label="">Node.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Nr-J-3R61V/" class="ctag ctag-34 ctag-Nr-J-3R61V" aria-label="">SHA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SqY3UeW8b/" class="ctag ctag-35 ctag-SqY3UeW8b" aria-label="">Github</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-36 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lE7-ZBoCn/" class="ctag ctag-37 ctag-lE7-ZBoCn" aria-label="">MongoDB</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-38 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/mIpAXBTpr/" class="ctag ctag-39 ctag-mIpAXBTpr" aria-label="">虚拟机</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-40 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/PPNnoV579/" class="ctag ctag-41 ctag-PPNnoV579" aria-label="">CUDA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eGsE7XySYo/" class="ctag ctag-42 ctag-eGsE7XySYo" aria-label="">PyTorch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-43 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-44 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-45 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-46 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-47 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-48 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-49 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-50 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-51 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-52 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-53 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-54 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-55 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-56 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-57 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-58 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-59 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-60 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-61 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-62 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-63 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-64 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-65 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-66 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-67 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-68 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-69 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-70 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-71 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-72 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-73 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-74 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-75 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-76 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-77 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-78 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-79 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-80 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-81 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-82 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-83 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-84 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-85 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-86 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-87 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-88 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-89 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-90 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-91 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-92 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-93 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-94 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-95 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-96 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-97 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-98 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-99 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-100 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-101 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-102 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-103 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-104 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-105 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-106 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-107 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-108 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-109 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-110 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-111 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8EbOHbvZf/" class="ctag ctag-112 ctag-8EbOHbvZf" aria-label="">about</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 502 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: false // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>
