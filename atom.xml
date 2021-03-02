@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-03-01T04:33:24.862Z</updated>
+    <updated>2021-03-02T03:16:25.123Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,53 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[SHA256sum系列命令检测文件完整性]]></title>
+        <id>https://2293736867.github.io/post/sha256sum-xi-lie-ming-ling-jian-ce-wen-jian-wan-zheng-xing/</id>
+        <link href="https://2293736867.github.io/post/sha256sum-xi-lie-ming-ling-jian-ce-wen-jian-wan-zheng-xing/">
+        </link>
+        <updated>2021-03-02T03:15:03.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-sha256sum">1 <code>sha256sum</code></h1>
+<p><code>sha256sum</code>是一个检测文件完整性的命令，一般下载的文件都会附带一个哈希值，使用<code>sha256sum</code>计算下载文件的哈希值再与目标哈希值比较即可确定文件是否完整，类似的命令还有：</p>
+<ul>
+<li><code>md5sum</code></li>
+<li><code>sha1sum</code></li>
+<li><code>sha224sum</code></li>
+<li><code>sha384sum</code></li>
+<li><code>sha512sum</code></li>
+</ul>
+<h1 id="2-安装">2 安装</h1>
+<p>该系列命令在一个叫<code>coreutils</code>的包内，一般<code>Linux</code>都会安装，没有的话可以从软件包仓库安装，以笔者系统<code>Manjaro</code>为例：</p>
+<pre><code class="language-bash">paru -S coreutils
+</code></pre>
+<p>另外目前最新的<code>SHA</code>算法为<code>SHA3</code>，需要使用<code>SHA3</code>的话可以安装<code>sha3sum</code>：</p>
+<pre><code class="language-bash">paru -S sha3sum
+</code></pre>
+<h1 id="3-使用">3 使用</h1>
+<p>使用很简单，命令后面直接加上对应的文件，即可计算哈希值，以<a href="https://jdk.java.net/java-se-ri/15">OpenJDK</a>为例：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210301221955176.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>文件旁边有一个<code>sha256</code>的值，先把文件下载，使用<code>sha256sum</code>计算：</p>
+<pre><code class="language-bash">sha256sum openjdk-15+36_linux-x64_bin.tar.gz
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210301222200204.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>然后下一步就是比较给出的<code>sha256</code>，没理由手动一个一个比较吧？</p>
+<p>可以直接使用下面的命令去比较：</p>
+<pre><code class="language-bash">echo &quot;bb67cadee687d7b486583d03c9850342afea4593be4f436044d785fba9508fb7 openjdk-15+36_linux-x64_bin.tar.gz&quot; | sha256sum --check
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210301222615349.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>格式为：</p>
+<pre><code class="language-bash">echo &quot;sha256哈希值 文件名&quot; | sha256sum --check
+</code></pre>
+<p>如果不匹配，会显示<code>checksum did NOT match</code>：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210301222726136.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果哈希值存在于文件中，可以使用下面的命令：</p>
+<pre><code class="language-bash">echo &quot;$(cat 哈希值文件名) 待比较的文件&quot; | sha256sum --check
+</code></pre>
+<p>比如：</p>
+<pre><code class="language-bash">echo &quot;$(cat sha256) openjdk-15+36_linux-x64_bin.tar.gz&quot; | sha256sum --check
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第260期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-260-qi/</id>
@@ -520,27 +567,6 @@ create user test@172.17.0.1 identified by 'test';
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>我们把世界看错，反说它欺骗了我们。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第253期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-253-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-253-qi/">
-        </link>
-        <updated>2021-02-22T02:52:04.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>从今天开始，接受来自三大姑八大姨，灵魂的拷问。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>坐睡觉来无一事，满窗晴日看蚕生。<br>
-——范成大《春日田园杂兴》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>知识有两种，一种是你知道的，一种是你知道在哪里能找到的。</p>
 </blockquote>
 ]]></content>
     </entry>
