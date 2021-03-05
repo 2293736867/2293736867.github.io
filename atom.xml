@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-03-03T23:17:38.262Z</updated>
+    <updated>2021-03-05T03:55:56.762Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,509 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[JVM学习笔记（三）：JVM基本参数]]></title>
+        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-san-jvm-ji-ben-can-shu/</id>
+        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-san-jvm-ji-ben-can-shu/">
+        </link>
+        <updated>2021-03-05T03:49:44.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%9D%A5%E6%BA%90">1 来源</a></li>
+<li><a href="#2-gc%E6%97%A5%E5%BF%97-xloggc">2 <code>GC</code>日志：<code>-Xlog:gc</code></a></li>
+<li><a href="#3-%E7%B3%BB%E7%BB%9F%E5%8F%82%E6%95%B0%E6%89%93%E5%8D%B0">3 系统参数打印</a></li>
+<li><a href="#4-%E5%A0%86%E5%8F%82%E6%95%B0">4 堆参数</a>
+<ul>
+<li><a href="#41-%E6%9C%80%E5%A4%A7%E5%A0%86%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%A0%86%E5%8F%82%E6%95%B0">4.1 最大堆与初始堆参数</a></li>
+<li><a href="#42-%E6%96%B0%E7%94%9F%E4%BB%A3%E5%8F%82%E6%95%B0">4.2 新生代参数</a></li>
+<li><a href="#43-%E5%A0%86%E6%BA%A2%E5%87%BA%E5%A4%84%E7%90%86">4.3 堆溢出处理</a></li>
+</ul>
+</li>
+<li><a href="#5-%E9%9D%9E%E5%A0%86%E5%8F%82%E6%95%B0">5 非堆参数</a>
+<ul>
+<li><a href="#51-%E6%96%B9%E6%B3%95%E5%8C%BA">5.1 方法区</a></li>
+<li><a href="#52-%E6%A0%88">5.2 栈</a></li>
+<li><a href="#53-%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98">5.3 直接内存</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-来源">1 来源</h1>
+<ul>
+<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
+<li>章节：第三章</li>
+</ul>
+<p>本文是第三章的一些笔记整理。</p>
+<h1 id="2-gc日志-xloggc">2 <code>GC</code>日志：<code>-Xlog:gc</code></h1>
+<p>要打印<code>GC</code>日志的话，可以加上<code>-Xlog:gc</code>参数（<code>JDK8</code>及以下请使用<code>-XX:+PrintGC</code>），开启<code>GC</code>打印后，每次<code>GC</code>就会打印如下的日志（<code>OpenJDK11 -Xlog:gc</code>）：</p>
+<pre><code class="language-bash">[0.126s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 25M-&gt;0M(502M) 1.902ms
+[0.205s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 300M-&gt;0M(502M) 4.174ms
+[0.236s][info][gc] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 300M-&gt;0M(502M) 2.067ms
+[0.268s][info][gc] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 300M-&gt;0M(502M) 2.362ms
+</code></pre>
+<p>其中开头的时间表示发生<code>GC</code>的时刻，<code>25M-&gt;0M(502M)</code>表示：</p>
+<ul>
+<li><code>GC</code>前，堆使用量为<code>25M</code></li>
+<li><code>GC</code>后，堆使用量为<code>0M</code></li>
+<li>堆空间总和约为<code>502M</code></li>
+</ul>
+<p>末尾的时间表示本次<code>GC</code>的耗时。</p>
+<p>另外如果需要更加详细的参数，可以使用<code>-Xlog:gc*</code>（<code>JDK8</code>及以下请使用<code>-XX:+PrintGCDetails</code>），比如下面是一部分的<code>GC</code>日志（<code>-Xlog:gc*</code>）：</p>
+<pre><code class="language-bash">[0.137s][info][gc,start     ] GC(0) Pause Young (Normal) (G1 Evacuation Pause)
+[0.138s][info][gc,task      ] GC(0) Using 10 workers of 10 for evacuation
+[0.147s][info][gc,phases    ] GC(0)   Pre Evacuate Collection Set: 0.0ms
+[0.147s][info][gc,phases    ] GC(0)   Evacuate Collection Set: 8.8ms
+[0.147s][info][gc,phases    ] GC(0)   Post Evacuate Collection Set: 0.2ms
+[0.147s][info][gc,phases    ] GC(0)   Other: 0.8ms
+[0.147s][info][gc,heap      ] GC(0) Eden regions: 25-&gt;0(300)
+[0.147s][info][gc,heap      ] GC(0) Survivor regions: 0-&gt;1(4)
+[0.147s][info][gc,heap      ] GC(0) Old regions: 0-&gt;0
+[0.147s][info][gc,heap      ] GC(0) Humongous regions: 0-&gt;0
+[0.147s][info][gc,metaspace ] GC(0) Metaspace: 6633K-&gt;6633K(1056768K)
+[0.147s][info][gc           ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 25M-&gt;0M(502M) 9.878ms
+[0.147s][info][gc,cpu       ] GC(0) User=0.05s Sys=0.00s Real=0.01s
+</code></pre>
+<ul>
+<li>行首的时间：事件发生的时刻</li>
+<li><code>GC(0)</code>：这是第1次<code>GC</code>，接着会有<code>GC(1)</code>、<code>GC(2)</code></li>
+<li><code>Pause Young（Normal）</code>：这次<code>GC</code>回收了新生代</li>
+<li><code>Using 10 workers</code>：使用10个工作线程</li>
+<li><code>Pre Evacuate Collection Set</code>/<code>Evacuate Collection Set</code>/<code>Post Evacuate</code>/<code>Other</code>：表示<code>G1</code>垃圾回收标记，清除算法不同阶段所花费的时间</li>
+<li><code>Eden/Survivor/Old/Humongous/Metaspace</code>：分别表示<code>eden区</code>、<code>存活区</code>、<code>老年区</code>、<code>巨型对象区</code>（就是很大很大的对象所在的区域）、<code>元数据区</code>在<code>GC</code>前后的大小</li>
+<li><code>25M-0M(502M)</code>：<code>GC</code>前堆占用<code>25M</code>，<code>GC</code>后为<code>0M</code>，可用堆空间为<code>502M</code></li>
+<li><code>User/Sys/Real</code>：分别表示<code>用户态CPU耗时</code>、<code>系统CPU耗时</code>、<code>GC真实经历时间</code></li>
+</ul>
+<p>如果想查看更全面的堆信息，可以使用<code>Visual VM</code>，将在后续文章中叙述。</p>
+<p>另外如果需要将日志持久化，可以使用<code>-Xlog:gc:gc.log</code>。</p>
+<h1 id="3-系统参数打印">3 系统参数打印</h1>
+<p>参数<code>-XX:+PrintVMOptinos</code>可以打印运行时接收到的显式参数，而<code>-XX:+PrintCommandLineFlags</code>可以打印传递给<code>JVM</code>的隐式与显式参数：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210304094815957.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>另外一个参数是<code>-XX:+PrintFlagsFinal</code>，会打印所有系统参数的值（数量很多）：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210304094936823.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-堆参数">4 堆参数</h1>
+<h2 id="41-最大堆与初始堆参数">4.1 最大堆与初始堆参数</h2>
+<p><code>Java</code>进程启动时，虚拟机就会分配一块初始堆空间，可以使用参数<code>-Xms</code>指定这块空间的初始化大小。一般来说虚拟机会尽可能维持在初始堆空间范围内运行，但是如果初始堆空间耗尽，虚拟机会将堆空间进行扩展，扩展上限为最大堆空间，最大堆空间可以使用参数<code>-Xmx</code>指定。</p>
+<p>来一段代码测试一下：</p>
+<pre><code class="language-java">public class Main {
+
+    public static void main(String[] args){
+        printMemory();
+
+        byte [] bytes = new byte[1*1024*1024];
+        System.out.println(&quot;Allocate 1024 KB array&quot;);
+        printMemory();
+
+        bytes = new byte[4*1024*1024];
+        System.out.println(&quot;Allocate 4096 KB array&quot;);
+        printMemory();
+    }
+
+    public static void printMemory(){
+        System.out.println();
+        System.out.println(&quot;Max memory = &quot; + Runtime.getRuntime().maxMemory() / 1024+ &quot; KB&quot;);
+        System.out.println(&quot;Free memory = &quot;+Runtime.getRuntime().freeMemory()/1024+ &quot; KB&quot;);
+        System.out.println(&quot;Total memory = &quot; + Runtime.getRuntime().totalMemory()/ 1024+ &quot; KB&quot;);
+        System.out.println();
+    }
+}
+</code></pre>
+<p>参数：</p>
+<pre><code class="language-bash">-Xmx20m
+-Xms5m
+-XX:+PrintCommandLineFlags
+-Xlog:gc*
+-XX:+UseSerialGC
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">-XX:InitialHeapSize=5242880 -XX:MaxHeapSize=20971520 -XX:+PrintCommandLineFlags -XX:+PrintGCDetails -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseSerialGC 
+[0.002s][info   ][gc] Using Serial
+[0.002s][info   ][gc,heap,coops] Heap address: 0x00000000fec00000, size: 20 MB, Compressed Oops mode: 32-bit
+
+[0.110s][info   ][gc,start     ] GC(0) Pause Young (Allocation Failure)
+[0.112s][info   ][gc,heap      ] GC(0) DefNew: 1664K-&gt;192K(1856K)
+[0.112s][info   ][gc,heap      ] GC(0) Tenured: 0K-&gt;598K(4096K)
+[0.112s][info   ][gc,metaspace ] GC(0) Metaspace: 6436K-&gt;6436K(1056768K)
+[0.112s][info   ][gc           ] GC(0) Pause Young (Allocation Failure) 1M-&gt;0M(5M) 2.069ms
+[0.112s][info   ][gc,cpu       ] GC(0) User=0.00s Sys=0.00s Real=0.01s
+Max memory = 19840 KB
+Free memory = 4797 KB
+Total memory = 5952 KB
+
+Allocate 1024 KB array
+
+Max memory = 19840 KB
+Free memory = 3773 KB
+Total memory = 5952 KB
+
+[0.128s][info   ][gc,start     ] GC(1) Pause Young (Allocation Failure)
+[0.129s][info   ][gc,start     ] GC(2) Pause Full (Allocation Failure)
+[0.129s][info   ][gc,phases,start] GC(2) Phase 1: Mark live objects
+[0.130s][info   ][gc,phases      ] GC(2) Phase 1: Mark live objects 1.366ms
+[0.130s][info   ][gc,phases,start] GC(2) Phase 2: Compute new object addresses
+[0.130s][info   ][gc,phases      ] GC(2) Phase 2: Compute new object addresses 0.235ms
+[0.130s][info   ][gc,phases,start] GC(2) Phase 3: Adjust pointers
+[0.131s][info   ][gc,phases      ] GC(2) Phase 3: Adjust pointers 0.624ms
+[0.131s][info   ][gc,phases,start] GC(2) Phase 4: Move objects
+[0.131s][info   ][gc,phases      ] GC(2) Phase 4: Move objects 0.042ms
+[0.131s][info   ][gc             ] GC(2) Pause Full (Allocation Failure) 1M-&gt;1M(5M) 2.335ms
+[0.131s][info   ][gc,heap        ] GC(1) DefNew: 1579K-&gt;0K(1856K)
+[0.131s][info   ][gc,heap        ] GC(1) Tenured: 598K-&gt;1899K(4096K)
+[0.131s][info   ][gc,metaspace   ] GC(1) Metaspace: 6624K-&gt;6624K(1056768K)
+[0.131s][info   ][gc             ] GC(1) Pause Young (Allocation Failure) 2M-&gt;1M(5M) 3.636ms
+[0.131s][info   ][gc,cpu         ] GC(1) User=0.00s Sys=0.01s Real=0.00s
+Allocate 4096 KB array
+
+Max memory = 19840 KB
+Free memory = 4087 KB
+Total memory = 10116 KB
+
+[0.133s][info   ][gc,heap,exit   ] Heap
+[0.133s][info   ][gc,heap,exit   ]  def new generation   total 1920K, used 44K [0x00000000fec00000, 0x00000000fee10000, 0x00000000ff2a0000)
+[0.133s][info   ][gc,heap,exit   ]   eden space 1728K,   2% used [0x00000000fec00000, 0x00000000fec0b198, 0x00000000fedb0000)
+[0.133s][info   ][gc,heap,exit   ]   from space 192K,   0% used [0x00000000fedb0000, 0x00000000fedb0000, 0x00000000fede0000)
+[0.133s][info   ][gc,heap,exit   ]   to   space 192K,   0% used [0x00000000fede0000, 0x00000000fede0000, 0x00000000fee10000)
+[0.133s][info   ][gc,heap,exit   ]  tenured generation   total 8196K, used 5995K [0x00000000ff2a0000, 0x00000000ffaa1000, 0x0000000100000000)
+[0.133s][info   ][gc,heap,exit   ]    the space 8196K,  73% used [0x00000000ff2a0000, 0x00000000ff87aed0, 0x00000000ff87b000, 0x00000000ffaa1000)
+[0.133s][info   ][gc,heap,exit   ]  Metaspace       used 6640K, capacity 6723K, committed 7040K, reserved 1056768K
+[0.133s][info   ][gc,heap,exit   ]   class space    used 590K, capacity 623K, committed 640K, reserved 1048576K
+</code></pre>
+<p>最大内存由<code>-XX:MaxHeapSize</code>指定，该值为<code>-Xmx</code>的值，也就是<code>20 * 1024 * 1024</code>，而打印的最大可用内存为<code>20316160</code>，比设定的值少，这是因为分配给堆的内存空间与实际可用的内存空间并不是同一个概念，由于<code>GC</code>的需要，虚拟机会对堆空间进行分区管理，不同的区会采用不同的回收算法，一些算法会使用空间换时间的策略，因此会存在损失，最终的结果是实际可用内存会浪费大小等于<code>from</code>/<code>to</code>的空间，从输出可以知道：</p>
+<pre><code class="language-bash">[0.139s][info][gc,heap,exit   ]   from space 192K,   0% used [0x00000000fedb0000, 0x00000000fedb0000, 0x00000000fede0000)
+</code></pre>
+<p><code>from</code>的大小为<code>192k</code>，但是实际情况是最大可用内存<code>19840k</code>+<code>from</code>的<code>192k</code>=<code>20032k</code>，并不是分配的内存<code>20480k</code>，这是因为虚拟机会对<code>from</code>/<code>to</code>进行对齐，将最大可用内存加上对齐后的<code>from</code>/<code>to</code>即得到分配的内存大小。</p>
+<p>另外，打印显示，初始运行空闲内存<code>4797k</code>，分配一个<code>1024k</code>数组后，空闲内存为<code>3773k</code>，正好符合，接着分配<code>4096k</code>，因为内存不足，对堆空间进行扩展后再分配，扩展后的堆大小为<code>10116k</code>。</p>
+<p>在实际工作中，可以将<code>-Xms</code>与<code>-Xmx</code>设置为相同，这样可以减少运行时的<code>GC</code>次数，提高性能。</p>
+<h2 id="42-新生代参数">4.2 新生代参数</h2>
+<p><code>-Xmn</code>可以设置新生代的大小，设置一个较大的新生代会减小老年代的大小，这个参数堆<code>GC</code>有很大影响，一般设置为堆空间的<code>1/3-1/4</code>。参数<code>-XX:SurvivorRatio</code>，也就是幸存区比例，可用来设置<code>eden区</code>与<code>from/to区</code>的比例，相当于：</p>
+<pre><code class="language-bash">-XX:SurvivorRatio=eden/from=eden/to
+</code></pre>
+<p>一个简单的例子如下：</p>
+<pre><code class="language-java">public static void main(String[] args){
+    byte [] b = null;
+    for (int i = 0; i &lt; 10; i++) {
+        b = new byte[1*1024*1024] ;
+    }
+}
+</code></pre>
+<p>参数：</p>
+<pre><code class="language-bash">-Xmx20m
+-Xms20m
+-Xmn1m
+-XX:SurvivorRatio=2
+-Xlog:gc*
+-XX:+UseSerialGC
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">[0.002s][info][gc] Using Serial
+[0.002s][info][gc,heap,coops] Heap address: 0x00000000fec00000, size: 20 MB, Compressed Oops mode: 32-bit
+[0.042s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
+[0.044s][info][gc,heap      ] GC(0) DefNew: 512K-&gt;256K(768K)
+[0.044s][info][gc,heap      ] GC(0) Tenured: 0K-&gt;172K(19456K)
+[0.044s][info][gc,metaspace ] GC(0) Metaspace: 3871K-&gt;3871K(1056768K)
+[0.044s][info][gc           ] GC(0) Pause Young (Allocation Failure) 0M-&gt;0M(19M) 1.617ms
+[0.044s][info][gc,cpu       ] GC(0) User=0.01s Sys=0.00s Real=0.00s
+[0.064s][info][gc,start     ] GC(1) Pause Young (Allocation Failure)
+[0.065s][info][gc,heap      ] GC(1) DefNew: 767K-&gt;76K(768K)
+[0.065s][info][gc,heap      ] GC(1) Tenured: 172K-&gt;425K(19456K)
+[0.065s][info][gc,metaspace ] GC(1) Metaspace: 4518K-&gt;4518K(1056768K)
+[0.065s][info][gc           ] GC(1) Pause Young (Allocation Failure) 0M-&gt;0M(19M) 0.870ms
+[0.065s][info][gc,cpu       ] GC(1) User=0.00s Sys=0.00s Real=0.00s
+[0.093s][info][gc,heap,exit ] Heap
+[0.093s][info][gc,heap,exit ]  def new generation   total 768K, used 562K [0x00000000fec00000, 0x00000000fed00000, 0x00000000fed00000)
+[0.093s][info][gc,heap,exit ]   eden space 512K,  94% used [0x00000000fec00000, 0x00000000fec79730, 0x00000000fec80000)
+[0.093s][info][gc,heap,exit ]   from space 256K,  29% used [0x00000000fec80000, 0x00000000fec93260, 0x00000000fecc0000)
+[0.093s][info][gc,heap,exit ]   to   space 256K,   0% used [0x00000000fecc0000, 0x00000000fecc0000, 0x00000000fed00000)
+[0.093s][info][gc,heap,exit ]  tenured generation   total 19456K, used 10665K [0x00000000fed00000, 0x0000000100000000, 0x0000000100000000)
+[0.093s][info][gc,heap,exit ]    the space 19456K,  54% used [0x00000000fed00000, 0x00000000ff76a630, 0x00000000ff76a800, 0x0000000100000000)
+[0.093s][info][gc,heap,exit ]  Metaspace       used 6190K, capacity 6251K, committed 6528K, reserved 1056768K
+[0.093s][info][gc,heap,exit ]   class space    used 535K, capacity 570K, committed 640K, reserved 1048576K
+</code></pre>
+<p><code>eden区</code>与<code>from区</code>的比值为<code>2:1</code>，因此<code>eden区</code>为<code>512K</code>，总可用新生代大小为<code>512K+256K=768K</code>，新生代总大小为<code>512K+256K+256K=1M</code>，由于<code>eden</code>区无法容纳分配<code>1MB</code>数组，因此触发了新生代<code>GC</code>，所有数组分配在了老年代。</p>
+<p>而如果使用<code>-Xmn7m</code>（其他参数保持不变），输出如下：</p>
+<pre><code class="language-bash">[0.003s][info][gc] Using Serial
+[0.003s][info][gc,heap,coops] Heap address: 0x00000000fec00000, size: 20 MB, Compressed Oops mode: 32-bit
+[0.096s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
+[0.097s][info][gc,heap      ] GC(0) DefNew: 2684K-&gt;1752K(5376K)
+[0.097s][info][gc,heap      ] GC(0) Tenured: 0K-&gt;0K(13312K)
+[0.097s][info][gc,metaspace ] GC(0) Metaspace: 5929K-&gt;5929K(1056768K)
+[0.097s][info][gc           ] GC(0) Pause Young (Allocation Failure) 2M-&gt;1M(18M) 1.350ms
+[0.097s][info][gc,cpu       ] GC(0) User=0.00s Sys=0.00s Real=0.00s
+[0.098s][info][gc,start     ] GC(1) Pause Young (Allocation Failure)
+[0.099s][info][gc,heap      ] GC(1) DefNew: 4928K-&gt;1024K(5376K)
+[0.099s][info][gc,heap      ] GC(1) Tenured: 0K-&gt;727K(13312K)
+[0.099s][info][gc,metaspace ] GC(1) Metaspace: 5996K-&gt;5996K(1056768K)
+[0.099s][info][gc           ] GC(1) Pause Young (Allocation Failure) 4M-&gt;1M(18M) 1.142ms
+[0.099s][info][gc,cpu       ] GC(1) User=0.01s Sys=0.00s Real=0.00s
+[0.100s][info][gc,start     ] GC(2) Pause Young (Allocation Failure)
+[0.100s][info][gc,heap      ] GC(2) DefNew: 4180K-&gt;1024K(5376K)
+[0.100s][info][gc,heap      ] GC(2) Tenured: 727K-&gt;728K(13312K)
+[0.100s][info][gc,metaspace ] GC(2) Metaspace: 6008K-&gt;6008K(1056768K)
+[0.100s][info][gc           ] GC(2) Pause Young (Allocation Failure) 4M-&gt;1M(18M) 0.190ms
+[0.100s][info][gc,cpu       ] GC(2) User=0.00s Sys=0.00s Real=0.00s
+[0.100s][info][gc,heap,exit ] Heap
+[0.100s][info][gc,heap,exit ]  def new generation   total 5376K, used 4211K [0x00000000fec00000, 0x00000000ff300000, 0x00000000ff300000)
+[0.100s][info][gc,heap,exit ]   eden space 3584K,  88% used [0x00000000fec00000, 0x00000000fef1cc00, 0x00000000fef80000)
+[0.100s][info][gc,heap,exit ]   from space 1792K,  57% used [0x00000000ff140000, 0x00000000ff2402a0, 0x00000000ff300000)
+[0.100s][info][gc,heap,exit ]   to   space 1792K,   0% used [0x00000000fef80000, 0x00000000fef80000, 0x00000000ff140000)
+[0.100s][info][gc,heap,exit ]  tenured generation   total 13312K, used 728K [0x00000000ff300000, 0x0000000100000000, 0x0000000100000000)
+[0.100s][info][gc,heap,exit ]    the space 13312K,   5% used [0x00000000ff300000, 0x00000000ff3b61f8, 0x00000000ff3b6200, 0x0000000100000000)
+[0.100s][info][gc,heap,exit ]  Metaspace       used 6034K, capacity 6091K, committed 6272K, reserved 1056768K
+[0.100s][info][gc,heap,exit ]   class space    used 518K, capacity 538K, committed 640K, reserved 1048576K
+</code></pre>
+<p>此参数下，<code>eden区</code>有足够的空间，所有数组分配在<code>eden</code>区，但是不足以预留<code>10M</code>空间，因此产生了<code>GC</code>，每次申请空间也废弃了上一次申请的空间，在新生代<code>GC</code>中有效回收了这些内存，最后的结果是所有内存分配都在新生代进行，只是在<code>GC</code>过程中部分新生代对象晋升到了老年代。</p>
+<p>再次增大新生代，使用<code>-Xmn15m -XX:SurvivorRatio=8</code>（其他参数不变），输出如下：</p>
+<pre><code class="language-bash">[0.003s][info][gc] Using Serial
+[0.003s][info][gc,heap,coops] Heap address: 0x00000000fec00000, size: 20 MB, Compressed Oops mode: 32-bit
+start
+[0.097s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
+[0.099s][info][gc,heap      ] GC(0) DefNew: 11416K-&gt;1471K(13696K)
+[0.099s][info][gc,heap      ] GC(0) Tenured: 0K-&gt;294K(5312K)
+[0.099s][info][gc,metaspace ] GC(0) Metaspace: 6103K-&gt;6103K(1056768K)
+[0.099s][info][gc           ] GC(0) Pause Young (Allocation Failure) 11M-&gt;1M(18M) 2.322ms
+[0.099s][info][gc,cpu       ] GC(0) User=0.00s Sys=0.00s Real=0.01s
+end
+[0.099s][info][gc,heap,exit ] Heap
+[0.099s][info][gc,heap,exit ]  def new generation   total 13696K, used 2934K [0x00000000fec00000, 0x00000000ffad0000, 0x00000000ffad0000)
+[0.099s][info][gc,heap,exit ]   eden space 12224K,  11% used [0x00000000fec00000, 0x00000000fed6d908, 0x00000000ff7f0000)
+[0.099s][info][gc,heap,exit ]   from space 1472K,  99% used [0x00000000ff960000, 0x00000000ffacfff8, 0x00000000ffad0000)
+[0.099s][info][gc,heap,exit ]   to   space 1472K,   0% used [0x00000000ff7f0000, 0x00000000ff7f0000, 0x00000000ff960000)
+[0.099s][info][gc,heap,exit ]  tenured generation   total 5312K, used 294K [0x00000000ffad0000, 0x0000000100000000, 0x0000000100000000)
+[0.099s][info][gc,heap,exit ]    the space 5312K,   5% used [0x00000000ffad0000, 0x00000000ffb19960, 0x00000000ffb19a00, 0x0000000100000000)
+[0.099s][info][gc,heap,exit ]  Metaspace       used 6164K, capacity 6251K, committed 6528K, reserved 1056768K
+[0.099s][info][gc,heap,exit ]   class space    used 532K, capacity 570K, committed 640K, reserved 1048576K
+</code></pre>
+<p>可以看到新生代使用<code>15M</code>空间，<code>eden区</code>占了<code>12288K</code>，完全满足了<code>10MB</code>需要，并没有发生<code>GC</code>（日志的<code>GC</code>只是在<code>for</code>循环结束后产生的，一次性回收了<code>10M</code>）。</p>
+<p>实际工作中，应根据系统的特点，做合理的设置，基本策略是：</p>
+<ul>
+<li>尽可能将对象预留在新生代</li>
+<li>减少老年代<code>GC</code>次数</li>
+</ul>
+<p>另外，可以使用<code>-XX:NewRatio=老年代/新生代</code>指定新生代和老年代的比例，比如使用参数：</p>
+<pre><code class="language-bash">-Xmx20m
+-Xms20m
+-XX:NewRatio=2
+-Xlog:gc*
+-XX:+UseSerialGC
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">[0.005s][info][gc] Using Serial
+[0.005s][info][gc,heap,coops] Heap address: 0x00000000fec00000, size: 20 MB, Compressed Oops mode: 32-bit
+[0.096s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
+[0.097s][info][gc,heap      ] GC(0) DefNew: 4852K-&gt;639K(6144K)
+[0.097s][info][gc,heap      ] GC(0) Tenured: 0K-&gt;1112K(13696K)
+[0.097s][info][gc,metaspace ] GC(0) Metaspace: 5905K-&gt;5905K(1056768K)
+[0.097s][info][gc           ] GC(0) Pause Young (Allocation Failure) 4M-&gt;1M(19M) 1.413ms
+[0.097s][info][gc,cpu       ] GC(0) User=0.00s Sys=0.00s Real=0.00s
+[0.098s][info][gc,start     ] GC(1) Pause Young (Allocation Failure)
+[0.099s][info][gc,heap      ] GC(1) DefNew: 5920K-&gt;0K(6144K)
+[0.099s][info][gc,heap      ] GC(1) Tenured: 1112K-&gt;2776K(13696K)
+[0.099s][info][gc,metaspace ] GC(1) Metaspace: 5970K-&gt;5970K(1056768K)
+[0.099s][info][gc           ] GC(1) Pause Young (Allocation Failure) 6M-&gt;2M(19M) 1.129ms
+[0.099s][info][gc,cpu       ] GC(1) User=0.00s Sys=0.01s Real=0.00s
+[0.100s][info][gc,heap,exit ] Heap
+[0.100s][info][gc,heap,exit ]  def new generation   total 6144K, used 2238K [0x00000000fec00000, 0x00000000ff2a0000, 0x00000000ff2a0000)
+[0.100s][info][gc,heap,exit ]   eden space 5504K,  40% used [0x00000000fec00000, 0x00000000fee2f690, 0x00000000ff160000)
+[0.100s][info][gc,heap,exit ]   from space 640K,   0% used [0x00000000ff160000, 0x00000000ff160398, 0x00000000ff200000)
+[0.100s][info][gc,heap,exit ]   to   space 640K,   0% used [0x00000000ff200000, 0x00000000ff200000, 0x00000000ff2a0000)
+[0.100s][info][gc,heap,exit ]  tenured generation   total 13696K, used 2776K [0x00000000ff2a0000, 0x0000000100000000, 0x0000000100000000)
+[0.100s][info][gc,heap,exit ]    the space 13696K,  20% used [0x00000000ff2a0000, 0x00000000ff556250, 0x00000000ff556400, 0x0000000100000000)
+[0.100s][info][gc,heap,exit ]  Metaspace       used 5998K, capacity 6091K, committed 6272K, reserved 1056768K
+[0.100s][info][gc,heap,exit ]   class space    used 517K, capacity 538K, committed 640K, reserved 1048576K
+</code></pre>
+<p>堆大小为<code>20M</code>，新生代和老年代的比为<code>1:2</code>，因此新生代大小约为<code>7M</code>，老年代为<code>13M</code>，分配<code>1M</code>时，由于<code>from/to</code>空间不足，导致两个<code>1MB</code>的数组进入了老年代。</p>
+<h2 id="43-堆溢出处理">4.3 堆溢出处理</h2>
+<p>如果在<code>Java</code>程序运行过程中，堆空间不足，会抛出内存溢出错误，也就是常见的<code>OOM</code>。想要分析原因，可以使用参数<code>-XX:+HeapDumpOnOutOfMemoryError</code>，可以在内存溢出时导出整个堆的信息，配合使用的还有<code>-XX:HeapDumpPath</code>，指定导出堆的存放路径，例子如下：</p>
+<pre><code class="language-java">public static void main(String[] args){
+    List&lt;byte[]&gt; list = new ArrayList&lt;&gt;();
+    for (int i = 0; i &lt; 25; i++) {
+        list.add(new byte[1*1024*1024]);
+    }
+}
+</code></pre>
+<p>参数：</p>
+<pre><code class="language-bash">-Xmx20m
+-Xms5m
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=out.dump
+</code></pre>
+<p>例子分配了<code>25M</code>的内存，但是堆只有<code>20M</code>，会抛出<code>OOM</code>，并且文件保存到<code>out.dump</code>中，注意该文件是二进制文件，需要使用专业的工具（如<code>MAT</code>等）查看。</p>
+<h1 id="5-非堆参数">5 非堆参数</h1>
+<h2 id="51-方法区">5.1 方法区</h2>
+<p>从<code>JDK8</code>开始，永久区被移除，使用了新的元数据区来存放类的元数据，默认情况下，元数据区受系统可用内存的限制，但是仍然可以使用<code>-XX:MaxMetaspaceSize</code>指定永久区的最大可用值。</p>
+<h2 id="52-栈">5.2 栈</h2>
+<p>栈是每个线程私有的空间，可以使用<code>-Xss</code>指定线程的栈大小，具体在<a href="https://blog.csdn.net/qq_27525611/article/details/114308179?spm=1001.2014.3001.5501">笔者之前的文章中</a>。</p>
+<h2 id="53-直接内存">5.3 直接内存</h2>
+<p>直接内存跳过了<code>Java堆</code>，可以使得程序直接访问原生堆空间，在一定程度上加快了内存空间的访问速度。最大可用直接内存可以使用<code>-XX:MaxDirectMemorySize</code>设置，如果不设置，默认为最大堆空间，即<code>-Xmx</code>的值，当直接内存使用量到达最大值时，会触发<code>GC</code>，如果<code>GC</code>后不能有效释放足够的空间，直接内存依然会引起系统的<code>OOM</code>。</p>
+<p>下面测试一下直接内存与堆的速度：</p>
+<pre><code class="language-java">public class Main {
+
+    public static final int count = 1000000;
+
+    public static void directAccess(){
+        long start = System.currentTimeMillis();
+        ByteBuffer b = ByteBuffer.allocateDirect(500);
+        for(int i=0;i&lt;count;++i){
+            for (int j = 0; j &lt; 99; j++) {
+                b.putInt(j) ;
+            }
+            b.flip();
+            for (int j = 0; j &lt; 99; j++) {
+                b.getInt();
+            }
+            b.clear();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(&quot;Direct access: &quot;+(end-start)+&quot; ms&quot;);
+    }
+
+    public static void bufferAccess(){
+        long start = System.currentTimeMillis();
+        ByteBuffer b = ByteBuffer.allocate(500);
+        for(int i=0;i&lt;count;++i){
+            for (int j = 0; j &lt; 99; j++) {
+                b.putInt(j) ;
+            }
+            b.flip();
+            for (int j = 0; j &lt; 99; j++) {
+                b.getInt();
+            }
+            b.clear();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(&quot;Buffer access: &quot;+(end-start)+&quot; ms&quot;);
+    }
+
+
+    public static void main(String[] args){
+        directAccess();
+        bufferAccess();
+
+        directAccess();
+        bufferAccess();
+    }
+}
+</code></pre>
+<p>输出（不带任何参数）：</p>
+<pre><code class="language-bash">Direct access: 167 ms
+Buffer access: 70 ms
+Direct access: 176 ms
+Buffer access: 67 ms
+</code></pre>
+<p>直接内存的访问速度要快于堆内存，但是有一个缺点就是申请的时候速度慢：</p>
+<pre><code class="language-java">public static void directAllocate(){
+    long start = System.currentTimeMillis();
+    for (int i = 0; i &lt; count; i++) {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1000);
+    }
+    long end = System.currentTimeMillis();
+    System.out.println(&quot;Direct allocate: &quot;+(end-start)+&quot; ms&quot;);
+}
+
+public static void bufferAllocate(){
+    long start = System.currentTimeMillis();
+    for (int i = 0; i &lt; count; i++) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1000);
+    }
+    long end = System.currentTimeMillis();
+    System.out.println(&quot;Buffer allocate: &quot;+(end-start)+&quot; ms&quot;);
+}
+
+
+public static void main(String[] args){
+    directAllocate();
+    bufferAllocate();
+
+    directAllocate();
+    bufferAllocate();
+}
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">Direct allocate: 867 ms
+Buffer allocate: 287 ms
+Direct allocate: 676 ms
+Buffer allocate: 208 ms
+</code></pre>
+<p>简单来说，直接内存适合申请次数较少、访问较频繁的场合，如果需要频繁申请内存空间，并不适合使用直接内存。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第264期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-264-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-264-qi/">
+        </link>
+        <updated>2021-03-05T03:46:31.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>穷不要紧，抬头挺胸让大家看看，你不仅穷还丑还矮。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>斜风细雨作春寒，对尊前，忆前欢。<br>
+——朱淑真《江城子·赏春》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>如果不被畏惧，神又何以为神。</p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[字节面试流程概览]]></title>
+        <id>https://2293736867.github.io/post/zi-jie-mian-shi-liu-cheng-gai-lan/</id>
+        <link href="https://2293736867.github.io/post/zi-jie-mian-shi-liu-cheng-gai-lan/">
+        </link>
+        <updated>2021-03-04T00:24:52.000Z</updated>
+        <content type="html"><![CDATA[<p><s>很水的一篇，勿喷。。。。</s></p>
+<h1 id="1-流程">1 流程</h1>
+<ul>
+<li>网申</li>
+<li>网测</li>
+<li>面试</li>
+<li>入职</li>
+</ul>
+<h1 id="2-网申">2 网申</h1>
+<p>先头先筛，建议早点投但不用太早。</p>
+<p>至于内推，本质上是没有什么区别，也是需要经历面试等阶段，只是企业的一种多渠道招人手段。</p>
+<p>网申选岗阶段，可以选两个岗位，彼此独立，不限制投递时间。</p>
+<p>可以根据不同的岗位准备不同的简历。</p>
+<h1 id="3-网测">3 网测</h1>
+<p>技术岗位的网测包括：</p>
+<ul>
+<li>编程题</li>
+<li>单选题</li>
+<li>多选题</li>
+</ul>
+<p>建议的策略是提前了解题型，掌握解题思路，针对性练习。</p>
+<h1 id="4-面试">4 面试</h1>
+<p>面试分为单面与群面。</p>
+<h2 id="41-单面">4.1 单面</h2>
+<p>一般3轮：</p>
+<ul>
+<li>部门经理：考察岗位胜任力（也就是技术）以及是否招人喜欢（面试技巧）</li>
+<li>部门总监：岗位胜任力（深层），以及是否招人喜欢（面试技巧）</li>
+<li><code>HR</code>：动机、忠诚度</li>
+</ul>
+<p>建议策略：</p>
+<ul>
+<li>经历提炼（写好简历）</li>
+<li>提前准备</li>
+<li>面试必考问题提前准备，不断打磨优化</li>
+</ul>
+<p>难点：</p>
+<ul>
+<li>经历讲不明白</li>
+<li>讲的经历面试官不感兴趣</li>
+</ul>
+<p>总结：</p>
+<ul>
+<li>不准备：99%挂</li>
+<li>准备了：未必能过，因为有可能别人比你准备得更好，与分数线同一个道理，你的分数比人低，自然上不去</li>
+</ul>
+<h2 id="42-群面">4.2 群面</h2>
+<p>群面就是把一群面试者组成一个团队去进行面试。</p>
+<p>群面不一定要当<code>Leader</code>，<a href="https://www.zhihu.com/question/339135205/answer/781010654">参考</a>。</p>
+<p>群面需要找准自己的定位，如果你认为自己适合当<code>Leader</code>，那就争取<code>Leader</code>的角色。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第263期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-263-qi/</id>
@@ -919,69 +1422,6 @@ cd openjdk
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>我又不是因为你们的评价才去当的英雄，是因为我想当才去当的。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第260期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-260-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-260-qi/">
-        </link>
-        <updated>2021-03-01T03:42:26.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>没有什么事情能把人一次击倒，只要足够坚强，它会持续的把你击倒！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>料想春光先到处，吹绽梅英。<br>
-——苏轼《浪淘沙·探春》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>再凶的男孩子，绑鞋带还不是要系蝴蝶结。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第259期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-259-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-259-qi/">
-        </link>
-        <updated>2021-02-28T10:07:55.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>马云成功跟长相没关系，姜尚成功跟年龄没关系，而成功跟你没关系。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>日暮苍山远，天寒白屋贫。<br>
-——刘长卿《逢雪宿芙蓉山主人》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>正因为不会发生，人们才称它为“奇迹”。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第258期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-258-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-258-qi/">
-        </link>
-        <updated>2021-02-27T01:46:43.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>有些事，不说是个结，说了是个疤。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>把酒祝东风，且共从容。<br>
-——欧阳修《浪淘沙·把酒祝东风》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>不管什么时候，能够改变世界的人都是一心追逐梦想的人。</p>
 </blockquote>
 ]]></content>
     </entry>
