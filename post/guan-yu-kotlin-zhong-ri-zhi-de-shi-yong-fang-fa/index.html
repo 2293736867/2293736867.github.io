@@ -20,8 +20,8 @@
 想必学过Java的人都知道一个@Slf4j使用得多么的舒服：
 @Slf4j
 public class TestController{
-	@GetMapping(&quot;/test&quot;)
-	public String t..." />
+	    @GetMapping(&quot;/test&quot;)
+        publ..." />
     <meta name="keywords" content="Slf4j,Log,Kotlin" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -77,7 +77,7 @@ public class TestController{
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1615919875759" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1615920624875" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -92,7 +92,7 @@ public class TestController{
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/guan-yu-kotlin-zhong-ri-zhi-de-shi-yong-fang-fa.png');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2021-03-17"><i class="fa fa-calendar"></i><span class="lately">8 分钟前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2021-03-17"><i class="fa fa-calendar"></i><span class="lately">14 分钟前</span></time>
               
               <a href="https://2293736867.github.io/post/guan-yu-kotlin-zhong-ri-zhi-de-shi-yong-fang-fa/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/guan-yu-kotlin-zhong-ri-zhi-de-shi-yong-fang-fa/"> </span>
@@ -124,11 +124,11 @@ public class TestController{
 <p>想必学过<code>Java</code>的人都知道一个<code>@Slf4j</code>使用得多么的舒服：</p>
 <pre><code class="language-java">@Slf4j
 public class TestController{
-	@GetMapping(&quot;/test&quot;)
-	public String test(){
-		log.debug(&quot;debug&quot;);		
-		return &quot;test&quot;;
-	}
+	    @GetMapping(&quot;/test&quot;)
+        public String test(){
+		        log.debug(&quot;debug&quot;);		
+		        return &quot;test&quot;;
+	    }
 }
 </code></pre>
 <p>但是很不幸在<code>Kotlin</code>中并没有这种注解，因此，本文给出了一种类似<code>@Slf4j</code>注解在<code>Kotlin</code>中的使用方法，以及介绍一个100%使用<code>Kotlin</code>编写的日志库。</p>
@@ -140,10 +140,10 @@ import org.slf4j.LoggerFactory
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Slf4j{
-    companion object{
-        val &lt;reified T&gt; T.log: Logger
-        inline get() = LoggerFactory.getLogger(T::class.java)
-    }
+        companion object{
+                val &lt;reified T&gt; T.log: Logger
+                inline get() = LoggerFactory.getLogger(T::class.java)
+        }
 }
 </code></pre>
 <p>逐行解释如下：</p>
@@ -159,11 +159,11 @@ annotation class Slf4j{
 <pre><code class="language-kotlin">@RestController
 @Slf4j
 class TestController {
-    @GetMapping(&quot;/test&quot;)
-    fun test():String{
-        log.warn(&quot;cc&quot;)
-        return &quot;test&quot;
-    }
+        @GetMapping(&quot;/test&quot;)
+        fun test():String{
+                log.warn(&quot;cc&quot;)
+                return &quot;test&quot;
+        }
 }
 </code></pre>
 <p>直接类上加一个注解，就可以使用<code>log.info</code>/<code>log.warn</code>之类的方法了。</p>
@@ -173,9 +173,9 @@ class TestController {
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210317014610620.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>依赖如下：</p>
 <pre><code class="language-xml">&lt;dependency&gt;
-	&lt;groupId&gt;io.github.microutils&lt;/groupId&gt;
-	&lt;artifactId&gt;kotlin-logging-jvm&lt;/artifactId&gt;
-	&lt;version&gt;2.0.6&lt;/version&gt;
+        &lt;groupId&gt;io.github.microutils&lt;/groupId&gt;
+        &lt;artifactId&gt;kotlin-logging-jvm&lt;/artifactId&gt;
+        &lt;version&gt;2.0.6&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 <p><code>Gradle</code>：</p>
@@ -188,10 +188,10 @@ class TestController {
 <pre><code class="language-kotlin">import mu.KotlinLogging
 private val logger = KotlinLogging.logger {} 
 class FooWithLogging {
-    val message = &quot;world&quot;
-    fun bar() {
-        logger.debug { &quot;hello $message&quot; }
-    }
+        val message = &quot;world&quot;
+        fun bar() {
+                logger.debug { &quot;hello $message&quot; }
+        }
 }
 </code></pre>
 <h1 id="4-两者结合使用">4 两者结合使用</h1>
@@ -210,10 +210,10 @@ import org.slf4j.Logger
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Slf4j{
-    companion object{
-        val &lt;reified T&gt; T.log: Logger
-        inline get() = KotlinLogging.logger{T::class.java.name}
-    }
+        companion object{
+                val &lt;reified T&gt; T.log: Logger
+                inline get() = KotlinLogging.logger{T::class.java.name}
+        }
 }
 </code></pre>
 <p>使用方法同上，直接加一个<code>@Slf4j</code>即可使用。</p>

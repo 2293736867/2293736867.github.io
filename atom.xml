@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-03-16T18:44:09.488Z</updated>
+    <updated>2021-03-16T18:50:28.863Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -21,11 +21,11 @@
 <p>想必学过<code>Java</code>的人都知道一个<code>@Slf4j</code>使用得多么的舒服：</p>
 <pre><code class="language-java">@Slf4j
 public class TestController{
-	@GetMapping(&quot;/test&quot;)
-	public String test(){
-		log.debug(&quot;debug&quot;);		
-		return &quot;test&quot;;
-	}
+	    @GetMapping(&quot;/test&quot;)
+        public String test(){
+		        log.debug(&quot;debug&quot;);		
+		        return &quot;test&quot;;
+	    }
 }
 </code></pre>
 <p>但是很不幸在<code>Kotlin</code>中并没有这种注解，因此，本文给出了一种类似<code>@Slf4j</code>注解在<code>Kotlin</code>中的使用方法，以及介绍一个100%使用<code>Kotlin</code>编写的日志库。</p>
@@ -37,10 +37,10 @@ import org.slf4j.LoggerFactory
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Slf4j{
-    companion object{
-        val &lt;reified T&gt; T.log: Logger
-        inline get() = LoggerFactory.getLogger(T::class.java)
-    }
+        companion object{
+                val &lt;reified T&gt; T.log: Logger
+                inline get() = LoggerFactory.getLogger(T::class.java)
+        }
 }
 </code></pre>
 <p>逐行解释如下：</p>
@@ -56,11 +56,11 @@ annotation class Slf4j{
 <pre><code class="language-kotlin">@RestController
 @Slf4j
 class TestController {
-    @GetMapping(&quot;/test&quot;)
-    fun test():String{
-        log.warn(&quot;cc&quot;)
-        return &quot;test&quot;
-    }
+        @GetMapping(&quot;/test&quot;)
+        fun test():String{
+                log.warn(&quot;cc&quot;)
+                return &quot;test&quot;
+        }
 }
 </code></pre>
 <p>直接类上加一个注解，就可以使用<code>log.info</code>/<code>log.warn</code>之类的方法了。</p>
@@ -70,9 +70,9 @@ class TestController {
 <figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210317014610620.png" alt="在这里插入图片描述" loading="lazy"></figure>
 <p>依赖如下：</p>
 <pre><code class="language-xml">&lt;dependency&gt;
-	&lt;groupId&gt;io.github.microutils&lt;/groupId&gt;
-	&lt;artifactId&gt;kotlin-logging-jvm&lt;/artifactId&gt;
-	&lt;version&gt;2.0.6&lt;/version&gt;
+        &lt;groupId&gt;io.github.microutils&lt;/groupId&gt;
+        &lt;artifactId&gt;kotlin-logging-jvm&lt;/artifactId&gt;
+        &lt;version&gt;2.0.6&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 <p><code>Gradle</code>：</p>
@@ -85,10 +85,10 @@ class TestController {
 <pre><code class="language-kotlin">import mu.KotlinLogging
 private val logger = KotlinLogging.logger {} 
 class FooWithLogging {
-    val message = &quot;world&quot;
-    fun bar() {
-        logger.debug { &quot;hello $message&quot; }
-    }
+        val message = &quot;world&quot;
+        fun bar() {
+                logger.debug { &quot;hello $message&quot; }
+        }
 }
 </code></pre>
 <h1 id="4-两者结合使用">4 两者结合使用</h1>
@@ -107,10 +107,10 @@ import org.slf4j.Logger
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Slf4j{
-    companion object{
-        val &lt;reified T&gt; T.log: Logger
-        inline get() = KotlinLogging.logger{T::class.java.name}
-    }
+        companion object{
+                val &lt;reified T&gt; T.log: Logger
+                inline get() = KotlinLogging.logger{T::class.java.name}
+        }
 }
 </code></pre>
 <p>使用方法同上，直接加一个<code>@Slf4j</code>即可使用。</p>
