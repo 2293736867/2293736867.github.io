@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-03-22T23:18:13.560Z</updated>
+    <updated>2021-03-23T04:38:42.581Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,97 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[解决Github访问速度慢以及图片加载慢的问题]]></title>
+        <id>https://2293736867.github.io/post/jie-jue-github-fang-wen-su-du-man-yi-ji-tu-pian-jia-zai-man-de-wen-ti/</id>
+        <link href="https://2293736867.github.io/post/jie-jue-github-fang-wen-su-du-man-yi-ji-tu-pian-jia-zai-man-de-wen-ti/">
+        </link>
+        <updated>2021-03-23T04:28:44.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-前言">1 前言</h1>
+<p><s>众所周知</s><code>Github</code>在国内的访问速度一直都不怎么样，主要的原因是<code>DNS</code>解析太慢了，也就是从<code>github.com</code>获取<code>IP</code>的过程太慢了，因此，一种最有效的办法是直接修改本地<code>Hosts</code>，饶过<code>DNS</code>解析。</p>
+<p>这也是本文的出发点，虽然，这样的文章网上有很多，百度一搜出来基本上都是如下的套路：</p>
+<ul>
+<li>通过<code>IP</code>解析网站得到<code>github.com</code>的<code>IP</code>/直接给出某个<code>IP</code></li>
+<li>修改本地<code>Hosts</code></li>
+<li>刷新缓存</li>
+</ul>
+<p>当然，这样最大的一个坏处是当<code>IP</code>更新的时候每次都需要去修改<code>Hosts</code>，非常麻烦。受到<a href="https://github.com/521xueweihan/GitHub520">该仓库</a>的启发，本文提供了一种自动修改的方法，非常方便。</p>
+<p>本文主要分成两个部分介绍：</p>
+<ul>
+<li>手动修改<code>Hosts</code></li>
+<li>通过工具自动修改<code>Hosts</code></li>
+</ul>
+<p>首先看一下第一部分。</p>
+<h1 id="2-手动修改hosts">2 手动修改<code>Hosts</code></h1>
+<h2 id="21-修改hosts">2.1 修改<code>Hosts</code></h2>
+<p>首先打开<a href="https://github.com/521xueweihan/GitHub520">该仓库</a>：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210323104956954.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>复制其中的内容到<code>Hosts</code>文件中，各大平台<code>Hosts</code>文件位置如下：</p>
+<ul>
+<li><code>Windows</code>：<code>C:\Windows\System32\drivers\etc\hosts</code></li>
+<li><code>Linux</code>：<code>/etc/hosts</code></li>
+<li><code>Mac</code>：<code>/etc/hosts</code></li>
+<li><code>Android</code>：<code>/system/etc/hosts</code></li>
+<li><code>iOS</code>：<code>/etc/hosts</code></li>
+</ul>
+<p>根据对应平台修改上述的文件，添加内容到<code>Hosts</code>末尾即可。</p>
+<h2 id="22-使hosts生效">2.2 使<code>Hosts</code>生效</h2>
+<p>大部分情况下修改完<code>Hosts</code>文件后直接生效，如果不生效，可以尝试手动刷新<code>DNS</code>缓存，具体如下：</p>
+<ul>
+<li><code>Windows</code>：打开<code>cmd</code>，输入<code>ipconfig /flushdns</code></li>
+<li><code>Linux</code>：<code>sudo rcnscd restart</code></li>
+<li><code>Mac</code>：<code>sudo killall -HUP mDNSResponder</code></li>
+</ul>
+<p>如果不生效可以尝试重启机器。</p>
+<h1 id="3-自动方式推荐">3 自动方式（推荐）</h1>
+<p>上面的方式需要手动修改<code>Hosts</code>文件，非常麻烦，这里推荐一种自动修改的方式。</p>
+<p>在此之前需要一个工具：<code>SwitchHosts</code>。</p>
+<h2 id="31-switchhosts安装">3.1 <code>SwitchHosts</code>安装</h2>
+<p>官方仓库在<a href="https://github.com/oldj/SwitchHosts">此处</a>，直接到<code>Release</code>下载即可。</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210323105839503.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>或者从软件包仓库安装，以笔者的<code>Manjaro</code>为例：</p>
+<pre><code class="language-bash">paru -S switchhosts-bin
+</code></pre>
+<h2 id="32-配置">3.2 配置</h2>
+<p>打开后，点击左下角的加号按钮，添加一个新的规则：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210323110926924.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>内容如下：</p>
+<ul>
+<li>标题：随便</li>
+<li>类型：<code>Remote</code></li>
+<li><code>URL</code>：<code>https://cdn.jsdelivr.net/gh/521xueweihan/GitHub520@main/hosts</code></li>
+<li>自动刷新时间：第一次添加可以先选择<code>1 minute</code>，有了规则以后，就可以选择<code>1 hour</code></li>
+</ul>
+<p>配置好后就可以看到了：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210323111137241.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="33-一个小问题">3.3 一个小问题</h2>
+<p>笔者在实测的时候发现如果直接通过启动菜单启动<code>SwitchHosts</code>，添加新的规则老是失败：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210323111256850.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>无论输入的是用户的密码还是<code>root</code>的密码都不行。</p>
+<p>于是笔者找了一下启动命令，直接<code>sudo</code>启动：</p>
+<pre><code class="language-bash">sudo switchhosts
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2021032311140535.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>启动失败，按照提示加上<code>--no-sandbox</code>（这是一个<code>eletron</code>的参数）：</p>
+<pre><code class="language-bash">sudo switchhosts --no-sandbox
+</code></pre>
+<p>需要注意在启动之前需要把原来普通模式启动的<code>SwitchHosts</code>先退出了，不然会提示端口占用：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210323111606707.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>启动之后就可以直接修改<code>Hosts</code>而不需要密码了。</p>
+<p>另外这里有一个小细节就是两种模式下（普通模式/<code>sudo</code>模式）启动的图标不一样：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210323111626701.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210323111748541.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-效果">4 效果</h1>
+<p>配置好<code>DNS</code>后应该能正常访问<code>Github</code>上的图片了：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/2021032312153795.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-后记">5 后记</h1>
+<p>通过上面的配置<code>DNS</code>方法应该就可以顺利访问<code>Github</code>了，此外，该仓库还介绍了另一种自动配置<code>DNS</code>的方式：<code>AdGuard Home</code>：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20210323121702657.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于笔者没有用过就不说这个了。最后，该仓库还有一个<code>TODO</code>：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20210323121802315.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>希望最后一项内容尽快完成吧。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第282期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-282-qi/</id>
@@ -198,9 +289,9 @@
         <link href="https://2293736867.github.io/post/linux-shi-yong-gong-ju-he-ji-chi-xu-geng-xin-zhong/">
         </link>
         <updated>2021-03-19T09:00:00.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="2021322-更新">2021.3.22 更新</h1>
-<h1 id="linux-系列">Linux 系列</h1>
-<h2 id="实用工具">实用工具</h2>
+        <content type="html"><![CDATA[<h1 id="2021323-更新">2021.3.23 更新</h1>
+<h1 id="1-linux-系列">1 Linux 系列</h1>
+<h2 id="11-实用工具">1.1 实用工具</h2>
 <ul>
 <li><code>shellcheck</code>：<code>shell</code>检查工具</li>
 <li><code>rhit</code>：<code>Nginx</code>日志检查工具</li>
@@ -212,14 +303,21 @@
 <ul>
 <li><code>t-rec</code>：终端命令录制工具（准确来说可以录制任何窗口，指定即可）</li>
 <li><code>Syncthing</code>：<code>Go</code>语言写的文件同步器，支持三大平台</li>
+<li><code>Kooha</code>：<code>Gnome</code>下的录屏工具，笔者的<code>Xfce</code>不支持，遗憾了</li>
 </ul>
-<h2 id="好玩的东东">好玩的东东</h2>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1616467430932.png" alt="" loading="lazy"></figure>
+<h2 id="12-好玩的东东">1.2 好玩的东东</h2>
 <ul>
 <li><code>cool-retro-term</code>：复古效果终端</li>
 </ul>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1616295464158.png" alt="" loading="lazy"></figure>
-<h1 id="android">Android</h1>
-<h2 id="实用工具-2">实用工具</h2>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1616295464158.png" alt="" loading="lazy"></figure>
+<ul>
+<li><code>Ryujinx</code>：<code>C#</code>写的<code>Switch</code>模拟器，笔者<code>Manjaro</code>已尝试成功运行马里奥3D世界</li>
+</ul>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1616467565496.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1616467570236.png" alt="" loading="lazy"></figure>
+<h1 id="2-android">2 Android</h1>
+<h2 id="21-实用工具">2.1 实用工具</h2>
 <ul>
 <li><code>NewPipe</code>：第三方油管播放器，带下载功能</li>
 </ul>
@@ -410,120 +508,6 @@
 <li>回归测试通过，关闭缺陷跟踪单</li>
 <li>回归测试不通过，缺陷单返回开发人员，重新修改后再次回归测试</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[关于Kotlin中日志的使用方法]]></title>
-        <id>https://2293736867.github.io/post/guan-yu-kotlin-zhong-ri-zhi-de-shi-yong-fang-fa/</id>
-        <link href="https://2293736867.github.io/post/guan-yu-kotlin-zhong-ri-zhi-de-shi-yong-fang-fa/">
-        </link>
-        <updated>2021-03-16T18:36:07.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-引言">1 引言</h1>
-<p>想必学过<code>Java</code>的人都知道一个<code>@Slf4j</code>使用得多么的舒服：</p>
-<pre><code class="language-java">@Slf4j
-public class TestController{
-	    @GetMapping(&quot;/test&quot;)
-        public String test(){
-		        log.debug(&quot;debug&quot;);		
-		        return &quot;test&quot;;
-	    }
-}
-</code></pre>
-<p>但是很不幸在<code>Kotlin</code>中并没有这种注解，因此，本文给出了一种类似<code>@Slf4j</code>注解在<code>Kotlin</code>中的使用方法，以及介绍一个100%使用<code>Kotlin</code>编写的日志库。</p>
-<h1 id="2-动手写slf4j">2 动手写<code>@Slf4j</code></h1>
-<p>很简单，先上代码：</p>
-<pre><code class="language-kotlin">import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class Slf4j{
-        companion object{
-                val &lt;reified T&gt; T.log: Logger
-                inline get() = LoggerFactory.getLogger(T::class.java)
-        }
-}
-</code></pre>
-<p>逐行解释如下：</p>
-<ul>
-<li><code>@Target</code>：与<code>Java</code>中的<code>@Target</code>类似，注解的目标，这里是类</li>
-<li><code>@Retention</code>：与<code>Java</code>中的<code>@Retention</code>类似，运行时保留</li>
-<li><code>annotation class</code>：声明一个注解</li>
-<li><code>companion object</code>：伴生对象</li>
-<li><code>val &lt;reified T&gt; T.log:Logger</code>：声明一个<code>Logger</code>类型的泛型对象</li>
-<li><code>inline get() = LoggerFactory.getLogger(T::class.java)</code>：声明<code>getter</code>为内联，声明为内联才能使用<code>T</code>，这样才能传递给后面的<code>getLogger</code>，<code>T::class.java</code>相当于<code>Java</code>中的<code>T.class</code>，也就是<code>getLogger(T::class.java)</code>相当于<code>getLogger(SomeClass.class)</code></li>
-</ul>
-<p>使用很简单：</p>
-<pre><code class="language-kotlin">@RestController
-@Slf4j
-class TestController {
-        @GetMapping(&quot;/test&quot;)
-        fun test():String{
-                log.warn(&quot;cc&quot;)
-                return &quot;test&quot;
-        }
-}
-</code></pre>
-<p>直接类上加一个注解，就可以使用<code>log.info</code>/<code>log.warn</code>之类的方法了。</p>
-<h1 id="3-kotlin-logging">3 <code>kotlin-logging</code></h1>
-<p>上面介绍了注解的使用方法，如果不想使用注解的话，可以使用别人的库，比如<code>kotlin-logging</code>。</p>
-<p><code>kotlin-logging</code>是一个100%使用<code>Kotlin</code>编写的轻度封装了<code>slf4j</code>的开源日志库，已经收获<code>1.4k</code>的<code>star</code>：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210317014610620.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>依赖如下：</p>
-<pre><code class="language-xml">&lt;dependency&gt;
-        &lt;groupId&gt;io.github.microutils&lt;/groupId&gt;
-        &lt;artifactId&gt;kotlin-logging-jvm&lt;/artifactId&gt;
-        &lt;version&gt;2.0.6&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p><code>Gradle</code>：</p>
-<pre><code class="language-bash">implementation 'io.github.microutils:kotlin-logging-jvm:2.0.6'
-</code></pre>
-<p>引入时，只需要在对应的类中创建一个属性即可：</p>
-<pre><code class="language-kotlin">private val logger = KotlinLogging.logger {}
-</code></pre>
-<p>使用时，直接调用其中的<code>info</code>/<code>debug</code>/<code>error</code>等即可：</p>
-<pre><code class="language-kotlin">import mu.KotlinLogging
-private val logger = KotlinLogging.logger {} 
-class FooWithLogging {
-        val message = &quot;world&quot;
-        fun bar() {
-                logger.debug { &quot;hello $message&quot; }
-        }
-}
-</code></pre>
-<h1 id="4-两者结合使用">4 两者结合使用</h1>
-<p>当然，也可以将注解与<code>kotlin-logging</code>结合一下使用，首先，笔者简单地看了一下<code>KotlinLogging</code>的接口：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210317020838976.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>提供了三个对外的<code>logger</code>方法，参数分别是：</p>
-<ul>
-<li>函数</li>
-<li>字符串</li>
-<li><code>org.slf4j.Logger</code></li>
-</ul>
-<p>对外没有提供类似<code>getLogger(Class&lt;?&gt; clazz)</code>这样的用类作为参数的方法，因此，需要通过泛型获取到具体类的名字并使用第二种方法构造<code>mu.KLogger</code>：</p>
-<pre><code class="language-kotlin">import mu.KotlinLogging
-import org.slf4j.Logger
-
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class Slf4j{
-        companion object{
-                val &lt;reified T&gt; T.log: Logger
-                inline get() = KotlinLogging.logger{T::class.java.name}
-        }
-}
-</code></pre>
-<p>使用方法同上，直接加一个<code>@Slf4j</code>即可使用。</p>
-<h1 id="5-完整demo参考">5 完整<code>Demo</code>参考</h1>
-<ul>
-<li><a href="https://github.com/2293736867/KotlinLogWithAnnotationDemo">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/KotlinLogWithAnnotationDemo">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/KotlinLogWithAnnotationDemo">CODE.CHINA</a></li>
-</ul>
-<h1 id="6-参考">6 参考</h1>
-<p>1、<a href="https://github.com/MicroUtils/kotlin-logging">kotlin-logging</a></p>
-<p>2、<a href="https://www.kotlincn.net/docs/reference/inline-functions.html">Kotlin官网-内联函数</a></p>
 ]]></content>
     </entry>
 </feed>
