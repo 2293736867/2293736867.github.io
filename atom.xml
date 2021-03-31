@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-03-29T07:25:50.928Z</updated>
+    <updated>2021-03-31T06:06:04.708Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,168 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[软件测试笔记（三）：黑盒测试]]></title>
+        <id>https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-san-hei-he-ce-shi/</id>
+        <link href="https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-san-hei-he-ce-shi/">
+        </link>
+        <updated>2021-03-31T05:59:57.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95%E6%A6%82%E8%BF%B0">1 黑盒测试概述</a></li>
+<li><a href="#2-%E7%AD%89%E4%BB%B7%E7%B1%BB%E5%88%92%E5%88%86">2 等价类划分</a>
+<ul>
+<li><a href="#21-%E7%AD%89%E4%BB%B7%E7%B1%BB">2.1 等价类</a></li>
+<li><a href="#22-%E5%88%92%E5%88%86%E5%8E%9F%E5%88%99">2.2 划分原则</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%BE%B9%E7%95%8C%E5%80%BC%E5%88%86%E6%9E%90">3 边界值分析</a>
+<ul>
+<li><a href="#31-%E8%BE%B9%E7%95%8C%E5%80%BC%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99">3.1 边界值分析设计原则</a></li>
+<li><a href="#32-%E8%BE%B9%E7%95%8C%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95">3.2 边界分析的两种方法</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%86%B3%E7%AD%96%E8%A1%A8">4 决策表</a></li>
+<li><a href="#5-%E5%9B%A0%E6%9E%9C%E5%9B%BE">5 因果图</a>
+<ul>
+<li><a href="#51-%E5%AE%9A%E4%B9%89">5.1 定义</a></li>
+<li><a href="#52-%E5%9F%BA%E6%9C%AC%E5%9B%BE%E5%BD%A2%E7%AC%A6%E5%8F%B7">5.2 基本图形符号</a></li>
+</ul>
+</li>
+<li><a href="#6-%E5%9C%BA%E6%99%AF%E6%B3%95">6 场景法</a></li>
+</ul>
+</p>
+<h1 id="1-黑盒测试概述">1 黑盒测试概述</h1>
+<p>黑盒测试也叫功能测试，通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作是一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，对程序接口进行测试，只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当接收输入数据而产生正确的输出信息。</p>
+<p>黑盒测试以用户角度，从输入数据与输出数据的关系触发，试图发现一下几类错误：</p>
+<ul>
+<li>功能不正确或遗漏</li>
+<li>界面错误</li>
+<li>数据库访问错误</li>
+<li>性能错误</li>
+<li>初始化和终止错误</li>
+</ul>
+<p>用例设计方法包括：</p>
+<ul>
+<li>等价类划分</li>
+<li>边界值分析</li>
+<li>决策表</li>
+<li>因果图</li>
+<li>场景法</li>
+</ul>
+<p>等等。</p>
+<h1 id="2-等价类划分">2 等价类划分</h1>
+<h2 id="21-等价类">2.1 等价类</h2>
+<p>等价类是指某个输入域的子集，在该子集合中，测试某等价类的代表值就等于这一类其他值的测试，对于揭露程序的错误是等效的。因此，全部输入数据可以合理划分为若干个等价类，在每一个等价类中取一个数据作为测试的输入条件，就可以用少量的代表性的测试数据取得比较好的效果。</p>
+<p>等价类划分可以分为：</p>
+<ul>
+<li>有效等价类：对于程序的规格说明来说是合理的，有意义的输入数据构成的集合，利用有效等价类可以检验程序是否实现了规格说明中所规定的功能和意义</li>
+<li>无效等价类：与有效等价类相反，是指对程序的规格说明无意义，不合理的数据构成的集合</li>
+</ul>
+<h2 id="22-划分原则">2.2 划分原则</h2>
+<ul>
+<li>如果规定了输入值的范围，可以定义一个有效等价类和两个无效等价类</li>
+<li>如果规定了输入的规则，可以划分出一个有效的等价类（符合规则）和若干无效的等价类（从不同角度违反原则）</li>
+<li>如果规定了输入数据的已组织，且程序对不同输入值做不同处理，则每个允许的输入值是一个有效等价类，并有一个无效等价类</li>
+<li>如果规定了输入数据是整型，可以划分出正整数、零、负整数三个有效等价类</li>
+<li>处理表格时，有效类为空表、含一项的表、含多项的表等</li>
+</ul>
+<h1 id="3-边界值分析">3 边界值分析</h1>
+<h2 id="31-边界值分析设计原则">3.1 边界值分析设计原则</h2>
+<p>边界值分析作为等价类划分的补充，通过选择等价类的边界值作为测试用例。</p>
+<p>基于边界值分析有如下原则：</p>
+<ul>
+<li>如果输入条件规定了值的范围，应选择刚到达这个范围的边界的值，以及刚刚超过这个范围边界的值作为测试输入数据</li>
+<li>如果输入条件中规定了值的个数，则用最大个数、最小个数、比最小个数少一，比最大个数多一作为测试数据</li>
+<li>如果规格说明书给出的输入域或输出域的有序集合，则应选取集合的第一个元素和最后一个元素作为测试用例</li>
+<li>如果程序中使用了内部数据结构，则应选择内部数据结构的边界上的值作为测试用例</li>
+</ul>
+<h2 id="32-边界分析的两种方法">3.2 边界分析的两种方法</h2>
+<p>一般包括：</p>
+<ul>
+<li>一般边界值分析：一般取<code>Min</code>、<code>Min+</code>、<code>Normal</code>、<code>Max-</code>、<code>Max</code></li>
+<li>健壮性边界值分析：除了一般边界值分析外，还包括<code>Min-</code>、<code>Max+</code></li>
+</ul>
+<h1 id="4-决策表">4 决策表</h1>
+<p>决策表又叫判定表，是分析多种逻辑条件下执行不同操作的技术。决策表由四个部分组成，包括：</p>
+<ul>
+<li>条件桩：列出问题的所有条件，条件的顺序无关紧要</li>
+<li>动作桩：列出问题规定可能采取的所有动作，排列顺序没有约束</li>
+<li>条件项：列出了针对条件桩的取值在所有可能情况下的真假值</li>
+<li>动作项：列出了在条件项的各种取值的有机关联情况下应采取的动作</li>
+</ul>
+<p>另一方面，决策表中的规则，指的是任何条件组合的特定取值以及相应要执行的动作，在决策表中贯穿条件项和动作项的列就是规则，决策表中列出多少条件取值，就对应多少规则，条件项就有多少列。</p>
+<p>比如下面是一个使用决策表制作的打印机测试用例：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2021033109210066.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-因果图">5 因果图</h1>
+<h2 id="51-定义">5.1 定义</h2>
+<p>因果图利用图解法分析输入的各种组合情况，适合于描述多种输入条件的组合，相应产生多个动作的方法，因果图的好处如下：</p>
+<ul>
+<li>考虑多个输入之间的相互组合、相互制约的关系</li>
+<li>指导测试用例的选择，指出需求规格说明描述中存在的问题</li>
+<li>能够帮助测试人员按照一定的步骤，高效率地开发测试用例</li>
+<li>因果图法是一种严格地将自然语言规格说明转化为形式语言规格说明的方法，可以指出规格说明存在的不完整性和二义性</li>
+</ul>
+<h2 id="52-基本图形符号">5.2 基本图形符号</h2>
+<p>原因结果图：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210331103407748.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>ci</code>和<code>ei</code>都可以取值0或1，0表示状态不出现，1表示状态出现。</p>
+<p>约束图：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210331104503159.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-场景法">6 场景法</h1>
+<p>同一事件不同的触发顺序和处理结果形成事件流，每个事件流触发时的情景便形成了场景。</p>
+<p>场景法一般包含基本流和备选流（也叫备用流），从一个流程开始，通过描述经过的路径来确定过程，经过遍历所有的基本流和备用流来形成整个场景。场景法的基本设计步骤如下：</p>
+<ul>
+<li>根据说明，描述程序的基本流以及各项备选流</li>
+<li>根据基本流和各项备选流生成不同的场景</li>
+<li>对每一个场景生成相应的测试用例</li>
+<li>对生成的所有测试用例重新复审，去掉多余的测试用例，测试用例确定后，对每一个测试用例确定测试数据值</li>
+</ul>
+<p>图示如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210331110653842.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第290期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-290-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-290-qi/">
+        </link>
+        <updated>2021-03-31T05:58:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>大家都以为我没有朋友，事实上，我还真没有朋友。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>春风桃李开花日，秋雨梧桐叶落时。<br>
+——白居易《长恨歌》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>你是否会等待我？我会变得更加完美！</p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第289期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-289-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-289-qi/">
+        </link>
+        <updated>2021-03-30T05:56:00.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你不懂得安排自己的人生，会有很多人帮你安排，他们需要你做的事。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>狂风落尽深红色，绿叶成阴子满枝。<br>
+——杜牧《叹花/怅诗》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>寻觅归乡之路，一次一颗子弹。</p>
+</blockquote>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第288期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-288-qi/</id>
@@ -410,139 +572,6 @@
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>相见争如不见，多情何似无情。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[解决Github访问速度慢以及图片加载慢的问题]]></title>
-        <id>https://2293736867.github.io/post/jie-jue-github-fang-wen-su-du-man-yi-ji-tu-pian-jia-zai-man-de-wen-ti/</id>
-        <link href="https://2293736867.github.io/post/jie-jue-github-fang-wen-su-du-man-yi-ji-tu-pian-jia-zai-man-de-wen-ti/">
-        </link>
-        <updated>2021-03-23T04:28:44.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-前言">1 前言</h1>
-<p><s>众所周知</s><code>Github</code>在国内的访问速度一直都不怎么样，主要的原因是<code>DNS</code>解析太慢了，也就是从<code>github.com</code>获取<code>IP</code>的过程太慢了，因此，一种最有效的办法是直接修改本地<code>Hosts</code>，饶过<code>DNS</code>解析。</p>
-<p>这也是本文的出发点，虽然，这样的文章网上有很多，百度一搜出来基本上都是如下的套路：</p>
-<ul>
-<li>通过<code>IP</code>解析网站得到<code>github.com</code>的<code>IP</code>/直接给出某个<code>IP</code></li>
-<li>修改本地<code>Hosts</code></li>
-<li>刷新缓存</li>
-</ul>
-<p>当然，这样最大的一个坏处是当<code>IP</code>更新的时候每次都需要去修改<code>Hosts</code>，非常麻烦。受到<a href="https://github.com/521xueweihan/GitHub520">该仓库</a>的启发，本文提供了一种自动修改的方法，非常方便。</p>
-<p>本文主要分成两个部分介绍：</p>
-<ul>
-<li>手动修改<code>Hosts</code></li>
-<li>通过工具自动修改<code>Hosts</code></li>
-</ul>
-<p>首先看一下第一部分。</p>
-<h1 id="2-手动修改hosts">2 手动修改<code>Hosts</code></h1>
-<h2 id="21-修改hosts">2.1 修改<code>Hosts</code></h2>
-<p>首先打开<a href="https://github.com/521xueweihan/GitHub520">该仓库</a>：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210323104956954.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>复制其中的内容到<code>Hosts</code>文件中，各大平台<code>Hosts</code>文件位置如下：</p>
-<ul>
-<li><code>Windows</code>：<code>C:\Windows\System32\drivers\etc\hosts</code></li>
-<li><code>Linux</code>：<code>/etc/hosts</code></li>
-<li><code>Mac</code>：<code>/etc/hosts</code></li>
-<li><code>Android</code>：<code>/system/etc/hosts</code></li>
-<li><code>iOS</code>：<code>/etc/hosts</code></li>
-</ul>
-<p>根据对应平台修改上述的文件，添加内容到<code>Hosts</code>末尾即可。</p>
-<h2 id="22-使hosts生效">2.2 使<code>Hosts</code>生效</h2>
-<p>大部分情况下修改完<code>Hosts</code>文件后直接生效，如果不生效，可以尝试手动刷新<code>DNS</code>缓存，具体如下：</p>
-<ul>
-<li><code>Windows</code>：打开<code>cmd</code>，输入<code>ipconfig /flushdns</code></li>
-<li><code>Linux</code>：<code>sudo rcnscd restart</code></li>
-<li><code>Mac</code>：<code>sudo killall -HUP mDNSResponder</code></li>
-</ul>
-<p>如果不生效可以尝试重启机器。</p>
-<h1 id="3-自动方式推荐">3 自动方式（推荐）</h1>
-<p>上面的方式需要手动修改<code>Hosts</code>文件，非常麻烦，这里推荐一种自动修改的方式。</p>
-<p>在此之前需要一个工具：<code>SwitchHosts</code>。</p>
-<h2 id="31-switchhosts安装">3.1 <code>SwitchHosts</code>安装</h2>
-<p>官方仓库在<a href="https://github.com/oldj/SwitchHosts">此处</a>，直接到<code>Release</code>下载即可。</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210323105839503.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>或者从软件包仓库安装，以笔者的<code>Manjaro</code>为例：</p>
-<pre><code class="language-bash">paru -S switchhosts-bin
-</code></pre>
-<h2 id="32-配置">3.2 配置</h2>
-<p>打开后，点击左下角的加号按钮，添加一个新的规则：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210323110926924.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>内容如下：</p>
-<ul>
-<li>标题：随便</li>
-<li>类型：<code>Remote</code></li>
-<li><code>URL</code>：<code>https://cdn.jsdelivr.net/gh/521xueweihan/GitHub520@main/hosts</code></li>
-<li>自动刷新时间：第一次添加可以先选择<code>1 minute</code>，有了规则以后，就可以选择<code>1 hour</code></li>
-</ul>
-<p>配置好后就可以看到了：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210323111137241.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="33-一个小问题">3.3 一个小问题</h2>
-<p>笔者在实测的时候发现如果直接通过启动菜单启动<code>SwitchHosts</code>，添加新的规则老是失败：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210323111256850.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>无论输入的是用户的密码还是<code>root</code>的密码都不行。</p>
-<p>于是笔者找了一下启动命令，直接<code>sudo</code>启动：</p>
-<pre><code class="language-bash">sudo switchhosts
-</code></pre>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2021032311140535.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>启动失败，按照提示加上<code>--no-sandbox</code>（这是一个<code>eletron</code>的参数）：</p>
-<pre><code class="language-bash">sudo switchhosts --no-sandbox
-</code></pre>
-<p>需要注意在启动之前需要把原来普通模式启动的<code>SwitchHosts</code>先退出了，不然会提示端口占用：</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210323111606707.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>启动之后就可以直接修改<code>Hosts</code>而不需要密码了。</p>
-<p>另外这里有一个小细节就是两种模式下（普通模式/<code>sudo</code>模式）启动的图标不一样：</p>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210323111626701.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210323111748541.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-效果">4 效果</h1>
-<p>配置好<code>DNS</code>后应该能正常访问<code>Github</code>上的图片了：</p>
-<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/2021032312153795.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-后记">5 后记</h1>
-<p>通过上面的配置<code>DNS</code>方法应该就可以顺利访问<code>Github</code>了，此外，该仓库还介绍了另一种自动配置<code>DNS</code>的方式：<code>AdGuard Home</code>：</p>
-<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20210323121702657.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>由于笔者没有用过就不说这个了。最后，该仓库还有一个<code>TODO</code>：</p>
-<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20210323121802315.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>希望最后一项内容尽快完成吧。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第282期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-282-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-282-qi/">
-        </link>
-        <updated>2021-03-22T23:14:02.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>海底捞的服务是真心好，上次我吃饭没带钱，还是服务员帮我报的警。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>晓日压重檐，斗帐春寒起来忺。<br>
-——孙道绚《南乡子·春闺》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我讨厌一会充满希望一会变成绝望，我们已经受够了期待落空了。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第281期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-281-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-281-qi/">
-        </link>
-        <updated>2021-03-22T14:14:13.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>人生和骑自行车不同，就算走下坡路，也不会轻松。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>春蚕食叶响回廊，禹门已准桃花浪，月殿先收桂子香。<br>
-——辛弃疾《鹧鸪天·送廓之秋试》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>身为冒险者，如果安静的老死在床上，那简直就是耻辱！</p>
 </blockquote>
 ]]></content>
     </entry>
