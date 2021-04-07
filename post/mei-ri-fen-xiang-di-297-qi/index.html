@@ -89,7 +89,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1617753469729" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1617768464813" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -104,7 +104,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-297-qi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2021-04-07"><i class="fa fa-calendar"></i><span class="lately">12 分钟前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2021-04-07"><i class="fa fa-calendar"></i><span class="lately">4 小时前</span></time>
               
               <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-297-qi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/mei-ri-fen-xiang-di-297-qi/"> </span>
@@ -194,6 +194,68 @@ class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1617753310280.png" alt="" loading="lazy"></figure>
+<h1 id="太菜了太菜了完犊子完犊子"><s>太菜了太菜了完犊子完犊子</s></h1>
+<p>这是另外做的，特地挑了条困难的做，不出所料果然不会做：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1617763682944.png" alt="" loading="lazy"></figure>
+<p>题目描述很简单，就是找到最长的有效括号子串。</p>
+<p><s>但众所周知题目越短难度越高。</s></p>
+<p>一开始尝试动态规划，从一个dp数组变为一个dpl数组加一个dpr数组，好像发现不行，样例都过不了，反正是找不出转移方程，看了题解才知道转移方程还能是这样的：</p>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1617763826310.png" alt="" loading="lazy"></figure>
+<p>dp原来还可以在下标里面，，，</p>
+<p><s>怪我太菜了，，，</s></p>
+<p>另外当时一开始做的时候想到用栈，但是这种最长的，用栈需要遍历每一个位置，<code>O(n^3)</code>，看了一下题解的优化，原来栈存的是下标，这样就可以保存之前计算过的结果，可以降到<code>O(n)</code>：</p>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1617764010014.png" alt="" loading="lazy"></figure>
+<p><s>怪我太菜了，，，</s></p>
+<p>最后一种方法是使用两个计数器（<code>left</code>+<code>right</code>，<code>left</code>保存当前的左括号数量，<code>right</code>保存当前的右括号数量）+正向遍历+反向遍历，当两个计数器大小一样时，计算它们的和并与最大值比较。正向遍历时，<code>right&gt;left</code>时清空两个计数器，反向遍历时，<code>left&gt;right</code>时清空两个计数器：</p>
+<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1617764234183.png" alt="" loading="lazy"></figure>
+<p>最后。。。</p>
+<pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public int longestValidParentheses(String s) {
+        int n = s.length();
+        if(n &lt;= 1){
+            return 0;
+        }
+        char[] c = s.toCharArray();
+        int l = 0;
+        int r = 0;
+        int max = 0;
+        for (int i = 0; i &lt; n; i++) {
+            if(c[i] == '('){
+                ++l;
+            }else{
+                ++r;
+            }
+            if(l == r &amp;&amp; l+r &gt; max){
+                max = l+r;
+            }
+            if(r &gt; l){
+                r = l = 0;
+            }
+        }
+        l = r = 0;
+        for (int i = n-1; i &gt;= 0; --i) {
+            if(c[i] == '('){
+                ++l;
+            }else{
+                ++r;
+            }
+            if(l == r &amp;&amp; l+r &gt; max){
+                max = l+r;
+            }
+            if(l &gt; r){
+                l = r = 0;
+            }
+        }
+        return max;
+    }
+}
+</code></pre>
+<p>好吧我是fw。。。</p>
+<figure data-type="image" tabindex="7"><img src="https://2293736867.github.io/post-images/1617764293834.png" alt="" loading="lazy"></figure>
+<p><s>fwfwfwfwfw。。。。</s></p>
+<p><s>完犊子完犊子</s></p>
 
                 </div>
                 <div class="clear"></div>
@@ -202,6 +264,19 @@ class Solution {
             <div class="clear"></div>
 
             <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/linux-pgrep-ming-ling.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/linux-pgrep-ming-ling/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-04-07">2021-04-07</time>
+                  <h4 class="title white no-margin">Linux pgrep命令</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
               
               
               <article class="next grid-50 tablet-grid-50 grid-parent">
@@ -261,6 +336,21 @@ var dsqjs = new DisqusJS(options)
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/linux-pgrep-ming-ling/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/linux-pgrep-ming-ling.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-04-07">2021-04-07</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/linux-pgrep-ming-ling/">Linux pgrep命令</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-297-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-297-qi.jpg');"></span>
                     </a>
@@ -275,7 +365,7 @@ var dsqjs = new DisqusJS(options)
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-296-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-296-qi.jpg');"></span>
                     </a>
@@ -289,19 +379,6 @@ var dsqjs = new DisqusJS(options)
                   </article>
                   
                   
-                  
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-295-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-295-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-04-05">2021-04-05</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-295-qi/">每日分享 第295期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
@@ -1411,13 +1488,13 @@ var dsqjs = new DisqusJS(options)
                   <h4 class="widget-title title white bordered">标签云</h4>
                   <div class="tagcloud">
                     
-                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-0 ctag-wtA4qyubx" aria-label="">Linux</a>
                     
-                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-1 ctag-P6coYUl8A" aria-label="">软件测试</a>
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-1 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
-                      <a href="https://2293736867.github.io/tag/Zh36z1JpD/" class="ctag ctag-2 ctag-Zh36z1JpD" aria-label="">Switch</a>
+                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-2 ctag-P6coYUl8A" aria-label="">软件测试</a>
                     
-                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-3 ctag-wtA4qyubx" aria-label="">Linux</a>
+                      <a href="https://2293736867.github.io/tag/Zh36z1JpD/" class="ctag ctag-3 ctag-Zh36z1JpD" aria-label="">Switch</a>
                     
                       <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-4 ctag-iwdKt-vEi" aria-label="">Windows</a>
                     
@@ -1692,7 +1769,7 @@ var dsqjs = new DisqusJS(options)
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 552 篇文章
+          ©2019 共 553 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

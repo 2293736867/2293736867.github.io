@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-07T00:05:04.631Z</updated>
+    <updated>2021-04-07T04:07:50.282Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,43 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Linux pgrep命令]]></title>
+        <id>https://2293736867.github.io/post/linux-pgrep-ming-ling/</id>
+        <link href="https://2293736867.github.io/post/linux-pgrep-ming-ling/">
+        </link>
+        <updated>2021-04-07T04:07:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-pgrep">1 <code>pgrep</code></h1>
+<p><code>pgrep</code>是一个根据名称查找进程<code>ID</code>的命令，返回的是进程<code>ID</code>，若存在当个进程，则分为不同的行返回<code>ID</code>（默认实现）。</p>
+<h1 id="2-示例">2 示例</h1>
+<p>查找<code>java</code>进程：</p>
+<pre><code class="language-bash">pgrep java
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210407110625110.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>上图还显示了<code>ps</code>与<code>pgrep</code>的区别，简单来说：</p>
+<pre><code class="language-bash">pgrep name
+等价于
+ps -e | grep name | awk '{print $1}'
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210407110833970.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-常用参数">3 常用参数</h1>
+<ul>
+<li><code>-l</code>：显示<code>PID</code>和进程名称</li>
+<li><code>-a</code>：显示详细信息</li>
+<li><code>-c</code>：计算进程数量</li>
+<li><code>-n/-o</code>：显示进程号最大与最小的进程</li>
+</ul>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210407111454587.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-与其他命令配合">4 与其他命令配合</h1>
+<p>一般<code>pgrep</code>需要和其他命令配合使用，最常见的是<code>kill</code>：</p>
+<pre><code class="language-bash">pgrep name | xargs kill -15
+</code></pre>
+<p>注意需要使用<code>xargs</code>传递参数，而不能只使用管道，这样是话会提示<code>not enough arguments</code>：</p>
+<pre><code class="language-bash">pgrep name | kill -15
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210407111927228.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第297期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-297-qi/</id>
@@ -83,6 +120,68 @@ class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1617753310280.png" alt="" loading="lazy"></figure>
+<h1 id="太菜了太菜了完犊子完犊子"><s>太菜了太菜了完犊子完犊子</s></h1>
+<p>这是另外做的，特地挑了条困难的做，不出所料果然不会做：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1617763682944.png" alt="" loading="lazy"></figure>
+<p>题目描述很简单，就是找到最长的有效括号子串。</p>
+<p><s>但众所周知题目越短难度越高。</s></p>
+<p>一开始尝试动态规划，从一个dp数组变为一个dpl数组加一个dpr数组，好像发现不行，样例都过不了，反正是找不出转移方程，看了题解才知道转移方程还能是这样的：</p>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1617763826310.png" alt="" loading="lazy"></figure>
+<p>dp原来还可以在下标里面，，，</p>
+<p><s>怪我太菜了，，，</s></p>
+<p>另外当时一开始做的时候想到用栈，但是这种最长的，用栈需要遍历每一个位置，<code>O(n^3)</code>，看了一下题解的优化，原来栈存的是下标，这样就可以保存之前计算过的结果，可以降到<code>O(n)</code>：</p>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1617764010014.png" alt="" loading="lazy"></figure>
+<p><s>怪我太菜了，，，</s></p>
+<p>最后一种方法是使用两个计数器（<code>left</code>+<code>right</code>，<code>left</code>保存当前的左括号数量，<code>right</code>保存当前的右括号数量）+正向遍历+反向遍历，当两个计数器大小一样时，计算它们的和并与最大值比较。正向遍历时，<code>right&gt;left</code>时清空两个计数器，反向遍历时，<code>left&gt;right</code>时清空两个计数器：</p>
+<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1617764234183.png" alt="" loading="lazy"></figure>
+<p>最后。。。</p>
+<pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public int longestValidParentheses(String s) {
+        int n = s.length();
+        if(n &lt;= 1){
+            return 0;
+        }
+        char[] c = s.toCharArray();
+        int l = 0;
+        int r = 0;
+        int max = 0;
+        for (int i = 0; i &lt; n; i++) {
+            if(c[i] == '('){
+                ++l;
+            }else{
+                ++r;
+            }
+            if(l == r &amp;&amp; l+r &gt; max){
+                max = l+r;
+            }
+            if(r &gt; l){
+                r = l = 0;
+            }
+        }
+        l = r = 0;
+        for (int i = n-1; i &gt;= 0; --i) {
+            if(c[i] == '('){
+                ++l;
+            }else{
+                ++r;
+            }
+            if(l == r &amp;&amp; l+r &gt; max){
+                max = l+r;
+            }
+            if(l &gt; r){
+                l = r = 0;
+            }
+        }
+        return max;
+    }
+}
+</code></pre>
+<p>好吧我是fw。。。</p>
+<figure data-type="image" tabindex="7"><img src="https://2293736867.github.io/post-images/1617764293834.png" alt="" loading="lazy"></figure>
+<p><s>fwfwfwfwfw。。。。</s></p>
+<p><s>完犊子完犊子</s></p>
 ]]></content>
     </entry>
     <entry>
@@ -453,27 +552,6 @@ public class Solution {
 <h1 id="每日一句">每日一句</h1>
 <blockquote>
 <p>你是否会等待我？我会变得更加完美！</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第289期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-289-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-289-qi/">
-        </link>
-        <updated>2021-03-30T05:56:00.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你不懂得安排自己的人生，会有很多人帮你安排，他们需要你做的事。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>狂风落尽深红色，绿叶成阴子满枝。<br>
-——杜牧《叹花/怅诗》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>寻觅归乡之路，一次一颗子弹。</p>
 </blockquote>
 ]]></content>
     </entry>
