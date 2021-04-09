@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-08T01:37:20.526Z</updated>
+    <updated>2021-04-09T00:53:27.843Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,62 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第299期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-299-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-299-qi/">
+        </link>
+        <updated>2021-04-09T00:33:33.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>凡是不赚钱的，都说自己在创业。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>春水碧于天，画船听雨眠。<br>
+——韦庄《菩萨蛮·人人尽说江南好》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>和绝望，和睦相处。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1617928474795.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>二分，中间值与右边值比较：</p>
+<ul>
+<li>如果中间值小于右边值，则忽略右半区间</li>
+<li>如果中间值大于右边值，则忽略左半区间</li>
+<li>如果中间值等于右边值，因为允许重复值的存在，不能判断忽略哪一边的区间，只能将右指针减1，并继续循环</li>
+</ul>
+<pre><code class="language-java">class Solution {
+    public int findMin(int[] nums) {
+        int n = nums.length;
+        int l = 0;
+        int r = n-1;
+        while(l&lt;r){
+            int m = (l+r)/2;
+            if(nums[m] &gt; nums[r]){
+                l = m+1;
+            }else if(nums[m] &lt; nums[r]){
+                r = m;
+            }else{
+                --r;
+            }
+        }
+        return nums[l];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1617928450436.png" alt="" loading="lazy"></figure>
+<h1 id="蚂蚁电话面">蚂蚁电话面</h1>
+<p>昨天晚上电话面了蚂蚁，感觉自己有很多答不上来，或者说答上来的不怎么全面，比如，问了一下<code>JVM</code>，然后答了方法区、直接内存、堆区、栈区、本地方法区、<code>PC</code>寄存器。</p>
+<p>然后就问了里面有什么。</p>
+<p>好吧只是看过不记得了，怎么就不问堆组成，<code>GC</code>算法，<code>G1</code>回收器，类加载器，，，，，，</p>
+<p><s>太菜了太菜了，，，，</s></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第298期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-298-qi/</id>
@@ -474,126 +530,6 @@ public class Solution {
 <h1 id="愚人节">愚人节</h1>
 <p>愚人节快。。。</p>
 <p>不对。。。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[软件测试笔记（三）：黑盒测试]]></title>
-        <id>https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-san-hei-he-ce-shi/</id>
-        <link href="https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-san-hei-he-ce-shi/">
-        </link>
-        <updated>2021-03-31T05:59:57.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95%E6%A6%82%E8%BF%B0">1 黑盒测试概述</a></li>
-<li><a href="#2-%E7%AD%89%E4%BB%B7%E7%B1%BB%E5%88%92%E5%88%86">2 等价类划分</a>
-<ul>
-<li><a href="#21-%E7%AD%89%E4%BB%B7%E7%B1%BB">2.1 等价类</a></li>
-<li><a href="#22-%E5%88%92%E5%88%86%E5%8E%9F%E5%88%99">2.2 划分原则</a></li>
-</ul>
-</li>
-<li><a href="#3-%E8%BE%B9%E7%95%8C%E5%80%BC%E5%88%86%E6%9E%90">3 边界值分析</a>
-<ul>
-<li><a href="#31-%E8%BE%B9%E7%95%8C%E5%80%BC%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99">3.1 边界值分析设计原则</a></li>
-<li><a href="#32-%E8%BE%B9%E7%95%8C%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95">3.2 边界分析的两种方法</a></li>
-</ul>
-</li>
-<li><a href="#4-%E5%86%B3%E7%AD%96%E8%A1%A8">4 决策表</a></li>
-<li><a href="#5-%E5%9B%A0%E6%9E%9C%E5%9B%BE">5 因果图</a>
-<ul>
-<li><a href="#51-%E5%AE%9A%E4%B9%89">5.1 定义</a></li>
-<li><a href="#52-%E5%9F%BA%E6%9C%AC%E5%9B%BE%E5%BD%A2%E7%AC%A6%E5%8F%B7">5.2 基本图形符号</a></li>
-</ul>
-</li>
-<li><a href="#6-%E5%9C%BA%E6%99%AF%E6%B3%95">6 场景法</a></li>
-</ul>
-</p>
-<h1 id="1-黑盒测试概述">1 黑盒测试概述</h1>
-<p>黑盒测试也叫功能测试，通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作是一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，对程序接口进行测试，只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当接收输入数据而产生正确的输出信息。</p>
-<p>黑盒测试以用户角度，从输入数据与输出数据的关系触发，试图发现一下几类错误：</p>
-<ul>
-<li>功能不正确或遗漏</li>
-<li>界面错误</li>
-<li>数据库访问错误</li>
-<li>性能错误</li>
-<li>初始化和终止错误</li>
-</ul>
-<p>用例设计方法包括：</p>
-<ul>
-<li>等价类划分</li>
-<li>边界值分析</li>
-<li>决策表</li>
-<li>因果图</li>
-<li>场景法</li>
-</ul>
-<p>等等。</p>
-<h1 id="2-等价类划分">2 等价类划分</h1>
-<h2 id="21-等价类">2.1 等价类</h2>
-<p>等价类是指某个输入域的子集，在该子集合中，测试某等价类的代表值就等于这一类其他值的测试，对于揭露程序的错误是等效的。因此，全部输入数据可以合理划分为若干个等价类，在每一个等价类中取一个数据作为测试的输入条件，就可以用少量的代表性的测试数据取得比较好的效果。</p>
-<p>等价类划分可以分为：</p>
-<ul>
-<li>有效等价类：对于程序的规格说明来说是合理的，有意义的输入数据构成的集合，利用有效等价类可以检验程序是否实现了规格说明中所规定的功能和意义</li>
-<li>无效等价类：与有效等价类相反，是指对程序的规格说明无意义，不合理的数据构成的集合</li>
-</ul>
-<h2 id="22-划分原则">2.2 划分原则</h2>
-<ul>
-<li>如果规定了输入值的范围，可以定义一个有效等价类和两个无效等价类</li>
-<li>如果规定了输入的规则，可以划分出一个有效的等价类（符合规则）和若干无效的等价类（从不同角度违反原则）</li>
-<li>如果规定了输入数据的已组织，且程序对不同输入值做不同处理，则每个允许的输入值是一个有效等价类，并有一个无效等价类</li>
-<li>如果规定了输入数据是整型，可以划分出正整数、零、负整数三个有效等价类</li>
-<li>处理表格时，有效类为空表、含一项的表、含多项的表等</li>
-</ul>
-<h1 id="3-边界值分析">3 边界值分析</h1>
-<h2 id="31-边界值分析设计原则">3.1 边界值分析设计原则</h2>
-<p>边界值分析作为等价类划分的补充，通过选择等价类的边界值作为测试用例。</p>
-<p>基于边界值分析有如下原则：</p>
-<ul>
-<li>如果输入条件规定了值的范围，应选择刚到达这个范围的边界的值，以及刚刚超过这个范围边界的值作为测试输入数据</li>
-<li>如果输入条件中规定了值的个数，则用最大个数、最小个数、比最小个数少一，比最大个数多一作为测试数据</li>
-<li>如果规格说明书给出的输入域或输出域的有序集合，则应选取集合的第一个元素和最后一个元素作为测试用例</li>
-<li>如果程序中使用了内部数据结构，则应选择内部数据结构的边界上的值作为测试用例</li>
-</ul>
-<h2 id="32-边界分析的两种方法">3.2 边界分析的两种方法</h2>
-<p>一般包括：</p>
-<ul>
-<li>一般边界值分析：一般取<code>Min</code>、<code>Min+</code>、<code>Normal</code>、<code>Max-</code>、<code>Max</code></li>
-<li>健壮性边界值分析：除了一般边界值分析外，还包括<code>Min-</code>、<code>Max+</code></li>
-</ul>
-<h1 id="4-决策表">4 决策表</h1>
-<p>决策表又叫判定表，是分析多种逻辑条件下执行不同操作的技术。决策表由四个部分组成，包括：</p>
-<ul>
-<li>条件桩：列出问题的所有条件，条件的顺序无关紧要</li>
-<li>动作桩：列出问题规定可能采取的所有动作，排列顺序没有约束</li>
-<li>条件项：列出了针对条件桩的取值在所有可能情况下的真假值</li>
-<li>动作项：列出了在条件项的各种取值的有机关联情况下应采取的动作</li>
-</ul>
-<p>另一方面，决策表中的规则，指的是任何条件组合的特定取值以及相应要执行的动作，在决策表中贯穿条件项和动作项的列就是规则，决策表中列出多少条件取值，就对应多少规则，条件项就有多少列。</p>
-<p>比如下面是一个使用决策表制作的打印机测试用例：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/2021033109210066.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-因果图">5 因果图</h1>
-<h2 id="51-定义">5.1 定义</h2>
-<p>因果图利用图解法分析输入的各种组合情况，适合于描述多种输入条件的组合，相应产生多个动作的方法，因果图的好处如下：</p>
-<ul>
-<li>考虑多个输入之间的相互组合、相互制约的关系</li>
-<li>指导测试用例的选择，指出需求规格说明描述中存在的问题</li>
-<li>能够帮助测试人员按照一定的步骤，高效率地开发测试用例</li>
-<li>因果图法是一种严格地将自然语言规格说明转化为形式语言规格说明的方法，可以指出规格说明存在的不完整性和二义性</li>
-</ul>
-<h2 id="52-基本图形符号">5.2 基本图形符号</h2>
-<p>原因结果图：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210331103407748.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p><code>ci</code>和<code>ei</code>都可以取值0或1，0表示状态不出现，1表示状态出现。</p>
-<p>约束图：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210331104503159.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6-场景法">6 场景法</h1>
-<p>同一事件不同的触发顺序和处理结果形成事件流，每个事件流触发时的情景便形成了场景。</p>
-<p>场景法一般包含基本流和备选流（也叫备用流），从一个流程开始，通过描述经过的路径来确定过程，经过遍历所有的基本流和备用流来形成整个场景。场景法的基本设计步骤如下：</p>
-<ul>
-<li>根据说明，描述程序的基本流以及各项备选流</li>
-<li>根据基本流和各项备选流生成不同的场景</li>
-<li>对每一个场景生成相应的测试用例</li>
-<li>对生成的所有测试用例重新复审，去掉多余的测试用例，测试用例确定后，对每一个测试用例确定测试数据值</li>
-</ul>
-<p>图示如下：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210331110653842.png" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
