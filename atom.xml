@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-10T02:35:36.707Z</updated>
+    <updated>2021-04-11T00:38:32.443Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,158 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第301期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-301-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-301-qi/">
+        </link>
+        <updated>2021-04-11T00:35:14.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>由于性格太内向，一直做不出，抢着结账这种事。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>桃花仙人种桃树，又折花枝当酒钱。<br>
+——唐寅《桃花庵歌》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>如果最开始我没欺骗你，我们会怎样？</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618101450341.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>动态规划：</p>
+<pre><code class="language-java">public class Solution {
+    public int nthUglyNumber(int n) {
+        int [] dp = new int[n+1];
+        dp[1] = 1;
+        int p2 = 1;
+        int p3 = 1;
+        int p5 = 1;
+        for (int t = 2; t &lt;= n;++t ) {
+            int a = dp[p2] * 2;
+            int b = dp[p3] * 3;
+            int c = dp[p5] * 5;
+            dp[t] = Math.min(Math.min(a,b),c);
+            if(dp[t] == a){
+                ++p2;
+            }
+            if(dp[t] == b){
+                ++p3;
+            }
+            if(dp[t] == c){
+                ++p5;
+            }
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618101473806.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java中的绑定]]></title>
+        <id>https://2293736867.github.io/post/java-zhong-de-bang-ding/</id>
+        <link href="https://2293736867.github.io/post/java-zhong-de-bang-ding/">
+        </link>
+        <updated>2021-04-10T14:58:57.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-前言">1 前言</h1>
+<p>做了一次笔试题，发现了一题问答题，是关于<code>Java</code>绑定的：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210410200801611.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>当时做的时候是完全不会的。。。</p>
+<p>于是这里补上一篇<code>Java</code>绑定的文章。</p>
+<h1 id="2-绑定">2 绑定</h1>
+<p>首先来了解一下绑定的概念。绑定是指<strong>一个方法的调用与方法所在的类关联起来</strong>。</p>
+<p>很抽象吧，举个例子，如果父类与子类存在同名方法，子类对父类方法进行了重写，那么就需要绑定来区分调用的到底是父类的方法还是子类的方法。相对简单的一种理解是，绑定是一个方法的调用与调用这个方法的类连接在一起的过程。</p>
+<p>而绑定具体又可以分为：</p>
+<ul>
+<li>静态绑定：就是程序执行前，方法已经被绑定，可以简单理解成编译期绑定</li>
+<li>动态绑定：在运行时根据具体对象的类型进行绑定，通过一些机制去运行时判断对象的类型，并分别调用适当的方法</li>
+</ul>
+<h1 id="3-静态绑定">3 静态绑定</h1>
+<p>静态绑定也叫前期绑定、编译期绑定，在程序运行之前，也就是编译时期<code>JVM</code>能够确认方法由谁调用，这种机制就叫静态绑定。</p>
+<p>如果一个方法由<code>private</code>、<code>static</code>、<code>final</code>任意一个关键字修饰，那么这个方法就是静态绑定的，原因很简单，因为：</p>
+<ul>
+<li><code>private</code>修饰的方法，无法由本类以外的类调用，也就是调用者只能是该类</li>
+<li><code>static</code>修饰的方法，通过<code>类名.方法名</code>进行调用，也可以唯一确定了调用的类</li>
+<li><code>final</code>修饰的方法，不能被子类进行重写，在编译期就能确定了调用的类</li>
+</ul>
+<p>这三个关键字修饰的方法，都可以在编译时期就能唯一确定了调用的类，不存在子类调用的问题，因此使用静态绑定，而不是动态绑定。</p>
+<h1 id="4-动态绑定">4 动态绑定</h1>
+<p>动态绑定就是运行时根据对象的类型进行绑定，简单来说，<code>JVM</code>在运行时期决定由哪个对象调用的过程称为动态绑定。</p>
+<p>比如：</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args){
+        A b = new B();
+        b.print();
+    }
+}
+
+class A{
+    public void print(){
+        System.out.println(&quot;A&quot;);
+    }
+}
+
+class B extends A{
+    @Override
+    public void print(){
+        System.out.println(&quot;B&quot;);
+    }
+}
+</code></pre>
+<p>由于B类继承了A类，因此创建对象的时候：</p>
+<pre><code class="language-java">A b = new B();
+</code></pre>
+<p>编译期并不知道b真正引用的是A类还是B类，在运行的时候才知道b是一个A类对象，但是指向了B类的引用。</p>
+<p>在<code>Java</code>中，所有的非<code>final</code>、<code>private</code>、<code>static</code>的方法都是动态绑定的，因为只要继承了就能重写。</p>
+<h1 id="5-区别">5 区别</h1>
+<ul>
+<li>发生时期：静态绑定发生在编译时期，动态绑定发生在运行时期</li>
+<li>灵活性：动态绑定的灵活性要比静态绑定高，因为静态绑定在编译的时期就确定了，而动态绑定在编译的时候并不知道是调用哪一个类的方法</li>
+<li>速度：静态绑定调用方法的速度要快于动态绑定，因为静态绑定可以直接调用，而动态绑定需要去搜索方法表</li>
+</ul>
+<h1 id="6-动态绑定的过程">6 动态绑定的过程</h1>
+<p>在了解动态绑定的过程之前，先了解一些前置知识。</p>
+<h2 id="61-方法调用">6.1 方法调用</h2>
+<p><code>Java</code>中的方法调用有两类：</p>
+<ul>
+<li>静态方法调用</li>
+<li>动态方法调用</li>
+</ul>
+<p>而方法调用的指令有四个，分别是：</p>
+<ul>
+<li><code>invokestatic</code></li>
+<li><code>invokespecial</code></li>
+<li><code>invokevirtual</code></li>
+<li><code>invokeinterface</code></li>
+</ul>
+<p>前两个是静态绑定的，而后两个是动态绑定的。</p>
+<h2 id="62-方法表">6.2 方法表</h2>
+<p>方法表是字节码文件的一部分，每个类都有一个方法表，方法表是为<code>invokevirtual</code>以及<code>invokeinterface</code>指令服务的。由于<code>Java</code>中的类都继承于<code>Object</code>，因此，在默认情况下，所有类的方法表中都有<code>Object</code>的方法，如果重写了其中的方法，就会改变其中的描述符。比如，<code>Object</code>类的方法表可以简单理解如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210410220749370.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而加载了A类的字节码后，因为A类并没有重写任何的<code>Object</code>方法，因此只是添加了A类本身的方法：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210410220926793.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而加载了B类的字节码后，因为重写了<code>print()</code>，因此方法表如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210410221217622.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="63-具体过程">6.3 具体过程</h2>
+<p>了解了前置知识后看具体过程就会相对简单一点了，动态绑定的过程可以分为三步：</p>
+<ul>
+<li>虚拟机提取对象实际类型的方法表：<code>JVM</code>获取到对象的实际类型后，再获取该类型的方法表</li>
+<li>虚拟机搜索方法签名：当调用<code>b.print()</code>时，通过方法表发现实际方法是<code>B.print()</code></li>
+<li>调用方法：调用<code>B.print()</code></li>
+</ul>
+<h1 id="7-参考">7 参考</h1>
+<ul>
+<li><a href="https://stackoverflow.com/questions/18082651/how-does-dynamic-binding-happens-in-jvm">StackOverflow-How does dynamic binding happens in JVM?</a></li>
+<li><a href="https://www.cnblogs.com/kaleidoscope/p/9790766.html">博客园-Java多态实现原理</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第300期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-300-qi/</id>
@@ -511,48 +663,6 @@ public class Solution {
 <p>祭祖。</p>
 <p>追思。</p>
 <p>愿安好。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第293期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-293-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-293-qi/">
-        </link>
-        <updated>2021-04-03T12:50:22.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>出身好的努力是为了成功，而你是为了活下去。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>梨花风起正清明，游子寻春半出城。<br>
-——吴惟信《苏堤清明即事》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>能够用自己喜欢的工作维持生活是件很幸福的事。</p>
-</blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第292期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-292-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-292-qi/">
-        </link>
-        <updated>2021-04-02T12:46:38.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>我能想到最浪漫的事，就是和你一起吃吃吃，然后你付钱。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>好风胧月清明夜，碧砌红轩刺史家。<br>
-——白居易《清明夜》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>虽然我和他已十年不见，但我知道我会永远怀念他。</p>
-</blockquote>
 ]]></content>
     </entry>
 </feed>
