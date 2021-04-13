@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-13T01:21:15.765Z</updated>
+    <updated>2021-04-13T05:42:56.439Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,98 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[关于Vim/Neovim/SpaceVim的一些思考]]></title>
+        <id>https://2293736867.github.io/post/guan-yu-vimneovimspacevim-de-yi-xie-si-kao/</id>
+        <link href="https://2293736867.github.io/post/guan-yu-vimneovimspacevim-de-yi-xie-si-kao/">
+        </link>
+        <updated>2021-04-13T05:23:36.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-前言">1 前言</h1>
+<p>最近看到了<code>Neovim</code>以及<code>SpaceVim</code>，于是上手试了一下。</p>
+<h1 id="2-neovim与spacevim">2 <code>Neovim</code>与<code>SpaceVim</code></h1>
+<p><code>Neovim</code>是<code>Vim</code>的一个分支，具有更加现代的<code>GUI</code>、嵌入式以及脚本化的终端、异步工作控制等等特点，默认配置文件为<code>~/.config/nvim/init.vim</code>。而<code>SpaveVim</code>，是一个社区驱动的模块化的<code>Vim IDE</code>，以模块的方式组织管理插件以及相关配置，为不同的语言开发量身定制了相关的开发模块，提供了自动补全、语法检查、格式化、调试等特性，默认配置文件为<code>~/.SpaveVim.d/init.toml</code>。</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210413104514281.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-使用感受">3 使用感受</h1>
+<h2 id="31-neovim">3.1 <code>Neovim</code></h2>
+<p>首先是安装，<code>Neovim</code>的安装很简单，可以直接通过包管理器安装：</p>
+<pre><code class="language-bash">paru -S neovim
+</code></pre>
+<p>安装了之后可以使用<code>nvim</code>命令打开。</p>
+<p>简单使用了一下，发现<code>Neovim</code>并没有和<code>Vim</code>（版本<code>8.2</code>）有太大的区别。一般情况下，这样的<code>Neovim</code>不能成为一个<code>IDE</code>，需要添加若干插件才能使用。流行的插件管理器有如下几个：</p>
+<ul>
+<li><code>vim-plug</code></li>
+<li><code>vundle</code></li>
+<li><code>neobundle</code></li>
+<li><code>Pathogen</code></li>
+</ul>
+<p>笔者用的是<code>vim-plug</code>，插件安装不难，在<code>init.vim</code>中的两个<code>call</code>之间加上插件的名字：</p>
+<pre><code class="language-bash">call plug#begin('~/.vim/plugged')
+Plug 'junegunn/vim-easy-align'
+call plug#end()
+</code></pre>
+<p>然后在<code>Neovim</code>中键入<code>:PlugInstall</code>即可进行安装。</p>
+<p>一般来说，如果需要打造成为一个<code>IDE</code>，那么至少需要具备以下功能：</p>
+<ul>
+<li>补全：可用插件<a href="https://github.com/ycm-core/YouCompleteMe">YouCompleteMe</a>、<a href="https://github.com/honza/vim-snippets">vim-snippets</a></li>
+<li>高亮：可用插件<a href="https://github.com/jaxbot/semantic-highlight.vim">semantic-highlight.vim</a></li>
+<li>工程目录树：可用插件<a href="https://github.com/preservim/nerdtree">nerdtree</a></li>
+<li>运行与调试：可用插件<a href="https://github.com/vim-vdebug/vdebug">Vdebug</a></li>
+</ul>
+<p>但是，安装使用了之后，测试了一下<code>Java</code>，效果并不怎么样，拿最常用的补全来说，补全提示的速度比不快，另一方面，提示的速度比<code>IDEA</code>慢，而且提示不够智能，不能根据当前光标处的变量提示最接近的补全。另一方面，并不能自动<code>import</code>（虽然可以通过脚本做到，但是又需要额外的配置）。</p>
+<h2 id="32-spacevim">3.2 <code>SpaceVim</code></h2>
+<p><code>SpaveVim</code>相当于一个开箱即用的<code>IDE</code>，默认就提供了<code>IDE</code>的常见功能，比如：</p>
+<ul>
+<li>补全</li>
+<li>高亮</li>
+<li>工程目录树</li>
+<li>运行调试</li>
+<li>快速定位</li>
+<li>构建工具支持</li>
+</ul>
+<p>等等。首先，不可否认的是<code>SpaceVim</code>默认就提供了一个用户友好的界面：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210413112344359.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>会默认记录最近打开的文件，并且可以通过数字快速定位。笔者同样使用了<code>Java</code>进行测试，虽然内置了代码补全插件，但是，令人遗憾的是并没有自动<code>import</code>的功能，并且也没有变量名自动补全的功能（指创建一个叫<code>arrayList</code>的变量）：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210413112515715.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>当然，这也有可能是没有完全配置好的原因，想要配置一个更加好用的<code>SpaceVim</code>，可以参考<a href="https://blog.csdn.net/simple_the_best/article/details/52970992">这篇文章</a>。</p>
+<h1 id="4-建议">4 建议</h1>
+<p>下面是个人建议的使用<code>Neovim</code>的原因：</p>
+<ul>
+<li>需要一个从零开始配置的<code>IDE</code>或者<code>Vim</code></li>
+<li>动手能力强，能解决各种问题</li>
+<li>能够熟练记忆并使用各种各样的快捷键</li>
+<li>熟悉各种插件，包括但不限于<code>nerdtree</code>、<code>YouCompleteMe</code>等等</li>
+</ul>
+<p>因为如果想把<code>Neovim</code>用好，最起码需要花点时间，利用插件安装好各种各样的插件之后（当然因为有些插件只是针对<code>Vim</code>的，所以可能会遇上不兼容的问题），熟悉它们的使用并知道快捷键，这对记忆力以及学习能力都是一个考验，在这过程中，需要无数次的打开<code>init.vim</code>进行配置。</p>
+<p>建议使用<code>SpaveVim</code>的原因：</p>
+<ul>
+<li>不想手动配置太多的插件以及快捷键</li>
+<li>需要一个开箱即用且轻量级的<code>IDE</code></li>
+<li>不需要开发很大的工程</li>
+</ul>
+<p>在<code>SpaveVim</code>里面，大部分都是已经配置好的，剩下的只是需要通过官网文档熟悉界面，最主要的是熟悉<code>Space</code>组合键的使用，比如：</p>
+<ul>
+<li><code>Space+数字键</code>：切换窗口</li>
+<li><code>Space+b/B</code>：缓冲区操作</li>
+<li><code>Space+c</code>：命令操作</li>
+<li><code>Space+f</code>：文件操作</li>
+<li><code>Space+l</code>：语言相关操作，比如运行等等</li>
+<li><code>Space+w</code>：窗口操作</li>
+</ul>
+<p>相比起<code>Neovim</code>需要在<code>init.vim</code>中配置各种<code>map</code>去映射键，<code>SpaceVim</code>的快捷键学习曲线会低了很多。</p>
+<p>但是相比起现代级的<code>IDE</code>，<code>Neovim</code>与<code>SpaceVim</code>还是有很大差距的，最明显的就是对各种库、各种包以及一键部署运行的支持，因此，个人认为<code>SpaceVim</code>/<code>Neovim</code>不是特别适合大项目的。不过当然有一些折中的方案，比如<code>VSCode</code>，在各种各样的插件加持之下，可以堪称是又轻又快的现代<code>IDE</code>。</p>
+<h1 id="5-资源">5 资源</h1>
+<p>如果想学习<code>Neovim</code>/<code>SpaceVim</code>或者想把两者配置成一个更好用的<code>IDE</code>，这里提供了一些资源：</p>
+<ul>
+<li><a href="https://neovim.io/">Neovim文档</a></li>
+<li><a href="https://spacevim.org/cn/">SpaceVim文档</a></li>
+<li><a href="https://github.com/junegunn/vim-plug/wiki/tutorial">vim-plug文档</a></li>
+<li><a href="https://github.com/VundleVim/Vundle.vim/wiki">Vundle文档</a></li>
+<li><a href="https://github.com/amix/vimrc">24.3k star的vimrc配置</a></li>
+<li><a href="https://vimawesome.com/">VimAwesome-Vim插件合集网站</a></li>
+<li><a href="https://github.com/yangyangwithgnu/use_vim_as_ide">8.9k star的如何将Vim配置成C/C++ IDE的仓库</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日一句 301-350期合集]]></title>
         <id>https://2293736867.github.io/post/mei-ri-yi-ju-301-350-qi-he-ji/</id>
@@ -1574,43 +1666,6 @@ class B extends A{
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Linux pgrep命令]]></title>
-        <id>https://2293736867.github.io/post/linux-pgrep-ming-ling/</id>
-        <link href="https://2293736867.github.io/post/linux-pgrep-ming-ling/">
-        </link>
-        <updated>2021-04-07T04:07:28.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-pgrep">1 <code>pgrep</code></h1>
-<p><code>pgrep</code>是一个根据名称查找进程<code>ID</code>的命令，返回的是进程<code>ID</code>，若存在当个进程，则分为不同的行返回<code>ID</code>（默认实现）。</p>
-<h1 id="2-示例">2 示例</h1>
-<p>查找<code>java</code>进程：</p>
-<pre><code class="language-bash">pgrep java
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210407110625110.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>上图还显示了<code>ps</code>与<code>pgrep</code>的区别，简单来说：</p>
-<pre><code class="language-bash">pgrep name
-等价于
-ps -e | grep name | awk '{print $1}'
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210407110833970.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-常用参数">3 常用参数</h1>
-<ul>
-<li><code>-l</code>：显示<code>PID</code>和进程名称</li>
-<li><code>-a</code>：显示详细信息</li>
-<li><code>-c</code>：计算进程数量</li>
-<li><code>-n/-o</code>：显示进程号最大与最小的进程</li>
-</ul>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210407111454587.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-与其他命令配合">4 与其他命令配合</h1>
-<p>一般<code>pgrep</code>需要和其他命令配合使用，最常见的是<code>kill</code>：</p>
-<pre><code class="language-bash">pgrep name | xargs kill -15
-</code></pre>
-<p>注意需要使用<code>xargs</code>传递参数，而不能只使用管道，这样是话会提示<code>not enough arguments</code>：</p>
-<pre><code class="language-bash">pgrep name | kill -15
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210407111927228.png" alt="在这里插入图片描述" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
