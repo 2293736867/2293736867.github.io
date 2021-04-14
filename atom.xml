@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-13T05:59:59.981Z</updated>
+    <updated>2021-04-14T00:56:50.374Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,81 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第304期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-304-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-304-qi/">
+        </link>
+        <updated>2021-04-14T00:09:42.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>试着去了解那些你讨厌的人，你会发现，真是越看越讨厌。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>醉舞梁园夜，行歌泗水春。<br>
+——杜甫《寄李十二白二十韵》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>有时语言就像利刃，使用不当，就会成为凶器。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618359014201.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>一开始直接上的暴力<code>ArrayList</code>，虽然能过，但是速度打败了<code>5%</code>的<code>Java</code>提交。。。</p>
+<p>然后想了一下题目说这是一个树形结构，于是想着用二叉树试了一下，但是发现好像叉数太少了。</p>
+<p>后来发现前缀树其实是一棵非典型m叉树，说非典型是因为它与一般的m叉树结构不一样，一般的m叉树都有一个值以及一个孩子节点数组，而前缀树只有一个表示是否结束的布尔变量以及一个映射表（这题中是只有26个小写字母，所以映射表的长度为26）。</p>
+<p>最主要的两个操作：</p>
+<ul>
+<li>插入：插入需要从根开始，对于一个单词，进行逐个字符的插入，首先判断每个字符对应的前缀树是否存在，存在的话直接修改临时变量<code>Node</code>的值，不存在的话新建一个前缀树并使<code>Node</code>指向它，直到每个字符处理完毕</li>
+<li>查找：从根开始，逐个字符开始查找，若字符对应的前缀树存在，移动临时变量<code>Node</code>，使其指向下一个节点，如果不存在，直接返回<code>null</code>或者<code>false</code></li>
+</ul>
+<p>代码：</p>
+<pre><code class="language-java">public class Trie {
+    private boolean isEnd = false;
+    private Trie[] children = new Trie[26];
+
+    public Trie() {
+    }
+
+    public void insert(String word) {
+        Trie node = searchPrefix(word,true);
+        node.isEnd = true;
+    }
+
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        Trie node = searchPrefix(word,false);
+        return node != null &amp;&amp; node.isEnd;
+    }
+
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        return searchPrefix(prefix,false) != null;
+    }
+
+    private Trie searchPrefix(String prefix,boolean isInsertMode){
+        Trie node = this;
+        for (int i = 0; i &lt; prefix.length(); i++) {
+            int index = prefix.charAt(i) - 'a';
+            if(node.children[index] == null){
+                if(isInsertMode){
+                    node.children[index] = new Trie();
+                }else{
+                    return null;
+                }
+            }
+            node = node.children[index];
+        }
+        return node;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618358999407.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[关于Vim/Neovim/SpaceVim的一些思考]]></title>
         <id>https://2293736867.github.io/post/guan-yu-vimneovimspacevim-de-yi-xie-si-kao/</id>
@@ -1604,68 +1679,6 @@ class B extends A{
 <p>然后就问了里面有什么。</p>
 <p>好吧只是看过不记得了，怎么就不问堆组成，<code>GC</code>算法，<code>G1</code>回收器，类加载器，，，，，，</p>
 <p><s>太菜了太菜了，，，，</s></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第298期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-298-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-298-qi/">
-        </link>
-        <updated>2021-04-08T11:52:56.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>以前我每天都会买彩票，终于有一天，我连彩票也买不起了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>唯有相思似春色，江南江北送君归。<br>
-——王维《送沈子归江东》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>爸爸我也不是一生下来就是爸爸，爸爸也是头一次当爸爸。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1617841682575.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<pre><code class="language-java">class Solution {
-    public int findMin(int[] nums) {
-        int n = nums.length;
-        if(n == 1){
-            return nums[0];
-        }
-        int l = 0;
-        int r = n-1;
-        int m = (l+r)/2;
-        while(l&lt;r){
-            if(nums[m] &gt; nums[r]){
-                l = m+1;
-            }else{
-                r = m;
-            }
-            m = (l+r)/2;
-        }
-        return nums[l];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1617841475684.png" alt="" loading="lazy"></figure>
-<h1 id="关于一些一行代码ac的题目">关于一些一行代码AC的题目</h1>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1617796838448.png" alt="" loading="lazy"></figure>
-<pre><code class="language-java">class Solution {
-    public int maximumWealth(int[][] accounts) {
-        return Arrays.stream(accounts).mapToInt(t -&gt; Arrays.stream(t).sum()).max().orElse(0);
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1617797331792.png" alt="" loading="lazy"></figure>
-<pre><code class="language-java">class Solution {
-    public int maximum(int a, int b) {
-        return (int)(((long) a + (long) b +Math.abs((long) a - (long) b))/2);
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
