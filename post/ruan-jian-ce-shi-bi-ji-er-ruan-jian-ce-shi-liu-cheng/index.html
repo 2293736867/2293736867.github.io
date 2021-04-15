@@ -16,10 +16,25 @@
 <script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
 <script src="https://2293736867.github.io/media/js/functions.js"></script>
     <meta name="referrer" content="never">
-    <meta name="description" content="1 测试流程概述
-软件测试流程包括：
+    <meta name="description" content="
+1 测试流程概述
+2 单元测试
 
-测试计划：测试计划是指根据用户需求报告中关于功能要求和性能指标的规格说明书，定义相应的测试需求报告，使得随后所有的测试工作都围绕着测试需求来进行，同时适当选择测试内容，合理安排测试人员、测试时间和测试..." />
+2.1 定义
+2.2 内容
+2.3 步骤
+
+
+3 集成测试
+
+3.1 定义
+3.2 任务
+3.3 方法
+
+3.3.1 非增量式集成测试方法
+3.3.2 增量式集成测试方法
+
+3.3.2.1 自顶向下增量式..." />
     <meta name="keywords" content="软件测试" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -75,7 +90,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1618361787150" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1618447107441" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -114,7 +129,61 @@
             <article class="main-article post">
               <section class="post-content">
                 <div class="text">
-                  <h1 id="1-测试流程概述">1 测试流程概述</h1>
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B%E6%A6%82%E8%BF%B0">1 测试流程概述</a></li>
+<li><a href="#2-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95">2 单元测试</a>
+<ul>
+<li><a href="#21-%E5%AE%9A%E4%B9%89">2.1 定义</a></li>
+<li><a href="#22-%E5%86%85%E5%AE%B9">2.2 内容</a></li>
+<li><a href="#23-%E6%AD%A5%E9%AA%A4">2.3 步骤</a></li>
+</ul>
+</li>
+<li><a href="#3-%E9%9B%86%E6%88%90%E6%B5%8B%E8%AF%95">3 集成测试</a>
+<ul>
+<li><a href="#31-%E5%AE%9A%E4%B9%89">3.1 定义</a></li>
+<li><a href="#32-%E4%BB%BB%E5%8A%A1">3.2 任务</a></li>
+<li><a href="#33-%E6%96%B9%E6%B3%95">3.3 方法</a>
+<ul>
+<li><a href="#331-%E9%9D%9E%E5%A2%9E%E9%87%8F%E5%BC%8F%E9%9B%86%E6%88%90%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95">3.3.1 非增量式集成测试方法</a></li>
+<li><a href="#332-%E5%A2%9E%E9%87%8F%E5%BC%8F%E9%9B%86%E6%88%90%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95">3.3.2 增量式集成测试方法</a>
+<ul>
+<li><a href="#3321-%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E5%A2%9E%E9%87%8F%E5%BC%8F%E6%B5%8B%E8%AF%95">3.3.2.1 自顶向下增量式测试</a></li>
+<li><a href="#3322-%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E5%A2%9E%E9%87%8F%E5%BC%8F%E6%B5%8B%E8%AF%95">3.3.2.2 自底向上增量式测试</a></li>
+<li><a href="#3323-%E4%B8%89%E6%98%8E%E6%B2%BB%E9%9B%86%E6%88%90%E6%B5%8B%E8%AF%95">3.3.2.3 三明治集成测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-%E7%A1%AE%E8%AE%A4%E6%B5%8B%E8%AF%95">4 确认测试</a>
+<ul>
+<li><a href="#41-%E5%AE%9A%E4%B9%89">4.1 定义</a></li>
+<li><a href="#42-%E5%86%85%E5%AE%B9">4.2 内容</a></li>
+</ul>
+</li>
+<li><a href="#5-%E9%AA%8C%E6%94%B6%E6%B5%8B%E8%AF%95">5 验收测试</a>
+<ul>
+<li><a href="#51-%E5%AE%9A%E4%B9%89">5.1 定义</a></li>
+<li><a href="#52-%E5%86%85%E5%AE%B9">5.2 内容</a>
+<ul>
+<li><a href="#521-alpha%E6%B5%8B%E8%AF%95">5.2.1 <code>alpha</code>测试</a></li>
+<li><a href="#522-beta%E6%B5%8B%E8%AF%95">5.2.2 <code>beta</code>测试</a></li>
+<li><a href="#523-%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95">5.2.3 回归测试</a>
+<ul>
+<li><a href="#5231-%E5%AE%9A%E4%B9%89">5.2.3.1 定义</a></li>
+<li><a href="#5232-%E5%AE%9E%E6%96%BD%E5%89%8D%E6%8F%90">5.2.3.2 实施前提</a></li>
+<li><a href="#5233-%E5%9B%9E%E5%BD%92%E6%B5%8B%E8%AF%95%E7%9A%84%E4%B8%A4%E4%B8%AA%E7%AD%96%E7%95%A5">5.2.3.3 回归测试的两个策略</a></li>
+<li><a href="#5234-%E6%B5%81%E7%A8%8B">5.2.3.4 流程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="1-测试流程概述">1 测试流程概述</h1>
 <p>软件测试流程包括：</p>
 <ul>
 <li>测试计划：测试计划是指根据用户需求报告中关于功能要求和性能指标的规格说明书，定义相应的测试需求报告，使得随后所有的测试工作都围绕着测试需求来进行，同时适当选择测试内容，合理安排测试人员、测试时间和测试资源等</li>
@@ -331,6 +400,36 @@ var dsqjs = new DisqusJS(options)
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-305-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-305-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-04-15">2021-04-15</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-305-qi/">每日分享 第305期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-si-bai-he-ce-shi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/ruan-jian-ce-shi-bi-ji-si-bai-he-ce-shi.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-04-14">2021-04-14</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-si-bai-he-ce-shi/">软件测试笔记（四）：白盒测试</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-304-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-304-qi.jpg');"></span>
                     </a>
@@ -345,33 +444,7 @@ var dsqjs = new DisqusJS(options)
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/guan-yu-vimneovimspacevim-de-yi-xie-si-kao/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/guan-yu-vimneovimspacevim-de-yi-xie-si-kao.jpeg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-04-13">2021-04-13</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/guan-yu-vimneovimspacevim-de-yi-xie-si-kao/">关于Vim/Neovim/SpaceVim的一些思考</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
-                  
-                  
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-yi-ju-301-350-qi-he-ji/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-yi-ju-301-350-qi-he-ji.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-04-13">2021-04-13</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-yi-ju-301-350-qi-he-ji/">每日一句 301-350期合集</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
@@ -1507,13 +1580,13 @@ var dsqjs = new DisqusJS(options)
                     
                       <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
-                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-1 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-1 ctag-P6coYUl8A" aria-label="">软件测试</a>
                     
-                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-2 ctag--AktfIpz8" aria-label="">Java</a>
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-2 ctag-VVnjOjF_K" aria-label="">Vim</a>
                     
-                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-3 ctag-wtA4qyubx" aria-label="">Linux</a>
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-3 ctag--AktfIpz8" aria-label="">Java</a>
                     
-                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-4 ctag-P6coYUl8A" aria-label="">软件测试</a>
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-4 ctag-wtA4qyubx" aria-label="">Linux</a>
                     
                       <a href="https://2293736867.github.io/tag/Zh36z1JpD/" class="ctag ctag-5 ctag-Zh36z1JpD" aria-label="">Switch</a>
                     
@@ -1786,7 +1859,7 @@ var dsqjs = new DisqusJS(options)
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 564 篇文章
+          ©2019 共 566 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

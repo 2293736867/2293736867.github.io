@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-14T00:59:50.777Z</updated>
+    <updated>2021-04-15T00:39:44.139Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,195 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第305期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-305-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-305-qi/">
+        </link>
+        <updated>2021-04-15T00:33:34.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>这年头有些人靠脸吃饭，而有些人，靠不要脸吃饭。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>柳下桃蹊，乱分春色到人家。<br>
+——秦观《望海潮·洛阳怀古》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>如果我真的存在，也是因为你需要我。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618446938131.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>比较笨的一个时间空间都是<code>O(n)</code>的<code>dp</code>，其实还有优化的空间，可以把空间优化为<code>O(1)</code>，深夜了，肝不动。。。</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if(n == 1){
+            return nums[0];
+        }
+        if(n == 2){
+            return Math.max(nums[0],nums[1]);
+        }
+        if(n == 3) {
+            return Math.max(Math.max(nums[0],nums[1]),nums[2]);
+        }
+        if(n == 4){
+            return Math.max(nums[0]+nums[2],nums[1]+nums[3]);
+        }
+
+        int [] dp = new int[n];
+        dp[0] = nums[0];
+        dp[1] = nums[1];
+        dp[2] = nums[2] + nums[0];
+        dp[3] = nums[3] + Math.max(nums[0],nums[1]);
+        for (int i = 4; i &lt; n-1; i++) {
+            int max = dp[0] + nums[i];
+            for (int j = 1; j &lt; i-1; j++) {
+                if(dp[j] + nums[i] &gt; max){
+                    max = dp[j]+nums[i];
+                }
+            }
+            dp[i] = max;
+        }
+        int maxV = Arrays.stream(dp).max().getAsInt();
+        Arrays.fill(dp,0);
+        dp[0] = 0;
+        dp[1] = nums[1];
+        dp[2] = nums[2];
+        dp[3] = nums[3] + nums[1];
+        for (int i = 4; i &lt; n; i++) {
+            int max = dp[1] + nums[i];
+            for (int j = 2; j &lt; i - 1; j++) {
+                if (dp[j] + nums[i] &gt; max) {
+                    max = dp[j] + nums[i];
+                }
+            }
+            dp[i] = max;
+        }
+        int temp = Arrays.stream(dp).max().getAsInt();
+        if(temp &gt; maxV){
+            maxV = temp;
+        }
+        return maxV;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618446959829.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[软件测试笔记（四）：白盒测试]]></title>
+        <id>https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-si-bai-he-ce-shi/</id>
+        <link href="https://2293736867.github.io/post/ruan-jian-ce-shi-bi-ji-si-bai-he-ce-shi/">
+        </link>
+        <updated>2021-04-14T03:09:26.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95">1 白盒测试</a></li>
+<li><a href="#2-%E9%80%BB%E8%BE%91%E8%A6%86%E7%9B%96%E6%B3%95">2 逻辑覆盖法</a>
+<ul>
+<li><a href="#21-%E8%AF%AD%E5%8F%A5%E8%A6%86%E7%9B%96">2.1 语句覆盖</a></li>
+<li><a href="#22-%E5%88%A4%E5%AE%9A%E8%A6%86%E7%9B%96">2.2 判定覆盖</a></li>
+<li><a href="#23-%E6%9D%A1%E4%BB%B6%E8%A6%86%E7%9B%96">2.3 条件覆盖</a></li>
+<li><a href="#24-%E6%9D%A1%E4%BB%B6%E5%88%A4%E5%AE%9A%E8%A6%86%E7%9B%96">2.4 条件/判定覆盖</a></li>
+<li><a href="#25-%E4%BF%AE%E6%AD%A3%E6%9D%A1%E4%BB%B6%E5%88%A4%E5%AE%9A%E8%A6%86%E7%9B%96">2.5 修正条件/判定覆盖</a></li>
+<li><a href="#26-%E6%9D%A1%E4%BB%B6%E7%BB%84%E5%90%88%E8%A6%86%E7%9B%96">2.6 条件组合覆盖</a></li>
+<li><a href="#27-%E8%B7%AF%E5%BE%84%E8%A6%86%E7%9B%96">2.7 路径覆盖</a></li>
+<li><a href="#28-%E6%80%BB%E7%BB%93">2.8 总结</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%B7%AF%E5%BE%84%E5%88%86%E6%9E%90">3 路径分析</a></li>
+<li><a href="#4-%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84%E6%B5%8B%E8%AF%95">4 控制结构测试</a></li>
+</ul>
+</p>
+<h1 id="1-白盒测试">1 白盒测试</h1>
+<p>白盒测试是对软件的过程性细节做细致的检查，把测试对象看作是一个打开的盒子，允许测试人员利用程序内部的逻辑结构以及有关信息，设计或选择测试用例，对程序所有逻辑路径进行测试。通过在不同点检查程序状态，确定实际状态是否与预期的状态一致。</p>
+<p>白盒测试只测试软件产品的内部结构和处理过程，而不是测试软件产品的功能，可以分为静态和动态两种：</p>
+<ul>
+<li>静态白盒测试就是在不执行测试的情况下有条理仔细审查软件设计、体系结构和代码，从而找出软件缺陷的过程</li>
+<li>动态白盒测试也叫结构化测试，通过查看并使用代码的内部结构，设计和执行测试</li>
+</ul>
+<p>白盒测试的常见方法包括：</p>
+<ul>
+<li>逻辑覆盖法</li>
+<li>路径分析</li>
+<li>控制结构测试</li>
+</ul>
+<h1 id="2-逻辑覆盖法">2 逻辑覆盖法</h1>
+<p>逻辑覆盖法又叫控制流覆盖，是按照程序内部逻辑结构设计测试用例的测试方法，根据程序中的判定和条件控制流覆盖准则来定量度量测试进行程度，按照覆盖标准的不同，可以分为：</p>
+<ul>
+<li>语句覆盖</li>
+<li>判定覆盖</li>
+<li>条件覆盖</li>
+<li>条件判定覆盖</li>
+<li>修正条件判定覆盖</li>
+<li>条件组合覆盖</li>
+<li>路径覆盖</li>
+</ul>
+<h2 id="21-语句覆盖">2.1 语句覆盖</h2>
+<p>语句覆盖又叫线覆盖面或者段覆盖面，含义是选择足够数目的测试数据，使被测试程序中每条语句至少执行一次。语句覆盖可以直接应用于目标代码，不需要处理源代码，但是由于对一些控制结构不敏感（比如同样的测试用例，语句中的逻辑运算符从<code>and</code>改为<code>or</code>也同样通过），逻辑覆盖率低，因此往往不能发现判断中逻辑运算符出现的错误。</p>
+<h2 id="22-判定覆盖">2.2 判定覆盖</h2>
+<p>又叫分支覆盖或所有边覆盖，用于测试控制结构中布尔表达式分别为真和假，其中布尔表达式被认为是一个整体，不考虑内部是否包含了“逻辑与”或者“逻辑或”等运算符。判定覆盖的基本思想是设计的测试用例是的程序中每个判定至少分别取“真”分支和取“假”分支经历一次，即判断真假值均被满足。</p>
+<p>判定覆盖比语句覆盖提供了更强的测试能力，但是，大部分的判定语句是由多个逻辑条件组合而成的，仅仅判断最终的逻辑运算结果并不能真正覆盖所有的测试路径，这是判定覆盖的一个缺点。</p>
+<h2 id="23-条件覆盖">2.3 条件覆盖</h2>
+<p>条件覆盖是设计测试用例，使得每个判断中每个条件的可能取值至少满足一次。</p>
+<p>条件覆盖比判定覆盖增加了对符合判定情况的测试，增加了测试路径，但是条件覆盖只能保证每个条件至少有一次为真，而不考虑所有的判定结果。</p>
+<h2 id="24-条件判定覆盖">2.4 条件/判定覆盖</h2>
+<p>条件/判定覆盖是综合了条件覆盖与判定覆盖的一种方法，含义是通过设计足够的测试用例，使得判断条件中所有条件可能至少执行一次取值，同时所有判断的可能结果至少执行一次。</p>
+<p>表面上，条件/判定覆盖能同时满足判定覆盖以及条件覆盖两种标准，但实际上并没有完全覆盖所有的“真”和“假”取值的条件组合情况，这种情况下需要将判定语句中的复合条件表达式进行分解，形成由多个基本判定嵌套组成的流程图，以有效检查所有条件是否正确。</p>
+<h2 id="25-修正条件判定覆盖">2.5 修正条件/判定覆盖</h2>
+<p>修正条件/判定覆盖（缩写为<code>MC/DC</code>）可以解释为：</p>
+<ul>
+<li>每个条件的所有可能结果至少出现一次</li>
+<li>每个判定本身的所有可能结果也至少出现一次</li>
+<li>每个入口点与出口点至少要唤醒一次</li>
+<li>每个条件都显示能单独影响判定结果</li>
+</ul>
+<p><code>MC/DC</code>具有如下优点：</p>
+<ul>
+<li>继承了多重条件覆盖的优点</li>
+<li>线性地增加了测试用例的数量</li>
+<li>对操作数以及非等式条件变化反应敏感</li>
+<li>具有更高的目标码覆盖率</li>
+</ul>
+<h2 id="26-条件组合覆盖">2.6 条件组合覆盖</h2>
+<p>基本思想是，设计测试用例使得：</p>
+<ul>
+<li>每个条件中的所有可能至少出现一次</li>
+<li>每个判断本身的判定结果也至少出现一次</li>
+</ul>
+<p>条件组合覆盖是一种相当强的覆盖准则，可以有效地检查各种可能的条件取值的组合是否正确，它不但可以覆盖所有条件的可能取值组合，还可以覆盖所有判断的可取分支，但仍有可能的路径会遗漏掉，测试还不完全。</p>
+<h2 id="27-路径覆盖">2.7 路径覆盖</h2>
+<p>路径覆盖的基本思想是，选择足够的测试用例，使得程序中所有可能的路径都至少被执行一次。一条路径是从函数的入口到出口分支的一个唯一序列。</p>
+<p>路径覆盖的覆盖率比前面几种逻辑覆盖要大，但是随着代码增加，测试工作将呈指数级增长，比如一个函数包括10个判断语句，那么就需要测试<code>2^10 = 1024</code>个路径。</p>
+<h2 id="28-总结">2.8 总结</h2>
+<p>语句覆盖的效果最弱，路径覆盖的效果最好，如下图所示：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210414092712630.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>优缺点集合：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210414093317798.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-路径分析">3 路径分析</h1>
+<p>路径分析测试法是在程序控制流程图的基础上，通过分析控制构造的环路复杂性，导出独立路径集合，设计测试用例的方法。程序的所有路径作为一个集合，在这些路径集合中必然存在一个最短路径，这个最小的路径称为基路径或独立路径。</p>
+<p>路径分析与测试法主要步骤如下：</p>
+<ul>
+<li>绘制控制流图</li>
+<li>计算圈复杂性，圈复杂性用于计算程序的基本独立路径数目，确保所有语句至少执行一次的测试数量的上界</li>
+<li>确定独立路径的集合，独立路径是指至少引入程序的一个新处理语句集合或一个新条件的路径，即独立路径必须包含一条在定义之前不曾使用的边</li>
+<li>测试用例生成，设计测试用例的数据输入和预期结果，确保基本路径集中每条路径上的执行</li>
+</ul>
+<h1 id="4-控制结构测试">4 控制结构测试</h1>
+<p>控制结构测试可以分为：</p>
+<ul>
+<li>条件测试：检查程序模块中所包含逻辑条件的测试用例设计方法</li>
+<li>循环测试：检测代码中的简单循环、嵌套循环以及串接循环，测试用例包括零次循环、一次循环、两次循环、m次循环、最大循环次数等等</li>
+<li>Z路径覆盖：是路径覆盖的一个变体，是一种在大量判断和多个循环组合的情况下减少循环测试次数的方法，Z路径覆盖不考虑循环的形式和复杂度如何，也不考虑实际执行循环体次数是多少，只考虑通过循环体零次和一次这两种情况</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第304期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-304-qi/</id>
@@ -1576,109 +1765,6 @@ class B extends A{
 <li><a href="https://stackoverflow.com/questions/18082651/how-does-dynamic-binding-happens-in-jvm">StackOverflow-How does dynamic binding happens in JVM?</a></li>
 <li><a href="https://www.cnblogs.com/kaleidoscope/p/9790766.html">博客园-Java多态实现原理</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第300期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-300-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-300-qi/">
-        </link>
-        <updated>2021-04-10T02:23:10.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你认真的样子，就像天桥上贴膜的。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>白日放歌须纵酒，青春作伴好还乡。<br>
-——杜甫《闻官军收河南河北》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>猎人永不孤单。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618021493011.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>负数全都不是丑数，0也不是，直接从正整数开始判断。</p>
-<pre><code class="language-java">class Solution {
-    public boolean isUgly(int n) {
-        if(n &gt; 0){
-            while(n &gt; 1){
-                if(n % 5 == 0){
-                    n /= 5;
-                }else if(n % 3 == 0){
-                    n /= 3;
-                }else if(n % 2 == 0){
-                    n /= 2;
-                }else{
-                    break;
-                }
-            }
-            return n == 1;
-        }
-        return false;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618021543005.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第299期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-299-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-299-qi/">
-        </link>
-        <updated>2021-04-09T00:33:33.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>凡是不赚钱的，都说自己在创业。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>春水碧于天，画船听雨眠。<br>
-——韦庄《菩萨蛮·人人尽说江南好》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>和绝望，和睦相处。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1617928474795.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>二分，中间值与右边值比较：</p>
-<ul>
-<li>如果中间值小于右边值，则忽略右半区间</li>
-<li>如果中间值大于右边值，则忽略左半区间</li>
-<li>如果中间值等于右边值，因为允许重复值的存在，不能判断忽略哪一边的区间，只能将右指针减1，并继续循环</li>
-</ul>
-<pre><code class="language-java">class Solution {
-    public int findMin(int[] nums) {
-        int n = nums.length;
-        int l = 0;
-        int r = n-1;
-        while(l&lt;r){
-            int m = (l+r)/2;
-            if(nums[m] &gt; nums[r]){
-                l = m+1;
-            }else if(nums[m] &lt; nums[r]){
-                r = m;
-            }else{
-                --r;
-            }
-        }
-        return nums[l];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1617928450436.png" alt="" loading="lazy"></figure>
-<h1 id="蚂蚁电话面">蚂蚁电话面</h1>
-<p>昨天晚上电话面了蚂蚁，感觉自己有很多答不上来，或者说答上来的不怎么全面，比如，问了一下<code>JVM</code>，然后答了方法区、直接内存、堆区、栈区、本地方法区、<code>PC</code>寄存器。</p>
-<p>然后就问了里面有什么。</p>
-<p>好吧只是看过不记得了，怎么就不问堆组成，<code>GC</code>算法，<code>G1</code>回收器，类加载器，，，，，，</p>
-<p><s>太菜了太菜了，，，，</s></p>
 ]]></content>
     </entry>
 </feed>
