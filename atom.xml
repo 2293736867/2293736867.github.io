@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-20T05:20:01.813Z</updated>
+    <updated>2021-04-20T12:34:06.775Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,86 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[在Win10中手动添加/修改本地IP]]></title>
+        <id>https://2293736867.github.io/post/zai-win10-zhong-shou-dong-tian-jia-xiu-gai-ben-di-ip/</id>
+        <link href="https://2293736867.github.io/post/zai-win10-zhong-shou-dong-tian-jia-xiu-gai-ben-di-ip/">
+        </link>
+        <updated>2021-04-20T12:24:07.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-前言">1 前言</h1>
+<p>好久没动<code>Win10</code>了。。。</p>
+<p>今天需要用<code>Win10</code>做一下实验，手动修改<code>IP</code>，于是写下了这篇文章作为过程记录。</p>
+<h1 id="2-概述">2 概述</h1>
+<p><code>Win10</code>里面修改本地<code>IP</code>不是一件特别困难的事，简单来说可以分为两种方式：</p>
+<ul>
+<li>图形方式</li>
+<li>命令行方式</li>
+</ul>
+<p>先来看一下比较简单的图形方式。</p>
+<h1 id="3-图形操作">3 图形操作</h1>
+<p>打开<code>Win</code>，输入<code>Network status</code>，可以看到下面界面：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210420194131656.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>选择其中的网卡（图中是<code>Ethernet</code>），点击其中的<code>Properties</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210420194233437.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>点击其中的<code>Edit</code>并选择<code>Manual</code>就可以修改：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210420194425596.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>关于其中的值如何填写，建议参考<code>ipconfig /all</code>中的值。</p>
+<p>图中右边的黑框就是在<code>cmd</code>使用<code>ipconfig /all</code>获取的结果，可以看到：</p>
+<ul>
+<li>内网<code>IP</code>：<code>10.0.2.15</code></li>
+<li>子网掩码：<code>255.255.255.0</code></li>
+<li>网关：<code>10.0.2.2</code></li>
+</ul>
+<p>所以根据需要修改内网<code>IP</code>的值即可，子网掩码一般为<code>24</code>（<code>255.255.255.0</code>）、网关、<code>DNS</code>可以直接使用默认网关的值（<code>10.0.2.2</code>）：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/2021042019500892.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在<code>cmd</code>里面再次使用<code>ipconfig /all</code>就可以看到新修改的值了：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210420195142582.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="4-命令行操作">4 命令行操作</h1>
+<p>众所周知，在<code>Win10</code>中使用命令行操作的档次比使用图形操作高了不止一个档次，而且，使用图形化操作的话还不能添加新的<code>IP</code>，只能修改<code>IP</code>，那么，这时候就轮到命令行操作登场了。</p>
+<p>命令行操作主要使用到<code>netsh</code>命令，官方文档<a href="https://docs.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts">在此处</a>，先来看一下如何修改<code>IP</code>。</p>
+<h2 id="41-修改ip">4.1 修改<code>IP</code></h2>
+<p>操作之前，首先需要知道网卡的名字，使用</p>
+<pre><code class="language-bash">netsh interface show interface
+</code></pre>
+<p>就可以看到自己的网卡名字了：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210420200502747.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里只有一个叫<code>Ethernet</code>的网卡，修改时，使用<code>set</code>命令即可，格式为：</p>
+<pre><code class="language-bash">netsh interface ipv4 set address name=&quot;INTERFACE_NAME&quot; static IP_ADDRESS SUBNET_MASK GATEWAY
+</code></pre>
+<p>比如这里需要修改为<code>10.0.2.18</code>的<code>IP</code>，命令如下（需要管理员权限）：</p>
+<pre><code class="language-bash">netsh interface ipv4 set address name=&quot;Ethernet&quot; static 10.0.2.18 255.255.255.0 10.0.2.2
+</code></pre>
+<p>效果：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/2021042020075619.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-新增ip">4.2 新增<code>IP</code></h2>
+<p>操作与修改类似，只是修改为<code>add</code>命令，格式如下：</p>
+<pre><code class="language-bash">netsh interface ipv4 add address name=&quot;INTERFACE_NAME&quot; IP_ADDRESS SUBNET_MASK GATEWAY
+</code></pre>
+<p>比如需要添加一个<code>10.0.2.19</code>的<code>IP</code>，命名如下：</p>
+<pre><code class="language-bash">net interface ipv4 add address name=&quot;Ethernet&quot; 10.0.2.19 255.255.255.0 10.0.2.2
+</code></pre>
+<p>效果：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/2021042020111724.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="43-删除ip">4.3 删除<code>IP</code></h2>
+<p>删除<code>IP</code>操作也类似：</p>
+<pre><code class="language-bash">netsh interface ipv4 delete address name=&quot;INTERFACE_NAME&quot; IP_ADDRESS
+</code></pre>
+<p>比如把刚才新增加的<code>10.0.2.19</code>删去：</p>
+<pre><code class="language-bash">netsh interface ipv4 delete address name=&quot;Ethernet&quot; 10.0.2.19
+</code></pre>
+<p>效果：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210420201345885.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-总结">5 总结</h1>
+<p>图形化操作修改比较简单，而命令行修改功能强大，但是配置难度较高，实际情况中可以结合两者使用。</p>
+<p>另外，如果出现了无法连接网络的情况，一种简单的解决办法是在<code>Network status</code>中切换为<code>DHCP</code>，自动分配<code>IP</code>以及<code>DNS</code>：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210420194233437.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="6-参考链接">6 参考链接</h1>
+<ul>
+<li><a href="https://www.howtogeek.com/103190/change-your-ip-address-from-the-command-prompt/">How to Change Your Computer’s IP Address From the Command Prompt</a></li>
+<li><a href="https://docs.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts">Netsh Command Syntax, Contexts, and Formatting</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第310期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-310-qi/</id>
@@ -728,120 +808,6 @@ call plug#end()
 <li><a href="https://vimawesome.com/">VimAwesome-Vim插件合集网站</a></li>
 <li><a href="https://github.com/yangyangwithgnu/use_vim_as_ide">8.9k star的如何将Vim配置成C/C++ IDE的仓库</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日一句 301-350期合集]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-yi-ju-301-350-qi-he-ji/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-yi-ju-301-350-qi-he-ji/">
-        </link>
-        <updated>2021-04-13T01:06:05.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="第301期">第301期</h1>
-<blockquote>
-<p>如果最开始我没欺骗你，我们会怎样？</p>
-</blockquote>
-<h1 id="第302期">第302期</h1>
-<blockquote>
-<p>我会穿越那七大海洋，去和你相见。</p>
-</blockquote>
-<h1 id="第303期">第303期</h1>
-<blockquote>
-<p>踏碎零花，执剑称皇！</p>
-</blockquote>
-<h1 id="第304期">第304期</h1>
-<blockquote></blockquote>
-<h1 id="第305期">第305期</h1>
-<blockquote></blockquote>
-<h1 id="第306期">第306期</h1>
-<blockquote></blockquote>
-<h1 id="第307期">第307期</h1>
-<blockquote></blockquote>
-<h1 id="第308期">第308期</h1>
-<blockquote></blockquote>
-<h1 id="第309期">第309期</h1>
-<blockquote></blockquote>
-<h1 id="第310期">第310期</h1>
-<blockquote></blockquote>
-<h1 id="第311期">第311期</h1>
-<blockquote></blockquote>
-<h1 id="第312期">第312期</h1>
-<blockquote></blockquote>
-<h1 id="第313期">第313期</h1>
-<blockquote></blockquote>
-<h1 id="第314期">第314期</h1>
-<blockquote></blockquote>
-<h1 id="第315期">第315期</h1>
-<blockquote></blockquote>
-<h1 id="第316期">第316期</h1>
-<blockquote></blockquote>
-<h1 id="第317期">第317期</h1>
-<blockquote></blockquote>
-<h1 id="第318期">第318期</h1>
-<blockquote></blockquote>
-<h1 id="第319期">第319期</h1>
-<blockquote></blockquote>
-<h1 id="第320期">第320期</h1>
-<blockquote></blockquote>
-<h1 id="第321期">第321期</h1>
-<blockquote></blockquote>
-<h1 id="第322期">第322期</h1>
-<blockquote></blockquote>
-<h1 id="第323期">第323期</h1>
-<blockquote></blockquote>
-<h1 id="第324期">第324期</h1>
-<blockquote></blockquote>
-<h1 id="第325期">第325期</h1>
-<blockquote></blockquote>
-<h1 id="第326期">第326期</h1>
-<blockquote></blockquote>
-<h1 id="第327期">第327期</h1>
-<blockquote></blockquote>
-<h1 id="第328期">第328期</h1>
-<blockquote></blockquote>
-<h1 id="第329期">第329期</h1>
-<blockquote></blockquote>
-<h1 id="第330期">第330期</h1>
-<blockquote></blockquote>
-<h1 id="第331期">第331期</h1>
-<blockquote></blockquote>
-<h1 id="第332期">第332期</h1>
-<blockquote></blockquote>
-<h1 id="第333期">第333期</h1>
-<blockquote></blockquote>
-<h1 id="第334期">第334期</h1>
-<blockquote></blockquote>
-<h1 id="第335期">第335期</h1>
-<blockquote></blockquote>
-<h1 id="第336期">第336期</h1>
-<blockquote></blockquote>
-<h1 id="第337期">第337期</h1>
-<blockquote></blockquote>
-<h1 id="第338期">第338期</h1>
-<blockquote></blockquote>
-<h1 id="第339期">第339期</h1>
-<blockquote></blockquote>
-<h1 id="第340期">第340期</h1>
-<blockquote></blockquote>
-<h1 id="第341期">第341期</h1>
-<blockquote></blockquote>
-<h1 id="第342期">第342期</h1>
-<blockquote></blockquote>
-<h1 id="第343期">第343期</h1>
-<blockquote></blockquote>
-<h1 id="第344期">第344期</h1>
-<blockquote></blockquote>
-<h1 id="第345期">第345期</h1>
-<blockquote></blockquote>
-<h1 id="第346期">第346期</h1>
-<blockquote></blockquote>
-<h1 id="第347期">第347期</h1>
-<blockquote></blockquote>
-<h1 id="第348期">第348期</h1>
-<blockquote></blockquote>
-<h1 id="第349期">第349期</h1>
-<blockquote></blockquote>
-<h1 id="第350期">第350期</h1>
-<blockquote></blockquote>
 ]]></content>
     </entry>
 </feed>
