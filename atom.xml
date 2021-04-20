@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-19T00:45:06.748Z</updated>
+    <updated>2021-04-20T05:20:01.813Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,82 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第310期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-310-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-310-qi/">
+        </link>
+        <updated>2021-04-20T05:16:02.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>好运一定会降临，只是会降临在别人头上。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>青史几番春梦，红尘多少奇才。<br>
+——朱敦儒《西江月·日日深怀酒满》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>路过的熟悉，如同有你，已无转身的距离。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618895785731.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p><code>String.indexOf</code>实现，<code>KMP</code>：</p>
+<pre><code class="language-java">public class Solution {
+    public int strStr(String haystack, String needle) {
+        int hLen = haystack.length();
+        int nLen = needle.length();
+        if(nLen == 0){
+            return 0;
+        }
+        haystack = &quot; &quot; + haystack;
+        needle = &quot; &quot; + needle;
+
+        char[] s = haystack.toCharArray();
+        char[] p = needle.toCharArray();
+        int [] next = new int[nLen+1];
+
+        for (int i = 2,j = 0; i &lt;= nLen; i++) {
+            while (j &gt; 0 &amp;&amp; p[i] != p[j+1]){
+                j = next[j];
+            }
+            if(p[i] == p[j+1]){
+                ++j;
+            }
+            next[i] = j;
+        }
+
+        for (int i = 1,j=0; i &lt;= hLen; i++) {
+            while(j&gt;0 &amp;&amp; s[i] != p[j+1]){
+                j = next[j];
+            }
+            if(s[i] == p[j+1]){
+                ++j;
+            }
+            if(j == nLen){
+                return i - nLen;
+            }
+        }
+        return -1;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618895801006.png" alt="" loading="lazy"></figure>
+<p>才记起一年前好像直接调库做过。。。</p>
+<pre><code class="language-java">import java.util.Arrays;
+import java.util.Locale;
+
+public class Solution {
+    public int strStr(String haystack, String needle) {
+        return haystack.indexOf(needle);
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第309期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-309-qi/</id>
@@ -766,67 +842,6 @@ call plug#end()
 <blockquote></blockquote>
 <h1 id="第350期">第350期</h1>
 <blockquote></blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第303期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-303-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-303-qi/">
-        </link>
-        <updated>2021-04-13T00:20:13.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>其实你讨厌的并不是广场舞，而是广场舞大妈。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>霜月定相知，先识春风面。<br>
-——辛弃疾《生查子·重叶梅》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>踏碎零花，执剑称皇！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618275375531.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>直接暴力（当然更好的方法是中序遍历）：</p>
-<pre><code class="language-java">public class Solution {
-    private int min = 10_0000;
-    public int minDiffInBST(TreeNode root) {
-        f(root);
-        return min;
-    }
-
-    private void f(TreeNode root){
-        if(root != null){
-            min = Math.min(Math.min(Math.abs(root.val - rightChild(root.left)),Math.abs(root.val - leftChild(root.right))),min);
-            f(root.left);
-            f(root.right);
-        }
-    }
-
-    private int rightChild(TreeNode root){
-        int temp = 10_0000;
-        while(root != null){
-            temp = root.val;
-            root = root.right;
-        }
-        return temp;
-    }
-
-    private int leftChild(TreeNode root){
-        int temp = 10_0000;
-        while (root != null){
-            temp = root.val;
-            root = root.left;
-        }
-        return temp;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618275385211.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
