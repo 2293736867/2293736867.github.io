@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-21T01:24:59.348Z</updated>
+    <updated>2021-04-21T04:17:15.452Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,333 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[CountDownLatch与CyclicBarrier的基本使用]]></title>
+        <id>https://2293736867.github.io/post/countdownlatch-yu-cyclicbarrier-de-ji-ben-shi-yong/</id>
+        <link href="https://2293736867.github.io/post/countdownlatch-yu-cyclicbarrier-de-ji-ben-shi-yong/">
+        </link>
+        <updated>2021-04-21T04:16:33.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p><code>CountDownLatch</code>以及<code>CyclicBarrier</code>都是<code>Java</code>里面的同步工具之一，本文介绍了两者的基本原理以及基本使用方法。</p>
+<h1 id="2-countdownlatch">2 <code>CountDownLatch</code></h1>
+<p><code>CountDownLatch</code>是一个同步工具类，常见的使用场景包括：</p>
+<ul>
+<li>允许一个或多个线程等待一系列的其他线程结束</li>
+<li>在串行化任务中需要进行并行化处理，并等待所有并行化任务结束，串行化任务才能继续进行</li>
+</ul>
+<p>比如考虑这样一个场景，在一个电商网站中，用户点击了首页，需要一部分的商品，同时显示它们的价格，那么，调用的流程应该是：</p>
+<ul>
+<li>获取商品</li>
+<li>计算售价</li>
+<li>返回所有商品的最终售价</li>
+</ul>
+<p>解决这样的问题可以使用串行化或并行化操作，串行化就是逐一计算商品的售价，并返回，并行化就是获取商品后，并行计算每一个商品的售价，最后返回，显然后一种方案要比前一种要好，那么这时候就可以用上<code>CountDownLatch</code>了。</p>
+<p>一份简单的模拟代码如下：</p>
+<pre><code class="language-java">import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import static java.util.concurrent.ThreadLocalRandom.current;
+
+public class CountDownLatchExample {
+    public static void main(String[] args) throws InterruptedException{
+        List&lt;Price&gt; list = IntStream.rangeClosed(1,10).mapToObj(Price::new).collect(Collectors.toList());
+        //计数器大小为商品列表的长度
+        final CountDownLatch latch = new CountDownLatch(list.size());
+        //线程池
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(5,10,2, TimeUnit.SECONDS,new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+        list.forEach(p-&gt; executor.execute(()-&gt;{
+            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price &quot;);
+            try{
+            	//随机休眠模拟业务操作耗时
+                TimeUnit.SECONDS.sleep(current().nextInt(10));
+                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
+                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed&quot;);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }finally {
+            	//每完成计算一个商品，将计数器减1，注意需要放在finally中
+                latch.countDown();
+            }
+        }));
+        //主线程阻塞直到所有的计数器为0，也就是等待所有的子任务计算价格完毕
+        latch.await();
+        System.out.println(&quot;All of prices calculate finished&quot;);
+        //手动终止，不然不会结束运行
+        executor.shutdown();
+    }
+
+    private static class Price{
+        private final int id;
+        private double price;
+
+        public Price(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+    }
+}
+</code></pre>
+<p>输出：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210421104604159.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>代码比较简单，关键地方用上了注释，可以看到代码执行顺序如下：</p>
+<ul>
+<li>创建多个任务计算商品的价格</li>
+<li>主线程阻塞</li>
+<li>计算完成后，将计数器减1</li>
+<li>当计数器为0时，主线程退出阻塞状态</li>
+</ul>
+<p>值得注意的是计数器减1的操作需要放在<code>finally</code>中，因为有可能会出现异常，如果出现异常导致计数器不能减少，那么主线程会一直阻塞。</p>
+<p>另外，<code>CountDownLatch</code>还有一个<code>await(long timeout,TimeUnit unit)</code>方法，是带有超时参数的，也就是说，如果在超时时间内，计数器的值还是大于0（还有任务没执行完成），会使得当前线程退出阻塞状态。</p>
+<h1 id="3-cyclicbarrier">3 <code>CyclicBarrier</code></h1>
+<p><code>CyclicBarrier</code>与<code>CountDownLatch</code>有很多类似的地方，也是一个同步工具类，允许多个线程在执行完相应的操作之后彼此等待到达同一个<code>barrier point</code>（屏障点）。<code>CyclicBarrier</code>也适合某个串行化的任务被拆分为多个并行化任务，这点与<code>CountDownLatch</code>类似，但是<code>CyclicBarrier</code>具备的一个更强大的功能是，<code>CyclicBarrier</code>可以被重复使用。</p>
+<h2 id="31-等待完成">3.1 等待完成</h2>
+<p>先简单说一下<code>CyclicBarrier</code>的实现原理：</p>
+<ul>
+<li>初始化<code>CyclicBarrier</code>，传入一个<code>int</code>参数，表示分片（<code>parites</code>），通常意义上来说分片数就是任务的数量</li>
+<li>同时串行化执行多个任务</li>
+<li>任务执行完成后，调用<code>await()</code>，等待其他线程也到达<code>barrier point</code></li>
+<li>当所有线程到达后，继续以串行化方式运行任务</li>
+</ul>
+<p>常见的使用方法是设置分片数为任务数+1，这样，可以在主线程中执行<code>await()</code>，等待所有子任务完成。比如下面是使用<code>CyclicBarrier</code>实现同样功能的模拟代码：</p>
+<pre><code class="language-java">import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import static java.util.concurrent.ThreadLocalRandom.current;
+
+public class CountDownLatchExample {
+    public static void main(String[] args) throws InterruptedException,BrokenBarrierException{
+        List&lt;Price&gt; list = IntStream.rangeClosed(1,10).mapToObj(Price::new).collect(Collectors.toList());
+        final CyclicBarrier barrier = new CyclicBarrier(11);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(10,10,2, TimeUnit.SECONDS,new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+        list.forEach(p-&gt; executor.execute(()-&gt;{
+            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price &quot;);
+            try{
+                TimeUnit.SECONDS.sleep(current().nextInt(10));
+                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
+                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed&quot;);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }finally {
+                try{
+                    barrier.await();
+                }catch (InterruptedException | BrokenBarrierException e){
+                    e.printStackTrace();
+                }
+            }
+        }));
+        barrier.await();
+        System.out.println(&quot;All of prices calculate finished&quot;);
+        executor.shutdown();
+    }
+
+    private static class Price{
+        private final int id;
+        private double price;
+
+        public Price(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+    }
+}
+</code></pre>
+<p>输出相同，代码大部分相似，不同的地方有：</p>
+<ul>
+<li><code>latch.countDown()</code>替换成了<code>barrier.await()</code></li>
+<li><code>latch.await()</code>替换成了<code>barrier.await()</code></li>
+<li>线程池的核心线程数替换成了<code>10</code></li>
+</ul>
+<p><code>await()</code>方法会等待所有的线程到达<code>barrier point</code>，上面代码执行流程简述如下：</p>
+<ul>
+<li>初始化<code>CyclicBarrier</code>，分片数为11（子线程数+1）</li>
+<li>主线程调用<code>await()</code>，等待子线程执行完成</li>
+<li>子线程各自进行商品价格的计算，计算完成后，调用<code>await()</code>，等待其他线程也到达<code>barrier point</code></li>
+<li>当所有子线程计算完成后，由于没有后续操作，所以子线程运行结束，同时由于主线程还有后续操作，会先输出提示信息再终止线程池</li>
+</ul>
+<p>注意一个很大的不同就是这里的线程池核心线程数目改成了 10，那么，为什么需要10？</p>
+<p>因为如果是设置一个小于10的核心线程个数，由于线程池是会先创建核心线程来执行任务，核心线程满了之后，放进任务队列中，而假设只有5个核心线程，那么：</p>
+<ul>
+<li>5个线程进行计算价格</li>
+<li>另外5个任务放在任务队列中</li>
+</ul>
+<p>这样的话，会出现死锁，因为计算中的线程需要队列中的任务到达<code>barrier point</code>才能结束，而队列中的任务需要核心线程计算完毕后，才能调度出来计算，这样死锁就出现了。</p>
+<h2 id="32-重复使用">3.2 重复使用</h2>
+<p><code>CyclicBarrier</code>与<code>CountDownLatch</code>的一个最大不同是，<code>CyclicBarrier</code>可以被重复使用，原理上来说，<code>await()</code>会将内部计数器减1，当计数器减为0时，会自动进行计数器（分片数）重置。比如，在上面的代码中，由于遇上促销活动，需要对商品的价格再次进行计算：</p>
+<pre><code class="language-java">import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import static java.util.concurrent.ThreadLocalRandom.current;
+
+public class CountDownLatchExample {
+    public static void main(String[] args) throws InterruptedException,BrokenBarrierException{
+        List&lt;Price&gt; list = IntStream.rangeClosed(1,10).mapToObj(Price::new).collect(Collectors.toList());
+        final CyclicBarrier barrier = new CyclicBarrier(11);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(10,10,2, TimeUnit.SECONDS,new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+        list.forEach(p-&gt; executor.execute(()-&gt;{
+            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price.&quot;);
+            try{
+                TimeUnit.SECONDS.sleep(current().nextInt(10));
+                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
+                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed.&quot;);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }finally {
+                try{
+                    barrier.await();
+                }catch (InterruptedException | BrokenBarrierException e){
+                    e.printStackTrace();
+                }
+            }
+        }));
+        barrier.await();
+        System.out.println(&quot;All of prices calculate finished.&quot;);
+		
+		//复制的一段相同代码
+        list.forEach(p-&gt; executor.execute(()-&gt;{
+            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price again.&quot;);
+            try{
+                TimeUnit.SECONDS.sleep(current().nextInt(10));
+                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
+                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed.&quot;);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }finally {
+                try{
+                    barrier.await();
+                }catch (InterruptedException | BrokenBarrierException e){
+                    e.printStackTrace();
+                }
+            }
+        }));
+        barrier.await();
+        System.out.println(&quot;All of prices calculate finished again.&quot;);
+        executor.shutdown();
+    }
+
+    private static class Price{
+        private final int id;
+        private double price;
+
+        public Price(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+    }
+}
+</code></pre>
+<p>将计算价格的代码复制一遍，其中没有手动修改计数器，只是调用<code>await()</code>，输出如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210421110421819.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到，并没有对<code>CycliBarrier</code>进行类似<code>reset</code>之类的操作，但是依然能按正常逻辑运行，这是因为<code>await()</code>内部会维护一个计数器，当计数器为0的时候，会自动进行重置，下面是<code>await()</code>在<code>OpenJDK 11</code>下的源码：</p>
+<pre><code class="language-java">public int await() throws InterruptedException, BrokenBarrierException {
+    try {
+        return this.dowait(false, 0L);
+    } catch (TimeoutException var2) {
+        throw new Error(var2);
+    }
+}
+    
+private int dowait(boolean timed, long nanos) throws InterruptedException, BrokenBarrierException, TimeoutException {
+    ReentrantLock lock = this.lock;
+    lock.lock();
+
+    byte var9;
+    try {
+        //...
+        int index = --this.count;
+        if (index != 0) {
+            //计数器不为0的情况
+            //....
+        }
+
+        boolean ranAction = false;
+
+        try {
+            Runnable command = this.barrierCommand;
+            if (command != null) {
+                command.run();
+            }
+
+            ranAction = true;
+            
+            this.nextGeneration();
+            var9 = 0;
+        } finally {
+            if (!ranAction) {
+                this.breakBarrier();
+            }
+
+        }
+    } finally {
+        lock.unlock();
+    }
+
+    return var9;
+}
+
+private void nextGeneration() {
+    this.trip.signalAll();
+    this.count = this.parties;
+    this.generation = new CyclicBarrier.Generation();
+}
+</code></pre>
+<p>当计数器为0时，会生成新的<code>Generation</code>，并将<code>var9</code>置为0，最后返回<code>var9</code>（在这个方法中<code>var9</code>只有一处赋值，就是代码中的<code>var9=0</code>，可以理解成直接返回0）。</p>
+<h2 id="33-cyclicbarrier其他的一些常用方法">3.3 <code>CyclicBarrier</code>其他的一些常用方法</h2>
+<ul>
+<li><code>CyclicBarrier(int parties,Runnable barrierAction)</code>：构造的时候传入一个<code>Runnable</code>，表示所有线程到达<code>barrier point</code>时，会调用该<code>Runnable</code></li>
+<li><code>await(long timeout,TimeUnit unit)</code>：与无参的<code>await()</code>类似，底层调用的是相同的<code>doWait()</code>，不过增加了超时功能</li>
+<li><code>isBroken()</code>：返回<code>broken</code>状态，某个线程由于执行<code>await</code>而进入阻塞，此时如果执行了中断操作（比如<code>interrupt</code>），那么<code>isBroken()</code>会返回<code>true</code>。需要注意，处于<code>broken</code>状态的<code>CyclicBarrier</code>不能被直接使用，需要调用<code>reset()</code>进行重置</li>
+</ul>
+<h1 id="4-总结">4 总结</h1>
+<p>下面是<code>CountDownLatch</code>与<code>CyclicBarrier</code>的一些简单比较，相同点如下：</p>
+<ul>
+<li>都是<code>java.util.concurrent</code>包下的线程同步工具类</li>
+<li>都可以用于“主线程阻塞一直等待，直到子任务完成，主线程才继续执行”的情况</li>
+</ul>
+<p>不同点：</p>
+<ul>
+<li><code>CountDownLatch</code>的<code>await()</code>方法会等待计数器归0，而<code>CyclicBarrier</code>的<code>await()</code>会等待其他线程到达<code>barrier point</code></li>
+<li><code>CyclicBarrier</code>内部的计数器是可以被重置的，但是<code>CountDownLatch</code>不可以</li>
+<li><code>CyclicBarrier</code>是由<code>Lock</code>和<code>Condition</code>实现的，而<code>CountDownLatch</code>是由同步控制器<code>AQS</code>实现的</li>
+<li>构造时<code>CyclicBarrier</code>不允许<code>parties</code>为0，而<code>CountDownLatch</code>允许<code>count</code>为0</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第311期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-311-qi/</id>
@@ -690,81 +1017,6 @@ public class Solution {
 <li>循环测试：检测代码中的简单循环、嵌套循环以及串接循环，测试用例包括零次循环、一次循环、两次循环、m次循环、最大循环次数等等</li>
 <li>Z路径覆盖：是路径覆盖的一个变体，是一种在大量判断和多个循环组合的情况下减少循环测试次数的方法，Z路径覆盖不考虑循环的形式和复杂度如何，也不考虑实际执行循环体次数是多少，只考虑通过循环体零次和一次这两种情况</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第304期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-304-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-304-qi/">
-        </link>
-        <updated>2021-04-14T00:09:42.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>试着去了解那些你讨厌的人，你会发现，真是越看越讨厌。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>醉舞梁园夜，行歌泗水春。<br>
-——杜甫《寄李十二白二十韵》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>有时语言就像利刃，使用不当，就会成为凶器。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618359014201.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>一开始直接上的暴力<code>ArrayList</code>，虽然能过，但是速度打败了<code>5%</code>的<code>Java</code>提交。。。</p>
-<p>然后想了一下题目说这是一个树形结构，于是想着用二叉树试了一下，但是发现好像叉数太少了。</p>
-<p>后来发现前缀树其实是一棵非典型m叉树，说非典型是因为它与一般的m叉树结构不一样，一般的m叉树都有一个值以及一个孩子节点数组，而前缀树只有一个表示是否结束的布尔变量以及一个映射表（这题中是只有26个小写字母，所以映射表的长度为26）。</p>
-<p>最主要的两个操作：</p>
-<ul>
-<li>插入：插入需要从根开始，对于一个单词，进行逐个字符的插入，首先判断每个字符对应的前缀树是否存在，存在的话直接修改临时变量<code>Node</code>的值，不存在的话新建一个前缀树并使<code>Node</code>指向它，直到每个字符处理完毕</li>
-<li>查找：从根开始，逐个字符开始查找，若字符对应的前缀树存在，移动临时变量<code>Node</code>，使其指向下一个节点，如果不存在，直接返回<code>null</code>或者<code>false</code></li>
-</ul>
-<p>代码：</p>
-<pre><code class="language-java">public class Trie {
-    private boolean isEnd = false;
-    private Trie[] children = new Trie[26];
-
-    public Trie() {
-    }
-
-    public void insert(String word) {
-        Trie node = searchPrefix(word,true);
-        node.isEnd = true;
-    }
-
-    /** Returns if the word is in the trie. */
-    public boolean search(String word) {
-        Trie node = searchPrefix(word,false);
-        return node != null &amp;&amp; node.isEnd;
-    }
-
-    /** Returns if there is any word in the trie that starts with the given prefix. */
-    public boolean startsWith(String prefix) {
-        return searchPrefix(prefix,false) != null;
-    }
-
-    private Trie searchPrefix(String prefix,boolean isInsertMode){
-        Trie node = this;
-        for (int i = 0; i &lt; prefix.length(); i++) {
-            int index = prefix.charAt(i) - 'a';
-            if(node.children[index] == null){
-                if(isInsertMode){
-                    node.children[index] = new Trie();
-                }else{
-                    return null;
-                }
-            }
-            node = node.children[index];
-        }
-        return node;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618358999407.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
