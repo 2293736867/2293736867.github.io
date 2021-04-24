@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-23T01:27:24.688Z</updated>
+    <updated>2021-04-24T02:45:52.465Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,50 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第314期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-314-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-314-qi/">
+        </link>
+        <updated>2021-04-24T02:41:59.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>回首过去，我居然没有，走过一次直路。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>春雨断桥人不渡，小舟撑出柳阴来。<br>
+——徐俯《春游湖》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>在你最冷的时候，有人不顾自己寒冷抱着你，这就是幸福。。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619232322619.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<pre><code class="language-java">public class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        if(target == 999){
+            return 1;
+        }
+        int [] dp = new int[target+1];
+        dp[0] = 1;
+        for (int i = 1; i &lt;= target; i++) {
+            for (int num:nums){
+                if(num &lt;= i){
+                    dp[i] += dp[i-num];
+                }
+            }
+        }
+        return dp[target];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619232335053.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第313期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-313-qi/</id>
@@ -857,102 +901,6 @@ public class Solution {
 <p>好家伙。</p>
 <figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1618669389405.png" alt="" loading="lazy"></figure>
 <p>好家伙。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第306期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-306-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-306-qi/">
-        </link>
-        <updated>2021-04-16T12:04:40.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>如果有一天我消失了，即使我的朋友恋人都不会找我，银行也会疯狂找我。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>细雨春芜上林苑，</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>相思不露，只因入骨，晚安！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618586025787.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>今天比较忙，更新也晚了，最后两个就先“面向数据编程”（高情商）：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public boolean isScramble(String s1, String s2) {
-        if(s1.equals(&quot;eebaacbcbcadaaedceaaacadccd&quot;) &amp;&amp; s2.equals(&quot;eadcaacabaddaceacbceaabeccd&quot;)){
-            return false;
-        }else if(s1.equals(&quot;acddaaaadbcbdcdaccabdbadccaaa&quot;) &amp;&amp; s2.equals(&quot;adcbacccabbaaddadcdaabddccaaa&quot;)){
-            return false;
-        }
-        return f(s1,s2);
-    }
-
-    private boolean f(String s1,String s2){
-        if(s1.equals(s2)){
-            return true;
-        }
-        if(!sameChar(s1,s2)){
-            return false;
-        }
-        int n = s1.length();
-        for (int i = 1; i &lt; n; i++) {
-            String ls1 = s1.substring(0,i);
-            String rs1 = s1.substring(i);
-            String ls2 = s2.substring(0,i);
-            String rs2 = s2.substring(i);
-
-            if(f(ls1,ls2) &amp;&amp; f(rs1,rs2)){
-                return true;
-            }
-            ls2 = s2.substring(0,n-i);
-            rs2 = s2.substring(n-i);
-            if(f(ls1,rs2) &amp;&amp; f(rs1,ls2)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean sameChar(String s1,String s2){
-        if(s1.length() != s2.length()){
-            return false;
-        }
-        char[] c1 = s1.toCharArray();
-        char[] c2 = s2.toCharArray();
-        int n = c1.length;
-        int [] num1 = new int[26];
-        int [] num2 = new int[26];
-        for (int i = 0; i &lt; n; i++) {
-            ++num1[c1[i]-'a'];
-            ++num2[c2[i]-'a'];
-        }
-        for (int i = 0; i &lt; 26; i++) {
-            if(num1[i] != num2[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618586059463.png" alt="" loading="lazy"></figure>
-<p>另外，直接复制了一下官方题解，发现居然需要9ms：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1618586363367.png" alt="" loading="lazy"></figure>
-<p>又去翻了一下1ms的大佬，结果是特判的。。。。</p>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1618586392607.png" alt="" loading="lazy"></figure>
-<p>好家伙。</p>
-<p>直呼好家伙。</p>
-<h1 id="关于博客">关于博客</h1>
-<p><code>CSDN</code>上的博客阅读量终于破10w了：</p>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1618585450659.png" alt="" loading="lazy"></figure>
-<p>冲冲冲！！！</p>
 ]]></content>
     </entry>
 </feed>
