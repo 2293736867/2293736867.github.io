@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-24T02:45:52.465Z</updated>
+    <updated>2021-04-25T00:55:22.856Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,55 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第315期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/">
+        </link>
+        <updated>2021-04-25T00:48:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你和学霸的区别就是，你所有的灵光一闪，都是他的基本题型。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>草色青青柳色黄，桃花历乱李花香。<br>
+——贾至《春思二首》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>时光一逝永不回，往事只能回味。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619311735438.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>中序遍历，然后最后一个右节点取<code>null</code>：</p>
+<pre><code class="language-java">public class Solution {
+    private TreeNode newRoot = new TreeNode();
+    private TreeNode temp = newRoot;
+    private TreeNode preTemp = temp;
+    public TreeNode increasingBST(TreeNode root) {
+        inorder(root);
+        preTemp.right = null;
+        return newRoot;
+    }
+
+    private void inorder(TreeNode root){
+        if(root != null){
+            inorder(root.left);
+            temp.val = root.val;
+            preTemp = temp;
+            temp.right = new TreeNode();
+            temp = temp.right;
+            inorder(root.right);
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619311785567.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第314期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-314-qi/</id>
@@ -799,108 +848,6 @@ public class Solution {
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618706604823.png" alt="" loading="lazy"></figure>
 <p>居然是自己一年前做过的题。。。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第307期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-307-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-307-qi/">
-        </link>
-        <updated>2021-04-17T13:53:44.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>不要以为老天在折磨你，而事实上，老天根本就不在意你。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>海棠不惜胭脂色，独立蒙蒙细雨中。</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>即使认真做，有些事还是做不到啊。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618669506501.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>版本1：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
-        int n = nums.length;
-        TreeSet&lt;Long&gt; set = new TreeSet&lt;&gt;();
-        for (int i = 0; i &lt; n; i++) {
-            Long target = (long) nums[i];
-            Long l = set.floor(target);
-            Long r = set.ceiling(target);
-            if(l != null &amp;&amp; target-l &lt;= t){
-                return true;
-            }
-            if(r != null &amp;&amp; r-target &lt;= t){
-                return true;
-            }
-            set.add(target);
-            if(i &gt;= k){
-                set.remove((long)nums[i-k]);
-            }
-        }
-        return false;
-    }
-}
-</code></pre>
-<p>用的是<code>TreeSet</code>红黑树，主要使用到了其中的<code>ceiling</code>以及<code>floor</code>，保持滑动窗口大小为k，时间<code>O(n log k)</code>，空间<code>O(k)</code>，当然效果也就那样子：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618667737036.png" alt="" loading="lazy"></figure>
-<p>然后又看了题解，用上了桶：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    long size;
-    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
-        int n = nums.length;
-        Map&lt;Long,Long&gt; map = new HashMap&lt;&gt;();
-        size = t+1L;
-        for (int i = 0; i &lt; n; i++) {
-            long u = nums[i];
-            long idx = getId(u);
-            if(map.containsKey(idx)){
-                return true;
-            }
-            long l = idx-1;
-            long r = idx+1;
-            if(map.containsKey(l) &amp;&amp; u-map.get(l) &lt;= t){
-                return true;
-            }
-            if(map.containsKey(r) &amp;&amp; map.get(r)-u &lt;= t){
-                return true;
-            }
-            map.put(idx,u);
-            if(i &gt;= k){
-                map.remove(getId(nums[i-k]));
-            }
-        }
-        return false;
-    }
-
-    private long getId(long u){
-        return u &gt;= 0 ? u/size : (u+1)/size - 1;
-    }
-}
-</code></pre>
-<p>时间可以降到<code>O(n)</code>（因为判断桶内是否存在元素只需要<code>O(1)</code>），但是才28ms：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1618669183812.png" alt="" loading="lazy"></figure>
-<p>于是看了一下详情，居然还有0ms的：</p>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1618669208463.png" alt="" loading="lazy"></figure>
-<p>好家伙这直接暴力的<code>O(n^2)</code>的居然比<code>O(n)</code>要快？？？？？？</p>
-<p>直呼好家伙。</p>
-<p>然后自己测试了一下：</p>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1618669352176.png" alt="" loading="lazy"></figure>
-<p>？？？？？</p>
-<p>？？？？？</p>
-<p>？？？？？</p>
-<p>好家伙。</p>
-<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1618669389405.png" alt="" loading="lazy"></figure>
-<p>好家伙。</p>
 ]]></content>
     </entry>
 </feed>
