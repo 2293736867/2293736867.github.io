@@ -1,0 +1,2131 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java 线程池详解 | 氷泠&#39;s blog</title>
+<meta name="description" content="我配不上你，
+纵然很努力。" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 概述
+本文主要讲解了Java里面线程池的接口以及实现类，以及它们的基本使用方法，内容包括：
+
+Executor/Executors
+ExecutorService
+ThreadPoolExecutor
+ScheduledThreadPo..." />
+    <meta name="keywords" content="Java" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="https://github.com/2293736867" class="menu">
+                      Github
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="https://blog.csdn.net/qq_27525611" class="menu">
+                      CSDN
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1619398016769" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/java-xian-cheng-chi-xiang-jie.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2021-04-25"><i class="fa fa-calendar"></i><span class="lately">12 小时前</span></time>
+              
+              <a href="https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/java-xian-cheng-chi-xiang-jie/"> </span>
+              </a>
+              <span id="/java-xian-cheng-chi-xiang-jie/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-0 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">Java 线程池详解</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-概述">1 概述</h1>
+<p>本文主要讲解了<code>Java</code>里面线程池的接口以及实现类，以及它们的基本使用方法，内容包括：</p>
+<ul>
+<li><code>Executor</code>/<code>Executors</code></li>
+<li><code>ExecutorService</code></li>
+<li><code>ThreadPoolExecutor</code></li>
+<li><code>ScheduledThreadPoolExecutor</code></li>
+</ul>
+<h1 id="2-两个重要的接口executorexecutorservice">2 两个重要的接口：<code>Executor</code>+<code>ExecutorService</code></h1>
+<p><code>Executor</code>是一个接口，里面只是定义了一个简单的任务提交方法：</p>
+<pre><code class="language-java">//Executor
+package java.util.concurrent;
+
+public interface Executor {
+    void execute(Runnable var1);
+}
+</code></pre>
+<p>而<code>ExecutorService</code>也是一个接口，继承了<code>Executor</code>，并且提供了更多用于任务提交和管理的一些方法，比如停止任务的执行等：</p>
+<pre><code class="language-java">//ExecutorService
+package java.util.concurrent;
+
+import java.util.Collection;
+import java.util.List;
+
+public interface ExecutorService extends Executor {
+    void shutdown();
+
+    List&lt;Runnable&gt; shutdownNow();
+
+    boolean isShutdown();
+
+    boolean isTerminated();
+
+    boolean awaitTermination(long var1, TimeUnit var3) throws InterruptedException;
+
+    &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; var1);
+
+    &lt;T&gt; Future&lt;T&gt; submit(Runnable var1, T var2);
+
+    Future&lt;?&gt; submit(Runnable var1);
+
+    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; var1) throws InterruptedException;
+
+    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; var1, long var2, TimeUnit var4) throws InterruptedException;
+
+    &lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; var1) throws InterruptedException, ExecutionException;
+
+    &lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; var1, long var2, TimeUnit var4) throws InterruptedException, ExecutionException, TimeoutException;
+}
+</code></pre>
+<p>下面将详细讲述<code>ExecutorService</code>的两个重要实现：</p>
+<ul>
+<li><code>ThreadPoolExecutor</code></li>
+<li><code>ScheduledThreadPoolExecutor</code></li>
+</ul>
+<h1 id="3-threadpoolexecutor">3 <code>ThreadPoolExecutor</code></h1>
+<p>这就是通常所说的线程池类，通常来说，一个线程池有如下特征：</p>
+<ul>
+<li>线程池有一定数量的工作线程</li>
+<li>线程数量以及任务数量会受到一定的控制和管理</li>
+<li>任务的执行以异步的方式进行</li>
+<li>线程池会负责执行任务的信息统计</li>
+</ul>
+<h2 id="31-一个简单的例子">3.1 一个简单的例子</h2>
+<p>先来看一个简单的例子：</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) throws Exception {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+        //执行没有返回值的任务
+        executor.execute(()-&gt; System.out.println(&quot; Execute the runnable task.&quot;));
+        //执行带返回值的任务，用到了Future泛型类
+        Future&lt;String&gt; future = executor.submit(()-&gt;&quot; Execute the callable task and this is the result.&quot;);
+        //通过get()获取任务结果，get()会在任务未完成时一直阻塞
+        System.out.println(future.get());
+   		//手动关闭线程池
+        executor.shutdown();
+    }
+}
+</code></pre>
+<p>从这个简单的例子可以看到，线程池可以执行带返回值以及不带返回值的任务，带返回值的话需要使用<code>get()</code>方法阻塞获取。另外，运行完毕后需要手动关闭线程池，否则<code>JVM</code>不会退出，因为线程池中有指定数量的活跃线程数量，而<code>JVM</code>正常退出的条件是<code>JVM</code>进程中不存在任何运行着的非守护进程。</p>
+<h2 id="32-构造方法">3.2 构造方法</h2>
+<p>构造方法的源码如下：</p>
+<pre><code class="language-java">public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue) 
+
+public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory) 
+
+public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, RejectedExecutionHandler handler) 
+
+public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)
+</code></pre>
+<p>虽然提供了四个构造方法，但本质上调用的是最后一个构造方法，该构造方法带有7个参数，分别是：</p>
+<ul>
+<li><code>corePoolSize</code>：核心线程数量，即使当线程池中的核心线程不工作，核心线程的数量也不会减少。该参数的最小值为0，且小于等于<code>maximumPoolSize</code></li>
+<li><code>maximumPoolSize</code>：用于设置线程池中允许的线程数量的最大值</li>
+<li><code>keepAliveTime</code>：当线程池中的线程数量超过核心线程数并且处于空闲时，线程池将会回收一部分线程让出系统资源，该参数可用于设置超过<code>corePoolSize</code>数量的线程在多长时间后被回收，与后一个表示时间单位的参数<code>unit</code>配合使用</li>
+<li><code>unit</code>：用于设定<code>keepAliveTime</code>的时间单位</li>
+<li><code>workQueure</code>：用于存放已提交至线程池但未被执行的任务</li>
+<li><code>threadFactory</code>：用于创建线程的工厂，开发者可以自定义<code>ThreadFactory</code>来创建线程</li>
+<li><code>handler</code>：拒绝策略，当任务超过阻塞队列的边界时，线程池会拒绝新增的任务，主要用于设置拒绝策略</li>
+</ul>
+<h2 id="33-任务执行流程">3.3 任务执行流程</h2>
+<p>线程池被成功创建后，内部的运行线程并不会被立即创建，<code>ThreadPoolExecutor</code>会采用一种<code>Lazy</code>的方式去创建并且运行。首次调用执行任务方法时才会创建线程，比如：</p>
+<pre><code class="language-java">ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+assert executor.getActiveCount() == 0;
+assert executor.getMaximumPoolSize() == 4;
+assert executor.getCorePoolSize() == 2;
+executor.execute(()-&gt; System.out.println(&quot; Execute the runnable task.&quot;));
+assert executor.getActiveCount() == 1;
+assert executor.getMaximumPoolSize() == 4;
+assert executor.getCorePoolSize() == 2;
+</code></pre>
+<p>（运行的时候请加上<code>-ea</code>参数）</p>
+<p>下面看一下任务的具体执行流程：</p>
+<ul>
+<li>如果运行中线程数少于核心线程数，创建新线程并立即执行任务</li>
+<li>如果运行中的线程大于等于核心线程数，且任务队列未满时，会将任务先放进任务队列，直到运行中的线程数执行完成自己的任务后，再去轮询任务队列以获取任务运行</li>
+<li>如果任务队列已满，且运行中的线程数量小于最大线程数量时，线程池会创建线程执行任务，创建的线程数量会少于最大线程数</li>
+<li>如果任务队列已满且运行中的线程数量已到达最大线程数量，并且此刻没有空闲的运行线程，会执行任务拒绝策略，取决于<code>RejectedEcecutionHandler</code></li>
+<li>若线程池中的线程是空闲的，且空闲时间到达<code>keepAliveTime</code>指定时间，会回收线程，直到保留<code>corePoolSize</code>个核心线程为止（不过核心线程也可以设置被超时回收，默认不开启核心线程超时）</li>
+</ul>
+<h2 id="34-线程工厂">3.4 线程工厂</h2>
+<p>线程工厂<code>ThreadFactory</code>是一个接口：</p>
+<pre><code class="language-java">package java.util.concurrent;
+
+public interface ThreadFactory {
+    Thread newThread(Runnable var1);
+}
+</code></pre>
+<p>使用线程工厂可以在创建线程时加入自定义配置，比如指定名字、优先级、是否为守护线程等，比如下面是线程工厂的一个简单实现：</p>
+<pre><code class="language-java">public class TestThreadFactory implements ThreadFactory {
+    private final static String PREFIX = &quot;Test thread[&quot;;
+    private final static String SUFFIX = &quot;]&quot;;
+    private final static AtomicInteger THREAD_NUM = new AtomicInteger();
+    @Override
+    public Thread newThread(Runnable runnable) {
+        ThreadGroup group = new ThreadGroup(&quot;My pool&quot;);
+        Thread thread = new Thread(group,runnable,PREFIX+THREAD_NUM.getAndIncrement()+SUFFIX);
+        thread.setPriority(5);
+        return thread;
+    }
+}
+</code></pre>
+<h2 id="35-拒绝策略">3.5 拒绝策略</h2>
+<p>默认情况下，<code>ThreadPoolExecutor</code>提供了四种拒绝策略：</p>
+<ul>
+<li><code>DiscardPolicy</code>：丢弃策略，直接丢弃任务</li>
+<li><code>AbortPolicy</code>：终止策略，抛出<code>RejectedExecutionException</code></li>
+<li><code>DiscardOldestPolicy</code>：丢弃队列中最老任务的策略（严格意义来说需要根据任务队列去选择，因为不是所有的队列都是<code>FIFO</code>的）</li>
+<li><code>CallerRunsPolicy</code>：调用者线程执行策略，任务会在当前线程中阻塞执行</li>
+</ul>
+<p>当然，如果不能满足需要，可以实现<code>RejectedExecutionHandler</code>接口去自定义策略：</p>
+<pre><code class="language-java">public interface RejectedExecutionHandler {
+    void rejectedExecution(Runnable var1, ThreadPoolExecutor var2);
+}
+</code></pre>
+<h2 id="36-关闭线程池">3.6 关闭线程池</h2>
+<p>如果不需要线程池，那么需要手动对线程池关闭。线程池提供了如下三种方式：</p>
+<ul>
+<li>有序关闭：<code>shutdown()</code></li>
+<li>立即关闭：<code>shutdownNow()</code></li>
+<li>组合关闭：<code>shutdown()+shutdownNow()</code></li>
+</ul>
+<h3 id="361-有序关闭">3.6.1 有序关闭</h3>
+<p><code>shutdown()</code>提供了一种有序关闭的方式去关闭线程池，调用该方法后，会等待当前执行的任务全部执行完成然后关闭，同时新提交任务将会被拒绝。注意该方法是非阻塞，立即返回的。如果需要查看关闭状态，可以使用：</p>
+<ul>
+<li><code>isShutdown()</code>：返回是否调用了<code>shutdown()</code>的结果</li>
+<li><code>isTerminating()</code>：返回是否正在结束中</li>
+<li><code>isTerminated()</code>：返回是否已经结束</li>
+</ul>
+<h3 id="362-立即关闭">3.6.2 立即关闭</h3>
+<p><code>shutdownNow()</code>方法首先将线程池状态修改为<code>shutdown</code>状态，然后将未被执行的任务挂起，接着将尝试中断运行中的线程，最后返回未执行的任务：</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), new TestThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+    IntStream.range(0,10).forEach(i-&gt; executor.execute(()-&gt; {
+        try{
+            TimeUnit.SECONDS.sleep(5);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }));
+    List&lt;Runnable&gt; runnables = executor.shutdownNow();
+    System.out.println(runnables.size());
+}
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">8
+
+BUILD SUCCESSFUL in 326ms
+2 actionable tasks: 2 executed
+java.lang.InterruptedException: sleep interrupted
+	at java.base/java.lang.Thread.sleep(Native Method)
+	at java.base/java.lang.Thread.sleep(Thread.java:339)
+	at java.base/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
+	at com.company.Main.lambda$main$0(Main.java:29)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+java.lang.InterruptedException: sleep interrupted
+	at java.base/java.lang.Thread.sleep(Native Method)
+	at java.base/java.lang.Thread.sleep(Thread.java:339)
+	at java.base/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
+	at com.company.Main.lambda$main$0(Main.java:29)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+3:14:36 AM: Task execution finished 'Main.main()'.
+</code></pre>
+<h3 id="363-组合关闭">3.6.3 组合关闭</h3>
+<p>为了确保安全关闭线程池，一般会使用组合方式关闭，确保正在运行的任务被正常执行的同时又能提高线程池被关闭的成功率，例子如下：</p>
+<pre><code class="language-java"> ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), new TestThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+IntStream.range(0,10).forEach(i-&gt; executor.execute(()-&gt; {
+    try{
+        TimeUnit.SECONDS.sleep(5);
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+}));
+
+//首先调用shutdown()尝试关闭
+executor.shutdown();
+try{
+	//如果等待一段时间后还没关闭
+    if(!executor.awaitTermination(10,TimeUnit.SECONDS)){
+    	//强制关闭
+        executor.shutdownNow();
+        //如果强制关闭失败，比如运行的线程异常耗时且不能被中断
+        if(!executor.awaitTermination(10,TimeUnit.SECONDS)){
+        	//其他处理，这里只是输出中断失败的信息
+            System.out.println(&quot;Terminate failed.&quot;);
+        }
+    }
+}catch (InterruptedException e){
+	//如果当前线程被中断，并且捕获了异常，执行立即关闭方法
+    executor.shutdownNow();
+    //重新抛出中断信号
+    Thread.currentThread().interrupt();
+}
+</code></pre>
+<h1 id="4-scheduledthreadpoolexecutor">4 <code>ScheduledThreadPoolExecutor</code></h1>
+<p><code>ScheduledExecutorService</code>继承了<code>ExecutorService</code>，并且提供了任务被定时执行的特性，可以使用<code>ScheduledThreadPoolExecutor</code>去实现某些特殊的任务执行。当然实现固定任务的方法或者框架有很多，有原生的<code>shell</code>实现，老式的<code>Timer/TimerTask</code>实现，或者专门的框架<code>Quartz</code>实现，这里要说的是<code>JDK</code>内部的实现<code>ScheduledThreadPoolExecutor</code>。</p>
+<p><code>ScheduledThreadPoolExecutor</code>继承了<code>ThreadPoolExecutor</code>，除了具备<code>ThreadPoolExecutor</code>的所有方法外，还定义了4个与<code>schedule</code>有关的方法：</p>
+<ul>
+<li><code>&lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit)</code>：一个<code>one-shot</code>（只执行一次）的方法， 任务（<code>callable</code>）会在单位时间（<code>delay</code>）后被执行，并且立即返回<code>ScheduledFuture</code></li>
+<li><code>ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit)</code>：也是一个<code>one-shot</code>方法，任务会在单位时间后被执行，与第一个方法不同的是返回的<code>ScheduledFuture</code>不包含任何执行结果，但是可以通过返回的<code>ScheduledFuture</code>判断任务是否执行结束</li>
+<li><code>ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)</code>：任务会根据固定的速率在<code>initialDelay</code>后不断被执行</li>
+<li><code>ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)</code>：任务将以固定延迟单位时间的方式执行任务</li>
+</ul>
+<p>关于后两者的区别如下：</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+    Runnable runnable = ()-&gt;{
+        long startTimestamp = System.currentTimeMillis();
+        System.out.println(&quot;current timestamp: &quot;+startTimestamp);
+        try{
+            TimeUnit.MILLISECONDS.sleep(current().nextInt(100));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println(&quot;elapsed time: &quot;+(System.currentTimeMillis() - startTimestamp));
+    };
+
+    executor.scheduleAtFixedRate(runnable,10,1000,TimeUnit.MILLISECONDS);
+//        executor.scheduleWithFixedDelay(runnable,10,1000,TimeUnit.MILLISECONDS);
+}
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">current timestamp: 1619351675438
+elapsed time: 97
+current timestamp: 1619351676438
+elapsed time: 85
+current timestamp: 1619351677438
+elapsed time: 1
+current timestamp: 1619351678438
+elapsed time: 1
+current timestamp: 1619351679438
+elapsed time: 68
+current timestamp: 1619351680438
+elapsed time: 99
+</code></pre>
+<p>可以看到任务始终以一种固定的速率运行，每次运行的开始时间始终相隔<code>1000ms</code>。</p>
+<p>而使用<code>FixedDelay</code>的输出如下：</p>
+<pre><code class="language-bash">current timestamp: 1619351754890
+elapsed time: 53
+current timestamp: 1619351755944
+elapsed time: 30
+current timestamp: 1619351756974
+elapsed time: 13
+current timestamp: 1619351757987
+elapsed time: 80
+current timestamp: 1619351759068
+elapsed time: 94
+current timestamp: 1619351760162
+elapsed time: 29
+</code></pre>
+<p>每次开始的时间为上一次执行完成后的时间再加上时间间隔（<code>1000ms</code>）。</p>
+<h1 id="5-executors中的线程池">5 <code>Executors</code>中的线程池</h1>
+<p><code>Executors</code>类提供了六种创建线程池的静态方法：</p>
+<ul>
+<li><code>FixedThreadPool</code></li>
+<li><code>SingleThreadExecutor</code></li>
+<li><code>CachedThreadPool</code></li>
+<li><code>ScheduledThreadPool</code></li>
+<li><code>SingleThreadScheduledExecutor</code></li>
+<li><code>WorkStealingPool</code></li>
+</ul>
+<p>下面分别来看一下。</p>
+<h2 id="51-fixedthreadpool">5.1 <code>FixedThreadPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newFixedThreadPool(int nThreads) {
+    return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue());
+}
+
+public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
+    return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(), threadFactory);
+}
+</code></pre>
+<p><code>FixedThreadPool</code>底层调用的是<code>ThreadPoolExecutor</code>，默认创建的核心线程数与最大线程数相等，任务队列为无边界的<code>LinkedBlockingQueue</code>。</p>
+<h2 id="52-singlethreadexecutor">5.2 <code>SingleThreadExecutor</code></h2>
+<p>相关源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newSingleThreadExecutor() {
+    return new Executors.FinalizableDelegatedExecutorService(new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue()));
+}
+
+public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
+    return new Executors.FinalizableDelegatedExecutorService(new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(), threadFactory));
+}
+
+private static class FinalizableDelegatedExecutorService extends Executors.DelegatedExecutorService {
+    FinalizableDelegatedExecutorService(ExecutorService executor) {
+        super(executor);
+    }
+
+    protected void finalize() {
+        super.shutdown();
+    }
+}
+</code></pre>
+<p>可以看到<code>SingleThreadPool</code>实际上是内部类<code>FinalizableDelegatedExecutorService</code>的包装，核心线程与最大线程数均为1，任务队列为无边界的<code>LinkedBlockingQueue</code>。发生<code>GC</code>的时候，会调用<code>shutdown()</code>方法。</p>
+<h2 id="53-cachedthreadpool">5.3 <code>CachedThreadPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newCachedThreadPool() {
+    return new ThreadPoolExecutor(0, 2147483647, 60L, TimeUnit.SECONDS, new SynchronousQueue());
+}
+
+public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
+    return new ThreadPoolExecutor(0, 2147483647, 60L, TimeUnit.SECONDS, new SynchronousQueue(), threadFactory);
+}
+</code></pre>
+<p><code>CachedThreadPool</code>会根据需要创建新线程，通常用于执行量大的，耗时较短的异步任务。未被使用且空闲时间超过<code>60s</code>的线程会被回收。</p>
+<h2 id="54-scheduledthreadpool">5.4 <code>ScheduledThreadPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
+    return new ScheduledThreadPoolExecutor(corePoolSize);
+}
+
+public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory) {
+    return new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
+}
+</code></pre>
+<p>创建指定核心数<code>ScheduledThreadPoolExecutor</code>。</p>
+<h2 id="55-singlethreadscheduledexecutor">5.5 <code>SingleThreadScheduledExecutor</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
+    return new Executors.DelegatedScheduledExecutorService(new ScheduledThreadPoolExecutor(1));
+}
+
+public static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory) {
+    return new Executors.DelegatedScheduledExecutorService(new ScheduledThreadPoolExecutor(1, threadFactory));
+}
+
+private static class DelegatedScheduledExecutorService extends Executors.DelegatedExecutorService implements ScheduledExecutorService {
+    private final ScheduledExecutorService e;
+
+    DelegatedScheduledExecutorService(ScheduledExecutorService executor) {
+        super(executor);
+        this.e = executor;
+    }
+
+    public ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit) {
+        return this.e.schedule(command, delay, unit);
+    }
+
+    public &lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit) {
+        return this.e.schedule(callable, delay, unit);
+    }
+
+    public ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+        return this.e.scheduleAtFixedRate(command, initialDelay, period, unit);
+    }
+
+    public ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+        return this.e.scheduleWithFixedDelay(command, initialDelay, delay, unit);
+    }
+}
+</code></pre>
+<p>其实就是<code>SingelThreadPool</code>+<code>ScheduledThreadPool</code>。</p>
+<h2 id="56-workstealingpool">5.6 <code>WorkStealingPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newWorkStealingPool(int parallelism) {
+    return new ForkJoinPool(parallelism, ForkJoinPool.defaultForkJoinWorkerThreadFactory, (UncaughtExceptionHandler)null, true);
+}
+
+public static ExecutorService newWorkStealingPool() {
+    return new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory, (UncaughtExceptionHandler)null, true);
+}
+</code></pre>
+<p><code>WorkStealingPool</code>是<code>JDK8</code>引入的线程池，返回的是<code>ForkJoinPool</code>。在<code>WorkStealingPool</code>中，如果每个线程处理的任务执行比较耗时，那么它负责的任务会被其他线程“窃取”，进而提高并发处理的效率。</p>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-316-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-04-26">2021-04-26</time>
+                  <h4 class="title white no-margin">每日分享 第316期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-315-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-04-25">2021-04-25</time>
+                  <h4 class="title white no-margin">每日分享 第315期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                
+                
+                  <!-- jsDelivr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/disqusjs@1.2/dist/disqusjs.css">
+<script src="https://cdn.jsdelivr.net/npm/disqusjs@1.2/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+<div class="clear"></div>
+<script>
+var options = {
+  shortname: '',
+  apikey: 'x4w0ijIgKdycYEPacfY9sSDFNA7k57W2vEw65a3PRFFckEGUqw6zvedonEtd93DN',
+}
+if ('') {
+  options.api = ''
+}
+var dsqjs = new DisqusJS(options)
+</script>
+
+                
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-316-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-04-26">2021-04-26</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/">每日分享 第316期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java-xian-cheng-chi-xiang-jie.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-04-25">2021-04-25</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/">Java 线程池详解</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-315-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-04-25">2021-04-25</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/">每日分享 第315期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-1 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-2 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-3 ctag-P6coYUl8A" aria-label="">软件测试</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-4 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-5 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zh36z1JpD/" class="ctag ctag-6 ctag-Zh36z1JpD" aria-label="">Switch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SqY3UeW8b/" class="ctag ctag-7 ctag-SqY3UeW8b" aria-label="">Github</a>
+                    
+                      <a href="https://2293736867.github.io/tag/QJqlomFg9/" class="ctag ctag-8 ctag-QJqlomFg9" aria-label="">Slf4j</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kAbR5fhGrj/" class="ctag ctag-9 ctag-kAbR5fhGrj" aria-label="">Log</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-10 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/x6hezqu0h/" class="ctag ctag-11 ctag-x6hezqu0h" aria-label="">Github Pages</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TSVR1gTbAW/" class="ctag ctag-12 ctag-TSVR1gTbAW" aria-label="">DisqusJS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-13 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hmN5f1Dgf/" class="ctag ctag-14 ctag-hmN5f1Dgf" aria-label="">JVM</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jEhLpTJ4y/" class="ctag ctag-15 ctag-jEhLpTJ4y" aria-label="">Kotlin DSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-16 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-17 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j27TsowsQ/" class="ctag ctag-18 ctag-j27TsowsQ" aria-label="">SHA256</a>
+                    
+                      <a href="https://2293736867.github.io/tag/1bPjb7633/" class="ctag ctag-19 ctag-1bPjb7633" aria-label="">Redis</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-20 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-21 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-22 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-23 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/k_kTITP45/" class="ctag ctag-24 ctag-k_kTITP45" aria-label="">WebStorm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OykyL0ueI/" class="ctag ctag-25 ctag-OykyL0ueI" aria-label="">Vue3</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lAlW3LzZy/" class="ctag ctag-26 ctag-lAlW3LzZy" aria-label="">Vite</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-27 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/3qNOu3uvC/" class="ctag ctag-28 ctag-3qNOu3uvC" aria-label="">pyenv</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-29 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-30 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-31 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-32 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HaIBKIG-Y/" class="ctag ctag-33 ctag-HaIBKIG-Y" aria-label="">Debian</a>
+                    
+                      <a href="https://2293736867.github.io/tag/fFCOUCKJji/" class="ctag ctag-34 ctag-fFCOUCKJji" aria-label="">MyCLI</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ODfvYwg3O/" class="ctag ctag-35 ctag-ODfvYwg3O" aria-label="">地图</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YdNb8nB1n/" class="ctag ctag-36 ctag-YdNb8nB1n" aria-label="">Element-Plus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/87dRXt1l_8/" class="ctag ctag-37 ctag-87dRXt1l_8" aria-label="">Echarts</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TFZz0NHYM/" class="ctag ctag-38 ctag-TFZz0NHYM" aria-label="">Token</a>
+                    
+                      <a href="https://2293736867.github.io/tag/v6JZElgCrM/" class="ctag ctag-39 ctag-v6JZElgCrM" aria-label="">ECC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sYkFqGm0dQ/" class="ctag ctag-40 ctag-sYkFqGm0dQ" aria-label="">ECDSA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8dOYqqfXPD/" class="ctag ctag-41 ctag-8dOYqqfXPD" aria-label="">Auth0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bK7AXA8PC/" class="ctag ctag-42 ctag-bK7AXA8PC" aria-label="">Vue.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/NxCZbHQqot/" class="ctag ctag-43 ctag-NxCZbHQqot" aria-label="">Node.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Nr-J-3R61V/" class="ctag ctag-44 ctag-Nr-J-3R61V" aria-label="">SHA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-45 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lE7-ZBoCn/" class="ctag ctag-46 ctag-lE7-ZBoCn" aria-label="">MongoDB</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-47 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/mIpAXBTpr/" class="ctag ctag-48 ctag-mIpAXBTpr" aria-label="">虚拟机</a>
+                    
+                      <a href="https://2293736867.github.io/tag/PPNnoV579/" class="ctag ctag-49 ctag-PPNnoV579" aria-label="">CUDA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eGsE7XySYo/" class="ctag ctag-50 ctag-eGsE7XySYo" aria-label="">PyTorch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-51 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-52 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-53 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-54 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-55 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-56 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-57 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-58 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-59 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-60 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-61 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-62 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-63 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-64 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-65 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-66 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-67 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-68 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-69 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-70 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-71 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-72 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-73 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-74 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-75 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-76 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-77 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-78 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-79 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-80 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-81 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-82 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-83 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-84 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-85 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-86 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-87 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-88 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-89 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-90 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-91 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-92 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-93 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-94 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-95 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-96 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-97 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-98 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-99 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-100 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-101 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-102 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-103 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-104 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-105 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-106 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-107 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-108 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-109 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-110 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-111 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-112 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-113 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-114 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-115 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-116 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-117 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8EbOHbvZf/" class="ctag ctag-118 ctag-8EbOHbvZf" aria-label="">about</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">我配不上你，
+纵然很努力。</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 580 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

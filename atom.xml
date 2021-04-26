@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-25T01:50:36.302Z</updated>
+    <updated>2021-04-26T00:47:07.722Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,597 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第316期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/">
+        </link>
+        <updated>2021-04-26T00:07:58.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>做事一定要考虑别人的感受，千万不能让他们太开心了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>四月南风大麦黄，枣花未落桐叶长。<br>
+——李颀《送陈章甫》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>今天的风儿有些喧嚣啊。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619397056830.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>暴力大法好：</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    public int shipWithinDays(int[] weights, int D) {
+        int n = weights.length;
+        if (D == 1) {
+            int sum = 0;
+            for (int i = 0; i &lt; n; i++) {
+                sum += weights[i];
+            }
+            return sum;
+        }
+
+        int max = Arrays.stream(weights).max().getAsInt();
+        for (int ans = max; ; ++ans) {
+            int day = 0;
+            int temp = 0;
+            for (int i = 0; i &lt; n; i++) {
+                if (temp + weights[i] &lt;= ans) {
+                    temp += weights[i];
+                } else {
+                    temp = weights[i];
+                    ++day;
+                }
+
+                if (temp == ans) {
+                    if(i != n-1){
+                        temp = 0;
+                    }
+                    ++day;
+                }
+            }
+            if(temp &lt; ans){
+                ++day;
+            }
+            if (day &lt;= D) {
+                return ans;
+            }
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619397088069.png" alt="" loading="lazy"></figure>
+<p>二分优化（左边界为数组的最大值，右边界为数组的和）：</p>
+<pre><code class="language-java">public class Solution {
+    public int shipWithinDays(int[] weights, int D) {
+        int n = weights.length;
+        int sum = 0;
+        int max = 0;
+        for (int i = 0; i &lt; n; i++) {
+            sum += weights[i];
+            if(weights[i] &gt; max){
+                max = weights[i];
+            }
+        }
+        if (D == 1) {
+            return sum;
+        }
+
+        int ans = (max+sum)/2;
+        while (max &lt; sum){
+            int day = 0;
+            int temp = 0;
+            for (int i = 0; i &lt; n; i++) {
+                if (temp + weights[i] &lt;= ans) {
+                    temp += weights[i];
+                } else {
+                    temp = weights[i];
+                    ++day;
+                }
+
+                if (temp == ans) {
+                    if(i != n-1){
+                        temp = 0;
+                    }
+                    ++day;
+                }
+            }
+            if(temp &lt; ans){
+                ++day;
+            }
+            if (day &lt;= D) {
+                sum = ans;
+            }else{
+                max = ans+1;
+            }
+            ans = (max+sum)/2;
+        }
+        return max;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1619397527442.png" alt="" loading="lazy"></figure>
+<p>极限优化，优化点包括：</p>
+<ul>
+<li>判断<code>D==1</code>与<code>D==n</code></li>
+<li>计算二分的<code>mid</code>时使用右移代替除法</li>
+<li>优化计算天数的函数，采用相减而不是相加</li>
+</ul>
+<pre><code class="language-java">public class Solution {
+    private int [] weights;
+    private int D;
+    public int shipWithinDays(int[] weights, int D) {
+        this.weights = weights;
+        this.D = D;
+        int n = weights.length;
+        int right = 0;
+        int left = 0;
+        for (int i = 0; i &lt; n; i++) {
+            right += weights[i];
+            if(weights[i] &gt; left){
+                left = weights[i];
+            }
+        }
+        if (D == 1) {
+            return right;
+        }else if(D == n){
+            return left;
+        }
+
+        while (left &lt;= right){
+            int mid = (left+right) &gt;&gt; 1;
+            if(canShip(mid)){
+                right = mid - 1;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    private boolean canShip(int mid){
+        int day = 1;
+        int cur = mid;
+        for (int weight:weights){
+            if(weight &gt; cur){
+                ++day;
+                cur = mid;
+            }
+            cur -= weight;
+        }
+        return day &lt;= D;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1619397976229.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java 线程池详解]]></title>
+        <id>https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/</id>
+        <link href="https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/">
+        </link>
+        <updated>2021-04-25T12:27:12.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>本文主要讲解了<code>Java</code>里面线程池的接口以及实现类，以及它们的基本使用方法，内容包括：</p>
+<ul>
+<li><code>Executor</code>/<code>Executors</code></li>
+<li><code>ExecutorService</code></li>
+<li><code>ThreadPoolExecutor</code></li>
+<li><code>ScheduledThreadPoolExecutor</code></li>
+</ul>
+<h1 id="2-两个重要的接口executorexecutorservice">2 两个重要的接口：<code>Executor</code>+<code>ExecutorService</code></h1>
+<p><code>Executor</code>是一个接口，里面只是定义了一个简单的任务提交方法：</p>
+<pre><code class="language-java">//Executor
+package java.util.concurrent;
+
+public interface Executor {
+    void execute(Runnable var1);
+}
+</code></pre>
+<p>而<code>ExecutorService</code>也是一个接口，继承了<code>Executor</code>，并且提供了更多用于任务提交和管理的一些方法，比如停止任务的执行等：</p>
+<pre><code class="language-java">//ExecutorService
+package java.util.concurrent;
+
+import java.util.Collection;
+import java.util.List;
+
+public interface ExecutorService extends Executor {
+    void shutdown();
+
+    List&lt;Runnable&gt; shutdownNow();
+
+    boolean isShutdown();
+
+    boolean isTerminated();
+
+    boolean awaitTermination(long var1, TimeUnit var3) throws InterruptedException;
+
+    &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; var1);
+
+    &lt;T&gt; Future&lt;T&gt; submit(Runnable var1, T var2);
+
+    Future&lt;?&gt; submit(Runnable var1);
+
+    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; var1) throws InterruptedException;
+
+    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; var1, long var2, TimeUnit var4) throws InterruptedException;
+
+    &lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; var1) throws InterruptedException, ExecutionException;
+
+    &lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; var1, long var2, TimeUnit var4) throws InterruptedException, ExecutionException, TimeoutException;
+}
+</code></pre>
+<p>下面将详细讲述<code>ExecutorService</code>的两个重要实现：</p>
+<ul>
+<li><code>ThreadPoolExecutor</code></li>
+<li><code>ScheduledThreadPoolExecutor</code></li>
+</ul>
+<h1 id="3-threadpoolexecutor">3 <code>ThreadPoolExecutor</code></h1>
+<p>这就是通常所说的线程池类，通常来说，一个线程池有如下特征：</p>
+<ul>
+<li>线程池有一定数量的工作线程</li>
+<li>线程数量以及任务数量会受到一定的控制和管理</li>
+<li>任务的执行以异步的方式进行</li>
+<li>线程池会负责执行任务的信息统计</li>
+</ul>
+<h2 id="31-一个简单的例子">3.1 一个简单的例子</h2>
+<p>先来看一个简单的例子：</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) throws Exception {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+        //执行没有返回值的任务
+        executor.execute(()-&gt; System.out.println(&quot; Execute the runnable task.&quot;));
+        //执行带返回值的任务，用到了Future泛型类
+        Future&lt;String&gt; future = executor.submit(()-&gt;&quot; Execute the callable task and this is the result.&quot;);
+        //通过get()获取任务结果，get()会在任务未完成时一直阻塞
+        System.out.println(future.get());
+   		//手动关闭线程池
+        executor.shutdown();
+    }
+}
+</code></pre>
+<p>从这个简单的例子可以看到，线程池可以执行带返回值以及不带返回值的任务，带返回值的话需要使用<code>get()</code>方法阻塞获取。另外，运行完毕后需要手动关闭线程池，否则<code>JVM</code>不会退出，因为线程池中有指定数量的活跃线程数量，而<code>JVM</code>正常退出的条件是<code>JVM</code>进程中不存在任何运行着的非守护进程。</p>
+<h2 id="32-构造方法">3.2 构造方法</h2>
+<p>构造方法的源码如下：</p>
+<pre><code class="language-java">public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue) 
+
+public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory) 
+
+public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, RejectedExecutionHandler handler) 
+
+public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
+TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)
+</code></pre>
+<p>虽然提供了四个构造方法，但本质上调用的是最后一个构造方法，该构造方法带有7个参数，分别是：</p>
+<ul>
+<li><code>corePoolSize</code>：核心线程数量，即使当线程池中的核心线程不工作，核心线程的数量也不会减少。该参数的最小值为0，且小于等于<code>maximumPoolSize</code></li>
+<li><code>maximumPoolSize</code>：用于设置线程池中允许的线程数量的最大值</li>
+<li><code>keepAliveTime</code>：当线程池中的线程数量超过核心线程数并且处于空闲时，线程池将会回收一部分线程让出系统资源，该参数可用于设置超过<code>corePoolSize</code>数量的线程在多长时间后被回收，与后一个表示时间单位的参数<code>unit</code>配合使用</li>
+<li><code>unit</code>：用于设定<code>keepAliveTime</code>的时间单位</li>
+<li><code>workQueure</code>：用于存放已提交至线程池但未被执行的任务</li>
+<li><code>threadFactory</code>：用于创建线程的工厂，开发者可以自定义<code>ThreadFactory</code>来创建线程</li>
+<li><code>handler</code>：拒绝策略，当任务超过阻塞队列的边界时，线程池会拒绝新增的任务，主要用于设置拒绝策略</li>
+</ul>
+<h2 id="33-任务执行流程">3.3 任务执行流程</h2>
+<p>线程池被成功创建后，内部的运行线程并不会被立即创建，<code>ThreadPoolExecutor</code>会采用一种<code>Lazy</code>的方式去创建并且运行。首次调用执行任务方法时才会创建线程，比如：</p>
+<pre><code class="language-java">ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+assert executor.getActiveCount() == 0;
+assert executor.getMaximumPoolSize() == 4;
+assert executor.getCorePoolSize() == 2;
+executor.execute(()-&gt; System.out.println(&quot; Execute the runnable task.&quot;));
+assert executor.getActiveCount() == 1;
+assert executor.getMaximumPoolSize() == 4;
+assert executor.getCorePoolSize() == 2;
+</code></pre>
+<p>（运行的时候请加上<code>-ea</code>参数）</p>
+<p>下面看一下任务的具体执行流程：</p>
+<ul>
+<li>如果运行中线程数少于核心线程数，创建新线程并立即执行任务</li>
+<li>如果运行中的线程大于等于核心线程数，且任务队列未满时，会将任务先放进任务队列，直到运行中的线程数执行完成自己的任务后，再去轮询任务队列以获取任务运行</li>
+<li>如果任务队列已满，且运行中的线程数量小于最大线程数量时，线程池会创建线程执行任务，创建的线程数量会少于最大线程数</li>
+<li>如果任务队列已满且运行中的线程数量已到达最大线程数量，并且此刻没有空闲的运行线程，会执行任务拒绝策略，取决于<code>RejectedEcecutionHandler</code></li>
+<li>若线程池中的线程是空闲的，且空闲时间到达<code>keepAliveTime</code>指定时间，会回收线程，直到保留<code>corePoolSize</code>个核心线程为止（不过核心线程也可以设置被超时回收，默认不开启核心线程超时）</li>
+</ul>
+<h2 id="34-线程工厂">3.4 线程工厂</h2>
+<p>线程工厂<code>ThreadFactory</code>是一个接口：</p>
+<pre><code class="language-java">package java.util.concurrent;
+
+public interface ThreadFactory {
+    Thread newThread(Runnable var1);
+}
+</code></pre>
+<p>使用线程工厂可以在创建线程时加入自定义配置，比如指定名字、优先级、是否为守护线程等，比如下面是线程工厂的一个简单实现：</p>
+<pre><code class="language-java">public class TestThreadFactory implements ThreadFactory {
+    private final static String PREFIX = &quot;Test thread[&quot;;
+    private final static String SUFFIX = &quot;]&quot;;
+    private final static AtomicInteger THREAD_NUM = new AtomicInteger();
+    @Override
+    public Thread newThread(Runnable runnable) {
+        ThreadGroup group = new ThreadGroup(&quot;My pool&quot;);
+        Thread thread = new Thread(group,runnable,PREFIX+THREAD_NUM.getAndIncrement()+SUFFIX);
+        thread.setPriority(5);
+        return thread;
+    }
+}
+</code></pre>
+<h2 id="35-拒绝策略">3.5 拒绝策略</h2>
+<p>默认情况下，<code>ThreadPoolExecutor</code>提供了四种拒绝策略：</p>
+<ul>
+<li><code>DiscardPolicy</code>：丢弃策略，直接丢弃任务</li>
+<li><code>AbortPolicy</code>：终止策略，抛出<code>RejectedExecutionException</code></li>
+<li><code>DiscardOldestPolicy</code>：丢弃队列中最老任务的策略（严格意义来说需要根据任务队列去选择，因为不是所有的队列都是<code>FIFO</code>的）</li>
+<li><code>CallerRunsPolicy</code>：调用者线程执行策略，任务会在当前线程中阻塞执行</li>
+</ul>
+<p>当然，如果不能满足需要，可以实现<code>RejectedExecutionHandler</code>接口去自定义策略：</p>
+<pre><code class="language-java">public interface RejectedExecutionHandler {
+    void rejectedExecution(Runnable var1, ThreadPoolExecutor var2);
+}
+</code></pre>
+<h2 id="36-关闭线程池">3.6 关闭线程池</h2>
+<p>如果不需要线程池，那么需要手动对线程池关闭。线程池提供了如下三种方式：</p>
+<ul>
+<li>有序关闭：<code>shutdown()</code></li>
+<li>立即关闭：<code>shutdownNow()</code></li>
+<li>组合关闭：<code>shutdown()+shutdownNow()</code></li>
+</ul>
+<h3 id="361-有序关闭">3.6.1 有序关闭</h3>
+<p><code>shutdown()</code>提供了一种有序关闭的方式去关闭线程池，调用该方法后，会等待当前执行的任务全部执行完成然后关闭，同时新提交任务将会被拒绝。注意该方法是非阻塞，立即返回的。如果需要查看关闭状态，可以使用：</p>
+<ul>
+<li><code>isShutdown()</code>：返回是否调用了<code>shutdown()</code>的结果</li>
+<li><code>isTerminating()</code>：返回是否正在结束中</li>
+<li><code>isTerminated()</code>：返回是否已经结束</li>
+</ul>
+<h3 id="362-立即关闭">3.6.2 立即关闭</h3>
+<p><code>shutdownNow()</code>方法首先将线程池状态修改为<code>shutdown</code>状态，然后将未被执行的任务挂起，接着将尝试中断运行中的线程，最后返回未执行的任务：</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), new TestThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+    IntStream.range(0,10).forEach(i-&gt; executor.execute(()-&gt; {
+        try{
+            TimeUnit.SECONDS.sleep(5);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }));
+    List&lt;Runnable&gt; runnables = executor.shutdownNow();
+    System.out.println(runnables.size());
+}
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">8
+
+BUILD SUCCESSFUL in 326ms
+2 actionable tasks: 2 executed
+java.lang.InterruptedException: sleep interrupted
+	at java.base/java.lang.Thread.sleep(Native Method)
+	at java.base/java.lang.Thread.sleep(Thread.java:339)
+	at java.base/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
+	at com.company.Main.lambda$main$0(Main.java:29)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+java.lang.InterruptedException: sleep interrupted
+	at java.base/java.lang.Thread.sleep(Native Method)
+	at java.base/java.lang.Thread.sleep(Thread.java:339)
+	at java.base/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
+	at com.company.Main.lambda$main$0(Main.java:29)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+3:14:36 AM: Task execution finished 'Main.main()'.
+</code></pre>
+<h3 id="363-组合关闭">3.6.3 组合关闭</h3>
+<p>为了确保安全关闭线程池，一般会使用组合方式关闭，确保正在运行的任务被正常执行的同时又能提高线程池被关闭的成功率，例子如下：</p>
+<pre><code class="language-java"> ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), new TestThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+IntStream.range(0,10).forEach(i-&gt; executor.execute(()-&gt; {
+    try{
+        TimeUnit.SECONDS.sleep(5);
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+}));
+
+//首先调用shutdown()尝试关闭
+executor.shutdown();
+try{
+	//如果等待一段时间后还没关闭
+    if(!executor.awaitTermination(10,TimeUnit.SECONDS)){
+    	//强制关闭
+        executor.shutdownNow();
+        //如果强制关闭失败，比如运行的线程异常耗时且不能被中断
+        if(!executor.awaitTermination(10,TimeUnit.SECONDS)){
+        	//其他处理，这里只是输出中断失败的信息
+            System.out.println(&quot;Terminate failed.&quot;);
+        }
+    }
+}catch (InterruptedException e){
+	//如果当前线程被中断，并且捕获了异常，执行立即关闭方法
+    executor.shutdownNow();
+    //重新抛出中断信号
+    Thread.currentThread().interrupt();
+}
+</code></pre>
+<h1 id="4-scheduledthreadpoolexecutor">4 <code>ScheduledThreadPoolExecutor</code></h1>
+<p><code>ScheduledExecutorService</code>继承了<code>ExecutorService</code>，并且提供了任务被定时执行的特性，可以使用<code>ScheduledThreadPoolExecutor</code>去实现某些特殊的任务执行。当然实现固定任务的方法或者框架有很多，有原生的<code>shell</code>实现，老式的<code>Timer/TimerTask</code>实现，或者专门的框架<code>Quartz</code>实现，这里要说的是<code>JDK</code>内部的实现<code>ScheduledThreadPoolExecutor</code>。</p>
+<p><code>ScheduledThreadPoolExecutor</code>继承了<code>ThreadPoolExecutor</code>，除了具备<code>ThreadPoolExecutor</code>的所有方法外，还定义了4个与<code>schedule</code>有关的方法：</p>
+<ul>
+<li><code>&lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit)</code>：一个<code>one-shot</code>（只执行一次）的方法， 任务（<code>callable</code>）会在单位时间（<code>delay</code>）后被执行，并且立即返回<code>ScheduledFuture</code></li>
+<li><code>ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit)</code>：也是一个<code>one-shot</code>方法，任务会在单位时间后被执行，与第一个方法不同的是返回的<code>ScheduledFuture</code>不包含任何执行结果，但是可以通过返回的<code>ScheduledFuture</code>判断任务是否执行结束</li>
+<li><code>ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)</code>：任务会根据固定的速率在<code>initialDelay</code>后不断被执行</li>
+<li><code>ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)</code>：任务将以固定延迟单位时间的方式执行任务</li>
+</ul>
+<p>关于后两者的区别如下：</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+    Runnable runnable = ()-&gt;{
+        long startTimestamp = System.currentTimeMillis();
+        System.out.println(&quot;current timestamp: &quot;+startTimestamp);
+        try{
+            TimeUnit.MILLISECONDS.sleep(current().nextInt(100));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println(&quot;elapsed time: &quot;+(System.currentTimeMillis() - startTimestamp));
+    };
+
+    executor.scheduleAtFixedRate(runnable,10,1000,TimeUnit.MILLISECONDS);
+//        executor.scheduleWithFixedDelay(runnable,10,1000,TimeUnit.MILLISECONDS);
+}
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">current timestamp: 1619351675438
+elapsed time: 97
+current timestamp: 1619351676438
+elapsed time: 85
+current timestamp: 1619351677438
+elapsed time: 1
+current timestamp: 1619351678438
+elapsed time: 1
+current timestamp: 1619351679438
+elapsed time: 68
+current timestamp: 1619351680438
+elapsed time: 99
+</code></pre>
+<p>可以看到任务始终以一种固定的速率运行，每次运行的开始时间始终相隔<code>1000ms</code>。</p>
+<p>而使用<code>FixedDelay</code>的输出如下：</p>
+<pre><code class="language-bash">current timestamp: 1619351754890
+elapsed time: 53
+current timestamp: 1619351755944
+elapsed time: 30
+current timestamp: 1619351756974
+elapsed time: 13
+current timestamp: 1619351757987
+elapsed time: 80
+current timestamp: 1619351759068
+elapsed time: 94
+current timestamp: 1619351760162
+elapsed time: 29
+</code></pre>
+<p>每次开始的时间为上一次执行完成后的时间再加上时间间隔（<code>1000ms</code>）。</p>
+<h1 id="5-executors中的线程池">5 <code>Executors</code>中的线程池</h1>
+<p><code>Executors</code>类提供了六种创建线程池的静态方法：</p>
+<ul>
+<li><code>FixedThreadPool</code></li>
+<li><code>SingleThreadExecutor</code></li>
+<li><code>CachedThreadPool</code></li>
+<li><code>ScheduledThreadPool</code></li>
+<li><code>SingleThreadScheduledExecutor</code></li>
+<li><code>WorkStealingPool</code></li>
+</ul>
+<p>下面分别来看一下。</p>
+<h2 id="51-fixedthreadpool">5.1 <code>FixedThreadPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newFixedThreadPool(int nThreads) {
+    return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue());
+}
+
+public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
+    return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(), threadFactory);
+}
+</code></pre>
+<p><code>FixedThreadPool</code>底层调用的是<code>ThreadPoolExecutor</code>，默认创建的核心线程数与最大线程数相等，任务队列为无边界的<code>LinkedBlockingQueue</code>。</p>
+<h2 id="52-singlethreadexecutor">5.2 <code>SingleThreadExecutor</code></h2>
+<p>相关源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newSingleThreadExecutor() {
+    return new Executors.FinalizableDelegatedExecutorService(new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue()));
+}
+
+public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
+    return new Executors.FinalizableDelegatedExecutorService(new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(), threadFactory));
+}
+
+private static class FinalizableDelegatedExecutorService extends Executors.DelegatedExecutorService {
+    FinalizableDelegatedExecutorService(ExecutorService executor) {
+        super(executor);
+    }
+
+    protected void finalize() {
+        super.shutdown();
+    }
+}
+</code></pre>
+<p>可以看到<code>SingleThreadPool</code>实际上是内部类<code>FinalizableDelegatedExecutorService</code>的包装，核心线程与最大线程数均为1，任务队列为无边界的<code>LinkedBlockingQueue</code>。发生<code>GC</code>的时候，会调用<code>shutdown()</code>方法。</p>
+<h2 id="53-cachedthreadpool">5.3 <code>CachedThreadPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newCachedThreadPool() {
+    return new ThreadPoolExecutor(0, 2147483647, 60L, TimeUnit.SECONDS, new SynchronousQueue());
+}
+
+public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
+    return new ThreadPoolExecutor(0, 2147483647, 60L, TimeUnit.SECONDS, new SynchronousQueue(), threadFactory);
+}
+</code></pre>
+<p><code>CachedThreadPool</code>会根据需要创建新线程，通常用于执行量大的，耗时较短的异步任务。未被使用且空闲时间超过<code>60s</code>的线程会被回收。</p>
+<h2 id="54-scheduledthreadpool">5.4 <code>ScheduledThreadPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
+    return new ScheduledThreadPoolExecutor(corePoolSize);
+}
+
+public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory) {
+    return new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
+}
+</code></pre>
+<p>创建指定核心数<code>ScheduledThreadPoolExecutor</code>。</p>
+<h2 id="55-singlethreadscheduledexecutor">5.5 <code>SingleThreadScheduledExecutor</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
+    return new Executors.DelegatedScheduledExecutorService(new ScheduledThreadPoolExecutor(1));
+}
+
+public static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory) {
+    return new Executors.DelegatedScheduledExecutorService(new ScheduledThreadPoolExecutor(1, threadFactory));
+}
+
+private static class DelegatedScheduledExecutorService extends Executors.DelegatedExecutorService implements ScheduledExecutorService {
+    private final ScheduledExecutorService e;
+
+    DelegatedScheduledExecutorService(ScheduledExecutorService executor) {
+        super(executor);
+        this.e = executor;
+    }
+
+    public ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit) {
+        return this.e.schedule(command, delay, unit);
+    }
+
+    public &lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit) {
+        return this.e.schedule(callable, delay, unit);
+    }
+
+    public ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+        return this.e.scheduleAtFixedRate(command, initialDelay, period, unit);
+    }
+
+    public ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+        return this.e.scheduleWithFixedDelay(command, initialDelay, delay, unit);
+    }
+}
+</code></pre>
+<p>其实就是<code>SingelThreadPool</code>+<code>ScheduledThreadPool</code>。</p>
+<h2 id="56-workstealingpool">5.6 <code>WorkStealingPool</code></h2>
+<p>源码如下：</p>
+<pre><code class="language-java">public static ExecutorService newWorkStealingPool(int parallelism) {
+    return new ForkJoinPool(parallelism, ForkJoinPool.defaultForkJoinWorkerThreadFactory, (UncaughtExceptionHandler)null, true);
+}
+
+public static ExecutorService newWorkStealingPool() {
+    return new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory, (UncaughtExceptionHandler)null, true);
+}
+</code></pre>
+<p><code>WorkStealingPool</code>是<code>JDK8</code>引入的线程池，返回的是<code>ForkJoinPool</code>。在<code>WorkStealingPool</code>中，如果每个线程处理的任务执行比较耗时，那么它负责的任务会被其他线程“窃取”，进而提高并发处理的效率。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第315期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/</id>
@@ -759,95 +1350,6 @@ public class Solution {
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第309期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-309-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-309-qi/">
-        </link>
-        <updated>2021-04-19T00:36:21.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>世界上没有钱解决不了的事，如果有，那就是你的钱不够。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>国破山河在，城春草木深。<br>
-——杜甫《春望》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>等一条离群太远的深海游鱼，碰到一只离群太远的蚁。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618792727124.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>简单题，提交的时候又发现自己一年前做过了：</p>
-<pre><code class="language-java">public class Solution {
-    public int removeElement(int[] nums, int val) {
-        int slow = 0;
-        for (int i = 0; i &lt; nums.length; i++) {
-            if(nums[i] != val) {
-                nums[slow++] = nums[i];
-            }
-        }
-        return slow;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618792759254.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第308期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-308-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-308-qi/">
-        </link>
-        <updated>2021-04-18T00:42:54.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>女人用丝袜征服了男人，男人用丝袜征服了银行。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>桃花尽日随流水，洞在清溪何处边。<br>
-——张旭《桃花溪》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>这不是神经病，是理想。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618706649732.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>快慢指针：</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    public int removeDuplicates(int[] nums) {
-        int n = nums.length;
-        if(n &lt;= 1){
-            return n;
-        }
-        int slow = 0;
-        for (int i = 1; i &lt; n; i++) {
-            while(i&lt;n &amp;&amp; nums[i] == nums[slow]){
-                ++i;
-            }
-            if(i &lt; n){
-                nums[++slow] = nums[i];
-            }
-            --i;
-        }
-        return slow+1;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618706604823.png" alt="" loading="lazy"></figure>
-<p>居然是自己一年前做过的题。。。</p>
 ]]></content>
     </entry>
 </feed>
