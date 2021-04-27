@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-27T04:35:12.790Z</updated>
+    <updated>2021-04-27T17:42:15.924Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,631 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第318期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-318-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-318-qi/">
+        </link>
+        <updated>2021-04-27T17:38:51.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>不要等明天交不上差，再找借口，今天就要找好。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>子规啼彻四更时，起视蚕稠怕叶稀。<br>
+——谢枋得《残妇吟》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>人与人的羁绊是真正的力量之源。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619545284012.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>双指针：</p>
+<pre><code class="language-java">public class Solution {
+    public boolean judgeSquareSum(int c) {
+        if(c &lt;= 5){
+            return c != 3;
+        }
+        int a = 0;
+        int b = (int)Math.sqrt(c);
+        while (a &lt;= b){
+            int sum = a*a + b*b;
+            if(sum == c){
+                return true;
+            }else if(sum &gt; c){
+                --b;
+            }else{
+                ++a;
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619545327711.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JVM学习笔记（五）：垃圾回收器和内存分配]]></title>
+        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-wu-la-ji-hui-shou-qi-he-nei-cun-fen-pei/</id>
+        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-wu-la-ji-hui-shou-qi-he-nei-cun-fen-pei/">
+        </link>
+        <updated>2021-04-27T17:33:44.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
+<ul>
+<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
+<li>章节：第五章</li>
+</ul>
+<p>本文是第五章的一些笔记整理。</p>
+<h1 id="2-概述">2 概述</h1>
+<p>本文主要讲述了<code>JVM</code>中的常见垃圾回收器，包括：</p>
+<ul>
+<li>串行回收器</li>
+<li>并行回收器</li>
+<li><code>CMS</code></li>
+<li><code>G1</code></li>
+</ul>
+<p>另外还提及了内存分配的一些细节以及一个简单的<code>JVM</code>调优实战。</p>
+<h1 id="3-串行回收器">3 串行回收器</h1>
+<p>串行回收器是指使用单线程进行垃圾回收的回收器，每次回收时，串行回收器只有一个工作线程。串行回收器作为最古老的一种回收器，特点如下：</p>
+<ul>
+<li>仅仅使用单线程进行垃圾回收</li>
+<li>独占式的垃圾回收方式</li>
+</ul>
+<p>在串行回收器进行垃圾回收的时候，应用线程需要暂停工作直到回收完成，这种现象就是著名的<code>Stop-The-World</code>，也就是<code>STW</code>。</p>
+<p>串行回收器的相关参数如下：</p>
+<ul>
+<li><code>-XX:+UseSerialGC</code>：新生代与老年代都使用串行回收器</li>
+<li><code>-XX:+UseParNewGC</code>：新生代使用<code>ParNew</code>回收器，老年代使用串行回收器（<code>JDK9+</code>版本已删除该参数，因为<code>CMS</code>被<code>G1</code>代替）</li>
+<li><code>-XX:+UseParallelGC</code>：新生代使用<code>ParallelGC</code>回收器，老年代使用串行回收器</li>
+</ul>
+<h1 id="4-并行回收器">4 并行回收器</h1>
+<p>并行回收期在串行回收器的基础上进行了改进，使用多个线程同时对垃圾进行回收，常见的并行回收器有：</p>
+<ul>
+<li>新生代<code>ParNew</code>回收器</li>
+<li>新生代<code>ParallelGC</code>回收器</li>
+<li>老年代<code>ParallelOldGC</code>回收器</li>
+</ul>
+<h2 id="41-parnew">4.1 <code>ParNew</code></h2>
+<p><code>ParNew</code>是一个工作在新生代的垃圾回收器，只是简单地将串行回收器多线程化，回收策略、算法、参数和新生代串行回收器一样。同时，<code>ParNew</code>也是独占式的回收器，回收过程中会<code>STW</code>。虽然<code>ParNew</code>采用了多线程进行垃圾回收，但是在单<code>CPU</code>或者并发能力较弱的系统中，并行回收器的效果有可能还要比串行回收器差。</p>
+<p>开启<code>ParNew</code>可以使用如下参数：</p>
+<ul>
+<li><code>-XX:+UseParNewGC</code>：新生代使用<code>ParNew</code>，老年代使用串行回收器（<code>JDK9+</code>已删除）</li>
+<li><code>-XX:+UseConcMarkSweepGC</code>：新生代使用<code>ParNew</code>，老年代使用<code>CMS</code>（<code>JDK9+</code>不建议，建议使用默认的<code>G1</code>）</li>
+</ul>
+<p><code>ParNew</code>工作时的线程数量可以使用<code>-XX:ParallelGCThreads</code>指定。</p>
+<h2 id="42-parallelgc">4.2 <code>ParallelGC</code></h2>
+<p><code>ParallelGC</code>是使用复制算法的回收器，与<code>ParNew</code>的相同点是，都是多线程、独占式的回收器，但是，<code>ParallelGC</code>会关注系统的吞吐量，可以通过如下参数启用<code>ParallelGC</code>：</p>
+<ul>
+<li><code>-XX:+UseParallelGC</code>：新生代使用<code>ParallelGC</code>，老年代使用串行回收器</li>
+<li><code>-XX:+UseParallelOldGC</code>：新生代使用<code>ParallelGC</code>，老年代使用<code>ParallelOldGC</code></li>
+</ul>
+<p><code>ParallelGC</code>提供了两个参数控制系统的吞吐量：</p>
+<ul>
+<li><code>-XX:+MaxGCPauseMills</code>：设置最大垃圾回收停顿时间，一个大于0的整数。<code>ParallelGC</code>在工作的时候会调整<code>Java</code>堆大小或者其他参数，尽可能把停顿时间控制在<code>MaxGCPauseMills</code>以内，如果希望把停顿时间设置得很小，那么可能会使用一个较小的堆，因为较小的堆回收速度快于较大的堆，但后果是可能会导致垃圾回收的次数增多，有可能会降低吞吐量</li>
+<li><code>-XX:+GCTimeRatio</code>：设置吞吐量大小，是一个<code>0-100</code>的整数，假设为<code>n</code>，那么系统将花费不超过<code>1/(1+n)</code>的时间进行垃圾回收，默认值为<code>99</code>，也就是用于垃圾回收的时间不得超过<code>1/(1+99)=1%</code></li>
+</ul>
+<p>另外还有一个<code>-XX:+UseAdaptiveSizePolicy</code>的参数，可以开启自适应策略，开启后，新生代大小、<code>eden</code>区和<code>survivor</code>区比例、晋升老年代的对象年龄等参数都会被自动调整。</p>
+<h2 id="43-paralleloldgc">4.3 <code>ParallelOldGC</code></h2>
+<p>从名字就可以知道这是一个工作在老年代的<code>ParallelGC</code>，一样关注系统吞吐量，使用了标记压缩法，<code>JDK 1.6+</code>可用。相关参数如下：</p>
+<ul>
+<li><code>-XX:+UseParallelOldGC</code>：指定在老年代使用<code>ParallelOldGC</code>（同时新生代使用<code>ParallelGC</code>）</li>
+<li><code>-XX:ParallelGCThreads</code>：设置垃圾回收时的线程数量</li>
+</ul>
+<h1 id="5-cms">5 <code>CMS</code></h1>
+<p><code>CMS</code>是<code>Concurrent Mark Sweep</code>的缩写，可以翻译为并发标记清除，一个使用标记清除法的多线程回收器，不会回收新生代。<code>CMS</code>与<code>ParallelGC</code>/<code>ParallelOldGC</code>不同，<code>CMS</code>主要关注的是系统停顿时间。</p>
+<h2 id="51-工作流程">5.1 工作流程</h2>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210427131940440.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>详细说明如下：</p>
+<ul>
+<li>初始标记：<code>STW</code>，作用是标记存活的对象，内容包括老年代中的所有<code>GC Roots</code>（<code>Java</code>中的<code>GC Roots</code>包括虚拟机栈引用的对象、方法区中类静态属性引用的对象、方法区中的常量引用的对象、本地方法栈中<code>JNI</code>引用的对象），以及新生代中引用到老年代对象的对象</li>
+<li>并发标记：从初始标记阶段标记的对象开始找出所有存活的对象</li>
+<li>预清理：因为并发标记并不能标记出老年代全部的存活对象（标记的同时应用程序会改变一些对象的引用），这个阶段是用于处理并发标记阶段因为引用关系改变而导致没有标记到的存活对象的（可以使用<code>-XX:-CMSPrecleaningEnabled</code>关闭）</li>
+<li>重新标记：<code>STW</code>，目标是完成标记整个老年代的所有存活对象。如果此阶段花费时间过长，可以使用<code>-XX:+CMSScavengeBeforeRemark</code>，在重新标记之前进行<code>Yong GC</code>，不过该参数有可能会导致频繁的<code>CMS GC</code>，原因可以<a href="https://cloud.tencent.com/developer/article/1413725">戳这里</a></li>
+<li>并发清理：清除没有标记的对象并回收空间，当然由于这个过程是并发的，也就是用户线程也会运行，而此时产生的垃圾无法被清理，只能留到下一次<code>GC</code>再清理，这部分垃圾就称为“浮动垃圾”</li>
+<li>并发重置：重新设置<code>CMS</code>内部的数据结果，准备下一次<code>CMS</code>使用</li>
+</ul>
+<h2 id="52-主要参数">5.2 主要参数</h2>
+<ul>
+<li><code>-XX:+UseConcMarkSweepGC</code>：开启<code>CMS</code></li>
+<li><code>-XX:ConcGCThreads</code>/<code>-XX:ParallelCMSThreads</code>：设置并发线程数</li>
+<li><code>-XX:CMSInitiatingOccupancyFraction</code>：回收阈值，当老年代使用率超过该值的时候就进行回收，默认为<code>68</code>，如果内存使用增长率过快，导致<code>CMS</code>执行过程中出现内存不足的情况，<code>CMS</code>就会回收失败，<code>JVM</code>会启动老年代串行回收器进行回收，同时会触发<code>STW</code>，直到回收完成</li>
+<li><code>-XX:+UseCMSCompactAtFullCollection</code>：因为<code>CMS</code>是一个并发回收器，回收后很大可能会出现大量的内存碎片，导致离散的可用空间无法分配给大对象，并再次触发<code>CMS GC</code>。使用该参数后，会在回收完成后进行一次内存压缩（表现为整理内存碎片，非并发）</li>
+<li><code>-XX:CMSFullGCsBeforeCompaction</code>：用于设定多少次<code>CMS</code>后，进行一次内存压缩</li>
+</ul>
+<h1 id="6-g1">6 <code>G1</code></h1>
+<p><code>G1</code>是<code>JDK7</code>引入的垃圾回收器，在<code>JDK9+</code>作为默认回收器，特点包括：</p>
+<ul>
+<li>并行性：回收期间可以由多个<code>GC</code>线程同时工作</li>
+<li>并发性：部分工作可以和应用程序同时执行，一般不会在整个回收期阻塞应用程序</li>
+<li>分代<code>GC</code>：兼顾新生代与老年代</li>
+<li>空间整理：回收过程中会有适当的对象移动</li>
+<li>可预见性：只选取部分区域进行内存回收，缩小了回收范围，同时可以控制<code>STW</code>时间</li>
+</ul>
+<h2 id="61-g1工作流程">6.1 <code>G1</code>工作流程</h2>
+<p><code>G1</code>的回收过程可能有4个阶段：</p>
+<ul>
+<li>新生代<code>GC</code></li>
+<li>并发标记周期</li>
+<li>混合回收</li>
+<li>（可选）<code>Full GC</code></li>
+</ul>
+<p>下面来分别看一下。</p>
+<h3 id="611-新生代gc">6.1.1 新生代<code>GC</code></h3>
+<p>新生代<code>GC</code>的工作区域是<code>eden</code>区以及<code>survivor</code>区，一旦<code>eden</code>区占满，新生代<code>GC</code>就会启动。新生代<code>GC</code>后，所有的<code>eden</code>区会被清空，老年代的区域有可能增多（因为部分<code>survivor</code>区或<code>eden</code>区的对象晋升到老年代）。</p>
+<p>比如下面是新生代<code>G1 GC</code>日志的一部分：</p>
+<pre><code class="language-bash">[1.076s][info][gc,start     ] GC(0) Pause Young (Normal) (G1 Evacuation Pause)
+[1.076s][info][gc,task      ] GC(0) Using 2 workers of 10 for evacuation
+[1.079s][info][gc,phases    ] GC(0)   Pre Evacuate Collection Set: 0.0ms
+[1.079s][info][gc,phases    ] GC(0)   Evacuate Collection Set: 2.4ms
+[1.079s][info][gc,phases    ] GC(0)   Post Evacuate Collection Set: 0.1ms
+[1.079s][info][gc,phases    ] GC(0)   Other: 0.2ms
+[1.079s][info][gc,heap      ] GC(0) Eden regions: 9-&gt;0(7)
+[1.079s][info][gc,heap      ] GC(0) Survivor regions: 0-&gt;2(2)
+[1.079s][info][gc,heap      ] GC(0) Old regions: 0-&gt;1
+[1.079s][info][gc,heap      ] GC(0) Humongous regions: 0-&gt;0
+[1.079s][info][gc,metaspace ] GC(0) Metaspace: 3473K-&gt;3473K(1056768K)
+[1.079s][info][gc           ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 9M-&gt;2M(20M) 2.689ms
+[1.079s][info][gc,cpu       ] GC(0) User=0.00s Sys=0.00s Real=0.01s
+</code></pre>
+<p>可以看到<code>eden</code>区域被清空，<code>survivor</code>区与老年区增多。</p>
+<h3 id="612-并发标记周期">6.1.2 并发标记周期</h3>
+<p><code>G1</code>的并发标记阶段和<code>CMS</code>有类似的地方，可以分为以下几步：</p>
+<ul>
+<li>初始标记（<code>STW</code>）：标记从根节点直接可达的对象，这个阶段会伴随着一次新生代<code>GC</code></li>
+<li>根区域扫描（并发）：扫描由<code>survivor</code>区可直达的老年区域，并标记这些直接可达的对象</li>
+<li>并发标记（并发）：和<code>CMS</code>类似，会扫描并查找整个堆的存活对象，并做好标记，这是一个并发的过程，但是会被新生代的<code>GC</code>打断</li>
+<li>重新标记（<code>STW</code>）：对标记结果进行修正，使用<code>SATB</code>（<code>Snapshot-At-The-Beginning</code>）算法，在标记之初为存活对象创建一个快照，这个快照有助于加速重新标记的速度</li>
+<li>独占清理（<code>STW</code>）：计算各个区域的存活对象和<code>GC</code>回收比例并进行排序，在这个阶段还会更新记忆集（<code>Remebered Set</code>）</li>
+<li>并发清理（并发）：并发清理垃圾</li>
+</ul>
+<p>其中比较重要的一个阶段是并发标记阶段，在并发标记后，会增加一些标记为<code>G</code>的区域，这些区域被标记为<code>G</code>是因为内部的垃圾比例高，希望在后续的<code>GC</code>中进行收集，而这些被标记为<code>G</code>的区域会被<code>G1</code>记录在一个称为<code>Collection Sets</code>的集合中。</p>
+<h3 id="613-混合回收">6.1.3 混合回收</h3>
+<p>在并发标记周期中，虽然有部分对象被回收，但是总体上来说回收的比例是相当低的，但是在并发标记周期后，<code>G1</code>已经明确知道哪些区域有比较多的垃圾对象，在下一阶段就可以对其进行回收。</p>
+<p>这个阶段就叫混合回收，因为既会执行正常的年轻代<code>GC</code>，也会选取一些被标记的老年代区域进行回收，同时处理了新生代和老年代。混合<code>GC</code>会执行多次，直到回收了足够的内存空间，然后它会触发一次新生代<code>GC</code>，然后不断循环，整体流程如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210427181933160.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="614-full-gc">6.1.4 <code>Full GC</code></h3>
+<p>如果在并发回收的期间出现了内存不足，<code>G1</code>就会像<code>CMS</code>一样执行<code>Full GC</code>。另外，如果混合<code>GC</code>的时候空间不足，或者新生代<code>GC</code>时<code>survivor</code>区和老年代无法容纳幸存对象，都会导致一次<code>Full GC</code>。</p>
+<h2 id="62-g1相关参数">6.2 <code>G1</code>相关参数</h2>
+<ul>
+<li><code>-XX:+UseG1GC</code>：启用<code>G1</code></li>
+<li><code>-XX:MaxGCPauseMills</code>：<code>STW</code>最大时间，如果任意一次停顿时间超过设置值，<code>G1</code>会尝试自动调整新生代、老年代的比例、调整堆大小等</li>
+<li><code>-XX:ParallelGCThreads</code>：用于设置并行回收时<code>GC</code>的工作线程数</li>
+<li><code>-XX:InitiatingHeapOccupancyPercent</code>：可以指定整个堆的使用率到达多少的时候，触发并发标记周期的执行，默认是<code>45</code>。一旦设置了该值，<code>G1</code>始终不会去修改，如果设置过大，意味着并发周期会迟迟得不到启动，引起<code>Full GC</code>的可能性会大大增加，如果设置得过小，并发周期会执行得非常频繁，大量<code>GC</code>线程抢占<code>CPU</code>导致性能下降</li>
+</ul>
+<h1 id="7-gc调优简单实验">7 <code>GC</code>调优简单实验</h1>
+<h2 id="71-概述">7.1 概述</h2>
+<p>一个简单的实验，测试不同的<code>JVM</code>启动参数对<code>Tomcat</code>的影响，通过压力测试，获得<code>JVM</code>主要性能指标，体验不同参数对系统性能的影响。环境：</p>
+<ul>
+<li><code>Tomcat 10.0.5</code></li>
+<li><code>OpenJDK 11.0.10</code></li>
+<li><code>JMeter 5.4.1</code></li>
+</ul>
+<h2 id="72-步骤">7.2 步骤</h2>
+<h3 id="721-添加线程组">7.2.1 添加线程组</h3>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210427190736669.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>Test Plan</code>中选择右键，<code>Thread(Users)</code>，再选择<code>Thread Group</code>，设置线程数以及循环次数：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210428012848289.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h3 id="722-添加采样器">7.2.2 添加采样器</h3>
+<p>选中刚才添加的线程组，并选择界面中的<code>Edit-&gt;Add-&gt;Sampler-&gt;HTTP Request</code>，添加<code>HTTP</code>采样器：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210427201708660.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里选择了默认的<code>Tomcat</code>页面进行测试，端口<code>1080</code>。</p>
+<h3 id="723-添加总结报告">7.2.3 添加总结报告</h3>
+<p>选中<code>HTTP Request</code>后，右键选择<code>Add-&gt;Listener-&gt;Summary Request</code>，添加总结报告，完成后就可以进行测试了。</p>
+<h2 id="73-测试">7.3 测试</h2>
+<p>先引入环境变量：</p>
+<pre><code class="language-bash">export CATALINA_OPTS=&quot;-Xlog:gc:gc.log -Xmx32m -Xms32m -XX:ParallelGCThreads=4&quot; 
+</code></pre>
+<p>接下来的操作都以该环境变量为主，首先设置初始堆和最大堆为<code>32m</code>，设置好后运行<code>Tomcat</code>，并在<code>JMeter</code>中进行测试，下面是<code>GC</code>日志的前100行：</p>
+<pre><code class="language-bash">[0.040s][info][gc] Using G1
+[0.377s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 14M-&gt;3M(32M) 2.699ms
+[0.573s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 14M-&gt;5M(32M) 2.605ms
+[0.678s][info][gc] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 16M-&gt;6M(32M) 2.355ms
+[0.793s][info][gc] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 17M-&gt;7M(32M) 1.579ms
+[0.796s][info][gc] GC(4) Pause Young (Concurrent Start) (Metadata GC Threshold) 7M-&gt;7M(32M) 0.925ms
+[0.796s][info][gc] GC(5) Concurrent Cycle
+[0.808s][info][gc] GC(5) Pause Remark 8M-&gt;8M(32M) 2.363ms
+[0.815s][info][gc] GC(5) Pause Cleanup 9M-&gt;9M(32M) 0.021ms
+[0.816s][info][gc] GC(5) Concurrent Cycle 19.666ms
+[0.899s][info][gc] GC(6) Pause Young (Normal) (G1 Evacuation Pause) 19M-&gt;8M(32M) 1.150ms
+[1.018s][info][gc] GC(7) Pause Young (Normal) (G1 Evacuation Pause) 20M-&gt;9M(32M) 1.243ms
+[17.760s][info][gc] GC(8) Pause Young (Normal) (G1 Evacuation Pause) 22M-&gt;15M(32M) 2.984ms
+[17.810s][info][gc] GC(9) Pause Young (Normal) (G1 Evacuation Pause) 22M-&gt;19M(32M) 2.921ms
+[17.818s][info][gc] GC(10) Pause Young (Concurrent Start) (G1 Evacuation Pause) 22M-&gt;21M(32M) 1.168ms
+[17.818s][info][gc] GC(11) Concurrent Cycle
+[17.822s][info][gc] GC(12) Pause Young (Normal) (G1 Evacuation Pause) 23M-&gt;23M(32M) 1.129ms
+[17.830s][info][gc] GC(13) Pause Young (Normal) (G1 Evacuation Pause) 24M-&gt;24M(32M) 1.426ms
+[17.836s][info][gc] GC(14) Pause Young (Normal) (G1 Evacuation Pause) 25M-&gt;25M(32M) 1.050ms
+[17.843s][info][gc] GC(15) Pause Young (Normal) (G1 Evacuation Pause) 26M-&gt;26M(32M) 1.195ms
+[17.853s][info][gc] GC(11) Pause Remark 27M-&gt;27M(32M) 3.820ms
+[17.855s][info][gc] GC(16) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;26M(32M) 1.672ms
+[17.858s][info][gc] GC(17) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;26M(32M) 1.069ms
+[17.869s][info][gc] GC(18) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;27M(32M) 1.121ms
+[17.872s][info][gc] GC(19) Pause Young (Normal) (G1 Evacuation Pause) 28M-&gt;27M(32M) 0.811ms
+[17.876s][info][gc] GC(20) Pause Young (Normal) (G1 Evacuation Pause) 28M-&gt;28M(32M) 0.867ms
+[17.878s][info][gc] GC(11) Pause Cleanup 29M-&gt;29M(32M) 0.029ms
+[17.879s][info][gc] GC(21) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 29M-&gt;28M(32M) 0.905ms
+[17.879s][info][gc] GC(11) Concurrent Cycle 60.929ms
+[17.885s][info][gc] GC(22) To-space exhausted
+[17.885s][info][gc] GC(22) Pause Young (Mixed) (G1 Evacuation Pause) 29M-&gt;30M(32M) 2.788ms
+[17.891s][info][gc] GC(23) To-space exhausted
+[17.891s][info][gc] GC(23) Pause Young (Concurrent Start) (G1 Evacuation Pause) 31M-&gt;31M(32M) 2.017ms
+[17.891s][info][gc] GC(25) Concurrent Cycle
+[17.915s][info][gc] GC(24) Pause Full (G1 Evacuation Pause) 31M-&gt;24M(32M) 24.037ms
+[17.915s][info][gc] GC(25) Concurrent Cycle 24.201ms
+[17.918s][info][gc] GC(26) Pause Young (Normal) (G1 Evacuation Pause) 25M-&gt;25M(32M) 0.881ms
+[17.921s][info][gc] GC(27) Pause Young (Concurrent Start) (G1 Evacuation Pause) 26M-&gt;25M(32M) 1.092ms
+[17.921s][info][gc] GC(28) Concurrent Cycle
+[17.924s][info][gc] GC(29) Pause Young (Normal) (G1 Evacuation Pause) 26M-&gt;25M(32M) 0.842ms
+[17.931s][info][gc] GC(30) Pause Young (Normal) (G1 Evacuation Pause) 26M-&gt;26M(32M) 2.357ms
+[17.933s][info][gc] GC(31) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;26M(32M) 1.058ms
+[17.936s][info][gc] GC(32) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;26M(32M) 0.966ms
+[17.941s][info][gc] GC(33) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;27M(32M) 0.911ms
+[17.954s][info][gc] GC(34) Pause Young (Normal) (G1 Evacuation Pause) 28M-&gt;27M(32M) 1.532ms
+[17.961s][info][gc] GC(35) To-space exhausted
+[17.961s][info][gc] GC(35) Pause Young (Normal) (G1 Evacuation Pause) 28M-&gt;29M(32M) 1.326ms
+[17.967s][info][gc] GC(36) To-space exhausted
+[17.967s][info][gc] GC(36) Pause Young (Normal) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.425ms
+[17.989s][info][gc] GC(37) Pause Full (G1 Evacuation Pause) 30M-&gt;28M(32M) 22.554ms
+[17.989s][info][gc] GC(28) Concurrent Cycle 68.160ms
+[17.993s][info][gc] GC(38) Pause Young (Normal) (G1 Evacuation Pause) 29M-&gt;29M(32M) 0.951ms
+[17.997s][info][gc] GC(39) To-space exhausted
+[17.997s][info][gc] GC(39) Pause Young (Concurrent Start) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.763ms
+[17.997s][info][gc] GC(41) Concurrent Cycle
+[18.020s][info][gc] GC(40) Pause Full (G1 Evacuation Pause) 30M-&gt;29M(32M) 22.459ms
+[18.020s][info][gc] GC(41) Concurrent Cycle 22.538ms
+[18.028s][info][gc] GC(42) To-space exhausted
+[18.028s][info][gc] GC(42) Pause Young (Normal) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.399ms
+[18.049s][info][gc] GC(43) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 21.067ms
+[18.058s][info][gc] GC(44) To-space exhausted
+[18.058s][info][gc] GC(44) Pause Young (Concurrent Start) (G1 Evacuation Pause) 31M-&gt;31M(32M) 1.830ms
+[18.058s][info][gc] GC(46) Concurrent Cycle
+[18.080s][info][gc] GC(45) Pause Full (G1 Evacuation Pause) 31M-&gt;30M(32M) 22.113ms
+[18.080s][info][gc] GC(46) Concurrent Cycle 22.213ms
+[18.169s][info][gc] GC(47) To-space exhausted
+[18.169s][info][gc] GC(47) Pause Young (Normal) (G1 Evacuation Pause) 31M-&gt;31M(32M) 87.776ms
+[18.192s][info][gc] GC(48) Pause Full (G1 Evacuation Pause) 31M-&gt;30M(32M) 22.622ms
+[18.214s][info][gc] GC(49) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 22.480ms
+[18.216s][info][gc] GC(50) Pause Young (Concurrent Start) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.112ms
+[18.216s][info][gc] GC(52) Concurrent Cycle
+[18.241s][info][gc] GC(51) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 25.469ms
+[18.266s][info][gc] GC(53) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 24.480ms
+[18.266s][info][gc] GC(52) Concurrent Cycle 50.062ms
+[18.267s][info][gc] GC(54) Pause Young (Normal) (G1 Evacuation Pause) 30M-&gt;30M(32M) 0.681ms
+[18.293s][info][gc] GC(55) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 25.581ms
+[18.316s][info][gc] GC(56) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 22.917ms
+[18.317s][info][gc] GC(57) Pause Young (Concurrent Start) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.170ms
+[18.317s][info][gc] GC(59) Concurrent Cycle
+[18.342s][info][gc] GC(58) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 24.189ms
+[18.365s][info][gc] GC(60) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 23.685ms
+[18.365s][info][gc] GC(59) Concurrent Cycle 48.004ms
+[18.366s][info][gc] GC(61) Pause Young (Normal) (G1 Evacuation Pause) 30M-&gt;30M(32M) 0.810ms
+[18.393s][info][gc] GC(62) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 26.309ms
+[18.419s][info][gc] GC(63) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 26.395ms
+[18.421s][info][gc] GC(64) Pause Young (Concurrent Start) (G1 Evacuation Pause) 30M-&gt;30M(32M) 0.978ms
+[18.421s][info][gc] GC(66) Concurrent Cycle
+[18.447s][info][gc] GC(65) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 26.732ms
+[18.473s][info][gc] GC(67) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 25.213ms
+[18.473s][info][gc] GC(66) Concurrent Cycle 52.098ms
+[18.474s][info][gc] GC(68) Pause Young (Normal) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.288ms
+[18.503s][info][gc] GC(69) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 28.438ms
+[18.526s][info][gc] GC(70) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 22.862ms
+[18.527s][info][gc] GC(71) Pause Young (Concurrent Start) (G1 Evacuation Pause) 30M-&gt;30M(32M) 1.047ms
+[18.527s][info][gc] GC(73) Concurrent Cycle
+[18.551s][info][gc] GC(72) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 24.183ms
+[18.572s][info][gc] GC(74) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 21.006ms
+[18.573s][info][gc] GC(73) Concurrent Cycle 45.322ms
+[18.574s][info][gc] GC(75) Pause Young (Normal) (G1 Evacuation Pause) 30M-&gt;30M(32M) 0.711ms
+[18.598s][info][gc] GC(76) Pause Full (G1 Evacuation Pause) 30M-&gt;30M(32M) 24.588ms
+</code></pre>
+<p>可以看到频繁发生了<code>Full GC</code>。</p>
+<h2 id="74-调优">7.4 调优</h2>
+<p>解决频繁发生<code>Full GC</code>的最简单一个方法就是将堆内存调大，使用如下参数再次启动<code>Tomcat</code>：</p>
+<pre><code class="language-bash">export CATALINA_OPTS=&quot;-Xlog:gc:gc.log -Xmx256m -Xms32m -XX:ParallelGCThreads=4&quot;
+</code></pre>
+<p>日志如下：</p>
+<pre><code class="language-bash">[0.024s][info][gc] Using G1
+[0.278s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 14M-&gt;3M(32M) 2.545ms
+[0.355s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 7M-&gt;4M(32M) 2.359ms
+[0.485s][info][gc] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 13M-&gt;5M(32M) 1.345ms
+[0.595s][info][gc] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 15M-&gt;6M(32M) 2.102ms
+[0.686s][info][gc] GC(4) Pause Young (Concurrent Start) (Metadata GC Threshold) 16M-&gt;7M(32M) 3.140ms
+[0.686s][info][gc] GC(5) Concurrent Cycle
+[0.696s][info][gc] GC(5) Pause Remark 8M-&gt;8M(32M) 2.647ms
+[0.700s][info][gc] GC(5) Pause Cleanup 8M-&gt;8M(32M) 0.019ms
+[0.700s][info][gc] GC(5) Concurrent Cycle 13.683ms
+[0.761s][info][gc] GC(6) Pause Young (Normal) (G1 Evacuation Pause) 17M-&gt;8M(32M) 1.689ms
+[0.835s][info][gc] GC(7) Pause Young (Normal) (G1 Evacuation Pause) 19M-&gt;8M(32M) 1.680ms
+[11.813s][info][gc] GC(8) Pause Young (Normal) (G1 Evacuation Pause) 19M-&gt;11M(32M) 2.670ms
+[11.890s][info][gc] GC(9) Pause Young (Normal) (G1 Evacuation Pause) 21M-&gt;17M(32M) 4.077ms
+[11.907s][info][gc] GC(10) Pause Young (Concurrent Start) (G1 Evacuation Pause) 22M-&gt;21M(32M) 1.528ms
+[11.907s][info][gc] GC(11) Concurrent Cycle
+[11.917s][info][gc] GC(12) Pause Young (Normal) (G1 Evacuation Pause) 23M-&gt;23M(32M) 1.918ms
+[11.921s][info][gc] GC(13) Pause Young (Normal) (G1 Evacuation Pause) 24M-&gt;24M(32M) 0.955ms
+[11.926s][info][gc] GC(14) Pause Young (Normal) (G1 Evacuation Pause) 25M-&gt;24M(32M) 0.733ms
+[11.930s][info][gc] GC(15) Pause Young (Normal) (G1 Evacuation Pause) 25M-&gt;25M(32M) 0.769ms
+[11.934s][info][gc] GC(11) Pause Remark 25M-&gt;25M(32M) 3.490ms
+[11.937s][info][gc] GC(16) Pause Young (Normal) (G1 Evacuation Pause) 26M-&gt;25M(32M) 0.787ms
+[11.945s][info][gc] GC(17) Pause Young (Normal) (G1 Evacuation Pause) 26M-&gt;25M(32M) 0.893ms
+[11.949s][info][gc] GC(18) Pause Young (Normal) (G1 Evacuation Pause) 26M-&gt;26M(32M) 0.911ms
+[11.949s][info][gc] GC(11) Pause Cleanup 26M-&gt;26M(32M) 0.029ms
+[11.950s][info][gc] GC(11) Concurrent Cycle 42.921ms
+[11.962s][info][gc] GC(19) Pause Young (Normal) (G1 Evacuation Pause) 27M-&gt;26M(32M) 0.855ms
+[11.971s][info][gc] GC(20) Pause Young (Concurrent Start) (G1 Evacuation Pause) 27M-&gt;27M(32M) 1.335ms
+[11.971s][info][gc] GC(21) Concurrent Cycle
+[11.978s][info][gc] GC(22) Pause Young (Normal) (G1 Evacuation Pause) 28M-&gt;28M(32M) 0.853ms
+[11.981s][info][gc] GC(23) Pause Young (Normal) (G1 Evacuation Pause) 29M-&gt;28M(32M) 0.777ms
+[11.984s][info][gc] GC(24) Pause Young (Normal) (G1 Evacuation Pause) 29M-&gt;29M(64M) 0.944ms
+[12.007s][info][gc] GC(21) Pause Remark 34M-&gt;34M(64M) 3.139ms
+[12.032s][info][gc] GC(21) Pause Cleanup 39M-&gt;39M(64M) 0.041ms
+[12.036s][info][gc] GC(25) Pause Young (Normal) (G1 Evacuation Pause) 39M-&gt;32M(64M) 3.190ms
+[12.037s][info][gc] GC(21) Concurrent Cycle 65.196ms
+[12.096s][info][gc] GC(26) Pause Young (Normal) (G1 Evacuation Pause) 41M-&gt;34M(64M) 2.597ms
+[12.150s][info][gc] GC(27) Pause Young (Concurrent Start) (G1 Evacuation Pause) 43M-&gt;37M(64M) 2.926ms
+[12.150s][info][gc] GC(28) Concurrent Cycle
+[12.246s][info][gc] GC(28) Pause Remark 42M-&gt;42M(64M) 73.769ms
+[12.259s][info][gc] GC(29) Pause Young (Normal) (G1 Evacuation Pause) 45M-&gt;38M(109M) 2.864ms
+[12.263s][info][gc] GC(28) Pause Cleanup 40M-&gt;40M(109M) 0.037ms
+[12.267s][info][gc] GC(28) Concurrent Cycle 117.019ms
+[12.341s][info][gc] GC(30) Pause Young (Normal) (G1 Evacuation Pause) 59M-&gt;40M(109M) 3.691ms
+[12.468s][info][gc] GC(31) Pause Young (Normal) (G1 Evacuation Pause) 72M-&gt;44M(109M) 3.743ms
+[12.594s][info][gc] GC(32) Pause Young (Normal) (G1 Evacuation Pause) 76M-&gt;47M(109M) 3.134ms
+[12.764s][info][gc] GC(33) Pause Young (Normal) (G1 Evacuation Pause) 79M-&gt;48M(109M) 2.044ms
+[12.855s][info][gc] GC(34) Pause Young (Normal) (G1 Evacuation Pause) 80M-&gt;48M(109M) 2.071ms
+[12.949s][info][gc] GC(35) Pause Young (Normal) (G1 Evacuation Pause) 82M-&gt;48M(109M) 1.615ms
+[13.035s][info][gc] GC(36) Pause Young (Normal) (G1 Evacuation Pause) 83M-&gt;48M(109M) 1.681ms
+[13.133s][info][gc] GC(37) Pause Young (Normal) (G1 Evacuation Pause) 83M-&gt;50M(109M) 3.947ms
+[13.214s][info][gc] GC(38) Pause Young (Normal) (G1 Evacuation Pause) 85M-&gt;50M(109M) 3.206ms
+[13.285s][info][gc] GC(39) Pause Young (Normal) (G1 Evacuation Pause) 85M-&gt;50M(109M) 2.007ms
+[13.362s][info][gc] GC(40) Pause Young (Normal) (G1 Evacuation Pause) 87M-&gt;50M(109M) 2.705ms
+[13.454s][info][gc] GC(41) Pause Young (Normal) (G1 Evacuation Pause) 90M-&gt;50M(109M) 3.772ms
+</code></pre>
+<p>吞吐量为<code>1.4w</code>每秒：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210427202729311.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>将堆大小调大后，可以明显看到<code>GC</code>次数减少，且没有发生<code>Full GC</code>，此时的可以将并发量增加，观察性能瓶颈，比如将线程数调到<code>2000</code>，循环数不变：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210427203011744.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>再次测试，日志如下（最后50行）：</p>
+<pre><code class="language-bash">[7.554s][info][gc] GC(73) Pause Young (Concurrent Start) (G1 Evacuation Pause) 114M-&gt;82M(132M) 1.920ms
+[7.554s][info][gc] GC(74) Concurrent Cycle
+[7.590s][info][gc] GC(74) Pause Remark 99M-&gt;99M(132M) 4.054ms
+[7.620s][info][gc] GC(74) Pause Cleanup 113M-&gt;113M(132M) 0.089ms
+[7.620s][info][gc] GC(74) Concurrent Cycle 66.091ms
+[7.624s][info][gc] GC(75) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;82M(132M) 2.885ms
+[7.677s][info][gc] GC(76) Pause Young (Concurrent Start) (G1 Evacuation Pause) 114M-&gt;82M(132M) 2.369ms
+[7.677s][info][gc] GC(77) Concurrent Cycle
+[7.730s][info][gc] GC(78) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;82M(132M) 2.615ms
+[7.756s][info][gc] GC(77) Pause Remark 95M-&gt;95M(132M) 2.964ms
+[7.793s][info][gc] GC(79) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;82M(132M) 5.707ms
+[7.811s][info][gc] GC(77) Pause Cleanup 92M-&gt;92M(132M) 0.255ms
+[7.812s][info][gc] GC(77) Concurrent Cycle 134.823ms
+[7.854s][info][gc] GC(80) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;82M(132M) 2.604ms
+[7.912s][info][gc] GC(81) Pause Young (Concurrent Start) (G1 Evacuation Pause) 114M-&gt;82M(132M) 1.952ms
+[7.912s][info][gc] GC(82) Concurrent Cycle
+[7.940s][info][gc] GC(82) Pause Remark 94M-&gt;94M(132M) 3.422ms
+[7.960s][info][gc] GC(82) Pause Cleanup 105M-&gt;105M(132M) 0.061ms
+[7.960s][info][gc] GC(82) Concurrent Cycle 47.595ms
+[7.976s][info][gc] GC(83) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 114M-&gt;81M(132M) 2.423ms
+[7.985s][info][gc] GC(84) Pause Young (Mixed) (G1 Evacuation Pause) 86M-&gt;81M(132M) 1.495ms
+[8.038s][info][gc] GC(85) Pause Young (Concurrent Start) (G1 Evacuation Pause) 113M-&gt;81M(132M) 2.309ms
+[8.038s][info][gc] GC(86) Concurrent Cycle
+[8.079s][info][gc] GC(86) Pause Remark 104M-&gt;104M(132M) 3.507ms
+[8.098s][info][gc] GC(87) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;81M(132M) 3.336ms
+[8.106s][info][gc] GC(86) Pause Cleanup 86M-&gt;86M(132M) 0.112ms
+[8.106s][info][gc] GC(86) Concurrent Cycle 67.767ms
+[8.148s][info][gc] GC(88) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;81M(132M) 2.621ms
+[8.205s][info][gc] GC(89) Pause Young (Concurrent Start) (G1 Evacuation Pause) 114M-&gt;81M(132M) 2.943ms
+[8.205s][info][gc] GC(90) Concurrent Cycle
+[8.263s][info][gc] GC(91) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;81M(132M) 2.117ms
+[8.274s][info][gc] GC(90) Pause Remark 84M-&gt;84M(132M) 4.372ms
+[8.309s][info][gc] GC(90) Pause Cleanup 102M-&gt;102M(132M) 0.082ms
+[8.309s][info][gc] GC(90) Concurrent Cycle 103.562ms
+[8.331s][info][gc] GC(92) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 114M-&gt;81M(132M) 2.712ms
+[8.342s][info][gc] GC(93) Pause Young (Mixed) (G1 Evacuation Pause) 86M-&gt;80M(132M) 1.982ms
+[8.392s][info][gc] GC(94) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;80M(132M) 1.921ms
+[8.437s][info][gc] GC(95) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;80M(132M) 1.980ms
+[8.487s][info][gc] GC(96) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;80M(132M) 1.965ms
+[8.528s][info][gc] GC(97) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;80M(132M) 1.959ms
+[8.600s][info][gc] GC(98) Pause Young (Normal) (G1 Evacuation Pause) 114M-&gt;80M(132M) 5.305ms
+[8.655s][info][gc] GC(99) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 2.709ms
+[8.709s][info][gc] GC(100) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.762ms
+[8.759s][info][gc] GC(101) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.767ms
+[8.801s][info][gc] GC(102) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.739ms
+[8.850s][info][gc] GC(103) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.696ms
+[8.899s][info][gc] GC(104) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.499ms
+[8.952s][info][gc] GC(105) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.289ms
+[8.999s][info][gc] GC(106) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.219ms
+[9.043s][info][gc] GC(107) Pause Young (Normal) (G1 Evacuation Pause) 115M-&gt;80M(132M) 1.110ms
+</code></pre>
+<p>吞吐量为<code>2.3w</code>每秒：</p>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210427203322511.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>相同的参数下，将线程数增加，吞吐量增加了，说明还没到达性能瓶颈，再次增大并发线程数：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210427203541236.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>日志如下：</p>
+<pre><code class="language-bash">[58.313s][info][gc] GC(354) Pause Young (Normal) (G1 Evacuation Pause) 217M-&gt;209M(241M) 3.415ms
+[58.328s][info][gc] GC(355) Pause Young (Normal) (G1 Evacuation Pause) 220M-&gt;210M(241M) 1.408ms
+[58.354s][info][gc] GC(356) Pause Young (Normal) (G1 Evacuation Pause) 220M-&gt;210M(241M) 4.860ms
+[58.378s][info][gc] GC(353) Pause Remark 221M-&gt;221M(241M) 5.735ms
+[58.392s][info][gc] GC(357) Pause Young (Normal) (G1 Evacuation Pause) 221M-&gt;210M(241M) 1.799ms
+[58.407s][info][gc] GC(353) Pause Cleanup 218M-&gt;218M(241M) 0.430ms
+[58.408s][info][gc] GC(353) Concurrent Cycle 109.426ms
+[58.416s][info][gc] GC(358) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 221M-&gt;210M(241M) 1.584ms
+[58.431s][info][gc] GC(359) Pause Young (Mixed) (G1 Evacuation Pause) 221M-&gt;187M(241M) 1.880ms
+[58.463s][info][gc] GC(360) Pause Young (Mixed) (G1 Evacuation Pause) 197M-&gt;165M(244M) 2.684ms
+[58.485s][info][gc] GC(361) Pause Young (Mixed) (G1 Evacuation Pause) 175M-&gt;144M(244M) 4.659ms
+[58.505s][info][gc] GC(362) Pause Young (Mixed) (G1 Evacuation Pause) 154M-&gt;124M(244M) 5.943ms
+[58.522s][info][gc] GC(363) Pause Young (Mixed) (G1 Evacuation Pause) 134M-&gt;118M(244M) 3.665ms
+[58.640s][info][gc] GC(364) Pause Young (Normal) (G1 Evacuation Pause) 163M-&gt;119M(247M) 3.835ms
+[58.722s][info][gc] GC(365) Pause Young (Normal) (G1 Evacuation Pause) 170M-&gt;119M(247M) 1.531ms
+[58.823s][info][gc] GC(366) Pause Young (Normal) (G1 Evacuation Pause) 178M-&gt;119M(247M) 1.982ms
+[58.926s][info][gc] GC(367) Pause Young (Normal) (G1 Evacuation Pause) 185M-&gt;120M(247M) 2.277ms
+[59.023s][info][gc] GC(368) Pause Young (Normal) (G1 Evacuation Pause) 191M-&gt;120M(247M) 3.918ms
+[59.192s][info][gc] GC(369) Pause Young (Normal) (G1 Evacuation Pause) 194M-&gt;120M(247M) 2.634ms
+[59.346s][info][gc] GC(370) Pause Young (Normal) (G1 Evacuation Pause) 205M-&gt;120M(247M) 2.053ms
+[59.479s][info][gc] GC(371) Pause Young (Normal) (G1 Evacuation Pause) 206M-&gt;120M(247M) 2.384ms
+[59.615s][info][gc] GC(372) Pause Young (Normal) (G1 Evacuation Pause) 207M-&gt;120M(247M) 3.700ms
+[59.733s][info][gc] GC(373) Pause Young (Normal) (G1 Evacuation Pause) 207M-&gt;120M(247M) 6.038ms
+[59.917s][info][gc] GC(374) Pause Young (Normal) (G1 Evacuation Pause) 208M-&gt;120M(247M) 2.311ms
+[60.062s][info][gc] GC(375) Pause Young (Normal) (G1 Evacuation Pause) 209M-&gt;120M(247M) 2.319ms
+[60.197s][info][gc] GC(376) Pause Young (Normal) (G1 Evacuation Pause) 210M-&gt;120M(247M) 2.315ms
+[60.316s][info][gc] GC(377) Pause Young (Normal) (G1 Evacuation Pause) 210M-&gt;120M(247M) 3.419ms
+[60.456s][info][gc] GC(378) Pause Young (Normal) (G1 Evacuation Pause) 212M-&gt;120M(247M) 2.019ms
+[60.638s][info][gc] GC(379) Pause Young (Normal) (G1 Evacuation Pause) 212M-&gt;120M(247M) 2.782ms
+[60.799s][info][gc] GC(380) Pause Young (Normal) (G1 Evacuation Pause) 212M-&gt;120M(247M) 2.341ms
+[60.947s][info][gc] GC(381) Pause Young (Normal) (G1 Evacuation Pause) 213M-&gt;120M(247M) 2.954ms
+[61.102s][info][gc] GC(382) Pause Young (Normal) (G1 Evacuation Pause) 217M-&gt;120M(247M) 2.598ms
+[61.234s][info][gc] GC(383) Pause Young (Concurrent Start) (G1 Evacuation Pause) 216M-&gt;120M(247M) 2.340ms
+[61.234s][info][gc] GC(384) Concurrent Cycle
+[61.271s][info][gc] GC(384) Pause Remark 133M-&gt;133M(247M) 4.457ms
+[61.287s][info][gc] GC(384) Pause Cleanup 135M-&gt;135M(247M) 0.171ms
+[61.288s][info][gc] GC(384) Concurrent Cycle 53.972ms
+[61.444s][info][gc] GC(385) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 216M-&gt;120M(247M) 2.913ms
+[61.464s][info][gc] GC(386) Pause Young (Mixed) (G1 Evacuation Pause) 131M-&gt;103M(247M) 3.910ms
+[61.486s][info][gc] GC(387) Pause Young (Mixed) (G1 Evacuation Pause) 114M-&gt;95M(247M) 3.828ms
+[61.684s][info][gc] GC(388) Pause Young (Normal) (G1 Evacuation Pause) 200M-&gt;95M(247M) 2.013ms
+[61.881s][info][gc] GC(389) Pause Young (Normal) (G1 Evacuation Pause) 215M-&gt;95M(247M) 2.089ms
+[62.073s][info][gc] GC(390) Pause Young (Concurrent Start) (G1 Evacuation Pause) 217M-&gt;95M(247M) 2.686ms
+[62.073s][info][gc] GC(391) Concurrent Cycle
+[62.103s][info][gc] GC(391) Pause Remark 106M-&gt;106M(247M) 3.136ms
+[62.122s][info][gc] GC(391) Pause Cleanup 118M-&gt;118M(247M) 0.111ms
+[62.123s][info][gc] GC(391) Concurrent Cycle 49.728ms
+[62.334s][info][gc] GC(392) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 217M-&gt;95M(247M) 2.472ms
+[62.348s][info][gc] GC(393) Pause Young (Mixed) (G1 Evacuation Pause) 106M-&gt;75M(247M) 1.981ms
+[62.363s][info][gc] GC(394) Pause Young (Mixed) (G1 Evacuation Pause) 86M-&gt;59M(247M) 3.422ms
+</code></pre>
+<p>吞吐量<code>2.7w</code>：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210427203729120.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于篇幅限制，其他方法就不再叙述了，如果想再提高吞吐量，可以从下面几个方面入手：</p>
+<ul>
+<li>调大堆内存：<code>-Xmx1g</code></li>
+<li>使用更多的线程：<code>-XX:ParallelGCThreads=8</code></li>
+<li>设置更大的初始堆内存：<code>-Xms512m</code></li>
+<li>设置更大的新生代：<code>-XX:G1NewSizePercent</code>+<code>-XX:G1MaxNewSizePercent</code></li>
+</ul>
+<h1 id="8-附录一回收的一些细节讨论">8 附录一：回收的一些细节讨论</h1>
+<h2 id="81-禁用显式gc">8.1 禁用显式<code>GC</code></h2>
+<p>一般情况下，<code>System.gc()</code>会触发<code>Full GC</code>，同时对老年代和新生代进行回收，<code>JVM</code>提供了一个<code>DisableExplicitGC</code>来控制是否可以显式触发<code>GC</code>。<code>System.gc()</code>底层是<code>native</code>方法，源码位于<code>jvm.cpp</code>中：</p>
+<figure data-type="image" tabindex="11"><img src="https://img-blog.csdnimg.cn/20210427145330225.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>如果禁用了，就相当于是空实现，也就是什么也不会执行。</p>
+<h2 id="82-显式gc使用并发回收">8.2 显式<code>GC</code>使用并发回收</h2>
+<p>默认情况下，如果<code>System.gc()</code>生效，会使用传统的<code>Full GC</code>，同时会忽略参数中的<code>UseG1GC</code>以及<code>UseConcMarkSweepGC</code>，此时<code>CMS</code>/<code>G1</code>都是没有并发执行的，如果使用<code>-XX:+ExplicitGCInvokesConcurrent</code>后，就会改变这种默认行为。</p>
+<p>比如下面的代码：</p>
+<pre><code class="language-java">public static void main(String[] args){
+    byte [] b = new byte[1024*1024*10];
+    System.gc();
+}
+</code></pre>
+<p>带上参数：</p>
+<pre><code class="language-bash">-Xlog:gc*,gc+marking*=debug,gc+heap=debug
+-Xmx30m
+</code></pre>
+<p>会触发<code>Full GC</code>：</p>
+<figure data-type="image" tabindex="12"><img src="https://img-blog.csdnimg.cn/20210427204914920.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而如果加上<code>-XX:+ExplicitGCInvokesConcurrent</code>后，不会发生<code>Full GC</code>，而是使用<code>G1</code>的并行<code>GC</code>：</p>
+<figure data-type="image" tabindex="13"><img src="https://img-blog.csdnimg.cn/20210427205100371.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="83-关于对象如何晋升到老年代">8.3 关于对象如何晋升到老年代</h2>
+<p>对象晋升为老年代的途径有以下几个：</p>
+<ul>
+<li>通过年龄晋升：在<code>survivor</code>区中存活到一定年龄后（默认是15），便进入老年代，但是需要注意对象的实际晋升年龄是由<code>survivor</code>的使用情况动态计算得来的，也就是说，默认情况下，年龄到达15一定晋升到老年代，但是未到达该年龄的对象也有可能晋升，可以通过<code>-XX:MaxTenuringThresold</code>设置晋升年龄、</li>
+<li>通过大小晋升：如果对象很大，大到<code>eden</code>区和<code>survivor</code>区都无法容纳，则会直接晋升到老年代，可以通过<code>-XX:PreteureSizeThreshold</code>设置，单位为字节</li>
+</ul>
+<h2 id="84-关于tlab">8.4 关于<code>TLAB</code></h2>
+<p><code>TLAB</code>全称是<code>Thread Local Allocation Buffer</code>，线程本地缓存分配，这是一个线程专用的内存分配区域。使用该区域的原因是为了加速对象的分配，尽管对象一般分配在堆上，而堆是所有线程共享的，同一时间可能会有多个线程申请堆空间，容易造成冲突，而对象分配是一种非常常见的操作，因此<code>Java</code>提供了<code>TLAB</code>来避免分配对象时的线程冲突，提高对象分配的效率。在<code>TLAB</code>启用的情况下，虚拟机会为每一个<code>Java</code>线程分配一块<code>TLAB</code>区域。</p>
+<h3 id="841-一个简单的测试">8.4.1 一个简单的测试</h3>
+<p>测试代码：</p>
+<pre><code class="language-java">public static void main(String[] args){
+    long start = System.nanoTime();
+    for (int i = 0; i &lt; 1_0000_0000; i++) {
+        byte [] b = new byte[2];
+        b[0] = 1;
+    }
+    long end = System.nanoTime();
+    System.out.println(end-start);
+}
+</code></pre>
+<p>参数：</p>
+<pre><code class="language-bash">-server -XX:+UseTLAB -Xcomp -XX:-BackgroundCompilation -XX:+DoEscapeAnalysis
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">1013561
+</code></pre>
+<p>修改参数，关闭<code>TLAB</code>：</p>
+<pre><code class="language-bash">-server -XX:-UseTLAB -Xcomp -XX:-BackgroundCompilation -XX:+DoEscapeAnalysis
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">3154586
+</code></pre>
+<p>可以看到，开启了<code>TLAB</code>花费的时间大概是没有开启<code>TLAB</code>的时间的三分之一。</p>
+<h3 id="842-对象的分配">8.4.2 对象的分配</h3>
+<p>从上面的实验可以看到，<code>TLAB</code>对对象分配的影响还是很大的，但是，由于<code>TLAB</code>的空间通常比较小，很容易装满，比如<code>TLAB</code>为<code>100KB</code>，已经使用了<code>80KB</code>，如果需要分配一个<code>30KB</code>的对象，那么可以有两种处理办法：</p>
+<ul>
+<li>放弃当前的<code>TLAB</code>区域：就是重新再申请一块<code>TLAB</code>，但是这样会浪费原来<code>TLAB</code>剩下的<code>20KB</code></li>
+<li>直接分配在堆上：保留当前的<code>TLAB</code>，将来如果有小于<code>20KB</code>的对象就可以直接使用剩下的<code>20KB</code></li>
+</ul>
+<p>因此，<code>JVM</code>内部会维护一个叫<code>refill_waste</code>的值：</p>
+<ul>
+<li>当请求的对象大于<code>refill_waste</code>时，会选择在堆分配</li>
+<li>若小于该值，废弃当前<code>TLAB</code>，新建<code>TLAB</code>来分配新对象</li>
+</ul>
+<p>默认情况下，<code>TLAB</code>和<code>refill_waste</code>的大小都会在运行时不断调整，使系统的运行状态最优。</p>
+<p>引入<code>TLAB</code>后，对象的分配流程如下：</p>
+<figure data-type="image" tabindex="14"><img src="https://img-blog.csdnimg.cn/2021042721230183.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="9-附录二-常用gc参数总结">9 附录二： 常用<code>GC</code>参数总结</h1>
+<h2 id="91-串行回收器相关参数">9.1 串行回收器相关参数</h2>
+<ul>
+<li><code>-XX:+UseSerialGC</code>：新生代和老年代使用串行回收器</li>
+<li><code>-XX:SurvivorRatio</code>：设置<code>eden</code>区和<code>survivor</code>区大小比例</li>
+<li><code>-XX:PretenureSizeThreshold</code>：设置大对象进入老年代的阈值，超过该值会被直接分配在老年代</li>
+<li><code>-XX:MaxTenuringThreshold</code>：设置对象进入老年代的最大值，每一次<code>Minor GC</code>后对象年龄就会加1，大于这个年龄的对象会进入老年代</li>
+</ul>
+<h2 id="92-并行回收器相关参数">9.2 并行回收器相关参数</h2>
+<ul>
+<li><code>-XX:+UseParNewGC</code>：新生代使用并行回收器，老年代使用串行回收器（<code>JDK9+</code>已删除）</li>
+<li><code>-XX:+UseParallelOldGC</code>：老年代使用<code>ParallelOldGC</code>，新生代使用<code>ParallelGC</code></li>
+<li><code>-XX:+ParallelGCThreads</code>：设置用于垃圾回收的线程数</li>
+<li><code>-XX:MaxGCPauseMills</code>：最大垃圾回收停顿时间，一个大于0的整数</li>
+<li><code>-XX:GCTimeRatio</code>：设置吞吐量大小，一个<code>0-100</code>的整数</li>
+<li><code>-XX:+UseAdaptiveSizePolicy</code>：打开自适应策略，新生代的大小、<code>eden</code>区和<code>survivor</code>区比例、晋升到老年代的对象年龄参数会被动态调整</li>
+</ul>
+<h2 id="93-cms相关参数">9.3 <code>CMS</code>相关参数</h2>
+<ul>
+<li><code>-XX:+UseConcMarkSweepGC</code>：新生代使用并行回收器，老年代使用<code>CMS</code>+串行回收器</li>
+<li><code>-XX:ParallelCMSThreads</code>：设定<code>CMS</code>的线程数量</li>
+<li><code>-XX:CMSInitiatingOccupancyFraction</code>：设置垃圾回收在老年代空间被使用多少后触发，默认为使用率为<code>68%</code></li>
+<li><code>-XX:+UseCMSCompactAtFullCollection</code>：设置垃圾回收后是否需要进行一次内存碎片整理</li>
+<li><code>-XX:CMSFullGCsBeforeCompaction</code>：设定进行多少次<code>CMS</code>后，进行一次内存压缩</li>
+<li><code>-XX:+CMSClassUnloadingEnabled</code>：允许对类元数据区进行回收</li>
+<li><code>-XX:CMSInitiatingPermOccupancyFraction</code>：当永久区占用率达到该百分比后，进行一次<code>CMS GC</code>，前提开启<code>-XX:+CMSClassUnloadingEnabled</code></li>
+<li><code>-XX:+CMSIncrementalMode</code>：使用增量模式（<code>JDK9</code>移除）</li>
+</ul>
+<h2 id="94-g1相关参数">9.4 <code>G1</code>相关参数</h2>
+<ul>
+<li><code>-XX:+UseG1GC</code>：开启<code>G1</code></li>
+<li><code>-XX:MaxGCPauseMills</code>：设置最大垃圾回收停顿时间</li>
+<li><code>-XX:GCPauseIntervalMills</code>：设置停顿时间间隔</li>
+</ul>
+<h2 id="95-tlab相关参数">9.5 <code>TLAB</code>相关参数</h2>
+<ul>
+<li><code>-XX:+UseTLAB</code>：开启<code>TLAB</code></li>
+<li><code>-XX:+PrintTLAB</code>：打印相关信息（<code>JDK9</code>不支持）</li>
+<li><code>-XX:TLABSize</code>：设置<code>TLAB</code>区域大小</li>
+<li><code>-XX:+ResizeTLAB</code>：自动调整<code>TLAB</code>大小</li>
+</ul>
+<h2 id="96-其他参数">9.6 其他参数</h2>
+<ul>
+<li><code>-XX:+DisableExplicitGC</code>：禁用显式<code>GC</code></li>
+<li><code>-XX:+ExplicitGCInvokesConcurrent</code>：使用并发方式处理显式<code>GC</code></li>
+</ul>
+<h1 id="10-参考">10 参考</h1>
+<ul>
+<li><a href="https://juejin.cn/post/6844903970142421005">掘金-JVM原理之GC垃圾回收器CMS详解</a></li>
+<li><a href="https://sematext.com/blog/java-garbage-collection-logs/">Understanding Java Garbage Collection Logging: What Are GC Logs and How To Analyze Them</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第317期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-317-qi/</id>
@@ -1031,382 +1656,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619051695239.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[CountDownLatch与CyclicBarrier的基本使用]]></title>
-        <id>https://2293736867.github.io/post/countdownlatch-yu-cyclicbarrier-de-ji-ben-shi-yong/</id>
-        <link href="https://2293736867.github.io/post/countdownlatch-yu-cyclicbarrier-de-ji-ben-shi-yong/">
-        </link>
-        <updated>2021-04-21T04:16:33.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p><code>CountDownLatch</code>以及<code>CyclicBarrier</code>都是<code>Java</code>里面的同步工具之一，本文介绍了两者的基本原理以及基本使用方法。</p>
-<h1 id="2-countdownlatch">2 <code>CountDownLatch</code></h1>
-<p><code>CountDownLatch</code>是一个同步工具类，常见的使用场景包括：</p>
-<ul>
-<li>允许一个或多个线程等待一系列的其他线程结束</li>
-<li>在串行化任务中需要进行并行化处理，并等待所有并行化任务结束，串行化任务才能继续进行</li>
-</ul>
-<p>比如考虑这样一个场景，在一个电商网站中，用户点击了首页，需要一部分的商品，同时显示它们的价格，那么，调用的流程应该是：</p>
-<ul>
-<li>获取商品</li>
-<li>计算售价</li>
-<li>返回所有商品的最终售价</li>
-</ul>
-<p>解决这样的问题可以使用串行化或并行化操作，串行化就是逐一计算商品的售价，并返回，并行化就是获取商品后，并行计算每一个商品的售价，最后返回，显然后一种方案要比前一种要好，那么这时候就可以用上<code>CountDownLatch</code>了。</p>
-<p>一份简单的模拟代码如下：</p>
-<pre><code class="language-java">import java.util.List;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import static java.util.concurrent.ThreadLocalRandom.current;
-
-public class CountDownLatchExample {
-    public static void main(String[] args) throws InterruptedException{
-        List&lt;Price&gt; list = IntStream.rangeClosed(1,10).mapToObj(Price::new).collect(Collectors.toList());
-        //计数器大小为商品列表的长度
-        final CountDownLatch latch = new CountDownLatch(list.size());
-        //线程池
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(5,10,2, TimeUnit.SECONDS,new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
-        list.forEach(p-&gt; executor.execute(()-&gt;{
-            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price &quot;);
-            try{
-            	//随机休眠模拟业务操作耗时
-                TimeUnit.SECONDS.sleep(current().nextInt(10));
-                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
-                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed&quot;);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }finally {
-            	//每完成计算一个商品，将计数器减1，注意需要放在finally中
-                latch.countDown();
-            }
-        }));
-        //主线程阻塞直到所有的计数器为0，也就是等待所有的子任务计算价格完毕
-        latch.await();
-        System.out.println(&quot;All of prices calculate finished&quot;);
-        //手动终止，不然不会结束运行
-        executor.shutdown();
-    }
-
-    private static class Price{
-        private final int id;
-        private double price;
-
-        public Price(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-    }
-}
-</code></pre>
-<p>输出：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210421104604159.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>代码比较简单，关键地方用上了注释，可以看到代码执行顺序如下：</p>
-<ul>
-<li>创建多个任务计算商品的价格</li>
-<li>主线程阻塞</li>
-<li>计算完成后，将计数器减1</li>
-<li>当计数器为0时，主线程退出阻塞状态</li>
-</ul>
-<p>值得注意的是计数器减1的操作需要放在<code>finally</code>中，因为有可能会出现异常，如果出现异常导致计数器不能减少，那么主线程会一直阻塞。</p>
-<p>另外，<code>CountDownLatch</code>还有一个<code>await(long timeout,TimeUnit unit)</code>方法，是带有超时参数的，也就是说，如果在超时时间内，计数器的值还是大于0（还有任务没执行完成），会使得当前线程退出阻塞状态。</p>
-<h1 id="3-cyclicbarrier">3 <code>CyclicBarrier</code></h1>
-<p><code>CyclicBarrier</code>与<code>CountDownLatch</code>有很多类似的地方，也是一个同步工具类，允许多个线程在执行完相应的操作之后彼此等待到达同一个<code>barrier point</code>（屏障点）。<code>CyclicBarrier</code>也适合某个串行化的任务被拆分为多个并行化任务，这点与<code>CountDownLatch</code>类似，但是<code>CyclicBarrier</code>具备的一个更强大的功能是，<code>CyclicBarrier</code>可以被重复使用。</p>
-<h2 id="31-等待完成">3.1 等待完成</h2>
-<p>先简单说一下<code>CyclicBarrier</code>的实现原理：</p>
-<ul>
-<li>初始化<code>CyclicBarrier</code>，传入一个<code>int</code>参数，表示分片（<code>parites</code>），通常意义上来说分片数就是任务的数量</li>
-<li>同时串行化执行多个任务</li>
-<li>任务执行完成后，调用<code>await()</code>，等待其他线程也到达<code>barrier point</code></li>
-<li>当所有线程到达后，继续以串行化方式运行任务</li>
-</ul>
-<p>常见的使用方法是设置分片数为任务数+1，这样，可以在主线程中执行<code>await()</code>，等待所有子任务完成。比如下面是使用<code>CyclicBarrier</code>实现同样功能的模拟代码：</p>
-<pre><code class="language-java">import java.util.List;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import static java.util.concurrent.ThreadLocalRandom.current;
-
-public class CountDownLatchExample {
-    public static void main(String[] args) throws InterruptedException,BrokenBarrierException{
-        List&lt;Price&gt; list = IntStream.rangeClosed(1,10).mapToObj(Price::new).collect(Collectors.toList());
-        final CyclicBarrier barrier = new CyclicBarrier(11);
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(10,10,2, TimeUnit.SECONDS,new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
-        list.forEach(p-&gt; executor.execute(()-&gt;{
-            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price &quot;);
-            try{
-                TimeUnit.SECONDS.sleep(current().nextInt(10));
-                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
-                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed&quot;);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }finally {
-                try{
-                    barrier.await();
-                }catch (InterruptedException | BrokenBarrierException e){
-                    e.printStackTrace();
-                }
-            }
-        }));
-        barrier.await();
-        System.out.println(&quot;All of prices calculate finished&quot;);
-        executor.shutdown();
-    }
-
-    private static class Price{
-        private final int id;
-        private double price;
-
-        public Price(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-    }
-}
-</code></pre>
-<p>输出相同，代码大部分相似，不同的地方有：</p>
-<ul>
-<li><code>latch.countDown()</code>替换成了<code>barrier.await()</code></li>
-<li><code>latch.await()</code>替换成了<code>barrier.await()</code></li>
-<li>线程池的核心线程数替换成了<code>10</code></li>
-</ul>
-<p><code>await()</code>方法会等待所有的线程到达<code>barrier point</code>，上面代码执行流程简述如下：</p>
-<ul>
-<li>初始化<code>CyclicBarrier</code>，分片数为11（子线程数+1）</li>
-<li>主线程调用<code>await()</code>，等待子线程执行完成</li>
-<li>子线程各自进行商品价格的计算，计算完成后，调用<code>await()</code>，等待其他线程也到达<code>barrier point</code></li>
-<li>当所有子线程计算完成后，由于没有后续操作，所以子线程运行结束，同时由于主线程还有后续操作，会先输出提示信息再终止线程池</li>
-</ul>
-<p>注意一个很大的不同就是这里的线程池核心线程数目改成了 10，那么，为什么需要10？</p>
-<p>因为如果是设置一个小于10的核心线程个数，由于线程池是会先创建核心线程来执行任务，核心线程满了之后，放进任务队列中，而假设只有5个核心线程，那么：</p>
-<ul>
-<li>5个线程进行计算价格</li>
-<li>另外5个任务放在任务队列中</li>
-</ul>
-<p>这样的话，会出现死锁，因为计算中的线程需要队列中的任务到达<code>barrier point</code>才能结束，而队列中的任务需要核心线程计算完毕后，才能调度出来计算，这样死锁就出现了。</p>
-<h2 id="32-重复使用">3.2 重复使用</h2>
-<p><code>CyclicBarrier</code>与<code>CountDownLatch</code>的一个最大不同是，<code>CyclicBarrier</code>可以被重复使用，原理上来说，<code>await()</code>会将内部计数器减1，当计数器减为0时，会自动进行计数器（分片数）重置。比如，在上面的代码中，由于遇上促销活动，需要对商品的价格再次进行计算：</p>
-<pre><code class="language-java">import java.util.List;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import static java.util.concurrent.ThreadLocalRandom.current;
-
-public class CountDownLatchExample {
-    public static void main(String[] args) throws InterruptedException,BrokenBarrierException{
-        List&lt;Price&gt; list = IntStream.rangeClosed(1,10).mapToObj(Price::new).collect(Collectors.toList());
-        final CyclicBarrier barrier = new CyclicBarrier(11);
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(10,10,2, TimeUnit.SECONDS,new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
-        list.forEach(p-&gt; executor.execute(()-&gt;{
-            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price.&quot;);
-            try{
-                TimeUnit.SECONDS.sleep(current().nextInt(10));
-                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
-                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed.&quot;);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }finally {
-                try{
-                    barrier.await();
-                }catch (InterruptedException | BrokenBarrierException e){
-                    e.printStackTrace();
-                }
-            }
-        }));
-        barrier.await();
-        System.out.println(&quot;All of prices calculate finished.&quot;);
-		
-		//复制的一段相同代码
-        list.forEach(p-&gt; executor.execute(()-&gt;{
-            System.out.println(&quot;Product &quot;+p.id+&quot; start calculate price again.&quot;);
-            try{
-                TimeUnit.SECONDS.sleep(current().nextInt(10));
-                p.setPrice(p.getPrice()*((p.getId() &amp; 1) == 1 ? 0.9 : 0.7));
-                System.out.println(&quot;Product &quot;+p.id+&quot; calculate price completed.&quot;);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }finally {
-                try{
-                    barrier.await();
-                }catch (InterruptedException | BrokenBarrierException e){
-                    e.printStackTrace();
-                }
-            }
-        }));
-        barrier.await();
-        System.out.println(&quot;All of prices calculate finished again.&quot;);
-        executor.shutdown();
-    }
-
-    private static class Price{
-        private final int id;
-        private double price;
-
-        public Price(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-    }
-}
-</code></pre>
-<p>将计算价格的代码复制一遍，其中没有手动修改计数器，只是调用<code>await()</code>，输出如下：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210421110421819.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>可以看到，并没有对<code>CycliBarrier</code>进行类似<code>reset</code>之类的操作，但是依然能按正常逻辑运行，这是因为<code>await()</code>内部会维护一个计数器，当计数器为0的时候，会自动进行重置，下面是<code>await()</code>在<code>OpenJDK 11</code>下的源码：</p>
-<pre><code class="language-java">public int await() throws InterruptedException, BrokenBarrierException {
-    try {
-        return this.dowait(false, 0L);
-    } catch (TimeoutException var2) {
-        throw new Error(var2);
-    }
-}
-    
-private int dowait(boolean timed, long nanos) throws InterruptedException, BrokenBarrierException, TimeoutException {
-    ReentrantLock lock = this.lock;
-    lock.lock();
-
-    byte var9;
-    try {
-        //...
-        int index = --this.count;
-        if (index != 0) {
-            //计数器不为0的情况
-            //....
-        }
-
-        boolean ranAction = false;
-
-        try {
-            Runnable command = this.barrierCommand;
-            if (command != null) {
-                command.run();
-            }
-
-            ranAction = true;
-            
-            this.nextGeneration();
-            var9 = 0;
-        } finally {
-            if (!ranAction) {
-                this.breakBarrier();
-            }
-
-        }
-    } finally {
-        lock.unlock();
-    }
-
-    return var9;
-}
-
-private void nextGeneration() {
-    this.trip.signalAll();
-    this.count = this.parties;
-    this.generation = new CyclicBarrier.Generation();
-}
-</code></pre>
-<p>当计数器为0时，会生成新的<code>Generation</code>，并将<code>var9</code>置为0，最后返回<code>var9</code>（在这个方法中<code>var9</code>只有一处赋值，就是代码中的<code>var9=0</code>，可以理解成直接返回0）。</p>
-<h2 id="33-cyclicbarrier其他的一些常用方法">3.3 <code>CyclicBarrier</code>其他的一些常用方法</h2>
-<ul>
-<li><code>CyclicBarrier(int parties,Runnable barrierAction)</code>：构造的时候传入一个<code>Runnable</code>，表示所有线程到达<code>barrier point</code>时，会调用该<code>Runnable</code></li>
-<li><code>await(long timeout,TimeUnit unit)</code>：与无参的<code>await()</code>类似，底层调用的是相同的<code>doWait()</code>，不过增加了超时功能</li>
-<li><code>isBroken()</code>：返回<code>broken</code>状态，某个线程由于执行<code>await</code>而进入阻塞，此时如果执行了中断操作（比如<code>interrupt</code>），那么<code>isBroken()</code>会返回<code>true</code>。需要注意，处于<code>broken</code>状态的<code>CyclicBarrier</code>不能被直接使用，需要调用<code>reset()</code>进行重置</li>
-</ul>
-<h1 id="4-总结">4 总结</h1>
-<p>下面是<code>CountDownLatch</code>与<code>CyclicBarrier</code>的一些简单比较，相同点如下：</p>
-<ul>
-<li>都是<code>java.util.concurrent</code>包下的线程同步工具类</li>
-<li>都可以用于“主线程阻塞一直等待，直到子任务完成，主线程才继续执行”的情况</li>
-</ul>
-<p>不同点：</p>
-<ul>
-<li><code>CountDownLatch</code>的<code>await()</code>方法会等待计数器归0，而<code>CyclicBarrier</code>的<code>await()</code>会等待其他线程到达<code>barrier point</code></li>
-<li><code>CyclicBarrier</code>内部的计数器是可以被重置的，但是<code>CountDownLatch</code>不可以</li>
-<li><code>CyclicBarrier</code>是由<code>Lock</code>和<code>Condition</code>实现的，而<code>CountDownLatch</code>是由同步控制器<code>AQS</code>实现的</li>
-<li>构造时<code>CyclicBarrier</code>不允许<code>parties</code>为0，而<code>CountDownLatch</code>允许<code>count</code>为0</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第311期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-311-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-311-qi/">
-        </link>
-        <updated>2021-04-21T00:25:08.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>没人嘲笑你的梦想，他们只是，嘲笑你的实力。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>绿叶阴阴占得春，草满莺啼处。<br>
-——徐俯《卜算子·天生百种愁》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>要保持希望在每天清晨太阳升起。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1618965019908.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>空间可以优化到<code>O(1)</code>的动态规划（前几天字节一面刚好碰上的这条，原题）：</p>
-<pre><code class="language-java">public class Solution {
-    public int numDecodings(String s) {
-        int n = s.length();
-        int a = 0;
-        int b = 1;
-        int c = 0;
-        for (int i = 1; i &lt;= n; i++) {
-            c = 0;
-            if(s.charAt(i-1) != '0'){
-                c += b;
-            }
-            if(i &gt; 1 &amp;&amp; s.charAt(i-2) != '0' &amp;&amp; ((s.charAt(i-2)-'0')*10 + (s.charAt(i-1)-'0') &lt;= 26)){
-                c += a;
-            }
-            a = b;
-            b = c;
-        }
-        return c;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618968261834.png" alt="" loading="lazy"></figure>
-<p><s>一开始用的回溯超时了</s></p>
 ]]></content>
     </entry>
 </feed>
