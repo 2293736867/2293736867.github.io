@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-26T14:22:07.196Z</updated>
+    <updated>2021-04-27T04:32:02.515Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,68 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第317期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-317-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-317-qi/">
+        </link>
+        <updated>2021-04-27T04:29:02.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>平时骂你就算了，非要等我打你，才知道我文武双全。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>东风吹雨过青山，却望千门草色闲。<br>
+——卢纶《长安春望》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>记忆是不会消失的，只是一时想不起来了而已。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619497859389.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>利用<code>BST</code>的性质直接遍历就好了：</p>
+<pre><code class="language-java">public class Solution {
+    private int sum = 0;
+    private int low;
+    private int high;
+    public int rangeSumBST(TreeNode root, int low, int high) {
+        this.low = low;
+        this.high = high;
+        f(root);
+        return sum;
+    }
+
+    private void f(TreeNode root){
+        if(root != null){
+            int temp = root.val;
+            if(temp &gt;= low &amp;&amp; temp &lt;= high){
+                sum += temp;
+            }
+            if(root.right != null){
+                if(root.right.val &lt;= high){
+                    f(root.right);
+                }else{
+                    f(root.right.left);
+                }
+            }
+            if(root.left != null){
+                if(root.left.val &gt;= low){
+                    f(root.left);
+                }else{
+                    f(root.left.right);
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619497907789.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JVM学习笔记（四）：GC算法与四种引用]]></title>
         <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-si-gc-suan-fa-yu-si-chong-yin-yong/</id>
@@ -1345,86 +1407,6 @@ private void nextGeneration() {
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1618968261834.png" alt="" loading="lazy"></figure>
 <p><s>一开始用的回溯超时了</s></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[在Win10中手动添加/修改本地IP]]></title>
-        <id>https://2293736867.github.io/post/zai-win10-zhong-shou-dong-tian-jia-xiu-gai-ben-di-ip/</id>
-        <link href="https://2293736867.github.io/post/zai-win10-zhong-shou-dong-tian-jia-xiu-gai-ben-di-ip/">
-        </link>
-        <updated>2021-04-20T12:24:07.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-前言">1 前言</h1>
-<p>好久没动<code>Win10</code>了。。。</p>
-<p>今天需要用<code>Win10</code>做一下实验，手动修改<code>IP</code>，于是写下了这篇文章作为过程记录。</p>
-<h1 id="2-概述">2 概述</h1>
-<p><code>Win10</code>里面修改本地<code>IP</code>不是一件特别困难的事，简单来说可以分为两种方式：</p>
-<ul>
-<li>图形方式</li>
-<li>命令行方式</li>
-</ul>
-<p>先来看一下比较简单的图形方式。</p>
-<h1 id="3-图形操作">3 图形操作</h1>
-<p>打开<code>Win</code>，输入<code>Network status</code>，可以看到下面界面：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210420194131656.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>选择其中的网卡（图中是<code>Ethernet</code>），点击其中的<code>Properties</code>：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210420194233437.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>点击其中的<code>Edit</code>并选择<code>Manual</code>就可以修改：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210420194425596.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>关于其中的值如何填写，建议参考<code>ipconfig /all</code>中的值。</p>
-<p>图中右边的黑框就是在<code>cmd</code>使用<code>ipconfig /all</code>获取的结果，可以看到：</p>
-<ul>
-<li>内网<code>IP</code>：<code>10.0.2.15</code></li>
-<li>子网掩码：<code>255.255.255.0</code></li>
-<li>网关：<code>10.0.2.2</code></li>
-</ul>
-<p>所以根据需要修改内网<code>IP</code>的值即可，子网掩码一般为<code>24</code>（<code>255.255.255.0</code>）、网关、<code>DNS</code>可以直接使用默认网关的值（<code>10.0.2.2</code>）：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/2021042019500892.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>在<code>cmd</code>里面再次使用<code>ipconfig /all</code>就可以看到新修改的值了：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210420195142582.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-命令行操作">4 命令行操作</h1>
-<p>众所周知，在<code>Win10</code>中使用命令行操作的档次比使用图形操作高了不止一个档次，而且，使用图形化操作的话还不能添加新的<code>IP</code>，只能修改<code>IP</code>，那么，这时候就轮到命令行操作登场了。</p>
-<p>命令行操作主要使用到<code>netsh</code>命令，官方文档<a href="https://docs.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts">在此处</a>，先来看一下如何修改<code>IP</code>。</p>
-<h2 id="41-修改ip">4.1 修改<code>IP</code></h2>
-<p>操作之前，首先需要知道网卡的名字，使用</p>
-<pre><code class="language-bash">netsh interface show interface
-</code></pre>
-<p>就可以看到自己的网卡名字了：</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210420200502747.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里只有一个叫<code>Ethernet</code>的网卡，修改时，使用<code>set</code>命令即可，格式为：</p>
-<pre><code class="language-bash">netsh interface ipv4 set address name=&quot;INTERFACE_NAME&quot; static IP_ADDRESS SUBNET_MASK GATEWAY
-</code></pre>
-<p>比如这里需要修改为<code>10.0.2.18</code>的<code>IP</code>，命令如下（需要管理员权限）：</p>
-<pre><code class="language-bash">netsh interface ipv4 set address name=&quot;Ethernet&quot; static 10.0.2.18 255.255.255.0 10.0.2.2
-</code></pre>
-<p>效果：</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/2021042020075619.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="42-新增ip">4.2 新增<code>IP</code></h2>
-<p>操作与修改类似，只是修改为<code>add</code>命令，格式如下：</p>
-<pre><code class="language-bash">netsh interface ipv4 add address name=&quot;INTERFACE_NAME&quot; IP_ADDRESS SUBNET_MASK GATEWAY
-</code></pre>
-<p>比如需要添加一个<code>10.0.2.19</code>的<code>IP</code>，命名如下：</p>
-<pre><code class="language-bash">net interface ipv4 add address name=&quot;Ethernet&quot; 10.0.2.19 255.255.255.0 10.0.2.2
-</code></pre>
-<p>效果：</p>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/2021042020111724.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="43-删除ip">4.3 删除<code>IP</code></h2>
-<p>删除<code>IP</code>操作也类似：</p>
-<pre><code class="language-bash">netsh interface ipv4 delete address name=&quot;INTERFACE_NAME&quot; IP_ADDRESS
-</code></pre>
-<p>比如把刚才新增加的<code>10.0.2.19</code>删去：</p>
-<pre><code class="language-bash">netsh interface ipv4 delete address name=&quot;Ethernet&quot; 10.0.2.19
-</code></pre>
-<p>效果：</p>
-<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210420201345885.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="5-总结">5 总结</h1>
-<p>图形化操作修改比较简单，而命令行修改功能强大，但是配置难度较高，实际情况中可以结合两者使用。</p>
-<p>另外，如果出现了无法连接网络的情况，一种简单的解决办法是在<code>Network status</code>中切换为<code>DHCP</code>，自动分配<code>IP</code>以及<code>DNS</code>：</p>
-<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/20210420194233437.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="6-参考链接">6 参考链接</h1>
-<ul>
-<li><a href="https://www.howtogeek.com/103190/change-your-ip-address-from-the-command-prompt/">How to Change Your Computer’s IP Address From the Command Prompt</a></li>
-<li><a href="https://docs.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-contexts">Netsh Command Syntax, Contexts, and Formatting</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
