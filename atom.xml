@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-27T19:00:35.416Z</updated>
+    <updated>2021-04-29T01:51:59.135Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,96 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第319期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-319-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-319-qi/">
+        </link>
+        <updated>2021-04-29T00:20:14.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>别和我说对不起，因为我既不能原谅你，也无法捅死你。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>见说江头春浪渺，殷勤欲送归船。<br>
+——赵长卿《临江仙·暮春》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>在不同的遭遇里我发现你的瞬间，有种不可言说的温柔直觉。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619655792502.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>暴力大法好，非常的节约空间：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public boolean canCross(int[] stones) {
+        int n = stones.length;
+        Map&lt;Integer, List&lt;Integer&gt;&gt; map = new HashMap&lt;&gt;(n);
+        map.put(0, List.of(0));
+        for (int i = 1; i &lt; n; i++) {
+            List&lt;Integer&gt; target = new ArrayList&lt;&gt;();
+            for (int j = 0; j &lt; i; j++) {
+                List&lt;Integer&gt; list = map.get(stones[j]);
+                if(list != null &amp;&amp; !list.isEmpty()){
+                    int dis = stones[i] - stones[j];
+                    for (Integer e:list){
+                        if(Math.abs(e-dis) &lt;= 1 &amp;&amp; !target.contains(dis)){
+                            target.add(dis);
+                            if(i == n-1){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            map.put(stones[i],target);
+        }
+        return false;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619659079138.png" alt="" loading="lazy"></figure>
+<p>上二维<code>dp</code>，可以先上一次<code>O(n)</code>遍历判断是否有可能到达最后一个石头，如果没有直接返回<code>false</code>，遍历之后再一次<code>O(n^2)</code>遍历<code>dp</code>数组，数组存的是石头下标，转移方程为：</p>
+<pre><code class="language-java">dp[i][k] = dp[j][k-1] || dp[j][k] || dp[j][k+1];
+</code></pre>
+<p>如果<code>i==n-1</code>，也就是到达了最后一个石头，可以直接返回<code>true</code>，否则<code>O(n^2)</code>遍历结束后，返回<code>false</code>。</p>
+<pre><code class="language-java">public class Solution {
+    public boolean canCross(int[] stones) {
+        int n = stones.length;
+        boolean [][] dp = new boolean[n][n];
+
+        //测试发现O(n)的遍历貌似没什么用，反而增加耗时
+        // for (int i = 1; i &lt; n; ++i) {
+        //     if (stones[i] - stones[i - 1] &gt; i) {
+        //         return false;
+        //     }
+        // }
+
+        dp[0][0] = true;
+        for (int i = 1; i &lt; n; i++) {
+            for (int j = i-1; j &gt;= 0; --j) {
+                int k = stones[i]-stones[j];
+                if(k &gt; j+1){
+                    break;
+                }
+                dp[i][k] = dp[j][k-1] || dp[j][k] || dp[j][k+1];
+                if(i == n-1 &amp;&amp; dp[i][k]){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1619660800997.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第318期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-318-qi/</id>
@@ -1602,60 +1692,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619139871165.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第312期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-312-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-312-qi/">
-        </link>
-        <updated>2021-04-22T00:34:37.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote></blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote></blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote></blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619051735799.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>菜鸡只配用暴力。</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int maxSumSubmatrix(int[][] matrix, int k) {
-        int n1 = matrix.length;
-        int n2 = matrix[0].length;
-        int[][] sum = new int[n1 + 1][n2 + 1];
-        for (int i = 1; i &lt;= n1; i++) {
-            for (int j = 1; j &lt;= n2; j++) {
-                sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + matrix[i - 1][j - 1];
-            }
-        }
-
-        int ans = -1000000;
-
-        for (int i = 1; i &lt;= n1; i++) {
-            for (int j = 1; j &lt;= n2; j++) {
-                for (int p = i; p &lt;= n1; p++) {
-                    for (int q = j; q &lt;= n2; q++) {
-                        int temp = sum[p][q] - sum[i - 1][q] - sum[p][j - 1] + sum[i - 1][j - 1];
-                        if (temp &lt;= k) {
-                            ans = Math.max(ans, temp);
-                            if(ans == k){
-                                return ans;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return ans;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619051695239.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
