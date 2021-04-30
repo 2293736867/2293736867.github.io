@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-29T01:51:59.135Z</updated>
+    <updated>2021-04-30T02:16:59.736Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,55 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第320期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-320-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-320-qi/">
+        </link>
+        <updated>2021-04-30T02:14:19.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>为什么你能像智障一样活着，而我却不可以。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>洛阳城东桃李花，飞来飞去落谁家？<br>
+——刘希夷《代悲白头翁》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>人们生于信仰，毁于信仰。人们在信仰的灰烬重生。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619748966774.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>不会电路，<code>O(n)</code>空间：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int singleNumber(int[] nums) {
+        int n = nums.length;
+        if(n == 1){
+            return nums[0];
+        }
+        long sum = 0;
+        Map&lt;Integer,Boolean&gt; map = new HashMap&lt;&gt;();
+        for (int num:nums){
+            if(map.containsKey(num)){
+                sum -= num;
+            }else{
+                map.put(num,true);
+                sum += num* 2L;
+            }
+        }
+        return (int)(sum/2);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619749011958.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第319期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-319-qi/</id>
@@ -1621,77 +1670,6 @@ public static ExecutorService newWorkStealingPool() {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619232335053.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第313期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-313-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-313-qi/">
-        </link>
-        <updated>2021-04-23T00:08:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你家住海边吗？这么浪。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>日高烟敛，更看今日晴未。<br>
-——李清照《念奴娇·春情》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>你为了你的正义，我为了我的正义。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619136581446.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>动态规划，注意几个点：</p>
-<ul>
-<li><code>dp</code>数组可以从1开始计算，<code>dp[0] = 1</code></li>
-<li>遍历<code>j</code>的时候可以使用<code>nums[j]</code>与<code>nums[i]</code>的关系遍历，而不是单纯使用<code>j&lt;i</code></li>
-<li><code>dp</code>数组每次只自增1，因此可以放在<code>j</code>循环的外层，而不是每次都用<code>dp[j]+1 &gt; temp</code>比较</li>
-<li>遍历完<code>dp</code>数组后可以记录最后一次最大数值出现的位置，这样倒序还原结果的时候相比起从末尾开始可以更快</li>
-<li>还原结果的时候注意判断整除</li>
-</ul>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public List&lt;Integer&gt; largestDivisibleSubset(int[] nums) {
-        int n = nums.length;
-        if (n == 1) {
-            return List.of(nums[0]);
-        }
-        Arrays.sort(nums);
-        int [] dp = new int[n];
-        dp[0] = 1;
-        int max = 1;
-        int last = 0;
-        for (int i = 1; i &lt; n; i++) {
-            for (int j = 0; nums[j]*2L &lt;= nums[i]; j++) {
-                if(nums[i] % nums[j] == 0){
-                    dp[i] = Math.max(dp[i],dp[j]);
-                }
-            }
-            ++dp[i];
-            if(dp[i] &gt; max){
-                max = dp[i];
-                last = i;
-            }
-        }
-        List&lt;Integer&gt; ans = new ArrayList&lt;&gt;(max);
-        for (int i = last; i &gt;= 0; --i) {
-            if(dp[i] == max &amp;&amp; nums[last] % nums[i] == 0){
-                ans.add(nums[i]);
-                --max;
-                last = i;
-            }
-        }
-        return ans;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619139871165.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
