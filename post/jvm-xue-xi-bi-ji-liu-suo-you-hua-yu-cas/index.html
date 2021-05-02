@@ -1,0 +1,2025 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JVM学习笔记（六）：锁优化与CAS | 氷泠&#39;s blog</title>
+<meta name="description" content="几百遍，重复了几百遍
+重复的情绪重复的熬过想你的夜" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="1 来源
+
+来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣
+章节：第八章
+
+本文是第八章的一些笔记整理。
+2 概述
+本文主要讲述了JVM在运行层面和代码层面的锁优化策略，最后介绍了实现无锁的其中一种方法CAS。
+3 对象头
+J..." />
+    <meta name="keywords" content="JVM" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="https://github.com/2293736867" class="menu">
+                      Github
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="https://blog.csdn.net/qq_27525611" class="menu">
+                      CSDN
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1619965179142" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2021-04-30"><i class="fa fa-calendar"></i><span class="lately">2 天前</span></time>
+              
+              <a href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/"> </span>
+              </a>
+              <span id="/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/hmN5f1Dgf/" class="ctag ctag-0 ctag-hmN5f1Dgf" aria-label="">JVM</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">JVM学习笔记（六）：锁优化与CAS</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <h1 id="1-来源">1 来源</h1>
+<ul>
+<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
+<li>章节：第八章</li>
+</ul>
+<p>本文是第八章的一些笔记整理。</p>
+<h1 id="2-概述">2 概述</h1>
+<p>本文主要讲述了<code>JVM</code>在运行层面和代码层面的锁优化策略，最后介绍了实现无锁的其中一种方法<code>CAS</code>。</p>
+<h1 id="3-对象头">3 对象头</h1>
+<p><code>JVM</code>中每个对象都有一个对象头，用于保存对象的系统信息，<code>64bit JVM</code>的对象头结构如下图所示：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210429104615245.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>其中：</p>
+<ul>
+<li><code>Mark Word</code>由<code>64bit</code>组成，一个功能数据区，可以存放对象的哈希、对象年龄、锁的指针等信息</li>
+<li><code>KClass Word</code>在没有开启指针压缩的情况下，<code>64bit</code>组成，但是<code>64bit JVM</code>会默认开启指针压缩（<code>+UseCompressedOops</code>），所以会压缩到<code>32bit</code></li>
+</ul>
+<p>另外，从图中可以看到，不同的锁对应于不同的<code>Mark Word</code>：</p>
+<ul>
+<li>无锁：<code>25bit</code>空+<code>31bit</code>哈希值+<code>1bit</code>空+<code>4bit</code>分代年龄+<code>1bit</code>是否偏向锁+<code>2bit</code>锁标记</li>
+<li>偏向锁：<code>54bit</code>持有偏向锁的线程<code>ID</code>+<code>2bit</code>偏向时间戳+<code>1bit</code>空+<code>4bit</code>分代年龄+<code>1bit</code>是否偏向锁+<code>2bit</code>锁标记</li>
+<li>轻量锁：<code>62bit</code>栈中锁记录指针+<code>2bit</code>锁标记</li>
+<li>重量锁：<code>62bit</code>重量级锁指针+<code>2bit</code>锁标记</li>
+</ul>
+<p><code>JVM</code>如何区分锁主要看两个字段：<code>biased_lock</code>与<code>lock</code>，对应关系如下：</p>
+<ul>
+<li><code>biased_lock=0 lock=00</code>：轻量级锁</li>
+<li><code>biased_lock=0 lock=01</code>：无锁</li>
+<li><code>biased_lock=0 lock=10</code>：重量级锁</li>
+<li><code>biased_lock=0 lock=11</code>：<code>GC</code>标记</li>
+<li><code>biased_lock=1 lock=01</code>：偏向锁</li>
+</ul>
+<h1 id="4-锁的运行时优化">4 锁的运行时优化</h1>
+<p>很多时候<code>JVM</code>都会对线程竞争的操作在<code>JVM</code>层面进行优化，尽可能解决竞争问题，也会试图消除不必要的竞争，实现的方法包括：</p>
+<ul>
+<li>偏向锁</li>
+<li>轻量级锁</li>
+<li>重量级锁</li>
+<li>自旋锁</li>
+<li>锁消除</li>
+</ul>
+<h2 id="41-偏向锁jdk15默认关闭">4.1 偏向锁（<code>JDK15</code>默认关闭）</h2>
+<h3 id="411-简介">4.1.1 简介</h3>
+<p>偏向锁是<code>JDK 1.6</code>提出的一种锁优化方式，核心思想是，如果线程没有竞争，则取消已经取得锁的线程同步操作，也就是说，某个线程获取到锁后，锁就会进入偏向模式，当线程再次请求该锁时，无需再次进行相关的同步操作，从而节省操作时间。而在此期间如果有其他线程进行了锁请求，则锁退出偏向模式。</p>
+<p>开启偏向锁的参数是<code>-XX:+UseBiasedLocking</code>，处于偏向锁时，<code>Mark Word</code>会记录获得锁的线程（<code>54bit</code>），通过该信息可以判断当前线程是否持有偏向锁。</p>
+<p>注意<code>JDK15</code>后默认关闭了偏向锁以及禁用了相关选项，可以参考<a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8231264">JDK-8231264</a>。</p>
+<h3 id="412-加锁流程">4.1.2 加锁流程</h3>
+<p>偏向锁的加锁过程如下：</p>
+<ul>
+<li>第一步：访问<code>Mark Word</code>中的<code>biased_lock</code>是否设置为<code>1</code>，<code>lock</code>是否设置为<code>01</code>，确认为可偏向状态，如果<code>biased_lock</code>为<code>0</code>，则是无锁状态，直接通过<code>CAS</code>操作竞争锁，如果失败，执行第四步</li>
+<li>第二步：如果为可偏向状态，测试线程<code>ID</code>是否指向当前线程，如果是，到达第五步，否则到达第三步</li>
+<li>第三步：如果线程<code>ID</code>没有指向当前线程，通过<code>CAS</code>操作竞争锁，如果成功，将<code>Mark Word</code>中的线程<code>ID</code>设置为当前线程<code>ID</code>，然后执行第五步，如果失败，执行第四步</li>
+<li>第四步：如果<code>CAS</code>获取偏向锁失败，表示有竞争，开始锁撤销</li>
+<li>第五步：执行同步代码</li>
+</ul>
+<h3 id="413-例子">4.1.3 例子</h3>
+<p>下面是一个简单的例子：</p>
+<pre><code class="language-java">public class Main {
+    private static List&lt;Integer&gt; list = new Vector&lt;&gt;();
+    public static void main(String[] args){
+        long start = System.nanoTime();
+        for (int i = 0; i &lt; 1_0000_0000; i++) {
+            list.add(i);
+        }
+        long end = System.nanoTime();
+        System.out.println(end-start);
+    }
+}
+</code></pre>
+<p><code>Vector</code>的<code>add</code>是一个<code>synchronized</code>方法，使用如下参数测试：</p>
+<pre><code class="language-bash">-XX:BiasedLockingStartupDelay=0 # 偏向锁启动时间，设置为0表示立即启动
+-XX:+UseBiasedLocking # 开启偏向锁
+</code></pre>
+<p>输出如下：</p>
+<pre><code class="language-bash">1664109780
+</code></pre>
+<p>而将偏向锁关闭：</p>
+<pre><code class="language-bash">-XX:BiasedLockingStartupDelay=0
+-XX:-UseBiasedLocking
+</code></pre>
+<p>输出如下：</p>
+<pre><code class="language-bash">2505048191
+</code></pre>
+<p>可以看到偏向锁还是对系统性能有一定帮助的，但是需要注意偏向锁在锁竞争激烈的场合没有太强的优化效果，因为大量的竞争会导致持有锁的线程不停地切换，锁很难一直保持在偏向模式，这样不仅仅不能优化性能，反而因为频繁切换而导致性能下降，因此竞争激烈的场合可以尝试使用<code>-XX:-UseBiasedLocking</code>禁用偏向锁。</p>
+<h2 id="42-轻量级锁">4.2 轻量级锁</h2>
+<h3 id="421-简介">4.2.1 简介</h3>
+<p>如果偏向锁失败，那么<code>JVM</code>会让线程申请轻量级锁。轻量级锁在内部使用一个<code>BasicObjectLock</code>的对象实现，该对象内部由：</p>
+<ul>
+<li>一个<code>BasicLock</code>对象</li>
+<li>一个持有该锁的<code>Java</code>对象指针</li>
+</ul>
+<p>组成。<code>BasicObjectLock</code>对象放置在<code>Java</code>栈的栈帧中，在<code>BasicLock</code>对象还会维护一个叫<code>displaced_header</code>的字段，用于备份对象头部的<code>Mark Word</code>。</p>
+<h3 id="422-加锁流程">4.2.2 加锁流程</h3>
+<ul>
+<li>第一步：通过<code>Mark Word</code>判断是否无锁（<code>biased_lock</code>是否为<code>0</code>且<code>lock</code>为<code>01</code>），如果是无锁，会创建一个叫锁记录（<code>Lock Record</code>）的空间，用于存储当前<code>Mark Word</code>的拷贝</li>
+<li>第二步：将对象头的<code>Mark Word</code>复制到锁记录中</li>
+<li>第三步：拷贝成功后，使用<code>CAS</code>操作尝试将锁对象<code>Mark Word</code>更新为指向锁记录的指针，并将线程栈帧中的锁记录的<code>owner</code>指向<code>Object</code>的<code>Mark Word</code></li>
+<li>第四步：如果操作成功，那么就成功拥有了锁</li>
+<li>第五步：如果操作失败，<code>JVM</code>会检查<code>Mark Word</code>是否指向当前线程的栈帧，如果是就说明当前线程已经拥有了这个对象的锁，就可以直接进入同步块继续执行，否则会让当前线程尝试自旋获取锁，自旋到达一定次数后如果还没有获得锁，那么会膨胀为重量级锁</li>
+</ul>
+<h2 id="43-重量级锁">4.3 重量级锁</h2>
+<h3 id="431-简介">4.3.1 简介</h3>
+<p>当轻量级锁自旋一定次数后还是无法获取锁，就会膨胀为重量级锁。相比起轻量级锁，<code>Mak Word</code>存放的是指向锁记录的指针，重量级锁中的<code>Mark Word</code>存放的是指向<code>Object Monitor</code>的指针，如下图所示：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210430103445676.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>（图源见文末）</p>
+<p>因为锁记录是线程私有的，不能满足多线程都能访问的需求，因此重量级锁中引入了能线程共享的<code>ObjectMonitor</code>。</p>
+<h3 id="432-加锁流程">4.3.2 加锁流程</h3>
+<p>初次尝试加锁时，会先<code>CAS</code>尝试修改<code>ObjectMonitor</code>的<code>_owner</code>字段，结果如下：</p>
+<ul>
+<li>第一种：锁没有其他线程占用，成功获取锁</li>
+<li>第二种：锁被其他线程占用，则当前线程重入锁，获取成功</li>
+<li>第三种：锁被锁记录占用，而锁记录是线程私有的，也就是属于当前线程的，这样就属于重入，重入次数为1</li>
+<li>第四种：都不满足，再次尝试加锁（调用<code>EnterI()</code>）</li>
+</ul>
+<p>而再次尝试加锁的过程，是一个循环，不断尝试获取锁直到成功为止，流程简述如下：</p>
+<ul>
+<li>多次尝试获取锁</li>
+<li>获取失败把线程包装后放进阻塞队列</li>
+<li>再次尝试获取锁</li>
+<li>失败后将自己挂起</li>
+<li>被唤醒后继续尝试获取锁</li>
+<li>成功则退出循环，否则继续</li>
+</ul>
+<h2 id="44-自旋锁">4.4 自旋锁</h2>
+<p>自旋锁可以使线程没有取得锁时不被挂起，而是去执行一个空循环（也就是所谓的自旋），在若干个空循环后如果可以获取锁，则继续执行，如果不能，挂起当前线程。</p>
+<p>使用自旋锁后，线程被挂起的概率相对减小，线程执行的连贯性相对加强，因此对于锁竞争不是很激烈、锁占用并发时间很短的并发线程具有一定的积极意义，但是，对于竞争激烈且锁占用时间长的并发线程，自旋等待后仍无法获取锁，还是会被挂起，浪费了自旋时间。</p>
+<p>在<code>JDK1.6</code>中提供了<code>-XX:+UseSpinning</code>参数开启自旋锁，但是<code>JDK1.7</code>后，自旋锁参数被取消，<code>JVM</code>不再支持由用户配置自旋锁，自旋锁总是被执行，次数由<code>JVM</code>调整。</p>
+<h2 id="45-锁消除">4.5 锁消除</h2>
+<h3 id="451-简介">4.5.1 简介</h3>
+<p>锁消除就是把不必要的锁给去掉，比如，在一些单线程环境下使用一些线程安全的类，比如<code>StringBuffer</code>，这样就可以基于逃逸分析技术可消除这些不必要的锁，从而提高性能。</p>
+<h3 id="452-例子">4.5.2 例子</h3>
+<pre><code class="language-java">public class Main {
+    private static final int CIRCLE = 200_0000;
+    public static void main(String[] args){
+        long start = System.nanoTime();
+        for (int i = 0; i &lt; CIRCLE; i++) {
+            createStringBuffer(&quot;Test&quot;,String.valueOf(i));
+        }
+        long end = System.nanoTime();
+        System.out.println(end-start);
+    }
+
+    private static String createStringBuffer(String s1,String s2){
+        StringBuffer sb = new StringBuffer();
+        sb.append(s1);
+        sb.append(s2);
+        return sb.toString();
+    }
+}
+</code></pre>
+<p>参数：</p>
+<pre><code class="language-bash">-XX:+DoEscapeAnalysis
+-XX:-EliminateLocks
+-Xcomp
+-XX:-BackgroundCompilation
+-XX:BiasedLockingStartupDelay=0
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">260642198
+</code></pre>
+<p>而开启锁消除后：</p>
+<pre><code class="language-bash">-XX:+DoEscapeAnalysis
+-XX:+EliminateLocks
+-Xcomp
+-XX:-BackgroundCompilation
+-XX:BiasedLockingStartupDelay=0
+</code></pre>
+<p>输出如下：</p>
+<pre><code class="language-bash">253101105
+</code></pre>
+<p>可以看到还是有一定性能提升的，但是提升不大。</p>
+<h1 id="5-锁的应用层优化">5 锁的应用层优化</h1>
+<p>锁的应用层优化就是在代码层面对锁进行优化，方法包括：</p>
+<ul>
+<li>减少持有时间</li>
+<li>减小粒度</li>
+<li>锁分离</li>
+<li>锁粗化</li>
+</ul>
+<h2 id="51-减少持有时间">5.1 减少持有时间</h2>
+<p>减少锁持有时间就是尽可能减少某个锁的占用时间，以减少线程互斥时间，比如：</p>
+<pre><code class="language-java">public synchronized void method(){
+	A();
+	B();
+	C();
+}
+</code></pre>
+<p>如果只有<code>B()</code>是同步操作，那么可以优化为在必要时进行同步，也就是在执行<code>B()</code>的时候进行同步操作：</p>
+<pre><code class="language-java">public void method(){
+	A();
+	synchronized(this){
+		B();
+	}
+	C();
+}
+</code></pre>
+<h2 id="52-减小粒度">5.2 减小粒度</h2>
+<p>所谓的减小锁粒度，就是指缩小锁定的对象范围，从而减小锁冲突的可能性，进而提高系统的并发能力。</p>
+<p>减小粒度也是一种削弱多线程竞争的有效手段，比如典型的就是<code>ConcurrentHashMap</code>，在<code>JDK1.7</code>中的<code>segment</code>就是一个很好的例子。每次并发操作的时候只加锁某个特定的<code>segment</code>，从而提高并发性能。</p>
+<h2 id="53-锁分离">5.3 锁分离</h2>
+<p>锁分离就是将一个独占锁分成多个锁，比如<code>LinkedBlockingQueue</code>。在<code>take()</code>和<code>put()</code>操作中，使用的并不是同一个锁，而是分离成了一个<code>takeLock</code>和一个<code>putLock</code>：</p>
+<pre><code class="language-java">private final ReentrantLock takeLock;
+private final ReentrantLock putLock;
+</code></pre>
+<p>初始化操作如下：</p>
+<pre><code class="language-java">this.takeLock = new ReentrantLock();
+this.notEmpty = this.takeLock.newCondition();
+this.putLock = new ReentrantLock();
+</code></pre>
+<p>而<code>take()</code>和<code>put()</code>操作如下：</p>
+<pre><code class="language-java">public E take() throws InterruptedException {
+    takeLock.lockInterruptibly();  //不能两个线程同时take
+    //...
+    try {
+        //...
+    } finally {
+        takeLock.unlock();
+    }
+    //...
+}
+
+public void put(E e) throws InterruptedException {
+	//...
+    putLock.lockInterruptibly();  //不能两个线程同时put
+    try {
+        //...
+    } finally {
+        putLock.unlock();
+    }
+	//...
+}
+</code></pre>
+<p>可以看到通过<code>putLock</code>以及<code>takeLock</code>两把锁实现了真正的取数据与写数据分离</p>
+<h2 id="54-锁粗化">5.4 锁粗化</h2>
+<p>通常情况下，为了保证多线程的有效并发，会要求每个线程持有锁的时间尽可能短，但是，如果对同一个锁不停请求，本身也会消耗资源，反而不利于性能优化，于是，在遇到一连串连续对同一个锁不断进行请求和释放的操作时，会把所有的锁操作整合成对锁的一次请求，减少对锁的请求同步次数，这个过程就叫锁粗化，比如</p>
+<pre><code class="language-java">public void method(){
+	synchronized(lock){
+		A();
+	}
+	synchronized(lock){
+		B();
+	}
+}
+</code></pre>
+<p>会被整合成如下形式：</p>
+<pre><code class="language-java">public void method(){
+	synchronized(lock){
+		A();
+		B();
+	}
+}
+</code></pre>
+<p>而在循环内申请锁，比如：</p>
+<pre><code class="language-java">for(int i=0;i&lt;10;++i){
+	synchronized(lock){
+	}
+}
+</code></pre>
+<p>应将锁粗化为</p>
+<pre><code class="language-java">synchronized(lock){
+	for(int i=0;i&lt;10;++i){
+	}
+}
+</code></pre>
+<h1 id="6-无锁cas">6 无锁：<code>CAS</code></h1>
+<p>毫无疑问，为了保证多线程并发的安全，使用锁是一种最直观的方式，但是，锁的竞争有可能会称为瓶颈，因此，有没有不需要锁的方式去保证数据一致性呢？</p>
+<p>答案是有的，就是这一小节介绍的主角：<code>CAS</code>。</p>
+<p><code>CAS</code>就是<code>Compare And Swap</code>的缩写，<code>CAS</code>包含三个参数，形式为<code>CAS(V,E,N)</code>，其中：</p>
+<ul>
+<li><code>V</code>表示内存地址值</li>
+<li><code>E</code>表示期望值</li>
+<li><code>N</code>表示新值</li>
+</ul>
+<p>只有当<code>V</code>的值等于<code>E</code>的值时，才会把<code>V</code>设置为<code>N</code>，如果<code>V</code>的值和<code>N</code>的值不一样，那么表示已经有其他线程做了更新，当前线程什么也不做，最后<code>CAS</code>返回当前<code>V</code>的值。</p>
+<p><code>CAS</code>的操作是抱着乐观的态度进行的，总认为自己可以成功完成操作，当多个线程同时使用<code>CAS</code>操作同一个变量的时候，只会有一个胜出并成功更新，其他均会失败。失败的线程不会被挂起，仅被告知失败，并且允许再次尝试，当然也允许失败的线程放弃操作。</p>
+<h1 id="7-参考">7 参考</h1>
+<ul>
+<li><a href="https://blog.csdn.net/zhaocuit/article/details/100208879">CSDN-java对象头信息</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1667980">JVM系列之:详解java object对象在heap中的结构</a></li>
+<li><a href="https://stackoverflow.com/questions/26357186/what-is-in-java-object-header">StackOverflow-What is in Java object header?</a></li>
+<li><a href="https://blog.csdn.net/weixin_44584387/article/details/104763837">CSDN-Java 中锁是如何一步步膨胀的（偏向锁、轻量级锁、重量级锁）</a></li>
+<li><a href="https://www.jianshu.com/p/8a8d2b42ddca">简书-Java Synchronized 重量级锁原理深入剖析上(互斥篇)</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              <article class="prev grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-321-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-321-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-05-01">2021-05-01</time>
+                  <h4 class="title white no-margin">每日分享 第321期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/left-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-320-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-320-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-04-30">2021-04-30</time>
+                  <h4 class="title white no-margin">每日分享 第320期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                
+                
+                  <!-- jsDelivr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/disqusjs@1.2/dist/disqusjs.css">
+<script src="https://cdn.jsdelivr.net/npm/disqusjs@1.2/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+<div class="clear"></div>
+<script>
+var options = {
+  shortname: '',
+  apikey: 'x4w0ijIgKdycYEPacfY9sSDFNA7k57W2vEw65a3PRFFckEGUqw6zvedonEtd93DN',
+}
+if ('') {
+  options.api = ''
+}
+var dsqjs = new DisqusJS(options)
+</script>
+
+                
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-qi-class-wen-jian-jie-gou/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/jvm-xue-xi-bi-ji-qi-class-wen-jian-jie-gou.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-05-02">2021-05-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-qi-class-wen-jian-jie-gou/">JVM学习笔记（七）：Class文件结构</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-322-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-322-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-05-02">2021-05-02</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-322-qi/">每日分享 第322期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-321-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-321-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-05-01">2021-05-01</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-321-qi/">每日分享 第321期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/hmN5f1Dgf/" class="ctag ctag-0 ctag-hmN5f1Dgf" aria-label="">JVM</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-1 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-2 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-3 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-4 ctag-P6coYUl8A" aria-label="">软件测试</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-5 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-6 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zh36z1JpD/" class="ctag ctag-7 ctag-Zh36z1JpD" aria-label="">Switch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SqY3UeW8b/" class="ctag ctag-8 ctag-SqY3UeW8b" aria-label="">Github</a>
+                    
+                      <a href="https://2293736867.github.io/tag/QJqlomFg9/" class="ctag ctag-9 ctag-QJqlomFg9" aria-label="">Slf4j</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kAbR5fhGrj/" class="ctag ctag-10 ctag-kAbR5fhGrj" aria-label="">Log</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-11 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/x6hezqu0h/" class="ctag ctag-12 ctag-x6hezqu0h" aria-label="">Github Pages</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TSVR1gTbAW/" class="ctag ctag-13 ctag-TSVR1gTbAW" aria-label="">DisqusJS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-14 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jEhLpTJ4y/" class="ctag ctag-15 ctag-jEhLpTJ4y" aria-label="">Kotlin DSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-16 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-17 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j27TsowsQ/" class="ctag ctag-18 ctag-j27TsowsQ" aria-label="">SHA256</a>
+                    
+                      <a href="https://2293736867.github.io/tag/1bPjb7633/" class="ctag ctag-19 ctag-1bPjb7633" aria-label="">Redis</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-20 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-21 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-22 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-23 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/k_kTITP45/" class="ctag ctag-24 ctag-k_kTITP45" aria-label="">WebStorm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OykyL0ueI/" class="ctag ctag-25 ctag-OykyL0ueI" aria-label="">Vue3</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lAlW3LzZy/" class="ctag ctag-26 ctag-lAlW3LzZy" aria-label="">Vite</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-27 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/3qNOu3uvC/" class="ctag ctag-28 ctag-3qNOu3uvC" aria-label="">pyenv</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-29 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-30 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-31 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-32 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HaIBKIG-Y/" class="ctag ctag-33 ctag-HaIBKIG-Y" aria-label="">Debian</a>
+                    
+                      <a href="https://2293736867.github.io/tag/fFCOUCKJji/" class="ctag ctag-34 ctag-fFCOUCKJji" aria-label="">MyCLI</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ODfvYwg3O/" class="ctag ctag-35 ctag-ODfvYwg3O" aria-label="">地图</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YdNb8nB1n/" class="ctag ctag-36 ctag-YdNb8nB1n" aria-label="">Element-Plus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/87dRXt1l_8/" class="ctag ctag-37 ctag-87dRXt1l_8" aria-label="">Echarts</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TFZz0NHYM/" class="ctag ctag-38 ctag-TFZz0NHYM" aria-label="">Token</a>
+                    
+                      <a href="https://2293736867.github.io/tag/v6JZElgCrM/" class="ctag ctag-39 ctag-v6JZElgCrM" aria-label="">ECC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sYkFqGm0dQ/" class="ctag ctag-40 ctag-sYkFqGm0dQ" aria-label="">ECDSA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8dOYqqfXPD/" class="ctag ctag-41 ctag-8dOYqqfXPD" aria-label="">Auth0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bK7AXA8PC/" class="ctag ctag-42 ctag-bK7AXA8PC" aria-label="">Vue.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/NxCZbHQqot/" class="ctag ctag-43 ctag-NxCZbHQqot" aria-label="">Node.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Nr-J-3R61V/" class="ctag ctag-44 ctag-Nr-J-3R61V" aria-label="">SHA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-45 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lE7-ZBoCn/" class="ctag ctag-46 ctag-lE7-ZBoCn" aria-label="">MongoDB</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-47 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/mIpAXBTpr/" class="ctag ctag-48 ctag-mIpAXBTpr" aria-label="">虚拟机</a>
+                    
+                      <a href="https://2293736867.github.io/tag/PPNnoV579/" class="ctag ctag-49 ctag-PPNnoV579" aria-label="">CUDA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eGsE7XySYo/" class="ctag ctag-50 ctag-eGsE7XySYo" aria-label="">PyTorch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-51 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-52 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-53 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-54 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-55 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-56 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-57 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-58 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-59 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-60 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-61 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-62 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-63 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-64 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-65 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-66 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-67 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-68 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-69 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-70 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-71 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-72 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-73 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-74 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-75 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-76 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-77 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-78 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-79 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-80 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-81 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-82 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-83 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-84 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-85 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-86 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-87 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-88 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-89 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-90 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-91 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-92 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-93 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-94 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-95 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-96 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-97 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-98 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-99 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-100 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-101 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-102 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-103 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-104 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-105 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-106 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-107 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-108 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-109 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-110 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-111 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-112 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-113 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-114 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-115 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-116 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-117 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8EbOHbvZf/" class="ctag ctag-118 ctag-8EbOHbvZf" aria-label="">about</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">几百遍，重复了几百遍
+重复的情绪重复的熬过想你的夜</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 590 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

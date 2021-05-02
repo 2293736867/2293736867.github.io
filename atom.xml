@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-04-30T02:16:59.736Z</updated>
+    <updated>2021-05-02T14:19:44.885Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,635 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[JVM学习笔记（七）：Class文件结构]]></title>
+        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-qi-class-wen-jian-jie-gou/</id>
+        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-qi-class-wen-jian-jie-gou/">
+        </link>
+        <updated>2021-05-02T14:17:07.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
+<ul>
+<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
+<li>章节：第九章</li>
+</ul>
+<p>本文是第九章的一些笔记整理。</p>
+<h1 id="2-概述">2 概述</h1>
+<p>本文主要介绍了<code>Class</code>文件的主要组成，包括魔数、版本号、常量池、访问标志等。</p>
+<h1 id="3-class文件概览">3 <code>Class</code>文件概览</h1>
+<p>根据<code>JVM</code>规范，一个<code>Class</code>文件可以非常严谨地描述为：</p>
+<pre><code class="language-java">ClassFile{
+	u4             magic;
+    u2             minor_version;
+    u2             major_version;
+    u2             constant_pool_count;
+    cp_info        constant_pool[constant_pool_count-1];
+    u2             access_flags;
+    u2             this_class;
+    u2             super_class;
+    u2             interfaces_count;
+    u2             interfaces[interfaces_count];
+    u2             fields_count;
+    field_info     fields[fields_count];
+    u2             methods_count;
+    method_info    methods[methods_count];
+    u2             attributes_count;
+    attribute_info attributes[attributes_count];
+}
+</code></pre>
+<p>下面会按顺序详细介绍里面的各个字段。</p>
+<h1 id="4-魔数">4 魔数</h1>
+<p>魔数（<code>Magic Number</code>）作为<code>Class</code>的标志，用来告诉<code>JVM</code>这是一个<code>Class</code>文件，魔数是一个4字节的无符号整数，固定为<code>0xCAFEBABE</code>。如果一个<code>Class</code>文件不以<code>0xCAFEBABE</code>开头，那么会抛出如下错误：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210501092555377.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p><code>Linux</code>下可以直接使用<code>vim</code>打开<code>class</code>文件进行查看，比如需要打开一个<code>Test.class</code>文件，可以输入如下命令：</p>
+<pre><code class="language-bash">vim -b Test.class
+:%!xxd
+</code></pre>
+<p>切换到十六进制后就可以看到魔数了：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210501092757413.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-版本">5 版本</h1>
+<p>魔数后面紧跟着<code>Class</code>的小版本和大版本号，这表示当前<code>Class</code>文件是由哪个版本的编译期产生的。小版本和大版本后都是占用两个字节，比如下图：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210501093335313.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<ul>
+<li><code>0000</code>是小版本号</li>
+<li><code>0037</code>是大版本号，十进制为<code>55</code>，也就是对应<code>JDK 11</code>版本的编译期</li>
+</ul>
+<h1 id="6-常量池">6 常量池</h1>
+<p>在版本号后面，紧跟着就是常量池的数量以及若干个常量池表项：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210501094528106.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210501094538627.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>其中每一个常量池表项都具有标签属性：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210501095154980.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>对应关系举例如下：</p>
+<ul>
+<li><code>tag</code>为3：类型为<code>CONSTANT_Integer</code></li>
+<li><code>tag</code>为4：类型为<code>CONSTANT_Float</code></li>
+</ul>
+<p>等等，比如<code>CONSTANT_Integer</code>结构如下：</p>
+<pre><code class="language-java">CONSTANT_Integer_info {
+    u1 tag;
+    u4 bytes;
+}
+</code></pre>
+<p>一个<code>tag</code>加上一个四字节的无符号整数。其他类型大部分类似，篇幅限制，详细请看<a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.4.1">JVM规范</a>。</p>
+<h1 id="7-访问标记">7 访问标记</h1>
+<p>访问标记使用两个字节表示，用于表明该类的访问信息，比如<code>public</code>/<code>abstract</code>等，对应关系如下：</p>
+<ul>
+<li><code>ACC_PUBLIC</code>：<code>0x0001</code>，表示<code>public</code>类</li>
+<li><code>ACC_FINAL</code>：<code>0x0010</code>，表示是否为<code>final</code>类</li>
+<li><code>ACC_SUPER</code>：<code>0x0020</code>，表示使用增强的方法调用父类的方法</li>
+<li><code>ACC_INTERFACE</code>：<code>0x0200</code>，表示是否为接口</li>
+<li><code>ACC_ABSTRACT</code>：<code>0x0400</code>，表示是否为抽象类</li>
+<li><code>ACC_SYNTHETIC</code>：<code>0x1000</code>，由编译期产生的类，没有源码对应</li>
+<li><code>ACC_ANNOTATION</code>：<code>0x2000</code>，表示是否是注释</li>
+<li><code>ACC_ENUM</code>：<code>0x4000</code>，表示是否为枚举</li>
+</ul>
+<h1 id="8-当前类-父类和接口">8 当前类、父类和接口</h1>
+<p>格式如下：</p>
+<pre><code class="language-java">u2             this_class;                                    
+u2             super_class;
+u2             interfaces_count;
+u2             interfaces[interfaces_count];
+</code></pre>
+<p>其中<code>this_class</code>与<code>super_class</code>都是两个字节的无符号整数，指向常量池中的一个<code>CONSTANT_Class</code>，表示当前的类型以及父类。另外，由于一个类可以实现多个接口，因此需要以数组形式保存多个接口的索引，如果没有实现任何接口，则<code>interfaces_count</code>为0。</p>
+<h1 id="9-字段">9 字段</h1>
+<p>字段的格式如下：</p>
+<pre><code class="language-java">u2             fields_count;
+field_info     fields[fields_count];
+</code></pre>
+<p><code>fields_count</code>是一个2字节的无符号整数，字段数量之后是具体的字段信息，每个字段都是一个<code>field_info</code>的结构，如下所示：</p>
+<pre><code class="language-java">field_info {
+    u2             access_flags;                         //访问标记，类似于类的访问标记，可以表示public/private/static等等
+    u2             name_index;                           //两字节整数，指向常量池中的CONSTANT_Utf8
+    u2             descriptor_index;                     //也是两字节整数，用于描述字段类型，也指向常量池中的CONSTANT_Utf8
+    u2             attributes_count;                     //属性数量
+    attribute_info attributes[attributes_count];         //属性，比如存储初始化值，一些注释信息等，需要使用attribute_info
+}
+
+attribute_info {
+    u2 attribute_name_index;                             //属性名字，指向常量池的索引
+    u4 attribute_length;                                 //属性长度
+    u1 info[attribute_length];                           //字节数组表示的信息
+}
+</code></pre>
+<h1 id="10-方法">10 方法</h1>
+<h2 id="101-方法基本结构">10.1 方法基本结构</h2>
+<p>方法的格式如下：</p>
+<pre><code class="language-java">u2             methods_count;
+method_info    methods[methods_count];
+</code></pre>
+<p>其中每一个<code>method_info</code>结构表示一个方法：</p>
+<pre><code class="language-java">method_info {
+    u2             access_flags;                            //访问标记，标记方法为public/private等等
+    u2             name_index;                              //方法名称，一个指向常量池的索引
+    u2             descriptor_index;                        //方法描述符，也是一个指向常量符的索引
+    u2             attributes_count;                        //属性数量
+    attribute_info attributes[attributes_count];            //属性，和字段类似，方法也可以携带属性，一个属性数量+一个属性描述数组
+}
+</code></pre>
+<h2 id="102-code属性">10.2 <code>Code</code>属性</h2>
+<p>方法的主要内容存放在属性中，在属性里面最重要的一个属性就是<code>Code</code>，<code>Code</code>存放着方法的字节码等信息，结构如下：</p>
+<pre><code class="language-java">Code_attribute {
+    u2 attribute_name_index;                      //属性名称，指向常量池的索引
+    u4 attribute_length;                          //属性长度，不包括前6字节（u2+u4）
+    u2 max_stack;                                 //操作数栈最大深度
+    u2 max_locals;                                //局部变量表的最大值
+    u4 code_length;                               //字节码长度
+    u1 code[code_length];                         //字节码内容本身
+    u2 exception_table_length;                    //异常处理表长度
+    {   u2 start_pc;                              //四个字段表示在start_pc到end_pc两个偏移量之间
+        u2 end_pc;                                //如果遇到了catch_type指向的异常
+        u2 handler_pc;                            //代码就跳转到handler_pc位置执行
+        u2 catch_type;                            
+    } exception_table[exception_table_length];    //异常表
+    u2 attributes_count;
+    attribute_info attributes[attributes_count];
+}
+</code></pre>
+<p><code>Code</code>属性本身也包含其他属性以进一步存储一些额外信息，主要包括：</p>
+<ul>
+<li><code>LineNumberTable</code></li>
+<li><code>LocalVariableTable</code></li>
+<li><code>StackMapTable</code></li>
+</ul>
+<h3 id="1021-linenumbertable">10.2.1 <code>LineNumberTable</code></h3>
+<p><code>LineNumberTable</code>用于记录字节码偏移量和行号的对应关系，结构如下：</p>
+<pre><code class="language-java">LineNumberTable_attribute {
+    u2 attribute_name_index;                             //指向常量池的索引
+    u4 attribute_length;                                 //属性长度
+    u2 line_number_table_length;                         //表项记录条数
+    {   u2 start_pc;                                     //字节码偏移量
+        u2 line_number;	                                 //字节码偏移量对应的行号
+    } line_number_table[line_number_table_length];       //表数组，每一个元素对应的是一个&lt;start_pc,line_number&gt;元组
+}
+</code></pre>
+<h3 id="1022-localvariabletable">10.2.2 <code>LocalVariableTable</code></h3>
+<p>这个属性也叫局部变量表，记录了一个方法中所有的局部变量，结构如下：</p>
+<pre><code class="language-java">LocalVariableTable_attribute {
+    u2 attribute_name_index;                                     //当前属性名字，指向常量池的索引
+    u4 attribute_length;                                         //属性长度
+    u2 local_variable_table_length;                              //局部变量表的表项条目
+    {   u2 start_pc;                                             //当前局部变量开始位置
+        u2 length;                                               //当前局部变量长度（可用于计算结束位置）
+        u2 name_index;                                           //局部变量名称，指向常量池的索引
+        u2 descriptor_index;                                     //局部变量的类型描述，指向常量池的索引
+        u2 index;                                                //局部变量在当前栈帧的局部变量表中的槽位
+    } local_variable_table[local_variable_table_length];         
+}
+</code></pre>
+<h3 id="1023-stackmaptable">10.2.3 <code>StackMapTable</code></h3>
+<p><code>StackMapTable</code>中含有若干个栈映射帧（<code>Stack Map Frame</code>）的数据，不包含运行时所需要的信息，仅用作<code>Class</code>文件的类型校验，结构如下：</p>
+<pre><code class="language-java">StackMapTable_attribute {
+    u2              attribute_name_index;                         //常量池索引，恒为&quot;StackMapTable&quot;
+    u4              attribute_length;                             //属性长度
+    u2              number_of_entries;                            //栈映射帧的数量
+    stack_map_frame entries[number_of_entries];                   //具体的栈映射帧
+}
+
+union stack_map_frame {                                           //每个栈映射帧被定义为一个枚举值，取值如下
+    same_frame;                                                   //具体每个取值的意义可以查看JVM规范
+    same_locals_1_stack_item_frame;                               //https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.7.4
+    same_locals_1_stack_item_frame_extended;
+    chop_frame;
+    same_frame_extended;
+    append_frame;
+    full_frame;
+}
+</code></pre>
+<p>每个栈映射帧是为了说明在一个特定的字节码偏移位置上，系统的数据类型是什么，包括局部变量表的类型和操作数栈的类型。</p>
+<h1 id="11-附录asm简单使用">11 附录：<code>ASM</code>简单使用</h1>
+<p><code>ASM</code>是一个<code>Java</code>字节码操作库，很多著名的库都依赖于该库，比如<code>AspectJ</code>、<code>CGLIB</code>等等。但是<code>ASM</code>的性能远远超过<code>CGLIB</code>等高层字节码库，因为<code>ASM</code>更加接近底层，使用更为灵活且功能更为强大。</p>
+<p>下面是一个简单的使用<code>ASM</code>输出<code>Hello World</code>的例子：</p>
+<pre><code class="language-java">package com.company;
+
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+
+public class Main extends ClassLoader implements Opcodes {
+    public static void main(String[] args) throws Exception{
+    	//创建ClassWriter，指定COMPUTE_MAXS和COMPUTE_FRAMES，分别表示计算最大局部变量表以及最深操作数栈
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        //通过ClassWriter设置类的基本信息，比如public访问标记，类名为Example
+        cw.visit(V11,ACC_PUBLIC,&quot;Example&quot;,null,&quot;java/lang/Object&quot;,null);
+        //生成Example的构造方法
+        MethodVisitor mw = cw.visitMethod(ACC_PUBLIC ,&quot;&lt;init&gt;&quot;,&quot;()V&quot;,null,null);
+        mw.visitVarInsn(ALOAD,0);
+        mw.visitMethodInsn(INVOKESPECIAL,&quot;java/lang/Object&quot;,&quot;&lt;init&gt;&quot;,&quot;()V&quot;,false);
+        mw.visitInsn(RETURN);
+        mw.visitMaxs(0,0);
+        mw.visitEnd();
+
+		//生成public static void main(String []args)方法，并生成了main()方法的字节码
+		//要求运行时调用System.out.println()，并输出&quot;Hello world&quot;：
+        mw = cw.visitMethod(ACC_PUBLIC+ACC_STATIC,&quot;main&quot;,&quot;([Ljava/lang/String;)V&quot;,null,null);
+        mw.visitFieldInsn(GETSTATIC,&quot;java/lang/System&quot;,&quot;out&quot;,&quot;Ljava/io/PrintStream;&quot;);
+        mw.visitLdcInsn(&quot;Hello world!&quot;);
+        mw.visitMethodInsn(INVOKEVIRTUAL,&quot;java/io/PrintStream&quot;,&quot;println&quot;,&quot;(Ljava/lang/String;)V&quot;,false);
+        mw.visitInsn(RETURN);
+        mw.visitMaxs(0,0);
+        mw.visitEnd();
+
+		//获取二进制表示
+        byte[] code = cw.toByteArray();
+        Main m = new Main();
+        //将class文件载入系统，通过反射调用`main()`方法，输出结果
+        Class&lt;?&gt; mainClass = m.defineClass(&quot;Example&quot;,code,0,code.length);
+        mainClass.getMethods()[0].invoke(null, new Object[]{null});
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210501150243207.png" alt="在这里插入图片描述" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第322期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-322-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-322-qi/">
+        </link>
+        <updated>2021-05-02T13:52:42.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>凡是不赚钱的，都说自己在创业。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>海棠未雨，梨花先雪，一半春休。<br>
+——王雱《眼儿媚·杨柳丝丝弄轻柔》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我既不想伤害别人，也不想被伤害。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619963723796.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>哈希统计每个间隙位置，计算间隙数量最大的垂直位置，再用总行数相减：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int leastBricks(List&lt;List&lt;Integer&gt;&gt; wall) {
+        Map&lt;Integer,Integer&gt; map = new HashMap&lt;&gt;();
+        int max = 0;
+        int n = wall.size();
+        for (int i = 0; i &lt; n; i++) {
+            List&lt;Integer&gt; l = wall.get(i);
+            int sum = 0;
+            int len = l.size()-1;
+            for (int j = 0; j &lt; len; j++) {
+                sum += l.get(j);
+                int temp;
+                map.put(sum,temp = (map.getOrDefault(sum,0)+1));
+                if(temp &gt; max){
+                    max = temp;
+                }
+            }
+        }
+        return n-max;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619963711889.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第321期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-321-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-321-qi/">
+        </link>
+        <updated>2021-05-01T13:31:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>放弃这个字，说起来简单，做起来就更简单了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>夜来小雨新霁，双燕舞风斜。<br>
+——万俟咏《诉衷情·送春》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>彼此相互推卸不幸是没有结果的。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619962296233.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>深搜：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    private Map&lt;Integer,Employee&gt; map;
+    public int getImportance(List&lt;Employee&gt; employees, int id) {
+        map = new HashMap&lt;&gt;(employees.size());
+        for(Employee employee:employees){
+            map.put(employee.id,employee);
+        }
+        return f(id);
+    }
+
+    private int f(int id){
+        int sum = map.get(id).importance;
+        for (int i:map.get(id).subordinates){
+            sum += f(i);
+        }
+        return sum;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619962308238.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JVM学习笔记（六）：锁优化与CAS]]></title>
+        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/</id>
+        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/">
+        </link>
+        <updated>2021-04-30T05:27:29.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
+<ul>
+<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
+<li>章节：第八章</li>
+</ul>
+<p>本文是第八章的一些笔记整理。</p>
+<h1 id="2-概述">2 概述</h1>
+<p>本文主要讲述了<code>JVM</code>在运行层面和代码层面的锁优化策略，最后介绍了实现无锁的其中一种方法<code>CAS</code>。</p>
+<h1 id="3-对象头">3 对象头</h1>
+<p><code>JVM</code>中每个对象都有一个对象头，用于保存对象的系统信息，<code>64bit JVM</code>的对象头结构如下图所示：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210429104615245.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>其中：</p>
+<ul>
+<li><code>Mark Word</code>由<code>64bit</code>组成，一个功能数据区，可以存放对象的哈希、对象年龄、锁的指针等信息</li>
+<li><code>KClass Word</code>在没有开启指针压缩的情况下，<code>64bit</code>组成，但是<code>64bit JVM</code>会默认开启指针压缩（<code>+UseCompressedOops</code>），所以会压缩到<code>32bit</code></li>
+</ul>
+<p>另外，从图中可以看到，不同的锁对应于不同的<code>Mark Word</code>：</p>
+<ul>
+<li>无锁：<code>25bit</code>空+<code>31bit</code>哈希值+<code>1bit</code>空+<code>4bit</code>分代年龄+<code>1bit</code>是否偏向锁+<code>2bit</code>锁标记</li>
+<li>偏向锁：<code>54bit</code>持有偏向锁的线程<code>ID</code>+<code>2bit</code>偏向时间戳+<code>1bit</code>空+<code>4bit</code>分代年龄+<code>1bit</code>是否偏向锁+<code>2bit</code>锁标记</li>
+<li>轻量锁：<code>62bit</code>栈中锁记录指针+<code>2bit</code>锁标记</li>
+<li>重量锁：<code>62bit</code>重量级锁指针+<code>2bit</code>锁标记</li>
+</ul>
+<p><code>JVM</code>如何区分锁主要看两个字段：<code>biased_lock</code>与<code>lock</code>，对应关系如下：</p>
+<ul>
+<li><code>biased_lock=0 lock=00</code>：轻量级锁</li>
+<li><code>biased_lock=0 lock=01</code>：无锁</li>
+<li><code>biased_lock=0 lock=10</code>：重量级锁</li>
+<li><code>biased_lock=0 lock=11</code>：<code>GC</code>标记</li>
+<li><code>biased_lock=1 lock=01</code>：偏向锁</li>
+</ul>
+<h1 id="4-锁的运行时优化">4 锁的运行时优化</h1>
+<p>很多时候<code>JVM</code>都会对线程竞争的操作在<code>JVM</code>层面进行优化，尽可能解决竞争问题，也会试图消除不必要的竞争，实现的方法包括：</p>
+<ul>
+<li>偏向锁</li>
+<li>轻量级锁</li>
+<li>重量级锁</li>
+<li>自旋锁</li>
+<li>锁消除</li>
+</ul>
+<h2 id="41-偏向锁jdk15默认关闭">4.1 偏向锁（<code>JDK15</code>默认关闭）</h2>
+<h3 id="411-简介">4.1.1 简介</h3>
+<p>偏向锁是<code>JDK 1.6</code>提出的一种锁优化方式，核心思想是，如果线程没有竞争，则取消已经取得锁的线程同步操作，也就是说，某个线程获取到锁后，锁就会进入偏向模式，当线程再次请求该锁时，无需再次进行相关的同步操作，从而节省操作时间。而在此期间如果有其他线程进行了锁请求，则锁退出偏向模式。</p>
+<p>开启偏向锁的参数是<code>-XX:+UseBiasedLocking</code>，处于偏向锁时，<code>Mark Word</code>会记录获得锁的线程（<code>54bit</code>），通过该信息可以判断当前线程是否持有偏向锁。</p>
+<p>注意<code>JDK15</code>后默认关闭了偏向锁以及禁用了相关选项，可以参考<a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8231264">JDK-8231264</a>。</p>
+<h3 id="412-加锁流程">4.1.2 加锁流程</h3>
+<p>偏向锁的加锁过程如下：</p>
+<ul>
+<li>第一步：访问<code>Mark Word</code>中的<code>biased_lock</code>是否设置为<code>1</code>，<code>lock</code>是否设置为<code>01</code>，确认为可偏向状态，如果<code>biased_lock</code>为<code>0</code>，则是无锁状态，直接通过<code>CAS</code>操作竞争锁，如果失败，执行第四步</li>
+<li>第二步：如果为可偏向状态，测试线程<code>ID</code>是否指向当前线程，如果是，到达第五步，否则到达第三步</li>
+<li>第三步：如果线程<code>ID</code>没有指向当前线程，通过<code>CAS</code>操作竞争锁，如果成功，将<code>Mark Word</code>中的线程<code>ID</code>设置为当前线程<code>ID</code>，然后执行第五步，如果失败，执行第四步</li>
+<li>第四步：如果<code>CAS</code>获取偏向锁失败，表示有竞争，开始锁撤销</li>
+<li>第五步：执行同步代码</li>
+</ul>
+<h3 id="413-例子">4.1.3 例子</h3>
+<p>下面是一个简单的例子：</p>
+<pre><code class="language-java">public class Main {
+    private static List&lt;Integer&gt; list = new Vector&lt;&gt;();
+    public static void main(String[] args){
+        long start = System.nanoTime();
+        for (int i = 0; i &lt; 1_0000_0000; i++) {
+            list.add(i);
+        }
+        long end = System.nanoTime();
+        System.out.println(end-start);
+    }
+}
+</code></pre>
+<p><code>Vector</code>的<code>add</code>是一个<code>synchronized</code>方法，使用如下参数测试：</p>
+<pre><code class="language-bash">-XX:BiasedLockingStartupDelay=0 # 偏向锁启动时间，设置为0表示立即启动
+-XX:+UseBiasedLocking # 开启偏向锁
+</code></pre>
+<p>输出如下：</p>
+<pre><code class="language-bash">1664109780
+</code></pre>
+<p>而将偏向锁关闭：</p>
+<pre><code class="language-bash">-XX:BiasedLockingStartupDelay=0
+-XX:-UseBiasedLocking
+</code></pre>
+<p>输出如下：</p>
+<pre><code class="language-bash">2505048191
+</code></pre>
+<p>可以看到偏向锁还是对系统性能有一定帮助的，但是需要注意偏向锁在锁竞争激烈的场合没有太强的优化效果，因为大量的竞争会导致持有锁的线程不停地切换，锁很难一直保持在偏向模式，这样不仅仅不能优化性能，反而因为频繁切换而导致性能下降，因此竞争激烈的场合可以尝试使用<code>-XX:-UseBiasedLocking</code>禁用偏向锁。</p>
+<h2 id="42-轻量级锁">4.2 轻量级锁</h2>
+<h3 id="421-简介">4.2.1 简介</h3>
+<p>如果偏向锁失败，那么<code>JVM</code>会让线程申请轻量级锁。轻量级锁在内部使用一个<code>BasicObjectLock</code>的对象实现，该对象内部由：</p>
+<ul>
+<li>一个<code>BasicLock</code>对象</li>
+<li>一个持有该锁的<code>Java</code>对象指针</li>
+</ul>
+<p>组成。<code>BasicObjectLock</code>对象放置在<code>Java</code>栈的栈帧中，在<code>BasicLock</code>对象还会维护一个叫<code>displaced_header</code>的字段，用于备份对象头部的<code>Mark Word</code>。</p>
+<h3 id="422-加锁流程">4.2.2 加锁流程</h3>
+<ul>
+<li>第一步：通过<code>Mark Word</code>判断是否无锁（<code>biased_lock</code>是否为<code>0</code>且<code>lock</code>为<code>01</code>），如果是无锁，会创建一个叫锁记录（<code>Lock Record</code>）的空间，用于存储当前<code>Mark Word</code>的拷贝</li>
+<li>第二步：将对象头的<code>Mark Word</code>复制到锁记录中</li>
+<li>第三步：拷贝成功后，使用<code>CAS</code>操作尝试将锁对象<code>Mark Word</code>更新为指向锁记录的指针，并将线程栈帧中的锁记录的<code>owner</code>指向<code>Object</code>的<code>Mark Word</code></li>
+<li>第四步：如果操作成功，那么就成功拥有了锁</li>
+<li>第五步：如果操作失败，<code>JVM</code>会检查<code>Mark Word</code>是否指向当前线程的栈帧，如果是就说明当前线程已经拥有了这个对象的锁，就可以直接进入同步块继续执行，否则会让当前线程尝试自旋获取锁，自旋到达一定次数后如果还没有获得锁，那么会膨胀为重量级锁</li>
+</ul>
+<h2 id="43-重量级锁">4.3 重量级锁</h2>
+<h3 id="431-简介">4.3.1 简介</h3>
+<p>当轻量级锁自旋一定次数后还是无法获取锁，就会膨胀为重量级锁。相比起轻量级锁，<code>Mak Word</code>存放的是指向锁记录的指针，重量级锁中的<code>Mark Word</code>存放的是指向<code>Object Monitor</code>的指针，如下图所示：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210430103445676.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>（图源见文末）</p>
+<p>因为锁记录是线程私有的，不能满足多线程都能访问的需求，因此重量级锁中引入了能线程共享的<code>ObjectMonitor</code>。</p>
+<h3 id="432-加锁流程">4.3.2 加锁流程</h3>
+<p>初次尝试加锁时，会先<code>CAS</code>尝试修改<code>ObjectMonitor</code>的<code>_owner</code>字段，结果如下：</p>
+<ul>
+<li>第一种：锁没有其他线程占用，成功获取锁</li>
+<li>第二种：锁被其他线程占用，则当前线程重入锁，获取成功</li>
+<li>第三种：锁被锁记录占用，而锁记录是线程私有的，也就是属于当前线程的，这样就属于重入，重入次数为1</li>
+<li>第四种：都不满足，再次尝试加锁（调用<code>EnterI()</code>）</li>
+</ul>
+<p>而再次尝试加锁的过程，是一个循环，不断尝试获取锁直到成功为止，流程简述如下：</p>
+<ul>
+<li>多次尝试获取锁</li>
+<li>获取失败把线程包装后放进阻塞队列</li>
+<li>再次尝试获取锁</li>
+<li>失败后将自己挂起</li>
+<li>被唤醒后继续尝试获取锁</li>
+<li>成功则退出循环，否则继续</li>
+</ul>
+<h2 id="44-自旋锁">4.4 自旋锁</h2>
+<p>自旋锁可以使线程没有取得锁时不被挂起，而是去执行一个空循环（也就是所谓的自旋），在若干个空循环后如果可以获取锁，则继续执行，如果不能，挂起当前线程。</p>
+<p>使用自旋锁后，线程被挂起的概率相对减小，线程执行的连贯性相对加强，因此对于锁竞争不是很激烈、锁占用并发时间很短的并发线程具有一定的积极意义，但是，对于竞争激烈且锁占用时间长的并发线程，自旋等待后仍无法获取锁，还是会被挂起，浪费了自旋时间。</p>
+<p>在<code>JDK1.6</code>中提供了<code>-XX:+UseSpinning</code>参数开启自旋锁，但是<code>JDK1.7</code>后，自旋锁参数被取消，<code>JVM</code>不再支持由用户配置自旋锁，自旋锁总是被执行，次数由<code>JVM</code>调整。</p>
+<h2 id="45-锁消除">4.5 锁消除</h2>
+<h3 id="451-简介">4.5.1 简介</h3>
+<p>锁消除就是把不必要的锁给去掉，比如，在一些单线程环境下使用一些线程安全的类，比如<code>StringBuffer</code>，这样就可以基于逃逸分析技术可消除这些不必要的锁，从而提高性能。</p>
+<h3 id="452-例子">4.5.2 例子</h3>
+<pre><code class="language-java">public class Main {
+    private static final int CIRCLE = 200_0000;
+    public static void main(String[] args){
+        long start = System.nanoTime();
+        for (int i = 0; i &lt; CIRCLE; i++) {
+            createStringBuffer(&quot;Test&quot;,String.valueOf(i));
+        }
+        long end = System.nanoTime();
+        System.out.println(end-start);
+    }
+
+    private static String createStringBuffer(String s1,String s2){
+        StringBuffer sb = new StringBuffer();
+        sb.append(s1);
+        sb.append(s2);
+        return sb.toString();
+    }
+}
+</code></pre>
+<p>参数：</p>
+<pre><code class="language-bash">-XX:+DoEscapeAnalysis
+-XX:-EliminateLocks
+-Xcomp
+-XX:-BackgroundCompilation
+-XX:BiasedLockingStartupDelay=0
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">260642198
+</code></pre>
+<p>而开启锁消除后：</p>
+<pre><code class="language-bash">-XX:+DoEscapeAnalysis
+-XX:+EliminateLocks
+-Xcomp
+-XX:-BackgroundCompilation
+-XX:BiasedLockingStartupDelay=0
+</code></pre>
+<p>输出如下：</p>
+<pre><code class="language-bash">253101105
+</code></pre>
+<p>可以看到还是有一定性能提升的，但是提升不大。</p>
+<h1 id="5-锁的应用层优化">5 锁的应用层优化</h1>
+<p>锁的应用层优化就是在代码层面对锁进行优化，方法包括：</p>
+<ul>
+<li>减少持有时间</li>
+<li>减小粒度</li>
+<li>锁分离</li>
+<li>锁粗化</li>
+</ul>
+<h2 id="51-减少持有时间">5.1 减少持有时间</h2>
+<p>减少锁持有时间就是尽可能减少某个锁的占用时间，以减少线程互斥时间，比如：</p>
+<pre><code class="language-java">public synchronized void method(){
+	A();
+	B();
+	C();
+}
+</code></pre>
+<p>如果只有<code>B()</code>是同步操作，那么可以优化为在必要时进行同步，也就是在执行<code>B()</code>的时候进行同步操作：</p>
+<pre><code class="language-java">public void method(){
+	A();
+	synchronized(this){
+		B();
+	}
+	C();
+}
+</code></pre>
+<h2 id="52-减小粒度">5.2 减小粒度</h2>
+<p>所谓的减小锁粒度，就是指缩小锁定的对象范围，从而减小锁冲突的可能性，进而提高系统的并发能力。</p>
+<p>减小粒度也是一种削弱多线程竞争的有效手段，比如典型的就是<code>ConcurrentHashMap</code>，在<code>JDK1.7</code>中的<code>segment</code>就是一个很好的例子。每次并发操作的时候只加锁某个特定的<code>segment</code>，从而提高并发性能。</p>
+<h2 id="53-锁分离">5.3 锁分离</h2>
+<p>锁分离就是将一个独占锁分成多个锁，比如<code>LinkedBlockingQueue</code>。在<code>take()</code>和<code>put()</code>操作中，使用的并不是同一个锁，而是分离成了一个<code>takeLock</code>和一个<code>putLock</code>：</p>
+<pre><code class="language-java">private final ReentrantLock takeLock;
+private final ReentrantLock putLock;
+</code></pre>
+<p>初始化操作如下：</p>
+<pre><code class="language-java">this.takeLock = new ReentrantLock();
+this.notEmpty = this.takeLock.newCondition();
+this.putLock = new ReentrantLock();
+</code></pre>
+<p>而<code>take()</code>和<code>put()</code>操作如下：</p>
+<pre><code class="language-java">public E take() throws InterruptedException {
+    takeLock.lockInterruptibly();  //不能两个线程同时take
+    //...
+    try {
+        //...
+    } finally {
+        takeLock.unlock();
+    }
+    //...
+}
+
+public void put(E e) throws InterruptedException {
+	//...
+    putLock.lockInterruptibly();  //不能两个线程同时put
+    try {
+        //...
+    } finally {
+        putLock.unlock();
+    }
+	//...
+}
+</code></pre>
+<p>可以看到通过<code>putLock</code>以及<code>takeLock</code>两把锁实现了真正的取数据与写数据分离</p>
+<h2 id="54-锁粗化">5.4 锁粗化</h2>
+<p>通常情况下，为了保证多线程的有效并发，会要求每个线程持有锁的时间尽可能短，但是，如果对同一个锁不停请求，本身也会消耗资源，反而不利于性能优化，于是，在遇到一连串连续对同一个锁不断进行请求和释放的操作时，会把所有的锁操作整合成对锁的一次请求，减少对锁的请求同步次数，这个过程就叫锁粗化，比如</p>
+<pre><code class="language-java">public void method(){
+	synchronized(lock){
+		A();
+	}
+	synchronized(lock){
+		B();
+	}
+}
+</code></pre>
+<p>会被整合成如下形式：</p>
+<pre><code class="language-java">public void method(){
+	synchronized(lock){
+		A();
+		B();
+	}
+}
+</code></pre>
+<p>而在循环内申请锁，比如：</p>
+<pre><code class="language-java">for(int i=0;i&lt;10;++i){
+	synchronized(lock){
+	}
+}
+</code></pre>
+<p>应将锁粗化为</p>
+<pre><code class="language-java">synchronized(lock){
+	for(int i=0;i&lt;10;++i){
+	}
+}
+</code></pre>
+<h1 id="6-无锁cas">6 无锁：<code>CAS</code></h1>
+<p>毫无疑问，为了保证多线程并发的安全，使用锁是一种最直观的方式，但是，锁的竞争有可能会称为瓶颈，因此，有没有不需要锁的方式去保证数据一致性呢？</p>
+<p>答案是有的，就是这一小节介绍的主角：<code>CAS</code>。</p>
+<p><code>CAS</code>就是<code>Compare And Swap</code>的缩写，<code>CAS</code>包含三个参数，形式为<code>CAS(V,E,N)</code>，其中：</p>
+<ul>
+<li><code>V</code>表示内存地址值</li>
+<li><code>E</code>表示期望值</li>
+<li><code>N</code>表示新值</li>
+</ul>
+<p>只有当<code>V</code>的值等于<code>E</code>的值时，才会把<code>V</code>设置为<code>N</code>，如果<code>V</code>的值和<code>N</code>的值不一样，那么表示已经有其他线程做了更新，当前线程什么也不做，最后<code>CAS</code>返回当前<code>V</code>的值。</p>
+<p><code>CAS</code>的操作是抱着乐观的态度进行的，总认为自己可以成功完成操作，当多个线程同时使用<code>CAS</code>操作同一个变量的时候，只会有一个胜出并成功更新，其他均会失败。失败的线程不会被挂起，仅被告知失败，并且允许再次尝试，当然也允许失败的线程放弃操作。</p>
+<h1 id="7-参考">7 参考</h1>
+<ul>
+<li><a href="https://blog.csdn.net/zhaocuit/article/details/100208879">CSDN-java对象头信息</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1667980">JVM系列之:详解java object对象在heap中的结构</a></li>
+<li><a href="https://stackoverflow.com/questions/26357186/what-is-in-java-object-header">StackOverflow-What is in Java object header?</a></li>
+<li><a href="https://blog.csdn.net/weixin_44584387/article/details/104763837">CSDN-Java 中锁是如何一步步膨胀的（偏向锁、轻量级锁、重量级锁）</a></li>
+<li><a href="https://www.jianshu.com/p/8a8d2b42ddca">简书-Java Synchronized 重量级锁原理深入剖析上(互斥篇)</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第320期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-320-qi/</id>
@@ -986,690 +1615,6 @@ null
 <p>输出结果：</p>
 <pre><code class="language-bash">null
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第316期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-316-qi/">
-        </link>
-        <updated>2021-04-26T00:07:58.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>做事一定要考虑别人的感受，千万不能让他们太开心了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>四月南风大麦黄，枣花未落桐叶长。<br>
-——李颀《送陈章甫》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>今天的风儿有些喧嚣啊。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619397056830.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>暴力大法好：</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    public int shipWithinDays(int[] weights, int D) {
-        int n = weights.length;
-        if (D == 1) {
-            int sum = 0;
-            for (int i = 0; i &lt; n; i++) {
-                sum += weights[i];
-            }
-            return sum;
-        }
-
-        int max = Arrays.stream(weights).max().getAsInt();
-        for (int ans = max; ; ++ans) {
-            int day = 0;
-            int temp = 0;
-            for (int i = 0; i &lt; n; i++) {
-                if (temp + weights[i] &lt;= ans) {
-                    temp += weights[i];
-                } else {
-                    temp = weights[i];
-                    ++day;
-                }
-
-                if (temp == ans) {
-                    if(i != n-1){
-                        temp = 0;
-                    }
-                    ++day;
-                }
-            }
-            if(temp &lt; ans){
-                ++day;
-            }
-            if (day &lt;= D) {
-                return ans;
-            }
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619397088069.png" alt="" loading="lazy"></figure>
-<p>二分优化（左边界为数组的最大值，右边界为数组的和）：</p>
-<pre><code class="language-java">public class Solution {
-    public int shipWithinDays(int[] weights, int D) {
-        int n = weights.length;
-        int sum = 0;
-        int max = 0;
-        for (int i = 0; i &lt; n; i++) {
-            sum += weights[i];
-            if(weights[i] &gt; max){
-                max = weights[i];
-            }
-        }
-        if (D == 1) {
-            return sum;
-        }
-
-        int ans = (max+sum)/2;
-        while (max &lt; sum){
-            int day = 0;
-            int temp = 0;
-            for (int i = 0; i &lt; n; i++) {
-                if (temp + weights[i] &lt;= ans) {
-                    temp += weights[i];
-                } else {
-                    temp = weights[i];
-                    ++day;
-                }
-
-                if (temp == ans) {
-                    if(i != n-1){
-                        temp = 0;
-                    }
-                    ++day;
-                }
-            }
-            if(temp &lt; ans){
-                ++day;
-            }
-            if (day &lt;= D) {
-                sum = ans;
-            }else{
-                max = ans+1;
-            }
-            ans = (max+sum)/2;
-        }
-        return max;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1619397527442.png" alt="" loading="lazy"></figure>
-<p>极限优化，优化点包括：</p>
-<ul>
-<li>判断<code>D==1</code>与<code>D==n</code></li>
-<li>计算二分的<code>mid</code>时使用右移代替除法</li>
-<li>优化计算天数的函数，采用相减而不是相加</li>
-</ul>
-<pre><code class="language-java">public class Solution {
-    private int [] weights;
-    private int D;
-    public int shipWithinDays(int[] weights, int D) {
-        this.weights = weights;
-        this.D = D;
-        int n = weights.length;
-        int right = 0;
-        int left = 0;
-        for (int i = 0; i &lt; n; i++) {
-            right += weights[i];
-            if(weights[i] &gt; left){
-                left = weights[i];
-            }
-        }
-        if (D == 1) {
-            return right;
-        }else if(D == n){
-            return left;
-        }
-
-        while (left &lt;= right){
-            int mid = (left+right) &gt;&gt; 1;
-            if(canShip(mid)){
-                right = mid - 1;
-            }else{
-                left = mid + 1;
-            }
-        }
-        return left;
-    }
-
-    private boolean canShip(int mid){
-        int day = 1;
-        int cur = mid;
-        for (int weight:weights){
-            if(weight &gt; cur){
-                ++day;
-                cur = mid;
-            }
-            cur -= weight;
-        }
-        return day &lt;= D;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1619397976229.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java 线程池详解]]></title>
-        <id>https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/</id>
-        <link href="https://2293736867.github.io/post/java-xian-cheng-chi-xiang-jie/">
-        </link>
-        <updated>2021-04-25T12:27:12.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>本文主要讲解了<code>Java</code>里面线程池的接口以及实现类，以及它们的基本使用方法，内容包括：</p>
-<ul>
-<li><code>Executor</code>/<code>Executors</code></li>
-<li><code>ExecutorService</code></li>
-<li><code>ThreadPoolExecutor</code></li>
-<li><code>ScheduledThreadPoolExecutor</code></li>
-</ul>
-<h1 id="2-两个重要的接口executorexecutorservice">2 两个重要的接口：<code>Executor</code>+<code>ExecutorService</code></h1>
-<p><code>Executor</code>是一个接口，里面只是定义了一个简单的任务提交方法：</p>
-<pre><code class="language-java">//Executor
-package java.util.concurrent;
-
-public interface Executor {
-    void execute(Runnable var1);
-}
-</code></pre>
-<p>而<code>ExecutorService</code>也是一个接口，继承了<code>Executor</code>，并且提供了更多用于任务提交和管理的一些方法，比如停止任务的执行等：</p>
-<pre><code class="language-java">//ExecutorService
-package java.util.concurrent;
-
-import java.util.Collection;
-import java.util.List;
-
-public interface ExecutorService extends Executor {
-    void shutdown();
-
-    List&lt;Runnable&gt; shutdownNow();
-
-    boolean isShutdown();
-
-    boolean isTerminated();
-
-    boolean awaitTermination(long var1, TimeUnit var3) throws InterruptedException;
-
-    &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; var1);
-
-    &lt;T&gt; Future&lt;T&gt; submit(Runnable var1, T var2);
-
-    Future&lt;?&gt; submit(Runnable var1);
-
-    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; var1) throws InterruptedException;
-
-    &lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; var1, long var2, TimeUnit var4) throws InterruptedException;
-
-    &lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; var1) throws InterruptedException, ExecutionException;
-
-    &lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; var1, long var2, TimeUnit var4) throws InterruptedException, ExecutionException, TimeoutException;
-}
-</code></pre>
-<p>下面将详细讲述<code>ExecutorService</code>的两个重要实现：</p>
-<ul>
-<li><code>ThreadPoolExecutor</code></li>
-<li><code>ScheduledThreadPoolExecutor</code></li>
-</ul>
-<h1 id="3-threadpoolexecutor">3 <code>ThreadPoolExecutor</code></h1>
-<p>这就是通常所说的线程池类，通常来说，一个线程池有如下特征：</p>
-<ul>
-<li>线程池有一定数量的工作线程</li>
-<li>线程数量以及任务数量会受到一定的控制和管理</li>
-<li>任务的执行以异步的方式进行</li>
-<li>线程池会负责执行任务的信息统计</li>
-</ul>
-<h2 id="31-一个简单的例子">3.1 一个简单的例子</h2>
-<p>先来看一个简单的例子：</p>
-<pre><code class="language-java">public class Main {
-    public static void main(String[] args) throws Exception {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-        //执行没有返回值的任务
-        executor.execute(()-&gt; System.out.println(&quot; Execute the runnable task.&quot;));
-        //执行带返回值的任务，用到了Future泛型类
-        Future&lt;String&gt; future = executor.submit(()-&gt;&quot; Execute the callable task and this is the result.&quot;);
-        //通过get()获取任务结果，get()会在任务未完成时一直阻塞
-        System.out.println(future.get());
-   		//手动关闭线程池
-        executor.shutdown();
-    }
-}
-</code></pre>
-<p>从这个简单的例子可以看到，线程池可以执行带返回值以及不带返回值的任务，带返回值的话需要使用<code>get()</code>方法阻塞获取。另外，运行完毕后需要手动关闭线程池，否则<code>JVM</code>不会退出，因为线程池中有指定数量的活跃线程数量，而<code>JVM</code>正常退出的条件是<code>JVM</code>进程中不存在任何运行着的非守护进程。</p>
-<h2 id="32-构造方法">3.2 构造方法</h2>
-<p>构造方法的源码如下：</p>
-<pre><code class="language-java">public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
-TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue) 
-
-public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
-TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory) 
-
-public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
-TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, RejectedExecutionHandler handler) 
-
-public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, 
-TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)
-</code></pre>
-<p>虽然提供了四个构造方法，但本质上调用的是最后一个构造方法，该构造方法带有7个参数，分别是：</p>
-<ul>
-<li><code>corePoolSize</code>：核心线程数量，即使当线程池中的核心线程不工作，核心线程的数量也不会减少。该参数的最小值为0，且小于等于<code>maximumPoolSize</code></li>
-<li><code>maximumPoolSize</code>：用于设置线程池中允许的线程数量的最大值</li>
-<li><code>keepAliveTime</code>：当线程池中的线程数量超过核心线程数并且处于空闲时，线程池将会回收一部分线程让出系统资源，该参数可用于设置超过<code>corePoolSize</code>数量的线程在多长时间后被回收，与后一个表示时间单位的参数<code>unit</code>配合使用</li>
-<li><code>unit</code>：用于设定<code>keepAliveTime</code>的时间单位</li>
-<li><code>workQueure</code>：用于存放已提交至线程池但未被执行的任务</li>
-<li><code>threadFactory</code>：用于创建线程的工厂，开发者可以自定义<code>ThreadFactory</code>来创建线程</li>
-<li><code>handler</code>：拒绝策略，当任务超过阻塞队列的边界时，线程池会拒绝新增的任务，主要用于设置拒绝策略</li>
-</ul>
-<h2 id="33-任务执行流程">3.3 任务执行流程</h2>
-<p>线程池被成功创建后，内部的运行线程并不会被立即创建，<code>ThreadPoolExecutor</code>会采用一种<code>Lazy</code>的方式去创建并且运行。首次调用执行任务方法时才会创建线程，比如：</p>
-<pre><code class="language-java">ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-assert executor.getActiveCount() == 0;
-assert executor.getMaximumPoolSize() == 4;
-assert executor.getCorePoolSize() == 2;
-executor.execute(()-&gt; System.out.println(&quot; Execute the runnable task.&quot;));
-assert executor.getActiveCount() == 1;
-assert executor.getMaximumPoolSize() == 4;
-assert executor.getCorePoolSize() == 2;
-</code></pre>
-<p>（运行的时候请加上<code>-ea</code>参数）</p>
-<p>下面看一下任务的具体执行流程：</p>
-<ul>
-<li>如果运行中线程数少于核心线程数，创建新线程并立即执行任务</li>
-<li>如果运行中的线程大于等于核心线程数，且任务队列未满时，会将任务先放进任务队列，直到运行中的线程数执行完成自己的任务后，再去轮询任务队列以获取任务运行</li>
-<li>如果任务队列已满，且运行中的线程数量小于最大线程数量时，线程池会创建线程执行任务，创建的线程数量会少于最大线程数</li>
-<li>如果任务队列已满且运行中的线程数量已到达最大线程数量，并且此刻没有空闲的运行线程，会执行任务拒绝策略，取决于<code>RejectedEcecutionHandler</code></li>
-<li>若线程池中的线程是空闲的，且空闲时间到达<code>keepAliveTime</code>指定时间，会回收线程，直到保留<code>corePoolSize</code>个核心线程为止（不过核心线程也可以设置被超时回收，默认不开启核心线程超时）</li>
-</ul>
-<h2 id="34-线程工厂">3.4 线程工厂</h2>
-<p>线程工厂<code>ThreadFactory</code>是一个接口：</p>
-<pre><code class="language-java">package java.util.concurrent;
-
-public interface ThreadFactory {
-    Thread newThread(Runnable var1);
-}
-</code></pre>
-<p>使用线程工厂可以在创建线程时加入自定义配置，比如指定名字、优先级、是否为守护线程等，比如下面是线程工厂的一个简单实现：</p>
-<pre><code class="language-java">public class TestThreadFactory implements ThreadFactory {
-    private final static String PREFIX = &quot;Test thread[&quot;;
-    private final static String SUFFIX = &quot;]&quot;;
-    private final static AtomicInteger THREAD_NUM = new AtomicInteger();
-    @Override
-    public Thread newThread(Runnable runnable) {
-        ThreadGroup group = new ThreadGroup(&quot;My pool&quot;);
-        Thread thread = new Thread(group,runnable,PREFIX+THREAD_NUM.getAndIncrement()+SUFFIX);
-        thread.setPriority(5);
-        return thread;
-    }
-}
-</code></pre>
-<h2 id="35-拒绝策略">3.5 拒绝策略</h2>
-<p>默认情况下，<code>ThreadPoolExecutor</code>提供了四种拒绝策略：</p>
-<ul>
-<li><code>DiscardPolicy</code>：丢弃策略，直接丢弃任务</li>
-<li><code>AbortPolicy</code>：终止策略，抛出<code>RejectedExecutionException</code></li>
-<li><code>DiscardOldestPolicy</code>：丢弃队列中最老任务的策略（严格意义来说需要根据任务队列去选择，因为不是所有的队列都是<code>FIFO</code>的）</li>
-<li><code>CallerRunsPolicy</code>：调用者线程执行策略，任务会在当前线程中阻塞执行</li>
-</ul>
-<p>当然，如果不能满足需要，可以实现<code>RejectedExecutionHandler</code>接口去自定义策略：</p>
-<pre><code class="language-java">public interface RejectedExecutionHandler {
-    void rejectedExecution(Runnable var1, ThreadPoolExecutor var2);
-}
-</code></pre>
-<h2 id="36-关闭线程池">3.6 关闭线程池</h2>
-<p>如果不需要线程池，那么需要手动对线程池关闭。线程池提供了如下三种方式：</p>
-<ul>
-<li>有序关闭：<code>shutdown()</code></li>
-<li>立即关闭：<code>shutdownNow()</code></li>
-<li>组合关闭：<code>shutdown()+shutdownNow()</code></li>
-</ul>
-<h3 id="361-有序关闭">3.6.1 有序关闭</h3>
-<p><code>shutdown()</code>提供了一种有序关闭的方式去关闭线程池，调用该方法后，会等待当前执行的任务全部执行完成然后关闭，同时新提交任务将会被拒绝。注意该方法是非阻塞，立即返回的。如果需要查看关闭状态，可以使用：</p>
-<ul>
-<li><code>isShutdown()</code>：返回是否调用了<code>shutdown()</code>的结果</li>
-<li><code>isTerminating()</code>：返回是否正在结束中</li>
-<li><code>isTerminated()</code>：返回是否已经结束</li>
-</ul>
-<h3 id="362-立即关闭">3.6.2 立即关闭</h3>
-<p><code>shutdownNow()</code>方法首先将线程池状态修改为<code>shutdown</code>状态，然后将未被执行的任务挂起，接着将尝试中断运行中的线程，最后返回未执行的任务：</p>
-<pre><code class="language-java">public static void main(String[] args) throws Exception {
-    ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), new TestThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-    IntStream.range(0,10).forEach(i-&gt; executor.execute(()-&gt; {
-        try{
-            TimeUnit.SECONDS.sleep(5);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }));
-    List&lt;Runnable&gt; runnables = executor.shutdownNow();
-    System.out.println(runnables.size());
-}
-</code></pre>
-<p>输出：</p>
-<pre><code class="language-bash">8
-
-BUILD SUCCESSFUL in 326ms
-2 actionable tasks: 2 executed
-java.lang.InterruptedException: sleep interrupted
-	at java.base/java.lang.Thread.sleep(Native Method)
-	at java.base/java.lang.Thread.sleep(Thread.java:339)
-	at java.base/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
-	at com.company.Main.lambda$main$0(Main.java:29)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-java.lang.InterruptedException: sleep interrupted
-	at java.base/java.lang.Thread.sleep(Native Method)
-	at java.base/java.lang.Thread.sleep(Thread.java:339)
-	at java.base/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
-	at com.company.Main.lambda$main$0(Main.java:29)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-3:14:36 AM: Task execution finished 'Main.main()'.
-</code></pre>
-<h3 id="363-组合关闭">3.6.3 组合关闭</h3>
-<p>为了确保安全关闭线程池，一般会使用组合方式关闭，确保正在运行的任务被正常执行的同时又能提高线程池被关闭的成功率，例子如下：</p>
-<pre><code class="language-java"> ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(10), new TestThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-IntStream.range(0,10).forEach(i-&gt; executor.execute(()-&gt; {
-    try{
-        TimeUnit.SECONDS.sleep(5);
-    }catch (Exception e){
-        e.printStackTrace();
-    }
-}));
-
-//首先调用shutdown()尝试关闭
-executor.shutdown();
-try{
-	//如果等待一段时间后还没关闭
-    if(!executor.awaitTermination(10,TimeUnit.SECONDS)){
-    	//强制关闭
-        executor.shutdownNow();
-        //如果强制关闭失败，比如运行的线程异常耗时且不能被中断
-        if(!executor.awaitTermination(10,TimeUnit.SECONDS)){
-        	//其他处理，这里只是输出中断失败的信息
-            System.out.println(&quot;Terminate failed.&quot;);
-        }
-    }
-}catch (InterruptedException e){
-	//如果当前线程被中断，并且捕获了异常，执行立即关闭方法
-    executor.shutdownNow();
-    //重新抛出中断信号
-    Thread.currentThread().interrupt();
-}
-</code></pre>
-<h1 id="4-scheduledthreadpoolexecutor">4 <code>ScheduledThreadPoolExecutor</code></h1>
-<p><code>ScheduledExecutorService</code>继承了<code>ExecutorService</code>，并且提供了任务被定时执行的特性，可以使用<code>ScheduledThreadPoolExecutor</code>去实现某些特殊的任务执行。当然实现固定任务的方法或者框架有很多，有原生的<code>shell</code>实现，老式的<code>Timer/TimerTask</code>实现，或者专门的框架<code>Quartz</code>实现，这里要说的是<code>JDK</code>内部的实现<code>ScheduledThreadPoolExecutor</code>。</p>
-<p><code>ScheduledThreadPoolExecutor</code>继承了<code>ThreadPoolExecutor</code>，除了具备<code>ThreadPoolExecutor</code>的所有方法外，还定义了4个与<code>schedule</code>有关的方法：</p>
-<ul>
-<li><code>&lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit)</code>：一个<code>one-shot</code>（只执行一次）的方法， 任务（<code>callable</code>）会在单位时间（<code>delay</code>）后被执行，并且立即返回<code>ScheduledFuture</code></li>
-<li><code>ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit)</code>：也是一个<code>one-shot</code>方法，任务会在单位时间后被执行，与第一个方法不同的是返回的<code>ScheduledFuture</code>不包含任何执行结果，但是可以通过返回的<code>ScheduledFuture</code>判断任务是否执行结束</li>
-<li><code>ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)</code>：任务会根据固定的速率在<code>initialDelay</code>后不断被执行</li>
-<li><code>ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)</code>：任务将以固定延迟单位时间的方式执行任务</li>
-</ul>
-<p>关于后两者的区别如下：</p>
-<pre><code class="language-java">public static void main(String[] args) throws Exception {
-    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
-    Runnable runnable = ()-&gt;{
-        long startTimestamp = System.currentTimeMillis();
-        System.out.println(&quot;current timestamp: &quot;+startTimestamp);
-        try{
-            TimeUnit.MILLISECONDS.sleep(current().nextInt(100));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        System.out.println(&quot;elapsed time: &quot;+(System.currentTimeMillis() - startTimestamp));
-    };
-
-    executor.scheduleAtFixedRate(runnable,10,1000,TimeUnit.MILLISECONDS);
-//        executor.scheduleWithFixedDelay(runnable,10,1000,TimeUnit.MILLISECONDS);
-}
-</code></pre>
-<p>输出：</p>
-<pre><code class="language-bash">current timestamp: 1619351675438
-elapsed time: 97
-current timestamp: 1619351676438
-elapsed time: 85
-current timestamp: 1619351677438
-elapsed time: 1
-current timestamp: 1619351678438
-elapsed time: 1
-current timestamp: 1619351679438
-elapsed time: 68
-current timestamp: 1619351680438
-elapsed time: 99
-</code></pre>
-<p>可以看到任务始终以一种固定的速率运行，每次运行的开始时间始终相隔<code>1000ms</code>。</p>
-<p>而使用<code>FixedDelay</code>的输出如下：</p>
-<pre><code class="language-bash">current timestamp: 1619351754890
-elapsed time: 53
-current timestamp: 1619351755944
-elapsed time: 30
-current timestamp: 1619351756974
-elapsed time: 13
-current timestamp: 1619351757987
-elapsed time: 80
-current timestamp: 1619351759068
-elapsed time: 94
-current timestamp: 1619351760162
-elapsed time: 29
-</code></pre>
-<p>每次开始的时间为上一次执行完成后的时间再加上时间间隔（<code>1000ms</code>）。</p>
-<h1 id="5-executors中的线程池">5 <code>Executors</code>中的线程池</h1>
-<p><code>Executors</code>类提供了六种创建线程池的静态方法：</p>
-<ul>
-<li><code>FixedThreadPool</code></li>
-<li><code>SingleThreadExecutor</code></li>
-<li><code>CachedThreadPool</code></li>
-<li><code>ScheduledThreadPool</code></li>
-<li><code>SingleThreadScheduledExecutor</code></li>
-<li><code>WorkStealingPool</code></li>
-</ul>
-<p>下面分别来看一下。</p>
-<h2 id="51-fixedthreadpool">5.1 <code>FixedThreadPool</code></h2>
-<p>源码如下：</p>
-<pre><code class="language-java">public static ExecutorService newFixedThreadPool(int nThreads) {
-    return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue());
-}
-
-public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
-    return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(), threadFactory);
-}
-</code></pre>
-<p><code>FixedThreadPool</code>底层调用的是<code>ThreadPoolExecutor</code>，默认创建的核心线程数与最大线程数相等，任务队列为无边界的<code>LinkedBlockingQueue</code>。</p>
-<h2 id="52-singlethreadexecutor">5.2 <code>SingleThreadExecutor</code></h2>
-<p>相关源码如下：</p>
-<pre><code class="language-java">public static ExecutorService newSingleThreadExecutor() {
-    return new Executors.FinalizableDelegatedExecutorService(new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue()));
-}
-
-public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
-    return new Executors.FinalizableDelegatedExecutorService(new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(), threadFactory));
-}
-
-private static class FinalizableDelegatedExecutorService extends Executors.DelegatedExecutorService {
-    FinalizableDelegatedExecutorService(ExecutorService executor) {
-        super(executor);
-    }
-
-    protected void finalize() {
-        super.shutdown();
-    }
-}
-</code></pre>
-<p>可以看到<code>SingleThreadPool</code>实际上是内部类<code>FinalizableDelegatedExecutorService</code>的包装，核心线程与最大线程数均为1，任务队列为无边界的<code>LinkedBlockingQueue</code>。发生<code>GC</code>的时候，会调用<code>shutdown()</code>方法。</p>
-<h2 id="53-cachedthreadpool">5.3 <code>CachedThreadPool</code></h2>
-<p>源码如下：</p>
-<pre><code class="language-java">public static ExecutorService newCachedThreadPool() {
-    return new ThreadPoolExecutor(0, 2147483647, 60L, TimeUnit.SECONDS, new SynchronousQueue());
-}
-
-public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
-    return new ThreadPoolExecutor(0, 2147483647, 60L, TimeUnit.SECONDS, new SynchronousQueue(), threadFactory);
-}
-</code></pre>
-<p><code>CachedThreadPool</code>会根据需要创建新线程，通常用于执行量大的，耗时较短的异步任务。未被使用且空闲时间超过<code>60s</code>的线程会被回收。</p>
-<h2 id="54-scheduledthreadpool">5.4 <code>ScheduledThreadPool</code></h2>
-<p>源码如下：</p>
-<pre><code class="language-java">public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
-    return new ScheduledThreadPoolExecutor(corePoolSize);
-}
-
-public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory) {
-    return new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
-}
-</code></pre>
-<p>创建指定核心数<code>ScheduledThreadPoolExecutor</code>。</p>
-<h2 id="55-singlethreadscheduledexecutor">5.5 <code>SingleThreadScheduledExecutor</code></h2>
-<p>源码如下：</p>
-<pre><code class="language-java">public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
-    return new Executors.DelegatedScheduledExecutorService(new ScheduledThreadPoolExecutor(1));
-}
-
-public static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory) {
-    return new Executors.DelegatedScheduledExecutorService(new ScheduledThreadPoolExecutor(1, threadFactory));
-}
-
-private static class DelegatedScheduledExecutorService extends Executors.DelegatedExecutorService implements ScheduledExecutorService {
-    private final ScheduledExecutorService e;
-
-    DelegatedScheduledExecutorService(ScheduledExecutorService executor) {
-        super(executor);
-        this.e = executor;
-    }
-
-    public ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit) {
-        return this.e.schedule(command, delay, unit);
-    }
-
-    public &lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit) {
-        return this.e.schedule(callable, delay, unit);
-    }
-
-    public ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-        return this.e.scheduleAtFixedRate(command, initialDelay, period, unit);
-    }
-
-    public ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        return this.e.scheduleWithFixedDelay(command, initialDelay, delay, unit);
-    }
-}
-</code></pre>
-<p>其实就是<code>SingelThreadPool</code>+<code>ScheduledThreadPool</code>。</p>
-<h2 id="56-workstealingpool">5.6 <code>WorkStealingPool</code></h2>
-<p>源码如下：</p>
-<pre><code class="language-java">public static ExecutorService newWorkStealingPool(int parallelism) {
-    return new ForkJoinPool(parallelism, ForkJoinPool.defaultForkJoinWorkerThreadFactory, (UncaughtExceptionHandler)null, true);
-}
-
-public static ExecutorService newWorkStealingPool() {
-    return new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory, (UncaughtExceptionHandler)null, true);
-}
-</code></pre>
-<p><code>WorkStealingPool</code>是<code>JDK8</code>引入的线程池，返回的是<code>ForkJoinPool</code>。在<code>WorkStealingPool</code>中，如果每个线程处理的任务执行比较耗时，那么它负责的任务会被其他线程“窃取”，进而提高并发处理的效率。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第315期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-315-qi/">
-        </link>
-        <updated>2021-04-25T00:48:01.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你和学霸的区别就是，你所有的灵光一闪，都是他的基本题型。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>草色青青柳色黄，桃花历乱李花香。<br>
-——贾至《春思二首》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>时光一逝永不回，往事只能回味。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619311735438.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>中序遍历，然后最后一个右节点取<code>null</code>：</p>
-<pre><code class="language-java">public class Solution {
-    private TreeNode newRoot = new TreeNode();
-    private TreeNode temp = newRoot;
-    private TreeNode preTemp = temp;
-    public TreeNode increasingBST(TreeNode root) {
-        inorder(root);
-        preTemp.right = null;
-        return newRoot;
-    }
-
-    private void inorder(TreeNode root){
-        if(root != null){
-            inorder(root.left);
-            temp.val = root.val;
-            preTemp = temp;
-            temp.right = new TreeNode();
-            temp = temp.right;
-            inorder(root.right);
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619311785567.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第314期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-314-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-314-qi/">
-        </link>
-        <updated>2021-04-24T02:41:59.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>回首过去，我居然没有，走过一次直路。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>春雨断桥人不渡，小舟撑出柳阴来。<br>
-——徐俯《春游湖》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>在你最冷的时候，有人不顾自己寒冷抱着你，这就是幸福。。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619232322619.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<pre><code class="language-java">public class Solution {
-    public int combinationSum4(int[] nums, int target) {
-        if(target == 999){
-            return 1;
-        }
-        int [] dp = new int[target+1];
-        dp[0] = 1;
-        for (int i = 1; i &lt;= target; i++) {
-            for (int num:nums){
-                if(num &lt;= i){
-                    dp[i] += dp[i-num];
-                }
-            }
-        }
-        return dp[target];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619232335053.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
