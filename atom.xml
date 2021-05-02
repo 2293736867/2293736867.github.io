@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-02T14:40:24.410Z</updated>
+    <updated>2021-05-02T18:07:21.564Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,32 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第323期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-323-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-323-qi/">
+        </link>
+        <updated>2021-05-02T18:04:43.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>三观没用，你得靠五官。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>参横斗转欲三更，苦雨终风也解晴。<br>
+——苏轼《六月二十日夜渡海》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我本身得不到答案。所以，我希望能够有答出来之物的诞生。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619978807809.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619978812784.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JVM学习笔记（七）：Class文件结构]]></title>
         <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-qi-class-wen-jian-jie-gou/</id>
@@ -1464,157 +1490,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619497907789.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM学习笔记（四）：GC算法与四种引用]]></title>
-        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-si-gc-suan-fa-yu-si-chong-yin-yong/</id>
-        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-si-gc-suan-fa-yu-si-chong-yin-yong/">
-        </link>
-        <updated>2021-04-26T14:11:30.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
-<ul>
-<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
-<li>章节：第四章</li>
-</ul>
-<p>本文是第四章的一些笔记整理。</p>
-<h1 id="2-gc算法">2 <code>GC</code>算法</h1>
-<p>常见的<code>GC</code>算法包括：</p>
-<ul>
-<li>引用计数法</li>
-<li>标记清除法</li>
-<li>复制算法</li>
-<li>标记压缩法</li>
-<li>分代算法</li>
-<li>分区算法</li>
-</ul>
-<h2 id="21-引用计数法">2.1 引用计数法</h2>
-<p>实现原理：</p>
-<ul>
-<li>对于一个对象A</li>
-<li>只要有任何一个对象引用A，A的引用计数器就加1</li>
-<li>引用失效时，引用计数器就减1</li>
-<li>只要对象A的引用计数器的值为0，对象A就不会再被使用，等待被回收</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>无法处理循环引用，比如A引用B，B引用A，但是并没有其他对象引用两者，此时A和B的引用计数都不为0，这样就无法被回收</li>
-<li>引用计数器要求每次引用产生和消除的时候，伴随一个加法操作和一个减法操作，对系统性能会有一定的影响</li>
-</ul>
-<p>由于引用计数法上述的缺点，<code>Java</code>中并未采用作为<code>GC</code>算法。</p>
-<h2 id="22-标记清除法">2.2 标记清除法</h2>
-<p>标记清除法将垃圾回收分为两个阶段：</p>
-<ul>
-<li>标记阶段：通过根节点标记所有从根节点开始的可达对象，未被标记的就是垃圾对象</li>
-<li>清除阶段：清除所有未被标记的对象</li>
-</ul>
-<p>标记阶段：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210426201921525.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>清除后：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210426173623187.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>缺点很明显，就是回收后的空间是不连续的，工作效率会低于连续的内存空间。</p>
-<h2 id="23-复制算法">2.3 复制算法</h2>
-<p>核心思想：</p>
-<ul>
-<li>内存空间分为相等的两块</li>
-<li>每次只使用其中一块</li>
-<li>回收的时候将存活对象移到另一块中，然后清除正在使用的内存块中所有对象</li>
-<li>交换两个内存块的角色</li>
-</ul>
-<p>优点是回收后的内存空间是没有碎片的，而缺点是如果存在大量的对象，需要花费大量的时间复制，并且内存只有原来的一半。</p>
-<p>比如下图中的A、B两块相同的内存空间，A在垃圾回收的时候，将存活对象复制到B中，B在复制后保持连续：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210426204108976.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>复制完成后，A会被清空，并将B设置为当前使用的空间。</p>
-<p>在<code>Java</code>的新生代串行垃圾回收器中，使用了复制算法，新生代分为<code>eden</code>区、<code>from</code>区以及<code>to</code>区。其中<code>from</code>和<code>to</code>区是两块内存相同的空间，也叫<code>survivor</code>区，也就是幸存者空间。在垃圾回收的时候，<code>eden</code>区以及<code>from</code>区存活的对象会被复制到<code>to</code>区，然后清空<code>from</code>区与<code>eden</code>区，接着<code>from</code>和<code>to</code>区的角色将会交换，也就是下一次垃圾回收的时候，会从原来的<code>to</code>区（新的<code>from</code>区）复制到原来的<code>from</code>区（新的<code>to</code>区）。</p>
-<h2 id="24-标记压缩法">2.4 标记压缩法</h2>
-<p>标记压缩法是一种老年代算法，在标记清除法的基础上做了一些优化，和标记清除法一样，首先也需要从根节点开始，对所有可达对象做一次标记，然后将所有存活对象压缩到内存的一端，接着清理边界外的所有空间，图示如下：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210426205832537.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>标记压缩法的优点是可以避免碎片的产生，又不需要两块相同的内存空间。</p>
-<h2 id="25-分代算法">2.5 分代算法</h2>
-<p>分代算法并不是一种具体的垃圾回收算法，分代算法其实是一种根据每块内存空间的特点使用不同回收算法以提高效率的算法。比如：</p>
-<ul>
-<li>在新生代中：会有大量的新建对象很快被回收，因此新生代比较适合使用复制算法</li>
-<li>在老年代中：采用标记压缩法或标记清除法</li>
-</ul>
-<h2 id="26-分区算法">2.6 分区算法</h2>
-<p>分区算法将整个堆空间划分成连续的不同小区间，每个小区间都独立使用，独立回收，如图所示：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210426210811452.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-四种引用">3 四种引用</h1>
-<p><code>Java</code>里面提供了4个级别的引用：</p>
-<ul>
-<li>强引用</li>
-<li>软引用</li>
-<li>弱引用</li>
-<li>虚引用</li>
-</ul>
-<p>下面分别来看一下。</p>
-<h2 id="31-强引用">3.1 强引用</h2>
-<p>强引用就是代码中一般使用的引用类型，强引用的对象是可触及的，不会被回收，比如：</p>
-<pre><code class="language-java">StringBuffer str = new StringBuffer(&quot;a&quot;);
-</code></pre>
-<p>如果上面的代码运行在方法体内，那么局部变量<code>str</code>会被分配在栈上，而对象<code>StringBuffer</code>实例会被分配在堆上，<code>str</code>指向的是<code>StringBuffer</code>实例所在的堆空间，通过<code>str</code>可以操作该实例，<code>str</code>就是<code>StringBuffer</code>实例的强引用。</p>
-<p>又比如执行了以下代码：</p>
-<pre><code class="language-java">StringBuffer str1 = str;
-</code></pre>
-<p>那么<code>str1</code>也会指向<code>str</code>指向的对象，也就是它们都指向同一个<code>StringBuffer</code>实例，此时<code>str1==str</code>的值为真，因为两个指向的是同一个堆空间地址。</p>
-<p>强引用的特点如下：</p>
-<ul>
-<li>可以直接访问目标对象</li>
-<li>强引用指向的对象不会被系统回收，<code>JVM</code>宁愿抛出<code>OOM</code>也不会回收强引用指向的对象</li>
-<li>强引用可能会导致内存泄漏</li>
-</ul>
-<h2 id="32-软引用">3.2 软引用</h2>
-<p>软引用是被强引用弱一点的引用类型，如果一个对象只持有软引用，那么当堆空间不足的时候，就会被回收，软引用可以使用<code>SoftReference</code>类实现，比如下面的代码：</p>
-<pre><code class="language-java">public static void main(String[] args){
-    Byte[] b = new Byte[1024*1024*8];
-    SoftReference&lt;Byte[]&gt; softReference = new SoftReference&lt;&gt;(b);
-    b = null;
-    System.out.println(softReference.get());
-    System.gc();
-    System.out.println(&quot;After GC&quot;);
-    System.out.println(softReference.get());
-    b = new Byte[1024*1024*8];
-    System.gc();
-    System.out.println(softReference.get());
-}
-</code></pre>
-<p>在<code>OpenJDK 11.0.10</code>上，加上<code>-Xmx40m</code>的输出如下：</p>
-<pre><code class="language-bash">[Ljava.lang.Byte;@1fbc7afb
-After GC
-[Ljava.lang.Byte;@1fbc7afb
-null
-</code></pre>
-<p>可以看到，当垃圾回收的时候，未必会回收软引用对象，但当内存紧张时，会回收软引用对象。</p>
-<h2 id="33-弱引用">3.3 弱引用</h2>
-<p>弱引用是比软引用弱的引用类型，在垃圾回收的时候，只要发现弱引用，不管系统空间使用情况如何，都会将对象进行回收。但是由于垃圾回收器的线程通常优先级不高，并不一定能很快发现弱引用对象，这种情况下弱引用对象可以存在较长时间。弱引用例子如下：</p>
-<pre><code class="language-java">public static void main(String[] args){
-    Byte[] b = new Byte[1024*1024*8];
-    WeakReference&lt;Byte[]&gt; softReference = new WeakReference&lt;&gt;(b);
-    b = null;
-    System.out.println(softReference.get());
-    System.gc();
-    System.out.println(&quot;After GC&quot;);
-    System.out.println(softReference.get());
-}
-</code></pre>
-<p>输出（<code>-Xmx40m</code>）：</p>
-<pre><code class="language-bash">[Ljava.lang.Byte;@1fbc7afb
-After GC
-null
-</code></pre>
-<p>可以看到在<code>GC</code>后，弱引用对象会被立即回收。</p>
-<p>软引用、弱引用的一个常见使用场景是保存可有可无的缓存数据，当系统内存不足时，这些内存数据会被回收，不会导致<code>OOM</code>，而内存充足时，这些缓存数据又可以存在相当长的时间，从而起到让系统加速的作用。</p>
-<h2 id="34-虚引用">3.4 虚引用</h2>
-<p>虚引用是所有引用类型中最弱的一个，一个持有虚引用的对象和没有引用几乎是一样的，随时都可能被垃圾回收器回收。另外，试图使用虚引用的<code>get()</code>方法获取强引用的时候，总是会失败，并且虚引用需要和引用队列一起使用，作用在与跟踪垃圾回收过程。</p>
-<pre><code class="language-java">public static void main(String[] args) throws Exception {
-    ReferenceQueue&lt;String&gt; queue = new ReferenceQueue&lt;&gt;();
-    PhantomReference&lt;String&gt; reference = new PhantomReference&lt;&gt;(new String(&quot;test&quot;),queue);
-    System.out.println(reference.get());
-}
-</code></pre>
-<p>输出结果：</p>
-<pre><code class="language-bash">null
-</code></pre>
 ]]></content>
     </entry>
 </feed>
