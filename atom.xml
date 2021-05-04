@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-02T18:46:01.806Z</updated>
+    <updated>2021-05-04T02:06:55.319Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,94 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第324期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-324-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-324-qi/">
+        </link>
+        <updated>2021-05-03T16:59:58.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>能有钱解决的问题都不是问题，但如何有钱，才是你最大的问题。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>北风吹雪四更初，嘉瑞天教及岁除。<br>
+——陆游《除夜雪》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>你搅散一池星光成为我的月亮。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620061928390.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>有点复杂，三维<code>dp</code>，其中<code>dp[i][j][k]</code>表示：</p>
+<ul>
+<li>第<code>i</code>个房子</li>
+<li>目前已形成<code>j</code>个街区</li>
+<li>第<code>i</code>个房子的颜色为<code>k</code></li>
+<li>符合以上三种条件下所花费的最小费用</li>
+</ul>
+<p>转移方程需要根据当前房子有没有涂色去讨论：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620093981955.png" alt="" loading="lazy"></figure>
+<p>代码：</p>
+<pre><code class="language-java">public class Solution {
+    public int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+        int[][][] dp = new int[m][target + 1][n + 1];
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt;= target; j++) {
+                for (int k = 0; k &lt;= n; k++) {
+                    dp[i][j][k] = 0x3f3f3f3f;
+                }
+            }
+        }
+
+        if (houses[0] == 0) {
+            System.arraycopy(cost[0], 0, dp[0][1], 1, n);
+        } else {
+            dp[0][1][houses[0]] = 0;
+        }
+
+        for (int i = 1; i &lt; m; i++) {
+            if (houses[i] == 0) {
+                for (int curColor = 1; curColor &lt;= n; ++curColor) {
+                    for (int preColor = 1; preColor &lt;= n; ++preColor) {
+                        for (int j = 1; j &lt;= target; j++) {
+                            dp[i][j][curColor] = (curColor == preColor ?
+                                    Math.min(dp[i][j][curColor], dp[i - 1][j][curColor] + cost[i][curColor - 1]) :
+                                    Math.min(dp[i][j][curColor], dp[i - 1][j - 1][preColor] + cost[i][curColor - 1])
+                            );
+                        }
+                    }
+                }
+            } else {
+                int curColor = houses[i];
+                for (int preColor = 1; preColor &lt;= n; ++preColor) {
+                    for (int j = 1; j &lt;= target; j++) {
+                        dp[i][j][curColor] = (curColor == preColor ?
+                                Math.min(dp[i][j][curColor], dp[i - 1][j][curColor]) :
+                                Math.min(dp[i][j][curColor], dp[i - 1][j - 1][preColor])
+                        );
+                    }
+                }
+            }
+        }
+
+        int min = dp[m - 1][target][1];
+        for (int i = 2; i &lt;= n; i++) {
+            if (min &gt; dp[m - 1][target][i]) {
+                min = dp[m - 1][target][i];
+            }
+        }
+        return min == 0x3f3f3f3f ? -1 : min;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620093851892.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第323期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-323-qi/</id>
@@ -1428,68 +1516,6 @@ public class Solution {
 <li><a href="https://juejin.cn/post/6844903970142421005">掘金-JVM原理之GC垃圾回收器CMS详解</a></li>
 <li><a href="https://sematext.com/blog/java-garbage-collection-logs/">Understanding Java Garbage Collection Logging: What Are GC Logs and How To Analyze Them</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第317期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-317-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-317-qi/">
-        </link>
-        <updated>2021-04-27T04:29:02.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>平时骂你就算了，非要等我打你，才知道我文武双全。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>东风吹雨过青山，却望千门草色闲。<br>
-——卢纶《长安春望》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>记忆是不会消失的，只是一时想不起来了而已。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619497859389.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>利用<code>BST</code>的性质直接遍历就好了：</p>
-<pre><code class="language-java">public class Solution {
-    private int sum = 0;
-    private int low;
-    private int high;
-    public int rangeSumBST(TreeNode root, int low, int high) {
-        this.low = low;
-        this.high = high;
-        f(root);
-        return sum;
-    }
-
-    private void f(TreeNode root){
-        if(root != null){
-            int temp = root.val;
-            if(temp &gt;= low &amp;&amp; temp &lt;= high){
-                sum += temp;
-            }
-            if(root.right != null){
-                if(root.right.val &lt;= high){
-                    f(root.right);
-                }else{
-                    f(root.right.left);
-                }
-            }
-            if(root.left != null){
-                if(root.left.val &gt;= low){
-                    f(root.left);
-                }else{
-                    f(root.left.right);
-                }
-            }
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619497907789.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
