@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-05T13:32:56.125Z</updated>
+    <updated>2021-05-06T04:36:27.685Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,48 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第326期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-326-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-326-qi/">
+        </link>
+        <updated>2021-05-06T04:31:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>只要坚持不懈，嘲笑你的人，迟早被你笑死。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>长风怒卷高浪，飞洒日光寒。<br>
+——元好问《水调歌头·赋三门津》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>兜里不硬气，啥都不敢买。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620275719877.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>直接错位异或即可得出答案：</p>
+<pre><code class="language-java">public class Solution {
+    public int[] decode(int[] encoded, int first) {
+        int n = encoded.length;
+        int [] arr = new int[n+1];
+        arr[0] = first;
+        for (int i = 1; i &lt;= n; i++) {
+            arr[i] = arr[i-1] ^ encoded[i-1];
+        }
+        return arr;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620275746195.png" alt="" loading="lazy"></figure>
+<h1 id="补课补课">补课补课</h1>
+<p>周六要补课，但是好像那天没课？</p>
+<p>好家伙。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第325期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-325-qi/</id>
@@ -1108,96 +1150,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619749011958.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第319期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-319-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-319-qi/">
-        </link>
-        <updated>2021-04-29T00:20:14.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>别和我说对不起，因为我既不能原谅你，也无法捅死你。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>见说江头春浪渺，殷勤欲送归船。<br>
-——赵长卿《临江仙·暮春》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>在不同的遭遇里我发现你的瞬间，有种不可言说的温柔直觉。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619655792502.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>暴力大法好，非常的节约空间：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public boolean canCross(int[] stones) {
-        int n = stones.length;
-        Map&lt;Integer, List&lt;Integer&gt;&gt; map = new HashMap&lt;&gt;(n);
-        map.put(0, List.of(0));
-        for (int i = 1; i &lt; n; i++) {
-            List&lt;Integer&gt; target = new ArrayList&lt;&gt;();
-            for (int j = 0; j &lt; i; j++) {
-                List&lt;Integer&gt; list = map.get(stones[j]);
-                if(list != null &amp;&amp; !list.isEmpty()){
-                    int dis = stones[i] - stones[j];
-                    for (Integer e:list){
-                        if(Math.abs(e-dis) &lt;= 1 &amp;&amp; !target.contains(dis)){
-                            target.add(dis);
-                            if(i == n-1){
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            map.put(stones[i],target);
-        }
-        return false;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619659079138.png" alt="" loading="lazy"></figure>
-<p>上二维<code>dp</code>，可以先上一次<code>O(n)</code>遍历判断是否有可能到达最后一个石头，如果没有直接返回<code>false</code>，遍历之后再一次<code>O(n^2)</code>遍历<code>dp</code>数组，数组存的是石头下标，转移方程为：</p>
-<pre><code class="language-java">dp[i][k] = dp[j][k-1] || dp[j][k] || dp[j][k+1];
-</code></pre>
-<p>如果<code>i==n-1</code>，也就是到达了最后一个石头，可以直接返回<code>true</code>，否则<code>O(n^2)</code>遍历结束后，返回<code>false</code>。</p>
-<pre><code class="language-java">public class Solution {
-    public boolean canCross(int[] stones) {
-        int n = stones.length;
-        boolean [][] dp = new boolean[n][n];
-
-        //测试发现O(n)的遍历貌似没什么用，反而增加耗时
-        // for (int i = 1; i &lt; n; ++i) {
-        //     if (stones[i] - stones[i - 1] &gt; i) {
-        //         return false;
-        //     }
-        // }
-
-        dp[0][0] = true;
-        for (int i = 1; i &lt; n; i++) {
-            for (int j = i-1; j &gt;= 0; --j) {
-                int k = stones[i]-stones[j];
-                if(k &gt; j+1){
-                    break;
-                }
-                dp[i][k] = dp[j][k-1] || dp[j][k] || dp[j][k+1];
-                if(i == n-1 &amp;&amp; dp[i][k]){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1619660800997.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
