@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-06T04:36:27.685Z</updated>
+    <updated>2021-05-07T01:39:16.662Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,68 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第327期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-327-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-327-qi/">
+        </link>
+        <updated>2021-05-07T01:35:06.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>这么多年来没掉入桃色陷阱，靠的就是两个字，没钱。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>沾衣欲湿杏花雨，吹面不寒杨柳风。<br>
+——志南《绝句·古木阴中系短篷》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>你的败因只有一个，就是与我为敌。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620351469814.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>遍历异或即可：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int xorOperation(int n, int start) {
+        int end = start + 2*(n-1);
+        int result = start;
+        for (int i = start+2;i&lt;=end;i+=2){
+            result ^= i;
+        }
+        return result;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620351533258.png" alt="" loading="lazy"></figure>
+<p>当然也有<code>O(1)</code>时间空间的：</p>
+<pre><code class="language-java">class Solution {
+    public int xorOperation(int n, int start) {
+        int s = start &gt;&gt; 1, e = n &amp; start &amp; 1;
+        int ret = sumXor(s - 1) ^ sumXor(s + n - 1);
+        return ret &lt;&lt; 1 | e;
+    }
+
+    public int sumXor(int x) {
+        if (x % 4 == 0) {
+            return x;
+        }
+        if (x % 4 == 1) {
+            return 1;
+        }
+        if (x % 4 == 2) {
+            return x + 1;
+        }
+        return 0;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第326期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-326-qi/</id>
@@ -1101,55 +1163,6 @@ public void put(E e) throws InterruptedException {
 <li><a href="https://blog.csdn.net/weixin_44584387/article/details/104763837">CSDN-Java 中锁是如何一步步膨胀的（偏向锁、轻量级锁、重量级锁）</a></li>
 <li><a href="https://www.jianshu.com/p/8a8d2b42ddca">简书-Java Synchronized 重量级锁原理深入剖析上(互斥篇)</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第320期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-320-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-320-qi/">
-        </link>
-        <updated>2021-04-30T02:14:19.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>为什么你能像智障一样活着，而我却不可以。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>洛阳城东桃李花，飞来飞去落谁家？<br>
-——刘希夷《代悲白头翁》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>人们生于信仰，毁于信仰。人们在信仰的灰烬重生。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1619748966774.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>不会电路，<code>O(n)</code>空间：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int singleNumber(int[] nums) {
-        int n = nums.length;
-        if(n == 1){
-            return nums[0];
-        }
-        long sum = 0;
-        Map&lt;Integer,Boolean&gt; map = new HashMap&lt;&gt;();
-        for (int num:nums){
-            if(map.containsKey(num)){
-                sum -= num;
-            }else{
-                map.put(num,true);
-                sum += num* 2L;
-            }
-        }
-        return (int)(sum/2);
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619749011958.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
