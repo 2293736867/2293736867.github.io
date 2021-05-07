@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-07T01:56:43.313Z</updated>
+    <updated>2021-05-07T17:26:09.429Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,144 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第328期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-328-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-328-qi/">
+        </link>
+        <updated>2021-05-07T17:13:52.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>人不能低下高贵的头，但捡钱时例外。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>五更鼓角声悲壮，三峡星河影动摇。<br>
+——杜甫《阁夜》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>迎着风，拥抱彩虹！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620407692283.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>尽力了，过51个样例：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    private int[] time;
+    private int k;
+    private int max;
+
+    public int minimumTimeRequired(int[] jobs, int k) {
+        Arrays.sort(jobs);
+        int len = jobs.length;
+        time = new int[this.k = k];
+        if (k &gt;= len) {
+            max = jobs[0];
+            for (int i = 1; i &lt; len; i++) {
+                if (max &lt; jobs[i]) {
+                    max = jobs[i];
+                }
+            }
+            return max;
+        }
+        boolean repeated = false;
+        Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
+        for (int i = 0; i &lt; len; i++) {
+            if(set.contains(jobs[i])){
+                repeated = true;
+                break;
+            }else{
+                set.add(jobs[i]);
+            }
+        }
+        if(k == 2 &amp;&amp; ((len &amp; 1) == 1) &amp;&amp; repeated){
+            for (int i = 0; i &lt; len/2; i++) {
+                time[0] += jobs[i];
+            }
+            for (int i = len/2+1; i &lt; len; i++) {
+                time[1] += jobs[i];
+            }
+            if(time[0] &lt; time[1]){
+                time[0] += jobs[len/2];
+            }else{
+                time[1] += jobs[len/2];
+            }
+            return Math.max(time[0],time[1]);
+        }
+        time[0] = jobs[len - 1];
+        max = time[0];
+        for (int i = len - 2; i &gt;= 0; --i) {
+            int index = findMin(jobs[i]);
+            time[index] += jobs[i];
+            if (time[index] &gt; max) {
+                max = time[index];
+            }
+        }
+        return max;
+    }
+
+    private int findMin(int next){
+        int i;
+        int min = 0;
+        for (i = 0; i &lt; k &amp;&amp; time[i] != 0; i++) {
+            if (time[i] + next &lt;= max) {
+                return i;
+            }
+            if(time[i] &lt; time[min]){
+                min = i;
+            }
+        }
+        for (int j = i; j &lt; k; j++) {
+            if(time[j] &lt; time[min]) {
+                min = j;
+            }
+        }
+        return min;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620407710826.png" alt="" loading="lazy"></figure>
+<p>看了题解才知道是状态压缩+动态规划，表示不会，这里放上一个回溯剪枝的版本：</p>
+<pre><code class="language-java">public class Solution {
+
+    private int minId = Integer.MAX_VALUE;
+
+    public int minimumTimeRequired(int[] jobs, int k) {
+        fd(jobs, new int[k], 0, 0);
+        return minId;
+    }
+
+    private void fd(int[] jobs, int[] times, int m, int minTime) {
+        if (m == jobs.length) {
+            minId = Math.min(minTime, minId);
+            return;
+        }
+        boolean first = true;
+        for (int i=0; i&lt;times.length; i++) {
+            if (times[i] == 0L &amp;&amp; !first) {
+                return;
+            }
+            if (times[i] == 0L) {
+                first = false;
+            }
+            times[i] += jobs[m];
+            int tmpMax = Math.max(minTime, times[i]);
+            if (tmpMax &lt; minId) {
+                fd(jobs, times, m + 1, Math.max(minTime, times[i]));
+            }
+            times[i] -= jobs[m];
+        }
+    }
+}
+</code></pre>
+<p>居然还有0ms的，惨无人性：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620408017415.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第327期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-327-qi/</id>
@@ -873,296 +1011,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1619962308238.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM学习笔记（六）：锁优化与CAS]]></title>
-        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/</id>
-        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-liu-suo-you-hua-yu-cas/">
-        </link>
-        <updated>2021-04-30T05:27:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
-<ul>
-<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
-<li>章节：第八章</li>
-</ul>
-<p>本文是第八章的一些笔记整理。</p>
-<h1 id="2-概述">2 概述</h1>
-<p>本文主要讲述了<code>JVM</code>在运行层面和代码层面的锁优化策略，最后介绍了实现无锁的其中一种方法<code>CAS</code>。</p>
-<h1 id="3-对象头">3 对象头</h1>
-<p><code>JVM</code>中每个对象都有一个对象头，用于保存对象的系统信息，<code>64bit JVM</code>的对象头结构如下图所示：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210429104615245.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>其中：</p>
-<ul>
-<li><code>Mark Word</code>由<code>64bit</code>组成，一个功能数据区，可以存放对象的哈希、对象年龄、锁的指针等信息</li>
-<li><code>KClass Word</code>在没有开启指针压缩的情况下，<code>64bit</code>组成，但是<code>64bit JVM</code>会默认开启指针压缩（<code>+UseCompressedOops</code>），所以会压缩到<code>32bit</code></li>
-</ul>
-<p>另外，从图中可以看到，不同的锁对应于不同的<code>Mark Word</code>：</p>
-<ul>
-<li>无锁：<code>25bit</code>空+<code>31bit</code>哈希值+<code>1bit</code>空+<code>4bit</code>分代年龄+<code>1bit</code>是否偏向锁+<code>2bit</code>锁标记</li>
-<li>偏向锁：<code>54bit</code>持有偏向锁的线程<code>ID</code>+<code>2bit</code>偏向时间戳+<code>1bit</code>空+<code>4bit</code>分代年龄+<code>1bit</code>是否偏向锁+<code>2bit</code>锁标记</li>
-<li>轻量锁：<code>62bit</code>栈中锁记录指针+<code>2bit</code>锁标记</li>
-<li>重量锁：<code>62bit</code>重量级锁指针+<code>2bit</code>锁标记</li>
-</ul>
-<p><code>JVM</code>如何区分锁主要看两个字段：<code>biased_lock</code>与<code>lock</code>，对应关系如下：</p>
-<ul>
-<li><code>biased_lock=0 lock=00</code>：轻量级锁</li>
-<li><code>biased_lock=0 lock=01</code>：无锁</li>
-<li><code>biased_lock=0 lock=10</code>：重量级锁</li>
-<li><code>biased_lock=0 lock=11</code>：<code>GC</code>标记</li>
-<li><code>biased_lock=1 lock=01</code>：偏向锁</li>
-</ul>
-<h1 id="4-锁的运行时优化">4 锁的运行时优化</h1>
-<p>很多时候<code>JVM</code>都会对线程竞争的操作在<code>JVM</code>层面进行优化，尽可能解决竞争问题，也会试图消除不必要的竞争，实现的方法包括：</p>
-<ul>
-<li>偏向锁</li>
-<li>轻量级锁</li>
-<li>重量级锁</li>
-<li>自旋锁</li>
-<li>锁消除</li>
-</ul>
-<h2 id="41-偏向锁jdk15默认关闭">4.1 偏向锁（<code>JDK15</code>默认关闭）</h2>
-<h3 id="411-简介">4.1.1 简介</h3>
-<p>偏向锁是<code>JDK 1.6</code>提出的一种锁优化方式，核心思想是，如果线程没有竞争，则取消已经取得锁的线程同步操作，也就是说，某个线程获取到锁后，锁就会进入偏向模式，当线程再次请求该锁时，无需再次进行相关的同步操作，从而节省操作时间。而在此期间如果有其他线程进行了锁请求，则锁退出偏向模式。</p>
-<p>开启偏向锁的参数是<code>-XX:+UseBiasedLocking</code>，处于偏向锁时，<code>Mark Word</code>会记录获得锁的线程（<code>54bit</code>），通过该信息可以判断当前线程是否持有偏向锁。</p>
-<p>注意<code>JDK15</code>后默认关闭了偏向锁以及禁用了相关选项，可以参考<a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8231264">JDK-8231264</a>。</p>
-<h3 id="412-加锁流程">4.1.2 加锁流程</h3>
-<p>偏向锁的加锁过程如下：</p>
-<ul>
-<li>第一步：访问<code>Mark Word</code>中的<code>biased_lock</code>是否设置为<code>1</code>，<code>lock</code>是否设置为<code>01</code>，确认为可偏向状态，如果<code>biased_lock</code>为<code>0</code>，则是无锁状态，直接通过<code>CAS</code>操作竞争锁，如果失败，执行第四步</li>
-<li>第二步：如果为可偏向状态，测试线程<code>ID</code>是否指向当前线程，如果是，到达第五步，否则到达第三步</li>
-<li>第三步：如果线程<code>ID</code>没有指向当前线程，通过<code>CAS</code>操作竞争锁，如果成功，将<code>Mark Word</code>中的线程<code>ID</code>设置为当前线程<code>ID</code>，然后执行第五步，如果失败，执行第四步</li>
-<li>第四步：如果<code>CAS</code>获取偏向锁失败，表示有竞争，开始锁撤销</li>
-<li>第五步：执行同步代码</li>
-</ul>
-<h3 id="413-例子">4.1.3 例子</h3>
-<p>下面是一个简单的例子：</p>
-<pre><code class="language-java">public class Main {
-    private static List&lt;Integer&gt; list = new Vector&lt;&gt;();
-    public static void main(String[] args){
-        long start = System.nanoTime();
-        for (int i = 0; i &lt; 1_0000_0000; i++) {
-            list.add(i);
-        }
-        long end = System.nanoTime();
-        System.out.println(end-start);
-    }
-}
-</code></pre>
-<p><code>Vector</code>的<code>add</code>是一个<code>synchronized</code>方法，使用如下参数测试：</p>
-<pre><code class="language-bash">-XX:BiasedLockingStartupDelay=0 # 偏向锁启动时间，设置为0表示立即启动
--XX:+UseBiasedLocking # 开启偏向锁
-</code></pre>
-<p>输出如下：</p>
-<pre><code class="language-bash">1664109780
-</code></pre>
-<p>而将偏向锁关闭：</p>
-<pre><code class="language-bash">-XX:BiasedLockingStartupDelay=0
--XX:-UseBiasedLocking
-</code></pre>
-<p>输出如下：</p>
-<pre><code class="language-bash">2505048191
-</code></pre>
-<p>可以看到偏向锁还是对系统性能有一定帮助的，但是需要注意偏向锁在锁竞争激烈的场合没有太强的优化效果，因为大量的竞争会导致持有锁的线程不停地切换，锁很难一直保持在偏向模式，这样不仅仅不能优化性能，反而因为频繁切换而导致性能下降，因此竞争激烈的场合可以尝试使用<code>-XX:-UseBiasedLocking</code>禁用偏向锁。</p>
-<h2 id="42-轻量级锁">4.2 轻量级锁</h2>
-<h3 id="421-简介">4.2.1 简介</h3>
-<p>如果偏向锁失败，那么<code>JVM</code>会让线程申请轻量级锁。轻量级锁在内部使用一个<code>BasicObjectLock</code>的对象实现，该对象内部由：</p>
-<ul>
-<li>一个<code>BasicLock</code>对象</li>
-<li>一个持有该锁的<code>Java</code>对象指针</li>
-</ul>
-<p>组成。<code>BasicObjectLock</code>对象放置在<code>Java</code>栈的栈帧中，在<code>BasicLock</code>对象还会维护一个叫<code>displaced_header</code>的字段，用于备份对象头部的<code>Mark Word</code>。</p>
-<h3 id="422-加锁流程">4.2.2 加锁流程</h3>
-<ul>
-<li>第一步：通过<code>Mark Word</code>判断是否无锁（<code>biased_lock</code>是否为<code>0</code>且<code>lock</code>为<code>01</code>），如果是无锁，会创建一个叫锁记录（<code>Lock Record</code>）的空间，用于存储当前<code>Mark Word</code>的拷贝</li>
-<li>第二步：将对象头的<code>Mark Word</code>复制到锁记录中</li>
-<li>第三步：拷贝成功后，使用<code>CAS</code>操作尝试将锁对象<code>Mark Word</code>更新为指向锁记录的指针，并将线程栈帧中的锁记录的<code>owner</code>指向<code>Object</code>的<code>Mark Word</code></li>
-<li>第四步：如果操作成功，那么就成功拥有了锁</li>
-<li>第五步：如果操作失败，<code>JVM</code>会检查<code>Mark Word</code>是否指向当前线程的栈帧，如果是就说明当前线程已经拥有了这个对象的锁，就可以直接进入同步块继续执行，否则会让当前线程尝试自旋获取锁，自旋到达一定次数后如果还没有获得锁，那么会膨胀为重量级锁</li>
-</ul>
-<h2 id="43-重量级锁">4.3 重量级锁</h2>
-<h3 id="431-简介">4.3.1 简介</h3>
-<p>当轻量级锁自旋一定次数后还是无法获取锁，就会膨胀为重量级锁。相比起轻量级锁，<code>Mak Word</code>存放的是指向锁记录的指针，重量级锁中的<code>Mark Word</code>存放的是指向<code>Object Monitor</code>的指针，如下图所示：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210430103445676.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>（图源见文末）</p>
-<p>因为锁记录是线程私有的，不能满足多线程都能访问的需求，因此重量级锁中引入了能线程共享的<code>ObjectMonitor</code>。</p>
-<h3 id="432-加锁流程">4.3.2 加锁流程</h3>
-<p>初次尝试加锁时，会先<code>CAS</code>尝试修改<code>ObjectMonitor</code>的<code>_owner</code>字段，结果如下：</p>
-<ul>
-<li>第一种：锁没有其他线程占用，成功获取锁</li>
-<li>第二种：锁被其他线程占用，则当前线程重入锁，获取成功</li>
-<li>第三种：锁被锁记录占用，而锁记录是线程私有的，也就是属于当前线程的，这样就属于重入，重入次数为1</li>
-<li>第四种：都不满足，再次尝试加锁（调用<code>EnterI()</code>）</li>
-</ul>
-<p>而再次尝试加锁的过程，是一个循环，不断尝试获取锁直到成功为止，流程简述如下：</p>
-<ul>
-<li>多次尝试获取锁</li>
-<li>获取失败把线程包装后放进阻塞队列</li>
-<li>再次尝试获取锁</li>
-<li>失败后将自己挂起</li>
-<li>被唤醒后继续尝试获取锁</li>
-<li>成功则退出循环，否则继续</li>
-</ul>
-<h2 id="44-自旋锁">4.4 自旋锁</h2>
-<p>自旋锁可以使线程没有取得锁时不被挂起，而是去执行一个空循环（也就是所谓的自旋），在若干个空循环后如果可以获取锁，则继续执行，如果不能，挂起当前线程。</p>
-<p>使用自旋锁后，线程被挂起的概率相对减小，线程执行的连贯性相对加强，因此对于锁竞争不是很激烈、锁占用并发时间很短的并发线程具有一定的积极意义，但是，对于竞争激烈且锁占用时间长的并发线程，自旋等待后仍无法获取锁，还是会被挂起，浪费了自旋时间。</p>
-<p>在<code>JDK1.6</code>中提供了<code>-XX:+UseSpinning</code>参数开启自旋锁，但是<code>JDK1.7</code>后，自旋锁参数被取消，<code>JVM</code>不再支持由用户配置自旋锁，自旋锁总是被执行，次数由<code>JVM</code>调整。</p>
-<h2 id="45-锁消除">4.5 锁消除</h2>
-<h3 id="451-简介">4.5.1 简介</h3>
-<p>锁消除就是把不必要的锁给去掉，比如，在一些单线程环境下使用一些线程安全的类，比如<code>StringBuffer</code>，这样就可以基于逃逸分析技术可消除这些不必要的锁，从而提高性能。</p>
-<h3 id="452-例子">4.5.2 例子</h3>
-<pre><code class="language-java">public class Main {
-    private static final int CIRCLE = 200_0000;
-    public static void main(String[] args){
-        long start = System.nanoTime();
-        for (int i = 0; i &lt; CIRCLE; i++) {
-            createStringBuffer(&quot;Test&quot;,String.valueOf(i));
-        }
-        long end = System.nanoTime();
-        System.out.println(end-start);
-    }
-
-    private static String createStringBuffer(String s1,String s2){
-        StringBuffer sb = new StringBuffer();
-        sb.append(s1);
-        sb.append(s2);
-        return sb.toString();
-    }
-}
-</code></pre>
-<p>参数：</p>
-<pre><code class="language-bash">-XX:+DoEscapeAnalysis
--XX:-EliminateLocks
--Xcomp
--XX:-BackgroundCompilation
--XX:BiasedLockingStartupDelay=0
-</code></pre>
-<p>输出：</p>
-<pre><code class="language-bash">260642198
-</code></pre>
-<p>而开启锁消除后：</p>
-<pre><code class="language-bash">-XX:+DoEscapeAnalysis
--XX:+EliminateLocks
--Xcomp
--XX:-BackgroundCompilation
--XX:BiasedLockingStartupDelay=0
-</code></pre>
-<p>输出如下：</p>
-<pre><code class="language-bash">253101105
-</code></pre>
-<p>可以看到还是有一定性能提升的，但是提升不大。</p>
-<h1 id="5-锁的应用层优化">5 锁的应用层优化</h1>
-<p>锁的应用层优化就是在代码层面对锁进行优化，方法包括：</p>
-<ul>
-<li>减少持有时间</li>
-<li>减小粒度</li>
-<li>锁分离</li>
-<li>锁粗化</li>
-</ul>
-<h2 id="51-减少持有时间">5.1 减少持有时间</h2>
-<p>减少锁持有时间就是尽可能减少某个锁的占用时间，以减少线程互斥时间，比如：</p>
-<pre><code class="language-java">public synchronized void method(){
-	A();
-	B();
-	C();
-}
-</code></pre>
-<p>如果只有<code>B()</code>是同步操作，那么可以优化为在必要时进行同步，也就是在执行<code>B()</code>的时候进行同步操作：</p>
-<pre><code class="language-java">public void method(){
-	A();
-	synchronized(this){
-		B();
-	}
-	C();
-}
-</code></pre>
-<h2 id="52-减小粒度">5.2 减小粒度</h2>
-<p>所谓的减小锁粒度，就是指缩小锁定的对象范围，从而减小锁冲突的可能性，进而提高系统的并发能力。</p>
-<p>减小粒度也是一种削弱多线程竞争的有效手段，比如典型的就是<code>ConcurrentHashMap</code>，在<code>JDK1.7</code>中的<code>segment</code>就是一个很好的例子。每次并发操作的时候只加锁某个特定的<code>segment</code>，从而提高并发性能。</p>
-<h2 id="53-锁分离">5.3 锁分离</h2>
-<p>锁分离就是将一个独占锁分成多个锁，比如<code>LinkedBlockingQueue</code>。在<code>take()</code>和<code>put()</code>操作中，使用的并不是同一个锁，而是分离成了一个<code>takeLock</code>和一个<code>putLock</code>：</p>
-<pre><code class="language-java">private final ReentrantLock takeLock;
-private final ReentrantLock putLock;
-</code></pre>
-<p>初始化操作如下：</p>
-<pre><code class="language-java">this.takeLock = new ReentrantLock();
-this.notEmpty = this.takeLock.newCondition();
-this.putLock = new ReentrantLock();
-</code></pre>
-<p>而<code>take()</code>和<code>put()</code>操作如下：</p>
-<pre><code class="language-java">public E take() throws InterruptedException {
-    takeLock.lockInterruptibly();  //不能两个线程同时take
-    //...
-    try {
-        //...
-    } finally {
-        takeLock.unlock();
-    }
-    //...
-}
-
-public void put(E e) throws InterruptedException {
-	//...
-    putLock.lockInterruptibly();  //不能两个线程同时put
-    try {
-        //...
-    } finally {
-        putLock.unlock();
-    }
-	//...
-}
-</code></pre>
-<p>可以看到通过<code>putLock</code>以及<code>takeLock</code>两把锁实现了真正的取数据与写数据分离</p>
-<h2 id="54-锁粗化">5.4 锁粗化</h2>
-<p>通常情况下，为了保证多线程的有效并发，会要求每个线程持有锁的时间尽可能短，但是，如果对同一个锁不停请求，本身也会消耗资源，反而不利于性能优化，于是，在遇到一连串连续对同一个锁不断进行请求和释放的操作时，会把所有的锁操作整合成对锁的一次请求，减少对锁的请求同步次数，这个过程就叫锁粗化，比如</p>
-<pre><code class="language-java">public void method(){
-	synchronized(lock){
-		A();
-	}
-	synchronized(lock){
-		B();
-	}
-}
-</code></pre>
-<p>会被整合成如下形式：</p>
-<pre><code class="language-java">public void method(){
-	synchronized(lock){
-		A();
-		B();
-	}
-}
-</code></pre>
-<p>而在循环内申请锁，比如：</p>
-<pre><code class="language-java">for(int i=0;i&lt;10;++i){
-	synchronized(lock){
-	}
-}
-</code></pre>
-<p>应将锁粗化为</p>
-<pre><code class="language-java">synchronized(lock){
-	for(int i=0;i&lt;10;++i){
-	}
-}
-</code></pre>
-<h1 id="6-无锁cas">6 无锁：<code>CAS</code></h1>
-<p>毫无疑问，为了保证多线程并发的安全，使用锁是一种最直观的方式，但是，锁的竞争有可能会称为瓶颈，因此，有没有不需要锁的方式去保证数据一致性呢？</p>
-<p>答案是有的，就是这一小节介绍的主角：<code>CAS</code>。</p>
-<p><code>CAS</code>就是<code>Compare And Swap</code>的缩写，<code>CAS</code>包含三个参数，形式为<code>CAS(V,E,N)</code>，其中：</p>
-<ul>
-<li><code>V</code>表示内存地址值</li>
-<li><code>E</code>表示期望值</li>
-<li><code>N</code>表示新值</li>
-</ul>
-<p>只有当<code>V</code>的值等于<code>E</code>的值时，才会把<code>V</code>设置为<code>N</code>，如果<code>V</code>的值和<code>N</code>的值不一样，那么表示已经有其他线程做了更新，当前线程什么也不做，最后<code>CAS</code>返回当前<code>V</code>的值。</p>
-<p><code>CAS</code>的操作是抱着乐观的态度进行的，总认为自己可以成功完成操作，当多个线程同时使用<code>CAS</code>操作同一个变量的时候，只会有一个胜出并成功更新，其他均会失败。失败的线程不会被挂起，仅被告知失败，并且允许再次尝试，当然也允许失败的线程放弃操作。</p>
-<h1 id="7-参考">7 参考</h1>
-<ul>
-<li><a href="https://blog.csdn.net/zhaocuit/article/details/100208879">CSDN-java对象头信息</a></li>
-<li><a href="https://cloud.tencent.com/developer/article/1667980">JVM系列之:详解java object对象在heap中的结构</a></li>
-<li><a href="https://stackoverflow.com/questions/26357186/what-is-in-java-object-header">StackOverflow-What is in Java object header?</a></li>
-<li><a href="https://blog.csdn.net/weixin_44584387/article/details/104763837">CSDN-Java 中锁是如何一步步膨胀的（偏向锁、轻量级锁、重量级锁）</a></li>
-<li><a href="https://www.jianshu.com/p/8a8d2b42ddca">简书-Java Synchronized 重量级锁原理深入剖析上(互斥篇)</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
