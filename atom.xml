@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-09T07:22:57.221Z</updated>
+    <updated>2021-05-10T12:51:35.717Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,416 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Java高并发学习笔记（二）：线程安全与ThreadGroup]]></title>
+        <id>https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-er-xian-cheng-an-quan-yu-threadgroup/</id>
+        <link href="https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-er-xian-cheng-an-quan-yu-threadgroup/">
+        </link>
+        <updated>2021-05-10T12:49:37.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
+<ul>
+<li>来源：《Java高并发编程详解 多线程与架构设计》，汪文君著</li>
+<li>章节：第四、六章</li>
+</ul>
+<p>本文是两章的笔记整理。</p>
+<h1 id="2-概述">2 概述</h1>
+<p>本文主要讲述了<code>synchronized</code>以及<code>ThreadGroup</code>的基本用法。</p>
+<h1 id="3-synchronized">3 <code>synchronized</code></h1>
+<h2 id="31-简介">3.1 简介</h2>
+<p><code>synchronized</code>可以防止线程干扰和内存一致性错误，具体表现如下：</p>
+<ul>
+<li><code>synchronized</code>提供了一种锁机制，能够确保共享变量的互斥访问，从而防止数据不一致的问题</li>
+<li><code>synchronized</code>包括<code>monitor enter</code>和<code>monitor exit</code>两个<code>JVM</code>指令，能保证在任何时候任何线程执行到<code>monitor enter</code>成功之前都必须从主存获取数据，而不是从缓存中，在<code>monitor exit</code>运行成功之后，共享变量被更新后的值必须刷入主内存而不是仅仅在缓存中</li>
+<li><code>synchronized</code>指令严格遵循<code>Happens-Beofre</code>规则，一个<code>monitor exit</code>指令之前必定要有一个<code>monitor enter</code></li>
+</ul>
+<h2 id="32-基本用法">3.2 基本用法</h2>
+<p><code>synchronized</code>的基本用法可以用于对代码块或方法进行修饰，比如：</p>
+<pre><code class="language-java">private final Object MUTEX = new Object();
+    
+public void sync1(){
+    synchronized (MUTEX){
+    }
+}
+
+public synchronized void sync2(){
+}
+</code></pre>
+<h2 id="33-字节码简单分析">3.3 字节码简单分析</h2>
+<p>一个简单的例子如下：</p>
+<pre><code class="language-java">public class Main {
+    private static final Object MUTEX = new Object();
+
+    public static void main(String[] args) throws InterruptedException {
+        final Main m = new Main();
+        for (int i = 0; i &lt; 5; i++) {
+            new Thread(m::access).start();
+        }
+    }
+
+    public void access(){
+        synchronized (MUTEX){
+            try{
+                TimeUnit.SECONDS.sleep(20);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre>
+<p>编译后查看字节码：</p>
+<pre><code class="language-bash">javap -v -c -s -l Main.class
+</code></pre>
+<p><code>access()</code>字节码截取如下：</p>
+<pre><code class="language-cpp">stack=3, locals=4, args_size=1
+ 0: getstatic     #9                  // Field MUTEX:Ljava/lang/Object;  获取MUTEX
+ 3: dup
+ 4: astore_1
+ 5: monitorenter					  // 执行monitor enter指令
+ 6: getstatic     #10                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+ 9: ldc2_w        #11                 // long 20l
+12: invokevirtual #13                 // Method java/util/concurrent/TimeUnit.sleep:(J)V
+15: goto          23				  // 正常退出，跳转到字节码偏移量23的地方
+18: astore_2
+19: aload_2
+20: invokevirtual #15                 // Method java/lang/InterruptedException.printStackTrace:()V
+23: aload_1
+24: monitorexit						  // monitor exit指令
+25: goto          33
+28: astore_3
+29: aload_1
+30: monitorexit
+31: aload_3
+32: athrow
+33: return
+</code></pre>
+<p>关于<code>monitorenter</code>与<code>monitorexit</code>说明如下：</p>
+<ul>
+<li><code>monitorenter</code>：每一个对象与一个<code>monitor</code>相对应，一个线程尝试获取与对象关联的<code>monitor</code>的时候，如果<code>monitor</code>的计数器为0，会获得之后立即对计数器加1，如果一个已经拥有<code>monitor</code>所有权的线程重入，将导致计数器再次累加，而如果其他线程尝试获取时，会一直阻塞直到<code>monitor</code>的计数器变为0，才能再次尝试获取对<code>monitor</code>的所有权</li>
+<li><code>monitorexit</code>：释放对<code>monitor</code>的所有权，将<code>monitor</code>的计数器减1，如果计数器为0，意味着该线程不再拥有对<code>monitor</code>的所有权</li>
+</ul>
+<h2 id="34-注意事项">3.4 注意事项</h2>
+<h3 id="341-非空对象">3.4.1 非空对象</h3>
+<p>与<code>monitor</code>关联的对象不能为空：</p>
+<pre><code class="language-java">private Object MUTEX = null;
+private void sync(){
+    synchronized (MUTEX){
+
+    }
+}
+</code></pre>
+<p>会直接抛出空指针异常。</p>
+<h3 id="342-作用域不当">3.4.2 作用域不当</h3>
+<p>由于<code>synchronized</code>关键字存在排它性，作用域越大，往往意味着效率越低，甚至丧失并发优势，比如：</p>
+<pre><code class="language-java">private synchronized void sync(){
+    method1();
+    syncMethod();
+    method2();
+}
+</code></pre>
+<p>其中只有第二个方法是并发操作，那么可以修改为</p>
+<pre><code class="language-java">private Object MUTEX = new Object();
+private void sync(){
+    method1();
+    synchronized (MUTEX){
+        syncMethod();
+    }
+    method2();
+}
+</code></pre>
+<h3 id="343-使用不同的对象">3.4.3 使用不同的对象</h3>
+<p>因为一个对象与一个<code>monitor</code>相关联，如果使用不同的对象，这样就失去了同步的意义，例子如下：</p>
+<pre><code class="language-java">public class Main {
+    public static class Task implements Runnable{
+        private final Object MUTEX = new Object();
+
+        @Override
+        public void run(){
+            synchronized (MUTEX){
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        for (int i = 0; i &lt; 20; i++) {
+            new Thread(new Task()).start();
+        }
+    }
+}
+</code></pre>
+<p>每一个线程争夺的<code>monitor</code>都是互相独立的，这样就失去了同步的意义，起不到互斥的作用。</p>
+<h2 id="35-死锁">3.5 死锁</h2>
+<p>另外，使用<code>synchronized</code>还需要注意的是有可能造成死锁的问题，先来看一下造成死锁可能的原因。</p>
+<h3 id="351-死锁成因">3.5.1 死锁成因</h3>
+<ul>
+<li>交叉锁导致程序死锁：比如线程A持有R1的锁等待R2的锁，线程B持有R2的锁等待R1的锁</li>
+<li>内存不足：比如两个线程T1和T2，T1已获取10MB内存，T2获取了15MB内存，T1和T2都需要获取30MB内存才能工作，但是剩余可用的内存为10MB，这样两个线程都在等待彼此释放内存资源</li>
+<li>一问一答式的数据交换：服务器开启某个端口，等待客户端访问，客户端发送请求后，服务器因某些原因错过了客户端请求，导致客户端等待服务器回应，而服务器等待客户端发送请求</li>
+<li>死循环引起的死锁：比较常见，使用<code>jstack</code>等工具看不到死锁，但是程序不工作，<code>CPU</code>占有率高，这种死锁也叫系统假死，难以排查和重现</li>
+</ul>
+<h3 id="352-例子">3.5.2 例子</h3>
+<pre><code class="language-java">public class Main {
+    private final Object MUTEX_READ = new Object();
+    private final Object MUTEX_WRITE = new Object();
+
+    public void read(){
+        synchronized (MUTEX_READ){
+            synchronized (MUTEX_WRITE){
+            }
+        }
+    }
+
+    public void write(){
+        synchronized (MUTEX_WRITE){
+            synchronized (MUTEX_READ){
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Main m = new Main();
+        new Thread(()-&gt;{
+            while (true){
+                m.read();
+            }
+        }).start();
+        new Thread(()-&gt;{
+            while (true){
+                m.write();
+            }
+        }).start();
+    }
+}
+</code></pre>
+<p>两个线程分别占有<code>MUTEX_READ</code>/<code>MUTEX_WRITE</code>，同时等待另一个线程释放<code>MUTEX_WRITE</code>/<code>MUTEX_READ</code>，这就是交叉锁造成的死锁。</p>
+<h3 id="353-排查">3.5.3 排查</h3>
+<p>使用<code>jps</code>找到进程后，通过<code>jstack</code>查看：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210509221644115.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>可以看到明确的提示找到了1个死锁，<code>Thread-0</code>等待被<code>Thread-1</code>占有的<code>monitor</code>，而<code>Thread-1</code>等待被<code>Thread-0</code>占有的<code>monitor</code>。</p>
+<h2 id="36-两个特殊的monitor">3.6 两个特殊的<code>monitor</code></h2>
+<p>这里介绍两个特殊的<code>monitor</code>：</p>
+<ul>
+<li><code>this monitor</code></li>
+<li><code>class monitor</code></li>
+</ul>
+<h3 id="361-this-monitor">3.6.1 <code>this monitor</code></h3>
+<p>先上一段代码：</p>
+<pre><code class="language-java">public class Main {
+    public synchronized void method1(){
+        System.out.println(Thread.currentThread().getName()+&quot; method1&quot;);
+        try{
+            TimeUnit.MINUTES.sleep(5);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void method2(){
+        System.out.println(Thread.currentThread().getName()+&quot; method2&quot;);
+        try{
+            TimeUnit.MINUTES.sleep(5);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Main m = new Main();
+        new Thread(m::method1).start();
+        new Thread(m::method2).start();
+    }
+}
+</code></pre>
+<p>运行之后可以发现，只有一行输出，也就是说，只是运行了其中一个方法，另一个方法根本没有执行，使用<code>jstack</code>可以发现：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210509222610580.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>一个线程处于休眠中，而另一个线程处于阻塞中。而如果将<code>method2()</code>修改如下：</p>
+<pre><code class="language-java">public void method2(){
+    synchronized (this) {
+        System.out.println(Thread.currentThread().getName() + &quot; method2&quot;);
+        try {
+            TimeUnit.MINUTES.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>效果是一样的。也就是说，在方法上使用<code>synchronized</code>，等价于<code>synchronized(this)</code>。</p>
+<h3 id="362-class-monitor">3.6.2 <code>class monitor</code></h3>
+<p>把上面的代码中的方法修改为静态方法：</p>
+<pre><code class="language-java">public class Main {
+    public static synchronized void method1() {
+        System.out.println(Thread.currentThread().getName() + &quot; method1&quot;);
+        try {
+            TimeUnit.MINUTES.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static synchronized void method2() {
+        System.out.println(Thread.currentThread().getName() + &quot; method2&quot;);
+        try {
+            TimeUnit.MINUTES.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(Main::method1).start();
+        new Thread(Main::method2).start();
+    }
+}
+</code></pre>
+<p>运行之后可以发现输出还是只有一行，也就是说只运行了其中一个方法，<code>jstack</code>分析也类似：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210509223432245.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而如果将<code>method2()</code>修改如下：</p>
+<pre><code class="language-java">public static void method2() {
+    synchronized (Main.class) {
+        System.out.println(Thread.currentThread().getName() + &quot; method2&quot;);
+        try {
+            TimeUnit.MINUTES.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>可以发现输出还是一致，也就是说，在静态方法上的<code>synchronized</code>，等价于<code>synchronized(XXX.class)</code>。</p>
+<h3 id="363-总结">3.6.3 总结</h3>
+<ul>
+<li><code>this monitor</code>：在成员方法上的<code>synchronized</code>，就是<code>this monitor</code>，等价于在方法中使用<code>synchronized(this)</code></li>
+<li><code>class monitor</code>：在静态方法上的<code>synchronized</code>，就是<code>class monitor</code>，等价于在静态方法中使用<code>synchronized(XXX.class)</code></li>
+</ul>
+<h1 id="4-threadgroup">4 <code>ThreadGroup</code></h1>
+<h2 id="41-简介">4.1 简介</h2>
+<p>无论什么情况下，一个新创建的线程都会加入某个<code>ThreadGroup</code>中：</p>
+<ul>
+<li>如果新建线程没有指定<code>ThreadGroup</code>，默认就是<code>main</code>线程所在的<code>ThreadGroup</code></li>
+<li>如果指定了<code>ThreadGroup</code>，那么就加入该<code>ThreadGroup</code>中</li>
+</ul>
+<p><code>ThreadGroup</code>中存在父子关系，一个<code>ThreadGroup</code>可以存在子<code>ThreadGroup</code>。</p>
+<h2 id="42-创建">4.2 创建</h2>
+<p>创建<code>ThreadGroup</code>可以直接通过构造方法创建，构造方法有两个，一个是直接指定名字（<code>ThreadGroup</code>为<code>main</code>线程的<code>ThreadGroup</code>），一个是带有父<code>ThreadGroup</code>与名字的构造方法：</p>
+<pre><code class="language-java">ThreadGroup group1 = new ThreadGroup(&quot;name&quot;);
+ThreadGroup group2 = new ThreadGroup(group1,&quot;name2&quot;);
+</code></pre>
+<p>完整例子：</p>
+<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
+    ThreadGroup group1 = new ThreadGroup(&quot;name&quot;);
+    ThreadGroup group2 = new ThreadGroup(group1,&quot;name2&quot;);
+    System.out.println(group2.getParent() == group1);
+    System.out.println(group1.getParent().getName());
+}
+</code></pre>
+<p>输出结果：</p>
+<pre><code class="language-bash">true
+main
+</code></pre>
+<h2 id="43-enumerate">4.3 <code>enumerate()</code></h2>
+<p><code>enumerate()</code>可用于<code>Thread</code>和<code>ThreadGroup</code>的复制，因为一个<code>ThreadGroup</code>可以加入若干个<code>Thread</code>以及若干个子<code>ThreadGroup</code>，使用该方法可以方便地进行复制。方法描述如下：</p>
+<ul>
+<li><code>public int enumerate(Thread [] list)</code></li>
+<li><code>public int enumerate(Thread [] list, boolean recurse)</code></li>
+<li><code>public int enumerate(ThreadGroup [] list)</code></li>
+<li><code>public int enumerate(ThreadGroup [] list, boolean recurse)</code></li>
+</ul>
+<p>上述方法会将<code>ThreadGroup</code>中的活跃线程/<code>ThreadGroup</code>复制到<code>Thread</code>/<code>ThreadGroup</code>数组中，布尔参数表示是否开启递归复制。</p>
+<p>例子如下：</p>
+<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
+    ThreadGroup myGroup = new ThreadGroup(&quot;MyGroup&quot;);
+    Thread thread = new Thread(myGroup,()-&gt;{
+        while (true){
+            try{
+                TimeUnit.SECONDS.sleep(1);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    },&quot;MyThread&quot;);
+    thread.start();
+    TimeUnit.MILLISECONDS.sleep(1);
+    ThreadGroup mainGroup = currentThread().getThreadGroup();
+    Thread[] list = new Thread[mainGroup.activeCount()];
+    int recurseSize = mainGroup.enumerate(list);
+    System.out.println(recurseSize);
+    recurseSize = mainGroup.enumerate(list,false);
+    System.out.println(recurseSize);
+}
+</code></pre>
+<p>后一个输出比前一个少1，因为不包含<code>myGroup</code>中的线程（递归设置为<code>false</code>）。需要注意的是，<code>enumerate()</code>获取的线程仅仅是一个预估值，并不能百分百地保证当前<code>group</code>的活跃线程，比如调用复制之后，某个线程结束了生命周期或者新的线程加入进来，都会导致数据不准确。另外，返回的<code>int</code>值相较起<code>Thread[]</code>的长度更为真实，因为<code>enumerate</code>仅仅将当前活跃的线程分别放进数组中，而返回值<code>int</code>代表的是真实的数量而不是数组的长度。</p>
+<h2 id="44-其他api">4.4 其他<code>API</code></h2>
+<ul>
+<li><code>activeCount()</code>：获取<code>group</code>中活跃的线程，估计值</li>
+<li><code>activeGroupCount()</code>：获取<code>group</code>中活跃的子<code>group</code>，也是一个近似值，会递归获取所有的子<code>group</code></li>
+<li><code>getMaxPriority()</code>：用于获取<code>group</code>的优先级，默认情况下，<code>group</code>的优先级为10，且所有线程的优先级不得大于线程所在<code>group</code>的优先级</li>
+<li><code>getName()</code>：获取<code>group</code>名字</li>
+<li><code>getParent()</code>：获取父<code>group</code>，如果不存在返回<code>null</code></li>
+<li><code>list()</code>：一个输出方法，递归输出所有活跃线程信息到控制台</li>
+<li><code>parentOf(ThreadGroup g)</code>：判断当前<code>group</code>是不是给定<code>group</code>的父<code>group</code>，如果给定的<code>group</code>是自己本身，也会返回<code>true</code></li>
+<li><code>setMaxPriority(int pri)</code>：指定<code>group</code>的最大优先级，设定后也会改变所有子<code>group</code>的最大优先级，另外，修改优先级后会出现线程优先级大于<code>group</code>优先级的情况，比如线程优先级为10，设置<code>group</code>优先级为5后，线程优先级就大于<code>group</code>优先级，但是新加入的线程优先级必须不能大于<code>group</code>优先级</li>
+<li><code>interrupt()</code>：导致所有的活跃线程被中断，递归调用线程的<code>interrupt()</code></li>
+<li><code>destroy()</code>：如果没有任何活跃线程，调用后在父<code>group</code>中将自己移除</li>
+<li><code>setDaemon(boolean daemon)</code>：设置为守护<code>ThreadGroup</code>后，如果该<code>ThreadGroup</code>没有任何活跃线程，自动被销毁</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第330期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-330-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-330-qi/">
+        </link>
+        <updated>2021-05-09T17:47:47.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>减肥就是要向妈妈证明，不光胖找不到对象，瘦也找不到！</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>寒随一夜去，春逐五更来。<br>
+——史青《应诏赋得除夜》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我们的时代还没到来，有的人死后方生。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620582485898.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>直接上二分，题解有递归和迭代两种实现，两种都进行了优化死活就是跑不到0ms真的就气人：</p>
+<pre><code class="language-java">public class Solution {
+    public double myPow(double x, int n) {
+        if (n == 0 || Math.abs(x - 1.0) &lt; 1e-6) {
+            return 1.0;
+        }
+        if (Math.abs(x + 1.0) &lt; 1e-6) {
+            return (n &amp; 1) == 1 ? -1.0 : 1.0;
+        }
+        if (n == Integer.MIN_VALUE) {
+            return 0.0;
+        }
+        return n &gt; 0 ? f(x,n) : 1/f(x,-n);
+    }
+
+    private double f(double x,int n){
+        double ans = 1.0;
+        double temp = x;
+        while (n &gt; 0) {
+            if ((n &amp; 1) == 1) {
+                ans *= temp;
+            }
+            temp *= temp;
+            n &gt;&gt;= 1;
+        }
+        return ans;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620582499904.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第329期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-329-qi/</id>
@@ -982,342 +1392,6 @@ public class Solution {
 <h1 id="五一续费">五一续费</h1>
 <p>难得的五天假期就这样没有了。。。</p>
 <p>好想为五一续费。。。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JVM学习笔记（八）：类加载]]></title>
-        <id>https://2293736867.github.io/post/jvm-xue-xi-bi-ji-ba-lei-jia-zai/</id>
-        <link href="https://2293736867.github.io/post/jvm-xue-xi-bi-ji-ba-lei-jia-zai/">
-        </link>
-        <updated>2021-05-04T08:38:12.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
-<ul>
-<li>来源：《Java虚拟机 JVM故障诊断与性能优化》——葛一鸣</li>
-<li>章节：第十章</li>
-</ul>
-<p>本文是第十章的一些笔记整理。</p>
-<h1 id="2-概述">2 概述</h1>
-<p>本文主要讲述了类加载器以及类加载的详细流程。</p>
-<h1 id="3-类加载流程">3 类加载流程</h1>
-<p>类加载的流程可以简单分为三步：</p>
-<ul>
-<li>加载</li>
-<li>连接</li>
-<li>初始化</li>
-</ul>
-<p>而其中的连接又可以细分为三步：</p>
-<ul>
-<li>验证</li>
-<li>准备</li>
-<li>解析</li>
-</ul>
-<p>下面会分别对各个流程进行介绍。</p>
-<h2 id="31-类加载条件">3.1 类加载条件</h2>
-<p>在了解类接在流程之前，先来看一下触发类加载的条件。</p>
-<p><code>JVM</code>不会无条件加载类，只有在一个类或接口在初次使用的时候，必须进行初始化。这里的使用是指主动使用，主动使用包括如下情况：</p>
-<ul>
-<li>创建一个类的实例的时候：比如使用<code>new</code>创建，或者使用反射、克隆、反序列化</li>
-<li>调用类的静态方法的时候：比如使用<code>invokestatic</code>指令</li>
-<li>使用类或接口的静态字段：比如使用<code>getstatic</code>/<code>putstatic</code>指令</li>
-<li>使用<code>java.lang.reflect</code>中的反射类方法时</li>
-<li>初始化子类时，要求先初始化父类</li>
-<li>含有<code>main()</code>方法的类</li>
-</ul>
-<p>除了以上情况外，其他情况属于被动使用，不会引起类的初始化。</p>
-<p>比如下面的例子：</p>
-<pre><code class="language-java">public class Main {
-    public static void main(String[] args){
-        System.out.println(Child.v);
-    }
-}
-
-class Parent{
-    static{
-        System.out.println(&quot;Parent init&quot;);
-    }
-    public static int v = 100;
-}
-
-class Child extends Parent{
-    static {
-        System.out.println(&quot;Child init&quot;);
-    }
-}
-</code></pre>
-<p>输出如下：</p>
-<pre><code class="language-bash">Parent init
-100
-</code></pre>
-<p>而加上类加载参数<code>-XX:+TraceClassLoading</code>后，可以看到<code>Child</code>确实被加载了：</p>
-<pre><code class="language-bash">[0.068s][info   ][class,load] com.company.Main
-[0.069s][info   ][class,load] com.company.Parent
-[0.069s][info   ][class,load] com.company.Child
-Parent init
-100
-</code></pre>
-<p>但是并没有进行初始化。另外一个例子是关于<code>final</code>的，代码如下：</p>
-<pre><code class="language-java">public class Main {
-    public static void main(String[] args){
-        System.out.println(Test.STR);
-    }
-}
-
-class Test{
-    static{
-        System.out.println(&quot;Test init&quot;);
-    }
-    public static final String STR = &quot;Hello&quot;;
-}
-</code></pre>
-<p>输出如下：</p>
-<pre><code class="language-bash">[0.066s][info   ][class,load] com.company.Main
-Hello
-</code></pre>
-<p><code>Test</code>类根本没有被加载，因为<code>final</code>被做了优化，编译后的<code>Main.class</code>中，并没有引用<code>Test</code>类：</p>
-<pre><code class="language-bash">0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
-3: ldc           #4                  // String Hello
-5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-</code></pre>
-<p>在字节码偏移3的位置，通过<code>ldc</code>将常量池第4项入栈，此时在字节码文件中常量池第4项为：</p>
-<pre><code class="language-bash">#3 = Class              #24            // com/company/Test
-#4 = String             #25            // Hello
-#5 = Methodref          #26.#27        // java/io/PrintStream.println:(Ljava/lang/String;)V
-</code></pre>
-<p>因此并没有对<code>Test</code>类进行加载，只是直接引用常量池中的常量，因此输出没有<code>Test</code>的加载日志。</p>
-<h2 id="32-加载">3.2 加载</h2>
-<p>类加载的时候，<code>JVM</code>必须完成以下操作：</p>
-<ul>
-<li>通过类的全名获取二进制数据流</li>
-<li>解析类的二进制数据流为方法区内的数据结构</li>
-<li>创建<code>java.lang.Class</code>类的实例，表示该类型</li>
-</ul>
-<p>第一步获取二进制数据流，途径有很多，包括：</p>
-<ul>
-<li>字节码文件</li>
-<li><code>JAR</code>/<code>ZIP</code>压缩包</li>
-<li>从网络加载</li>
-</ul>
-<p>等等，获取到二进制数据流后，<code>JVM</code>进行处理并转化为一个<code>java.lang.Class</code>实例。</p>
-<h2 id="33-验证">3.3 验证</h2>
-<p>验证的操作是确保加载的字节码是合法、合理并且规范的。步骤简略如下：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210504112255540.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li>格式检查：判断二进制数据是否符合格式要求和规范，比如是否以魔数开头，主版本号和小版本号是否在当前<code>JVM</code>支持范围内等等</li>
-<li>语义检查：比如是否所有类都有父类存在，一些被定义为<code>final</code>的方法或类是否被重载了或者继承了，是否存在不兼容方法等等</li>
-<li>字节码验证：会试图通过对字节码流的分析，判断字节码是否可以正确被执行，比如是否会跳转到一条不存在的指令，函数调用是否传递了正确的参数等等，但是却无法100%判断一段字节码是否可以被安全执行，只是尽可能检查出可以预知的明显问题。如果无法通过检查，则不会加载这个类，如果通过了检查，也不能说明这个类完全没有问题</li>
-<li>符号引用验证：检查类或方法是否确实存在，并且确定当前类有没有权限访问这些数据，比如无法找到一个类就抛出<code>NoClassDefFoundError</code>，无法找到方法就抛出<code>NoSuchMethodError</code></li>
-</ul>
-<h2 id="34-准备">3.4 准备</h2>
-<p>类通过验证后，就会进入准备阶段，在这个阶段，<code>JVM</code>为会类分配相应的内存空间，并设置初始值，比如：</p>
-<ul>
-<li><code>int</code>初始化为<code>0</code></li>
-<li><code>long</code>初始化为<code>0L</code></li>
-<li><code>double</code>初始化为<code>0f</code></li>
-<li>引用初始化为<code>null</code></li>
-</ul>
-<p>如果存在常量字段，那么这个阶段也会为常量赋值。</p>
-<h2 id="35-解析">3.5 解析</h2>
-<p>解析就是将类、接口、字段和方法的符号引用转为直接引用。符号引用就是一些字面量引用，和<code>JVM</code>的内存数据结构和内存布局无关，由于在字节码文件中，通过常量池进行了大量的符号引用，这个阶段就是将这些引用转为直接引用，得到类、字段、方法在内存中的指针或直接偏移量。</p>
-<p>另外，由于字符串有着很重要的作用，<code>JVM</code>对<code>String</code>进行了特别的处理，直接使用字符串常量时，就会在类中出现<code>CONSTANT_String</code>，并且会引用一个<code>CONSTANT_UTF8</code>常量项。<code>JVM</code>运行时，内部的常量池中会维护一张字符串拘留表（<code>intern</code>），会保存其中出现过的所有字符串常量，并且没有重复项。使用<code>String.intern()</code>可以获得一个字符串在拘留表的引用，比如下面代码：</p>
-<pre><code class="language-java">public static void main(String[] args){
-    String a = 1 + String.valueOf(2) + 3;
-    String b = &quot;123&quot;;
-    System.out.println(a.equals(b));
-    System.out.println(a == b);
-    System.out.println(a.intern() == b);
-}
-</code></pre>
-<p>输出：</p>
-<pre><code class="language-bash">true
-false
-true
-</code></pre>
-<p>这里<code>b</code>就是常量本身，因此<code>a.intern()</code>返回在拘留表的引用后就是<code>b</code>本身，比较结果为真。</p>
-<h2 id="36-初始化">3.6 初始化</h2>
-<p>初始化阶段会执行类的初始化方法<code>&lt;clint&gt;</code>，<code>&lt;clint&gt;</code>是由编译期生成的，由静态成员的赋值语句以及<code>static</code>语句共同产生。</p>
-<p>另外，加载一个类的时候，<code>JVM</code>总是会试图加载该类的父类，因此父类的<code>&lt;clint&gt;</code>方法总是在子类的<code>&lt;clint&gt;</code>方法之前被调用。另一方面，需要注意的是<code>&lt;clint&gt;</code>会确保在多线程环境下的安全性，也就是多个线程同时初始化同一个类时，只有一个线程可以进入<code>&lt;clint&gt;</code>方法，换句话说，在多线程下可能会出现死锁，比如下面代码：</p>
-<pre><code class="language-java">package com.company;
-
-import java.util.concurrent.TimeUnit;
-
-public class Main extends Thread{
-    private char flag;
-    public Main(char flag){
-        this.flag = flag;
-    }
-    
-    public static void main(String[] args){
-        Main a = new Main('A');
-        a.start();
-        Main b = new Main('B');
-        b.start();
-    }
-
-    @Override
-    public void run() {
-        try{
-            Class.forName(&quot;com.company.Static&quot;+flag);
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
-    }
-}
-
-class StaticA{
-    static {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        try{
-            Class.forName(&quot;com.company.StaticB&quot;);
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        System.out.println(&quot;StaticA init ok&quot;);
-    }
-}
-
-class StaticB{
-    static {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        try{
-            Class.forName(&quot;com.company.StaticA&quot;);
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        System.out.println(&quot;StaticB init ok&quot;);
-    }
-}
-</code></pre>
-<p>在加载<code>StaticA</code>的时候尝试加载<code>StaticB</code>，但是由于<code>StaticB</code>已经被加载中，因此加载<code>StaticA</code>的线程会阻塞在<code>Class.forName(&quot;com.company.StaticB&quot;)</code>处，同理加载<code>StaticB</code>的线程会阻塞在<code>Class.forName(&quot;com.company.StaticA&quot;)</code>处，这样就出现死锁了。</p>
-<h1 id="4-classloader">4 <code>ClassLoader</code></h1>
-<h2 id="41-classloader简介">4.1 <code>ClassLoader</code>简介</h2>
-<p><code>ClassLoader</code>是类加载的核心组件，所有的<code>Class</code>都是由<code>ClassLoader</code>加载的，<code>ClassLoader</code>通过各种各样的方式将<code>Class</code>信息的二进制数据流读入系统，然后交给<code>JVM</code>进行连接、初始化等操作。因此<code>ClassLoader</code>负责类的加载流程，无法通过<code>ClassLoader</code>改变类的连接和初始化行为。</p>
-<p><code>ClassLoader</code>是一个抽象类，提供了一些重要接口定义加载流程和加载方式，主要方法如下：</p>
-<ul>
-<li><code>public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException</code>：给定一个类名，加载一个类，返回这个类的<code>Class</code>实例，找不到抛出异常</li>
-<li><code>protected final Class&lt;?&gt; defineClass(byte[] b, int off, int len)</code>：根据给定字节流定义一个类，<code>off</code>和<code>len</code>表示在字节数组中的偏移和长度，这是一个<code>protected</code>方法，在自定义子类中才能使用</li>
-<li><code>protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException</code>：查找一个类，会在<code>loadClass</code>中被调用，用于自定义查找类的逻辑</li>
-<li><code>protected Class&lt;?&gt; findLoadedClass(String name)</code>：寻找一个已经加载的类</li>
-</ul>
-<h2 id="42-类加载器分类">4.2 类加载器分类</h2>
-<p>在标准的<code>Java</code>程序中，<code>JVM</code>会创建3类加载器为整个应用程序服务，分别是：</p>
-<ul>
-<li>启动类加载器：<code>Bootstrap ClassLoader</code></li>
-<li>扩展类加载器：<code>Extension ClassLoader</code></li>
-<li>应用类加载器（也叫系统类加载器）：<code>App ClassLoader</code></li>
-</ul>
-<p>另外，在程序中还可以定义自己的类加载器，从总体看，层次结构如下：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210504143259172.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>一般来说各个加载器负责的范围如下：</p>
-<ul>
-<li>启动类加载器：负责加载系统的核心类，比如<code>rt.jar</code>包中的类</li>
-<li>扩展类加载器：负责加载<code>lib/ext/*.jar</code>下的类</li>
-<li>应用类加载器：负责加载用户程序的类</li>
-<li>自定义加载器：加载一些特殊途径的类，一般是用户程序的类</li>
-</ul>
-<h2 id="43-双亲委派">4.3 双亲委派</h2>
-<p>默认情况下，类加载使用双亲委派加载的模式，具体来说，就是类在加载的时候，会判断当前类是否已经被加载，如果已经被加载，那么直接返回已加载的类，如果没有，会先请求双亲加载，双亲也是按照一样的流程先判断是否已加载，如果没有在此委托双亲加载，如果双亲加载失败，则会自己加载。</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210504143259172.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>在上图中，应用类加载器的双亲为扩展类加载器，扩展类加载器的双亲为启动类加载器，当系统需要加载一个类的时候，会先从底层类加载器开始进行判断，当需要加载的时候会从顶层开始加载，依次向下尝试直到加载成功。</p>
-<p>在所有加载器中，启动类加载器是最特别的，并不是使用<code>Java</code>语言实现，在<code>Java</code>中没有对象与之相对应，系统核心类就是由启动类加载器进行加载的。换句话说，如果尝试在程序中获取启动类加载器，得到的值是<code>null</code>：</p>
-<pre><code class="language-java">System.out.println(String.class.getClassLoader() == null);
-</code></pre>
-<p>输出结果为真。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第324期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-324-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-324-qi/">
-        </link>
-        <updated>2021-05-03T16:59:58.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>能有钱解决的问题都不是问题，但如何有钱，才是你最大的问题。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>北风吹雪四更初，嘉瑞天教及岁除。<br>
-——陆游《除夜雪》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>你搅散一池星光成为我的月亮。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620061928390.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>有点复杂，三维<code>dp</code>，其中<code>dp[i][j][k]</code>表示：</p>
-<ul>
-<li>第<code>i</code>个房子</li>
-<li>目前已形成<code>j</code>个街区</li>
-<li>第<code>i</code>个房子的颜色为<code>k</code></li>
-<li>符合以上三种条件下所花费的最小费用</li>
-</ul>
-<p>转移方程需要根据当前房子有没有涂色去讨论：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620093981955.png" alt="" loading="lazy"></figure>
-<p>代码：</p>
-<pre><code class="language-java">public class Solution {
-    public int minCost(int[] houses, int[][] cost, int m, int n, int target) {
-        int[][][] dp = new int[m][target + 1][n + 1];
-        for (int i = 0; i &lt; m; i++) {
-            for (int j = 0; j &lt;= target; j++) {
-                for (int k = 0; k &lt;= n; k++) {
-                    dp[i][j][k] = 0x3f3f3f3f;
-                }
-            }
-        }
-
-        if (houses[0] == 0) {
-            System.arraycopy(cost[0], 0, dp[0][1], 1, n);
-        } else {
-            dp[0][1][houses[0]] = 0;
-        }
-
-        for (int i = 1; i &lt; m; i++) {
-            if (houses[i] == 0) {
-                for (int curColor = 1; curColor &lt;= n; ++curColor) {
-                    for (int preColor = 1; preColor &lt;= n; ++preColor) {
-                        for (int j = 1; j &lt;= target; j++) {
-                            dp[i][j][curColor] = (curColor == preColor ?
-                                    Math.min(dp[i][j][curColor], dp[i - 1][j][curColor] + cost[i][curColor - 1]) :
-                                    Math.min(dp[i][j][curColor], dp[i - 1][j - 1][preColor] + cost[i][curColor - 1])
-                            );
-                        }
-                    }
-                }
-            } else {
-                int curColor = houses[i];
-                for (int preColor = 1; preColor &lt;= n; ++preColor) {
-                    for (int j = 1; j &lt;= target; j++) {
-                        dp[i][j][curColor] = (curColor == preColor ?
-                                Math.min(dp[i][j][curColor], dp[i - 1][j][curColor]) :
-                                Math.min(dp[i][j][curColor], dp[i - 1][j - 1][preColor])
-                        );
-                    }
-                }
-            }
-        }
-
-        int min = dp[m - 1][target][1];
-        for (int i = 2; i &lt;= n; i++) {
-            if (min &gt; dp[m - 1][target][i]) {
-                min = dp[m - 1][target][i];
-            }
-        }
-        return min == 0x3f3f3f3f ? -1 : min;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620093851892.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
