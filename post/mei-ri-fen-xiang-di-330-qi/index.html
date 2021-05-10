@@ -33,7 +33,7 @@
 题目
 
 解答
-直接上二分，题解有递归和迭代两..." />
+用一个数组存，保存两次遍历的长..." />
     <meta name="keywords" content="每日分享" />
     <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
     <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
@@ -89,7 +89,7 @@
       <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
         <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
           <div class="search-wrapper section">
-            <form id="gridea-search-form" data-update="1620651003732" action="/search/index.html" class="search-form" _lpchecked="1">
+            <form id="gridea-search-form" data-update="1620667299437" action="/search/index.html" class="search-form" _lpchecked="1">
               <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
               <button type="submit" class="submit" aria-label="Submit">
                 <i class="fa fa-search-line"></i>
@@ -104,7 +104,7 @@
         <div class="center content">
           <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-330-qi.jpg');">
             <div class="meta top"> 
-              <time class="meta-info" style="float:left;" datetime="2021-05-10"><i class="fa fa-calendar"></i><span class="lately">19 小时前</span></time>
+              <time class="meta-info" style="float:left;" datetime="2021-05-10"><i class="fa fa-calendar"></i><span class="lately">1 天前</span></time>
               
               <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-330-qi/#comments" class="comments meta-info" title="">
                 <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/mei-ri-fen-xiang-di-330-qi/"> </span>
@@ -143,38 +143,49 @@
 </blockquote>
 <h1 id="每日力扣">每日力扣</h1>
 <h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620582485898.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620664870513.png" alt="" loading="lazy"></figure>
 <h2 id="解答">解答</h2>
-<p>直接上二分，题解有递归和迭代两种实现，两种都进行了优化死活就是跑不到0ms真的就气人：</p>
+<p>用一个数组存，保存两次遍历的长度，比较即可：</p>
 <pre><code class="language-java">public class Solution {
-    public double myPow(double x, int n) {
-        if (n == 0 || Math.abs(x - 1.0) &lt; 1e-6) {
-            return 1.0;
-        }
-        if (Math.abs(x + 1.0) &lt; 1e-6) {
-            return (n &amp; 1) == 1 ? -1.0 : 1.0;
-        }
-        if (n == Integer.MIN_VALUE) {
-            return 0.0;
-        }
-        return n &gt; 0 ? f(x,n) : 1/f(x,-n);
+    private int [] arr = new int[201];
+    private int len1 = 0;
+    private int len2 = 0;
+
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        f1(root1);
+        f2(root2);
+        return len1 == len2;
     }
 
-    private double f(double x,int n){
-        double ans = 1.0;
-        double temp = x;
-        while (n &gt; 0) {
-            if ((n &amp; 1) == 1) {
-                ans *= temp;
+    private void f1(TreeNode root){
+        if(root != null){
+            if(root.left == null &amp;&amp; root.right == null){
+                arr[len1++] = root.val;
             }
-            temp *= temp;
-            n &gt;&gt;= 1;
+            f1(root.left);
+            f1(root.right);
         }
-        return ans;
+    }
+
+    private void f2(TreeNode root){
+        if(root != null){
+            if(root.left == null &amp;&amp; root.right == null){
+                if(arr[len2] == root.val){
+                    ++len2;
+                }else{
+                    if(len2 == len1){
+                        ++len2;
+                    }
+                    return;
+                }
+            }
+            f2(root.left);
+            f2(root.right);
+        }
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620582499904.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620664885369.png" alt="" loading="lazy"></figure>
 
                 </div>
                 <div class="clear"></div>
@@ -255,6 +266,21 @@ var dsqjs = new DisqusJS(options)
                   
                   
                   <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-331-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-05-11">2021-05-11</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/">每日分享 第331期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-er-xian-cheng-an-quan-yu-threadgroup/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/java-gao-bing-fa-xue-xi-bi-ji-er-xian-cheng-an-quan-yu-threadgroup.jpeg');"></span>
                     </a>
@@ -269,7 +295,7 @@ var dsqjs = new DisqusJS(options)
                   
                   
                   
-                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
                     <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-330-qi/" class="thumb hover-effect">
                       <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-330-qi.jpg');"></span>
                     </a>
@@ -283,19 +309,6 @@ var dsqjs = new DisqusJS(options)
                   </article>
                   
                   
-                  
-                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
-                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-329-qi/" class="thumb hover-effect">
-                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-329-qi.jpg');"></span>
-                    </a>
-                    <div class="info gradient-effect">
-                      <time datetime="2021-05-09">2021-05-09</time>
-                      <h4 class="title usmall">
-                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-329-qi/">每日分享 第329期</a>
-                      </h4>
-                    </div>
-                    <div class="clear"></div>
-                  </article>
                   
                   
                   
@@ -1507,11 +1520,11 @@ var dsqjs = new DisqusJS(options)
                   <h4 class="widget-title title white bordered">标签云</h4>
                   <div class="tagcloud">
                     
-                      <a href="https://2293736867.github.io/tag/-3_SBZaB7/" class="ctag ctag-0 ctag--3_SBZaB7" aria-label="">高并发</a>
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-0 ctag-e5akU9EUb" aria-label="">每日分享</a>
                     
-                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-1 ctag--AktfIpz8" aria-label="">Java</a>
+                      <a href="https://2293736867.github.io/tag/-3_SBZaB7/" class="ctag ctag-1 ctag--3_SBZaB7" aria-label="">高并发</a>
                     
-                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-2 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-2 ctag--AktfIpz8" aria-label="">Java</a>
                     
                       <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-3 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
                     
@@ -1790,7 +1803,7 @@ var dsqjs = new DisqusJS(options)
           <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
         </div>
         <p class="published border-effect">
-          ©2019 共 603 篇文章
+          ©2019 共 604 篇文章
           <br/>
           Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
         </p>

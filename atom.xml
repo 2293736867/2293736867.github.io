@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-10T13:14:44.105Z</updated>
+    <updated>2021-05-10T17:21:45.955Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,57 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第331期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/">
+        </link>
+        <updated>2021-05-10T17:18:05.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>所有的故事都会有结局，只有生活跟你没完。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>诗随十里寻春路，愁在三更挂月村。<br>
+——高启《咏梅九首》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>不会让你们碰那个人类一根手指的！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620667180065.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>通过“数学公式”确定了第一个，然后<code>O(n)</code>求剩下的就可以了：</p>
+<pre><code class="language-java">public class Solution {
+    public int[] decode(int[] encoded) {
+        int n = encoded.length + 1;
+        int [] r = new int[n];
+        int all = 0;
+        int temp;
+        for (int i = 1; i &lt;= n; i++) {
+            all ^= i;
+            temp = (i&lt;&lt;1) - 1;
+            if(temp &lt; n-1){
+                all ^= encoded[temp];
+            }
+        }
+        r[0] = all;
+
+        for (int i = 0; i &lt; n-1; i++) {
+            all ^= encoded[i];
+            r[i+1] = all;
+        }
+        return r;
+    }
+}
+</code></pre>
+<p>不过很搞心态的是减少了一个<code>O(n)</code>循环居然还死活上不了2ms：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620667102785.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java高并发学习笔记（二）：线程安全与ThreadGroup]]></title>
         <id>https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-er-xian-cheng-an-quan-yu-threadgroup/</id>
@@ -387,38 +438,49 @@ main
 </blockquote>
 <h1 id="每日力扣">每日力扣</h1>
 <h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620582485898.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620664870513.png" alt="" loading="lazy"></figure>
 <h2 id="解答">解答</h2>
-<p>直接上二分，题解有递归和迭代两种实现，两种都进行了优化死活就是跑不到0ms真的就气人：</p>
+<p>用一个数组存，保存两次遍历的长度，比较即可：</p>
 <pre><code class="language-java">public class Solution {
-    public double myPow(double x, int n) {
-        if (n == 0 || Math.abs(x - 1.0) &lt; 1e-6) {
-            return 1.0;
-        }
-        if (Math.abs(x + 1.0) &lt; 1e-6) {
-            return (n &amp; 1) == 1 ? -1.0 : 1.0;
-        }
-        if (n == Integer.MIN_VALUE) {
-            return 0.0;
-        }
-        return n &gt; 0 ? f(x,n) : 1/f(x,-n);
+    private int [] arr = new int[201];
+    private int len1 = 0;
+    private int len2 = 0;
+
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        f1(root1);
+        f2(root2);
+        return len1 == len2;
     }
 
-    private double f(double x,int n){
-        double ans = 1.0;
-        double temp = x;
-        while (n &gt; 0) {
-            if ((n &amp; 1) == 1) {
-                ans *= temp;
+    private void f1(TreeNode root){
+        if(root != null){
+            if(root.left == null &amp;&amp; root.right == null){
+                arr[len1++] = root.val;
             }
-            temp *= temp;
-            n &gt;&gt;= 1;
+            f1(root.left);
+            f1(root.right);
         }
-        return ans;
+    }
+
+    private void f2(TreeNode root){
+        if(root != null){
+            if(root.left == null &amp;&amp; root.right == null){
+                if(arr[len2] == root.val){
+                    ++len2;
+                }else{
+                    if(len2 == len1){
+                        ++len2;
+                    }
+                    return;
+                }
+            }
+            f2(root.left);
+            f2(root.right);
+        }
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620582499904.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620664885369.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
@@ -1333,65 +1395,6 @@ public class Solution {
 <h1 id="补课补课">补课补课</h1>
 <p>周六要补课，但是好像那天没课？</p>
 <p>好家伙。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第325期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-325-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-325-qi/">
-        </link>
-        <updated>2021-05-05T07:43:33.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>退一步海阔天空，没想到脚下落空。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>海棠糝径铺香绣，依旧成春瘦。<br>
-——陈亮《虞美人·东风荡飏轻云缕》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>如果温柔是罪，那就只能用拳头来清洗我们犯下的罪孽。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620203196313.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>一维<code>dp</code>，<code>dp</code>数组空间可以优化为<code>O(1)</code>，累计数字的出现个数后转化为“打家劫舍”问题：</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    public int deleteAndEarn(int[] nums) {
-        int n = nums.length;
-        if(n == 1){
-            return nums[0];
-        }
-        int [] sum = new int[10002];
-        int max = 0;
-        for (int num:nums){
-            ++sum[num];
-            max = Math.max(max,num);
-        }
-        int first = sum[1];
-        int second = Math.max(first,sum[2]*2);
-        int result = Math.max(first,second);
-        for (int i = 3; i &lt;= max; i++) {
-            int temp = Math.max(second,first+sum[i]*i);
-            if(temp &gt; result){
-                result = temp;
-            }
-            first = second;
-            second = temp;
-        }
-        return result;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620203228100.png" alt="" loading="lazy"></figure>
-<h1 id="五一续费">五一续费</h1>
-<p>难得的五天假期就这样没有了。。。</p>
-<p>好想为五一续费。。。</p>
 ]]></content>
     </entry>
 </feed>
