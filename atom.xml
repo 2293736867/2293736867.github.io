@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-10T17:21:45.955Z</updated>
+    <updated>2021-05-12T03:55:30.909Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,128 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第332期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-332-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-332-qi/">
+        </link>
+        <updated>2021-05-12T03:15:29.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>56个民族，55个加分。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>抛尽榆钱，依然难买春光驻。<br>
+——王鹏运《点绛唇·饯春》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我觉得，我这辈子最灿烂的笑容，大概都奉献给我电脑屏幕了。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620789810031.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>第一次用的自以为很厉害的算法，三个前缀和数组加小区间优化：</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    public int[] xorQueries(int[] arr, int[][] queries) {
+        int n = arr.length;
+        int m = queries.length;
+        int [] result = new int [m];
+        if(n &lt; 10){
+            for(int i=0;i&lt;m;++i){
+                int s1 = queries[i][0];
+                int s2 = queries[i][1];
+                int temp = arr[s1++];
+                while(s1&lt;=s2){
+                    temp ^= arr[s1++];
+                }
+                result[i] = temp;
+            }
+            return result;
+        }
+        int [] all = new int [n];
+        int [] half1 = new int [n];
+        int [] half2 = new int [n];
+
+        all[0] = half1[0] = arr[0];
+        half2[n/2] = arr[n/2];
+        for(int i=1;i&lt;n;++i){
+            if(i&lt;=n/2){
+                half1[i] ^= half1[i-1] ^ arr[i];
+            }else{
+                half2[i] = half2[i-1] ^ arr[i];
+            }
+            all[i] = all[i-1] ^ arr[i];
+        }
+        for(int i=0;i&lt;m;++i){
+            int s1 = queries[i][0];
+            int s2 = queries[i][1];
+            int temp;
+            if(s2 - s1 &lt; 10){
+                temp = arr[s1++];
+                while(s1&lt;=s2){
+                    temp ^= arr[s1++];
+                }
+            }else{
+                if(s2 &lt;= n/2){
+                    temp = half1[s2];
+                    for(int j=0;j&lt;s1;++j){
+                        temp ^= arr[j];
+                    }
+                }else if(s1 &gt; n/2){
+                    temp = half2[s2];
+                    for(int j=n/2;j&lt;s1;++j){
+                        temp ^= arr[j];
+                    }
+                }else{
+                    temp = all[s2];
+                    for(int j=0;j&lt;s1;++j){
+                        temp ^= arr[j];
+                    }
+                }
+            }
+            result[i] = temp;
+        }
+        return result;
+    }
+}
+</code></pre>
+<p>空间是好了，但时间烂的不想看：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620789428020.png" alt="" loading="lazy"></figure>
+<p>看了题解才知道，这个才叫前缀和。。。。</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    public int[] xorQueries(int[] arr, int[][] queries) {
+        int n = arr.length;
+        int m = queries.length;
+        int [] result = new int [m];
+        int [] all = new int [n];
+
+        all[0] = arr[0];
+        for(int i=1;i&lt;n;++i){
+            all[i] = all[i-1] ^ arr[i];
+        }
+        for(int i=0;i&lt;m;++i){
+            if(queries[i][0] == 0){
+                result[i] = all[queries[i][1]];
+            }else{
+                result[i] = all[queries[i][0]-1] ^ all[queries[i][1]];
+            }
+        }
+        return result;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620789768949.png" alt="" loading="lazy"></figure>
+<p>真正的<code>O(1)</code>求异或。</p>
+<p><s>完犊子。。。</s></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第331期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/</id>
@@ -1353,48 +1475,6 @@ public class Solution {
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第326期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-326-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-326-qi/">
-        </link>
-        <updated>2021-05-06T04:31:18.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>只要坚持不懈，嘲笑你的人，迟早被你笑死。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>长风怒卷高浪，飞洒日光寒。<br>
-——元好问《水调歌头·赋三门津》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>兜里不硬气，啥都不敢买。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620275719877.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>直接错位异或即可得出答案：</p>
-<pre><code class="language-java">public class Solution {
-    public int[] decode(int[] encoded, int first) {
-        int n = encoded.length;
-        int [] arr = new int[n+1];
-        arr[0] = first;
-        for (int i = 1; i &lt;= n; i++) {
-            arr[i] = arr[i-1] ^ encoded[i-1];
-        }
-        return arr;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620275746195.png" alt="" loading="lazy"></figure>
-<h1 id="补课补课">补课补课</h1>
-<p>周六要补课，但是好像那天没课？</p>
-<p>好家伙。</p>
 ]]></content>
     </entry>
 </feed>
