@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-12T03:58:08.468Z</updated>
+    <updated>2021-05-13T16:19:03.248Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,149 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第334期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-334-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-334-qi/">
+        </link>
+        <updated>2021-05-13T16:14:11.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>转角一般不会遇到爱，只会遇到乞丐。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>何当凯旋宴将士，三更雪压飞狐城！<br>
+——陆游《长歌行》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>萤火之光看起来比平常要更耀眼是错觉吗？今宵会成为永夜的吧。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620922670877.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>直接暴力：</p>
+<pre><code class="language-java">import java.util.LinkedList;
+import java.util.List;
+
+public class Solution {
+    public String intToRoman(int num) {
+        StringBuilder builder = new StringBuilder();
+        while (num &gt;= 1000){
+            builder.append('M');
+            num -= 1000;
+        }
+        if(num &gt;= 900){
+            builder.append(&quot;CM&quot;);
+            num -= 900;
+        }
+        if(num &gt;= 500){
+            builder.append('D');
+            num -= 500;
+        }
+        if(num &gt;= 400){
+            builder.append(&quot;CD&quot;);
+            num -= 400;
+        }
+        while(num &gt;= 100){
+            builder.append('C');
+            num -= 100;
+        }
+        if(num &gt;= 90){
+            builder.append(&quot;XC&quot;);
+            num -= 90;
+        }
+        if(num &gt;= 50){
+            builder.append('L');
+            num -= 50;
+        }
+        if(num &gt;= 40){
+            builder.append(&quot;XL&quot;);
+            num -= 40;
+        }
+        while (num &gt;= 10){
+            builder.append('X');
+            num -= 10;
+        }
+        if(num &gt;= 9){
+            builder.append(&quot;IX&quot;);
+            num -= 9;
+        }
+        if(num &gt;= 5){
+            builder.append(&quot;V&quot;);
+            num -= 5;
+        }
+        if(num &gt;= 4){
+            builder.append(&quot;IV&quot;);
+            num -= 4;
+        }
+        while (num &gt;= 1){
+            builder.append('I');
+            num -= 1;
+        }
+        return builder.toString();
+    }
+}
+</code></pre>
+<p>虽然不太优雅，快就行了：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620922731037.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第333期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-333-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-333-qi/">
+        </link>
+        <updated>2021-05-12T16:45:09.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>冬天就是好，穷的时候，还有西北风喝。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>迎得一钩月到，送得三更月去，莺燕不相猜。<br>
+——张惠言《水调歌头（五首选三）》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>愿时光能缓，愿故人不散！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620838100076.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>二维dp升级到的一维dp（其实是题解的答案，逃）：</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    private static final int MOD = 1000000007;
+
+    public int numWays(int steps, int arrLen) {
+        int maxColumn = Math.min(arrLen-1,steps);
+        int [] dp = new int[maxColumn+1];
+        dp[0] = 1;
+        for (int i = 1; i &lt;= steps; i++) {
+            int [] dpNext = new int[maxColumn+1];
+            for (int j = 0; j &lt;= maxColumn; j++) {
+                dpNext[j] = dp[j];
+                if(j - 1 &gt;= 0){
+                    dpNext[j] = (dpNext[j] + dp[j-1]) % MOD;
+                }
+                if(j + 1 &lt;= maxColumn){
+                    dpNext[j] = (dpNext[j] + dp[j+1]) % MOD;
+                }
+            }
+            dp = dpNext;
+        }
+        return dp[0];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620838143565.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第332期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-332-qi/</id>
@@ -1275,206 +1418,6 @@ main # 4
 </ul>
 <p>等等，虽然此时线程是存在的，但看起来跟死了一样，事实上是没有死的，出现这种情况，很大可能是因为线程出现了阻塞，或者两个线程争夺资源出现了死锁。</p>
 <p>这种情况需要借助一些外部工具去判断，比如<code>VisualVM</code>、<code>jconsole</code>等等，找出存在问题的线程以及当前的状态，并判断是哪个方法造成了阻塞。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第328期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-328-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-328-qi/">
-        </link>
-        <updated>2021-05-07T17:13:52.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>人不能低下高贵的头，但捡钱时例外。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>五更鼓角声悲壮，三峡星河影动摇。<br>
-——杜甫《阁夜》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>迎着风，拥抱彩虹！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620407692283.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>尽力了，过51个样例：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    private int[] time;
-    private int k;
-    private int max;
-
-    public int minimumTimeRequired(int[] jobs, int k) {
-        Arrays.sort(jobs);
-        int len = jobs.length;
-        time = new int[this.k = k];
-        if (k &gt;= len) {
-            max = jobs[0];
-            for (int i = 1; i &lt; len; i++) {
-                if (max &lt; jobs[i]) {
-                    max = jobs[i];
-                }
-            }
-            return max;
-        }
-        boolean repeated = false;
-        Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
-        for (int i = 0; i &lt; len; i++) {
-            if(set.contains(jobs[i])){
-                repeated = true;
-                break;
-            }else{
-                set.add(jobs[i]);
-            }
-        }
-        if(k == 2 &amp;&amp; ((len &amp; 1) == 1) &amp;&amp; repeated){
-            for (int i = 0; i &lt; len/2; i++) {
-                time[0] += jobs[i];
-            }
-            for (int i = len/2+1; i &lt; len; i++) {
-                time[1] += jobs[i];
-            }
-            if(time[0] &lt; time[1]){
-                time[0] += jobs[len/2];
-            }else{
-                time[1] += jobs[len/2];
-            }
-            return Math.max(time[0],time[1]);
-        }
-        time[0] = jobs[len - 1];
-        max = time[0];
-        for (int i = len - 2; i &gt;= 0; --i) {
-            int index = findMin(jobs[i]);
-            time[index] += jobs[i];
-            if (time[index] &gt; max) {
-                max = time[index];
-            }
-        }
-        return max;
-    }
-
-    private int findMin(int next){
-        int i;
-        int min = 0;
-        for (i = 0; i &lt; k &amp;&amp; time[i] != 0; i++) {
-            if (time[i] + next &lt;= max) {
-                return i;
-            }
-            if(time[i] &lt; time[min]){
-                min = i;
-            }
-        }
-        for (int j = i; j &lt; k; j++) {
-            if(time[j] &lt; time[min]) {
-                min = j;
-            }
-        }
-        return min;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620407710826.png" alt="" loading="lazy"></figure>
-<p>看了题解才知道是状态压缩+动态规划，表示不会，这里放上一个回溯剪枝的版本：</p>
-<pre><code class="language-java">public class Solution {
-
-    private int minId = Integer.MAX_VALUE;
-
-    public int minimumTimeRequired(int[] jobs, int k) {
-        fd(jobs, new int[k], 0, 0);
-        return minId;
-    }
-
-    private void fd(int[] jobs, int[] times, int m, int minTime) {
-        if (m == jobs.length) {
-            minId = Math.min(minTime, minId);
-            return;
-        }
-        boolean first = true;
-        for (int i=0; i&lt;times.length; i++) {
-            if (times[i] == 0L &amp;&amp; !first) {
-                return;
-            }
-            if (times[i] == 0L) {
-                first = false;
-            }
-            times[i] += jobs[m];
-            int tmpMax = Math.max(minTime, times[i]);
-            if (tmpMax &lt; minId) {
-                fd(jobs, times, m + 1, Math.max(minTime, times[i]));
-            }
-            times[i] -= jobs[m];
-        }
-    }
-}
-</code></pre>
-<p>居然还有0ms的，惨无人性：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620408017415.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第327期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-327-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-327-qi/">
-        </link>
-        <updated>2021-05-07T01:35:06.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>这么多年来没掉入桃色陷阱，靠的就是两个字，没钱。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>沾衣欲湿杏花雨，吹面不寒杨柳风。<br>
-——志南《绝句·古木阴中系短篷》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>你的败因只有一个，就是与我为敌。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620351469814.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>遍历异或即可：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int xorOperation(int n, int start) {
-        int end = start + 2*(n-1);
-        int result = start;
-        for (int i = start+2;i&lt;=end;i+=2){
-            result ^= i;
-        }
-        return result;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620351533258.png" alt="" loading="lazy"></figure>
-<p>当然也有<code>O(1)</code>时间空间的：</p>
-<pre><code class="language-java">class Solution {
-    public int xorOperation(int n, int start) {
-        int s = start &gt;&gt; 1, e = n &amp; start &amp; 1;
-        int ret = sumXor(s - 1) ^ sumXor(s + n - 1);
-        return ret &lt;&lt; 1 | e;
-    }
-
-    public int sumXor(int x) {
-        if (x % 4 == 0) {
-            return x;
-        }
-        if (x % 4 == 1) {
-            return 1;
-        }
-        if (x % 4 == 2) {
-            return x + 1;
-        }
-        return 0;
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
