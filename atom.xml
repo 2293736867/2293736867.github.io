@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-13T16:19:03.248Z</updated>
+    <updated>2021-05-14T16:53:58.217Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,85 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第335期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-335-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-335-qi/">
+        </link>
+        <updated>2021-05-14T16:50:14.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>生活不会放弃你，但也不会放过你。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>正护月云轻，嫩冰犹薄。<br>
+——辛弃疾《瑞鹤仙·赋梅》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>从一开始，我就不那么喜欢你。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621011032287.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>简单题直接判断各个字符了：</p>
+<pre><code class="language-java">public class Solution {
+    public int romanToInt(String s) {
+        char [] ch = s.toCharArray();
+        int sum = 0;
+        for (int i = 0; i &lt; ch.length; i++) {
+            if(ch[i] == 'M'){
+                sum += 1000;
+            }else if(ch[i] == 'D'){
+                sum += 500;
+            }else if(ch[i] == 'C'){
+                if(i+1 &lt; ch.length){
+                    if(ch[i+1] == 'D') {
+                        sum += 300;
+                        ++i;
+                    }else if(ch[i+1] == 'M'){
+                        sum += 800;
+                        ++i;
+                    }
+                }
+                sum += 100;
+            }else if(ch[i] == 'L'){
+                sum += 50;
+            }else if(ch[i] == 'X'){
+                if(i+1 &lt; ch.length){
+                    if(ch[i+1] == 'L') {
+                        sum += 30;
+                        ++i;
+                    }else if(ch[i+1] == 'C'){
+                        sum += 80;
+                        ++i;
+                    }
+                }
+                sum += 10;
+            }else if(ch[i] == 'V'){
+                sum += 5;
+            }else{
+                if(i+1 &lt; ch.length){
+                    if(ch[i+1] == 'V') {
+                        sum += 3;
+                        ++i;
+                    }else if(ch[i+1] == 'X'){
+                        sum += 8;
+                        ++i;
+                    }
+                }
+                sum += 1;
+            }
+        }
+        return sum;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621011059036.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第334期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-334-qi/</id>
@@ -99,6 +178,45 @@ public class Solution {
 </code></pre>
 <p>虽然不太优雅，快就行了：</p>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620922731037.png" alt="" loading="lazy"></figure>
+<h1 id="双100">双100</h1>
+<p>记录一下今天的双100：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620971589553.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">public class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        int[] row = new int[9];
+        int[] col = new int[9];
+        int[] block = new int[9];
+
+        for (int i = 0; i &lt; 9; i++) {
+            for (int j = 0; j &lt; 9; j++) {
+                if (board[i][j] != '.'){
+                    int t = board[i][j] - 48;
+                    if((col[j] &gt;&gt; t &amp; 1) == 1){
+                        return false;
+                    }else{
+                        col[j] |= 1 &lt;&lt; t;
+                    }
+
+                    if((row[i] &gt;&gt; t &amp; 1) == 1){
+                        return false;
+                    }else{
+                        row[i] |= 1 &lt;&lt; t;
+                    }
+
+                    int blockIndex = (i / 3) * 3 + j / 3;
+                    if((block[blockIndex] &gt;&gt; t &amp; 1) == 1){
+                        return false;
+                    }else{
+                        block[blockIndex] |= 1 &lt;&lt; t;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1620971595878.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
@@ -972,452 +1090,6 @@ public class Solution {
 </code></pre>
 <p>这样就成功了：</p>
 <figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210508151821713.png" alt="在这里插入图片描述" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java高并发学习笔记（一）：Thread详解]]></title>
-        <id>https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-yi-thread-xiang-jie/</id>
-        <link href="https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-yi-thread-xiang-jie/">
-        </link>
-        <updated>2021-05-08T02:45:01.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
-<ul>
-<li>来源：《Java高并发编程详解 多线程与架构设计》，汪文君著</li>
-<li>章节：第一、二、三章</li>
-</ul>
-<p>本文是前三章的笔记整理。</p>
-<h1 id="2-概述">2 概述</h1>
-<p>本文主要讲述了线程的生命周期、<code>Thread</code>类的构造方法以及常用<code>API</code>，最后介绍了线程的关闭方法。</p>
-<h1 id="3-线程生命周期">3 线程生命周期</h1>
-<h2 id="31-五个阶段">3.1 五个阶段</h2>
-<p>线程生命周期可以分为五个阶段：</p>
-<ul>
-<li><code>NEW</code></li>
-<li><code>RUNNABLE</code></li>
-<li><code>RUNNING</code></li>
-<li><code>BLOCKED</code></li>
-<li><code>TERMINATED</code></li>
-</ul>
-<h2 id="32-new">3.2 <code>NEW</code></h2>
-<p>用<code>new</code>创建一个<code>Thread</code>对象时，但是并没有使用<code>start()</code>启动线程，此时线程处于<code>NEW</code>状态。准确地说，只是<code>Thread</code>对象的状态，这就是一个普通的<code>Java</code>对象。此时可以通过<code>start()</code>方法进入<code>RUNNABLE</code>状态。</p>
-<h2 id="33-runnable">3.3 <code>RUNNABLE</code></h2>
-<p>进入<code>RUNNABLE</code>状态必须调用<code>start()</code>方法，这样就在<code>JVM</code>中创建了一个线程。但是，线程一经创建，并不能马上被执行，线程执行与否需要听令于<code>CPU</code>调度，也就是说，此时是处于可执行状态，具备执行的资格，但是并没有真正执行起来，而是在等待被调度。</p>
-<p><code>RUNNABLE</code>状态只能意外终止或进入<code>RUNNING</code>状态。</p>
-<h2 id="34-running">3.4 <code>RUNNING</code></h2>
-<p>一旦<code>CPU</code>通过轮询或其他方式从任务可执行队列中选中了线程，此时线程才能被执行，也就是处于<code>RUNNING</code>状态，在该状态中，可能发生的状态转换如下：</p>
-<ul>
-<li>进入<code>TERMINATED</code>：比如调用已经不推荐的<code>stop()</code>方法</li>
-<li>进入<code>BLOCKED</code>：比如调用了<code>sleep()</code>/<code>wait()</code>方法，或者进行某个阻塞操作（获取锁资源、磁盘<code>IO</code>等）</li>
-<li>进入<code>RUNNABLE</code>：<code>CPU</code>时间片到，或者线程主动调用<code>yield()</code></li>
-</ul>
-<h2 id="35-blocked">3.5 <code>BLOCKED</code></h2>
-<p>也就是阻塞状态，进入阻塞状态的原因很多，常见的如下：</p>
-<ul>
-<li>磁盘<code>IO</code></li>
-<li>网络操作</li>
-<li>为了获取锁而进入阻塞操作</li>
-</ul>
-<p>处于<code>BLOCKED</code>状态时，可能发生的状态转换如下：</p>
-<ul>
-<li>进入<code>TERMINATED</code>：比如调用不推荐的<code>stop()</code>，或者<code>JVM</code>意外死亡</li>
-<li>进入<code>RUNNABLE</code>：比如休眠结束、被<code>notify()</code>/<code>nofityAll()</code>唤醒、获取到某个锁、阻塞过程被<code>interrupt()</code>打断等</li>
-</ul>
-<h2 id="36-terminated">3.6 <code>TERMINATED</code></h2>
-<p><code>TERMINATED</code>是线程的最终状态，进入该状态后，意味着线程的生命周期结束，比如在下列情况下会进入该状态：</p>
-<ul>
-<li>线程运行正常结束</li>
-<li>线程运行出错意外结束</li>
-<li><code>JVM</code>意外崩溃，导致所有线程都强制结束</li>
-</ul>
-<h1 id="4-thread构造方法">4 <code>Thread</code>构造方法</h1>
-<h2 id="41-构造方法">4.1 构造方法</h2>
-<p><code>Thread</code>的构造方法一共有八个，这里根据命名方式分类，使用默认命名的构造方法如下：</p>
-<ul>
-<li><code>Thread()</code></li>
-<li><code>Thread(Runnable target)</code></li>
-<li><code>Thread(ThreadGroup group,Runnable target)</code></li>
-</ul>
-<p>命名线程的构造方法如下：</p>
-<ul>
-<li><code>Thread(String name)</code></li>
-<li><code>Thread(Runnable target,Strintg name)</code></li>
-<li><code>Thread(ThreadGroup group,String name)</code></li>
-<li><code>Thread(ThreadGroup group,Runnable target,String name)</code></li>
-<li><code>Thread(ThreadGroup group,Runnable target,String name,long stackSize)</code></li>
-</ul>
-<p>但实际上所有的构造方法最终都是调用如下私有构造方法：</p>
-<pre><code class="language-java">private Thread(ThreadGroup g, Runnable target, String name, long stackSize, AccessControlContext acc, boolean inheritThreadLocals);
-</code></pre>
-<p>在默认命名构造方法中，在源码中可以看到，默认命名其实就是<code>Thread-X</code>的命令（X为数字）：</p>
-<pre><code class="language-java">public Thread() {
-    this((ThreadGroup)null, (Runnable)null, &quot;Thread-&quot; + nextThreadNum(), 0L);
-}
-
-public Thread(Runnable target) {
-    this((ThreadGroup)null, target, &quot;Thread-&quot; + nextThreadNum(), 0L);
-}
-
-private static synchronized int nextThreadNum() {
-    return threadInitNumber++;
-}
-</code></pre>
-<p>而在命名构造方法就是自定义的名字。</p>
-<p>另外，如果想修改线程的名字，可以调用<code>setName()</code>方法，但是需要注意，处于<code>NEW</code>状态的线程才能修改。</p>
-<h2 id="42-线程的父子关系">4.2 线程的父子关系</h2>
-<p><code>Thread</code>的所有构造方法都会调用如下方法：</p>
-<pre><code class="language-java">private Thread(ThreadGroup g, Runnable target, String name, long stackSize, AccessControlContext acc, boolean inheritThreadLocals);
-</code></pre>
-<p>其中的一段源码截取如下：</p>
-<pre><code class="language-java">if (name == null) {
-    throw new NullPointerException(&quot;name cannot be null&quot;);
-} else {
-    this.name = name;
-    Thread parent = currentThread();
-    SecurityManager security = System.getSecurityManager();
-    if (g == null) {
-        if (security != null) {
-            g = security.getThreadGroup();
-        }
-
-        if (g == null) {
-            g = parent.getThreadGroup();
-        }
-    }
-}
-</code></pre>
-<p>可以看到当前这里有一个局部变量叫<code>parent</code>，并且赋值为<code>currentThread()</code>，<code>currentThread()</code>是一个<code>native</code>方法。因为一个线程被创建时的最初状态为<code>NEW</code>，因此<code>currentThread()</code>代表是创建自身线程的那个线程，也就是说，结论如下：</p>
-<ul>
-<li>一个线程的创建肯定是由另一个线程完成的</li>
-<li>被创建线程的父线程是创建它的线程</li>
-</ul>
-<p>也就是自己创建的线程，父线程为<code>main</code>线程，而<code>main</code>线程由<code>JVM</code>创建。</p>
-<p>另外，<code>Thread</code>的构造方法中有几个具有<code>ThreadGroup</code>参数，该参数指定了线程位于哪一个<code>ThreadGroup</code>，如果一个线程创建的时候没有指定<code>ThreadGroup</code>，那么将会和父线程同一个<code>ThreadGroup</code>。<code>main</code>线程所在的<code>ThreadGroup</code>称为<code>main</code>。</p>
-<h2 id="43-关于stacksize">4.3 关于<code>stackSize</code></h2>
-<p><code>Thread</code>构造方法中有一个<code>stackSize</code>参数，该参数指定了<code>JVM</code>分配线程栈的地址空间的字节数，对平台依赖性较高，在一些平台上：</p>
-<ul>
-<li>设置较大的值：可以使得线程内调用递归深度增加，降低<code>StackOverflowError</code>出现的概率</li>
-<li>设置较低的值：可以使得创建的线程数增多，可以推迟<code>OutOfMemoryError</code>出现的时间</li>
-</ul>
-<p>但是，在一些平台上该参数不会起任何作用。另外，如果设置为0也不会起到任何作用。</p>
-<h1 id="5-thread-api">5 <code>Thread API</code></h1>
-<h2 id="51-sleep">5.1 <code>sleep()</code></h2>
-<p><code>sleep()</code>有两个重载方法：</p>
-<ul>
-<li><code>sleep(long mills)</code></li>
-<li><code>sleep(long mills,int nanos)</code></li>
-</ul>
-<p>但是在<code>JDK1.5</code>后，引入了<code>TimeUnit</code>，其中对<code>sleep()</code>方法提供了很好的封装，建议使用<code>TimeUnit.XXXX.sleep()</code>去代替<code>Thread.sleep()</code>：</p>
-<pre><code class="language-java">TimeUnit.SECONDS.sleep(1);
-TimeUnit.MINUTES.sleep(3);
-</code></pre>
-<h2 id="52-yield">5.2 <code>yield()</code></h2>
-<p><code>yield()</code>属于一种启发式方法，提醒<code>CPU</code>调度器当前线程会自愿放弃资源，如果<code>CPU</code>资源不紧张，会忽略这种提醒。调用<code>yield()</code>方法会使当前线程从<code>RUNNING</code>变为<code>RUNNABLE</code>状态。</p>
-<p>关于<code>yield()</code>与<code>sleep()</code>的区别，区别如下：</p>
-<ul>
-<li><code>sleep()</code>会导致当前线程暂停指定的时间，没有<code>CPU</code>时间片的消耗</li>
-<li><code>yield()</code>只是对<code>CPU</code>调度器的一个提示，如果<code>CPU</code>调度器没有忽略这个提示，会导致线程上下文的切换</li>
-<li><code>sleep()</code>会使线程短暂阻塞，在给定时间内释放<code>CPU</code>资源</li>
-<li>如果<code>yield()</code>生效，<code>yield()</code>会使得从<code>RUNNING</code>状态进入<code>RUNNABLE</code>状态</li>
-<li><code>sleep()</code>会几乎百分百地完成给定时间的休眠，但是<code>yield()</code>的提示不一定能担保</li>
-<li>一个线程调用<code>sleep()</code>而另一个线程调用<code>interrupt()</code>会捕获到中断信号，而<code>yield</code>则不会</li>
-</ul>
-<h2 id="53-setpriority">5.3 <code>setPriority()</code></h2>
-<h3 id="531-优先级介绍">5.3.1 优先级介绍</h3>
-<p>线程与进程类似，也有自己的优先级，理论上来说，优先级越高的线程会有优先被调度的机会，但实际上并不是如此，设置优先级与<code>yield()</code>类似，也是一个提醒性质的操作：</p>
-<ul>
-<li>对于<code>root</code>用户，会提醒操作系统想要设置的优先级别，否则会被忽略</li>
-<li>如果<code>CPU</code>比较忙，设置优先级可能会获得更多的<code>CPU</code>时间片，但是空闲时优先级的高低几乎不会有任何作用</li>
-</ul>
-<p>所以，设置优先级只是很大程度上让某个线程尽可能获得比较多的执行机会，也就是让线程自己尽可能被操作系统调度，而不是设置了高优先级就一定优先运行，或者说优先级高的线程比优先级低的线程就一定优先运行。</p>
-<h3 id="532-优先级源码分析">5.3.2 优先级源码分析</h3>
-<p>设置优先级直接调用<code>setPriority()</code>即可，<code>OpenJDK 11</code>源码如下：</p>
-<pre><code class="language-java">public final void setPriority(int newPriority) {
-    this.checkAccess();
-    if (newPriority &lt;= 10 &amp;&amp; newPriority &gt;= 1) {
-        ThreadGroup g;
-        if ((g = this.getThreadGroup()) != null) {
-            if (newPriority &gt; g.getMaxPriority()) {
-                newPriority = g.getMaxPriority();
-            }
-
-            this.setPriority0(this.priority = newPriority);
-        }
-
-    } else {
-        throw new IllegalArgumentException();
-    }
-}
-</code></pre>
-<p>可以看到优先级处于<code>[1,10]</code>之间，而且不能设置为大于当前<code>ThreadGroup</code>的优先级，最后通过<code>native</code>方法<code>setPriority0</code>设置优先级。</p>
-<p>一般情况下，不会对线程的优先级设置级别，默认情况下，线程的优先级为5，因为<code>main</code>线程的优先级为5，而且<code>main</code>为所有线程的父进程，因此默认情况下线程的优先级也是5。</p>
-<h2 id="54-interrupt">5.4 <code>interrupt()</code></h2>
-<p><code>interrupt()</code>是一个重要的<code>API</code>，线程中断的<code>API</code>有如下三个：</p>
-<ul>
-<li><code>void interrupt()</code></li>
-<li><code>boolean isInterrupted()</code></li>
-<li><code>static boolean interrupted()</code></li>
-</ul>
-<p>下面对其逐一进行分析。</p>
-<h3 id="541-interrupt">5.4.1 <code>interrupt()</code></h3>
-<p>一些方法调用会使得当前线程进入阻塞状态，比如：</p>
-<ul>
-<li><code>Object.wait()</code></li>
-<li><code>Thread.sleep()</code></li>
-<li><code>Thread.join()</code></li>
-<li><code>Selector.wakeup()</code></li>
-</ul>
-<p>而调用<code>interrupt()</code>可以打断阻塞，打断阻塞并不等于线程的生命周期结束，仅仅是打断了当前线程的阻塞状态。一旦在阻塞状态下被打断，就会抛出一个<code>InterruptedException</code>的异常，这个异常就像一个信号一样通知当前线程被打断了，例子如下：</p>
-<pre><code class="language-java">public static void main(String[] args) throws InterruptedException{
-    Thread thread = new Thread(()-&gt;{
-        try{
-            TimeUnit.SECONDS.sleep(10);
-        }catch (InterruptedException e){
-            System.out.println(&quot;Thread is interrupted.&quot;);
-        }
-    });
-    thread.start();
-    TimeUnit.SECONDS.sleep(1);
-    thread.interrupt();
-}
-</code></pre>
-<p>会输出线程被中断的信息。</p>
-<h3 id="542-isinterrupted">5.4.2 <code>isInterrupted()</code></h3>
-<p><code>isInterrupted()</code>可以判断当前线程是否被中断，仅仅是对<code>interrupt()</code>标识的一个判断，并不会影响标识发生任何改变（因为调用<code>interrupt()</code>的时候会设置内部的一个叫<code>interrupt flag</code>的标识），例子如下：</p>
-<pre><code class="language-java">public static void main(String[] args) throws InterruptedException{
-    Thread thread = new Thread(()-&gt;{
-        while (true){}
-    });
-    thread.start();
-    TimeUnit.SECONDS.sleep(1);
-    System.out.println(&quot;Thread is interrupted :&quot;+thread.isInterrupted());
-    thread.interrupt();
-    System.out.println(&quot;Thread is interrupted :&quot;+thread.isInterrupted());
-}
-</code></pre>
-<p>输出结果为：</p>
-<pre><code class="language-bash">Thread is interrupted :false
-Thread is interrupted :true
-</code></pre>
-<p>另一个例子如下：</p>
-<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
-    Thread thread = new Thread() {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    TimeUnit.SECONDS.sleep(3);
-                } catch (InterruptedException e) {
-                    System.out.println(&quot;In catch block thread is interrupted :&quot; + isInterrupted());
-                }
-            }
-        }
-    };
-    thread.start();
-    TimeUnit.SECONDS.sleep(1);
-    System.out.println(&quot;Thread is interrupted :&quot; + thread.isInterrupted());
-    thread.interrupt();
-    TimeUnit.SECONDS.sleep(1);
-    System.out.println(&quot;Thread is interrupted :&quot; + thread.isInterrupted());
-}
-</code></pre>
-<p>输出结果：</p>
-<pre><code class="language-bash">Thread is interrupted :false
-In catch block thread is interrupted :false
-Thread is interrupted :false
-</code></pre>
-<p>一开始线程未被中断，结果为<code>false</code>，调用中断方法后，在循环体内捕获到了异常（信号），此时会<code>Thread</code>自身会擦除<code>interrupt</code>标识，将标识复位，因此捕获到异常后输出结果也为<code>false</code>。</p>
-<h3 id="543-interrupted">5.4.3 <code>interrupted()</code></h3>
-<p>这是一个静态方法，调用该方法会擦除掉线程的<code>interrupt</code>标识，需要注意的是如果当前线程被打断了：</p>
-<ul>
-<li>第一次调用<code>interrupted()</code>会返回<code>true</code>，并且立即擦除掉<code>interrupt</code>标识</li>
-<li>第二次包括以后的调用永远都会返回<code>false</code>，除非在此期间线程又一次被打断</li>
-</ul>
-<p>例子如下：</p>
-<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
-    Thread thread = new Thread() {
-        @Override
-        public void run() {
-            while (true) {
-                System.out.println(Thread.interrupted());
-            }
-        }
-    };
-    thread.setDaemon(true);
-    thread.start();
-    TimeUnit.MILLISECONDS.sleep(2);
-    thread.interrupt();
-}
-</code></pre>
-<p>输出（截取一部分）：</p>
-<pre><code class="language-bash">false
-false
-false
-true
-false
-false
-false
-</code></pre>
-<p>可以看到其中带有一个<code>true</code>，也就是<code>interrupted()</code>判断到了其被中断，此时会立即擦除中断标识，并且只有该次返回<code>true</code>，后面都是<code>false</code>。</p>
-<p>关于<code>interrupted()</code>与<code>isInterrupted()</code>的区别，可以从源码（<code>OpenJDK 11</code>）知道：</p>
-<pre><code class="language-java">public static boolean interrupted() {
-    return currentThread().isInterrupted(true);
-}
-
-public boolean isInterrupted() {
-    return this.isInterrupted(false);
-}
-
-@HotSpotIntrinsicCandidate
-private native boolean isInterrupted(boolean var1);
-</code></pre>
-<p>实际上两者都是调用同一个<code>native</code>方法，其中的布尔变量表示是否擦除线程的<code>interrupt</code>标识：</p>
-<ul>
-<li><code>true</code>表示想要擦除，<code>interrupted()</code>就是这样做的</li>
-<li><code>false</code>表示不想擦除，<code>isInterrupted()</code>就是这样做的</li>
-</ul>
-<h2 id="55-join">5.5 <code>join()</code></h2>
-<h3 id="551-join简介">5.5.1 <code>join()</code>简介</h3>
-<p><code>join()</code>与<code>sleep()</code>一样，都是属于可以中断的方法，如果其他线程执行了对当前线程的<code>interrupt</code>操作，也会捕获到中断信号，并且擦除线程的<code>interrupt</code>标识，<code>join()</code>提供了三个<code>API</code>，分别如下：</p>
-<ul>
-<li><code>void join()</code></li>
-<li><code>void join(long millis,int nanos)</code></li>
-<li><code>void join(long mills)</code></li>
-</ul>
-<h3 id="552-例子">5.5.2 例子</h3>
-<p>一个简单的例子如下：</p>
-<pre><code class="language-java">public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        List&lt;Thread&gt; threads = IntStream.range(1,3).mapToObj(Main::create).collect(Collectors.toList());
-        threads.forEach(Thread::start);
-        for (Thread thread:threads){
-            thread.join();
-        }
-        for (int i = 0; i &lt; 10; i++) {
-            System.out.println(Thread.currentThread().getName()+&quot; # &quot;+i);
-            shortSleep();
-        }
-    }
-
-    private static Thread create(int seq){
-        return new Thread(()-&gt;{
-            for (int i = 0; i &lt; 10; i++) {
-                System.out.println(Thread.currentThread().getName()+&quot; # &quot;+i);
-                shortSleep();
-            }
-        },String.valueOf(seq));
-    }
-
-    private static void shortSleep(){
-        try{
-            TimeUnit.MILLISECONDS.sleep(2);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-<p>输出截取如下：</p>
-<pre><code class="language-cpp">2 # 8
-1 # 8
-2 # 9
-1 # 9
-main # 0
-main # 1
-main # 2
-main # 3
-main # 4
-</code></pre>
-<p>线程1和线程2交替执行，而<code>main</code>线程会等到线程1和线程2执行完毕后再执行。</p>
-<h1 id="6-线程关闭">6 线程关闭</h1>
-<p><code>Thread</code>中有一个过时的方法<code>stop</code>，可以用于关闭线程，但是存在的问题是有可能不会释放<code>monitor</code>的锁，因此不建议使用该方法关闭线程。线程的关闭可以分为三类：</p>
-<ul>
-<li>正常关闭</li>
-<li>异常退出</li>
-<li>假死</li>
-</ul>
-<h2 id="61-正常关闭">6.1 正常关闭</h2>
-<h3 id="611-正常结束">6.1.1 正常结束</h3>
-<p>线程运行结束后，就会正常退出，这是最普通的一种情况。</p>
-<h3 id="612-捕获信号关闭线程">6.1.2 捕获信号关闭线程</h3>
-<p>通过捕获中断信号去关闭线程，例子如下：</p>
-<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
-    Thread t = new Thread(){
-        @Override
-        public void run() {
-            System.out.println(&quot;work...&quot;);
-            while(!isInterrupted()){
-
-            }
-            System.out.println(&quot;exit...&quot;);
-        }
-    };
-    t.start();
-    TimeUnit.SECONDS.sleep(5);
-    System.out.println(&quot;System will be shutdown.&quot;);
-    t.interrupt();
-}
-</code></pre>
-<p>一直检查<code>interrupt</code>标识是否设置为<code>true</code>，设置为<code>true</code>则跳出循环。另一种方式是使用<code>sleep()</code>：</p>
-<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
-    Thread t = new Thread(){
-        @Override
-        public void run() {
-            System.out.println(&quot;work...&quot;);
-            while(true){
-                try{
-                    TimeUnit.MILLISECONDS.sleep(1);
-                }catch (InterruptedException e){
-                    break;
-                }
-            }
-            System.out.println(&quot;exit...&quot;);
-        }
-    };
-    t.start();
-    TimeUnit.SECONDS.sleep(5);
-    System.out.println(&quot;System will be shutdown.&quot;);
-    t.interrupt();
-}
-</code></pre>
-<h3 id="613-volatile">6.1.3 <code>volatile</code></h3>
-<p>由于<code>interrupt</code>标识很有可能被擦除，或者不会调用<code>interrupt()</code>方法，因此另一种方法是使用<code>volatile</code>修饰一个布尔变量，并不断循环判断：</p>
-<pre><code class="language-java">public class Main {
-    static class MyTask extends Thread{
-        private volatile boolean closed = false;
-
-        @Override
-        public void run() {
-            System.out.println(&quot;work...&quot;);
-            while (!closed &amp;&amp; !isInterrupted()){
-
-            }
-            System.out.println(&quot;exit...&quot;);
-        }
-
-        public void close(){
-            this.closed = true;
-            this.interrupt();
-        }
-    }
-    public static void main(String[] args) throws InterruptedException {
-        MyTask t = new MyTask();
-        t.start();
-        TimeUnit.SECONDS.sleep(5);
-        System.out.println(&quot;System will be shutdown.&quot;);
-        t.close();
-    }
-}
-</code></pre>
-<h2 id="62-异常退出">6.2 异常退出</h2>
-<p>线程执行单元中是不允许抛出<code>checked</code>异常的，如果在线程运行过程中需要捕获<code>checked</code>异常并且判断是否还有运行下去的必要，可以将<code>checked</code>异常封装为<code>unchecked</code>异常，比如<code>RuntimeException</code>，抛出从而结束线程的生命周期。</p>
-<h2 id="63-假死">6.3 假死</h2>
-<p>所谓假死就是虽然线程存在，但是却没有任何的外在表现，比如：</p>
-<ul>
-<li>没有日志输出</li>
-<li>不进行任何的作业</li>
-</ul>
-<p>等等，虽然此时线程是存在的，但看起来跟死了一样，事实上是没有死的，出现这种情况，很大可能是因为线程出现了阻塞，或者两个线程争夺资源出现了死锁。</p>
-<p>这种情况需要借助一些外部工具去判断，比如<code>VisualVM</code>、<code>jconsole</code>等等，找出存在问题的线程以及当前的状态，并判断是哪个方法造成了阻塞。</p>
 ]]></content>
     </entry>
 </feed>
