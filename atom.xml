@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-16T11:54:04.588Z</updated>
+    <updated>2021-05-16T17:47:27.379Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,93 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第337期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-337-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-337-qi/">
+        </link>
+        <updated>2021-05-16T17:43:48.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>天将降大任于斯人也，必先苦其心志劳其筋骨，后来天改变主意了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>白发将军亦壮哉，西京昨夜捷书来。<br>
+——陆游《闻武均州报已复西京》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>为众人抱薪者，不可使其冻毙于风雪。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621187068743.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>简单<code>DFS</code>：</p>
+<pre><code class="language-java">
+public class Solution {
+    private int xParent;
+    private boolean findX = false;
+    private int yParent;
+    private boolean findY = false;
+
+    public boolean isCousins(TreeNode root, int x, int y) {
+        return heightX(root,x) == heightY(root,y) &amp;&amp; xParent != yParent;
+    }
+
+    private int heightX(TreeNode root, int x) {
+        if (root != null) {
+            if (root.val == x) {
+                findX = true;
+                return 1;
+            }
+            if (root.left != null) {
+                xParent = root.val;
+                int temp = heightX(root.left, x);
+                if (findX) {
+                    return temp + 1;
+                }
+            }
+            if (root.right != null) {
+                xParent = root.val;
+                int temp = heightX(root.right, x);
+                if (findX) {
+                    return temp + 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private int heightY(TreeNode root, int y) {
+        if (root != null) {
+            if (root.val == y) {
+                findY = true;
+                return 1;
+            }
+            if (root.left != null) {
+                yParent = root.val;
+                int temp = heightY(root.left, y);
+                if (findY) {
+                    return temp + 1;
+                }
+            }
+            if (root.right != null) {
+                yParent = root.val;
+                int temp = heightY(root.right, y);
+                if (findY) {
+                    return temp + 1;
+                }
+            }
+        }
+        return 0;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621187056629.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Java高并发学习笔记（四）：volatile关键字]]></title>
         <id>https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-si-volatile-guan-jian-zi/</id>
@@ -82,7 +169,7 @@
 <li>每个线程都有私有的工作内存或者叫本地内存</li>
 <li>工作内存只存储该线程对共享变量的副本</li>
 <li>线程不能直接操作主内存，只有先操作了工作内存之后才能写入主内存</li>
-<li>工作内存和<code>JMM</code>内存模型一样也是一个抽象概念，其实并不存在，涵盖了缓存、寄存器、编译期优化以及硬件等</li>
+<li>工作内存和<code>JMM</code>内存模型一样也是一个抽象概念，其实并不存在，涵盖了缓存、寄存器、编译器优化以及硬件等</li>
 </ul>
 <p>简略图如下：</p>
 <figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210516104445340.png" alt="在这里插入图片描述" loading="lazy"></figure>
@@ -225,7 +312,7 @@ public Context load(){
 </code></pre>
 <p>上面说过这段代码会不断运行，一直没有输出，就是因为修改后的<code>x</code>对线程<code>thread1</code>不可见，如果在<code>x</code>的定义中加上了<code>volatile</code>，就不会出现没有输出的情况了，因为此时对<code>x</code>的修改是线程<code>thread1</code>可见的。</p>
 <h3 id="522-有序性">5.2.2 有序性</h3>
-<p><code>JMM</code>中允许编译期和处理器对指令进行重排序，在多线程的情况下有可能会出现问题，为此，<code>Java</code>同样提供了三种机制去保证有序性：</p>
+<p><code>JMM</code>中允许编译器和处理器对指令进行重排序，在多线程的情况下有可能会出现问题，为此，<code>Java</code>同样提供了三种机制去保证有序性：</p>
 <ul>
 <li><code>volatile</code></li>
 <li><code>synchronized</code></li>
@@ -1338,72 +1425,6 @@ main
 <li><code>destroy()</code>：如果没有任何活跃线程，调用后在父<code>group</code>中将自己移除</li>
 <li><code>setDaemon(boolean daemon)</code>：设置为守护<code>ThreadGroup</code>后，如果该<code>ThreadGroup</code>没有任何活跃线程，自动被销毁</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第330期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-330-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-330-qi/">
-        </link>
-        <updated>2021-05-09T17:47:47.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>减肥就是要向妈妈证明，不光胖找不到对象，瘦也找不到！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>寒随一夜去，春逐五更来。<br>
-——史青《应诏赋得除夜》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我们的时代还没到来，有的人死后方生。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620664870513.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>用一个数组存，保存两次遍历的长度，比较即可：</p>
-<pre><code class="language-java">public class Solution {
-    private int [] arr = new int[201];
-    private int len1 = 0;
-    private int len2 = 0;
-
-    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
-        f1(root1);
-        f2(root2);
-        return len1 == len2;
-    }
-
-    private void f1(TreeNode root){
-        if(root != null){
-            if(root.left == null &amp;&amp; root.right == null){
-                arr[len1++] = root.val;
-            }
-            f1(root.left);
-            f1(root.right);
-        }
-    }
-
-    private void f2(TreeNode root){
-        if(root != null){
-            if(root.left == null &amp;&amp; root.right == null){
-                if(arr[len2] == root.val){
-                    ++len2;
-                }else{
-                    if(len2 == len1){
-                        ++len2;
-                    }
-                    return;
-                }
-            }
-            f2(root.left);
-            f2(root.right);
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620664885369.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
