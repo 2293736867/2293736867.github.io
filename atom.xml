@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-17T16:57:56.803Z</updated>
+    <updated>2021-05-20T05:52:17.817Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,153 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第340期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-340-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-340-qi/">
+        </link>
+        <updated>2021-05-20T02:04:15.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>为什么中国人结婚，都非要选个好日子呢？因为结完婚就没好日子过了！</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>阳春布德泽，万物生光辉。<br>
+——佚名《长歌行》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>掉头一去是风吹黑发，回首再来已雪满白头。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621489567021.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>统计词频+优先队列（前k个）：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public List&lt;String&gt; topKFrequent(String[] words, int k) {
+        Map&lt;String, Node&gt; map = new HashMap&lt;&gt;();
+        for (String s : words) {
+            if(map.containsKey(s)){
+                ++map.get(s).ct;
+            }else{
+                map.put(s,new Node(s));
+            }
+        }
+
+        PriorityQueue&lt;Node&gt; heap = new PriorityQueue&lt;&gt;((s1,s2)-&gt; s1.ct == s2.ct ? s1.s.compareTo(s2.s) : (s2.ct - s1.ct));
+
+        for (Node node:map.values()){
+            heap.offer(node)    ;
+        }
+
+        List&lt;String&gt; list = new ArrayList&lt;&gt;(k);
+        for (int i = 0; i &lt; k; i++) {
+            list.add(heap.poll().s);
+        }
+        return list;
+    }
+
+    private static class Node{
+        String s;
+        int ct;
+
+        public Node(String s){
+            ct = 1;
+            this.s = s;
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621489575585.png" alt="" loading="lazy"></figure>
+<h1 id="听说今天是520">听说今天是520</h1>
+<p>真搞不懂为什么这么多人送礼物？</p>
+<p>今天又不是什么特殊的日子。</p>
+<p>至于吗？</p>
+<p>520居然真的还会有人送礼物？</p>
+<p>不会吧不会吧？</p>
+<p>都2021年了，</p>
+<p>不会真的有人在520送礼物吧？</p>
+<p>不会吧不会吧？</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第339期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-339-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-339-qi/">
+        </link>
+        <updated>2021-05-19T01:56:29.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>打工钱少就出来创业吧，保证能让你，赔个精光。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>两岸桃花烘日出，思维高柳到天垂。<br>
+——姜彧《浣溪沙·山滴岚光水拍堤》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>你的名字那么普通也就我听到会心头一怔。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621476068651.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>前缀和+快速选择：</p>
+<pre><code class="language-java">public class Solution {
+    public int kthLargestValue(int[][] matrix, int k) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int [][] xor = new int[m+1][n+1];
+
+        int []result = new int[m*n];
+        int resultIndex = 0;
+
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                result[resultIndex++] = xor[i+1][j+1] = (matrix[i][j] ^ xor[i+1][j] ^ xor[i][j+1] ^ xor[i][j]);
+            }
+        }
+
+        return quickSelect(result,0,m*n-1,m*n-k+1);
+    }
+
+    private int quickSelect(int []nums,int start,int end,int k){
+        if (start == end) {
+            return nums[start];
+        }
+        int left = start;
+        int right = end;
+        int pivot = nums[start + (end - start) / 2];
+        while (left &lt;= right) {
+            if (nums[left] &lt; pivot) {
+                left++;
+            } else if (nums[right] &gt; pivot) {
+                right--;
+            } else {
+                int temp = nums[left];
+                nums[left++] = nums[right];
+                nums[right--] = temp;
+            }
+        }
+        if (start + k - 1 &lt;= right) {
+            return quickSelect(nums, start, right, k);
+        }
+        if (start + k - 1 &gt;= left) {
+            return quickSelect(nums, left, end, start + k - left);
+        }
+        return nums[right + 1];
+    }
+
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621489558295.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第338期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-338-qi/</id>
@@ -1007,179 +1154,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620838143565.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第332期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-332-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-332-qi/">
-        </link>
-        <updated>2021-05-12T03:15:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>56个民族，55个加分。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>抛尽榆钱，依然难买春光驻。<br>
-——王鹏运《点绛唇·饯春》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我觉得，我这辈子最灿烂的笑容，大概都奉献给我电脑屏幕了。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620789810031.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>第一次用的自以为很厉害的算法，三个前缀和数组加小区间优化：</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    public int[] xorQueries(int[] arr, int[][] queries) {
-        int n = arr.length;
-        int m = queries.length;
-        int [] result = new int [m];
-        if(n &lt; 10){
-            for(int i=0;i&lt;m;++i){
-                int s1 = queries[i][0];
-                int s2 = queries[i][1];
-                int temp = arr[s1++];
-                while(s1&lt;=s2){
-                    temp ^= arr[s1++];
-                }
-                result[i] = temp;
-            }
-            return result;
-        }
-        int [] all = new int [n];
-        int [] half1 = new int [n];
-        int [] half2 = new int [n];
-
-        all[0] = half1[0] = arr[0];
-        half2[n/2] = arr[n/2];
-        for(int i=1;i&lt;n;++i){
-            if(i&lt;=n/2){
-                half1[i] ^= half1[i-1] ^ arr[i];
-            }else{
-                half2[i] = half2[i-1] ^ arr[i];
-            }
-            all[i] = all[i-1] ^ arr[i];
-        }
-        for(int i=0;i&lt;m;++i){
-            int s1 = queries[i][0];
-            int s2 = queries[i][1];
-            int temp;
-            if(s2 - s1 &lt; 10){
-                temp = arr[s1++];
-                while(s1&lt;=s2){
-                    temp ^= arr[s1++];
-                }
-            }else{
-                if(s2 &lt;= n/2){
-                    temp = half1[s2];
-                    for(int j=0;j&lt;s1;++j){
-                        temp ^= arr[j];
-                    }
-                }else if(s1 &gt; n/2){
-                    temp = half2[s2];
-                    for(int j=n/2;j&lt;s1;++j){
-                        temp ^= arr[j];
-                    }
-                }else{
-                    temp = all[s2];
-                    for(int j=0;j&lt;s1;++j){
-                        temp ^= arr[j];
-                    }
-                }
-            }
-            result[i] = temp;
-        }
-        return result;
-    }
-}
-</code></pre>
-<p>空间是好了，但时间烂的不想看：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620789428020.png" alt="" loading="lazy"></figure>
-<p>看了题解才知道，这个才叫前缀和。。。。</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    public int[] xorQueries(int[] arr, int[][] queries) {
-        int n = arr.length;
-        int m = queries.length;
-        int [] result = new int [m];
-        int [] all = new int [n];
-
-        all[0] = arr[0];
-        for(int i=1;i&lt;n;++i){
-            all[i] = all[i-1] ^ arr[i];
-        }
-        for(int i=0;i&lt;m;++i){
-            if(queries[i][0] == 0){
-                result[i] = all[queries[i][1]];
-            }else{
-                result[i] = all[queries[i][0]-1] ^ all[queries[i][1]];
-            }
-        }
-        return result;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1620789768949.png" alt="" loading="lazy"></figure>
-<p>真正的<code>O(1)</code>求异或。</p>
-<p><s>完犊子。。。</s></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第331期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-331-qi/">
-        </link>
-        <updated>2021-05-10T17:18:05.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>所有的故事都会有结局，只有生活跟你没完。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>诗随十里寻春路，愁在三更挂月村。<br>
-——高启《咏梅九首》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>不会让你们碰那个人类一根手指的！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620667180065.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>通过“数学公式”确定了第一个，然后<code>O(n)</code>求剩下的就可以了：</p>
-<pre><code class="language-java">public class Solution {
-    public int[] decode(int[] encoded) {
-        int n = encoded.length + 1;
-        int [] r = new int[n];
-        int all = 0;
-        int temp;
-        for (int i = 1; i &lt;= n; i++) {
-            all ^= i;
-            temp = (i&lt;&lt;1) - 1;
-            if(temp &lt; n-1){
-                all ^= encoded[temp];
-            }
-        }
-        r[0] = all;
-
-        for (int i = 0; i &lt; n-1; i++) {
-            all ^= encoded[i];
-            r[i+1] = all;
-        }
-        return r;
-    }
-}
-</code></pre>
-<p>不过很搞心态的是减少了一个<code>O(n)</code>循环居然还死活上不了2ms：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620667102785.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
