@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-20T08:37:44.173Z</updated>
+    <updated>2021-05-21T04:35:58.768Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,52 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第341期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-341-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-341-qi/">
+        </link>
+        <updated>2021-05-21T04:33:37.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>别人露腿那叫美，你露腿就想让人怼。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>黄师塔前江水东，春光懒困倚微风。<br>
+——杜甫《江畔独步寻花·其五》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>只要微笑就可以了。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621571697210.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>实际上是最长公共子序列：</p>
+<pre><code class="language-java">public class Solution {
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int[][] dp = new int[n + 1][m + 1];
+
+        for (int i = 1; i &lt;= n; i++) {
+            for (int j = 1; j &lt;= m; j++) {
+                if (nums1[i - 1] == nums2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621571700653.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第340期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-340-qi/</id>
@@ -1101,59 +1147,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1620971595878.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第333期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-333-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-333-qi/">
-        </link>
-        <updated>2021-05-12T16:45:09.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>冬天就是好，穷的时候，还有西北风喝。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>迎得一钩月到，送得三更月去，莺燕不相猜。<br>
-——张惠言《水调歌头（五首选三）》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>愿时光能缓，愿故人不散！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1620838100076.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>二维dp升级到的一维dp（其实是题解的答案，逃）：</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    private static final int MOD = 1000000007;
-
-    public int numWays(int steps, int arrLen) {
-        int maxColumn = Math.min(arrLen-1,steps);
-        int [] dp = new int[maxColumn+1];
-        dp[0] = 1;
-        for (int i = 1; i &lt;= steps; i++) {
-            int [] dpNext = new int[maxColumn+1];
-            for (int j = 0; j &lt;= maxColumn; j++) {
-                dpNext[j] = dp[j];
-                if(j - 1 &gt;= 0){
-                    dpNext[j] = (dpNext[j] + dp[j-1]) % MOD;
-                }
-                if(j + 1 &lt;= maxColumn){
-                    dpNext[j] = (dpNext[j] + dp[j+1]) % MOD;
-                }
-            }
-            dp = dpNext;
-        }
-        return dp[0];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1620838143565.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
