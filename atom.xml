@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-22T15:27:21.114Z</updated>
+    <updated>2021-05-22T18:20:09.294Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,132 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第343期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-343-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-343-qi/">
+        </link>
+        <updated>2021-05-22T18:15:33.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>我躺在床上看天花板，想着我工作的天花板，只是别人的地板。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>殷勤昨夜三更雨，又得浮生一日凉。<br>
+——苏轼《鹧鸪天·林断山明竹隐墙》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>就像那句狠话：有一天，我一定会后悔的。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621707462173.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>前缀树、、、、渣渣不会：</p>
+<pre><code class="language-java">import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Solution {
+    public int[] maximizeXor(int[] nums, int[][] queries) {
+        int n = queries.length;
+        int [] res = new int[n];
+        Arrays.sort(nums);
+
+        Integer[] queries_idx = new Integer[n];
+        for (int i = 0; i &lt; n; i++) {
+            queries_idx[i] = i;
+        }
+        Arrays.sort(queries_idx,(a,b)-&gt;queries[a][1] - queries[b][1]);
+        Trie trie = new Trie();
+        int numIndex = 0;
+        for (int i = 0; i &lt; n; i++) {
+            while(numIndex &lt; nums.length &amp;&amp; nums[numIndex] &lt;= queries[queries_idx[i]][1]) {
+                trie.insert(nums[numIndex],nums[nums.length-1]);
+                ++numIndex;
+            }
+            res[queries_idx[i]] = trie.get(queries[queries_idx[i]][0],nums[nums.length-1]);
+        }
+        return res;
+    }
+
+    private static class TrieNode{
+        int val;
+        TrieNode [] next = new TrieNode[2];
+
+        public TrieNode(){}
+
+        public TrieNode(int val){
+            this.val = val;
+        }
+    }
+
+    private static class Trie{
+        TrieNode root = new TrieNode(1);
+
+        public void insert(int num,int maxNum){
+            TrieNode node = root;
+            char[] chars = binaryToDecimal(num,Integer.toBinaryString(maxNum).length()).toCharArray();
+            int len = chars.length;
+
+            for (int i = 0; i &lt; len; i++) {
+                char c = chars[i];
+                if(c == '0'){
+                    if(node.next[0] == null){
+                        node.next[0] = new TrieNode();
+                    }
+                    node = node.next[0];
+                }else{
+                    if(node.next[1] == null){
+                        node.next[1] = new TrieNode();
+                    }
+                    node = node.next[1];
+                }
+            }
+            node.val = num;
+        }
+
+        public int get(int num,int maxNum){
+            TrieNode node = root;
+            if(node.next[0] == null &amp;&amp; node.next[1] == null){
+                return -1;
+            }
+            char[] chars = binaryToDecimal(num,Integer.toBinaryString(maxNum).length()).toCharArray();
+            int len = chars.length;
+            for (int i = 0; i &lt; len; i++) {
+                char c = chars[i];
+                if(c == '0'){
+                    if(node.next[1] != null){
+                        node = node.next[1];
+                    }else{
+                        node = node.next[0];
+                    }
+                }else {
+                    if(node.next[0] != null){
+                        node = node.next[0];
+                    }else{
+                        node = node.next[1];
+                    }
+                }
+            }
+            return node.val ^ num;
+        }
+
+        private String binaryToDecimal(int decNum,int digit){
+            StringBuilder builder = new StringBuilder();
+            for (int i = digit-1; i &gt;= 0; --i) {
+                builder.append((decNum&gt;&gt;i)&amp;1);
+            }
+            return builder.toString();
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621707490560.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第342期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-342-qi/</id>
@@ -44,6 +170,8 @@
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621695774938.png" alt="" loading="lazy"></figure>
+<h1 id="袁老千古">袁老千古</h1>
+<p>好好吃饭。</p>
 ]]></content>
     </entry>
     <entry>
@@ -974,85 +1102,6 @@ private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) {
 }
 </code></pre>
 <p>通过线程上下文类加载器，就变成了启动类加载器去委托子类加载器去加载实现的方式，也就是<code>JDK</code>自己亲自打破了双亲委派机制这种方式，这种加载方式几乎涉及所有的<code>SPI</code>加载，包括<code>JAXB</code>、<code>JCE</code>、<code>JBI</code>等。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第335期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-335-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-335-qi/">
-        </link>
-        <updated>2021-05-14T16:50:14.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>生活不会放弃你，但也不会放过你。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>正护月云轻，嫩冰犹薄。<br>
-——辛弃疾《瑞鹤仙·赋梅》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>从一开始，我就不那么喜欢你。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621011032287.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>简单题直接判断各个字符了：</p>
-<pre><code class="language-java">public class Solution {
-    public int romanToInt(String s) {
-        char [] ch = s.toCharArray();
-        int sum = 0;
-        for (int i = 0; i &lt; ch.length; i++) {
-            if(ch[i] == 'M'){
-                sum += 1000;
-            }else if(ch[i] == 'D'){
-                sum += 500;
-            }else if(ch[i] == 'C'){
-                if(i+1 &lt; ch.length){
-                    if(ch[i+1] == 'D') {
-                        sum += 300;
-                        ++i;
-                    }else if(ch[i+1] == 'M'){
-                        sum += 800;
-                        ++i;
-                    }
-                }
-                sum += 100;
-            }else if(ch[i] == 'L'){
-                sum += 50;
-            }else if(ch[i] == 'X'){
-                if(i+1 &lt; ch.length){
-                    if(ch[i+1] == 'L') {
-                        sum += 30;
-                        ++i;
-                    }else if(ch[i+1] == 'C'){
-                        sum += 80;
-                        ++i;
-                    }
-                }
-                sum += 10;
-            }else if(ch[i] == 'V'){
-                sum += 5;
-            }else{
-                if(i+1 &lt; ch.length){
-                    if(ch[i+1] == 'V') {
-                        sum += 3;
-                        ++i;
-                    }else if(ch[i+1] == 'X'){
-                        sum += 8;
-                        ++i;
-                    }
-                }
-                sum += 1;
-            }
-        }
-        return sum;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621011059036.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
