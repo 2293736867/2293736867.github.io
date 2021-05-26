@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-23T10:41:00.103Z</updated>
+    <updated>2021-05-26T04:29:28.927Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -12,11 +12,414 @@
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
     <entry>
+        <title type="html"><![CDATA[每日分享 第346期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-346-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-346-qi/">
+        </link>
+        <updated>2021-05-25T18:39:22.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>困难也许会迟到，但绝不对缺席。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>两岸桃花烘日出，四维高柳到天垂。<br>
+——姜彧《浣溪沙·山滴岚光水拍堤》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>没人生来杰出。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621993294270.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>栈模拟：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public String reverseParentheses(String s) {
+        final Stack&lt;String&gt; stack = new Stack&lt;&gt;();
+        final StringBuilder builder = new StringBuilder();
+        int len = s.length();
+        for (int i = 0; i &lt; len; i++) {
+            char c = s.charAt(i);
+            if(c == '('){
+                stack.push(builder.toString());
+                builder.setLength(0);
+            }else if(c == ')'){
+                builder.reverse();
+                builder.insert(0,stack.pop());
+            }else{
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
+}
+</code></pre>
+<p>因为长度限制在2000，时间只需1ms：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621993235564.png" alt="" loading="lazy"></figure>
+<p>来个双指针：</p>
+<pre><code class="language-java">public class Solution {
+    public String reverseParentheses(String s) {
+        final StringBuilder builder = new StringBuilder(s);
+        while (true){
+            int post = builder.indexOf(&quot;)&quot;);
+            if(post == -1){
+                break;
+            }
+            int pre = builder.lastIndexOf(&quot;(&quot;,post);
+            StringBuilder temp = new StringBuilder(builder.substring(pre+1,post));
+            temp.reverse();
+            builder.replace(pre,post+1,temp.toString());
+        }
+        return builder.toString();
+    }
+}
+</code></pre>
+<p>手动模拟从内向外反转，时间：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1621993923712.png" alt="" loading="lazy"></figure>
+<p>最后来一个反向遍历，不带反转，本质就是需要减少每次<code>reverse()</code>消耗的时间，返回的只是一个按题目顺序要求的遍历顺序的结果，而不是真正反转字符串，示意图如下（来自<a href="https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/solution/zhan-dong-tu-yan-shi-by-xiaohu9527-hua8/">题解</a>）：</p>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1621994961055.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">import java.util.Stack;
+
+public class Solution {
+    public String reverseParentheses(String s) {
+        final StringBuilder builder = new StringBuilder();
+        int n = s.length();
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        int [] next = new int[n];
+        for (int i = 0; i &lt; n; i++) {
+            char c = s.charAt(i);
+            if(c == '('){
+                stack.push(i);
+            }else if(c == ')'){
+                int j = stack.pop();
+                next[i] = j;
+                next[j] = i;
+            }
+        }
+
+        int direction = 1;
+        for (int i = 0; i &lt; n; i+=direction) {
+            char c = s.charAt(i);
+            if(c == '(' || c == ')'){
+                i = next[i];
+                direction = -direction;
+            }else{
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
+}
+</code></pre>
+<p>使用一个辅助栈存储括号位置，当出现<code>)</code>时对<code>next</code>数组赋值，表示下一次遍历开始的位置，遍历完成后再次<code>O(n)</code>遍历：</p>
+<ul>
+<li>如果出现了括号，移动指针到<code>next[i]</code>的位置，并改变遍历方向</li>
+<li>如果不是括号，添加到结果末尾</li>
+</ul>
+<p>最后返回<code>builder.toString()</code>。</p>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1621995094642.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第345期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-345-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-345-qi/">
+        </link>
+        <updated>2021-05-24T21:20:19.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>骑电动车请戴好头盔，否则，开奔驰的同学会认出你。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>指点牡丹初绽朵，日高犹自凭朱栏，含嚬不语恨春残。<br>
+——韦庄《浣溪沙·清晓妆成寒食天》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我希望兜兜转转之后那个人还是你。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621891391130.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>不会，只会暴力，放个官方题解<code>dp</code>：</p>
+<pre><code class="language-java">class Solution {
+    // x 的范围为 [0, 2^10)
+    static final int MAXX = 1 &lt;&lt; 10;
+    // 极大值，为了防止整数溢出选择 INT_MAX / 2
+    static final int INFTY = Integer.MAX_VALUE / 2;
+
+    public int minChanges(int[] nums, int k) {
+        int n = nums.length;
+        int[] f = new int[MAXX];
+        Arrays.fill(f, INFTY);
+        // 边界条件 f(-1,0)=0
+        f[0] = 0;
+        
+        for (int i = 0; i &lt; k; ++i) {
+            // 第 i 个组的哈希映射
+            Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;Integer, Integer&gt;();
+            int size = 0;
+            for (int j = i; j &lt; n; j += k) {
+                cnt.put(nums[j], cnt.getOrDefault(nums[j], 0) + 1);
+                ++size;
+            }
+
+            // 求出 t2
+            int t2min = Arrays.stream(f).min().getAsInt();
+
+            int[] g = new int[MAXX];
+            Arrays.fill(g, t2min);
+            for (int mask = 0; mask &lt; MAXX; ++mask) {
+                // t1 则需要枚举 x 才能求出
+                for (Map.Entry&lt;Integer, Integer&gt; entry : cnt.entrySet()) {
+                    int x = entry.getKey(), countx = entry.getValue();
+                    g[mask] = Math.min(g[mask], f[mask ^ x] - countx);
+                }
+            }
+            
+            // 别忘了加上 size
+            for (int j = 0; j &lt; MAXX; ++j) {
+                g[j] += size;
+            }
+            f = g;
+        }
+
+        return f[0];
+    }
+}
+</code></pre>
+<p>然后速度并不怎么样：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621891491344.png" alt="" loading="lazy"></figure>
+<p>贪心优化：</p>
+<pre><code class="language-java">class Solution {
+    int[][] cnt;
+    int[] sz;
+    int[] nums;
+    int k;
+    public int cost(int pos,int num){
+        return sz[pos]-cnt[pos][num];
+    }
+    Integer[][] memo;
+    public int dfs(int pos,int num){//[0,pos]组之前异或值为num的cost
+        if(pos==0)return cost(pos,num);
+        if(memo[pos][num]!=null)return memo[pos][num];
+
+        int res = Integer.MAX_VALUE/2;
+        for(int i=pos;i&lt;nums.length;i+=k){//枚举[0,1023]可以覆盖了所有情况，但是会超时
+            //枚举这个组里的值x，那么前面需要值num^x，更新代价
+            int x = nums[i];
+            res = Math.min(res,cost(pos,x)+dfs(pos-1,num^x));
+        }
+        memo[pos][num] = res;
+        return memo[pos][num];
+    }
+    public int[] get_min_cost(int k){//计算第k组的最小cost
+        //res[0]==cost res[1]==众数个数
+        int min_cost = Integer.MAX_VALUE/2;
+        int mass_cnt = Integer.MAX_VALUE/2;
+        for(int i=0;i&lt;1024;i++){A
+            if(cost(k,i)&lt;min_cost){
+                min_cost = cost(k,i);
+                mass_cnt = cnt[k][i]; 
+            }
+        }
+        return new int[]{min_cost,mass_cnt};
+    }
+    public int minChanges(int[] nums, int k) {
+        this.nums = nums;
+        this.k = k;
+        int n = nums.length;
+        cnt = new int[k][1024];
+        sz =  new int[k];
+        memo = new Integer[k][1024];
+        for(int i=0;i&lt;k;i++){
+            for(int j=i;j&lt;n;j+=k){
+                cnt[i][nums[j]]++;
+                sz[i]++;
+            }
+        }
+        //dp从已有的数进行转移，先dp
+        int res = dfs(k-1,0);
+
+        //如果dp转移的时候枚举[0,1024]，虽然可以覆盖所有情况
+        //但是复杂度变成k*n*1024了
+        //只使用已有的数进行转移，可以将1024降为m，k*m=n，总复杂度就变成n^2了。
+        //但是会漏一种情况，有的组选择了新的数，此时这个组的cost为 (组内元素个数)。
+        //那么这种组有几个呢？
+        //可能是0个。可能是...
+
+        //贪心打补丁
+        int sum_cost = 0;
+        int cost_i = -1;
+        int id = -1;
+        int mass_cnt = Integer.MAX_VALUE/2;//众数
+        for(int i=0;i&lt;k;i++){
+            int[] t = get_min_cost(i);//得到第i组的最小cost
+            sum_cost += t[0];
+            if(t[1]&lt;mass_cnt){
+                mass_cnt = t[1];
+                id = i;
+            }
+        }
+        //找到那个众数个数最小的组 
+        //本来的cost_i = sz[i]-mass_cnt 变成 sz[i] 
+        res = Math.min(sum_cost+mass_cnt,res);
+        return res;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1621891537477.png" alt="" loading="lazy"></figure>
+<p>看看第一名的大佬，是真的强：</p>
+<pre><code class="language-java">public class Solution {
+    static class VC implements Comparable&lt;VC&gt; {
+        final int value;
+        final int index;
+        int count;
+
+        VC(int index, int v) {
+            this.index = index;
+            this.value = v;
+        }
+
+        @Override
+        public int compareTo(VC o) {
+            return o.count - this.count;
+        }
+
+        @Override
+        public String toString() {
+            return value + &quot;:&quot; + count;
+        }
+    }
+
+    static class Node implements Comparable&lt;Node&gt; {
+        final int index;
+        VC[] vs;
+        int size;
+        int count;
+        int min_change;
+        int min_change_all;
+        int[] cs;
+
+        Node(VC[] vcs, int[] nums, int index, int k) {
+            this.index = index;
+            vs = new VC[(nums.length - index - 1) / k + 1];
+            size = 0;
+            for (int i = index; i &lt; nums.length; i += k) {
+                int v = nums[i];
+                VC vc = vcs[v];
+                if (vc == null || vc.index != index) {
+                    vc = vcs[v] = new VC(index, v);
+                }
+                if (vc.count++ == 0)
+                    vs[size++] = vc;
+                count++;
+            }
+            Arrays.sort(vs, 0, size);
+            this.min_change = count - vs[0].count;
+        }
+
+        void buildcs() {
+            int maxv = 0;
+            for (int i = 0; i &lt; size; i++) {
+                maxv = Math.max(maxv, vs[i].value);
+            }
+            this.cs = new int[maxv + 1];
+            for (int i = 0; i &lt; size; i++) {
+                this.cs[vs[i].value] = vs[i].count;
+            }
+        }
+
+        int cs(int value) {
+            return value &lt; cs.length ? cs[value] : 0;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            int r = o.min_change - this.min_change;
+            if (r == 0)
+                r = this.count - o.count;
+            return r;
+        }
+
+    }
+
+/**
+     * 这里使用BFS比DP的计算量少很多。首先按照每行最少替换成本降序排列，然后从最小成本开始替换，每次替换也首先考虑当前行的最小成本，按照DFS思路构建替换路径，计算每个路径的替换成本。
+     * 每个路径的替换成本都与最小成本数进行比较，同时将其中的最小再作为比较标准，最小成本默认是数列的长度。
+     * 这里的剪枝做的很巧妙，min_change_all表示余下未替换步骤采用最优替换的最小替换和，再次基础上加上当前已经执行的替换数，如果比min_change大，就放弃后面的计算。min_change_all的设计很巧妙。
+     * 和DP相比，它按照每行的最优选择依次DFS搜索可能的替换路径，再搜索到最后一层时，判断该数值作为替换的成本（因此存在或不存在都考虑到了），不用像DP那样计算所有可能的替换值。
+     */
+    static int dfs(Node[] nodes, int index, int v, int changes, int min_change) {
+        Node node = nodes[index];
+        if (index == 0) {
+            changes += node.count - node.cs(v);
+            if (changes &lt; min_change) {
+                min_change = changes;
+            }
+            return min_change;
+        }
+        //优秀的剪枝判断
+        if (changes + node.min_change_all &gt;= min_change) {
+            return min_change;
+        }
+        for (int i = 0; i &lt; node.size; i++) {
+            VC vc = node.vs[i];
+            min_change = dfs(nodes, index - 1, v ^ vc.value, changes + node.count - vc.count, min_change);
+        }
+        return min_change;
+    }
+
+    public int minChanges(int[] nums, int k) {
+        final int N = nums.length;
+        int res = 0;
+        if (k == 1) {
+            for (int v : nums)
+                if (v != 0) res++;
+            return res;
+        }
+        if (k &gt;= N) {
+            for (int v : nums)
+                res ^= v;
+            res = res == 0 ? 0 : 1;
+            return res;
+        }
+        Node[] nodes = new Node[k];
+        int maxv = 0;
+        for (int v : nums)
+            maxv = Math.max(maxv, v);
+        VC[] vcs = new VC[maxv + 1];
+        for (int i = 0; i &lt; k; i++) {
+            nodes[i] = new Node(vcs, nums, i, k);
+        }
+        Arrays.sort(nodes);
+
+        int s = 0;
+        for (Node node : nodes) {
+            s += node.min_change;
+            node.min_change_all = s;
+        }
+        nodes[0].buildcs();
+        res = dfs(nodes, k - 1, 0, 0, N);
+        return res;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1621891584866.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[每日分享 第344期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-344-qi/</id>
         <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-344-qi/">
         </link>
-        <updated>2021-05-23T10:33:24.000Z</updated>
+        <updated>2021-05-24T10:33:24.000Z</updated>
         <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
 <blockquote>
 <p>不管是白帽子还是黑帽子，会变绿的都不是好帽子。</p>
@@ -621,389 +1024,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621187056629.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Java高并发学习笔记（四）：volatile关键字]]></title>
-        <id>https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-si-volatile-guan-jian-zi/</id>
-        <link href="https://2293736867.github.io/post/java-gao-bing-fa-xue-xi-bi-ji-si-volatile-guan-jian-zi/">
-        </link>
-        <updated>2021-05-16T11:39:04.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-来源">1 来源</h1>
-<ul>
-<li>来源：《Java高并发编程详解 多线程与架构设计》，汪文君著</li>
-<li>章节：第十二、十三章</li>
-</ul>
-<p>本文是两章的笔记整理。</p>
-<h1 id="2-cpu缓存">2 <code>CPU</code>缓存</h1>
-<h2 id="21-缓存模型">2.1 缓存模型</h2>
-<p>计算机中的所有运算操作都是由<code>CPU</code>完成的，<code>CPU</code>指令执行过程需要涉及数据读取和写入操作，但是<code>CPU</code>只能访问处于内存中的数据，而内存的速度和<code>CPU</code>的速度是远远不对等的，因此就出现了缓存模型，也就是在<code>CPU</code>和内存之间加入了缓存层。一般现代的<code>CPU</code>缓存层分为三级，分别叫<code>L1</code>缓存、<code>L2</code>缓存和<code>L3</code>缓存，简略图如下：</p>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210515234450950.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li><code>L1</code>缓存：三级缓存中访问速度最快，但是容量最小，另外<code>L1</code>缓存还被划分成了数据缓存（<code>L1d</code>，<code>data</code>首字母）和指令缓存（<code>L1i</code>，<code>instruction</code>首字母）</li>
-<li><code>L2</code>缓存：速度比<code>L1</code>慢，但是容量比<code>L1</code>大，在现代的多核<code>CPU</code>中，<code>L2</code>一般被单个核独占</li>
-<li><code>L3</code>缓存：三级缓存中速度最慢，但是容量最大，现代<code>CPU</code>中也有<code>L3</code>是多核共享的设计，比如<code>zen3</code>架构的设计</li>
-</ul>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210516000524728.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>缓存的出现，是为了解决<code>CPU</code>直接访问内存效率低下的问题，<code>CPU</code>进行运算的时候，将需要的数据从主存复制一份到缓存中，因为缓存的访问速度快于内存，在计算的时候只需要读取缓存并将结果更新到缓存，运算结束再将结果刷新到主存，这样就大大提高了计算效率，整体交互图简略如下：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210516001151927.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="22-缓存一致性问题">2.2 缓存一致性问题</h2>
-<p>虽然缓存的出现，大大提高了吞吐能力，但是，也引入了一个新的问题，就是缓存不一致。比如，最简单的一个<code>i++</code>操作，需要将内存数据复制一份到缓存中，<code>CPU</code>读取缓存值并进行更新，先写入缓存，运算结束后再将缓存中新的刷新到内存，具体过程如下：</p>
-<ul>
-<li>读取内存中的<code>i</code>到缓存中</li>
-<li><code>CPU</code>读取缓存<code>i</code>中的值</li>
-<li>对<code>i</code>进行加1操作</li>
-<li>将结果写回缓存</li>
-<li>再将数据刷新到主存</li>
-</ul>
-<p>这样的<code>i++</code>操作在单线程不会出现问题，但在多线程中，因为每个线程都有自己的工作内存（也叫本地内存，是线程自己的缓存），变量<code>i</code>在多个线程的本地内存中都存在一个副本，如果有两个线程执行<code>i++</code>操作：</p>
-<ul>
-<li>假设两个线程为A、B，同时假设<code>i</code>初始值为0</li>
-<li>线程A从内存中读取<code>i</code>的值放入缓存中，此时<code>i</code>的值为0，线程B也同理，放入缓存中的值也是0</li>
-<li>两个线程同时进行自增操作，此时A、B线程的缓存中，<code>i</code>的值都是1</li>
-<li>两个线程将<code>i</code>写入主内存，相当于<code>i</code>被两次赋值为1</li>
-<li>最终结果是<code>i</code>的值为1</li>
-</ul>
-<p>这个就是典型的缓存不一致问题，主流的解决办法有：</p>
-<ul>
-<li>总线加锁</li>
-<li>缓存一致性协议</li>
-</ul>
-<h3 id="221-总线加锁">2.2.1 总线加锁</h3>
-<p>这是一种悲观的实现方式，具体来说，就是通过处理器发出<code>lock</code>指令，锁住总线，总线收到指令后，会阻塞其他处理器的请求，直到占用锁的处理器完成操作。特点是只有一个抢到总线锁的处理器运行，但是这种方式效率低下，一旦某个处理器获取到锁其他处理器只能阻塞等待，会影响多核处理器的性能。</p>
-<h3 id="222-缓存一致性协议">2.2.2 缓存一致性协议</h3>
-<p>图示如下：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210516002914904.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>缓存一致性协议中最出名的就是<code>MESI</code>协议，<code>MESI</code>保证了每一个缓存中使用的共享变量的副本都是一致的。大致思想是，<code>CPU</code>操作缓存中的数据时，如果发现该变量是一个共享变量，操作如下：</p>
-<ul>
-<li>读取：不做其他处理，只是将缓存中数据读取到寄存器中</li>
-<li>写入：发出信号通知其他<code>CPU</code>将该变量的缓存行设置为无效状态（<code>Invalid</code>），其他<code>CPU</code>进行该变量的读取时需要到主存中再次获取</li>
-</ul>
-<p>具体来说，<code>MESI</code>中规定了缓存行使用4种状态标记：</p>
-<ul>
-<li><code>M</code>：<code>Modified</code>，被修改</li>
-<li><code>E</code>：<code>Exclusive</code>，独享的</li>
-<li><code>S</code>：<code>Shared</code>，共享的</li>
-<li><code>I</code>：<code>Invalid</code>，无效的</li>
-</ul>
-<p>有关<code>MESI</code>详细的实现超出了本文的范围，想要详细了解可以参考<a href="https://www.cnblogs.com/yanlong300/p/8986041.html">此处</a>或<a href="http://www2.in.tum.de/hp/file?fid=1276">此处</a>。</p>
-<h1 id="3-jmm">3 <code>JMM</code></h1>
-<p>看完了<code>CPU</code>缓存再来看一下<code>JMM</code>，也就是<code>Java</code>内存模型，指定了<code>JVM</code>如何与计算机的主存进行工作，同时也决定了一个线程对共享变量的写入何时对其他线程可见，<code>JMM</code>定义了线程和主内存之间的抽象关系，具体如下：</p>
-<ul>
-<li>共享变量存储于主内存中，每个线程都可以访问</li>
-<li>每个线程都有私有的工作内存或者叫本地内存</li>
-<li>工作内存只存储该线程对共享变量的副本</li>
-<li>线程不能直接操作主内存，只有先操作了工作内存之后才能写入主内存</li>
-<li>工作内存和<code>JMM</code>内存模型一样也是一个抽象概念，其实并不存在，涵盖了缓存、寄存器、编译器优化以及硬件等</li>
-</ul>
-<p>简略图如下：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210516104445340.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>与<code>MESI</code>类似，如果一个线程修改了共享变量，刷新到主内存后，其他线程读取工作内存的时候发现缓存失效，会从主内存再次读取到工作内存中。</p>
-<p>而下图表示了<code>JVM</code>与计算机硬件分配的关系：</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210516192712715.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="4-并发编程的三个特性">4 并发编程的三个特性</h1>
-<p>文章都看了大半了还没到<code>volatile</code>？别急别急，先来看看并发编程中的三个重要特性，这对正确理解<code>volatile</code>有很大的帮助。</p>
-<h2 id="41-原子性">4.1 原子性</h2>
-<p>原子性就是在一次或多次操作中：</p>
-<ul>
-<li>要么所有的操作全部都得到了执行，且不会受到任何因素的干扰而中断</li>
-<li>要么所有的操作都不执行</li>
-</ul>
-<p>一个典型的例子就是两个人转账，比如A向B转账1000元，那么这包含两个基本的操作：</p>
-<ul>
-<li>A的账户扣除1000元</li>
-<li>B的账户增加1000元</li>
-</ul>
-<p>这两个操作，要么都成功，要么都失败，也就是不能出现A账户扣除1000但是B账户金额不变的情况，也不能出现A账户金额不变B账户增加1000的情况。</p>
-<p>需要注意的是两个原子性操作结合在一起未必是原子性的，比如<code>i++</code>。本质上来说，<code>i++</code>涉及到了三个操作：</p>
-<ul>
-<li><code>get i</code></li>
-<li><code>i+1</code></li>
-<li><code>set i</code></li>
-</ul>
-<p>这三个操作都是原子性的，但是组合在一起（<code>i++</code>）就不是原子性的。</p>
-<h2 id="42-可见性">4.2 可见性</h2>
-<p>另一个重要的特性是可见性，可见性是指，一个线程对共享变量进行了修改，那么另外的线程可以立即看到修改后的最新值。</p>
-<p>一个简单的例子如下：</p>
-<pre><code class="language-java">public class Main {
-    private int x = 0;
-    private static final int MAX = 100000;
-    public static void main(String[] args) throws InterruptedException {
-        Main m = new Main();
-        Thread thread0 = new Thread(()-&gt;{
-            while(m.x &lt; MAX) {
-                ++m.x;
-            }
-        });
-
-        Thread thread1 = new Thread(()-&gt;{
-            while(m.x &lt; MAX){
-            }
-            System.out.println(&quot;finish&quot;);
-        });
-
-        thread1.start();
-        TimeUnit.MILLISECONDS.sleep(1);
-        thread0.start();
-    }
-}
-</code></pre>
-<p>线程<code>thread1</code>会一直运行，因为<code>thread1</code>把<code>x</code>读入工作内存后，会一直判断工作内存中的值，由于<code>thread0</code>改变的是<code>thread0</code>工作内存的值，并没有对<code>thread1</code>可见，因此永远也不会输出<code>finish</code>，使用<code>jstack</code>也可以看到结果：</p>
-<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210516121151277.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="43-有序性">4.3 有序性</h2>
-<p>有序性是指代码在执行过程中的先后顺序，由于<code>JVM</code>的优化，导致了代码的编写顺序未必是代码的运行顺序，比如下面的四条语句：</p>
-<pre><code class="language-java">int x = 10;
-int y = 0;
-x++;
-y = 20;
-</code></pre>
-<p>有可能<code>y=20</code>在<code>x++</code>前执行，这就是指令重排序。一般来说，处理器为了提高程序的效率，可能会对输入的代码指令做一定的优化，不会严格按照编写顺序去执行代码，但可以保证最终运算结果是编码时的期望结果，当然，重排序也有一定的规则，需要严格遵守指令之间的数据依赖关系，并不是可以任意重排序，比如：</p>
-<pre><code class="language-java">int x = 10;
-int y = 0;
-x++;
-y = x+1;
-</code></pre>
-<p><code>y=x+1</code>就不能先优于<code>x++</code>执行。</p>
-<p>在单线程下重排序不会导致预期值的改变，但在多线程下，如果有序性得不到保证，那么将可能出现很大的问题：</p>
-<pre><code class="language-java">private boolean initialized = false;
-private Context context;
-public Context load(){
-    if(!initialized){
-        context = loadContext();
-        initialized = true;
-    }
-    return context;
-}
-</code></pre>
-<p>如果发生了重排序，<code>initialized=true</code>排序到了<code>context=loadContext()</code>的前面，假设两个线程A、B同时访问，且<code>loadContext()</code>需要一定耗时，那么：</p>
-<ul>
-<li>线程A通过判断后，先设置布尔变量的值为<code>true</code>，再进行<code>loadContext()</code>操作</li>
-<li>线程B中由于布尔变量被设置为<code>true</code>，会直接返回一个未加载完成的<code>context</code></li>
-</ul>
-<h1 id="5-volatile">5 <code>volatile</code></h1>
-<p>好了终于到了<code>volatile</code>了，前面说了这么多，目的就是为了能彻底理解和明白<code>volatile</code>。这部分分为四个小节：</p>
-<ul>
-<li><code>volatile</code>的语义</li>
-<li>如何保证有序性以及可见性</li>
-<li>实现原理</li>
-<li>使用场景</li>
-<li>与<code>synchronized</code>区别</li>
-</ul>
-<p>先来介绍一下<code>volatile</code>的语义。</p>
-<h2 id="51-语义">5.1 语义</h2>
-<p>被<code>volatile</code>修饰的实例变量或者类变量具有两层语义：</p>
-<ul>
-<li>保证了不同线程之间对共享变量操作时的可见性</li>
-<li>禁止对指令进行重排序操作</li>
-</ul>
-<h2 id="52-如何保证可见性以及有序性">5.2 如何保证可见性以及有序性</h2>
-<p>先说结论：</p>
-<ul>
-<li><code>volatile</code>能保证可见性</li>
-<li><code>volatile</code>能保证有序性</li>
-<li><code>volatile</code>不能保证原子性</li>
-</ul>
-<p>下面分别进行介绍。</p>
-<h3 id="521-可见性">5.2.1 可见性</h3>
-<p><code>Java</code>中保证可见性有如下方式：</p>
-<ul>
-<li><code>volatile</code>：当一个变量被<code>volatile</code>修饰时，对共享资源的读操作会直接在主内存中进行（准确来说也会读取到工作内存中，但是如果其他线程进行了修改就必须从主内存重新读取），写操作是先修改工作内存，但是修改结束后立即刷新到主内存中</li>
-<li><code>synchronized</code>：<code>synchronized</code>一样能保证可见性，能够保证同一时刻只有一个线程获取到锁，然后执行同步方法，并且确保锁释放之前，变量的修改被刷新到主内存中</li>
-<li>使用显式锁<code>Lock</code>：<code>Lock</code>的<code>lock</code>方法能保证同一时刻只有一个线程能够获取到锁然后执行同步方法，并且确保锁释放之前能够将对变量的修改刷新到主内存中</li>
-</ul>
-<p>具体来说，可以看一下之前的例子：</p>
-<pre><code class="language-java">public class Main {
-    private int x = 0;
-    private static final int MAX = 100000;
-    public static void main(String[] args) throws InterruptedException {
-        Main m = new Main();
-        Thread thread0 = new Thread(()-&gt;{
-            while(m.x &lt; MAX) {
-                ++m.x;
-            }
-        });
-
-        Thread thread1 = new Thread(()-&gt;{
-            while(m.x &lt; MAX){
-            }
-            System.out.println(&quot;finish&quot;);
-        });
-
-        thread1.start();
-        TimeUnit.MILLISECONDS.sleep(1);
-        thread0.start();
-    }
-}
-</code></pre>
-<p>上面说过这段代码会不断运行，一直没有输出，就是因为修改后的<code>x</code>对线程<code>thread1</code>不可见，如果在<code>x</code>的定义中加上了<code>volatile</code>，就不会出现没有输出的情况了，因为此时对<code>x</code>的修改是线程<code>thread1</code>可见的。</p>
-<h3 id="522-有序性">5.2.2 有序性</h3>
-<p><code>JMM</code>中允许编译器和处理器对指令进行重排序，在多线程的情况下有可能会出现问题，为此，<code>Java</code>同样提供了三种机制去保证有序性：</p>
-<ul>
-<li><code>volatile</code></li>
-<li><code>synchronized</code></li>
-<li>显式锁<code>Lock</code></li>
-</ul>
-<p>另外，关于有序性不得不提的就是<code>Happens-before</code>原则。<code>Happends-before</code>原则说的就是如果两个操作的执行次序无法从该原则推导出来，那么就无法保证有序性，<code>JVM</code>或处理器可以任意重排序。这么做的目的是为了尽可能提高程序的并行度，具体规则如下：</p>
-<ul>
-<li>程序次序规则：在一个线程内，代码按照编写时的次序执行，编写在后面的操作发生与编写在前面的操作之后</li>
-<li>锁定规则：如果一个锁处于锁定状态，则<code>unlock</code>操作要先行发生于对同一个锁的<code>lock</code>操作</li>
-<li><code>volatile</code>变量规则：对一个变量的写操作要早于对这个变量之后的读操作</li>
-<li>传递规则：如果操作A先于操作B，操作B先于操作C，那么操作A先于操作C</li>
-<li>线程启动规则：<code>Thread</code>对象的<code>start()</code>方法先行发生于对该线程的任何动作</li>
-<li>线程中断规则：对线程执行<code>interrupt()</code>方法肯定要优于捕获到中断信号，换句话说，如果收到了中断信号，那么在此之前必定调用了<code>interrupt()</code></li>
-<li>线程终结规则：线程中所有操作都要先行发生于线程的终止检测，也就是逻辑单元的执行肯定要发生于线程终止之前</li>
-<li>对象终结规则：一个对象初始化的完成先行发生于<code>finalize()</code>之前</li>
-</ul>
-<p>对于<code>volatile</code>，会直接禁止对指令重排，但是对于<code>volatile</code>前后无依赖关系的指令可以随意重排，比如：</p>
-<pre><code class="language-java">int x = 0;
-int y = 1;
-//private volatile int z;
-z = 20;
-x++;
-y--;
-</code></pre>
-<p>在<code>z=20</code>之前，先定义<code>x</code>或先定义<code>y</code>并没有要求，只需要在执行<code>z=20</code>的时候，可以保证<code>x=0,y=1</code>即可，同理，<code>x++</code>或<code>y--</code>具体先执行哪一个并没有要求，只需要保证两者执行在<code>z=20</code>之后即可。</p>
-<h3 id="523-原子性">5.2.3 原子性</h3>
-<p>在<code>Java</code>中，所有对基本数据类型变量的读取赋值操作都是原子性的，对引用类型的变量读取和赋值也是原子性的，但是：</p>
-<ul>
-<li>将一个变量赋值给另一个变量的操作不是原子性的，因为涉及到了一个变量的读取以及一个变量的写入，两个原子性操作结合在一起就不是原子性操作</li>
-<li>多个原子性操作在一起就不是原子性操作，比如<code>i++</code></li>
-<li><code>JMM</code>只保证基本读取和赋值的原子性操作，其他的均不保证，如果需要具备原子性，那么可以使用<code>synchronized</code>或<code>Lock</code>，或者<code>JUC</code>包下的原子操作类</li>
-</ul>
-<p>也就是说，<code>volatile</code>并不能保证原子性，例子如下：</p>
-<pre><code class="language-java">public class Main {
-    private volatile int x = 0;
-    private static final CountDownLatch latch = new CountDownLatch(10);
-
-    public void inc() {
-        ++x;
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        Main m = new Main();
-        IntStream.range(0, 10).forEach(i -&gt; {
-            new Thread(() -&gt; {
-                for (int j = 0; j &lt; 1000; j++) {
-                    m.inc();
-                }
-                latch.countDown();
-            }).start();
-        });
-        latch.await();
-        System.out.println(m.x);
-    }
-}
-</code></pre>
-<p>最后输出的<code>x</code>的值会少于<code>10000</code>，而且每次运行的结果也并不相同，至于原因，可以从两个线程A、B开始分析，图示如下：</p>
-<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/202105161331204.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<ul>
-<li><code>0-t1</code>：线程A将<code>x</code>读入工作内存，此时<code>x=0</code></li>
-<li><code>t1-t2</code>：线程A时间片完，<code>CPU</code>调度线程B，线程B将<code>x</code>读入工作内存，此时<code>x=0</code></li>
-<li><code>t2-t3</code>：线程B对工作内存中的<code>x</code>进行自增操作，并更新到工作内存中</li>
-<li><code>t3-t4</code>：线程B时间片完，<code>CPU</code>调度线程A，同理线程A对工作内存中的<code>x</code>自增</li>
-<li><code>t4-t5</code>：线程A将工作内存中的值写回主内存，此时主内存中的值为<code>x=1</code></li>
-<li><code>t5</code>以后：线程A时间片完，<code>CPU</code>调度线程B，线程B也将自己的工作内存写回主内存，再次将主内存中的<code>x</code>赋值为1</li>
-</ul>
-<p>也就是说，多线程操作的话，会出现两次自增但是实际上只进行一次数值修改的操作。想要<code>x</code>的值变为<code>10000</code>也很简单，加上<code>synchronized</code>即可：</p>
-<pre><code class="language-java">new Thread(() -&gt; {
-    synchronized (m) {
-        for (int j = 0; j &lt; 1000; j++) {
-            m.inc();
-        }
-    }
-    latch.countDown();
-}).start();
-</code></pre>
-<h2 id="53-实现原理">5.3 实现原理</h2>
-<p>前面已经知道，<code>volatile</code>可以保证有序性以及可见性，那么，具体是如何操作的呢？</p>
-<p>答案就是一个<code>lock;</code>前缀，该前缀实际上相当于一个内存屏障，该内存屏障会为指令的执行提供如下几个保障：</p>
-<ul>
-<li>确保指令重排序时不会将其后面的代码排到内存屏障之前</li>
-<li>确保指令重排序时不会将其前面的代码排到内存屏障之后</li>
-<li>确保执行到内存屏障修饰的指令时前面的代码全部执行完成</li>
-<li>强制将线程工作内存中的值修改刷新到主存中</li>
-<li>如果是写操作，会导致其他线程工作内存中的缓存数据失效</li>
-</ul>
-<h2 id="54-使用场景">5.4 使用场景</h2>
-<p>一个典型的使用场景是利用开关进行线程的关闭操作，例子如下：</p>
-<pre><code class="language-java">public class ThreadTest extends Thread{
-    private volatile boolean started = true;
-
-    @Override
-    public void run() {
-        while (started){
-            
-        }
-    }
-
-    public void shutdown(){
-        this.started = false;
-    }
-}
-</code></pre>
-<p>如果布尔变量没有被<code>volatile</code>修饰，那么很可能新的布尔值刷新不到主内存中，导致线程不会结束。</p>
-<h2 id="55-与synchronized的区别">5.5 与<code>synchronized</code>的区别</h2>
-<ul>
-<li>使用上的区别：<code>volatile</code>只能用于修饰实例变量或者类变量，但是不能用于修饰方法、方法参数、局部变量等，另外可以修饰的变量为<code>null</code>。但<code>synchronized</code>不能用于对变量的修饰，只能修饰方法或语句块，而且<code>monitor</code>对象不能为<code>null</code></li>
-<li>对原子性的保证：<code>volatile</code>无法保证原子性，但是<code>synchronized</code>可以保证</li>
-<li>对可见性的保证：<code>volatile</code>与<code>synchronized</code>都能保证可见性，但是<code>synchronized</code>是借助于<code>JVM</code>指令<code>monitor enter</code>/<code>monitor exit</code>保证的，在<code>monitor exit</code>的时候所有共享资源都被刷新到主内存中，而<code>volatile</code>是通过<code>lock;</code>机器指令实现的，迫使其他线程工作内存失效，需要到主内存加载</li>
-<li>对有序性的保证：<code>volatile</code>能够禁止<code>JVM</code>以及处理器对其进行重排序，而<code>synchronized</code>保证的有序性是通过程序串行化执行换来的，并且在<code>synchronized</code>代码块中的代码也会发生指令重排的情况</li>
-<li>其他区别：<code>volatile</code>不会使线程陷入阻塞，但<code>synchronized</code>会</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第336期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-336-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-336-qi/">
-        </link>
-        <updated>2021-05-15T17:28:11.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>用2B形容你，人家铅笔不乐意。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>斜月照帘帷，忆君和梦稀。<br>
-——毛熙震《菩萨蛮·梨花满园飘香雪》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>清晨的花朵，开在黄昏的残骸之上，一切都会过去，不是吗？</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621099875304.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>哈希表+大佬的优化，目标就是让最终的值尽可能最高位为1：</p>
-<pre><code class="language-java">import java.util.HashSet;
-import java.util.Set;
-
-public class Solution {
-    public int findMaximumXOR(int[] nums) {
-        int max = 0;
-        for (int num:nums){
-            max = Math.max(num,max);
-        }
-        int x = 0;
-        Set&lt;Integer&gt; prefix = new HashSet&lt;&gt;();
-        for (int k = 32 - Integer.numberOfLeadingZeros(max) - 1; k &gt;= 0; --k){
-            prefix.clear();
-            x &lt;&lt;= 1;
-            int cur = x | 1;
-            for (int num : nums) {
-                prefix.add(num &gt;&gt; k);
-                if(prefix.contains(num &gt;&gt; k ^ cur)) {
-                    x |= 1;
-                    break;
-                }
-            }
-        }
-        return x;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621099880145.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
