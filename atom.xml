@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-26T04:29:28.927Z</updated>
+    <updated>2021-05-26T18:28:33.868Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,88 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第347期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-347-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-347-qi/">
+        </link>
+        <updated>2021-05-26T18:21:00.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>我最大的缺点，就是缺点钱。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>春归归不得，两桨松花隔。<br>
+——纳兰性德《菩萨蛮·问君何事轻离别》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>你知道的都是真相，只可惜那些并不是真相的全部。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622053358345.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>先看一下最原始的逐位比对的解法：</p>
+<pre><code class="language-java">public class Solution {
+    public int hammingDistance(int x, int y) {
+        int n = 31;
+        int num = 0;
+        while(n &gt; 0){
+            if((x&amp;1) != (y&amp;1)){
+                ++num;
+            }
+            x &gt;&gt;= 1;
+            y &gt;&gt;= 1;
+            --n;
+        }
+        return num;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622053396720.png" alt="" loading="lazy"></figure>
+<p>当然，可以优化，可以先用两个数相异或，然后再右移计算1的位数：</p>
+<pre><code class="language-java">public class Solution {
+    public int hammingDistance(int x, int y) {
+        int num = 0;
+        int s = x^y;
+        while(s != 0){
+            if((s&amp;1) == 1){
+                ++num;
+            }
+            s &gt;&gt;= 1;
+        }
+        return num;
+    }
+}
+</code></pre>
+<p>当然这还不是最快的，因为异或后的数值还对“没有用”的<code>0</code>进行了右移。</p>
+<p>这时候就需要用到一条神奇的公式：</p>
+<pre><code class="language-bash">s &amp; (s-1)
+</code></pre>
+<p>这条公式会直接把<code>s</code>最右边的<code>1</code>变为<code>0</code>，这样就再一次减少了“无用”的<code>0</code>的右移次数：</p>
+<pre><code class="language-java">public class Solution {
+    public int hammingDistance(int x, int y) {
+        int num = 0;
+        int s = x^y;
+        while(s != 0){
+            ++num;
+            s = s&amp;(s-1);
+        }
+        return num;
+    }
+}
+</code></pre>
+<p>最后放上一个调库的解法：</p>
+<pre><code class="language-java">public class Solution {
+    public int hammingDistance(int x, int y) {
+        return Integer.bitCount(x^y);
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第346期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-346-qi/</id>
@@ -937,93 +1019,6 @@ public class Solution {
 <figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1621270596468.png" alt="" loading="lazy"></figure>
 <p><code>O(n)</code>还要比<code>O(n^2)</code>要慢？？？？</p>
 <p>好家伙。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第337期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-337-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-337-qi/">
-        </link>
-        <updated>2021-05-16T17:43:48.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>天将降大任于斯人也，必先苦其心志劳其筋骨，后来天改变主意了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>白发将军亦壮哉，西京昨夜捷书来。<br>
-——陆游《闻武均州报已复西京》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>为众人抱薪者，不可使其冻毙于风雪。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621187068743.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>简单<code>DFS</code>：</p>
-<pre><code class="language-java">
-public class Solution {
-    private int xParent;
-    private boolean findX = false;
-    private int yParent;
-    private boolean findY = false;
-
-    public boolean isCousins(TreeNode root, int x, int y) {
-        return heightX(root,x) == heightY(root,y) &amp;&amp; xParent != yParent;
-    }
-
-    private int heightX(TreeNode root, int x) {
-        if (root != null) {
-            if (root.val == x) {
-                findX = true;
-                return 1;
-            }
-            if (root.left != null) {
-                xParent = root.val;
-                int temp = heightX(root.left, x);
-                if (findX) {
-                    return temp + 1;
-                }
-            }
-            if (root.right != null) {
-                xParent = root.val;
-                int temp = heightX(root.right, x);
-                if (findX) {
-                    return temp + 1;
-                }
-            }
-        }
-        return 0;
-    }
-
-    private int heightY(TreeNode root, int y) {
-        if (root != null) {
-            if (root.val == y) {
-                findY = true;
-                return 1;
-            }
-            if (root.left != null) {
-                yParent = root.val;
-                int temp = heightY(root.left, y);
-                if (findY) {
-                    return temp + 1;
-                }
-            }
-            if (root.right != null) {
-                yParent = root.val;
-                int temp = heightY(root.right, y);
-                if (findY) {
-                    return temp + 1;
-                }
-            }
-        }
-        return 0;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621187056629.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
