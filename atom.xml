@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-26T18:28:33.868Z</updated>
+    <updated>2021-05-29T01:05:10.640Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,129 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第349期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-349-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-349-qi/">
+        </link>
+        <updated>2021-05-29T00:55:14.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>正在输入...，给了多少人希望，又给了多少人失望。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>美女渭桥东，春还事蚕作。<br>
+——李白《陌上桑》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>定义虽然精确，现实极度模糊。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622249816294.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>这题是以<a href="https://leetcode-cn.com/problems/subarray-sum-equals-k/">560、和为K的子数组</a>作为基础的：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622249881301.png" alt="" loading="lazy"></figure>
+<p>560题可以使用哈希表将复杂度从<code>O(n^2)</code>降到<code>O(n)</code>，每一次计算前缀和的时候，计算<code>prefixSum - k</code>是否在哈希表中出现过，如果出现过，从哈希表中取值对应的值并累加到结果中，最后将<code>prefixSum</code>添加到哈希表中，将<code>prefixSum</code>的出现次数加1（默认为0）：</p>
+<pre><code class="language-java">class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int n = nums.length;
+        Map&lt;Integer,Integer&gt; map = new HashMap&lt;&gt;(n);
+        map.put(0,1);
+        int sum = 0;
+        int count = 0;
+        for (int i = 0; i &lt; n; i++) {
+            sum += nums[i];
+            if(map.containsKey(sum - k)) {
+                count += map.get(sum-k);
+            }
+            map.put(sum,map.getOrDefault(sum,0)+1);
+        }
+        return count;
+    }
+}
+</code></pre>
+<p>这题同样需要使用到这个方法（来自官方题解）：</p>
+<pre><code class="language-java">class Solution {
+    public int numSubmatrixSumTarget(int[][] matrix, int target) {
+        int ans = 0;
+        int m = matrix.length, n = matrix[0].length;
+        for (int i = 0; i &lt; m; ++i) { // 枚举上边界
+            int[] sum = new int[n];
+            for (int j = i; j &lt; m; ++j) { // 枚举下边界
+                for (int c = 0; c &lt; n; ++c) {
+                    sum[c] += matrix[j][c]; // 更新每列的元素和
+                }
+                ans += subarraySum(sum, target);
+            }
+        }
+        return ans;
+    }
+
+    public int subarraySum(int[] nums, int k) {
+        Map&lt;Integer, Integer&gt; map = new HashMap&lt;Integer, Integer&gt;();
+        map.put(0, 1);
+        int count = 0, pre = 0;
+        for (int x : nums) {
+            pre += x;
+            if (map.containsKey(pre - k)) {
+                count += map.get(pre - k);
+            }
+            map.put(pre, map.getOrDefault(pre, 0) + 1);
+        }
+        return count;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第348期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-348-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-348-qi/">
+        </link>
+        <updated>2021-05-27T16:32:47.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>命只有一条，但要命的事，可不止一件。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>毫端蕴秀临霜写，口齿噙香对月吟。<br>
+——曹雪芹《咏菊》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>沉默——真正猎手的选择。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622133327190.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>按位计算（<s>差点被昨天的异或求1误导了。。。</s>）：</p>
+<pre><code class="language-java">public class Solution {
+    public int totalHammingDistance(int[] nums) {
+        int n = nums.length;
+        int sum = 0;
+
+        for (int i = 0; i &lt; 32; i++) {
+            int c = 0;
+            for (int j = 0; j &lt; n; j++) {
+                c += (nums[j] &gt;&gt; i) &amp; 1;
+            }
+            sum += c * (n-c);
+        }
+        return sum;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622133330537.png" alt="" loading="lazy"></figure>
+<h1 id="启程">启程</h1>
+<p>Good luck.</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第347期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-347-qi/</id>
@@ -835,190 +958,6 @@ public class Solution {
 <p>都2021年了，</p>
 <p>不会真的有人在520送礼物吧？</p>
 <p>不会吧不会吧？</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第339期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-339-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-339-qi/">
-        </link>
-        <updated>2021-05-19T01:56:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>打工钱少就出来创业吧，保证能让你，赔个精光。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>两岸桃花烘日出，思维高柳到天垂。<br>
-——姜彧《浣溪沙·山滴岚光水拍堤》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>你的名字那么普通也就我听到会心头一怔。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621476068651.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>前缀和+快速选择：</p>
-<pre><code class="language-java">public class Solution {
-    public int kthLargestValue(int[][] matrix, int k) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-        int [][] xor = new int[m+1][n+1];
-
-        int []result = new int[m*n];
-        int resultIndex = 0;
-
-        for (int i = 0; i &lt; m; i++) {
-            for (int j = 0; j &lt; n; j++) {
-                result[resultIndex++] = xor[i+1][j+1] = (matrix[i][j] ^ xor[i+1][j] ^ xor[i][j+1] ^ xor[i][j]);
-            }
-        }
-
-        return quickSelect(result,0,m*n-1,m*n-k+1);
-    }
-
-    private int quickSelect(int []nums,int start,int end,int k){
-        if (start == end) {
-            return nums[start];
-        }
-        int left = start;
-        int right = end;
-        int pivot = nums[start + (end - start) / 2];
-        while (left &lt;= right) {
-            if (nums[left] &lt; pivot) {
-                left++;
-            } else if (nums[right] &gt; pivot) {
-                right--;
-            } else {
-                int temp = nums[left];
-                nums[left++] = nums[right];
-                nums[right--] = temp;
-            }
-        }
-        if (start + k - 1 &lt;= right) {
-            return quickSelect(nums, start, right, k);
-        }
-        if (start + k - 1 &gt;= left) {
-            return quickSelect(nums, left, end, start + k - left);
-        }
-        return nums[right + 1];
-    }
-
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621489558295.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第338期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-338-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-338-qi/">
-        </link>
-        <updated>2021-05-17T16:32:02.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>岁月让我知道，除了快递，我谁也不必等。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>来时浦口花迎入，采罢江头月送归。<br>
-——王昌龄《采莲曲二首》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我发现，勇气根本靠不住，只有完全的疯狂才有意义。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621269247204.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>暴力<code>O(n3)</code>：</p>
-<pre><code class="language-java">
-public class Solution {
-    public int countTriplets(int[] arr) {
-        int sum = 0;
-        int n = arr.length;
-        int [] x = new int[n];
-        x[0] = arr[0];
-        for (int i = 1; i &lt; n; i++) {
-            x[i] = arr[i] ^ x[i-1];
-        }
-        for (int i = 0; i &lt; n; i++) {
-            for (int j = i+1; j &lt; n; j++) {
-                for (int k = j; k &lt; n; k++) {
-                    int a = (i-1 &gt;= 0 ? x[j-1] ^ x[i-1] : x[j-1]);
-                    int b = x[k] ^ x[j-1];
-                    if(a == b){
-                        ++sum;
-                    }
-                }
-            }
-        }
-        return sum;
-    }
-}
-</code></pre>
-<p>自己也不太看得下去：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621269284763.png" alt="" loading="lazy"></figure>
-<p><s>真·时间换空间。</s></p>
-<p>题解还有一个<code>O(n^2)</code>的，核心公式如下：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1621269590200.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1621269595883.png" alt="" loading="lazy"></figure>
-<p>符合范围的<code>i</code>、<code>k</code>，<code>j</code>可以任意取值，也就是两者的差值：</p>
-<pre><code class="language-java">public class Solution {
-    public int countTriplets(int[] arr) {
-        int sum = 0;
-        int n = arr.length;
-        int[] x = new int[n + 1];
-        for (int i = 0; i &lt; n; i++) {
-            x[i+1] = arr[i] ^ x[i];
-        }
-        for (int i = 0; i &lt; n; i++) {
-            for (int k = i + 1; k &lt; n; k++) {
-                if (x[i] == x[k + 1]) {
-                    sum += k - i;
-                }
-            }
-        }
-        return sum;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1621269646584.png" alt="" loading="lazy"></figure>
-<p>居然还有<code>O(n)</code>的：</p>
-<pre><code class="language-java">import java.util.HashMap;
-import java.util.Map;
-
-public class Solution {
-    public int countTriplets(int[] arr) {
-        int sum = 0;
-        int n = arr.length;
-        int[] x = new int[n + 1];
-        for (int i = 0; i &lt; n; i++) {
-            x[i + 1] = arr[i] ^ x[i];
-        }
-
-        Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;&gt;();
-        Map&lt;Integer, Integer&gt; total = new HashMap&lt;&gt;();
-
-        for (int k = 0; k &lt; n; k++) {
-
-            if (cnt.containsKey(x[k + 1])) {
-                sum += cnt.get(x[k + 1]) * k - total.get(x[k + 1]);
-            }
-
-            cnt.put(x[k], cnt.getOrDefault(x[k], 0) + 1);
-            total.put(x[k], total.getOrDefault(x[k], 0) + k);
-        }
-        return sum;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1621270596468.png" alt="" loading="lazy"></figure>
-<p><code>O(n)</code>还要比<code>O(n^2)</code>要慢？？？？</p>
-<p>好家伙。</p>
 ]]></content>
     </entry>
 </feed>
