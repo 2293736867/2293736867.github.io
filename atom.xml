@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-29T02:17:28.313Z</updated>
+    <updated>2021-05-30T06:43:43.390Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,39 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第350期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-350-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-350-qi/">
+        </link>
+        <updated>2021-05-30T06:28:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>如果你跌倒了，那就，找个舒服的姿势趴着吧。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>无意苦争春，一任群芳妒。<br>
+——陆游《卜算子·咏梅》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我把这几个字写了又删，删了又写。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622356263336.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>原数减1后与原数相与，这个操作可以将最右边的一个1变为0，如果只有1个1，也就是如果是2的幂，那么最右边的一个1变为0后整个数就是0。</p>
+<pre><code class="language-java">class Solution {
+    public boolean isPowerOfTwo(int n) {
+        return n&lt;1 ? false : (n &amp; (n - 1)) == 0;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622356156620.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第349期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-349-qi/</id>
@@ -885,79 +918,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621571700653.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第340期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-340-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-340-qi/">
-        </link>
-        <updated>2021-05-20T02:04:15.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>为什么中国人结婚，都非要选个好日子呢？因为结完婚就没好日子过了！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>阳春布德泽，万物生光辉。<br>
-——佚名《长歌行》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>掉头一去是风吹黑发，回首再来已雪满白头。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621489567021.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>统计词频+优先队列（前k个）：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public List&lt;String&gt; topKFrequent(String[] words, int k) {
-        Map&lt;String, Node&gt; map = new HashMap&lt;&gt;();
-        for (String s : words) {
-            if(map.containsKey(s)){
-                ++map.get(s).ct;
-            }else{
-                map.put(s,new Node(s));
-            }
-        }
-
-        PriorityQueue&lt;Node&gt; heap = new PriorityQueue&lt;&gt;((s1,s2)-&gt; s1.ct == s2.ct ? s1.s.compareTo(s2.s) : (s2.ct - s1.ct));
-
-        for (Node node:map.values()){
-            heap.offer(node)    ;
-        }
-
-        List&lt;String&gt; list = new ArrayList&lt;&gt;(k);
-        for (int i = 0; i &lt; k; i++) {
-            list.add(heap.poll().s);
-        }
-        return list;
-    }
-
-    private static class Node{
-        String s;
-        int ct;
-
-        public Node(String s){
-            ct = 1;
-            this.s = s;
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621489575585.png" alt="" loading="lazy"></figure>
-<h1 id="听说今天是520">听说今天是520</h1>
-<p>真搞不懂为什么这么多人送礼物？</p>
-<p>今天又不是什么特殊的日子。</p>
-<p>至于吗？</p>
-<p>520居然真的还会有人送礼物？</p>
-<p>不会吧不会吧？</p>
-<p>都2021年了，</p>
-<p>不会真的有人在520送礼物吧？</p>
-<p>不会吧不会吧？</p>
 ]]></content>
     </entry>
 </feed>
