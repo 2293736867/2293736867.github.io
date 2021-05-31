@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-05-30T06:43:43.390Z</updated>
+    <updated>2021-05-31T00:44:22.780Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,49 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第351期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-351-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-351-qi/">
+        </link>
+        <updated>2021-05-31T00:35:05.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>问世间钱为何物，只叫人生死相许。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>日照香炉生紫烟，遥看瀑布挂前川。<br>
+——李白《望庐山瀑布》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>梦与现实是不同的，所以才能够为了把梦变为现实而努力。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622421449590.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>与昨天的每日一题差不多，先判断2的幂，再通过<code>0xaaaaaaaa</code>或<code>0x55555555</code>判断即可：</p>
+<pre><code class="language-java">public class Solution {
+    public boolean isPowerOfFour(int n) {
+        return n &gt; 0 &amp;&amp; (n &amp; (n-1)) == 0 &amp;&amp; (n &amp; 0x55555555) != 0;
+    }
+}
+</code></pre>
+<p><code>0x55555555</code>的二进制是</p>
+<pre><code class="language-bash">0101  0101  0101  0101  0101  0101  0101  0101
+</code></pre>
+<p>如果是2的幂的同时（只有一个1），与<code>0x55555555</code>相与，肯定不为0，这样就可以判断是4的幂了，同样道理也可以使用<code>0xaaaaaaaa</code>判断：</p>
+<pre><code class="language-java">public class Solution {
+    public boolean isPowerOfFour(int n) {
+        return n &gt; 0 &amp;&amp; (n &amp; (n-1)) == 0 &amp;&amp; (n &amp; 0xaaaaaaaa) == 0;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622421599795.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第350期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-350-qi/</id>
@@ -872,52 +915,6 @@ public class Solution {
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621695774938.png" alt="" loading="lazy"></figure>
 <h1 id="袁老千古">袁老千古</h1>
 <p>好好吃饭。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第341期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-341-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-341-qi/">
-        </link>
-        <updated>2021-05-21T04:33:37.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>别人露腿那叫美，你露腿就想让人怼。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>黄师塔前江水东，春光懒困倚微风。<br>
-——杜甫《江畔独步寻花·其五》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>只要微笑就可以了。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621571697210.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>实际上是最长公共子序列：</p>
-<pre><code class="language-java">public class Solution {
-    public int maxUncrossedLines(int[] nums1, int[] nums2) {
-        int n = nums1.length;
-        int m = nums2.length;
-        int[][] dp = new int[n + 1][m + 1];
-
-        for (int i = 1; i &lt;= n; i++) {
-            for (int j = 1; j &lt;= m; j++) {
-                if (nums1[i - 1] == nums2[j - 1]) {
-                    dp[i][j] = dp[i - 1][j - 1] + 1;
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-                }
-            }
-        }
-        return dp[n][m];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621571700653.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
