@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-01T06:35:23.461Z</updated>
+    <updated>2021-06-02T02:22:08.888Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,113 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第353期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-353-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-353-qi/">
+        </link>
+        <updated>2021-06-02T02:02:59.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>别说你一无所有，你还有一身债。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>秀色掩今古，荷花羞玉颜。<br>
+——李白《西施/咏苎蒙山》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>你说一声，我也默认，我们在这月光下十指生根。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622599403795.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>毫无疑问前缀和，使用同余定理，将所有前缀和的余数和对应的下标放进哈希表中，遍历的时候判断有没有出现了相同的余数，出现了就直接返回<code>true</code>，否则判断余数是否出现过，没有出现过就放进哈希表：</p>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+
+public class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+        int n = nums.length;
+        long [] sum = new long[n];
+        Map&lt;Long,Integer&gt; map = new HashMap&lt;&gt;();
+        map.put((sum[0] = nums[0]) % k,0);
+        for (int i = 1; i &lt; n; i++) {
+            sum[i] = nums[i] + sum[i-1];
+            long mod = sum[i] % k;
+            if(mod == 0 || (map.containsKey(mod) &amp;&amp; (i - map.get(mod) &gt; 1))){
+                return true;
+            }
+            if(!map.containsKey(mod)){
+                map.put(mod,i);
+            }
+        }
+
+        return false;
+    }
+}
+</code></pre>
+<p>然并卵：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622599553489.png" alt="" loading="lazy"></figure>
+<p>看了一下最快的答案：（哈希表？哈个der）</p>
+<pre><code class="language-java">class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+        for (int i = 0; i &lt; nums.length - 1; i++) {
+            if (nums[i] == 0 &amp;&amp; nums[i + 1] == 0) {
+                return true;
+            }
+        }
+        for (int i = 0; i &lt; nums.length; i++) {
+            int sum = nums[i];
+            for (int j = i + 1; j &lt; nums.length; j++) {
+                sum += nums[j];
+                if (sum % k == 0) {
+                    return true;
+                }
+            }
+            if (sum &lt; k) {
+                break;
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1622599684876.png" alt="" loading="lazy"></figure>
+<p>我当时就惊呆了，这不就是<code>O(n^2)</code>的优化版吗？怎么这么快？？？</p>
+<p><s>好家伙</s></p>
+<p>如果将</p>
+<pre><code class="language-java">if (sum &lt; k) {
+    break;
+}
+</code></pre>
+<p>去掉，就是妥妥的<code>O(n^2)</code>，但是这个判断是真的强，也就是第<code>i</code>个到最后一个的和如果小于<code>k</code>，这样第<code>i+1</code>个到最后一个、第<code>i+2</code>个到最后一个也一定会小于<code>k</code>，换句话说就没有答案出现了，可以直接跳出循环返回<code>false</code>，只是没有想到居然会这么快。。。</p>
+<p><s>好家伙</s></p>
+<p><s>我爱暴力</s></p>
+<p><s>爱个der</s></p>
+<h1 id="一位大佬的杂文">一位大佬的杂文</h1>
+<h2 id="地址">地址</h2>
+<p><a href="https://www.lucienshui.cn/">https://www.lucienshui.cn/</a></p>
+<h2 id="一些感想">一些感想</h2>
+<p>腾讯实习然后阿里工作的大佬，在学校的时候担任过文体部部长，会吉他，大学谈到现在的女朋友（不知道有没有结婚，好像里面没写），也是个<code>ACM</code>大佬。</p>
+<p>怎么说呢，这大佬好像从13年就开始写博客了（那时候他应该是初中？），只不过大概一年一篇的频率，估计没什么时间更。感想的话，羡慕肯定多少有一点的，不过从以前的文章看，多少感觉有点“孤独”的样子：</p>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1622600260814.png" alt="" loading="lazy"></figure>
+<p>果然是有故事的男人。</p>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1622600318188.png" alt="" loading="lazy"></figure>
+<p>不过就算是有故事，也不太希望主动提起，想回到以前那个无忧无虑的时代，起码笔者本人是这样想的。</p>
+<p>有故事又如何？</p>
+<p>没有，又如何？</p>
+<p>反正，</p>
+<p>又回不去了。</p>
+<p>。</p>
+<p>无论，是谈过恋爱，还是分手，</p>
+<p>无论，是榜上有名，还是倒数第一，</p>
+<p>无论，是经历过，还是没有经历过，</p>
+<p>都回不去了。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日一句  351-400期合集]]></title>
         <id>https://2293736867.github.io/post/mei-ri-yi-ju-351-400-qi-he-ji/</id>
@@ -26,7 +133,9 @@
 <p>多少岁月与轻狂交织的梦，被遗忘在大海的尽头，随时光匆匆而去。</p>
 </blockquote>
 <h1 id="第353期">第353期</h1>
-<blockquote></blockquote>
+<blockquote>
+<p>你说一声，我也默认，我们在这月光下十指生根。</p>
+</blockquote>
 <h1 id="第354期">第354期</h1>
 <blockquote></blockquote>
 <h1 id="第355期">第355期</h1>
@@ -860,65 +969,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1621891584866.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第344期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-344-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-344-qi/">
-        </link>
-        <updated>2021-05-24T10:33:24.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>不管是白帽子还是黑帽子，会变绿的都不是好帽子。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>垂死病中惊坐起，暗风吹雨入寒窗。<br>
-——元稹《闻乐天授江州司马》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>有时候，和你吵架，我宁愿当一个输家，也不愿意赢我爱的你！！！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621766022694.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>区间<code>DP</code>，模板是三重循环：</p>
-<ul>
-<li>一重循环：区间长度</li>
-<li>二重循环：区间起点</li>
-<li>三重循环：区间分割点</li>
-</ul>
-<p>转移方程：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621766144129.png" alt="" loading="lazy"></figure>
-<p><s>说的头头是道。。。</s></p>
-<p>代码（抄题解的，真的不会第一次遇到这种题）：</p>
-<pre><code class="language-java">public class Solution {
-    public int strangePrinter(String s){
-        int n = s.length();
-        int[][] f = new int[n][n];
-
-        for (int i = n-1; i &gt;= 0; --i) {
-            f[i][i] = 1;
-            for (int j = i+1; j &lt; n; j++) {
-                if(s.charAt(i) == s.charAt(j)) {
-                    f[i][j] = f[i][j-1];
-                }else{
-                    int minn = Integer.MAX_VALUE;
-                    for (int k = i; k &lt; j; k++) {
-                        minn = Math.min(minn,f[i][k] + f[k+1][j]);
-                    }
-                    f[i][j] = minn;
-                }
-            }
-        }
-        return f[0][n-1];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1621766026705.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
