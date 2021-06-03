@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-02T02:28:46.945Z</updated>
+    <updated>2021-06-03T01:12:20.488Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,64 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第354期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-354-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-354-qi/">
+        </link>
+        <updated>2021-06-03T01:03:24.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>不说没人陪你勇闯天涯，你能找到人陪你喝雪花吗？</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>云日相晖映，空水共澄鲜。<br>
+——谢灵运《登江中孤屿》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>多巴胺不等于爱情，爱情却一定有多巴胺！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622682361367.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>昨天做了那么多前缀和+哈希表做了个寂寞。</p>
+<p>才过了493个：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622682403568.png" alt="" loading="lazy"></figure>
+<p><s>做了个寂寞</s></p>
+<p>下面是官方题解的优化版，使用数组模拟哈希表<code>HashMap</code>：</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    public int findMaxLength(int[] nums) {
+        int res = 0;
+        int n = nums.length;
+        int mapLen = (n&lt;&lt;1) + 1;
+        int [] map = new int[mapLen];
+        for (int i = 0; i &lt; mapLen; i++) {
+            map[i] = -n;
+        }
+        int count = n;
+        map[n] = -1;
+        for (int i = 0; i &lt; n; i++) {
+            count += (nums[i] == 1 ? 1 : -1);
+            if(map[count] != -n){
+                res = Math.max(res,i - map[count]);
+            }else{
+                map[count] = i;
+            }
+        }
+        return res;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1622682649872.png" alt="" loading="lazy"></figure>
+<p><s>心态崩了</s></p>
+<p>本质上是维护一个计数器（前缀和），遇到1就加1，遇到0就减1，当哈希表中的计数器出现过时，计算下标之差并与<code>res</code>比较，如果没有出现过就直接放进哈希表中。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第353期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-353-qi/</id>
@@ -679,296 +737,6 @@ public class Solution {
 </ul>
 <p>最后返回<code>builder.toString()</code>。</p>
 <figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1621995094642.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第345期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-345-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-345-qi/">
-        </link>
-        <updated>2021-05-24T21:20:19.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>骑电动车请戴好头盔，否则，开奔驰的同学会认出你。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>指点牡丹初绽朵，日高犹自凭朱栏，含嚬不语恨春残。<br>
-——韦庄《浣溪沙·清晓妆成寒食天》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我希望兜兜转转之后那个人还是你。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621891391130.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>不会，只会暴力，放个官方题解<code>dp</code>：</p>
-<pre><code class="language-java">class Solution {
-    // x 的范围为 [0, 2^10)
-    static final int MAXX = 1 &lt;&lt; 10;
-    // 极大值，为了防止整数溢出选择 INT_MAX / 2
-    static final int INFTY = Integer.MAX_VALUE / 2;
-
-    public int minChanges(int[] nums, int k) {
-        int n = nums.length;
-        int[] f = new int[MAXX];
-        Arrays.fill(f, INFTY);
-        // 边界条件 f(-1,0)=0
-        f[0] = 0;
-        
-        for (int i = 0; i &lt; k; ++i) {
-            // 第 i 个组的哈希映射
-            Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;Integer, Integer&gt;();
-            int size = 0;
-            for (int j = i; j &lt; n; j += k) {
-                cnt.put(nums[j], cnt.getOrDefault(nums[j], 0) + 1);
-                ++size;
-            }
-
-            // 求出 t2
-            int t2min = Arrays.stream(f).min().getAsInt();
-
-            int[] g = new int[MAXX];
-            Arrays.fill(g, t2min);
-            for (int mask = 0; mask &lt; MAXX; ++mask) {
-                // t1 则需要枚举 x 才能求出
-                for (Map.Entry&lt;Integer, Integer&gt; entry : cnt.entrySet()) {
-                    int x = entry.getKey(), countx = entry.getValue();
-                    g[mask] = Math.min(g[mask], f[mask ^ x] - countx);
-                }
-            }
-            
-            // 别忘了加上 size
-            for (int j = 0; j &lt; MAXX; ++j) {
-                g[j] += size;
-            }
-            f = g;
-        }
-
-        return f[0];
-    }
-}
-</code></pre>
-<p>然后速度并不怎么样：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621891491344.png" alt="" loading="lazy"></figure>
-<p>贪心优化：</p>
-<pre><code class="language-java">class Solution {
-    int[][] cnt;
-    int[] sz;
-    int[] nums;
-    int k;
-    public int cost(int pos,int num){
-        return sz[pos]-cnt[pos][num];
-    }
-    Integer[][] memo;
-    public int dfs(int pos,int num){//[0,pos]组之前异或值为num的cost
-        if(pos==0)return cost(pos,num);
-        if(memo[pos][num]!=null)return memo[pos][num];
-
-        int res = Integer.MAX_VALUE/2;
-        for(int i=pos;i&lt;nums.length;i+=k){//枚举[0,1023]可以覆盖了所有情况，但是会超时
-            //枚举这个组里的值x，那么前面需要值num^x，更新代价
-            int x = nums[i];
-            res = Math.min(res,cost(pos,x)+dfs(pos-1,num^x));
-        }
-        memo[pos][num] = res;
-        return memo[pos][num];
-    }
-    public int[] get_min_cost(int k){//计算第k组的最小cost
-        //res[0]==cost res[1]==众数个数
-        int min_cost = Integer.MAX_VALUE/2;
-        int mass_cnt = Integer.MAX_VALUE/2;
-        for(int i=0;i&lt;1024;i++){A
-            if(cost(k,i)&lt;min_cost){
-                min_cost = cost(k,i);
-                mass_cnt = cnt[k][i]; 
-            }
-        }
-        return new int[]{min_cost,mass_cnt};
-    }
-    public int minChanges(int[] nums, int k) {
-        this.nums = nums;
-        this.k = k;
-        int n = nums.length;
-        cnt = new int[k][1024];
-        sz =  new int[k];
-        memo = new Integer[k][1024];
-        for(int i=0;i&lt;k;i++){
-            for(int j=i;j&lt;n;j+=k){
-                cnt[i][nums[j]]++;
-                sz[i]++;
-            }
-        }
-        //dp从已有的数进行转移，先dp
-        int res = dfs(k-1,0);
-
-        //如果dp转移的时候枚举[0,1024]，虽然可以覆盖所有情况
-        //但是复杂度变成k*n*1024了
-        //只使用已有的数进行转移，可以将1024降为m，k*m=n，总复杂度就变成n^2了。
-        //但是会漏一种情况，有的组选择了新的数，此时这个组的cost为 (组内元素个数)。
-        //那么这种组有几个呢？
-        //可能是0个。可能是...
-
-        //贪心打补丁
-        int sum_cost = 0;
-        int cost_i = -1;
-        int id = -1;
-        int mass_cnt = Integer.MAX_VALUE/2;//众数
-        for(int i=0;i&lt;k;i++){
-            int[] t = get_min_cost(i);//得到第i组的最小cost
-            sum_cost += t[0];
-            if(t[1]&lt;mass_cnt){
-                mass_cnt = t[1];
-                id = i;
-            }
-        }
-        //找到那个众数个数最小的组 
-        //本来的cost_i = sz[i]-mass_cnt 变成 sz[i] 
-        res = Math.min(sum_cost+mass_cnt,res);
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1621891537477.png" alt="" loading="lazy"></figure>
-<p>看看第一名的大佬，是真的强：</p>
-<pre><code class="language-java">public class Solution {
-    static class VC implements Comparable&lt;VC&gt; {
-        final int value;
-        final int index;
-        int count;
-
-        VC(int index, int v) {
-            this.index = index;
-            this.value = v;
-        }
-
-        @Override
-        public int compareTo(VC o) {
-            return o.count - this.count;
-        }
-
-        @Override
-        public String toString() {
-            return value + &quot;:&quot; + count;
-        }
-    }
-
-    static class Node implements Comparable&lt;Node&gt; {
-        final int index;
-        VC[] vs;
-        int size;
-        int count;
-        int min_change;
-        int min_change_all;
-        int[] cs;
-
-        Node(VC[] vcs, int[] nums, int index, int k) {
-            this.index = index;
-            vs = new VC[(nums.length - index - 1) / k + 1];
-            size = 0;
-            for (int i = index; i &lt; nums.length; i += k) {
-                int v = nums[i];
-                VC vc = vcs[v];
-                if (vc == null || vc.index != index) {
-                    vc = vcs[v] = new VC(index, v);
-                }
-                if (vc.count++ == 0)
-                    vs[size++] = vc;
-                count++;
-            }
-            Arrays.sort(vs, 0, size);
-            this.min_change = count - vs[0].count;
-        }
-
-        void buildcs() {
-            int maxv = 0;
-            for (int i = 0; i &lt; size; i++) {
-                maxv = Math.max(maxv, vs[i].value);
-            }
-            this.cs = new int[maxv + 1];
-            for (int i = 0; i &lt; size; i++) {
-                this.cs[vs[i].value] = vs[i].count;
-            }
-        }
-
-        int cs(int value) {
-            return value &lt; cs.length ? cs[value] : 0;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            int r = o.min_change - this.min_change;
-            if (r == 0)
-                r = this.count - o.count;
-            return r;
-        }
-
-    }
-
-/**
-     * 这里使用BFS比DP的计算量少很多。首先按照每行最少替换成本降序排列，然后从最小成本开始替换，每次替换也首先考虑当前行的最小成本，按照DFS思路构建替换路径，计算每个路径的替换成本。
-     * 每个路径的替换成本都与最小成本数进行比较，同时将其中的最小再作为比较标准，最小成本默认是数列的长度。
-     * 这里的剪枝做的很巧妙，min_change_all表示余下未替换步骤采用最优替换的最小替换和，再次基础上加上当前已经执行的替换数，如果比min_change大，就放弃后面的计算。min_change_all的设计很巧妙。
-     * 和DP相比，它按照每行的最优选择依次DFS搜索可能的替换路径，再搜索到最后一层时，判断该数值作为替换的成本（因此存在或不存在都考虑到了），不用像DP那样计算所有可能的替换值。
-     */
-    static int dfs(Node[] nodes, int index, int v, int changes, int min_change) {
-        Node node = nodes[index];
-        if (index == 0) {
-            changes += node.count - node.cs(v);
-            if (changes &lt; min_change) {
-                min_change = changes;
-            }
-            return min_change;
-        }
-        //优秀的剪枝判断
-        if (changes + node.min_change_all &gt;= min_change) {
-            return min_change;
-        }
-        for (int i = 0; i &lt; node.size; i++) {
-            VC vc = node.vs[i];
-            min_change = dfs(nodes, index - 1, v ^ vc.value, changes + node.count - vc.count, min_change);
-        }
-        return min_change;
-    }
-
-    public int minChanges(int[] nums, int k) {
-        final int N = nums.length;
-        int res = 0;
-        if (k == 1) {
-            for (int v : nums)
-                if (v != 0) res++;
-            return res;
-        }
-        if (k &gt;= N) {
-            for (int v : nums)
-                res ^= v;
-            res = res == 0 ? 0 : 1;
-            return res;
-        }
-        Node[] nodes = new Node[k];
-        int maxv = 0;
-        for (int v : nums)
-            maxv = Math.max(maxv, v);
-        VC[] vcs = new VC[maxv + 1];
-        for (int i = 0; i &lt; k; i++) {
-            nodes[i] = new Node(vcs, nums, i, k);
-        }
-        Arrays.sort(nodes);
-
-        int s = 0;
-        for (Node node : nodes) {
-            s += node.min_change;
-            node.min_change_all = s;
-        }
-        nodes[0].buildcs();
-        res = dfs(nodes, k - 1, 0, 0, N);
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1621891584866.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
