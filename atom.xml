@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-03T02:01:23.533Z</updated>
+    <updated>2021-06-04T04:26:38.042Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,46 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第355期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-355-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-355-qi/">
+        </link>
+        <updated>2021-06-04T04:20:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你喜欢我哪一点啊？我喜欢你离我远一点。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>春不断、亭台成趣，翠阴蒙密。<br>
+——吴文英《满江红·翠幕深庭》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>只要你想，你就是在天涯海角，我都会追去。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622780512189.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>采用一个非常神奇的思路：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622780619089.gif" alt="" loading="lazy"></figure>
+<p>只能说妙啊，采用一种“绕回去的处理”，知道两个链表相交。</p>
+<pre><code class="language-java">public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode A = headA, B = headB;
+        while (A != B) {
+            A = A != null ? A.next : headB;
+            B = B != null ? B.next : headA;
+        }
+        return A;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1622780533033.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第354期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-354-qi/</id>
@@ -624,119 +664,6 @@ public class Solution {
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第346期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-346-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-346-qi/">
-        </link>
-        <updated>2021-05-25T18:39:22.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>困难也许会迟到，但绝不对缺席。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>两岸桃花烘日出，四维高柳到天垂。<br>
-——姜彧《浣溪沙·山滴岚光水拍堤》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>没人生来杰出。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1621993294270.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>栈模拟：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public String reverseParentheses(String s) {
-        final Stack&lt;String&gt; stack = new Stack&lt;&gt;();
-        final StringBuilder builder = new StringBuilder();
-        int len = s.length();
-        for (int i = 0; i &lt; len; i++) {
-            char c = s.charAt(i);
-            if(c == '('){
-                stack.push(builder.toString());
-                builder.setLength(0);
-            }else if(c == ')'){
-                builder.reverse();
-                builder.insert(0,stack.pop());
-            }else{
-                builder.append(c);
-            }
-        }
-        return builder.toString();
-    }
-}
-</code></pre>
-<p>因为长度限制在2000，时间只需1ms：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1621993235564.png" alt="" loading="lazy"></figure>
-<p>来个双指针：</p>
-<pre><code class="language-java">public class Solution {
-    public String reverseParentheses(String s) {
-        final StringBuilder builder = new StringBuilder(s);
-        while (true){
-            int post = builder.indexOf(&quot;)&quot;);
-            if(post == -1){
-                break;
-            }
-            int pre = builder.lastIndexOf(&quot;(&quot;,post);
-            StringBuilder temp = new StringBuilder(builder.substring(pre+1,post));
-            temp.reverse();
-            builder.replace(pre,post+1,temp.toString());
-        }
-        return builder.toString();
-    }
-}
-</code></pre>
-<p>手动模拟从内向外反转，时间：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1621993923712.png" alt="" loading="lazy"></figure>
-<p>最后来一个反向遍历，不带反转，本质就是需要减少每次<code>reverse()</code>消耗的时间，返回的只是一个按题目顺序要求的遍历顺序的结果，而不是真正反转字符串，示意图如下（来自<a href="https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/solution/zhan-dong-tu-yan-shi-by-xiaohu9527-hua8/">题解</a>）：</p>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1621994961055.png" alt="" loading="lazy"></figure>
-<pre><code class="language-java">import java.util.Stack;
-
-public class Solution {
-    public String reverseParentheses(String s) {
-        final StringBuilder builder = new StringBuilder();
-        int n = s.length();
-        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
-        int [] next = new int[n];
-        for (int i = 0; i &lt; n; i++) {
-            char c = s.charAt(i);
-            if(c == '('){
-                stack.push(i);
-            }else if(c == ')'){
-                int j = stack.pop();
-                next[i] = j;
-                next[j] = i;
-            }
-        }
-
-        int direction = 1;
-        for (int i = 0; i &lt; n; i+=direction) {
-            char c = s.charAt(i);
-            if(c == '(' || c == ')'){
-                i = next[i];
-                direction = -direction;
-            }else{
-                builder.append(c);
-            }
-        }
-        return builder.toString();
-    }
-}
-</code></pre>
-<p>使用一个辅助栈存储括号位置，当出现<code>)</code>时对<code>next</code>数组赋值，表示下一次遍历开始的位置，遍历完成后再次<code>O(n)</code>遍历：</p>
-<ul>
-<li>如果出现了括号，移动指针到<code>next[i]</code>的位置，并改变遍历方向</li>
-<li>如果不是括号，添加到结果末尾</li>
-</ul>
-<p>最后返回<code>builder.toString()</code>。</p>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1621995094642.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
