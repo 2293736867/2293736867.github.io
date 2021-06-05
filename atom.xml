@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-04T08:47:09.668Z</updated>
+    <updated>2021-06-05T02:03:14.746Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,62 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第356期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-356-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-356-qi/">
+        </link>
+        <updated>2021-06-05T02:00:22.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>当生活压得你喘不过气，一定要挺直腰杆，这样被压死时才不难看。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>万顷波光，岳阳楼上，一快披襟。<br>
+——戴复古《柳梢青·岳阳楼》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>卑屈游戏谁是先该离场的呢？</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622858538512.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>没什么好说的。。。</p>
+<pre><code class="language-java">public class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode temp = head;
+        ListNode newHead = null;
+        ListNode pre = null;
+        while (temp != null){
+            while (temp != null &amp;&amp; temp.val == val){
+                temp = temp.next;
+            }
+            if(temp != null) {
+                if (newHead == null) {
+                    newHead = temp;
+                    pre = temp;
+                } else {
+                    pre.next = temp;
+                    pre = pre.next;
+                }
+                temp = temp.next;
+            }else{
+                break;
+            }
+        }
+        if(pre != null){
+            pre.next = null;
+        }
+        return newHead;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622858547671.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第355期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-355-qi/</id>
@@ -582,88 +638,6 @@ public class Solution {
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622133330537.png" alt="" loading="lazy"></figure>
 <h1 id="启程">启程</h1>
 <p>Good luck.</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第347期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-347-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-347-qi/">
-        </link>
-        <updated>2021-05-26T18:21:00.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>我最大的缺点，就是缺点钱。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>春归归不得，两桨松花隔。<br>
-——纳兰性德《菩萨蛮·问君何事轻离别》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>你知道的都是真相，只可惜那些并不是真相的全部。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622053358345.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>先看一下最原始的逐位比对的解法：</p>
-<pre><code class="language-java">public class Solution {
-    public int hammingDistance(int x, int y) {
-        int n = 31;
-        int num = 0;
-        while(n &gt; 0){
-            if((x&amp;1) != (y&amp;1)){
-                ++num;
-            }
-            x &gt;&gt;= 1;
-            y &gt;&gt;= 1;
-            --n;
-        }
-        return num;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622053396720.png" alt="" loading="lazy"></figure>
-<p>当然，可以优化，可以先用两个数相异或，然后再右移计算1的位数：</p>
-<pre><code class="language-java">public class Solution {
-    public int hammingDistance(int x, int y) {
-        int num = 0;
-        int s = x^y;
-        while(s != 0){
-            if((s&amp;1) == 1){
-                ++num;
-            }
-            s &gt;&gt;= 1;
-        }
-        return num;
-    }
-}
-</code></pre>
-<p>当然这还不是最快的，因为异或后的数值还对“没有用”的<code>0</code>进行了右移。</p>
-<p>这时候就需要用到一条神奇的公式：</p>
-<pre><code class="language-bash">s &amp; (s-1)
-</code></pre>
-<p>这条公式会直接把<code>s</code>最右边的<code>1</code>变为<code>0</code>，这样就再一次减少了“无用”的<code>0</code>的右移次数：</p>
-<pre><code class="language-java">public class Solution {
-    public int hammingDistance(int x, int y) {
-        int num = 0;
-        int s = x^y;
-        while(s != 0){
-            ++num;
-            s = s&amp;(s-1);
-        }
-        return num;
-    }
-}
-</code></pre>
-<p>最后放上一个调库的解法：</p>
-<pre><code class="language-java">public class Solution {
-    public int hammingDistance(int x, int y) {
-        return Integer.bitCount(x^y);
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
