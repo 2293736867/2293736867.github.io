@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-05T04:51:40.086Z</updated>
+    <updated>2021-06-06T15:08:50.295Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,95 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第357期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-357-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-357-qi/">
+        </link>
+        <updated>2021-06-06T14:21:38.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>纵然人生坎坷，但我从不会向命运屈服！我通常都是直接屈膝Orz。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>山头明月来，本在天高处。<br>
+——辛弃疾《生查子·独游西岩》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>讨厌酒的味道，却爱上醉的感觉。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622989628335.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>试过贪心，试过<code>dp</code>，也试过<code>dp</code>加上堆，就是死活不能<code>AC</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622990009270.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1622990012069.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1622990015020.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1622990018276.png" alt="" loading="lazy"></figure>
+<p>看了题解才知道是01背包~~（回去得好好看一下01背包）~~，下面给出一个题解优化过的版本：</p>
+<pre><code class="language-java">public class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        int total0 = 0;
+        int total1 = 0;
+        int len = strs.length;
+        int []num0 = new int[len];
+        int []num1 = new int[len];
+        for (int i = 0; i &lt; len; i++) {
+            for (char c:strs[i].toCharArray()){
+                if(c=='0'){
+                    ++num0[i];
+                }else{
+                    ++num1[i];
+                }
+            }
+            total0 += num0[i];
+            total1 += num1[i];
+        }
+
+        if(total0 &lt; m &amp;&amp; total1 &lt; n){
+            return len;
+        }
+        int [][] dp = new int[m+1][n+1];
+        dp[0][0] = 1;
+        for (int i = 0; i &lt; len; i++) {
+            int n0 = num0[i];
+            int n1 = num1[i];
+            for (int j = m; j &gt;= n0; --j) {
+                for (int k = n; k &gt;= n1; --k) {
+                    int temp = dp[j-n0][k-n1];
+                    if(temp != 0){
+                        if(j == n0 &amp;&amp; k == n1){
+                            dp[j][k] = Math.max(dp[j][k],temp);
+                        }else{
+                            dp[j][k] = Math.max(dp[j][k],temp+1);
+                        }
+                    }
+                }
+            }
+        }
+        int max = 0;
+        for (int j = m; j &gt; 0; --j) {
+            for (int k = n; k &gt; 0; --k) {
+                if(dp[j][k] &gt; max) {
+                    max = dp[j][k];
+                }
+            }
+        }
+        return max;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1622992117028.png" alt="" loading="lazy"></figure>
+<h1 id="赛氪的算法比赛">赛氪的算法比赛</h1>
+<p>今天和队友做了赛氪的一个比赛，</p>
+<p>真的菜的一比。</p>
+<p>才4题。</p>
+<p><s>完犊子。</s></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第356期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-356-qi/</id>
@@ -593,51 +682,6 @@ public class Solution {
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第348期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-348-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-348-qi/">
-        </link>
-        <updated>2021-05-27T16:32:47.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>命只有一条，但要命的事，可不止一件。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>毫端蕴秀临霜写，口齿噙香对月吟。<br>
-——曹雪芹《咏菊》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>沉默——真正猎手的选择。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622133327190.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>按位计算（<s>差点被昨天的异或求1误导了。。。</s>）：</p>
-<pre><code class="language-java">public class Solution {
-    public int totalHammingDistance(int[] nums) {
-        int n = nums.length;
-        int sum = 0;
-
-        for (int i = 0; i &lt; 32; i++) {
-            int c = 0;
-            for (int j = 0; j &lt; n; j++) {
-                c += (nums[j] &gt;&gt; i) &amp; 1;
-            }
-            sum += c * (n-c);
-        }
-        return sum;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622133330537.png" alt="" loading="lazy"></figure>
-<h1 id="启程">启程</h1>
-<p>Good luck.</p>
 ]]></content>
     </entry>
 </feed>
