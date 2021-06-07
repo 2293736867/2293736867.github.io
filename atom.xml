@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-06T16:00:58.139Z</updated>
+    <updated>2021-06-07T03:08:10.395Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,121 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第358期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-358-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-358-qi/">
+        </link>
+        <updated>2021-06-07T02:30:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>如果你有什么事，一定要告诉我，反正我也解决不了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>白鸟朱荷引画桡，垂杨影里见红桥，欲寻往事已魂消。<br>
+——王士祯《浣溪沙·红桥》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>这个社会一直在淘汰有学历的人，但是不会淘汰有学习力的人。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623033554364.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>直接暴力回溯：</p>
+<pre><code class="language-java">public class Solution {
+    private int ct;
+    public int findTargetSumWays(int[] nums, int target) {
+        int len = nums.length;
+        dfs(nums,0,len,target,0);
+        return ct;
+    }
+
+    private void dfs(int []nums,int index,int len,int target,int sum){
+        if(index &lt; len) {
+            dfs(nums,index+1,len,target,sum+nums[index]);
+            dfs(nums,index+1,len,target,sum-nums[index]);
+        }else if(sum == target){
+            ++ct;
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623033592467.png" alt="" loading="lazy"></figure>
+<p><s>时间效率非常的好。</s></p>
+<p>使用动态规划优化一下（来自官方题解，本来是没想到的）：</p>
+<pre><code class="language-java">public class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        int diff = sum - target;
+        if (diff &lt; 0 || (diff &amp; 1) == 1) {
+            return 0;
+        }
+        int n = nums.length;
+        int neg = diff &gt;&gt; 1;
+        int[][] dp = new int[n + 1][neg + 1];
+        dp[0][0] = 1;
+
+        for (int i = 1; i &lt;= n; i++) {
+            int num = nums[i - 1];
+            for (int j = 0; j &lt;= neg; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (j &gt;= num) {
+                    dp[i][j] += dp[i - 1][j - num];
+                }
+            }
+        }
+
+        return dp[n][neg];
+    }
+}
+</code></pre>
+<p>关键是计算<code>neg</code>，<code>neg = (sum-target)/2</code>：</p>
+<ul>
+<li>因为<code>nums</code>中所有数都是非负整数</li>
+<li>因此<code>neg</code>也是非负整数</li>
+<li>所以<code>sum-target</code>必须能整除2，也就是非负偶数</li>
+</ul>
+<p>用<code>diff</code>存储了<code>sum-target</code>的值，如果是负数或者正奇数直接返回<code>0</code>，否则进行动态规划的计算。</p>
+<p><code>dp[i][j]</code>表示前<code>i</code>个数中选取元素，使得这些元素之和为<code>j</code>的方案数目，最终答案就是<code>dp[n][neg]</code>。</p>
+<p>对于每个数组中的元素<code>num</code>（<code>nums[i-1]</code>，下标从1开始），在<code>[0,neg]</code>中遍历<code>j</code>，转移方程如下：</p>
+<ul>
+<li><code>j &lt; num</code>：<code>dp[i][j] = dp[i-1][j]</code></li>
+<li><code>j &gt;= num</code>：<code>dp[i][j] = dp[i-1][j] + dp[i-1][j-num]</code></li>
+</ul>
+<p>优化版（来自某位大佬），一维<code>dp</code>，反向计算，从<code>[nums[i],bagSize]</code>反向遍历<code>j</code>：</p>
+<pre><code class="language-java">public class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum &lt; target || ((sum + target) &amp; 1) == 1) {
+            return 0;
+        }
+        int bagSize = (sum+target) &gt;&gt; 1;
+        int n = nums.length;
+        int[] dp = new int[bagSize+1];
+        dp[0] = 1;
+
+        for (int i = 0; i &lt; n; i++) {
+            int num = nums[i];
+            for (int j = bagSize; j &gt;= num; --j) {
+                dp[j] += dp[j-num];
+            }
+        }
+
+        return dp[bagSize];
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第357期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-357-qi/</id>
@@ -604,84 +719,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622356156620.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第349期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-349-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-349-qi/">
-        </link>
-        <updated>2021-05-29T00:55:14.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>正在输入...，给了多少人希望，又给了多少人失望。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>美女渭桥东，春还事蚕作。<br>
-——李白《陌上桑》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>定义虽然精确，现实极度模糊。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622249816294.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>这题是以<a href="https://leetcode-cn.com/problems/subarray-sum-equals-k/">560、和为K的子数组</a>作为基础的：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622249881301.png" alt="" loading="lazy"></figure>
-<p>560题可以使用哈希表将复杂度从<code>O(n^2)</code>降到<code>O(n)</code>，每一次计算前缀和的时候，计算<code>prefixSum - k</code>是否在哈希表中出现过，如果出现过，从哈希表中取值对应的值并累加到结果中，最后将<code>prefixSum</code>添加到哈希表中，将<code>prefixSum</code>的出现次数加1（默认为0）：</p>
-<pre><code class="language-java">class Solution {
-    public int subarraySum(int[] nums, int k) {
-        int n = nums.length;
-        Map&lt;Integer,Integer&gt; map = new HashMap&lt;&gt;(n);
-        map.put(0,1);
-        int sum = 0;
-        int count = 0;
-        for (int i = 0; i &lt; n; i++) {
-            sum += nums[i];
-            if(map.containsKey(sum - k)) {
-                count += map.get(sum-k);
-            }
-            map.put(sum,map.getOrDefault(sum,0)+1);
-        }
-        return count;
-    }
-}
-</code></pre>
-<p>这题同样需要使用到这个方法（来自官方题解）：</p>
-<pre><code class="language-java">class Solution {
-    public int numSubmatrixSumTarget(int[][] matrix, int target) {
-        int ans = 0;
-        int m = matrix.length, n = matrix[0].length;
-        for (int i = 0; i &lt; m; ++i) { // 枚举上边界
-            int[] sum = new int[n];
-            for (int j = i; j &lt; m; ++j) { // 枚举下边界
-                for (int c = 0; c &lt; n; ++c) {
-                    sum[c] += matrix[j][c]; // 更新每列的元素和
-                }
-                ans += subarraySum(sum, target);
-            }
-        }
-        return ans;
-    }
-
-    public int subarraySum(int[] nums, int k) {
-        Map&lt;Integer, Integer&gt; map = new HashMap&lt;Integer, Integer&gt;();
-        map.put(0, 1);
-        int count = 0, pre = 0;
-        for (int x : nums) {
-            pre += x;
-            if (map.containsKey(pre - k)) {
-                count += map.get(pre - k);
-            }
-            map.put(pre, map.getOrDefault(pre, 0) + 1);
-        }
-        return count;
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
