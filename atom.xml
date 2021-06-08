@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-07T09:08:44.670Z</updated>
+    <updated>2021-06-08T13:40:30.459Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,147 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第359期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-359-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-359-qi/">
+        </link>
+        <updated>2021-06-08T13:04:26.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>研究证明常年抽烟喝酒的人，患老年痴呆的概率较低，因为早死的概率较高。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>西风千里，送我今夜岳阳楼。<br>
+——张孝祥《水调歌头·过岳阳楼作》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>在不同的遭遇里我发现你的瞬间，有种不可言说的温柔直觉。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623157666637.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>先上一个自己做出来的：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int n = stones.length;
+        if (n == 1) {
+            return stones[0];
+        }
+
+        Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i &lt; n; ++i) {
+            int stone = stones[i];
+            if (set.isEmpty()) {
+                set.add(stone);
+                set.add(-stone);
+            } else {
+                Set&lt;Integer&gt; temp = new HashSet&lt;&gt;();
+                if (i == n - 1) {
+                    for (Integer num : set) {
+                        int v = num - stone;
+                        if (v &gt;= 0 &amp;&amp; min &gt; v) {
+                            min = v;
+                        }
+                        v = num + stone;
+                        if (v &gt;= 0 &amp;&amp; min &gt; v) {
+                            min = v;
+                        }
+                    }
+                } else {
+                    for (Integer num : set) {
+                        temp.add(num + stone);
+                        temp.add(num - stone);
+                    }
+                }
+                set = temp;
+            }
+        }
+        return min;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623157833297.png" alt="" loading="lazy"></figure>
+<p>一开始是利用一个<code>HashSet</code>与一个<code>Node</code>类去标识长度和总和的，后面直接使用集合优化，然后再想更进一步使用数组优化时间就变长了。</p>
+<p>核心思想是把石头看做一系列的数，然后每个数前面可以添加<code>+</code>或<code>-</code>，问题就转换为计算所有的数的和的最小值。</p>
+<p>看了题解发现其实可以转化为01背包问题，不是特别懂就不扯了，放上一个朴素的二维<code>dp</code>：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int n = stones.length;
+        int sum = 0;
+        for(int num:stones){
+            sum += num;
+        }
+        int t = sum &gt;&gt; 1;
+        int [][] f = new int [n+1][t+1];
+        for (int i = 1; i &lt;= n; i++) {
+            int stone = stones[i-1];
+            for (int j = 0; j &lt;= t; j++) {
+                f[i][j] = f[i-1][j] ;
+                if(j &gt;= stone){
+                    f[i][j] = Math.max(f[i][j],f[i-1][j-stone] + stone);
+                }
+            }
+        }
+        return Math.abs(sum - f[n][t] - f[n][t]);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1623159140331.png" alt="" loading="lazy"></figure>
+<p>然后又试了一下一维的（果然要比二维快）：</p>
+<pre><code class="language-java">class Solution {
+    public int lastStoneWeightII(int[] ss) {
+        int n = ss.length;
+        int sum = 0;
+        for (int i : ss) sum += i;
+        int t = sum / 2;
+        int[] f = new int[t + 1];
+        for (int i = 1; i &lt;= n; i++) {
+            int x = ss[i - 1];
+            for (int j = t; j &gt;= x; j--) {
+                f[j] = Math.max(f[j], f[j - x] + x);
+            }
+        }
+        return Math.abs(sum - f[t] - f[t]);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1623159222708.png" alt="" loading="lazy"></figure>
+<p>但是看一下第一名的魔鬼0ms：</p>
+<pre><code class="language-java">class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int sum=0;
+        for(int st:stones)
+            sum+=st;
+        for(int i=(sum&gt;&gt;1);;i--){
+            if(helper(stones,0,0,i))
+                return sum-2*i;
+        }
+    }
+    
+    boolean helper(int[] nums,int idx,int sum,int target){
+        if(sum==target)
+            return true;
+        if(sum&gt;target)
+            return false;
+        if(idx==nums.length)
+            return false;
+        return helper(nums,idx+1,sum+nums[idx],target)
+            ||helper(nums,idx+1,sum,target);
+    }
+}
+</code></pre>
+<p>这。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第358期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-358-qi/</id>
@@ -686,39 +827,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622421599795.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第350期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-350-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-350-qi/">
-        </link>
-        <updated>2021-05-30T06:28:55.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>如果你跌倒了，那就，找个舒服的姿势趴着吧。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>无意苦争春，一任群芳妒。<br>
-——陆游《卜算子·咏梅》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我把这几个字写了又删，删了又写。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622356263336.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>原数减1后与原数相与，这个操作可以将最右边的一个1变为0，如果只有1个1，也就是如果是2的幂，那么最右边的一个1变为0后整个数就是0。</p>
-<pre><code class="language-java">class Solution {
-    public boolean isPowerOfTwo(int n) {
-        return n&lt;1 ? false : (n &amp; (n - 1)) == 0;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622356156620.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
