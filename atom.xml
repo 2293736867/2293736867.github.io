@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-08T14:26:47.662Z</updated>
+    <updated>2021-06-10T13:14:48.908Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,103 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第361期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-361-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-361-qi/">
+        </link>
+        <updated>2021-06-09T16:47:13.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>困难像弹簧，你弱它就强，你强它更强。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>荷花送香气，竹露滴清响。<br>
+——孟浩然《夏日南亭怀辛大》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>其实从头到尾，被挫骨扬灰，灰飞烟灭的，只有温情一人。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623257950495.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>首先尝试了一下去做<code>零钱兑换I</code>，做是做出来了，用的是记忆化搜索，然后再做这题，发现还是不会。</p>
+<p><s>太菜了太菜了。</s></p>
+<pre><code class="language-java">public class Solution {
+    public int change(int amount, int[] coins) {
+        int []dp = new int[amount+1];
+        dp[0] = 1;
+        for(int coin:coins){
+            for (int i=coin;i&lt;=amount;++i){
+                dp[i] += dp[i-coin];
+            }
+        }
+        return dp[amount];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623330831531.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第360期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-360-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-360-qi/">
+        </link>
+        <updated>2021-06-08T16:44:18.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>生命中必然要放弃某些人，不是你不在乎，是他们不在乎。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>从今若许闲乘月，拄杖无时夜叩门。<br>
+——陆游《游山西村》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>生气归生气，又不是不爱你......</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623257439961.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>自己做了一个暴力的，过了35个样例，剩下的超时，题解表示是一个变种的背包，三维<code>dp</code>（其实还有更详细的解答，不小心覆盖了昨天的每日分享，所以这里就补充一个简单的。。。）</p>
+<pre><code class="language-java">public class Solution {
+    private static final int MOD = 1000000007;
+
+    public int profitableSchemes(int maxGroup, int minProfit, int[] group, int[] profit) {
+        int len = group.length;
+        int[][][] dp = new int[len + 1][maxGroup + 1][minProfit + 1];
+        dp[0][0][0] = 1;
+
+        for (int i = 1; i &lt;= len; i++) {
+            int currentGroup = group[i - 1];
+            int currentProfit = profit[i - 1];
+            for (int j = 0; j &lt;= maxGroup; j++) {
+                for (int k = 0; k &lt;= minProfit; ++k) {
+                    dp[i][j][k] = dp[i - 1][j][k];
+                    if (j &gt;= currentGroup) {
+                        dp[i][j][k] = (dp[i][j][k] + dp[i - 1][j - currentGroup][Math.max(0, k - currentProfit)]) % MOD;
+                    }
+                }
+            }
+        }
+
+        int sum = 0;
+        for (int j = 0; j &lt;= maxGroup; j++) {
+            sum = (sum + dp[len][j][minProfit]) % MOD;
+        }
+        return sum;
+    }
+
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第359期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-359-qi/</id>
@@ -729,104 +826,6 @@ public class Solution {
 <blockquote></blockquote>
 <h1 id="第400期">第400期</h1>
 <blockquote></blockquote>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第352期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-352-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-352-qi/">
-        </link>
-        <updated>2021-06-01T05:53:50.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>虽然你长的丑，但是你想的美啊。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>凭栏渐觉春光暝，怅望碧天帆去尽。<br>
-——吴翌凤《玉楼春·空园数日无芳信》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>多少岁月与轻狂交织的梦，被遗忘在大海的尽头，随时光匆匆而去。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<p>六一儿童节当然是吃糖果啦：</p>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622527201233.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>前缀和，判断最大与最小：</p>
-<ul>
-<li>最大：(天数+1)*最大每天吃的糖果数量</li>
-<li>最小：天数*1（因为每天至少一颗糖果）</li>
-</ul>
-<pre><code class="language-java">public class Solution {
-    public boolean[] canEat(int[] candiesCount, int[][] queries) {
-        int n = queries.length;
-        boolean [] res = new boolean[n];
-        int m = candiesCount.length;
-        long [] sum = new long[m];
-        sum[0] = candiesCount[0];
-        for (int i = 1; i &lt; m; i++) {
-            sum[i] = sum[i-1] + candiesCount[i];
-        }
-
-        for (int i = 0; i &lt; n; i++) {
-            if(queries[i][0] == 0) {
-                res[i] = queries[i][1] &lt; sum[0];
-            }else{
-                res[i] = (((queries[i][1] + 1)*(long)queries[i][2]) &gt; sum[queries[i][0]-1] &amp;&amp; sum[queries[i][0]] &gt; queries[i][1]);
-            }
-        }
-
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622527220078.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第351期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-351-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-351-qi/">
-        </link>
-        <updated>2021-05-31T00:35:05.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>问世间钱为何物，只叫人生死相许。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>日照香炉生紫烟，遥看瀑布挂前川。<br>
-——李白《望庐山瀑布》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>梦与现实是不同的，所以才能够为了把梦变为现实而努力。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622421449590.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>与昨天的每日一题差不多，先判断2的幂，再通过<code>0xaaaaaaaa</code>或<code>0x55555555</code>判断即可：</p>
-<pre><code class="language-java">public class Solution {
-    public boolean isPowerOfFour(int n) {
-        return n &gt; 0 &amp;&amp; (n &amp; (n-1)) == 0 &amp;&amp; (n &amp; 0x55555555) != 0;
-    }
-}
-</code></pre>
-<p><code>0x55555555</code>的二进制是</p>
-<pre><code class="language-bash">0101  0101  0101  0101  0101  0101  0101  0101
-</code></pre>
-<p>如果是2的幂的同时（只有一个1），与<code>0x55555555</code>相与，肯定不为0，这样就可以判断是4的幂了，同样道理也可以使用<code>0xaaaaaaaa</code>判断：</p>
-<pre><code class="language-java">public class Solution {
-    public boolean isPowerOfFour(int n) {
-        return n &gt; 0 &amp;&amp; (n &amp; (n-1)) == 0 &amp;&amp; (n &amp; 0xaaaaaaaa) == 0;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622421599795.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
