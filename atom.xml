@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-11T10:14:45.485Z</updated>
+    <updated>2021-06-12T05:25:20.588Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,163 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第362期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-362-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-362-qi/">
+        </link>
+        <updated>2021-06-12T04:14:25.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>别埋怨手机没怎么用就没电，你还是一样，没干啥就累了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>等是有家归未得，杜鹃休向耳边啼。<br>
+——佚名《杂诗》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我们控制，我们收容，我们保护。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623471435043.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>纯手打，自己推导的<code>dp</code>方程：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623471384828.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public String largestNumber(int[] cost, int target) {
+        int [] costToNum = new int[5001];
+        for (int i = 0; i &lt; cost.length; i++) {
+            if(i+1 &gt; costToNum[cost[i]]) {
+                costToNum[cost[i]] = i + 1;
+            }
+        }
+
+        List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+        cost = new int[5001];
+        for (int i = 0; i &lt;= 5000; i++) {
+            if(costToNum[i] != 0) {
+                list.add(costToNum[i]);
+                cost[costToNum[i]] = i;
+            }
+        }
+        int [] nums = list.stream().sorted(Comparator.reverseOrder()).mapToInt(i-&gt;i).toArray();
+
+        Node []dp = new Node[target+1];
+        dp[0] = new Node(new StringBuilder(),0);
+        for (int i = 1; i &lt;= target; i++) {
+            dp[i] = new Node(new StringBuilder(),0);
+            for (int j = 0; j &lt; nums.length; j++) {
+                int index = i - cost[nums[j]];
+                if(index &gt;= 0 &amp;&amp; dp[index].target + cost[nums[j]] == i){
+                    StringBuilder temp = new StringBuilder(dp[index].builder);
+                    temp.insert(0, nums[j]);
+                    int len1 = temp.length();
+                    int len2 = dp[i].builder.length();
+                    if (len1 &gt; len2 || (len1 == len2 &amp;&amp; temp.compareTo(dp[i].builder) &gt; 0)) {
+                        dp[i] = new Node(temp,i);
+                    }
+                }
+            }
+        }
+        if(dp[target].builder.length() == 0){
+            return &quot;0&quot;;
+        }
+        return dp[target].builder.toString();
+    }
+
+    private static class Node{
+        StringBuilder builder;
+        int target;
+        public Node(StringBuilder builder,int target){
+            this.builder = builder;
+            this.target = target;
+        }
+    }
+}
+</code></pre>
+<p>感觉不是特别难（<s>可能是因为经过前几天<code>dp</code>的洗脑</s>）。</p>
+<p>说一下思路吧，要对数组进行预处理，相同价值的用更大的数去代替（比如取2的成本是3，取4的成本也是3，取8的成本还是3，那么就用最大的数8去代替），代码如下：</p>
+<pre><code class="language-java">int [] costToNum = new int[5001];
+for (int i = 0; i &lt; cost.length; i++) {
+    if(i+1 &gt; costToNum[cost[i]]) {
+        costToNum[cost[i]] = i + 1;
+    }
+}
+</code></pre>
+<p>比如原始的<code>cost[]</code>为<code>[4,3,2,5,6,7,2,5,5]</code>（样例1数据），那么<code>costToNum</code>为：</p>
+<ul>
+<li><code>costToNum[2] = 7</code>：表示在成本为2的数字中，最大可以取数字7</li>
+<li><code>costToNum[3] = 2</code>：表示在成本为3的数字中，最大可以取数字2</li>
+<li><code>costToNum[4] = 1</code>：表示在成本为4的数字中，最大可以取数字1</li>
+<li><code>costToNum[5] = 9</code>：表示在成本为5的数字中，最大可以取数字9</li>
+<li><code>costToNum[6] = 5</code>：表示在成本为6的数字中，最大可以取数字5</li>
+<li><code>costToNum[7] = 6</code>：表示在成本为7的数字中，最大可以取数字6</li>
+</ul>
+<p>得到<code>costToNum[]</code>后，抽取出能取的数字，放进<code>nums[]</code>数组中，并对<code>nums[]</code>排序，同时重新开辟<code>cost[]</code>数组，记录每一个数字对应的成本。</p>
+<p>比如把上面<code>costToNum[]</code>出现的所有数字（<code>7,2,1,9,5,6</code>）放进<code>nums[]</code>中，同时对<code>nums[]</code>排序（非升序），这样<code>nums[]</code>就是<code>9,7,6,5,2,1</code>，同时<code>cost[]</code>用于记录对应的成本：</p>
+<ul>
+<li><code>cost[9] = 5</code>：数字9的成本为5</li>
+<li><code>cost[7] = 6</code>：数字7的成本为6</li>
+<li><code>cost[6] = 7</code>：数字6的成本为7</li>
+<li><code>cost[5] = 6</code>：数字5的成本为6</li>
+<li><code>cost[2] = 3</code>：数字2的成本为3</li>
+<li><code>cost[1] = 4</code>：数字1的成本为4</li>
+</ul>
+<p>然后就可以进行<code>dp</code>的处理了，首先定义<code>dp[i]</code>：</p>
+<ul>
+<li><code>dp[i]</code>表示当成本<strong>刚好</strong>为<code>i</code>的时候，能取到的最大字符串</li>
+<li><code>dp[0] = &quot;&quot;</code>：<code>dp[0]</code>为空</li>
+</ul>
+<p>实际处理中，需要添加一个当前成本，也就是当字符串为<code>dp[i]</code>的时候，成本为<code>dp[i]</code>对应的成本（这里真心搞不懂为什么还需要一个变量去保存成本，因为明明成本就是<code>i</code>）。这里的处理是采用一个<code>Node</code>类：</p>
+<pre><code class="language-java">private static class Node{
+    StringBuilder builder;
+    int target;
+    public Node(StringBuilder builder,int target){
+        this.builder = builder;
+        this.target = target;
+    }
+}
+</code></pre>
+<p>转移方程：</p>
+<ul>
+<li><code>i</code>取值<code>[1,target]</code></li>
+<li><code>j</code>取值<code>[0,nums.length)</code></li>
+<li><code>index = i - cost[nums[j]]</code></li>
+<li>满足<code>index &gt;= 0</code>且<code>dp[index].target + cost[nums[j]] == i</code>的情况下</li>
+<li><code>dp[i].builder = max(dp[i].builder,dp[index].builder.append(0,nums[j]))</code></li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-java">Node []dp = new Node[target+1];
+dp[0] = new Node(new StringBuilder(),0);
+for (int i = 1; i &lt;= target; i++) {
+    dp[i] = new Node(new StringBuilder(),0);
+    for (int j = 0; j &lt; nums.length; j++) {
+        int index = i - cost[nums[j]];
+        if(index &gt;= 0 &amp;&amp; dp[index].target + cost[nums[j]] == i){
+            StringBuilder temp = new StringBuilder(dp[index].builder);
+            temp.insert(0, nums[j]);
+            int len1 = temp.length();
+            int len2 = dp[i].builder.length();
+            if (len1 &gt; len2 || (len1 == len2 &amp;&amp; temp.compareTo(dp[i].builder) &gt; 0)) {
+                dp[i] = new Node(temp,i);
+            }
+        }
+    }
+}
+</code></pre>
+<p>最终答案就是<code>dp[target].builder</code>，如果为空，返回<code>&quot;0&quot;</code>：</p>
+<pre><code class="language-java">if(dp[target].builder.length() == 0){
+    return &quot;0&quot;;
+}
+return dp[target].builder.toString();
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第361期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-361-qi/</id>
@@ -712,120 +869,6 @@ public class Solution {
 <p>无论，是榜上有名，还是倒数第一，</p>
 <p>无论，是经历过，还是没有经历过，</p>
 <p>都回不去了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日一句  351-400期合集]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-yi-ju-351-400-qi-he-ji/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-yi-ju-351-400-qi-he-ji/">
-        </link>
-        <updated>2021-06-01T06:06:27.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="第351期">第351期</h1>
-<blockquote>
-<p>梦与现实是不同的，所以才能够为了把梦变为现实而努力。</p>
-</blockquote>
-<h1 id="第352期">第352期</h1>
-<blockquote>
-<p>多少岁月与轻狂交织的梦，被遗忘在大海的尽头，随时光匆匆而去。</p>
-</blockquote>
-<h1 id="第353期">第353期</h1>
-<blockquote>
-<p>你说一声，我也默认，我们在这月光下十指生根。</p>
-</blockquote>
-<h1 id="第354期">第354期</h1>
-<blockquote></blockquote>
-<h1 id="第355期">第355期</h1>
-<blockquote></blockquote>
-<h1 id="第356期">第356期</h1>
-<blockquote></blockquote>
-<h1 id="第357期">第357期</h1>
-<blockquote></blockquote>
-<h1 id="第358期">第358期</h1>
-<blockquote></blockquote>
-<h1 id="第359期">第359期</h1>
-<blockquote></blockquote>
-<h1 id="第360期">第360期</h1>
-<blockquote></blockquote>
-<h1 id="第361期">第361期</h1>
-<blockquote></blockquote>
-<h1 id="第362期">第362期</h1>
-<blockquote></blockquote>
-<h1 id="第363期">第363期</h1>
-<blockquote></blockquote>
-<h1 id="第364期">第364期</h1>
-<blockquote></blockquote>
-<h1 id="第365期">第365期</h1>
-<blockquote></blockquote>
-<h1 id="第366期">第366期</h1>
-<blockquote></blockquote>
-<h1 id="第367期">第367期</h1>
-<blockquote></blockquote>
-<h1 id="第368期">第368期</h1>
-<blockquote></blockquote>
-<h1 id="第369期">第369期</h1>
-<blockquote></blockquote>
-<h1 id="第370期">第370期</h1>
-<blockquote></blockquote>
-<h1 id="第371期">第371期</h1>
-<blockquote></blockquote>
-<h1 id="第372期">第372期</h1>
-<blockquote></blockquote>
-<h1 id="第373期">第373期</h1>
-<blockquote></blockquote>
-<h1 id="第374期">第374期</h1>
-<blockquote></blockquote>
-<h1 id="第375期">第375期</h1>
-<blockquote></blockquote>
-<h1 id="第376期">第376期</h1>
-<blockquote></blockquote>
-<h1 id="第377期">第377期</h1>
-<blockquote></blockquote>
-<h1 id="第378期">第378期</h1>
-<blockquote></blockquote>
-<h1 id="第379期">第379期</h1>
-<blockquote></blockquote>
-<h1 id="第380期">第380期</h1>
-<blockquote></blockquote>
-<h1 id="第381期">第381期</h1>
-<blockquote></blockquote>
-<h1 id="第382期">第382期</h1>
-<blockquote></blockquote>
-<h1 id="第383期">第383期</h1>
-<blockquote></blockquote>
-<h1 id="第384期">第384期</h1>
-<blockquote></blockquote>
-<h1 id="第385期">第385期</h1>
-<blockquote></blockquote>
-<h1 id="第386期">第386期</h1>
-<blockquote></blockquote>
-<h1 id="第387期">第387期</h1>
-<blockquote></blockquote>
-<h1 id="第388期">第388期</h1>
-<blockquote></blockquote>
-<h1 id="第389期">第389期</h1>
-<blockquote></blockquote>
-<h1 id="第390期">第390期</h1>
-<blockquote></blockquote>
-<h1 id="第391期">第391期</h1>
-<blockquote></blockquote>
-<h1 id="第392期">第392期</h1>
-<blockquote></blockquote>
-<h1 id="第393期">第393期</h1>
-<blockquote></blockquote>
-<h1 id="第394期">第394期</h1>
-<blockquote></blockquote>
-<h1 id="第395期">第395期</h1>
-<blockquote></blockquote>
-<h1 id="第396期">第396期</h1>
-<blockquote></blockquote>
-<h1 id="第397期">第397期</h1>
-<blockquote></blockquote>
-<h1 id="第398期">第398期</h1>
-<blockquote></blockquote>
-<h1 id="第399期">第399期</h1>
-<blockquote></blockquote>
-<h1 id="第400期">第400期</h1>
-<blockquote></blockquote>
 ]]></content>
     </entry>
 </feed>
