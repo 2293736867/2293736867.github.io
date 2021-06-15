@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-14T00:48:19.449Z</updated>
+    <updated>2021-06-15T05:01:33.559Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,90 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第365期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-365-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-365-qi/">
+        </link>
+        <updated>2021-06-14T21:30:21.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>世上没有钱解决不了的事情，如果有，那就是你的钱不够。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>小园几许，收尽春光。<br>
+——秦观《行香子·树绕村庄》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>人的痛苦会把自己折磨到多深呢？</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623706244428.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>其实就是找到数组的最大值，直接上<code>O(n)</code>的算法，因为数据量本来就不大，直接0ms了：</p>
+<pre><code class="language-java">public class Solution{
+    public int peakIndexInMountainArray(int[] arr) {
+        int max = arr[0];
+        int index = 0;
+        int n = arr.length;
+        for(int i=1;i&lt;n;++i){
+            if(arr[i] &gt; max){
+                max = arr[i];
+                index = i;
+            }else{
+                break;
+            }
+        }
+        return index;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623706291752.png" alt="" loading="lazy"></figure>
+<p>（<s>并不是在凌晨5点做的，只是切了Windows没有同步时间</s>）</p>
+<p>不扯了不扯了，来个正经的二分：</p>
+<pre><code class="language-java">public class Solution {
+    public int peakIndexInMountainArray(int[] arr) {
+        int l = 0;
+        int r = arr.length - 1;
+        while (l &lt; r) {
+            int m = (l + r) &gt;&gt; 1;
+            if (arr[m] &gt; arr[l]) {
+                l = m;
+            } else {
+                r = m;
+            }
+        }
+        while (arr[l] &lt; arr[l-1]) {
+            r = l;
+            l = 0;
+            while (l &lt; r) {
+                int m = (l + r) &gt;&gt; 1;
+                if (arr[m] &gt; arr[l]) {
+                    l = m;
+                } else {
+                    r = m;
+                }
+            }
+        }
+        return l;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1623732782692.png" alt="" loading="lazy"></figure>
+<p>要注意的事一次二分之后需要使用循环去继续二分，这样才能找到正确的答案，因为答案有可能是偏左边起点的，这样一次二分之后有可能只是找到部分最大值，比如：</p>
+<pre><code class="language-bash">24,69,100,99,79,78,67,36,26,19
+</code></pre>
+<p>一次二分之后只能返回<code>l=4</code>，也是<code>79</code>的位置，此时需要继续对该位置进行二分：</p>
+<ul>
+<li><code>r = 4</code></li>
+<li><code>l = 0</code></li>
+</ul>
+<p>直到<code>arr[l] &gt; arr[l-1]</code>为止。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第364期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-364-qi/</id>
@@ -776,46 +860,6 @@ public class Solution {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622858547671.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第355期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-355-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-355-qi/">
-        </link>
-        <updated>2021-06-04T04:20:18.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你喜欢我哪一点啊？我喜欢你离我远一点。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>春不断、亭台成趣，翠阴蒙密。<br>
-——吴文英《满江红·翠幕深庭》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>只要你想，你就是在天涯海角，我都会追去。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1622780512189.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>采用一个非常神奇的思路：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1622780619089.gif" alt="" loading="lazy"></figure>
-<p>只能说妙啊，采用一种“绕回去的处理”，知道两个链表相交。</p>
-<pre><code class="language-java">public class Solution {
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        ListNode A = headA, B = headB;
-        while (A != B) {
-            A = A != null ? A.next : headB;
-            B = B != null ? B.next : headA;
-        }
-        return A;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1622780533033.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
