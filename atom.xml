@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-16T16:20:56.530Z</updated>
+    <updated>2021-06-18T10:18:44.402Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,241 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[如何建立一个足够安全的SSH连接？]]></title>
+        <id>https://2293736867.github.io/post/ru-he-jian-li-yi-ge-zu-gou-an-quan-de-ssh-lian-jie/</id>
+        <link href="https://2293736867.github.io/post/ru-he-jian-li-yi-ge-zu-gou-an-quan-de-ssh-lian-jie/">
+        </link>
+        <updated>2021-06-18T07:54:10.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>使用<code>SSH</code>连接服务器是一件很平常的事，但是，连接是否足够安全是一个令人担忧的问题。本文从如下几个方面介绍了如何建立一个足够安全的<code>SSH</code>连接：</p>
+<ul>
+<li>端口</li>
+<li>协议</li>
+<li>用户</li>
+<li>密码</li>
+<li>密钥对</li>
+<li><code>ssh-agent</code></li>
+</ul>
+<h1 id="2-端口">2 端口</h1>
+<p>第一步就是修改默认端口<code>22</code>，修改<code>/etc/ssh/sshd_config</code>中的<code>Port</code>即可，比如这里修改为<code>1234</code>端口：</p>
+<pre><code class="language-bash">Port 1234
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200820155542693.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>在<code>Debian</code>系的系统中直接修改端口就可以了，在<code>RedHat</code>中还需要使用<code>semanage</code>去开启端口：</p>
+<pre><code class="language-bash">yum install policycoreutils-python #没有安装的话需要先安装
+semanage port -a -t ssh_port_t -p tcp 1234 # 添加端口
+semanage port -l | grep ssh # 验证是否添加成功
+</code></pre>
+<h1 id="3-ssh协议">3  <code>SSH</code>协议</h1>
+<p><code>SSH2</code>协议要比<code>SSH1</code>安全，因此建议使用，同样修改配置文件：</p>
+<pre><code class="language-bash">Protocol 2 # 如果没有就末尾添加
+</code></pre>
+<p>这样客户端连接的时候就不能使用<code>Protocol 1</code>协议连接：</p>
+<pre><code class="language-bash">ssh -1 username@ip
+</code></pre>
+<p>会提示</p>
+<pre><code class="language-bash">SSH protocol v.1 is no longer supported
+</code></pre>
+<h1 id="4-超时断开">4 超时断开</h1>
+<p>修改为<code>60s</code>未操作自动断开：</p>
+<pre><code class="language-bash">ClientAliveInterval 60 
+# 以秒为单位，超过60s未操作自动断开
+
+ClientAliveCountMax 0 
+# 如果客户端没有响应则判断一次超时，该参数设置允许超时的次数
+</code></pre>
+<h1 id="5-限制用户">5 限制用户</h1>
+<h2 id="51-禁用root用户登录">5.1 禁用<code>root</code>用户登录</h2>
+<pre><code class="language-bash">PermitRootLogin no
+</code></pre>
+<p>当然禁用之前需要先创建好登录的用户，这里假设创建一个叫<code>aa</code>的用户：</p>
+<pre><code class="language-bash">useradd aa
+passwd aa
+vim /etc/sudoers
+</code></pre>
+<p>复制一行<code>root</code>的权限并修改用户名：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210618095059197.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>然后输入<code>:wq!</code>强制保存退出。</p>
+<h2 id="52-指定用户登录">5.2 指定用户登录</h2>
+<pre><code class="language-bash">AllowUsers testuser
+</code></pre>
+<p>这样只能通过该用户连接到该服务器，另外，如果出现拒绝登录的问题：</p>
+<pre><code class="language-bash">kex_exchange_identification: read: Connection reset by peer
+</code></pre>
+<p>则需要去开启对应允许的<code>ip</code>登录，修改<code>/etc/hosts.allow</code>，添加：</p>
+<pre><code class="language-bash">sshd: ALL
+</code></pre>
+<h2 id="53-禁用特定用户登录">5.3 禁用特定用户登录</h2>
+<pre><code class="language-bash">DenyUser testuser
+</code></pre>
+<p>禁止通过<code>testuser</code>登录。</p>
+<p>类似的配置还有<code>AllowGroups</code>与<code>DenyGroups</code>。</p>
+<h1 id="6-密码">6 密码</h1>
+<p>禁用（空）密码登录：</p>
+<pre><code class="language-bash">PermitEmptyPasswords no
+PasswordAuthentication no
+</code></pre>
+<h1 id="7-日志">7 日志</h1>
+<pre><code class="language-bash">LogLevel VERBOSE
+</code></pre>
+<p>默认为<code>INFO</code>，修改为<code>VERBOSE</code>可以得到更加详细的信息。</p>
+<h1 id="8-密钥对">8 密钥对</h1>
+<h2 id="81-生成密钥对">8.1 生成密钥对</h2>
+<p>上面已经设置了不能使用密码登录，那么，换句话说需要使用密钥登录，生成密钥并不难：</p>
+<pre><code class="language-bash">ssh-keygen -t rsa 
+</code></pre>
+<p>只需要指定算法即可，默认为<code>3072</code>位，可选<code>4096</code>位。</p>
+<p>但是，相比起传统的<code>RSA</code>，在<code>OpenSSH 6.5</code>中引入了另一种叫<code>Ed25519</code>的更加安全的算法，使用椭圆曲线进行加密。<code>Ed25519</code>相比起<code>RSA</code>的优点有：</p>
+<ul>
+<li>体积更小：相比起<code>RSA 3072</code>的<code>544</code>个字符，<code>Ed25519</code>只有<code>68</code>个字符</li>
+<li>更快：生成速度比<code>RSA</code>快，同时签名速度也比<code>RSA</code>快</li>
+<li>更安全：签名过程不依赖随机数生成器，不依赖哈希函数的防碰撞特性，没有时间通道攻击的问题</li>
+</ul>
+<p>生成方式很简单：</p>
+<pre><code class="language-bash">ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/ed25519
+</code></pre>
+<p>参数说明如下：</p>
+<ul>
+<li><code>-a</code>：指定<code>KDF</code>（<code>Key Derivation Function</code>）的轮数</li>
+<li><code>-t</code>：指定算法，可选<code>dsa</code>、<code>ecdsa</code>、<code>ecdsa-sk</code>、<code>ed25519</code>、<code>ed25519-sk</code>、<code>rsa</code></li>
+<li><code>-f</code>：指定位置</li>
+</ul>
+<p>生成之后复制公钥即可：</p>
+<pre><code class="language-bash">ssh-copy-id -i ~/.ssh/ed25519.pub user@ip
+</code></pre>
+<h2 id="82-私钥密码">8.2 私钥密码</h2>
+<p>比如按上述方式生成密钥对时，会提示输入私钥密码：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200820164532325.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这里的密码会在使用私钥连接的时候提示：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200820164836250.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="83-配合ssh-add">8.3 配合<code>ssh-add</code></h2>
+<p>默认情况下每次使用私钥登录的时候都需要输入私钥的密码，如果不想每次输出，可以使用<code>ssh-add</code>：</p>
+<pre><code class="language-bash">ssh-add ~/.ssh/test # ~/.ssh/test替换成对应的私钥路径
+</code></pre>
+<p>这样只需要输入一次私钥密码，下一次连接的时候就不需要输入私钥密码连接了。</p>
+<h2 id="84-使用不同密钥对">8.4 使用不同密钥对</h2>
+<p>假设您有多台服务器：<code>server1</code>，<code>server2</code>，<code>server3</code>，则可以为不同服务器使用不同的密钥对，而不是使用同一个密钥对：</p>
+<pre><code class="language-bash">ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/server1
+ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/server2
+ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/server3
+</code></pre>
+<p>接着复制公钥到对应的服务器上：</p>
+<pre><code class="language-bash">ssh-copy-id user@server1 -i ~/.ssh/server1.pub
+ssh-copy-id user@server2 -i ~/.ssh/server2.pub
+ssh-copy-id user@server3 -i ~/.ssh/server3.pub
+</code></pre>
+<h1 id="9-ssh-agent">9 <code>ssh-agent</code></h1>
+<h2 id="91-这是什么">9.1 这是什么？</h2>
+<p><code>ssh-agent</code>是一个程序，可以帮助管理私钥。代理能提供如下用途：</p>
+<ul>
+<li>自动选择密钥：使用不同密钥连接到不同主机时，需要手动指定密钥（比如上面的<code>使用不同密钥对</code>的例子中，连接到不同服务器时需要加上<code>-i</code>参数），<code>ssh-agent</code>可以自动选择，不需要手动指定</li>
+<li>自动输入私钥密码：如果私钥设置了密钥（比如上面的<code>私钥密码</code>例子），但是又需要频繁地使用私钥进行认证时，<code>ssh-agent</code>可以帮助自动输入私钥的密码</li>
+</ul>
+<h2 id="92-使用">9.2 使用</h2>
+<p>首先启动：</p>
+<pre><code class="language-bash">eval `ssh-agent` # 注意是反引号
+</code></pre>
+<p>接着添加私钥：</p>
+<pre><code class="language-bash"># 以上面“使用不同的密钥对”为例
+ssh-add ~/.ssh/server1
+ssh-add ~/.ssh/server1
+ssh-add ~/.ssh/server1
+</code></pre>
+<p>这样连接的时候就不需要手动指定<code>-i</code>参数了。</p>
+<p>如果私钥指定了密码，会在<code>ssh-add</code>时进行提示输入：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200820170238249.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样下次使用带密钥的私钥连接时就不需要输入密码了。</p>
+<h1 id="10-2fa">10 <code>2FA</code></h1>
+<p><code>Two-Factor Authentication</code>，缩写<code>2FA</code>，意为<code>双重认证</code>，<code>双因子认证</code>等等，顾名思义就是进行两步认证的操作，可选的应用有：</p>
+<ul>
+<li><code>Google Authenticator</code></li>
+<li><code>Authy</code></li>
+<li><code>Yubico</code></li>
+<li><code>Duo</code></li>
+</ul>
+<p>比如<code>Google Authenticator</code>，安装之后，连接服务器需要进行输入验证码的操作。</p>
+<p>具体的话就不演示了，因为笔者需要经常连接，因此这个选项对笔者来说不太实际，想要实现的话具体可以参考<a href="https://xz.aliyun.com/t/5249">这里</a>。</p>
+<h1 id="11-其他选项">11 其他选项</h1>
+<h2 id="111-设置最大错误次数">11.1 设置最大错误次数</h2>
+<pre><code class="language-bash">MaxAuthTries 6
+</code></pre>
+<p>默认为最多允许<code>3</code>次密码错误（需要除2），修改为<code>2</code>则表示如果密码输入错误一次即自动断开。</p>
+<h2 id="112-主动断开会话">11.2 主动断开会话</h2>
+<pre><code class="language-bash">LoginGraceTime 120
+</code></pre>
+<p>在<code>LoginGraceTime</code>指定的时间内如果没有连接成功，则自动断开会话，默认单位为秒，可以指定以分钟为单位，比如：</p>
+<pre><code class="language-bash">LoginGraceTime 2m
+</code></pre>
+<h1 id="12-最后">12 最后</h1>
+<p>修改完配置文件<code>/etc/ssh/ssd_config</code>后，对<code>sshd</code>服务进行重启：</p>
+<pre><code class="language-bash">systemctl restart sshd
+</code></pre>
+<h1 id="13-参考">13 参考</h1>
+<ul>
+<li>
+<p><a href="http://www.zsythink.net/archives/2407/">了解ssh代理：ssh-agent</a></p>
+</li>
+<li>
+<p><a href="https://www.jianshu.com/p/d0c48dcf6af6">简书-SSH超时断开(ClientAliveInterval和ClientAliveCountMax )的使用</a></p>
+</li>
+<li>
+<p><a href="https://xz.aliyun.com/t/5249">使用两步验证（2FA）保护你的SSH连接</a></p>
+</li>
+<li>
+<p><a href="https://blog.devolutions.net/2017/4/10-steps-to-secure-open-ssh">10 Steps to Secure Open SSH</a></p>
+</li>
+<li>
+<p><a href="https://devops.ionos.com/tutorials/secure-the-ssh-server-on-ubuntu/">Secure The SSH Server On Ubuntu</a></p>
+</li>
+<li>
+<p><a href="https://medium.com/risan/upgrade-your-ssh-key-to-ed25519-c6e8d60d3c54">Upgrade Your SSH Key to Ed25519</a></p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第368期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-368-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-368-qi/">
+        </link>
+        <updated>2021-06-18T00:51:23.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>活了这么多年发现，唯一坚持下去的，就是每天给手机充电。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>春阴垂野草青青，时有幽花一树明。<br>
+——苏舜钦《淮中晚泊犊头》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>比自己，比梦想更重要的东西永远都存在着......</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623977640051.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>差不多就是纯数学题。。。</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624011515656.png" alt="" loading="lazy"></figure>
+<pre><code class="language-java">class Solution {
+    public String smallestGoodBase(String n) {
+        long nVal = Long.parseLong(n);
+        int mMax = (int) Math.floor(Math.log(nVal) / Math.log(2));
+        for (int m = mMax; m &gt; 1; m--) {
+            int k = (int) Math.pow(nVal, 1.0 / m);
+            long mul = 1, sum = 1;
+            for (int i = 0; i &lt; m; i++) {
+                mul *= k;
+                sum += mul;
+            }
+            if (sum == nVal) {
+                return Integer.toString(k);
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624011486296.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第367期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-367-qi/</id>
@@ -611,262 +846,6 @@ return dp[target].builder.toString();
         return sum;
     }
 
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第359期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-359-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-359-qi/">
-        </link>
-        <updated>2021-06-08T13:04:26.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>研究证明常年抽烟喝酒的人，患老年痴呆的概率较低，因为早死的概率较高。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>西风千里，送我今夜岳阳楼。<br>
-——张孝祥《水调歌头·过岳阳楼作》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>在不同的遭遇里我发现你的瞬间，有种不可言说的温柔直觉。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623157666637.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>先上一个自己做出来的：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int lastStoneWeightII(int[] stones) {
-        int n = stones.length;
-        if (n == 1) {
-            return stones[0];
-        }
-
-        Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
-        int min = Integer.MAX_VALUE;
-        for (int i = 0; i &lt; n; ++i) {
-            int stone = stones[i];
-            if (set.isEmpty()) {
-                set.add(stone);
-                set.add(-stone);
-            } else {
-                Set&lt;Integer&gt; temp = new HashSet&lt;&gt;();
-                if (i == n - 1) {
-                    for (Integer num : set) {
-                        int v = num - stone;
-                        if (v &gt;= 0 &amp;&amp; min &gt; v) {
-                            min = v;
-                        }
-                        v = num + stone;
-                        if (v &gt;= 0 &amp;&amp; min &gt; v) {
-                            min = v;
-                        }
-                    }
-                } else {
-                    for (Integer num : set) {
-                        temp.add(num + stone);
-                        temp.add(num - stone);
-                    }
-                }
-                set = temp;
-            }
-        }
-        return min;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623157833297.png" alt="" loading="lazy"></figure>
-<p>一开始是利用一个<code>HashSet</code>与一个<code>Node</code>类去标识长度和总和的，后面直接使用集合优化，然后再想更进一步使用数组优化时间就变长了。</p>
-<p>核心思想是把石头看做一系列的数，然后每个数前面可以添加<code>+</code>或<code>-</code>，问题就转换为计算所有的数的和的最小值。</p>
-<p>看了题解发现其实可以转化为01背包问题，不是特别懂就不扯了，放上一个朴素的二维<code>dp</code>：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int lastStoneWeightII(int[] stones) {
-        int n = stones.length;
-        int sum = 0;
-        for(int num:stones){
-            sum += num;
-        }
-        int t = sum &gt;&gt; 1;
-        int [][] f = new int [n+1][t+1];
-        for (int i = 1; i &lt;= n; i++) {
-            int stone = stones[i-1];
-            for (int j = 0; j &lt;= t; j++) {
-                f[i][j] = f[i-1][j] ;
-                if(j &gt;= stone){
-                    f[i][j] = Math.max(f[i][j],f[i-1][j-stone] + stone);
-                }
-            }
-        }
-        return Math.abs(sum - f[n][t] - f[n][t]);
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1623159140331.png" alt="" loading="lazy"></figure>
-<p>然后又试了一下一维的（果然要比二维快）：</p>
-<pre><code class="language-java">class Solution {
-    public int lastStoneWeightII(int[] ss) {
-        int n = ss.length;
-        int sum = 0;
-        for (int i : ss) sum += i;
-        int t = sum / 2;
-        int[] f = new int[t + 1];
-        for (int i = 1; i &lt;= n; i++) {
-            int x = ss[i - 1];
-            for (int j = t; j &gt;= x; j--) {
-                f[j] = Math.max(f[j], f[j - x] + x);
-            }
-        }
-        return Math.abs(sum - f[t] - f[t]);
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1623159222708.png" alt="" loading="lazy"></figure>
-<p>但是看一下第一名的魔鬼0ms：</p>
-<pre><code class="language-java">class Solution {
-    public int lastStoneWeightII(int[] stones) {
-        int sum=0;
-        for(int st:stones)
-            sum+=st;
-        for(int i=(sum&gt;&gt;1);;i--){
-            if(helper(stones,0,0,i))
-                return sum-2*i;
-        }
-    }
-    
-    boolean helper(int[] nums,int idx,int sum,int target){
-        if(sum==target)
-            return true;
-        if(sum&gt;target)
-            return false;
-        if(idx==nums.length)
-            return false;
-        return helper(nums,idx+1,sum+nums[idx],target)
-            ||helper(nums,idx+1,sum,target);
-    }
-}
-</code></pre>
-<p>这。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第358期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-358-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-358-qi/">
-        </link>
-        <updated>2021-06-07T02:30:26.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>如果你有什么事，一定要告诉我，反正我也解决不了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>白鸟朱荷引画桡，垂杨影里见红桥，欲寻往事已魂消。<br>
-——王士祯《浣溪沙·红桥》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>这个社会一直在淘汰有学历的人，但是不会淘汰有学习力的人。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623033554364.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>直接暴力回溯：</p>
-<pre><code class="language-java">public class Solution {
-    private int ct;
-    public int findTargetSumWays(int[] nums, int target) {
-        int len = nums.length;
-        dfs(nums,0,len,target,0);
-        return ct;
-    }
-
-    private void dfs(int []nums,int index,int len,int target,int sum){
-        if(index &lt; len) {
-            dfs(nums,index+1,len,target,sum+nums[index]);
-            dfs(nums,index+1,len,target,sum-nums[index]);
-        }else if(sum == target){
-            ++ct;
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623033592467.png" alt="" loading="lazy"></figure>
-<p><s>时间效率非常的好。</s></p>
-<p>使用动态规划优化一下（来自官方题解，本来是没想到的）：</p>
-<pre><code class="language-java">public class Solution {
-    public int findTargetSumWays(int[] nums, int target) {
-        int sum = 0;
-        for (int num : nums) {
-            sum += num;
-        }
-        int diff = sum - target;
-        if (diff &lt; 0 || (diff &amp; 1) == 1) {
-            return 0;
-        }
-        int n = nums.length;
-        int neg = diff &gt;&gt; 1;
-        int[][] dp = new int[n + 1][neg + 1];
-        dp[0][0] = 1;
-
-        for (int i = 1; i &lt;= n; i++) {
-            int num = nums[i - 1];
-            for (int j = 0; j &lt;= neg; j++) {
-                dp[i][j] = dp[i - 1][j];
-                if (j &gt;= num) {
-                    dp[i][j] += dp[i - 1][j - num];
-                }
-            }
-        }
-
-        return dp[n][neg];
-    }
-}
-</code></pre>
-<p>关键是计算<code>neg</code>，<code>neg = (sum-target)/2</code>：</p>
-<ul>
-<li>因为<code>nums</code>中所有数都是非负整数</li>
-<li>因此<code>neg</code>也是非负整数</li>
-<li>所以<code>sum-target</code>必须能整除2，也就是非负偶数</li>
-</ul>
-<p>用<code>diff</code>存储了<code>sum-target</code>的值，如果是负数或者正奇数直接返回<code>0</code>，否则进行动态规划的计算。</p>
-<p><code>dp[i][j]</code>表示前<code>i</code>个数中选取元素，使得这些元素之和为<code>j</code>的方案数目，最终答案就是<code>dp[n][neg]</code>。</p>
-<p>对于每个数组中的元素<code>num</code>（<code>nums[i-1]</code>，下标从1开始），在<code>[0,neg]</code>中遍历<code>j</code>，转移方程如下：</p>
-<ul>
-<li><code>j &lt; num</code>：<code>dp[i][j] = dp[i-1][j]</code></li>
-<li><code>j &gt;= num</code>：<code>dp[i][j] = dp[i-1][j] + dp[i-1][j-num]</code></li>
-</ul>
-<p>优化版（来自某位大佬），一维<code>dp</code>，反向计算，从<code>[nums[i],bagSize]</code>反向遍历<code>j</code>：</p>
-<pre><code class="language-java">public class Solution {
-    public int findTargetSumWays(int[] nums, int target) {
-        int sum = 0;
-        for (int num : nums) {
-            sum += num;
-        }
-        if (sum &lt; target || ((sum + target) &amp; 1) == 1) {
-            return 0;
-        }
-        int bagSize = (sum+target) &gt;&gt; 1;
-        int n = nums.length;
-        int[] dp = new int[bagSize+1];
-        dp[0] = 1;
-
-        for (int i = 0; i &lt; n; i++) {
-            int num = nums[i];
-            for (int j = bagSize; j &gt;= num; --j) {
-                dp[j] += dp[j-num];
-            }
-        }
-
-        return dp[bagSize];
-    }
 }
 </code></pre>
 ]]></content>
