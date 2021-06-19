@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-19T05:31:21.903Z</updated>
+    <updated>2021-06-19T19:18:47.671Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,108 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第370期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-370-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-370-qi/">
+        </link>
+        <updated>2021-06-19T19:03:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你的晚安，只是想让我闭嘴。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>初月未终夕，边烽不过秦。<br>
+——贾岛《暮过山村》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>人总是贪婪的，就像是最开始，我也只是想知道你的名字。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624129533522.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>使用一种树的思想，一个节点有两个指针：</p>
+<ul>
+<li>兄弟指针：指向兄弟</li>
+<li>孩子指针：指向孩子</li>
+</ul>
+<p>题目中的<code>birth</code>实际上是添加节点操作，通过哈希表找到对应的<code>parent</code>后，首先判断它的孩子是否为空，如果为空直接添加孩子，如果不为空，拿到孩子节点，并把新节点添加到最后的兄弟节点。</p>
+<p>另外需要注意的一个操作是获取操作，本质上是树的遍历，利用了栈，每次遍历某节点的时候：</p>
+<ul>
+<li>遍历该节点，如果不是死亡状态，添加到列表中</li>
+<li>如果该节点的兄弟节点不为空，添加兄弟节点到栈中</li>
+<li>如果该节点的孩子节点不为空，添加孩子节点到栈中</li>
+</ul>
+<p>这样就能得到先遍历孩子再遍历兄弟的顺序了，代码如下：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class ThroneInheritance {
+    private final Node root;
+    private final Map&lt;String,Node&gt; map;
+    public ThroneInheritance(String kingName) {
+        root = new Node();
+        root.name = kingName;
+        map = new HashMap&lt;&gt;();
+        map.put(kingName,root);
+    }
+
+    public void birth(String parentName, String childName) {
+        Node children = new Node();
+        children.name = childName;
+        map.put(childName,children);
+        Node parent = map.get(parentName);
+        if(parent.children == null){
+            parent.children = children;
+        }else {
+            parent = parent.children;
+            while (parent.brother != null) {
+                parent = parent.brother;
+            }
+            parent.brother = children;
+        }
+    }
+
+    public void death(String name) {
+        map.get(name).death = true;
+    }
+
+    public List&lt;String&gt; getInheritanceOrder() {
+        List&lt;String&gt; list = new LinkedList&lt;&gt;();
+        Stack&lt;Node&gt; stack = new Stack&lt;&gt;();
+        stack.add(root);
+        while (!stack.isEmpty()){
+            Node temp = stack.pop();
+            if(!temp.death){
+                list.add(temp.name);
+            }
+            if(temp.brother != null){
+                stack.push(temp.brother);
+            }
+            if(temp.children != null){
+                stack.push(temp.children);
+            }
+        }
+        return list;
+    }
+
+    private static class Node{
+        String name;
+        boolean death;
+        Node brother;
+        Node children;
+    }
+}
+</code></pre>
+<p>必须吹一波自己，近乎双100，不愧是在凌晨三点做的：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624129460904.png" alt="" loading="lazy"></figure>
+<p>再优化一下，最快279ms，比第一名快，舒服：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624130160141.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1624130109126.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第369期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-369-qi/</id>
@@ -876,47 +978,6 @@ for (int i = 1; i &lt;= target; i++) {
 }
 return dp[target].builder.toString();
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第361期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-361-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-361-qi/">
-        </link>
-        <updated>2021-06-09T16:47:13.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>困难像弹簧，你弱它就强，你强它更强。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>荷花送香气，竹露滴清响。<br>
-——孟浩然《夏日南亭怀辛大》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>其实从头到尾，被挫骨扬灰，灰飞烟灭的，只有温情一人。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623257950495.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>首先尝试了一下去做<code>零钱兑换I</code>，做是做出来了，用的是记忆化搜索，然后再做这题，发现还是不会。</p>
-<p><s>太菜了太菜了。</s></p>
-<pre><code class="language-java">public class Solution {
-    public int change(int amount, int[] coins) {
-        int []dp = new int[amount+1];
-        dp[0] = 1;
-        for(int coin:coins){
-            for (int i=coin;i&lt;=amount;++i){
-                dp[i] += dp[i-coin];
-            }
-        }
-        return dp[amount];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623330831531.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
