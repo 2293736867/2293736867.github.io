@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-18T10:18:44.402Z</updated>
+    <updated>2021-06-19T05:31:21.903Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,131 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第369期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-369-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-369-qi/">
+        </link>
+        <updated>2021-06-18T16:38:35.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>岁月是把杀猪刀，可他拿丑的人一点办法也没有。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>藕花珠缀，犹似汗凝妆。<br>
+——阎选《临江仙·雨停荷荠逗浓香》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>如果你是我该多好，那你就知道我有多难过，多喜欢你。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624080638582.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>本来想动归的，看了一下数据量，直接暴力回溯：</p>
+<pre><code class="language-java">import java.util.List;
+
+public class Solution {
+    private int max = 0;
+    public int maxLength(List&lt;String&gt; arr) {
+        dfs(arr,0,new StringBuilder());
+        return max;
+    }
+
+    private void dfs(List&lt;String&gt; arr,int index,StringBuilder current){
+        int len = current.length();
+        if(index &lt; arr.size()) {
+            if(len &gt; max){
+                max = len;
+            }
+            dfs(arr,index+1,current);
+            StringBuilder next = new StringBuilder(current);
+            next.append(arr.get(index));
+            if(check(next)){
+                dfs(arr,index+1,next);
+            }
+        }
+        if(len &gt; max){
+            max = len;
+        }
+    }
+
+    private boolean check(StringBuilder builder){
+        boolean []table = new boolean[26];
+        for (int i=0;i&lt;builder.length();++i){
+            int index = builder.charAt(i) - 'a';
+            if(!table[index]){
+                table[index] = true;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+}
+</code></pre>
+<p>效果一般般：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624034460831.png" alt="" loading="lazy"></figure>
+<p>加上位运算优化（看了题解的）：</p>
+<pre><code class="language-java">import java.util.List;
+
+public class Solution {
+    private int ans = 0;
+
+    public int maxLength(List&lt;String&gt; arr) {
+        int n = arr.size();
+        int [] masks = new int[n];
+        int index = 0;
+        for (String s : arr) {
+            int mask = 0;
+            for (int i = 0; i &lt; s.length(); i++) {
+                int ch = s.charAt(i) - 'a';
+                if (((mask &gt;&gt; ch) &amp; 1) != 0) {
+                    mask = 0;
+                    break;
+                }
+                mask |= 1 &lt;&lt; ch;
+            }
+            if (mask &gt; 0) {
+                masks[index++] = mask;
+            }
+        }
+        backtrack(0,0,masks,index);
+        return ans;
+    }
+
+    private void backtrack(int pos, int mask,int []masks,int n) {
+        if (pos == n){
+            ans = Math.max(ans, Integer.bitCount(mask));
+            return;
+        }
+
+        if ((mask &amp; masks[pos]) == 0) {
+            backtrack(pos + 1, mask | masks[pos],masks,n);
+        }
+        backtrack(pos + 1, mask,masks,n);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624075839526.png" alt="" loading="lazy"></figure>
+<p>本质上是用一个<code>mask</code>去代替哈希表，<code>mask</code>是一个整型，32位，因为只有小写字母，最多只有26位，所以可以利用一个整型中的每一位去判断字母是否出现过。</p>
+<p>具体做法就是，一个字符串对应一个整型<code>mask</code>，遍历每个字符串中的每一个字符，如果字符已经出现过（对应的<code>mask</code>为1），也就是以下语句为<code>true</code>：</p>
+<pre><code class="language-java">if(((mask &gt;&gt; ch) &amp; 1) != 0)
+</code></pre>
+<p>这样就把<code>mask</code>重置为0，否则将对应的位置为1：</p>
+<pre><code class="language-java">mask = mask | (1 &lt;&lt; ch);
+</code></pre>
+<p>也就是</p>
+<pre><code class="language-java">mask |= (1&lt;&lt;ch);
+</code></pre>
+<p>在回溯判断的时候，使用</p>
+<pre><code class="language-java">mask &amp; masks[pos] == 0
+</code></pre>
+<p>即可判断字母是否出现过，如果不为0，表示有重合的1，也就是出现过相同字母了，否则进行下一层的回溯。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[如何建立一个足够安全的SSH连接？]]></title>
         <id>https://2293736867.github.io/post/ru-he-jian-li-yi-ge-zu-gou-an-quan-de-ssh-lian-jie/</id>
@@ -792,62 +917,6 @@ return dp[target].builder.toString();
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623330831531.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第360期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-360-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-360-qi/">
-        </link>
-        <updated>2021-06-08T16:44:18.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>生命中必然要放弃某些人，不是你不在乎，是他们不在乎。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>从今若许闲乘月，拄杖无时夜叩门。<br>
-——陆游《游山西村》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>生气归生气，又不是不爱你......</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623257439961.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>自己做了一个暴力的，过了35个样例，剩下的超时，题解表示是一个变种的背包，三维<code>dp</code>（其实还有更详细的解答，不小心覆盖了昨天的每日分享，所以这里就补充一个简单的。。。）</p>
-<pre><code class="language-java">public class Solution {
-    private static final int MOD = 1000000007;
-
-    public int profitableSchemes(int maxGroup, int minProfit, int[] group, int[] profit) {
-        int len = group.length;
-        int[][][] dp = new int[len + 1][maxGroup + 1][minProfit + 1];
-        dp[0][0][0] = 1;
-
-        for (int i = 1; i &lt;= len; i++) {
-            int currentGroup = group[i - 1];
-            int currentProfit = profit[i - 1];
-            for (int j = 0; j &lt;= maxGroup; j++) {
-                for (int k = 0; k &lt;= minProfit; ++k) {
-                    dp[i][j][k] = dp[i - 1][j][k];
-                    if (j &gt;= currentGroup) {
-                        dp[i][j][k] = (dp[i][j][k] + dp[i - 1][j - currentGroup][Math.max(0, k - currentProfit)]) % MOD;
-                    }
-                }
-            }
-        }
-
-        int sum = 0;
-        for (int j = 0; j &lt;= maxGroup; j++) {
-            sum = (sum + dp[len][j][minProfit]) % MOD;
-        }
-        return sum;
-    }
-
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
