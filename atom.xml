@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-21T00:16:30.559Z</updated>
+    <updated>2021-06-22T02:00:12.838Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,77 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第372期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-372-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-372-qi/">
+        </link>
+        <updated>2021-06-21T18:51:00.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>一见钟情就是好看，深思熟虑就是没钱。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>夜来南风起，小麦覆陇黄。<br>
+——白居易《观刈麦》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>时间就是一个饥饿的怪物，稍有不慎便会被它吃掉。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624301749763.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>今天居然出剑指的题了，好家伙：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    private final List&lt;String&gt; list = new ArrayList&lt;&gt;(40320);
+    public String[] permutation(String s) {
+        dfs(s.toCharArray(),0,s.length());
+        return list.toArray(new String[0]);
+    }
+
+    private void dfs(char[]ch,int start,int n){
+        if(start == n-1){
+            list.add(new String(ch));
+            return;
+        }
+        for (int i = start; i &lt; n; i++) {
+            if(i == start){
+                dfs(ch,start+1,n);
+                continue;
+            }
+            int j = i-1;
+            while(j &gt;= start){
+                if(ch[j] == ch[i]){
+                    break;
+                }
+                --j;
+            }
+            if(j + 1 != start){
+                continue;
+            }
+
+            char c = ch[start];
+            ch[start] = ch[i];
+            ch[i] = c;
+
+            dfs(ch,start+1,n);
+
+            c = ch[i];
+            ch[i] = ch[start];
+            ch[start] = c;
+        }
+    }
+}
+</code></pre>
+<p>这是交换字符做的，官方题解给的是一个回溯还有下一个排列那个算法。</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624301912454.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第371期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-371-qi/</id>
@@ -880,65 +951,6 @@ ssh-add ~/.ssh/server1
 <h1 id="端午快乐">端午快乐</h1>
 <p>祝各位读者端午快乐啊！</p>
 <p><s>呜呜呜今年没有粽子吃了。。。</s></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第363期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-363-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-363-qi/">
-        </link>
-        <updated>2021-06-13T05:00:46.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>失败不可怕，可怕的是，你还相信这句话。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>荷尽已无擎雨盖，菊残犹有傲霜枝。<br>
-——苏轼《赠刘景文》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>就算一次也好，我想在这颗星球上尽情奔跑。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623560483431.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>二分：</p>
-<pre><code class="language-java">public class Solution extends VersionControl {
-    public int firstBadVersion(int n) {
-        long left = 1;
-        long right = n;
-        while(left &lt; right){
-            int m = (int)((left+right) &gt;&gt; 1);
-            if(isBadVersion(m)){
-                right = m;
-            }else{
-                left = m+1;
-            }
-        }
-        return (int)left;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623560506031.png" alt="" loading="lazy"></figure>
-<h1 id="关于数十天没有更新">关于数十天没有更新</h1>
-<p>其实并不是没有更新，每天都有更，只是<code>Gridea</code>连续多天都是同步失败，测试了一下发现是连接的问题：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1623560597286.png" alt="" loading="lazy"></figure>
-<p>检查了一下用户名与域名都没有问题，于是就重新生成了一下<code>Token</code>，还是不行。</p>
-<p>然后排除了一下<code>DNS</code>的问题，把本机的<code>hosts</code>文件清空，重新更新<code>DNS</code>缓存，还是不行，<code>tracepath</code>检测了一下不套代理是跳不到<code>2293736867.github.io</code>的，但是<code>Gridea</code>又没有相关的代理设置。</p>
-<p>然后去<code>issue</code>看了一下，其实可以手动去数据文件夹下的<code>output</code>目录手动<code>git push</code>，然后就这样做了，感觉还挺好，因为：</p>
-<ul>
-<li>可以避免<code>Gridea GUI</code>偶尔（准确来说是很大程度上会）同步失败的问题</li>
-<li>可以避免<code>Gridea GUI</code>同步（非常非常）慢的问题</li>
-</ul>
-<h1 id="关于疫情">关于疫情</h1>
-<p>虽然明天就是端午节了，但是应该不回去了，因为疫情的问题，回去虽然携带48小时核酸证明，而且之前因为一些事情只打了第一针疫苗，第二针还没打。</p>
-<p>最近广州和浙江又爆发了。</p>
-<p>害。</p>
-<p>这该死的疫情到底什么时候才能彻底结束。</p>
-<p>距离2019年12月的爆发，已经1年半了。</p>
 ]]></content>
     </entry>
 </feed>
