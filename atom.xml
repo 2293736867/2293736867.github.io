@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-23T01:16:35.062Z</updated>
+    <updated>2021-06-24T04:49:51.206Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,140 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第374期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-374-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-374-qi/">
+        </link>
+        <updated>2021-06-24T04:41:20.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>我只想和你叙叙旧，你却问我要不要代购。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>清晨入古寺，初日照高林。<br>
+——常建《题破山寺后禅院》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>为什么要把眼影涂得那么红——可能是原来的样子太亲切了吧。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624510127970.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>难道不是很难，套一个哈希表就行了：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int maxPoints(int[][] points) {
+        int n = points.length;
+        if (n &lt;= 2) {
+            return n;
+        }
+        int max = 2;
+        Map&lt;Line, Node&gt; map = new HashMap&lt;&gt;();
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i + 1; j &lt; n; j++) {
+                Point point1 = new Point(points[i][0], points[i][1]);
+                Point point2 = new Point(points[j][0], points[j][1]);
+                Line line = new Line(point1, point2);
+                if (map.containsKey(line)) {
+                    Node node = map.get(line);
+                    node.addIgnoreRepeated(point2);
+                    if (node.count &gt; max) {
+                        max = node.count;
+                    }
+                } else {
+                    map.put(line, new Node(point1,point2));
+                }
+            }
+        }
+        return max;
+    }
+
+    private static class Point {
+        private final int x;
+        private final int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Point)) {
+                return false;
+            }
+            Point point = (Point) obj;
+            return x == point.x &amp;&amp; y == point.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+    }
+
+    private static class Node {
+        private final Set&lt;Point&gt; set;
+        private int count;
+
+        public Node(Point point1, Point point2) {
+            set = new HashSet&lt;&gt;();
+            set.add(point1);
+            set.add(point2);
+            count = 2;
+        }
+
+        public void addIgnoreRepeated(Point point) {
+            if (!set.contains(point)) {
+                set.add(point);
+                ++count;
+            }
+        }
+    }
+
+    private static class Line {
+        double k;
+        double b;
+
+        public Line(Point point1, Point point2) {
+            if (point1.x == point2.x) {
+                k = 10_0000.0;
+                b = point1.x;
+            } else {
+                k = (point1.y - point2.y) / ((double) point1.x - point2.x);
+                if (Math.abs(k) &lt; 1e-6) {
+                    k = 0.0;
+                }
+                b = k * point1.x - point1.y;
+            }
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Line)) {
+                return false;
+            }
+            Line line = (Line) obj;
+            return Math.abs(k - line.k) &lt; 1e-6 &amp;&amp; Math.abs(b - line.b) &lt; 1e-6;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(k, b);
+        }
+    }
+}
+</code></pre>
+<p>只不过真的不会优化，尽力了，只能11ms：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624509835847.png" alt="" loading="lazy"></figure>
+<p><s>裂开</s></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第373期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-373-qi/</id>
@@ -868,90 +1002,6 @@ ssh-add ~/.ssh/server1
 </code></pre>
 <p>当然这是经过数学分析的出来的。</p>
 <p>可以将所有的石头分为两组，偶数组（第一组，下标为偶数）和奇数组（第二组，下标为奇数），分为两组以后，可以计算出每一组石子的数量，知道哪一组的石子数量更多，先手的人只需要取走数量更多的石子即可，因此先手的人总是可以赢得比赛。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第365期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-365-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-365-qi/">
-        </link>
-        <updated>2021-06-14T21:30:21.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>世上没有钱解决不了的事情，如果有，那就是你的钱不够。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>小园几许，收尽春光。<br>
-——秦观《行香子·树绕村庄》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>人的痛苦会把自己折磨到多深呢？</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623706244428.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>其实就是找到数组的最大值，直接上<code>O(n)</code>的算法，因为数据量本来就不大，直接0ms了：</p>
-<pre><code class="language-java">public class Solution{
-    public int peakIndexInMountainArray(int[] arr) {
-        int max = arr[0];
-        int index = 0;
-        int n = arr.length;
-        for(int i=1;i&lt;n;++i){
-            if(arr[i] &gt; max){
-                max = arr[i];
-                index = i;
-            }else{
-                break;
-            }
-        }
-        return index;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623706291752.png" alt="" loading="lazy"></figure>
-<p>（<s>并不是在凌晨5点做的，只是切了Windows没有同步时间</s>）</p>
-<p>不扯了不扯了，来个正经的二分：</p>
-<pre><code class="language-java">public class Solution {
-    public int peakIndexInMountainArray(int[] arr) {
-        int l = 0;
-        int r = arr.length - 1;
-        while (l &lt; r) {
-            int m = (l + r) &gt;&gt; 1;
-            if (arr[m] &gt; arr[l]) {
-                l = m;
-            } else {
-                r = m;
-            }
-        }
-        while (arr[l] &lt; arr[l-1]) {
-            r = l;
-            l = 0;
-            while (l &lt; r) {
-                int m = (l + r) &gt;&gt; 1;
-                if (arr[m] &gt; arr[l]) {
-                    l = m;
-                } else {
-                    r = m;
-                }
-            }
-        }
-        return l;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1623732782692.png" alt="" loading="lazy"></figure>
-<p>要注意的事一次二分之后需要使用循环去继续二分，这样才能找到正确的答案，因为答案有可能是偏左边起点的，这样一次二分之后有可能只是找到部分最大值，比如：</p>
-<pre><code class="language-bash">24,69,100,99,79,78,67,36,26,19
-</code></pre>
-<p>一次二分之后只能返回<code>l=4</code>，也是<code>79</code>的位置，此时需要继续对该位置进行二分：</p>
-<ul>
-<li><code>r = 4</code></li>
-<li><code>l = 0</code></li>
-</ul>
-<p>直到<code>arr[l] &gt; arr[l-1]</code>为止。</p>
 ]]></content>
     </entry>
 </feed>
