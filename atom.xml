@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-24T04:49:51.206Z</updated>
+    <updated>2021-06-25T12:16:41.594Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,622 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第375期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/">
+        </link>
+        <updated>2021-06-25T10:55:31.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>同甘共苦你不陪，荣华富贵你是谁？</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>问何人又卸，片帆沙岸，系斜阳缆？<br>
+——辛弃疾《水龙吟·过南剑双溪楼》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>风筝的线你随时可以放开，只是别盼望我会回来。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624618691721.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>广搜：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    private static final String ZERO = &quot;0000&quot;;
+
+    public int openLock(String[] deadends, String target) {
+        if(target.equals(ZERO)) {
+            return 0;
+        }
+
+        final Set&lt;String&gt; dead = new HashSet&lt;&gt;();
+        for(String s:deadends){
+            dead.add(s);
+            if(s.equals(ZERO)){
+                return -1;
+            }
+        }
+
+        int res = 0;
+        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
+        queue.add(ZERO);
+        Set&lt;String&gt; visit = new HashSet&lt;&gt;();
+        visit.add(ZERO);
+
+        while (!queue.isEmpty()){
+            ++res;
+            int size = queue.size();
+            for (int i = 0; i &lt; size; i++) {
+                String str = queue.remove();
+                for(String s:get(str)){
+                    if(!dead.contains(s) &amp;&amp; !visit.contains(s)){
+                        if(s.equals(target)){
+                            return res;
+                        }
+                        queue.offer(s) ;
+                        visit.add(s);
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    public char numPrev(char x) {
+        return x == '0' ? '9' : (char) (x - 1);
+    }
+
+    public char numSucc(char x) {
+        return x == '9' ? '0' : (char) (x + 1);
+    }
+
+    public List&lt;String&gt; get(String status) {
+        List&lt;String&gt; ret = new ArrayList&lt;String&gt;();
+        char[] array = status.toCharArray();
+        for (int i = 0; i &lt; 4; ++i) {
+            char num = array[i];
+            array[i] = numPrev(num);
+            ret.add(new String(array));
+            array[i] = numSucc(num);
+            ret.add(new String(array));
+            array[i] = num;
+        }
+        return ret;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624623354233.png" alt="" loading="lazy"></figure>
+<p>就是不是十分服气下面的超时怎么来的，命名单独把样例拿出来跑就不会超时。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot demo系列（十二）：ShardingSphere + MyBatisPlus 读写分离 + 主从复制]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-er-shardingsphere-mybatisplus-du-xie-fen-chi-zhu-cong-fu-zhi/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-er-shardingsphere-mybatisplus-du-xie-fen-chi-zhu-cong-fu-zhi/">
+        </link>
+        <updated>2021-06-25T10:42:51.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA">3 一些基础理论</a>
+<ul>
+<li><a href="#31-%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB">3.1 读写分离</a></li>
+<li><a href="#32-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6">3.2 主从复制</a></li>
+<li><a href="#33-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6%E7%AE%80%E4%BB%8B">3.3 数据库中间件简介</a></li>
+</ul>
+</li>
+<li><a href="#4-mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">4 <code>MySQL</code>主从复制环境准备</a>
+<ul>
+<li><a href="#41-%E4%B8%BB%E5%BA%93%E6%93%8D%E4%BD%9C">4.1 主库操作</a>
+<ul>
+<li><a href="#411-%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F%E5%B9%B6%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C">4.1.1 拉取镜像并创建容器运行</a></li>
+<li><a href="#412-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">4.1.2 修改配置文件</a></li>
+<li><a href="#413-%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE%E6%BA%90">4.1.3 准备数据源</a></li>
+<li><a href="#414-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%A4%8D%E5%88%B6%E6%93%8D%E4%BD%9C%E7%9A%84%E7%94%A8%E6%88%B7%E5%8F%AF%E9%80%89%E4%BD%86%E6%8E%A8%E8%8D%90">4.1.4 创建一个复制操作的用户（可选但推荐）</a></li>
+<li><a href="#415-%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E5%8F%AF%E9%80%89">4.1.5 数据备份（可选）</a></li>
+<li><a href="#416-%E6%9F%A5%E7%9C%8B%E4%B8%BB%E5%BA%93%E7%8A%B6%E6%80%81">4.1.6 查看主库状态</a></li>
+</ul>
+</li>
+<li><a href="#42-%E4%BB%8E%E5%BA%93%E6%93%8D%E4%BD%9C">4.2 从库操作</a>
+<ul>
+<li><a href="#421-%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F%E5%B9%B6%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C">4.2.1 拉取镜像并创建容器运行</a></li>
+<li><a href="#422-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">4.2.2 修改配置文件</a></li>
+<li><a href="#423-%E6%9F%A5%E7%9C%8Bip%E5%9C%B0%E5%9D%80">4.2.3 查看<code>ip</code>地址</a></li>
+<li><a href="#424-%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E5%8F%AF%E9%80%89">4.2.4 导入数据（可选）</a></li>
+<li><a href="#425-%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE%E6%BA%90">4.2.5 准备数据源</a></li>
+<li><a href="#426-%E8%AE%BE%E7%BD%AE%E4%B8%BB%E5%BA%93">4.2.6 设置主库</a></li>
+<li><a href="#427-%E5%BC%80%E5%90%AF%E4%BB%8E%E5%BA%93">4.2.7 开启从库</a></li>
+</ul>
+</li>
+<li><a href="#43-%E6%B5%8B%E8%AF%95">4.3 测试</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%90%AD%E5%BB%BAspring-boot%E7%8E%AF%E5%A2%83">5 搭建<code>Spring Boot</code>环境</a>
+<ul>
+<li><a href="#51-%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE%E5%B9%B6%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96">5.1 新建项目并引入依赖</a></li>
+<li><a href="#52-%E4%BD%BF%E7%94%A8%E7%94%9F%E6%88%90%E5%99%A8">5.2 使用生成器</a></li>
+<li><a href="#53-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.3 配置文件</a></li>
+<li><a href="#54-%E5%87%86%E5%A4%87controller">5.4 准备<code>Controller</code></a></li>
+</ul>
+</li>
+<li><a href="#6-%E6%B5%8B%E8%AF%95">6 测试</a></li>
+<li><a href="#7-%E5%8F%82%E8%80%83%E6%BA%90%E7%A0%81">7 参考源码</a></li>
+<li><a href="#8-%E5%8F%82%E8%80%83">8 参考</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文讲述了如何使用<code>MyBatisPlus</code>+<code>ShardingSphere</code>进行读写分离，以及利用<code>MySQL</code>进行一主一从的主从复制。</p>
+<p>具体步骤包括：</p>
+<ul>
+<li><code>MySQL</code>主从复制环境准备（<code>Docker</code>）</li>
+<li>搭建<code>ShardingShpere</code>+<code>MyBatisPlus</code>+<code>Druid</code>环境</li>
+<li>测试</li>
+</ul>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>OpenJDK 11.0.11</code></li>
+<li><code>Spring Boot 2.5.1</code></li>
+<li><code>MyBatis Plus 3.4.3.1</code></li>
+<li><code>MyBatis Plus Generator 3.5.0</code></li>
+<li><code>Druid 1.2.6</code></li>
+<li><code>ShardingSphere 4.1.1</code></li>
+<li><code>MySQL 8.0.25</code></li>
+</ul>
+<h1 id="3-一些基础理论">3 一些基础理论</h1>
+<h2 id="31-读写分离">3.1 读写分离</h2>
+<p>读写分离，顾名思义就是读和写分开，更具体来说，就是：</p>
+<ul>
+<li>写操作在主数据库进行</li>
+<li>读操作在从数据库进行</li>
+</ul>
+<p>使用读写分离的根本目的就是为了提高并发性能，如果读写都在同一台<code>MySQL</code>上实现，相信会不如一台<code>MySQL</code>写，另外两台<code>MySQL</code>读这样的配置性能高。另一方面，在很多时候都是读操作的请求要远远高于写操作，这样就显得读写分离非常有必要了。</p>
+<h2 id="32-主从复制">3.2 主从复制</h2>
+<p>主从复制，顾名思义就是把主库的数据复制到从库中，因为读写分离之后，写操作都在主库进行，但是读操作是在从库进行的，也就是说，主库上的数据如果不能复制到从库中，那么从库就不会读到主库中的数据。严格意义上说，读写分离并不要求主从复制，只需要在主库写从库读即可，但是如果没有了主从复制，读写分离将失去了它的意义。因此读写分离通常与主从复制配合使用。</p>
+<p>因为本示例使用的是<code>MySQL</code>，这里就说一下<code>MySQL</code>主从复制的原理，如下图所示：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210625140216782.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>工作流程如下：</p>
+<ul>
+<li>主库修改数据后，将修改日志写入<code>binlog</code></li>
+<li>从库的<code>I/O</code>线程读取主库的<code>binlog</code>，并拷贝到从库本地的<code>binlog</code>中</li>
+<li>从库本地的<code>binlog</code>被<code>SQL</code>线程读取，执行其中的内容并同步到从库中</li>
+</ul>
+<h2 id="33-数据库中间件简介">3.3 数据库中间件简介</h2>
+<p>数据库中间件可以简化对读写分离以及分库分表的操作，并隐藏底层实现细节，可以像操作单库单表那样操作多库多表，主流的设计方案主要有两种：</p>
+<ul>
+<li>服务端代理：需要独立部署一个代理服务，该代理服务后面管理多个数据库实例，在应用中通过一个数据源与该代理服务器建立连接，由该代理去操作底层数据库，并返回相应结果。优点是支持多语言，对业务透明，缺点是实现复杂，实现难度大，同时代理需要确保自身高可用</li>
+<li>客户端代理：在连接池或数据库驱动上进行一层封装，内部与不同的数据库建立连接，并对<code>SQL</code>进行必要的操作，比如读写分离选择走主库还是从库，分库分表<code>select</code>后如何聚合结果。优点是实现简单，天然去中心化，缺点是支持语言较少，版本升级困难</li>
+</ul>
+<p>一些常见的数据库中间件如下：</p>
+<ul>
+<li><code>Cobar</code>：阿里开源的关系型数据库分布式服务中间件，已停更</li>
+<li><code>DRDS</code>：脱胎于<code>Cobar</code>，全称<code>分布式关系型数据库服务</code></li>
+<li><code>MyCat</code>：开源数据库中间件，目前更新了<code>MyCat2</code>版本</li>
+<li><code>Atlas</code>：<code>Qihoo 360</code>公司<code>Web</code>平台部基础架构团队开发维护的一个基于<code>MySQL</code>协议的数据中间层项目，同时还有一个<code>NoSQL</code>的版本，叫<code>Pika</code></li>
+<li><code>tddl</code>：阿里巴巴自主研发的分布式数据库服务</li>
+<li><code>Sharding-JDBC</code>：<code>ShardingShpere</code>的一个子产品，一个轻量级<code>Java</code>框架</li>
+</ul>
+<h1 id="4-mysql主从复制环境准备">4 <code>MySQL</code>主从复制环境准备</h1>
+<p>看完了一些基础理论就可以进行动手了，本小节先准备好<code>MySQL</code>主从复制的环境，基于<code>Docker</code>+<code>MySQL</code>官方文档搭建。</p>
+<h2 id="41-主库操作">4.1 主库操作</h2>
+<h3 id="411-拉取镜像并创建容器运行">4.1.1 拉取镜像并创建容器运行</h3>
+<pre><code class="language-bash">docker pull mysql
+docker run -itd -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-master mysql
+docker exec -it mysql-master /bin/bash
+</code></pre>
+<p>在主库中进行更新镜像源，安装<code>vim</code>以及<code>net-tools</code>的操作：</p>
+<pre><code class="language-bash">cd /etc/apt
+echo deb http://mirrors.aliyun.com/debian/ buster main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib deb http://mirrors.aliyun.com/debian-security buster/updates main deb-src http://mirrors.aliyun.com/debian-security buster/updates main deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib &gt; sources.list
+apt update &amp;&amp; apt upgrade
+apt install vim net-tools
+</code></pre>
+<h3 id="412-修改配置文件">4.1.2 修改配置文件</h3>
+<pre><code class="language-bash">vim /etc/mysql/my.cnf
+</code></pre>
+<p>添加下面两行数据：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=1                # 全局唯一，取值[1,2^32-1]，默认为1
+binlog-do-db=test          # 表示需要复制的是哪个库
+</code></pre>
+<p>修改完成后重启。</p>
+<h3 id="413-准备数据源">4.1.3 准备数据源</h3>
+<pre><code class="language-sql">create database test;
+use test;
+create table user(
+	id int primary key auto_increment,
+	name varchar(30) not null,
+	age int not null
+);
+</code></pre>
+<h3 id="414-创建一个复制操作的用户可选但推荐">4.1.4 创建一个复制操作的用户（可选但推荐）</h3>
+<p>注意创建用户需要加上<code>mysql_native_password</code>，否则会导致从库一直处于连接状态：</p>
+<pre><code class="language-sql">create user 'repl'@'172.17.0.3' identified with mysql_native_password by '123456';
+grant replication slave on *.* to 'repl'@'172.17.0.3';
+</code></pre>
+<p>具体的地址请根据从库的地址修改，可以先看后面的从库配置部分。</p>
+<h3 id="415-数据备份可选">4.1.5 数据备份（可选）</h3>
+<p>如果原来的主库中是有数据的，那么这部分数据需要手动同步到从库中：</p>
+<pre><code class="language-sql">flush tables with read lock;
+</code></pre>
+<p>开启主库的另一个终端，使用<code>mysqldump</code>导出：</p>
+<pre><code class="language-bash">mysqldump -u root -p --all-databases --master-data &gt; dbdump.db
+</code></pre>
+<p>导出完成后，解除读锁：</p>
+<pre><code class="language-sql">unlock tables;
+</code></pre>
+<h3 id="416-查看主库状态">4.1.6 查看主库状态</h3>
+<pre><code class="language-sql">show master status;
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210625161550759.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>需要把<code>File</code>以及<code>Position</code>记录下来，后面从库的配置需要用到。</p>
+<h2 id="42-从库操作">4.2 从库操作</h2>
+<h3 id="421-拉取镜像并创建容器运行">4.2.1 拉取镜像并创建容器运行</h3>
+<pre><code class="language-bash">docker pull mysql
+docker run -itd -p 3307:3306 -p 33061:33060 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-slave mysql
+docker exec -it mysql-slave /bin/bash
+</code></pre>
+<p>进入容器后，像主库一样更新源然后安装<code>vim</code>和<code>net-tools</code>：</p>
+<pre><code class="language-bash">cd /etc/apt
+echo deb http://mirrors.aliyun.com/debian/ buster main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib deb http://mirrors.aliyun.com/debian-security buster/updates main deb-src http://mirrors.aliyun.com/debian-security buster/updates main deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib &gt; sources.list
+apt update &amp;&amp; apt upgrade
+apt install vim net-tools
+</code></pre>
+<h3 id="422-修改配置文件">4.2.2 修改配置文件</h3>
+<pre><code class="language-bash">vim /etc/mysql/my.cnf
+</code></pre>
+<p>添加如下两行：</p>
+<pre><code class="language-bash">server-id=2            # 全局唯一，不能与主库相同
+replicate-do-db=test   # 与主库相同，表示对该库进行复制
+</code></pre>
+<p>修改完成后重启。</p>
+<h3 id="423-查看ip地址">4.2.3 查看<code>ip</code>地址</h3>
+<p>查看从库的<code>ip</code>地址，用于给主库设置同步的用户：</p>
+<pre><code class="language-bash">ifconfig
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-bash">inet 172.17.0.3  netmask 255.255.0.0  broadcast 172.17.255.255
+</code></pre>
+<p>那么主库中用于复制的用户就可以是<code>repl@172.17.0.3</code>。</p>
+<h3 id="424-导入数据可选">4.2.4 导入数据（可选）</h3>
+<p>如果主库有数据可以先导入到从库：</p>
+<pre><code class="language-bash">mysqldump -u root -p --all-databases &lt; dbdump.db
+</code></pre>
+<h3 id="425-准备数据源">4.2.5 准备数据源</h3>
+<pre><code class="language-sql">create database test;
+use test;
+create table user(
+	id int primary key auto_increment,
+	name varchar(30) not null,
+	age int not null
+);
+</code></pre>
+<h3 id="426-设置主库">4.2.6 设置主库</h3>
+<p>可以使用<code>change master to</code>/<code>change replication source to</code>（<code>8.0.23+</code>）命令：</p>
+<pre><code class="language-sql">change replication source to 
+source_host='172.17.0.2',                   # 可以使用ifconfig查看主库ip
+source_user='repl',                         # 之前主库创建的用户
+source_password='123456',                   # 密码
+source_log_file='binlog.000003',            # 之前在主库上使用show master status查看的日志文件
+source_log_pos=594;                         # 同样使用show master status查看
+</code></pre>
+<h3 id="427-开启从库">4.2.7 开启从库</h3>
+<pre><code class="language-sql">start slave;
+show slave status\G
+</code></pre>
+<p>新版本（<code>8.0.22+</code>）可使用：</p>
+<pre><code class="language-sql">start replica;
+show replica status\G
+</code></pre>
+<p>需要<code>IO</code>和<code>SQL</code>线程显示<code>Yes</code>才算成功：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210625163911765.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="43-测试">4.3 测试</h2>
+<p>主库选择插入一条数据：</p>
+<pre><code class="language-sql">insert into user values(1,&quot;name&quot;,3);
+</code></pre>
+<p>然后从库就能<code>select</code>到了：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210625165315257.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-搭建spring-boot环境">5 搭建<code>Spring Boot</code>环境</h1>
+<h2 id="51-新建项目并引入依赖">5.1 新建项目并引入依赖</h2>
+<p>新建<code>Spring Boot</code>项目，并引入如下依赖：</p>
+<pre><code class="language-bash">implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.3.1'
+implementation 'com.baomidou:mybatis-plus-generator:3.5.0'
+implementation 'org.apache.velocity:velocity-engine-core:2.3'
+implementation 'org.realityforge.org.jetbrains.annotations:org.jetbrains.annotations:1.7.0'
+implementation 'com.alibaba:druid:1.2.6' # 注意不能使用druid的starter依赖，会出现模板找不到的问题
+implementation 'org.apache.shardingsphere:sharding-jdbc-spring-boot-starter:4.1.1'
+</code></pre>
+<p><code>Maven</code>版本：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.4.3.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;
+    &lt;version&gt;3.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
+    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
+    &lt;version&gt;2.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.realityforge.org.jetbrains.annotations&lt;/groupId&gt;
+    &lt;artifactId&gt;org.jetbrains.annotations&lt;/artifactId&gt;
+    &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;druid&lt;/artifactId&gt;
+    &lt;version&gt;1.2.6&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.shardingsphere&lt;/groupId&gt;
+    &lt;artifactId&gt;sharding-jdbc-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;4.1.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="52-使用生成器">5.2 使用生成器</h2>
+<pre><code class="language-java">import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.config.*;
+
+public class MyBatisPlusGenerator {
+    public static void main(String[] args) {
+        DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(&quot;jdbc:mysql://localhost:3306/test&quot;,&quot;root&quot;,&quot;123456&quot;).build();
+        String projectPath = System.getProperty(&quot;user.dir&quot;);
+        GlobalConfig globalConfig = new GlobalConfig.Builder().outputDir(projectPath+&quot;/src/main/java&quot;).openDir(false).build();
+        PackageConfig packageConfig = new PackageConfig.Builder().moduleName(&quot;test&quot;).parent(&quot;com.example.demo&quot;).build();
+        AutoGenerator autoGenerator = new AutoGenerator(dataSourceConfig);
+        autoGenerator.global(globalConfig).packageInfo(packageConfig);
+        autoGenerator.execute();
+    }
+}
+</code></pre>
+<p>直接运行<code>main</code>方法即可生成代码，配置请根据个人需要进行更改，更详细的配置可以参考笔者的<a href="https://blog.csdn.net/qq_27525611/article/details/118197154">另一篇文章</a>。</p>
+<h2 id="53-配置文件">5.3 配置文件</h2>
+<pre><code class="language-yml">spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 123456
+  shardingsphere:
+    datasource:
+      names: master,slave                                   # 数据源名字
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource        # 连接池
+        url: jdbc:mysql://127.0.0.1:3306/test               # 主库地址
+        username: root                                      # 主库用户名
+        password: 123456                                    # 主库密码
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource        # 连接池
+        url: jdbc:mysql://127.0.0.1:3307/test               # 从库地址
+        username: root
+        password: 123456
+    masterslave:
+      load-balance-algorithm-type: round_robin              # 负载均衡算法，
+      name: ms
+      master-data-source-name: master                       # 主库数据源名字
+      slave-data-source-names: slave                        # 从库数据源名字
+    props:
+      sql:
+        show: true                                          # 打印SQL
+</code></pre>
+<p>关于负载均衡算法，目前只支持两种：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210625171008182.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="54-准备controller">5.4 准备<code>Controller</code></h2>
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;/test/user&quot;)
+@AllArgsConstructor(onConstructor = @__(@Autowired))
+public class UserController {
+    private final UserServiceImpl userService;
+    @GetMapping(&quot;/write&quot;)
+    public boolean write(){
+        return userService.save(User.builder().age(3).name(&quot;234&quot;).build());
+    }
+
+    @GetMapping(&quot;/read&quot;)
+    public User read(){
+        return userService.getById(1);
+    }
+}
+</code></pre>
+<h1 id="6-测试">6 测试</h1>
+<p>访问<code>http://localhost:8080/test/user/write</code>，可以看到写操作在主库进行：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210625175333981.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>访问<code>http://localhost:8080/test/user/read</code>，可以看到读操作在从库进行：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210625175408912.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>这样读写分离就算是可以了。</p>
+<h1 id="7-参考源码">7 参考源码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/main/ShardingSphereMyBaitsPlusMySQLMasterSlave">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/main/ShardingSphereMyBaitsPlusMySQLMasterSlave">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/main/ShardingSphereMyBaitsPlusMySQLMasterSlave">CODE CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/main/ShardingSphereMyBaitsPlusMySQLMasterSlave">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/main/ShardingSphereMyBaitsPlusMySQLMasterSlave">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/main/ShardingSphereMyBaitsPlusMySQLMasterSlave">CODE CHINA</a></li>
+</ul>
+<h1 id="8-参考">8 参考</h1>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/replication-configuration.html">MySQL 官方文档</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1457281">腾讯云-面试题:你们有没有做 MySQL 读写分离？如何实现 MySQL 的读写分离？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/87144535">知乎-数据库中间件详解（精品长文）</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot demo系列（十一）：MyBatis Plus Generator代码生成]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-yi-mybatis-plus-generator-dai-ma-sheng-cheng/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-yi-mybatis-plus-generator-dai-ma-sheng-cheng/">
+        </link>
+        <updated>2021-06-24T16:49:02.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E5%89%8D%E8%A8%80">1 前言</a></li>
+<li><a href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8">2 为什么需要代码生成器</a></li>
+<li><a href="#3-%E7%8E%AF%E5%A2%83">3 环境</a></li>
+<li><a href="#4-%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE%E8%A1%A8">4 准备数据表</a></li>
+<li><a href="#5-%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E5%B9%B6%E5%AF%BC%E5%85%A5%E4%BE%9D%E8%B5%96">5 创建项目并导入依赖</a></li>
+<li><a href="#6-%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%94%9F%E6%88%90%E5%99%A8%E7%B1%BB">6 新建一个生成器类</a></li>
+<li><a href="#7-%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C">7 测试运行</a></li>
+<li><a href="#8-%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE">8 其他配置</a></li>
+<li><a href="#9-%E6%BA%90%E7%A0%81">9 源码</a></li>
+<li><a href="#10-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">10 参考链接</a></li>
+</ul>
+</p>
+<h1 id="1-前言">1 前言</h1>
+<p><code>MyBatis Plus starter</code>最近更新了<code>3.4.3.1</code>版本，而<code>MyBatis Plug Generator</code>更新到了<code>3.5.0</code>版本，但是官方文档还没有更新生成器的代码，另外在之前的文章里介绍过<code>MyBatis Plus</code>的使用，因此这里补上一篇文章结合<code>Spring Boot</code>介绍代码生成器的使用。</p>
+<h1 id="2-为什么需要代码生成器">2 为什么需要代码生成器</h1>
+<p>使用代码生成器可以生成一些固定模板的代码，比如：</p>
+<ul>
+<li><code>Controller</code>层代码</li>
+<li><code>Service</code>层代码</li>
+<li><code>mapper</code></li>
+<li>实体类</li>
+</ul>
+<p>比如一个<code>User</code>类可以生成如下代码：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210624215503193.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="3-环境">3 环境</h1>
+<p>本次示例使用的环境如下：</p>
+<ul>
+<li><code>Spring Boot 2.5.1</code></li>
+<li><code>MyBaits Plus 3.4.3.1</code></li>
+<li><code>MyBatis Plus Generator 3.5.0</code></li>
+</ul>
+<h1 id="4-准备数据表">4 准备数据表</h1>
+<p>这里为了方便使用<code>Workbench</code>创建一个用户表<code>User</code>：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210624220414906.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="5-创建项目并导入依赖">5 创建项目并导入依赖</h1>
+<p>创建一个新的<code>Spring Boot</code>项目，然后导入如下依赖：</p>
+<pre><code class="language-bash">implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.3.1' 
+implementation 'com.baomidou:mybatis-plus-generator:3.5.0'
+implementation 'org.apache.velocity:velocity-engine-core:2.3'
+implementation 'org.realityforge.org.jetbrains.annotations:org.jetbrains.annotations:1.7.0'
+</code></pre>
+<p>除了<code>starter</code>和<code>generator</code>后，还需要一个模板引擎（可选<code>Velocity</code>、<code>Freemarker</code>、<code>Beetl</code>，默认<code>Velocity</code>）和一个注解依赖（<code>jetbrains.annotations</code>）。</p>
+<p><code>Maven</code>版本如下：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.4.3.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;
+    &lt;version&gt;3.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
+    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
+    &lt;version&gt;2.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.realityforge.org.jetbrains.annotations&lt;/groupId&gt;
+    &lt;artifactId&gt;org.jetbrains.annotations&lt;/artifactId&gt;
+    &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h1 id="6-新建一个生成器类">6 新建一个生成器类</h1>
+<p>该类用于进行代码生成的配置：</p>
+<pre><code class="language-java">import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.config.*;
+
+public class MyBatisPlusGenerator {
+    public static void main(String[] args) {
+        DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(&quot;jdbc:mysql://localhost:3306/test&quot;,&quot;root&quot;,&quot;123456&quot;).build();
+        String projectPath = System.getProperty(&quot;user.dir&quot;);
+        GlobalConfig globalConfig = new GlobalConfig.Builder().outputDir(projectPath+&quot;/src/main/java&quot;).openDir(false).build();
+        PackageConfig packageConfig = new PackageConfig.Builder().moduleName(&quot;test&quot;).parent(&quot;com.example.test&quot;).build();
+        AutoGenerator autoGenerator = new AutoGenerator(dataSourceConfig);
+        autoGenerator.global(globalConfig).packageInfo(packageConfig);
+        autoGenerator.execute();
+    }
+}
+</code></pre>
+<p>代码生成器配置相比起之前的版本，使用了<code>Builder</code>模式代替了原来的<code>setter</code>模式：</p>
+<pre><code class="language-java">DataSourceConfig dataSourceConfig = new DataSourceConfig(); // 3.5.0版本中默认构造方法变成私有，无法编译通过
+dataSourceConfig.setUrl(&quot;jdbc:mysql://localhost:3306/ant?useUnicode=true&amp;useSSL=false&amp;characterEncoding=utf8&quot;);
+dataSourceConfig.setDriverName(&quot;com.mysql.jdbc.Driver&quot;);
+dataSourceConfig.setUsername(&quot;root&quot;);
+dataSourceConfig.setPassword(&quot;password&quot;);
+</code></pre>
+<p>上面的代码中设置了数据源、输出的代码路径以及输出的包名，根据需要进行修改即可：</p>
+<pre><code class="language-java">DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(&quot;jdbc:mysql://localhost:3306/test&quot;,&quot;root&quot;,&quot;123456&quot;).build();
+String projectPath = System.getProperty(&quot;user.dir&quot;);
+GlobalConfig globalConfig = new GlobalConfig.Builder().outputDir(projectPath+&quot;/src/main/java&quot;).openDir(false).build();
+PackageConfig packageConfig = new PackageConfig.Builder().moduleName(&quot;test&quot;).parent(&quot;com.example.test&quot;).build();
+</code></pre>
+<p>准备好以后直接运行<code>main</code>，就会在<code>src/main/java</code>下生成一个<code>test</code>文件夹：</p>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210624221013305.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="7-测试运行">7 测试运行</h1>
+<p>首先修改一下配置文件，添加数据源：</p>
+<pre><code class="language-yml">spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 123456
+</code></pre>
+<p>修改<code>UserController</code>如下，添加一个测试方法：</p>
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;/test/user&quot;)
+public class UserController {
+    @Resource
+    private UserServiceImpl userService;
+    @GetMapping(&quot;/&quot;)
+    public String test() {
+        return userService.getById(1).toString();
+    }
+}
+</code></pre>
+<p>此时如果直接尝试运行<code>main</code>方法，会报错如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210624221324562.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>找不到<code>UserMapper</code>这个<code>Bean</code>，解决方法就是在<code>UserMapper</code>加上一个<code>@Mapper</code>即可：</p>
+<pre><code class="language-java">@Mapper
+public interface UserMapper extends BaseMapper&lt;User&gt; {
+}
+</code></pre>
+<p>或者在<code>main</code>类加上一个<code>@MapperScan</code>，加上<code>mapper</code>所在的全限定路径：</p>
+<pre><code class="language-java">@SpringBootApplication
+@MapperScan(&quot;com.example.test.test.mapper&quot;)
+public class TestApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(TestApplication.class, args);
+    }
+}
+</code></pre>
+<p>这样访问<code>localhost:8080/test/user/</code>就可以访问到<code>id=1</code>的用户了：</p>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210624221704290.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="8-其他配置">8 其他配置</h1>
+<p>上面只是介绍了最简单的生成器配置，实际上完整的代码生成器配置如下：</p>
+<ul>
+<li><code>DataSourceConfig</code>：数据源配置，包括数据库类型、驱动、连接<code>URL</code>、用户名、密码等</li>
+<li><code>StrategyConfig</code>：数据库表配置（但是这个命名确实看不出来），可以指定对哪些表生成代码或者排除哪些表不生成代码，同时可以设置生成的字段前缀，还可以支持模糊匹配表名（排除或包含）等</li>
+<li><code>PackageConfig</code>：包配置，指定代码生成的模块名、包名、<code>mapper</code>命名、<code>service</code>命名、<code>controller</code>命名等</li>
+<li><code>TemplateConfig</code>：模板配置，可以自定义生成的模板，包括实体类模板、<code>service</code>模板、<code>controller</code>模板、<code>mapper</code>模板、<code>mapper xml</code>模板等</li>
+<li><code>GlobalConfig</code>：全局配置，可以指定输出的代码目录、是否覆盖文件等配置，同时支持<code>Kotlin</code>和<code>Swagger2</code></li>
+<li><code>InjectionConfig</code>：注入配置，可以自定义配置<code>Map</code>对象等</li>
+</ul>
+<p>详细请查看<a href="https://mybatis.plus/config/generator-config.html#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">官方文档</a>。</p>
+<h1 id="9-源码">9 源码</h1>
+<p>参考源码，<code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/main/MyBatisPlusGenerator">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/main/MyBatisPlusGenerator">码云</a></li>
+</ul>
+<h1 id="10-参考链接">10 参考链接</h1>
+<ul>
+<li><a href="https://mybatis.plus/guide/generator.html#%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">MyBatis Plus官方文档</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第374期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-374-qi/</id>
@@ -806,202 +1422,6 @@ ssh-add ~/.ssh/server1
 <p><a href="https://medium.com/risan/upgrade-your-ssh-key-to-ed25519-c6e8d60d3c54">Upgrade Your SSH Key to Ed25519</a></p>
 </li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第368期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-368-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-368-qi/">
-        </link>
-        <updated>2021-06-18T00:51:23.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>活了这么多年发现，唯一坚持下去的，就是每天给手机充电。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>春阴垂野草青青，时有幽花一树明。<br>
-——苏舜钦《淮中晚泊犊头》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>比自己，比梦想更重要的东西永远都存在着......</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623977640051.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>差不多就是纯数学题。。。</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624011515656.png" alt="" loading="lazy"></figure>
-<pre><code class="language-java">class Solution {
-    public String smallestGoodBase(String n) {
-        long nVal = Long.parseLong(n);
-        int mMax = (int) Math.floor(Math.log(nVal) / Math.log(2));
-        for (int m = mMax; m &gt; 1; m--) {
-            int k = (int) Math.pow(nVal, 1.0 / m);
-            long mul = 1, sum = 1;
-            for (int i = 0; i &lt; m; i++) {
-                mul *= k;
-                sum += mul;
-            }
-            if (sum == nVal) {
-                return Integer.toString(k);
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624011486296.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第367期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-367-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-367-qi/">
-        </link>
-        <updated>2021-06-16T16:17:33.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>生活不止眼前的苟且，还有读不懂的诗和到不了的远方。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>梧桐树，三更雨，不导离情正苦。<br>
-——温庭筠《更漏子·玉炉香》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>人的痛苦会把自己折磨到多深呢？</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623860387621.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>u1s1不会有限状态机，只会分类讨论：</p>
-<pre><code class="language-java">public class Solution {
-    private char[] c;
-    public boolean isNumber(String s) {
-        if (s == null) {
-            return false;
-        }
-        char [] c = s.toCharArray();
-        this.c = c;
-        int n = c.length;
-        if (n == 0) {
-            return false;
-        }
-        if (c[0] != '+' &amp;&amp; c[0] != '-' &amp;&amp; c[0] &lt; '0' &amp;&amp; c[0] &gt; '9') {
-            return false;
-        }
-
-        boolean alpha = false;
-        boolean dot = false;
-        int alphaIndex = 0;
-        for (int i = 0; i &lt; n; i++) {
-            if (c[i] == '+' || c[i] == '-') {
-                if(i != 0 &amp;&amp; c[i-1] != 'e' &amp;&amp; c[i-1] != 'E'){
-                    return false;
-                }
-            } else if (c[i] == '.') {
-                if (!dot) {
-                    dot = true;
-                } else {
-                    return false;
-                }
-            } else if (c[i] == 'e' || c[i] == 'E'){
-                if (!alpha) {
-                    alpha = true;
-                    alphaIndex = i;
-                } else {
-                    return false;
-                }
-            }else if (!Character.isDigit(c[i])){
-                return false;
-            }
-        }
-        if (!alpha) {
-            return isInt(0,n) || isDouble(0,n);
-        }
-
-        if (isInt(0,alphaIndex) || isDouble(0,alphaIndex)) {
-            return isInt(alphaIndex+1,n);
-        }
-        return false;
-    }
-
-    private boolean isInt(int start,int end){
-        if(end == start){
-            return false;
-        }
-        char[] c = this.c;
-        if(c[start] == '+' || c[start] == '-'){
-            if(end - start == 1){
-                return false;
-            }
-            ++start;
-        }
-        for (int i = start; i &lt; end; i++) {
-            if(c[i] == '.'){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isDouble(int start,int end){
-        if(end == start){
-            return false;
-        }
-        char [] c = this.c;
-        int n = end - start;
-        boolean first = false;
-        if(c[0] == '+' || c[0] == '-'){
-            if(end - start == 1){
-                return false;
-            }
-            ++start;
-            first = true;
-        }
-        for (int i = start; i &lt; end; i++) {
-            if(c[i] == '.') {
-                return n != (first ? 1 : 0) + 1;
-            }
-        }
-        return false;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1623860431249.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第366期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-366-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-366-qi/">
-        </link>
-        <updated>2021-06-15T22:03:55.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>终于中了500万，兑奖的时候，笑醒了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>波面澄霞，兰艇采香去。<br>
-——高观国《祝英台近·荷花》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>每个人的心里，都有一个忘不记，却无法拥抱珍惜的人。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1623794775074.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>这是笔者做过的所有题中，能得到的最短的答案，没有之一：</p>
-<pre><code class="language-java">public class Solution {
-    public boolean stoneGame(int[] piles) {
-        return true;
-    }
-}
-</code></pre>
-<p>当然这是经过数学分析的出来的。</p>
-<p>可以将所有的石头分为两组，偶数组（第一组，下标为偶数）和奇数组（第二组，下标为奇数），分为两组以后，可以计算出每一组石子的数量，知道哪一组的石子数量更多，先手的人只需要取走数量更多的石子即可，因此先手的人总是可以赢得比赛。</p>
 ]]></content>
     </entry>
 </feed>
