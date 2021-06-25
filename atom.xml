@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-25T12:16:41.594Z</updated>
+    <updated>2021-06-25T18:06:15.086Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,167 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第376期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/">
+        </link>
+        <updated>2021-06-25T17:58:49.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你老是这么抠门，门都被你，抠坏了好几扇。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>客从洞庭来，婉娈潇湘深。<br>
+——顾况《游子吟》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>原谅他是上帝的事情，我的事情就是送他去见上帝。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624643946338.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>还是广搜题：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int slidingPuzzle(int[][] board) {
+        final int[][] target = {
+                {1,2,3},
+                {4,5,0}
+        };
+        if(Arrays.deepEquals(target,board)){
+            return 0;
+        }
+        Set&lt;Node&gt; set = new HashSet&lt;&gt;();
+        Queue&lt;int[][]&gt; queue = new LinkedList&lt;&gt;();
+        queue.add(board);
+        int res = 0;
+        set.add(new Node(board));
+        while (!queue.isEmpty()) {
+            ++res;
+            int size = queue.size();
+            for (int i = 0; i &lt; size; ++i) {
+                int[][] top = queue.remove();
+                for (int[][] s : get(top)) {
+                    if (!set.contains(new Node(s))) {
+                        if (Arrays.deepEquals(s, target)) {
+                            return res;
+                        }
+                        queue.offer(s);
+                        set.add(new Node(s));
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static class Node{
+        int [][] board;
+        public Node(int [][]board){
+            this.board = board;
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.deepHashCode(board);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(!(obj instanceof Node)){
+                return false;
+            }
+            Node node = (Node) obj;
+            return Arrays.deepEquals(board,node.board);
+        }
+
+        @Override
+        public String toString() {
+            return Arrays.deepToString(board);
+        }
+    }
+
+    private int[][][] get(int[][] board) {
+        int zi = -1;
+        int zj = -1;
+        for (int i = 0; i &lt; board.length; i++) {
+            for (int j = 0; j &lt; board[i].length; j++) {
+                if (board[i][j] == 0) {
+                    zi = i;
+                    zj = j;
+                    break;
+                }
+            }
+            if (zi != -1) {
+                break;
+            }
+        }
+
+        int[][] state1 = new int[2][3];
+        int[][] state2 = new int[2][3];
+        int[][] state3 = new int[2][3];
+        int num = 2;
+        if (zi == 0 &amp;&amp; zj == 0) {
+            state1[0] = new int[]{board[0][1], 0, board[0][2]};
+            state1[1] = new int[]{board[1][0], board[1][1], board[1][2]};
+            state2[0] = new int[]{board[1][0], board[0][1], board[0][2]};
+            state2[1] = new int[]{0, board[1][1], board[1][2]};
+        } else if (zi == 0 &amp;&amp; zj == 1) {
+            state1[0] = new int[]{0, board[0][0], board[0][2]};
+            state1[1] = new int[]{board[1][0], board[1][1], board[1][2]};
+            state2[0] = new int[]{board[0][0], board[0][2], 0};
+            state2[1] = new int[]{board[1][0], board[1][1], board[1][2]};
+            state3[0] = new int[]{board[0][0], board[1][1], board[0][2]};
+            state3[1] = new int[]{board[1][0], 0, board[1][2]};
+            num = 3;
+        } else if (zi == 0 &amp;&amp; zj == 2) {
+            state1[0] = new int[]{board[0][0], 0, board[0][1]};
+            state1[1] = new int[]{board[1][0], board[1][1], board[1][2]};
+            state2[0] = new int[]{board[0][0], board[0][1], board[1][2]};
+            state2[1] = new int[]{board[1][0], board[1][1], 0};
+        } else if (zi == 1 &amp;&amp; zj == 0) {
+            state1[0] = new int[]{0, board[0][1], board[0][2]};
+            state1[1] = new int[]{board[0][0], board[1][1], board[1][2]};
+            state2[0] = new int[]{board[0][0], board[0][1], board[0][2]};
+            state2[1] = new int[]{board[1][1], 0, board[1][2]};
+        } else if (zi == 1 &amp;&amp; zj == 1) {
+            state1[0] = new int[]{board[0][0], 0, board[0][2]};
+            state1[1] = new int[]{board[1][0], board[0][1], board[1][2]};
+            state2[0] = new int[]{board[0][0], board[0][1], board[0][2]};
+            state2[1] = new int[]{board[1][0], board[1][2], 0};
+            state3[0] = new int[]{board[0][0], board[0][1], board[0][2]};
+            state3[1] = new int[]{0, board[1][0], board[1][2]};
+            num = 3;
+        } else {
+            state1[0] = new int[]{board[0][0], board[0][1], 0};
+            state1[1] = new int[]{board[1][0], board[1][1], board[0][2]};
+            state2[0] = new int[]{board[0][0], board[0][1], board[0][2]};
+            state2[1] = new int[]{board[1][0], 0, board[1][1]};
+        }
+        int[][][] res = new int[num][2][3];
+        res[0] = state1;
+        res[1] = state2;
+        if(num == 3){
+            res[2] = state3;
+        }
+        return res;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624643984398.png" alt="" loading="lazy"></figure>
+<p>首先判断传进来的是否与目标相等，如果相等直接返回，否则添加到队列还有集合里面。</p>
+<p>注意集合需要使用一个包装类，重写<code>equals</code>以及<code>hashCode</code>，这样才能正确判断数组。</p>
+<p>进行循环后，首先将结果加1，并计算队列个数<code>size</code>，取<code>size</code>个队首，获取它们可能到达的位置，然后判断该位置是否已经出现过，如果出现过，直接忽略，如果没有出现过，首先判断数组是否与目标相等，若相等直接返回结果，若不等，添加到队列以及集合中。</p>
+<p>然后翻了一下1ms提交的，好家伙，这肯定<code>O(1)</code>啊：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624644163305.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第375期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/</id>
@@ -1229,199 +1390,6 @@ public class Solution {
 <pre><code class="language-java">mask &amp; masks[pos] == 0
 </code></pre>
 <p>即可判断字母是否出现过，如果不为0，表示有重合的1，也就是出现过相同字母了，否则进行下一层的回溯。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[如何建立一个足够安全的SSH连接？]]></title>
-        <id>https://2293736867.github.io/post/ru-he-jian-li-yi-ge-zu-gou-an-quan-de-ssh-lian-jie/</id>
-        <link href="https://2293736867.github.io/post/ru-he-jian-li-yi-ge-zu-gou-an-quan-de-ssh-lian-jie/">
-        </link>
-        <updated>2021-06-18T07:54:10.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
-<p>使用<code>SSH</code>连接服务器是一件很平常的事，但是，连接是否足够安全是一个令人担忧的问题。本文从如下几个方面介绍了如何建立一个足够安全的<code>SSH</code>连接：</p>
-<ul>
-<li>端口</li>
-<li>协议</li>
-<li>用户</li>
-<li>密码</li>
-<li>密钥对</li>
-<li><code>ssh-agent</code></li>
-</ul>
-<h1 id="2-端口">2 端口</h1>
-<p>第一步就是修改默认端口<code>22</code>，修改<code>/etc/ssh/sshd_config</code>中的<code>Port</code>即可，比如这里修改为<code>1234</code>端口：</p>
-<pre><code class="language-bash">Port 1234
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20200820155542693.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>在<code>Debian</code>系的系统中直接修改端口就可以了，在<code>RedHat</code>中还需要使用<code>semanage</code>去开启端口：</p>
-<pre><code class="language-bash">yum install policycoreutils-python #没有安装的话需要先安装
-semanage port -a -t ssh_port_t -p tcp 1234 # 添加端口
-semanage port -l | grep ssh # 验证是否添加成功
-</code></pre>
-<h1 id="3-ssh协议">3  <code>SSH</code>协议</h1>
-<p><code>SSH2</code>协议要比<code>SSH1</code>安全，因此建议使用，同样修改配置文件：</p>
-<pre><code class="language-bash">Protocol 2 # 如果没有就末尾添加
-</code></pre>
-<p>这样客户端连接的时候就不能使用<code>Protocol 1</code>协议连接：</p>
-<pre><code class="language-bash">ssh -1 username@ip
-</code></pre>
-<p>会提示</p>
-<pre><code class="language-bash">SSH protocol v.1 is no longer supported
-</code></pre>
-<h1 id="4-超时断开">4 超时断开</h1>
-<p>修改为<code>60s</code>未操作自动断开：</p>
-<pre><code class="language-bash">ClientAliveInterval 60 
-# 以秒为单位，超过60s未操作自动断开
-
-ClientAliveCountMax 0 
-# 如果客户端没有响应则判断一次超时，该参数设置允许超时的次数
-</code></pre>
-<h1 id="5-限制用户">5 限制用户</h1>
-<h2 id="51-禁用root用户登录">5.1 禁用<code>root</code>用户登录</h2>
-<pre><code class="language-bash">PermitRootLogin no
-</code></pre>
-<p>当然禁用之前需要先创建好登录的用户，这里假设创建一个叫<code>aa</code>的用户：</p>
-<pre><code class="language-bash">useradd aa
-passwd aa
-vim /etc/sudoers
-</code></pre>
-<p>复制一行<code>root</code>的权限并修改用户名：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210618095059197.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>然后输入<code>:wq!</code>强制保存退出。</p>
-<h2 id="52-指定用户登录">5.2 指定用户登录</h2>
-<pre><code class="language-bash">AllowUsers testuser
-</code></pre>
-<p>这样只能通过该用户连接到该服务器，另外，如果出现拒绝登录的问题：</p>
-<pre><code class="language-bash">kex_exchange_identification: read: Connection reset by peer
-</code></pre>
-<p>则需要去开启对应允许的<code>ip</code>登录，修改<code>/etc/hosts.allow</code>，添加：</p>
-<pre><code class="language-bash">sshd: ALL
-</code></pre>
-<h2 id="53-禁用特定用户登录">5.3 禁用特定用户登录</h2>
-<pre><code class="language-bash">DenyUser testuser
-</code></pre>
-<p>禁止通过<code>testuser</code>登录。</p>
-<p>类似的配置还有<code>AllowGroups</code>与<code>DenyGroups</code>。</p>
-<h1 id="6-密码">6 密码</h1>
-<p>禁用（空）密码登录：</p>
-<pre><code class="language-bash">PermitEmptyPasswords no
-PasswordAuthentication no
-</code></pre>
-<h1 id="7-日志">7 日志</h1>
-<pre><code class="language-bash">LogLevel VERBOSE
-</code></pre>
-<p>默认为<code>INFO</code>，修改为<code>VERBOSE</code>可以得到更加详细的信息。</p>
-<h1 id="8-密钥对">8 密钥对</h1>
-<h2 id="81-生成密钥对">8.1 生成密钥对</h2>
-<p>上面已经设置了不能使用密码登录，那么，换句话说需要使用密钥登录，生成密钥并不难：</p>
-<pre><code class="language-bash">ssh-keygen -t rsa 
-</code></pre>
-<p>只需要指定算法即可，默认为<code>3072</code>位，可选<code>4096</code>位。</p>
-<p>但是，相比起传统的<code>RSA</code>，在<code>OpenSSH 6.5</code>中引入了另一种叫<code>Ed25519</code>的更加安全的算法，使用椭圆曲线进行加密。<code>Ed25519</code>相比起<code>RSA</code>的优点有：</p>
-<ul>
-<li>体积更小：相比起<code>RSA 3072</code>的<code>544</code>个字符，<code>Ed25519</code>只有<code>68</code>个字符</li>
-<li>更快：生成速度比<code>RSA</code>快，同时签名速度也比<code>RSA</code>快</li>
-<li>更安全：签名过程不依赖随机数生成器，不依赖哈希函数的防碰撞特性，没有时间通道攻击的问题</li>
-</ul>
-<p>生成方式很简单：</p>
-<pre><code class="language-bash">ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/ed25519
-</code></pre>
-<p>参数说明如下：</p>
-<ul>
-<li><code>-a</code>：指定<code>KDF</code>（<code>Key Derivation Function</code>）的轮数</li>
-<li><code>-t</code>：指定算法，可选<code>dsa</code>、<code>ecdsa</code>、<code>ecdsa-sk</code>、<code>ed25519</code>、<code>ed25519-sk</code>、<code>rsa</code></li>
-<li><code>-f</code>：指定位置</li>
-</ul>
-<p>生成之后复制公钥即可：</p>
-<pre><code class="language-bash">ssh-copy-id -i ~/.ssh/ed25519.pub user@ip
-</code></pre>
-<h2 id="82-私钥密码">8.2 私钥密码</h2>
-<p>比如按上述方式生成密钥对时，会提示输入私钥密码：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20200820164532325.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这里的密码会在使用私钥连接的时候提示：</p>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20200820164836250.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h2 id="83-配合ssh-add">8.3 配合<code>ssh-add</code></h2>
-<p>默认情况下每次使用私钥登录的时候都需要输入私钥的密码，如果不想每次输出，可以使用<code>ssh-add</code>：</p>
-<pre><code class="language-bash">ssh-add ~/.ssh/test # ~/.ssh/test替换成对应的私钥路径
-</code></pre>
-<p>这样只需要输入一次私钥密码，下一次连接的时候就不需要输入私钥密码连接了。</p>
-<h2 id="84-使用不同密钥对">8.4 使用不同密钥对</h2>
-<p>假设您有多台服务器：<code>server1</code>，<code>server2</code>，<code>server3</code>，则可以为不同服务器使用不同的密钥对，而不是使用同一个密钥对：</p>
-<pre><code class="language-bash">ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/server1
-ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/server2
-ssh-keygen -a 1024 -t ed25519 -f ~/.ssh/server3
-</code></pre>
-<p>接着复制公钥到对应的服务器上：</p>
-<pre><code class="language-bash">ssh-copy-id user@server1 -i ~/.ssh/server1.pub
-ssh-copy-id user@server2 -i ~/.ssh/server2.pub
-ssh-copy-id user@server3 -i ~/.ssh/server3.pub
-</code></pre>
-<h1 id="9-ssh-agent">9 <code>ssh-agent</code></h1>
-<h2 id="91-这是什么">9.1 这是什么？</h2>
-<p><code>ssh-agent</code>是一个程序，可以帮助管理私钥。代理能提供如下用途：</p>
-<ul>
-<li>自动选择密钥：使用不同密钥连接到不同主机时，需要手动指定密钥（比如上面的<code>使用不同密钥对</code>的例子中，连接到不同服务器时需要加上<code>-i</code>参数），<code>ssh-agent</code>可以自动选择，不需要手动指定</li>
-<li>自动输入私钥密码：如果私钥设置了密钥（比如上面的<code>私钥密码</code>例子），但是又需要频繁地使用私钥进行认证时，<code>ssh-agent</code>可以帮助自动输入私钥的密码</li>
-</ul>
-<h2 id="92-使用">9.2 使用</h2>
-<p>首先启动：</p>
-<pre><code class="language-bash">eval `ssh-agent` # 注意是反引号
-</code></pre>
-<p>接着添加私钥：</p>
-<pre><code class="language-bash"># 以上面“使用不同的密钥对”为例
-ssh-add ~/.ssh/server1
-ssh-add ~/.ssh/server1
-ssh-add ~/.ssh/server1
-</code></pre>
-<p>这样连接的时候就不需要手动指定<code>-i</code>参数了。</p>
-<p>如果私钥指定了密码，会在<code>ssh-add</code>时进行提示输入：</p>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20200820170238249.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这样下次使用带密钥的私钥连接时就不需要输入密码了。</p>
-<h1 id="10-2fa">10 <code>2FA</code></h1>
-<p><code>Two-Factor Authentication</code>，缩写<code>2FA</code>，意为<code>双重认证</code>，<code>双因子认证</code>等等，顾名思义就是进行两步认证的操作，可选的应用有：</p>
-<ul>
-<li><code>Google Authenticator</code></li>
-<li><code>Authy</code></li>
-<li><code>Yubico</code></li>
-<li><code>Duo</code></li>
-</ul>
-<p>比如<code>Google Authenticator</code>，安装之后，连接服务器需要进行输入验证码的操作。</p>
-<p>具体的话就不演示了，因为笔者需要经常连接，因此这个选项对笔者来说不太实际，想要实现的话具体可以参考<a href="https://xz.aliyun.com/t/5249">这里</a>。</p>
-<h1 id="11-其他选项">11 其他选项</h1>
-<h2 id="111-设置最大错误次数">11.1 设置最大错误次数</h2>
-<pre><code class="language-bash">MaxAuthTries 6
-</code></pre>
-<p>默认为最多允许<code>3</code>次密码错误（需要除2），修改为<code>2</code>则表示如果密码输入错误一次即自动断开。</p>
-<h2 id="112-主动断开会话">11.2 主动断开会话</h2>
-<pre><code class="language-bash">LoginGraceTime 120
-</code></pre>
-<p>在<code>LoginGraceTime</code>指定的时间内如果没有连接成功，则自动断开会话，默认单位为秒，可以指定以分钟为单位，比如：</p>
-<pre><code class="language-bash">LoginGraceTime 2m
-</code></pre>
-<h1 id="12-最后">12 最后</h1>
-<p>修改完配置文件<code>/etc/ssh/ssd_config</code>后，对<code>sshd</code>服务进行重启：</p>
-<pre><code class="language-bash">systemctl restart sshd
-</code></pre>
-<h1 id="13-参考">13 参考</h1>
-<ul>
-<li>
-<p><a href="http://www.zsythink.net/archives/2407/">了解ssh代理：ssh-agent</a></p>
-</li>
-<li>
-<p><a href="https://www.jianshu.com/p/d0c48dcf6af6">简书-SSH超时断开(ClientAliveInterval和ClientAliveCountMax )的使用</a></p>
-</li>
-<li>
-<p><a href="https://xz.aliyun.com/t/5249">使用两步验证（2FA）保护你的SSH连接</a></p>
-</li>
-<li>
-<p><a href="https://blog.devolutions.net/2017/4/10-steps-to-secure-open-ssh">10 Steps to Secure Open SSH</a></p>
-</li>
-<li>
-<p><a href="https://devops.ionos.com/tutorials/secure-the-ssh-server-on-ubuntu/">Secure The SSH Server On Ubuntu</a></p>
-</li>
-<li>
-<p><a href="https://medium.com/risan/upgrade-your-ssh-key-to-ed25519-c6e8d60d3c54">Upgrade Your SSH Key to Ed25519</a></p>
-</li>
-</ul>
 ]]></content>
     </entry>
 </feed>
