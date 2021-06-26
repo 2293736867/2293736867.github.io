@@ -1,0 +1,2095 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MySQL 主从复制加密以及binlog的加密实现 | 氷泠&#39;s blog</title>
+<meta name="description" content="几百遍，重复了几百遍
+重复的情绪重复的熬过想你的夜" />
+<link rel="shortcut icon" href="https://2293736867.github.io/favicon.ico">
+<link rel="stylesheet" href="https://2293736867.github.io/styles/main.css">
+
+<script src="https://2293736867.github.io/media/js/jquery.min.js"></script>
+<script src="https://2293736867.github.io/media/js/masonry.pkgd.min.js"></script>
+<script src="https://2293736867.github.io/media/js/aos.js"></script>
+<script src="https://2293736867.github.io/media/js/pace.min.js"></script>
+<script src="https://2293736867.github.io/media/js/view-image.min.js"></script>
+<script src="https://2293736867.github.io/media/js/jquery.magnific-popup.min.js"></script>
+<script src="https://2293736867.github.io/media/js/functions.js"></script>
+    <meta name="referrer" content="never">
+    <meta name="description" content="
+1 概述
+2 环境
+3 准备容器
+4 SSL连接准备
+
+4.1 确保SSL开启
+4.2 生成CA和私钥
+4.3 修改权限
+4.4 修改配置文件
+
+
+5 主从复制的其他配置
+6 创建主从复制的用户
+7 修改从库配置指向主库
+8 启动从库并测..." />
+    <meta name="keywords" content="binlog,主从复制,MySQL" />
+    <script src="https://2293736867.github.io/media/js/waterfall.min.js"></script>
+    <script src="https://2293736867.github.io/media/js/prism.min.js"></script>
+  </head>
+  <body>
+            <header id="header" class="grid-container">
+        <!-- start: .menu-wrapper -->
+        <div class="menu-mobile"> 
+          <i class="fa fa-reorder"></i>
+        </div>
+        <div class="menu-wrapper">
+          <div class="">
+            <div class="logo">
+              <a href="https://2293736867.github.io"><img src="/media/images/custom-headerLogo.png" alt=""></a>
+            </div>
+            <!-- start: .main-nav -->
+
+            <nav class="main-nav grid-container grid-parent">
+              <ul id="menu-header" class="menu gradient-effect">
+                <li class=""><a href="https://2293736867.github.io" class="menu">首页</a></li>
+                
+                  <li class="" >
+                    <a href="/archives" class="menu">
+                      归档
+                    </a>
+                  </li>
+                
+                  <li class="" >
+                    <a href="https://github.com/2293736867" class="menu">
+                      Github
+                    </a>
+                  </li>
+                
+                <li class="search-menu-item hide-on-mobile hide-on-tablet"><a href="#search-lightbox" class="lightbox mfp-inline"><i class="fa fa-search-line"></i></a></li>
+              </ul>
+            </nav>
+            <a href="#search-lightbox" class="lightbox epcl-search-button mfp-inline hide-on-tablet hide-on-desktop"><i class="fa fa-search-line"></i></a>
+            <!-- end: .main-nav -->
+            <div class="clear"></div>
+            <div class="border hide-on-tablet hide-on-mobile"></div>
+          </div>    
+          <div class="clear"></div>
+        </div>
+        <!-- end: .menu-wrapper -->
+        <div class="clear"></div>
+      </header>
+      <div class="hide-on-mobile hide-on-tablet hide-on-desktop">
+        <div id="search-lightbox" class="grid-container grid-small grid-parent mfp-hide">
+          <div class="search-wrapper section">
+            <form id="gridea-search-form" data-update="1624695272928" action="/search/index.html" class="search-form" _lpchecked="1">
+              <input type="text" name="q" id="s" value="" class="search-field" placeholder="搜点啥..." aria-label="搜点啥..." required="">
+              <button type="submit" class="submit" aria-label="Submit">
+                <i class="fa fa-search-line"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <main id="single" class="main grid-container fullcover no-sidebar aos-init aos-animate" data-aos="fade">
+
+        <div class="center content">
+          <div class="featured-image cover" style="background-image: url('https://2293736867.github.io/post-images/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian.jpeg');">
+            <div class="meta top"> 
+              <time class="meta-info" style="float:left;" datetime="2021-06-26"><i class="fa fa-calendar"></i><span class="lately">5 分钟前</span></time>
+              
+              <a href="https://2293736867.github.io/post/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/#comments" class="comments meta-info" title="">
+                <i class="fa fa-comment remixicon"></i><span class="comment-count valine-comment-count" data-xid="/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/"> </span>
+              </a>
+              <span id="/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/" class="leancloud_visitors views-counter meta-info" title=""><i class="fa fa-leancloud remixicon"></i><span class="leancloud-visitors-count"></span></span>
+              
+            </div>
+            <div class="info">
+              <div class="tags ">
+                
+                      <a href="https://2293736867.github.io/tag/1yONWl62G/" class="ctag ctag-0 ctag-1yONWl62G" aria-label="">binlog</a>
+                    
+                      <a href="https://2293736867.github.io/tag/r7Ub49QuQq/" class="ctag ctag-1 ctag-r7Ub49QuQq" aria-label="">主从复制</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-2 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+              </div>
+              <h1 class="title ularge white bold">MySQL 主从复制加密以及binlog的加密实现</h1>
+            </div>
+          </div>
+        </div>  
+
+        <div class="epcl-page-wrapper">
+          <div class="left-content grid-70 np-mobile">
+            <article class="main-article post">
+              <section class="post-content">
+                <div class="text">
+                  <p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E5%AE%B9%E5%99%A8">3 准备容器</a></li>
+<li><a href="#4-ssl%E8%BF%9E%E6%8E%A5%E5%87%86%E5%A4%87">4 <code>SSL</code>连接准备</a>
+<ul>
+<li><a href="#41-%E7%A1%AE%E4%BF%9Dssl%E5%BC%80%E5%90%AF">4.1 确保<code>SSL</code>开启</a></li>
+<li><a href="#42-%E7%94%9F%E6%88%90ca%E5%92%8C%E7%A7%81%E9%92%A5">4.2 生成<code>CA</code>和私钥</a></li>
+<li><a href="#43-%E4%BF%AE%E6%94%B9%E6%9D%83%E9%99%90">4.3 修改权限</a></li>
+<li><a href="#44-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">4.4 修改配置文件</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE">5 主从复制的其他配置</a></li>
+<li><a href="#6-%E5%88%9B%E5%BB%BA%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E7%94%A8%E6%88%B7">6 创建主从复制的用户</a></li>
+<li><a href="#7-%E4%BF%AE%E6%94%B9%E4%BB%8E%E5%BA%93%E9%85%8D%E7%BD%AE%E6%8C%87%E5%90%91%E4%B8%BB%E5%BA%93">7 修改从库配置指向主库</a></li>
+<li><a href="#8-%E5%90%AF%E5%8A%A8%E4%BB%8E%E5%BA%93%E5%B9%B6%E6%B5%8B%E8%AF%95">8 启动从库并测试</a></li>
+<li><a href="#9-binlog%E7%9A%84%E5%8A%A0%E5%AF%86">9 <code>binlog</code>的加密</a>
+<ul>
+<li><a href="#91-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6">9.1 安装插件</a></li>
+<li><a href="#92-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE">9.2 修改配置</a></li>
+</ul>
+</li>
+<li><a href="#10-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">10 参考链接</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文主要讲述了如何在主从复制的过程中使用<code>SSL</code>进行加密，还有<code>binlog</code>加密（<code>MySQL 8.0.14+</code>）的实现。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>MySQL 8.0.25</code></li>
+<li><code>Docker</code></li>
+<li>一主一从</li>
+</ul>
+<h1 id="3-准备容器">3 准备容器</h1>
+<p>先拉取镜像并启动，主库<code>3306</code>，从库<code>3307</code>，还需要加上<code>--ssl</code>参数，以开启<code>SSL</code>加密连接的功能：</p>
+<pre><code class="language-bash">docker pull mysql
+docker run -itd -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-master mysql --ssl
+docker run -itd -p 3307:3306 -p 33061:33060 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-slave mysql --ssl
+</code></pre>
+<p>启动容器之后进入容器并安装<code>vim</code>和<code>net-tools</code>：</p>
+<pre><code class="language-bash">apt install vim net-tools
+</code></pre>
+<p>同时进入<code>MySQL</code>准备好数据源：</p>
+<pre><code class="language-sql">create database test;
+use test;
+create table user(
+	id int primary key auto_increment,
+	name varchar(30) not null,
+	age int not null
+);
+</code></pre>
+<h1 id="4-ssl连接准备">4 <code>SSL</code>连接准备</h1>
+<h2 id="41-确保ssl开启">4.1 确保<code>SSL</code>开启</h2>
+<p>首先可以进入<code>MySQL</code>确保<code>SSL</code>功能开启：</p>
+<pre><code class="language-sql">show variables like '%ssl%';
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210626135041437.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-生成ca和私钥">4.2 生成<code>CA</code>和私钥</h2>
+<p>默认情况下，在<code>/var/lib/mysql</code>下已经有生成的证书和私钥文件，如果不想用默认的，可以重新生成：</p>
+<pre><code class="language-bash">sudo mkdir /mysql
+sudo chown mysql:mysql /mysql
+mysql_ssl_rsa_setup --datadir=/mysql
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2021062613540272.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>生成的文件包括：</p>
+<ul>
+<li><code>ca-key.pem</code>：<code>CA</code>私钥</li>
+<li><code>ca.pem</code>：自签名的<code>CA</code>证书</li>
+<li><code>client-key.pem</code>：客户端连接时使用的私钥</li>
+<li><code>client-cert.pem</code>：客户端连接时使用的证书</li>
+<li><code>server-key.pem</code>：服务器端私钥</li>
+<li><code>server-cert.pem</code>：服务器端证书</li>
+<li><code>public_key.pem</code>/<code>private_key.pem</code>：密钥对的公钥和私钥</li>
+</ul>
+<p>实际使用只需要用到<code>ca.pem</code>、服务端私钥证书、客户端私钥证书这五个文件。由于主从复制的时候，主库作为服务端，从库作为客户端，因此<code>ca.pem</code>/<code>server-key.pem</code>/<code>server-client.pem</code>只需要在主库中配置，而<code>ca.pem</code>/<code>client-key.pem</code>/<code>client-cert.pem</code>需要通过<code>scp</code>传到从库中。</p>
+<h2 id="43-修改权限">4.3 修改权限</h2>
+<p>权限错误会导致<code>MySQL</code>无法正常使用<code>SSL</code>的功能：</p>
+<pre><code class="language-bash">sudo chown mysql:mysql /mysql/*.pem
+sudo chmod 400 /mysql/*.pem
+sudo chmod 444 /mysql/ca.pem
+</code></pre>
+<h2 id="44-修改配置文件">4.4 修改配置文件</h2>
+<p>修改主库的配置文件，如下所示：</p>
+<pre><code class="language-bash">[mysqld]
+ssl_ca=/mysql/ca.pem
+ssl_cert=/mysql/server-cert.pem
+ssl_key=/mysql/server-key.pem
+</code></pre>
+<p>而从库配置文件 修改如下：</p>
+<pre><code class="language-bash">[client]
+ssl-ca=/mysql/ca.pem
+ssl-cert=/mysql/client-cert.pem
+ssl-key=/mysql/client-key.pem
+</code></pre>
+<p>此时从库是没办法连接自己的，只能连接主库，如果需要连接自己，需要将主库的<code>server-key.pem</code>/<code>server-cert.pem</code>拷贝到从库中，并配置从库的<code>[mysqld]</code>：</p>
+<pre><code class="language-bash">[mysqld]
+ssl_ca=/mysql/ca.pem
+ssl_cert=/mysql/server-cert.pem
+ssl_key=/mysql/server-key.pem
+</code></pre>
+<h1 id="5-主从复制的其他配置">5 主从复制的其他配置</h1>
+<p>下面是一些主从复制的最常规最简单的配置，主库仅配置了<code>id</code>和需要复制的库：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=1                
+binlog-do-db=test         
+</code></pre>
+<p>从库的配置如下：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=2            
+replicate-do-db=test   
+</code></pre>
+<p>修改完后重启主库和从库。</p>
+<h1 id="6-创建主从复制的用户">6 创建主从复制的用户</h1>
+<p>在主库中创建主从复制的用户（具体<code>ip</code>请使用<code>ifconfig</code>查看）：</p>
+<pre><code class="language-sql">create user 'repl'@'172.17.0.3' identified with mysql_native_password by '123456' require ssl;
+grant replication slave on *.* to 'repl'@'172.17.0.3';
+</code></pre>
+<h1 id="7-修改从库配置指向主库">7 修改从库配置指向主库</h1>
+<p>首先查看主库的状态：</p>
+<pre><code class="language-sql">show master status;
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210626151712328.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>把<code>File</code>和<code>Position</code>记录下来，并在从库中使用<code>change master to</code>/<code>change replication source to</code>（<code>8.0.23+</code>）设置主库信息：</p>
+<pre><code class="language-bash">change master to
+master_host = '172.17.0.2',
+master_user = 'repl',
+master_password = '123456',
+master_log_file = 'binlog.000005',
+master_log_pos = 156,
+master_ssl = 1;
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">change replication source to
+source_host = '172.17.0.2',
+source_user = 'repl',
+source_password = '123456',
+source_log_file = 'binlog.000005',
+source_log_pos = 156;  
+source_ssl = 1;
+</code></pre>
+<h1 id="8-启动从库并测试">8 启动从库并测试</h1>
+<p>可以使用<code>start slave</code>/<code>start replica</code>（<code>8.0.22+</code>）启动从库开启复制功能：</p>
+<pre><code class="language-bash">start slave
+# 或
+start replica
+</code></pre>
+<p>启动完成后使用</p>
+<pre><code class="language-sql">show slave stauts\G
+</code></pre>
+<p>查看从库状态：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210626151732145.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>需要显示两个<code>Yes</code>才算成功，如果<code>Slave_IO_Running</code>一直显示<code>Connecting</code>，可能原因是：</p>
+<ul>
+<li>在从库中配置的主库地址、端口、用户名、密码等错误</li>
+<li><code>SSL</code>配置错误，比如使用了错误的<code>client-key.pem</code></li>
+<li>防火墙问题</li>
+</ul>
+<p>请查看日志自行检查，日志位置可通过</p>
+<pre><code class="language-sql">show variables like 'log_error'
+</code></pre>
+<p>查看。</p>
+<p>没有问题后，尝试在主库中插入数据：</p>
+<pre><code class="language-sql">use test;
+insert into user values('111',1);
+</code></pre>
+<p>在从库中就可以查询到了：</p>
+<pre><code class="language-sql">use test;
+select * from user;
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210626151908748.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="9-binlog的加密">9 <code>binlog</code>的加密</h1>
+<p>从<code>8.0.14</code>开始，<code>MySQL</code>提供了对<code>binlog</code>的加密功能，默认情况下，<code>binlog</code>是没有加密的，加密需要使用<code>keyring</code>插件或者组件：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210626152037772.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>实现步骤如下：</p>
+<ul>
+<li>安装<code>keyring_file</code>插件</li>
+<li>修改配置</li>
+<li>测试</li>
+</ul>
+<h2 id="91-安装插件">9.1 安装插件</h2>
+<p><code>MySQL</code>提供了以下插件的安装：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210626152219275.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于使用的是社区版，社区版只支持<code>keyring_file</code>插件，以此为例。</p>
+<p>主库和从库修改配置文件如下：</p>
+<pre><code class="language-bash">[mysqld]
+early-plugin-load=keyring_file.so
+keyring_file_data=/mysql/keyring
+</code></pre>
+<p>重启后，进入<code>MySQL</code>查看：</p>
+<pre><code class="language-sql">select plugin_name,plugin_status from information_schema.plugins where plugin_name like 'keyring%';
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210626152937375.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>需要处于<code>ACTIVE</code>状态，这样就是成功了。</p>
+<h2 id="92-修改配置">9.2 修改配置</h2>
+<p><code>binlog</code>的加密通过一个系统变量<code>binlog_encryption</code>控制，需要手动开启：</p>
+<pre><code class="language-sql">set global binlog_encryption=ON;
+set persist binlog_encryption=ON;
+</code></pre>
+<p>开启后查看日志：</p>
+<pre><code class="language-sql">show binary logs;
+</code></pre>
+<p>可以看到是加密了的<code>binlog</code>：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210626154936376.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而之前没有加密的<code>binlog</code>可以手动迁移数据后进行删除。</p>
+<p>加密完<code>binlog</code>后并不需要修改主从复制的配置，主从复制依然生效，如下图所示：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/2021062615543555.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>主库插入了一个用户从库依然能<code>select</code>到。</p>
+<h1 id="10-参考链接">10 参考链接</h1>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/replication-binlog-encryption.html">MySQL-17.3.2 Encrypting Binary Log Files and Relay Log Files</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/using-encrypted-connections.html#using-encrypted-connections-client-side-configuration">MySQL-6.3.1 Configuring MySQL to Use Encrypted Connections</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/mysql-ssl-rsa-setup.html">MySQL-4.4.3 mysql_ssl_rsa_setup — Create SSL/RSA Files</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/keyring-file-plugin.html">MySQL-6.4.4.6 Using the keyring_file File-Based Keyring Plugin</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/keyring-plugin-installation.html">MySQL-6.4.4.3 Keyring Plugin Installation</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/keyring-component-installation.html">MySQL-6.4.4.2 Keyring Component Installation</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/obtaining-plugin-information.html">MySQL-5.6.2 Obtaining Server Plugin Information</a></li>
+<li><a href="https://mysqlhighavailability.com/binary-log-encryption-at-rest/">MySQL High Availablity-Binary log encryption at rest</a></li>
+<li><a href="https://stackoverflow.com/questions/59036777/mysql-ssl-is-required-but-the-server-doesnt-support-it">StackOverflow-MySQL - SSL is required but the server doesn't support it</a></li>
+</ul>
+
+                </div>
+                <div class="clear"></div>
+              </section>
+            </article>
+            <div class="clear"></div>
+
+            <section class="related section">
+              
+              
+              <article class="next grid-50 tablet-grid-50 grid-parent">
+                <div class="thumb cover lazy loaded" style="background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-376-qi.jpg');"></div>
+                 <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/" class="full-link"></a>
+                 <div class="info">
+                  <time datetime="2021-06-26">2021-06-26</time>
+                  <h4 class="title white no-margin">每日分享 第376期</h4>
+                </div>
+                 <span class="epcl-button red">
+                  <img src="https://2293736867.github.io/media/images/right-arrow.svg" width="15" alt="Left Arrow">
+                </span>
+                <div class="overlay"></div>
+              </article>
+              
+
+                <div class="clear"></div>
+            </section>
+
+              <div class="clear"></div>
+              
+            
+              <div id="comments" class="bg-white hosted ">
+                
+                
+                  <!-- jsDelivr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/disqusjs@1.2/dist/disqusjs.css">
+<script src="https://cdn.jsdelivr.net/npm/disqusjs@1.2/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+<div class="clear"></div>
+<script>
+var options = {
+  shortname: '',
+  apikey: 'x4w0ijIgKdycYEPacfY9sSDFNA7k57W2vEw65a3PRFFckEGUqw6zvedonEtd93DN',
+}
+if ('') {
+  options.api = ''
+}
+var dsqjs = new DisqusJS(options)
+</script>
+
+                
+              </div>
+            
+
+            </div>
+          </div>
+      </main>
+
+          <footer id="footer" class="grid-container">
+        <div class="widgets row gradient-effect">
+            <div class="default-sidebar border-effect">
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_epcl_posts_thumbs underline-effect">
+                  <h4 class="widget-title title white bordered">最新文章</h4>
+                  
+                  
+                  <article class="item post-0 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian.jpeg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-06-26">2021-06-26</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/">MySQL 主从复制加密以及binlog的加密实现</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-1 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-376-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-06-26">2021-06-26</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/">每日分享 第376期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  <article class="item post-2 post type-post status-publish format-standard has-post-thumbnail hentry">
+                    <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/" class="thumb hover-effect">
+                      <span class="fullimage cover" style="display:block;border-radius:50%;background-image: url('https://2293736867.github.io/post-images/mei-ri-fen-xiang-di-375-qi.jpg');"></span>
+                    </a>
+                    <div class="info gradient-effect">
+                      <time datetime="2021-06-25">2021-06-25</time>
+                      <h4 class="title usmall">
+                        <a href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/">每日分享 第375期</a>
+                      </h4>
+                    </div>
+                    <div class="clear"></div>
+                  </article>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="tag_cloud-2" class="widget widget_tag_cloud underline-effect">
+                  <h4 class="widget-title title white bordered">标签云</h4>
+                  <div class="tagcloud">
+                    
+                      <a href="https://2293736867.github.io/tag/1yONWl62G/" class="ctag ctag-0 ctag-1yONWl62G" aria-label="">binlog</a>
+                    
+                      <a href="https://2293736867.github.io/tag/r7Ub49QuQq/" class="ctag ctag-1 ctag-r7Ub49QuQq" aria-label="">主从复制</a>
+                    
+                      <a href="https://2293736867.github.io/tag/zMdXcdRde/" class="ctag ctag-2 ctag-zMdXcdRde" aria-label="">MySQL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/e5akU9EUb/" class="ctag ctag-3 ctag-e5akU9EUb" aria-label="">每日分享</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtWhBuKjD/" class="ctag ctag-4 ctag-wtWhBuKjD" aria-label="">ShardingSphere</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tvpVzFblK/" class="ctag ctag-5 ctag-tvpVzFblK" aria-label="">MyBatisPlus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jLOEqgo2m/" class="ctag ctag-6 ctag-jLOEqgo2m" aria-label="">Spring Boot</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wtA4qyubx/" class="ctag ctag-7 ctag-wtA4qyubx" aria-label="">Linux</a>
+                    
+                      <a href="https://2293736867.github.io/tag/honQAnetP/" class="ctag ctag-8 ctag-honQAnetP" aria-label="">SSH</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-3_SBZaB7/" class="ctag ctag-9 ctag--3_SBZaB7" aria-label="">高并发</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-AktfIpz8/" class="ctag ctag-10 ctag--AktfIpz8" aria-label="">Java</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jRXlnJ0Cl/" class="ctag ctag-11 ctag-jRXlnJ0Cl" aria-label="">Gradle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/MD4_3l9-E/" class="ctag ctag-12 ctag-MD4_3l9-E" aria-label="">Manjaro</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hmN5f1Dgf/" class="ctag ctag-13 ctag-hmN5f1Dgf" aria-label="">JVM</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iwdKt-vEi/" class="ctag ctag-14 ctag-iwdKt-vEi" aria-label="">Windows</a>
+                    
+                      <a href="https://2293736867.github.io/tag/P6coYUl8A/" class="ctag ctag-15 ctag-P6coYUl8A" aria-label="">软件测试</a>
+                    
+                      <a href="https://2293736867.github.io/tag/VVnjOjF_K/" class="ctag ctag-16 ctag-VVnjOjF_K" aria-label="">Vim</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zh36z1JpD/" class="ctag ctag-17 ctag-Zh36z1JpD" aria-label="">Switch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SqY3UeW8b/" class="ctag ctag-18 ctag-SqY3UeW8b" aria-label="">Github</a>
+                    
+                      <a href="https://2293736867.github.io/tag/QJqlomFg9/" class="ctag ctag-19 ctag-QJqlomFg9" aria-label="">Slf4j</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kAbR5fhGrj/" class="ctag ctag-20 ctag-kAbR5fhGrj" aria-label="">Log</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eB6hSy8EZ/" class="ctag ctag-21 ctag-eB6hSy8EZ" aria-label="">Kotlin</a>
+                    
+                      <a href="https://2293736867.github.io/tag/x6hezqu0h/" class="ctag ctag-22 ctag-x6hezqu0h" aria-label="">Github Pages</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TSVR1gTbAW/" class="ctag ctag-23 ctag-TSVR1gTbAW" aria-label="">DisqusJS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/KG_EpW3KL/" class="ctag ctag-24 ctag-KG_EpW3KL" aria-label="">Gridea</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jEhLpTJ4y/" class="ctag ctag-25 ctag-jEhLpTJ4y" aria-label="">Kotlin DSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j27TsowsQ/" class="ctag ctag-26 ctag-j27TsowsQ" aria-label="">SHA256</a>
+                    
+                      <a href="https://2293736867.github.io/tag/1bPjb7633/" class="ctag ctag-27 ctag-1bPjb7633" aria-label="">Redis</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HhAuEu6wC/" class="ctag ctag-28 ctag-HhAuEu6wC" aria-label="">Demo</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4z8YfVN_z/" class="ctag ctag-29 ctag-4z8YfVN_z" aria-label="">Docker</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qkGQwVHv8/" class="ctag ctag-30 ctag-qkGQwVHv8" aria-label="">IDEA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/k_kTITP45/" class="ctag ctag-31 ctag-k_kTITP45" aria-label="">WebStorm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OykyL0ueI/" class="ctag ctag-32 ctag-OykyL0ueI" aria-label="">Vue3</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lAlW3LzZy/" class="ctag ctag-33 ctag-lAlW3LzZy" aria-label="">Vite</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U8vH4mq52/" class="ctag ctag-34 ctag-U8vH4mq52" aria-label="">Chrome</a>
+                    
+                      <a href="https://2293736867.github.io/tag/3qNOu3uvC/" class="ctag ctag-35 ctag-3qNOu3uvC" aria-label="">pyenv</a>
+                    
+                      <a href="https://2293736867.github.io/tag/28CF6BHsq/" class="ctag ctag-36 ctag-28CF6BHsq" aria-label="">Python</a>
+                    
+                      <a href="https://2293736867.github.io/tag/beuZIsL3V/" class="ctag ctag-37 ctag-beuZIsL3V" aria-label="">VirtualBox</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LfPbGAMCs/" class="ctag ctag-38 ctag-LfPbGAMCs" aria-label="">Java Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vBuId7yVdn/" class="ctag ctag-39 ctag-vBuId7yVdn" aria-label="">Android</a>
+                    
+                      <a href="https://2293736867.github.io/tag/HaIBKIG-Y/" class="ctag ctag-40 ctag-HaIBKIG-Y" aria-label="">Debian</a>
+                    
+                      <a href="https://2293736867.github.io/tag/fFCOUCKJji/" class="ctag ctag-41 ctag-fFCOUCKJji" aria-label="">MyCLI</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ODfvYwg3O/" class="ctag ctag-42 ctag-ODfvYwg3O" aria-label="">地图</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YdNb8nB1n/" class="ctag ctag-43 ctag-YdNb8nB1n" aria-label="">Element-Plus</a>
+                    
+                      <a href="https://2293736867.github.io/tag/87dRXt1l_8/" class="ctag ctag-44 ctag-87dRXt1l_8" aria-label="">Echarts</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TFZz0NHYM/" class="ctag ctag-45 ctag-TFZz0NHYM" aria-label="">Token</a>
+                    
+                      <a href="https://2293736867.github.io/tag/v6JZElgCrM/" class="ctag ctag-46 ctag-v6JZElgCrM" aria-label="">ECC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sYkFqGm0dQ/" class="ctag ctag-47 ctag-sYkFqGm0dQ" aria-label="">ECDSA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8dOYqqfXPD/" class="ctag ctag-48 ctag-8dOYqqfXPD" aria-label="">Auth0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bK7AXA8PC/" class="ctag ctag-49 ctag-bK7AXA8PC" aria-label="">Vue.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/NxCZbHQqot/" class="ctag ctag-50 ctag-NxCZbHQqot" aria-label="">Node.js</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Nr-J-3R61V/" class="ctag ctag-51 ctag-Nr-J-3R61V" aria-label="">SHA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/7QobdEpAB/" class="ctag ctag-52 ctag-7QobdEpAB" aria-label="">Git</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lE7-ZBoCn/" class="ctag ctag-53 ctag-lE7-ZBoCn" aria-label="">MongoDB</a>
+                    
+                      <a href="https://2293736867.github.io/tag/jM1IwIS2X/" class="ctag ctag-54 ctag-jM1IwIS2X" aria-label="">Spring</a>
+                    
+                      <a href="https://2293736867.github.io/tag/mIpAXBTpr/" class="ctag ctag-55 ctag-mIpAXBTpr" aria-label="">虚拟机</a>
+                    
+                      <a href="https://2293736867.github.io/tag/PPNnoV579/" class="ctag ctag-56 ctag-PPNnoV579" aria-label="">CUDA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eGsE7XySYo/" class="ctag ctag-57 ctag-eGsE7XySYo" aria-label="">PyTorch</a>
+                    
+                      <a href="https://2293736867.github.io/tag/RoCvXhPfH/" class="ctag ctag-58 ctag-RoCvXhPfH" aria-label="">NTFS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/SjeU3w4_d/" class="ctag ctag-59 ctag-SjeU3w4_d" aria-label="">BootstrapVue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94FcDb__B/" class="ctag ctag-60 ctag-94FcDb__B" aria-label="">Vue</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j4BuDeUjQ/" class="ctag ctag-61 ctag-j4BuDeUjQ" aria-label="">MyBaits</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FaFerPQym/" class="ctag ctag-62 ctag-FaFerPQym" aria-label="">终端美化</a>
+                    
+                      <a href="https://2293736867.github.io/tag/vMaxTlWsr/" class="ctag ctag-63 ctag-vMaxTlWsr" aria-label="">Nvidia</a>
+                    
+                      <a href="https://2293736867.github.io/tag/4fbWA3FjM/" class="ctag ctag-64 ctag-4fbWA3FjM" aria-label="">Matlab</a>
+                    
+                      <a href="https://2293736867.github.io/tag/BC-AL9W6w/" class="ctag ctag-65 ctag-BC-AL9W6w" aria-label="">Oracle</a>
+                    
+                      <a href="https://2293736867.github.io/tag/U_PXoCTJu/" class="ctag ctag-66 ctag-U_PXoCTJu" aria-label="">JDBCTemplate</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tpJlWuxg-t/" class="ctag ctag-67 ctag-tpJlWuxg-t" aria-label="">HTTPS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/R1SdHxPlR/" class="ctag ctag-68 ctag-R1SdHxPlR" aria-label="">Maven</a>
+                    
+                      <a href="https://2293736867.github.io/tag/i2hWOKTzb/" class="ctag ctag-69 ctag-i2hWOKTzb" aria-label="">七夕快乐</a>
+                    
+                      <a href="https://2293736867.github.io/tag/lhG453lfc/" class="ctag ctag-70 ctag-lhG453lfc" aria-label="">JetBrains</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6gn0AkH2Q/" class="ctag ctag-71 ctag-6gn0AkH2Q" aria-label="">Hadoop</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iPJJVQ6jY/" class="ctag ctag-72 ctag-iPJJVQ6jY" aria-label="">CentOS</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iihFN8FL0/" class="ctag ctag-73 ctag-iihFN8FL0" aria-label="">Jupyter</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Q0QnSl8as/" class="ctag ctag-74 ctag-Q0QnSl8as" aria-label="">设计模式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/YMPVdyUgq/" class="ctag ctag-75 ctag-YMPVdyUgq" aria-label="">Capslock+</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wz4wl2haW/" class="ctag ctag-76 ctag-wz4wl2haW" aria-label="">激活</a>
+                    
+                      <a href="https://2293736867.github.io/tag/WbQ1chYU2I/" class="ctag ctag-77 ctag-WbQ1chYU2I" aria-label="">Hello World</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Zp8szr4lB/" class="ctag ctag-78 ctag-Zp8szr4lB" aria-label="">Jar</a>
+                    
+                      <a href="https://2293736867.github.io/tag/yCD9r2xgw/" class="ctag ctag-79 ctag-yCD9r2xgw" aria-label="">HTTP Client</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bF2mL6IvE/" class="ctag ctag-80 ctag-bF2mL6IvE" aria-label="">HTTP/2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/orx4wZc0f/" class="ctag ctag-81 ctag-orx4wZc0f" aria-label="">Tomcat</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdS9f37e0/" class="ctag ctag-82 ctag-AdS9f37e0" aria-label="">注孤生</a>
+                    
+                      <a href="https://2293736867.github.io/tag/j0fdg3Cut/" class="ctag ctag-83 ctag-j0fdg3Cut" aria-label="">JFX</a>
+                    
+                      <a href="https://2293736867.github.io/tag/o5hKqf9Ap/" class="ctag ctag-84 ctag-o5hKqf9Ap" aria-label="">Music</a>
+                    
+                      <a href="https://2293736867.github.io/tag/bFNak4fnm/" class="ctag ctag-85 ctag-bFNak4fnm" aria-label="">OkHttp</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LO227Db0V/" class="ctag ctag-86 ctag-LO227Db0V" aria-label="">Powerlevel10K</a>
+                    
+                      <a href="https://2293736867.github.io/tag/hsNVKS9Qq/" class="ctag ctag-87 ctag-hsNVKS9Qq" aria-label="">Compress</a>
+                    
+                      <a href="https://2293736867.github.io/tag/dvWKgSydX/" class="ctag ctag-88 ctag-dvWKgSydX" aria-label="">unzip</a>
+                    
+                      <a href="https://2293736867.github.io/tag/l6qOxzmkS/" class="ctag ctag-89 ctag-l6qOxzmkS" aria-label="">TP6</a>
+                    
+                      <a href="https://2293736867.github.io/tag/t_WSDKPh7/" class="ctag ctag-90 ctag-t_WSDKPh7" aria-label="">PHP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OBGyotm1E9/" class="ctag ctag-91 ctag-OBGyotm1E9" aria-label="">JRebel</a>
+                    
+                      <a href="https://2293736867.github.io/tag/aicrp5v2D/" class="ctag ctag-92 ctag-aicrp5v2D" aria-label="">个人博客</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ECj8IAI_Y/" class="ctag ctag-93 ctag-ECj8IAI_Y" aria-label="">Zend Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/-g6dgYxeO/" class="ctag ctag-94 ctag--g6dgYxeO" aria-label="">Apache</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ErQ7EACbc/" class="ctag ctag-95 ctag-ErQ7EACbc" aria-label="">SSL</a>
+                    
+                      <a href="https://2293736867.github.io/tag/eT8Xr7OEa/" class="ctag ctag-96 ctag-eT8Xr7OEa" aria-label="">SCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/EpuvEnzD6/" class="ctag ctag-97 ctag-EpuvEnzD6" aria-label="">Nginx</a>
+                    
+                      <a href="https://2293736867.github.io/tag/qR5NhsqP6K/" class="ctag ctag-98 ctag-qR5NhsqP6K" aria-label="">acme.sh</a>
+                    
+                      <a href="https://2293736867.github.io/tag/wfF83Rkm0/" class="ctag ctag-99 ctag-wfF83Rkm0" aria-label="">jQuery</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iNele6Dhd/" class="ctag ctag-100 ctag-iNele6Dhd" aria-label="">Android Studio</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TwsilcwD0/" class="ctag ctag-101 ctag-TwsilcwD0" aria-label="">CMake</a>
+                    
+                      <a href="https://2293736867.github.io/tag/GGPqmyDEU/" class="ctag ctag-102 ctag-GGPqmyDEU" aria-label="">GCC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Cy8VujzGx/" class="ctag ctag-103 ctag-Cy8VujzGx" aria-label="">PyCharm</a>
+                    
+                      <a href="https://2293736867.github.io/tag/LwvWGj4Ip/" class="ctag ctag-104 ctag-LwvWGj4Ip" aria-label="">熵权可拓物元模型</a>
+                    
+                      <a href="https://2293736867.github.io/tag/DZ5E1trvJ/" class="ctag ctag-105 ctag-DZ5E1trvJ" aria-label="">AC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/sHFJEY1cE/" class="ctag ctag-106 ctag-sHFJEY1cE" aria-label="">正则表达式</a>
+                    
+                      <a href="https://2293736867.github.io/tag/V7ARPGm-S/" class="ctag ctag-107 ctag-V7ARPGm-S" aria-label="">Grub</a>
+                    
+                      <a href="https://2293736867.github.io/tag/OQzDJDrvg/" class="ctag ctag-108 ctag-OQzDJDrvg" aria-label="">软件工程</a>
+                    
+                      <a href="https://2293736867.github.io/tag/AdtivoET7/" class="ctag ctag-109 ctag-AdtivoET7" aria-label="">Tools</a>
+                    
+                      <a href="https://2293736867.github.io/tag/XYwHTUWyVk/" class="ctag ctag-110 ctag-XYwHTUWyVk" aria-label="">Web</a>
+                    
+                      <a href="https://2293736867.github.io/tag/kQfuG5TKhu/" class="ctag ctag-111 ctag-kQfuG5TKhu" aria-label="">FTP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/Vx2vpr_C7/" class="ctag ctag-112 ctag-Vx2vpr_C7" aria-label="">Gson</a>
+                    
+                      <a href="https://2293736867.github.io/tag/nGstKfTrf/" class="ctag ctag-113 ctag-nGstKfTrf" aria-label="">UDP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/tWrsXRojT/" class="ctag ctag-114 ctag-tWrsXRojT" aria-label="">TCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/JoO79KeOi/" class="ctag ctag-115 ctag-JoO79KeOi" aria-label="">Swing</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ghe87GgWJ5/" class="ctag ctag-116 ctag-ghe87GgWJ5" aria-label="">Spring Data JPA</a>
+                    
+                      <a href="https://2293736867.github.io/tag/TrLCkYWTX/" class="ctag ctag-117 ctag-TrLCkYWTX" aria-label="">JDBC</a>
+                    
+                      <a href="https://2293736867.github.io/tag/94BG00D7hD/" class="ctag ctag-118 ctag-94BG00D7hD" aria-label="">C3P0</a>
+                    
+                      <a href="https://2293736867.github.io/tag/iZ_eZyYBHd/" class="ctag ctag-119 ctag-iZ_eZyYBHd" aria-label="">DBCP</a>
+                    
+                      <a href="https://2293736867.github.io/tag/FbxLgkEJb/" class="ctag ctag-120 ctag-FbxLgkEJb" aria-label="">Qt</a>
+                    
+                      <a href="https://2293736867.github.io/tag/ZccDmc7QXC/" class="ctag ctag-121 ctag-ZccDmc7QXC" aria-label="">C++</a>
+                    
+                      <a href="https://2293736867.github.io/tag/6rtV8THYT/" class="ctag ctag-122 ctag-6rtV8THYT" aria-label="">Log4j2</a>
+                    
+                      <a href="https://2293736867.github.io/tag/8EbOHbvZf/" class="ctag ctag-123 ctag-8EbOHbvZf" aria-label="">about</a>
+                    
+                  </div>
+                  <div class="clear"></div>
+                </section>
+              </div>
+
+              <div class="grid-33 tablet-grid-50 mobile-grid-100">
+                <section id="epcl_about-2" class="widget widget_epcl_about underline-effect">
+                  <h4 class="widget-title title white bordered">关于我</h4>
+                  <div class="avatar">
+                    <a href="" class="translate-effect thumb"><span class="fullimage cover" style="background-image: url(https://2293736867.github.io/images/avatar.png);"></span></a>
+                  </div>
+                  <div class="info">
+                    <h4 class="title small author-name gradient-effect no-margin"><a href="">氷泠&#39;s blog</a></h4>
+                    <p class="founder">几百遍，重复了几百遍
+重复的情绪重复的熬过想你的夜</p>
+                    <div class="social">
+                      
+                          
+                            <a href="https://github.com/2293736867" class="translate-effect" target="_blank"><i class="fa fa-github"></i></a>
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                        
+                      
+                    </div> 
+                  </div>
+                  <div class="clear"></div>
+                  </section>
+              </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="logo">
+          <a href="https://2293736867.github.io"><img src="/media/images/custom-footerLogo.png" alt=""></a>
+        </div>
+        <p class="published border-effect">
+          ©2019 共 656 篇文章
+          <br/>
+          Theme <a href="https://gridea.dev/" target="_blank">「breek」</a> Powered by <a href="https://gridea.dev/" target="_blank">「Gridea」</a>
+        </p>
+        
+        <a href="javascript:void(0)" id="back-to-top" class="epcl-button dark" style="display:none">
+          <i class="fa fa-arrow"></i>
+        </a>
+    </footer>
+    
+    <div class="clear"></div>
+
+        
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leancloud-storage/dist/av-min.js"></script>
+<script type="text/javascript" src="https://cdn.staticfile.org/valine/1.3.10/Valine.Pure.min.js"></script>
+<script>
+    new Valine({
+        el: '#comments',
+        appId: 'bB7Cg2lXd41aulCOwaP57TCl-gzGzoHsz' ,
+        appKey: 'JbjT1r2X8OAL2m2kxGBCs6oD',
+        pageSize: 30,
+        placeholder: '既然来了，那就留个痕迹吧~',
+        visitor: true // 阅读量统计
+    })
+</script>
+    
+
+      
+    <script src="https://2293736867.github.io/media/js/functions-post.js"></script>
+
+    </div>
+    <!-- end: #wrapper -->
+  </body>
+</html>

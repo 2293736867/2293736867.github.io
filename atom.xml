@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-25T18:06:15.086Z</updated>
+    <updated>2021-06-26T08:14:39.135Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,233 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[MySQL 主从复制加密以及binlog的加密实现]]></title>
+        <id>https://2293736867.github.io/post/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/</id>
+        <link href="https://2293736867.github.io/post/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/">
+        </link>
+        <updated>2021-06-26T08:09:32.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
+<li><a href="#2-%E7%8E%AF%E5%A2%83">2 环境</a></li>
+<li><a href="#3-%E5%87%86%E5%A4%87%E5%AE%B9%E5%99%A8">3 准备容器</a></li>
+<li><a href="#4-ssl%E8%BF%9E%E6%8E%A5%E5%87%86%E5%A4%87">4 <code>SSL</code>连接准备</a>
+<ul>
+<li><a href="#41-%E7%A1%AE%E4%BF%9Dssl%E5%BC%80%E5%90%AF">4.1 确保<code>SSL</code>开启</a></li>
+<li><a href="#42-%E7%94%9F%E6%88%90ca%E5%92%8C%E7%A7%81%E9%92%A5">4.2 生成<code>CA</code>和私钥</a></li>
+<li><a href="#43-%E4%BF%AE%E6%94%B9%E6%9D%83%E9%99%90">4.3 修改权限</a></li>
+<li><a href="#44-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">4.4 修改配置文件</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE">5 主从复制的其他配置</a></li>
+<li><a href="#6-%E5%88%9B%E5%BB%BA%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E7%94%A8%E6%88%B7">6 创建主从复制的用户</a></li>
+<li><a href="#7-%E4%BF%AE%E6%94%B9%E4%BB%8E%E5%BA%93%E9%85%8D%E7%BD%AE%E6%8C%87%E5%90%91%E4%B8%BB%E5%BA%93">7 修改从库配置指向主库</a></li>
+<li><a href="#8-%E5%90%AF%E5%8A%A8%E4%BB%8E%E5%BA%93%E5%B9%B6%E6%B5%8B%E8%AF%95">8 启动从库并测试</a></li>
+<li><a href="#9-binlog%E7%9A%84%E5%8A%A0%E5%AF%86">9 <code>binlog</code>的加密</a>
+<ul>
+<li><a href="#91-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6">9.1 安装插件</a></li>
+<li><a href="#92-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE">9.2 修改配置</a></li>
+</ul>
+</li>
+<li><a href="#10-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5">10 参考链接</a></li>
+</ul>
+</p>
+<h1 id="1-概述">1 概述</h1>
+<p>本文主要讲述了如何在主从复制的过程中使用<code>SSL</code>进行加密，还有<code>binlog</code>加密（<code>MySQL 8.0.14+</code>）的实现。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>MySQL 8.0.25</code></li>
+<li><code>Docker</code></li>
+<li>一主一从</li>
+</ul>
+<h1 id="3-准备容器">3 准备容器</h1>
+<p>先拉取镜像并启动，主库<code>3306</code>，从库<code>3307</code>，还需要加上<code>--ssl</code>参数，以开启<code>SSL</code>加密连接的功能：</p>
+<pre><code class="language-bash">docker pull mysql
+docker run -itd -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-master mysql --ssl
+docker run -itd -p 3307:3306 -p 33061:33060 -e MYSQL_ROOT_PASSWORD=123456 --name mysql-slave mysql --ssl
+</code></pre>
+<p>启动容器之后进入容器并安装<code>vim</code>和<code>net-tools</code>：</p>
+<pre><code class="language-bash">apt install vim net-tools
+</code></pre>
+<p>同时进入<code>MySQL</code>准备好数据源：</p>
+<pre><code class="language-sql">create database test;
+use test;
+create table user(
+	id int primary key auto_increment,
+	name varchar(30) not null,
+	age int not null
+);
+</code></pre>
+<h1 id="4-ssl连接准备">4 <code>SSL</code>连接准备</h1>
+<h2 id="41-确保ssl开启">4.1 确保<code>SSL</code>开启</h2>
+<p>首先可以进入<code>MySQL</code>确保<code>SSL</code>功能开启：</p>
+<pre><code class="language-sql">show variables like '%ssl%';
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210626135041437.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h2 id="42-生成ca和私钥">4.2 生成<code>CA</code>和私钥</h2>
+<p>默认情况下，在<code>/var/lib/mysql</code>下已经有生成的证书和私钥文件，如果不想用默认的，可以重新生成：</p>
+<pre><code class="language-bash">sudo mkdir /mysql
+sudo chown mysql:mysql /mysql
+mysql_ssl_rsa_setup --datadir=/mysql
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/2021062613540272.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>生成的文件包括：</p>
+<ul>
+<li><code>ca-key.pem</code>：<code>CA</code>私钥</li>
+<li><code>ca.pem</code>：自签名的<code>CA</code>证书</li>
+<li><code>client-key.pem</code>：客户端连接时使用的私钥</li>
+<li><code>client-cert.pem</code>：客户端连接时使用的证书</li>
+<li><code>server-key.pem</code>：服务器端私钥</li>
+<li><code>server-cert.pem</code>：服务器端证书</li>
+<li><code>public_key.pem</code>/<code>private_key.pem</code>：密钥对的公钥和私钥</li>
+</ul>
+<p>实际使用只需要用到<code>ca.pem</code>、服务端私钥证书、客户端私钥证书这五个文件。由于主从复制的时候，主库作为服务端，从库作为客户端，因此<code>ca.pem</code>/<code>server-key.pem</code>/<code>server-client.pem</code>只需要在主库中配置，而<code>ca.pem</code>/<code>client-key.pem</code>/<code>client-cert.pem</code>需要通过<code>scp</code>传到从库中。</p>
+<h2 id="43-修改权限">4.3 修改权限</h2>
+<p>权限错误会导致<code>MySQL</code>无法正常使用<code>SSL</code>的功能：</p>
+<pre><code class="language-bash">sudo chown mysql:mysql /mysql/*.pem
+sudo chmod 400 /mysql/*.pem
+sudo chmod 444 /mysql/ca.pem
+</code></pre>
+<h2 id="44-修改配置文件">4.4 修改配置文件</h2>
+<p>修改主库的配置文件，如下所示：</p>
+<pre><code class="language-bash">[mysqld]
+ssl_ca=/mysql/ca.pem
+ssl_cert=/mysql/server-cert.pem
+ssl_key=/mysql/server-key.pem
+</code></pre>
+<p>而从库配置文件 修改如下：</p>
+<pre><code class="language-bash">[client]
+ssl-ca=/mysql/ca.pem
+ssl-cert=/mysql/client-cert.pem
+ssl-key=/mysql/client-key.pem
+</code></pre>
+<p>此时从库是没办法连接自己的，只能连接主库，如果需要连接自己，需要将主库的<code>server-key.pem</code>/<code>server-cert.pem</code>拷贝到从库中，并配置从库的<code>[mysqld]</code>：</p>
+<pre><code class="language-bash">[mysqld]
+ssl_ca=/mysql/ca.pem
+ssl_cert=/mysql/server-cert.pem
+ssl_key=/mysql/server-key.pem
+</code></pre>
+<h1 id="5-主从复制的其他配置">5 主从复制的其他配置</h1>
+<p>下面是一些主从复制的最常规最简单的配置，主库仅配置了<code>id</code>和需要复制的库：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=1                
+binlog-do-db=test         
+</code></pre>
+<p>从库的配置如下：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=2            
+replicate-do-db=test   
+</code></pre>
+<p>修改完后重启主库和从库。</p>
+<h1 id="6-创建主从复制的用户">6 创建主从复制的用户</h1>
+<p>在主库中创建主从复制的用户（具体<code>ip</code>请使用<code>ifconfig</code>查看）：</p>
+<pre><code class="language-sql">create user 'repl'@'172.17.0.3' identified with mysql_native_password by '123456' require ssl;
+grant replication slave on *.* to 'repl'@'172.17.0.3';
+</code></pre>
+<h1 id="7-修改从库配置指向主库">7 修改从库配置指向主库</h1>
+<p>首先查看主库的状态：</p>
+<pre><code class="language-sql">show master status;
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210626151712328.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>把<code>File</code>和<code>Position</code>记录下来，并在从库中使用<code>change master to</code>/<code>change replication source to</code>（<code>8.0.23+</code>）设置主库信息：</p>
+<pre><code class="language-bash">change master to
+master_host = '172.17.0.2',
+master_user = 'repl',
+master_password = '123456',
+master_log_file = 'binlog.000005',
+master_log_pos = 156,
+master_ssl = 1;
+</code></pre>
+<p>或</p>
+<pre><code class="language-bash">change replication source to
+source_host = '172.17.0.2',
+source_user = 'repl',
+source_password = '123456',
+source_log_file = 'binlog.000005',
+source_log_pos = 156;  
+source_ssl = 1;
+</code></pre>
+<h1 id="8-启动从库并测试">8 启动从库并测试</h1>
+<p>可以使用<code>start slave</code>/<code>start replica</code>（<code>8.0.22+</code>）启动从库开启复制功能：</p>
+<pre><code class="language-bash">start slave
+# 或
+start replica
+</code></pre>
+<p>启动完成后使用</p>
+<pre><code class="language-sql">show slave stauts\G
+</code></pre>
+<p>查看从库状态：</p>
+<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210626151732145.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>需要显示两个<code>Yes</code>才算成功，如果<code>Slave_IO_Running</code>一直显示<code>Connecting</code>，可能原因是：</p>
+<ul>
+<li>在从库中配置的主库地址、端口、用户名、密码等错误</li>
+<li><code>SSL</code>配置错误，比如使用了错误的<code>client-key.pem</code></li>
+<li>防火墙问题</li>
+</ul>
+<p>请查看日志自行检查，日志位置可通过</p>
+<pre><code class="language-sql">show variables like 'log_error'
+</code></pre>
+<p>查看。</p>
+<p>没有问题后，尝试在主库中插入数据：</p>
+<pre><code class="language-sql">use test;
+insert into user values('111',1);
+</code></pre>
+<p>在从库中就可以查询到了：</p>
+<pre><code class="language-sql">use test;
+select * from user;
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210626151908748.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<h1 id="9-binlog的加密">9 <code>binlog</code>的加密</h1>
+<p>从<code>8.0.14</code>开始，<code>MySQL</code>提供了对<code>binlog</code>的加密功能，默认情况下，<code>binlog</code>是没有加密的，加密需要使用<code>keyring</code>插件或者组件：</p>
+<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/20210626152037772.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>实现步骤如下：</p>
+<ul>
+<li>安装<code>keyring_file</code>插件</li>
+<li>修改配置</li>
+<li>测试</li>
+</ul>
+<h2 id="91-安装插件">9.1 安装插件</h2>
+<p><code>MySQL</code>提供了以下插件的安装：</p>
+<figure data-type="image" tabindex="7"><img src="https://img-blog.csdnimg.cn/20210626152219275.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>由于使用的是社区版，社区版只支持<code>keyring_file</code>插件，以此为例。</p>
+<p>主库和从库修改配置文件如下：</p>
+<pre><code class="language-bash">[mysqld]
+early-plugin-load=keyring_file.so
+keyring_file_data=/mysql/keyring
+</code></pre>
+<p>重启后，进入<code>MySQL</code>查看：</p>
+<pre><code class="language-sql">select plugin_name,plugin_status from information_schema.plugins where plugin_name like 'keyring%';
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://img-blog.csdnimg.cn/20210626152937375.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>需要处于<code>ACTIVE</code>状态，这样就是成功了。</p>
+<h2 id="92-修改配置">9.2 修改配置</h2>
+<p><code>binlog</code>的加密通过一个系统变量<code>binlog_encryption</code>控制，需要手动开启：</p>
+<pre><code class="language-sql">set global binlog_encryption=ON;
+set persist binlog_encryption=ON;
+</code></pre>
+<p>开启后查看日志：</p>
+<pre><code class="language-sql">show binary logs;
+</code></pre>
+<p>可以看到是加密了的<code>binlog</code>：</p>
+<figure data-type="image" tabindex="9"><img src="https://img-blog.csdnimg.cn/20210626154936376.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而之前没有加密的<code>binlog</code>可以手动迁移数据后进行删除。</p>
+<p>加密完<code>binlog</code>后并不需要修改主从复制的配置，主从复制依然生效，如下图所示：</p>
+<figure data-type="image" tabindex="10"><img src="https://img-blog.csdnimg.cn/2021062615543555.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>主库插入了一个用户从库依然能<code>select</code>到。</p>
+<h1 id="10-参考链接">10 参考链接</h1>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/replication-binlog-encryption.html">MySQL-17.3.2 Encrypting Binary Log Files and Relay Log Files</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/using-encrypted-connections.html#using-encrypted-connections-client-side-configuration">MySQL-6.3.1 Configuring MySQL to Use Encrypted Connections</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/mysql-ssl-rsa-setup.html">MySQL-4.4.3 mysql_ssl_rsa_setup — Create SSL/RSA Files</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/keyring-file-plugin.html">MySQL-6.4.4.6 Using the keyring_file File-Based Keyring Plugin</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/keyring-plugin-installation.html">MySQL-6.4.4.3 Keyring Plugin Installation</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/keyring-component-installation.html">MySQL-6.4.4.2 Keyring Component Installation</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/obtaining-plugin-information.html">MySQL-5.6.2 Obtaining Server Plugin Information</a></li>
+<li><a href="https://mysqlhighavailability.com/binary-log-encryption-at-rest/">MySQL High Availablity-Binary log encryption at rest</a></li>
+<li><a href="https://stackoverflow.com/questions/59036777/mysql-ssl-is-required-but-the-server-doesnt-support-it">StackOverflow-MySQL - SSL is required but the server doesn't support it</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第376期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/</id>
@@ -441,7 +668,8 @@ apt install vim net-tools
 <pre><code class="language-bash">vim /etc/mysql/my.cnf
 </code></pre>
 <p>添加如下两行：</p>
-<pre><code class="language-bash">server-id=2            # 全局唯一，不能与主库相同
+<pre><code class="language-bash">[mysqld]
+server-id=2            # 全局唯一，不能与主库相同
 replicate-do-db=test   # 与主库相同，表示对该库进行复制
 </code></pre>
 <p>修改完成后重启。</p>
@@ -1265,131 +1493,6 @@ public class ThroneInheritance {
 <p>再优化一下，最快279ms，比第一名快，舒服：</p>
 <figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624130160141.png" alt="" loading="lazy"></figure>
 <figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1624130109126.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第369期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-369-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-369-qi/">
-        </link>
-        <updated>2021-06-18T16:38:35.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>岁月是把杀猪刀，可他拿丑的人一点办法也没有。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>藕花珠缀，犹似汗凝妆。<br>
-——阎选《临江仙·雨停荷荠逗浓香》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>如果你是我该多好，那你就知道我有多难过，多喜欢你。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624080638582.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>本来想动归的，看了一下数据量，直接暴力回溯：</p>
-<pre><code class="language-java">import java.util.List;
-
-public class Solution {
-    private int max = 0;
-    public int maxLength(List&lt;String&gt; arr) {
-        dfs(arr,0,new StringBuilder());
-        return max;
-    }
-
-    private void dfs(List&lt;String&gt; arr,int index,StringBuilder current){
-        int len = current.length();
-        if(index &lt; arr.size()) {
-            if(len &gt; max){
-                max = len;
-            }
-            dfs(arr,index+1,current);
-            StringBuilder next = new StringBuilder(current);
-            next.append(arr.get(index));
-            if(check(next)){
-                dfs(arr,index+1,next);
-            }
-        }
-        if(len &gt; max){
-            max = len;
-        }
-    }
-
-    private boolean check(StringBuilder builder){
-        boolean []table = new boolean[26];
-        for (int i=0;i&lt;builder.length();++i){
-            int index = builder.charAt(i) - 'a';
-            if(!table[index]){
-                table[index] = true;
-            }else{
-                return false;
-            }
-        }
-        return true;
-    }
-}
-</code></pre>
-<p>效果一般般：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624034460831.png" alt="" loading="lazy"></figure>
-<p>加上位运算优化（看了题解的）：</p>
-<pre><code class="language-java">import java.util.List;
-
-public class Solution {
-    private int ans = 0;
-
-    public int maxLength(List&lt;String&gt; arr) {
-        int n = arr.size();
-        int [] masks = new int[n];
-        int index = 0;
-        for (String s : arr) {
-            int mask = 0;
-            for (int i = 0; i &lt; s.length(); i++) {
-                int ch = s.charAt(i) - 'a';
-                if (((mask &gt;&gt; ch) &amp; 1) != 0) {
-                    mask = 0;
-                    break;
-                }
-                mask |= 1 &lt;&lt; ch;
-            }
-            if (mask &gt; 0) {
-                masks[index++] = mask;
-            }
-        }
-        backtrack(0,0,masks,index);
-        return ans;
-    }
-
-    private void backtrack(int pos, int mask,int []masks,int n) {
-        if (pos == n){
-            ans = Math.max(ans, Integer.bitCount(mask));
-            return;
-        }
-
-        if ((mask &amp; masks[pos]) == 0) {
-            backtrack(pos + 1, mask | masks[pos],masks,n);
-        }
-        backtrack(pos + 1, mask,masks,n);
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624075839526.png" alt="" loading="lazy"></figure>
-<p>本质上是用一个<code>mask</code>去代替哈希表，<code>mask</code>是一个整型，32位，因为只有小写字母，最多只有26位，所以可以利用一个整型中的每一位去判断字母是否出现过。</p>
-<p>具体做法就是，一个字符串对应一个整型<code>mask</code>，遍历每个字符串中的每一个字符，如果字符已经出现过（对应的<code>mask</code>为1），也就是以下语句为<code>true</code>：</p>
-<pre><code class="language-java">if(((mask &gt;&gt; ch) &amp; 1) != 0)
-</code></pre>
-<p>这样就把<code>mask</code>重置为0，否则将对应的位置为1：</p>
-<pre><code class="language-java">mask = mask | (1 &lt;&lt; ch);
-</code></pre>
-<p>也就是</p>
-<pre><code class="language-java">mask |= (1&lt;&lt;ch);
-</code></pre>
-<p>在回溯判断的时候，使用</p>
-<pre><code class="language-java">mask &amp; masks[pos] == 0
-</code></pre>
-<p>即可判断字母是否出现过，如果不为0，表示有重合的1，也就是出现过相同字母了，否则进行下一层的回溯。</p>
 ]]></content>
     </entry>
 </feed>
