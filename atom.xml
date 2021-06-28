@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-06-26T08:14:39.135Z</updated>
+    <updated>2021-06-28T13:32:45.209Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,152 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第378期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-378-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-378-qi/">
+        </link>
+        <updated>2021-06-28T13:24:20.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>都说姐漂亮，其实都是妆出来的。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>此花此叶常相映，翠减红哀愁杀人。<br>
+——李商隐《赠荷花》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>用我一生，换你十年天真无邪。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624886536347.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>复制的，想了一下好像做不出来。。。（<s>太菜了</s>）</p>
+<pre><code class="language-java">class Solution {
+    int s, t;
+    int[][] rs;
+    public int numBusesToDestination(int[][] _rs, int _s, int _t) {
+        rs = _rs; s = _s; t = _t;
+        if (s == t) return 0;
+        int ans = bfs();
+        return ans;
+    }
+    int bfs() {
+        // 记录某个车站可以进入的路线
+        Map&lt;Integer, Set&lt;Integer&gt;&gt; map = new HashMap&lt;&gt;();
+        // 队列存的是经过的路线
+        Deque&lt;Integer&gt; d = new ArrayDeque&lt;&gt;();
+        // 哈希表记录的进入该路线所使用的距离
+        Map&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
+        int n = rs.length;
+        for (int i = 0; i &lt; n; i++) {
+            for (int station : rs[i]) {
+                // 将从起点可以进入的路线加入队列
+                if (station == s) {
+                    d.addLast(i);
+                    m.put(i, 1);
+                }
+                Set&lt;Integer&gt; set = map.getOrDefault(station, new HashSet&lt;&gt;());
+                set.add(i);
+                map.put(station, set);
+            }
+        }
+        while (!d.isEmpty()) {
+            // 取出当前所在的路线，与进入该路线所花费的距离
+            int poll = d.pollFirst();
+            int step = m.get(poll);
+
+            // 遍历该路线所包含的车站
+            for (int station : rs[poll]) {
+                // 如果包含终点，返回进入该路线花费的距离即可
+                if (station == t) return step;
+
+                // 将由该线路的车站发起的路线，加入队列
+                Set&lt;Integer&gt; lines = map.get(station);
+                if (lines == null) continue;
+                for (int nr : lines) {
+                    if (!m.containsKey(nr)) {
+                        m.put(nr, step + 1);
+                        d.add(nr);
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624886541130.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第377期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-377-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-377-qi/">
+        </link>
+        <updated>2021-06-28T13:21:31.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>运动一周瘦不下来不要紧，因为运动十周也瘦不下来的。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>荷风送香气，竹露滴清响。<br>
+——孟浩然《夏日南亭怀辛大》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>其实你不是真的很有趣，你只是太孤独。这个你，就是我。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624886887334.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>还还还是广搜：</p>
+<pre><code class="language-java">class Solution {
+    public int snakesAndLadders(int[][] board) {
+        int n = board.length;
+        boolean[] vis = new boolean[n * n + 1];
+        Queue&lt;int[]&gt; queue = new LinkedList&lt;int[]&gt;();
+        queue.offer(new int[]{1, 0});
+        while (!queue.isEmpty()) {
+            int[] p = queue.poll();
+            for (int i = 1; i &lt;= 6; ++i) {
+                int nxt = p[0] + i;
+                if (nxt &gt; n * n) { // 超出边界
+                    break;
+                }
+                int[] rc = id2rc(nxt, n); // 得到下一步的行列
+                if (board[rc[0]][rc[1]] &gt; 0) { // 存在蛇或梯子
+                    nxt = board[rc[0]][rc[1]];
+                }
+                if (nxt == n * n) { // 到达终点
+                    return p[1] + 1;
+                }
+                if (!vis[nxt]) {
+                    vis[nxt] = true;
+                    queue.offer(new int[]{nxt, p[1] + 1}); // 扩展新状态
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int[] id2rc(int id, int n) {
+        int r = (id - 1) / n, c = (id - 1) % n;
+        if (r % 2 == 1) {
+            c = n - 1 - c;
+        }
+        return new int[]{n - 1 - r, c};
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624886872960.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[MySQL 主从复制加密以及binlog的加密实现]]></title>
         <id>https://2293736867.github.io/post/mysql-zhu-cong-fu-zhi-jia-mi-yi-ji-binlog-de-jia-mi-shi-xian/</id>
@@ -1273,226 +1419,6 @@ public class Solution {
 </code></pre>
 <p>这是交换字符做的，官方题解给的是一个回溯还有下一个排列那个算法。</p>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624301912454.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第371期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-371-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-371-qi/">
-        </link>
-        <updated>2021-06-21T00:06:19.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>有钱能买来幸福吗？不能，有钱本身就是幸福！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>惟有绿荷红菡萏，卷舒开合任天真。<br>
-——李商隐《赠荷花》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>早知如此绊人心，何如当初莫相识。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624234354250.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>手动排列组合：</p>
-<pre><code class="language-java">import java.util.ArrayList;
-import java.util.List;
-
-public class Solution {
-    public List&lt;String&gt; readBinaryWatch(int turnedOn) {
-        if (turnedOn == 0) {
-            return List.of(&quot;0:00&quot;);
-        }
-        List&lt;String&gt; ans = new ArrayList&lt;&gt;(500);
-        String[][] hour = new String[4][];
-        String[][] minute = new String[5][];
-
-        hour[0] = new String[]{&quot;1&quot;, &quot;2&quot;, &quot;4&quot;, &quot;8&quot;};
-        hour[1] = new String[]{&quot;3&quot;, &quot;5&quot;, &quot;6&quot;, &quot;9&quot;, &quot;10&quot;};
-        hour[2] = new String[]{&quot;7&quot;, &quot;11&quot;};
-
-        minute[0] = new String[]{&quot;01&quot;, &quot;02&quot;, &quot;04&quot;, &quot;08&quot;, &quot;16&quot;, &quot;32&quot;};
-        minute[1] = new String[]{&quot;03&quot;, &quot;05&quot;, &quot;09&quot;, &quot;17&quot;, &quot;33&quot;, &quot;06&quot;, &quot;10&quot;, &quot;18&quot;, &quot;34&quot;, &quot;12&quot;, &quot;20&quot;, &quot;36&quot;, &quot;24&quot;, &quot;40&quot;, &quot;48&quot;};
-        minute[2] = new String[]{&quot;07&quot;, &quot;11&quot;, &quot;19&quot;, &quot;35&quot;, &quot;13&quot;, &quot;21&quot;, &quot;37&quot;, &quot;25&quot;, &quot;41&quot;, &quot;49&quot;, &quot;14&quot;, &quot;22&quot;, &quot;38&quot;, &quot;26&quot;, &quot;42&quot;, &quot;50&quot;, &quot;28&quot;, &quot;44&quot;, &quot;52&quot;, &quot;56&quot;};
-        minute[3] = new String[]{&quot;15&quot;, &quot;23&quot;, &quot;39&quot;, &quot;27&quot;, &quot;43&quot;, &quot;51&quot;, &quot;29&quot;, &quot;45&quot;, &quot;53&quot;, &quot;57&quot;, &quot;30&quot;, &quot;46&quot;, &quot;54&quot;, &quot;58&quot;};
-        minute[4] = new String[]{&quot;31&quot;, &quot;47&quot;, &quot;55&quot;, &quot;59&quot;};
-
-        for (int m = 0; m &lt;= turnedOn; m++) {
-            int h = turnedOn - m;
-            if(m &lt;= 3 &amp;&amp; h &lt;= 5){
-
-            }
-            if (m == 0 &amp;&amp; h &lt;= 3) {
-                for (String s : hour[h - 1]) {
-                    ans.add(s + &quot;:00&quot;);
-                }
-            } else if (h == 0 &amp;&amp; m &lt;= 5) {
-                for (String s : minute[m - 1]) {
-                    ans.add(&quot;0:&quot; + s);
-                }
-            } else if (h &lt;= 3 &amp;&amp; m &lt;= 5) {
-                for (String hh : hour[h - 1]) {
-                    for (String mm : minute[m - 1]) {
-                        ans.add(hh + &quot;:&quot; + mm);
-                    }
-                }
-            }
-        }
-        return ans;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624234391625.png" alt="" loading="lazy"></figure>
-<p>当然肯定不够大佬的回溯剪枝快：</p>
-<pre><code class="language-java">class Solution {
-
-    // 直接把二进制的问题转换为数组累加问题
-    int[] hours = new int[]{1,2,4,8,0,0,0,0,0,0};
-    int[] minutes = new int[]{0,0,0,0,1,2,4,8,16,32};
-    List&lt;String&gt; res = new ArrayList&lt;&gt;();
-
-    public List&lt;String&gt; readBinaryWatch(int turnedOn) {
-        // 方法二：采用回溯法
-        backTrack(turnedOn,0,0,0);
-        return res;
-
-    }
-
-    // 回溯的参数：num(需要点亮的灯，初始为turnedOn),index(点亮的下标)
-    // hour(小时数)minute(分钟数)
-    public void backTrack(int num,int index,int hour,int minute){
-        // 剪枝操作
-        if(hour &gt; 11  || minute &gt; 59){
-            return;
-        }
-        // 递归出口,当点亮到第0栈灯的时候，那么回溯所有数据
-        if(num == 0){
-            // 进行字符串拼接
-            StringBuilder sb = new StringBuilder();
-            sb.append(hour).append(':');
-            if(minute &lt; 10){
-                sb.append('0');
-            }
-            sb.append(minute);z
-            res.add(sb.toString());
-            //记得return终止掉
-            return;
-        }
-        // 这里是从下标开始递归遍历
-        for(int i = index; i &lt; 10; i++){
-            backTrack(num - 1, i+1,hour+hours[i],minute+minutes[i]);
-        }
-    }
-}
-</code></pre>
-<p>看做01序列分别对分钟和小时进行取值，强。</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624234527631.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第370期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-370-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-370-qi/">
-        </link>
-        <updated>2021-06-19T19:03:28.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你的晚安，只是想让我闭嘴。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>初月未终夕，边烽不过秦。<br>
-——贾岛《暮过山村》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>人总是贪婪的，就像是最开始，我也只是想知道你的名字。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624129533522.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>使用一种树的思想，一个节点有两个指针：</p>
-<ul>
-<li>兄弟指针：指向兄弟</li>
-<li>孩子指针：指向孩子</li>
-</ul>
-<p>题目中的<code>birth</code>实际上是添加节点操作，通过哈希表找到对应的<code>parent</code>后，首先判断它的孩子是否为空，如果为空直接添加孩子，如果不为空，拿到孩子节点，并把新节点添加到最后的兄弟节点。</p>
-<p>另外需要注意的一个操作是获取操作，本质上是树的遍历，利用了栈，每次遍历某节点的时候：</p>
-<ul>
-<li>遍历该节点，如果不是死亡状态，添加到列表中</li>
-<li>如果该节点的兄弟节点不为空，添加兄弟节点到栈中</li>
-<li>如果该节点的孩子节点不为空，添加孩子节点到栈中</li>
-</ul>
-<p>这样就能得到先遍历孩子再遍历兄弟的顺序了，代码如下：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class ThroneInheritance {
-    private final Node root;
-    private final Map&lt;String,Node&gt; map;
-    public ThroneInheritance(String kingName) {
-        root = new Node();
-        root.name = kingName;
-        map = new HashMap&lt;&gt;();
-        map.put(kingName,root);
-    }
-
-    public void birth(String parentName, String childName) {
-        Node children = new Node();
-        children.name = childName;
-        map.put(childName,children);
-        Node parent = map.get(parentName);
-        if(parent.children == null){
-            parent.children = children;
-        }else {
-            parent = parent.children;
-            while (parent.brother != null) {
-                parent = parent.brother;
-            }
-            parent.brother = children;
-        }
-    }
-
-    public void death(String name) {
-        map.get(name).death = true;
-    }
-
-    public List&lt;String&gt; getInheritanceOrder() {
-        List&lt;String&gt; list = new LinkedList&lt;&gt;();
-        Stack&lt;Node&gt; stack = new Stack&lt;&gt;();
-        stack.add(root);
-        while (!stack.isEmpty()){
-            Node temp = stack.pop();
-            if(!temp.death){
-                list.add(temp.name);
-            }
-            if(temp.brother != null){
-                stack.push(temp.brother);
-            }
-            if(temp.children != null){
-                stack.push(temp.children);
-            }
-        }
-        return list;
-    }
-
-    private static class Node{
-        String name;
-        boolean death;
-        Node brother;
-        Node children;
-    }
-}
-</code></pre>
-<p>必须吹一波自己，近乎双100，不愧是在凌晨三点做的：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624129460904.png" alt="" loading="lazy"></figure>
-<p>再优化一下，最快279ms，比第一名快，舒服：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624130160141.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1624130109126.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
