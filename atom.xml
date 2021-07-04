@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-03T04:06:45.366Z</updated>
+    <updated>2021-07-04T01:59:29.349Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,126 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第384期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-384-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-384-qi/">
+        </link>
+        <updated>2021-07-04T01:33:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>人生最大的耻辱是什么，考试作弊了还不及格。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>纸屏石枕竹方床，手倦抛书午梦长。<br>
+——蔡确《夏日登车盖亭》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>悲痛藏于心，欢喜言于表，说的不就是我们吗！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625362601439.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>直接哈希表：</p>
+<pre><code class="language-java">public class Solution {
+    public int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        boolean[] hash = new boolean[1_0000 + 1];
+        int repeated = 0;
+        for (int num : nums) {
+            if (hash[num]) {
+                repeated = num;
+            }
+            hash[num] = true;
+        }
+        for (int i = 1; i &lt;= n; ++i) {
+            if (!hash[i]) {
+                return new int[]{repeated, i};
+            }
+        }
+        return new int[]{};
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625362622318.png" alt="" loading="lazy"></figure>
+<p>当然最朴素的想法就是直接计数：</p>
+<pre><code class="language-java">public class Solution {
+    public int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        int[] count = new int[n + 1];
+        int[] res = new int[2];
+        for (int num : nums) {
+            ++count[num];
+        }
+        for (int i = 1; i &lt;= n; ++i) {
+            if(count[i] == 2){
+                res[0] = i;
+            }
+            if(count[i] == 0){
+                res[1] = i;
+            }
+        }
+        return res;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625362781875.png" alt="" loading="lazy"></figure>
+<p>好家伙这速度可以啊。</p>
+<p>还有一种做法是使用<code>O(1)</code>空间的位运算：</p>
+<pre><code class="language-java">public class Solution {
+    public int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        int x = 0;
+        int y = 0;
+        int xor = 0;
+        for (int num : nums) {
+            xor ^= num;
+        }
+        for (int i = 1; i &lt;= n; i++) {
+            xor ^= i;
+        }
+        xor &amp;= (-xor);
+        for (int num : nums) {
+            if ((num &amp; xor) == 0) {
+                x ^= num;
+            } else {
+                y ^= num;
+            }
+        }
+        for (int i = 1; i &lt;= n; i++) {
+            if((i &amp; xor) == 0) {
+                x ^= i;
+            }else{
+                y ^= i;
+            }
+        }
+        for (int num:nums){
+            if(num == x){
+                return new int[]{x,y};
+            }
+        }
+        return new int[]{y, x};
+    }
+}
+</code></pre>
+<p>思想就是：</p>
+<ul>
+<li>利用<code>xor</code>与原数组中每个数相异或</li>
+<li>再利用<code>xor</code>与<code>1..n</code>相异或</li>
+<li>这样<code>xor</code>就是三个重复的数与一个缺失的数字异或的结果</li>
+<li>计算<code>lowbit</code>，<code>lowbit = xor ^ (-xor)</code>，使用<code>lowbit</code>得到最低位1表示的结果</li>
+<li>再遍历原数组以及<code>1..n</code>组成的数组，将其中每个数与<code>lowbit</code>相与，如果为<code>0</code>，使用一个临时变量<code>x</code>与其相异或，否则使用临时变量<code>y</code>与其相异或</li>
+<li>得到的<code>x</code>、<code>y</code>分别是重复的数字和丢失的数字，但具体哪个是哪个还不能确定</li>
+<li>最后再次遍历原数组，如果<code>x</code>或<code>y</code>在原数组中出现过，那么它就是重复的数字，另一个就是丢失的数字</li>
+<li>否则它是丢失的数字，另一个是重复的数字</li>
+</ul>
+<p>说了这么多，但是时间还是不怎么样，虽然空间做到了<code>O(1)</code>，但是扫太多遍了：</p>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625363920298.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第383期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-383-qi/</id>
@@ -1249,100 +1369,6 @@ public class Solution {
 <p>进行循环后，首先将结果加1，并计算队列个数<code>size</code>，取<code>size</code>个队首，获取它们可能到达的位置，然后判断该位置是否已经出现过，如果出现过，直接忽略，如果没有出现过，首先判断数组是否与目标相等，若相等直接返回结果，若不等，添加到队列以及集合中。</p>
 <p>然后翻了一下1ms提交的，好家伙，这肯定<code>O(1)</code>啊：</p>
 <figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624644163305.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第375期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-375-qi/">
-        </link>
-        <updated>2021-06-25T10:55:31.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>同甘共苦你不陪，荣华富贵你是谁？</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>问何人又卸，片帆沙岸，系斜阳缆？<br>
-——辛弃疾《水龙吟·过南剑双溪楼》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>风筝的线你随时可以放开，只是别盼望我会回来。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624618691721.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>广搜：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    private static final String ZERO = &quot;0000&quot;;
-
-    public int openLock(String[] deadends, String target) {
-        if(target.equals(ZERO)) {
-            return 0;
-        }
-
-        final Set&lt;String&gt; dead = new HashSet&lt;&gt;();
-        for(String s:deadends){
-            dead.add(s);
-            if(s.equals(ZERO)){
-                return -1;
-            }
-        }
-
-        int res = 0;
-        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
-        queue.add(ZERO);
-        Set&lt;String&gt; visit = new HashSet&lt;&gt;();
-        visit.add(ZERO);
-
-        while (!queue.isEmpty()){
-            ++res;
-            int size = queue.size();
-            for (int i = 0; i &lt; size; i++) {
-                String str = queue.remove();
-                for(String s:get(str)){
-                    if(!dead.contains(s) &amp;&amp; !visit.contains(s)){
-                        if(s.equals(target)){
-                            return res;
-                        }
-                        queue.offer(s) ;
-                        visit.add(s);
-                    }
-                }
-            }
-        }
-        return -1;
-    }
-
-    public char numPrev(char x) {
-        return x == '0' ? '9' : (char) (x - 1);
-    }
-
-    public char numSucc(char x) {
-        return x == '9' ? '0' : (char) (x + 1);
-    }
-
-    public List&lt;String&gt; get(String status) {
-        List&lt;String&gt; ret = new ArrayList&lt;String&gt;();
-        char[] array = status.toCharArray();
-        for (int i = 0; i &lt; 4; ++i) {
-            char num = array[i];
-            array[i] = numPrev(num);
-            ret.add(new String(array));
-            array[i] = numSucc(num);
-            ret.add(new String(array));
-            array[i] = num;
-        }
-        return ret;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624623354233.png" alt="" loading="lazy"></figure>
-<p>就是不是十分服气下面的超时怎么来的，命名单独把样例拿出来跑就不会超时。</p>
 ]]></content>
     </entry>
 </feed>
