@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-04T01:59:29.349Z</updated>
+    <updated>2021-07-05T06:54:15.642Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,325 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第385期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-385-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-385-qi/">
+        </link>
+        <updated>2021-07-05T06:34:10.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>你努力找他说话的样子，像极了商场里的导购。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>日啖荔枝三百颗，不辞长作岭南人。<br>
+——苏轼《食荔枝》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>卑屈游戏谁是先该离场的呢？</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625466878403.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>好家伙，真真正正的困难题，需要用到哈希表、栈以及字符串处理的一些方法。</p>
+<p>一开始朴素的想法是，将其分块处理，比如：</p>
+<pre><code class="language-bash">Mg(OH)2
+</code></pre>
+<p>可以分成三块：</p>
+<ul>
+<li><code>Mg</code></li>
+<li><code>OH</code></li>
+<li><code>2</code></li>
+</ul>
+<p>于是就写出了下面的代码：</p>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class Solution {
+    private char[] formula;
+    public String countOfAtoms(String formula) {
+        this.formula = formula.toCharArray();
+        TreeMap&lt;String,Integer&gt; map = new TreeMap&lt;&gt;(countFormula(0,formula.length()-1));
+        StringBuilder builder = new StringBuilder();
+        for(Map.Entry&lt;String,Integer&gt; entry:map.entrySet()){
+            builder.append(entry.getKey());
+            int value = entry.getValue();
+            if(value != 1){
+                builder.append(value);
+            }
+        }
+        return builder.toString();
+    }
+
+    private Map&lt;String,Integer&gt; countFormula(int begin,int end){
+        char [] formula = this.formula;
+        int beginBracket = begin;
+        while(beginBracket &lt;= end &amp;&amp; formula[beginBracket] != '('){
+            ++beginBracket;
+        }
+        if(beginBracket &gt; end){
+            return countAtom(begin,end);
+        }
+        int endBracket = end;
+        while(endBracket &gt;= begin &amp;&amp; formula[endBracket] != ')'){
+            --endBracket;
+        }
+        int num = Integer.parseInt(new String(formula,endBracket+1,end - endBracket));
+        Map&lt;String,Integer&gt; map = countFormula(beginBracket+1,endBracket-1);
+        for (Map.Entry&lt;String,Integer&gt; entry:map.entrySet()){
+            entry.setValue(entry.getValue() * num);
+        }
+        Map&lt;String,Integer&gt; prefix = countAtom(begin,beginBracket-1);
+        for (Map.Entry&lt;String,Integer&gt; entry:prefix.entrySet()){
+            map.put(entry.getKey(),map.getOrDefault(entry.getKey(),0)+entry.getValue());
+        }
+        return map;
+    }
+
+    private Map&lt;String,Integer&gt; countAtom(int begin,int end){
+        char[] formula = this.formula;
+        Map&lt;String,Integer&gt; map = new HashMap&lt;&gt;();
+        for (int i = begin; i &lt;= end; i++) {
+            if(Character.isUpperCase(formula[i])){
+                int j = i;
+                ++i;
+                while(i &lt;= end &amp;&amp; Character.isLowerCase(formula[i])){
+                    ++i;
+                }
+                String str = new String(formula,j,i-j);
+                StringBuilder num = new StringBuilder();
+                while(i &lt;= end &amp;&amp; Character.isDigit(formula[i])){
+                    num.append(formula[i]);
+                    ++i;
+                }
+                map.put(str,map.getOrDefault(str,0)+
+                    (num.length() == 0 ? 1 : Integer.parseInt(num.toString())
+                ));
+                --i;
+            }
+        }
+        return map;
+    }
+}
+</code></pre>
+<p>但是过不了下面的样例：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625467206949.png" alt="" loading="lazy"></figure>
+<p>于是又改了一下：</p>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.TreeMap;
+
+public class Solution {
+    private char[] formula;
+
+    public String countOfAtoms(String formula) {
+        this.formula = formula.toCharArray();
+        TreeMap&lt;String, Integer&gt; map = new TreeMap&lt;&gt;(count(this.formula));
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
+            builder.append(entry.getKey());
+            int value = entry.getValue();
+            if (value != 1) {
+                builder.append(value);
+            }
+        }
+        return builder.toString();
+    }
+
+    private Map&lt;String,Integer&gt; count(char[] formula) {
+        int n = formula.length;
+        Stack&lt;Map&gt; stack = new Stack&lt;&gt;();
+        for (int i = 0; i &lt; n; i++) {
+            int j = i;
+            while (i &lt; n &amp;&amp; Character.isDigit(formula[i])){
+                ++i;
+            }
+            if(j != i){
+                int num = Integer.parseInt(new String(formula,j,i-j));
+                Map&lt;String, Integer&gt; top = stack.pop();
+                for (Map.Entry&lt;String, Integer&gt; entry : top.entrySet()) {
+                    entry.setValue(entry.getValue() * num);
+                }
+                if(!stack.isEmpty()) {
+                    Map&lt;String, Integer&gt; prefix = stack.pop();
+                    for (Map.Entry&lt;String, Integer&gt; entry : prefix.entrySet()) {
+                        top.put(entry.getKey(), top.getOrDefault(entry.getKey(), 0) + entry.getValue());
+                    }
+                }
+                stack.push(top);
+            }
+            j = i;
+            while (i &lt; n &amp;&amp; formula[i] != '(' &amp;&amp; formula[i] != ')') {
+                ++i;
+            }
+            Map&lt;String, Integer&gt; map = countAtom(j, i - 1);
+//            System.out.println(&quot;map is &quot; + map);
+            if(map.size() &gt; 0) {
+                stack.push(map);
+                if (i &lt; n &amp;&amp; formula[i] == ')') {
+                    StringBuilder number = new StringBuilder();
+                    ++i;
+                    while (i &lt; n &amp;&amp; Character.isDigit(formula[i])) {
+                        number.append(formula[i]);
+                        ++i;
+                    }
+                    int num = (number.length() == 0 ? 1 : Integer.parseInt(number.toString()));
+//                    System.out.println(&quot;num is &quot; + num);
+                    Map&lt;String, Integer&gt; top = stack.pop();
+                    for (Map.Entry&lt;String, Integer&gt; entry : top.entrySet()) {
+                        entry.setValue(entry.getValue() * num);
+                    }
+                    if(!stack.isEmpty()) {
+                        Map&lt;String, Integer&gt; prefix = stack.pop();
+                        for (Map.Entry&lt;String, Integer&gt; entry : prefix.entrySet()) {
+                            map.put(entry.getKey(), map.getOrDefault(entry.getKey(), 0) + entry.getValue());
+                        }
+                    }
+                    stack.push(top);
+//                    System.out.println(&quot;[i] is &quot; + formula[i]);
+                }
+            }
+        }
+//        System.out.println(stack);
+        return stack.pop();
+    }
+
+    private Map&lt;String, Integer&gt; countAtom(int begin, int end) {
+        char[] formula = this.formula;
+        Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
+        for (int i = begin; i &lt;= end; i++) {
+            if (Character.isUpperCase(formula[i])) {
+                int j = i;
+                ++i;
+                while (i &lt;= end &amp;&amp; Character.isLowerCase(formula[i])) {
+                    ++i;
+                }
+                String str = new String(formula, j, i - j);
+                StringBuilder num = new StringBuilder();
+                while (i &lt;= end &amp;&amp; Character.isDigit(formula[i])) {
+                    num.append(formula[i]);
+                    ++i;
+                }
+                map.put(str, map.getOrDefault(str, 0) +
+                        (num.length() == 0 ? 1 : Integer.parseInt(num.toString())
+                        ));
+                --i;
+            }
+        }
+        return map;
+    }
+}
+</code></pre>
+<p>但是：</p>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625467234437.png" alt="" loading="lazy"></figure>
+<p>后面重新换了一个思路，对单个原子进行处理，比如<code>Mg(OH)2</code>中的<code>OH</code>，不能直接看作一个<code>OH</code>，而是一个栈，从栈顶到栈底分别为：</p>
+<ul>
+<li><code>1</code></li>
+<li><code>H</code></li>
+<li><code>1</code></li>
+<li><code>O</code></li>
+</ul>
+<p>这样每次遇到数字的时候就进行合并，遇到左括号直接压栈，遇到右括号就进行弹栈操作：</p>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.TreeMap;
+
+public class Solution {
+    private char[] formula;
+    private static final String TYPE = &quot;type&quot;;
+    private static final Integer ATOM = 0;
+    private static final Integer BRACKET = 1;
+
+    public String countOfAtoms(String formula) {
+        this.formula = formula.toCharArray();
+        TreeMap&lt;String, Integer&gt; map = new TreeMap&lt;&gt;(count(this.formula));
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
+            if(!entry.getKey().equals(TYPE)) {
+                builder.append(entry.getKey());
+                int value = entry.getValue();
+                if (value != 1) {
+                    builder.append(value);
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    private Map&lt;String, Integer&gt; count(char[] formula) {
+        int n = formula.length;
+        Stack&lt;Map&gt; stack = new Stack&lt;&gt;();
+        for (int i = 0; i &lt; n; ) {
+            if (Character.isUpperCase(formula[i])) {
+                StringBuilder atom = new StringBuilder();
+                atom.append(formula[i++]);
+                while (i &lt; n &amp;&amp; Character.isLowerCase(formula[i])) {
+                    atom.append(formula[i++]);
+                }
+                Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
+                map.put(atom.toString(), 1);
+                map.put(TYPE, ATOM);
+                stack.push(map);
+            } else if (Character.isDigit(formula[i])) {
+                StringBuilder number = new StringBuilder();
+                number.append(formula[i++]);
+                while (i &lt; n &amp;&amp; Character.isDigit(formula[i])) {
+                    number.append(formula[i++]);
+                }
+                int num = Integer.parseInt(number.toString());
+                Map&lt;String, Integer&gt; map = stack.pop();
+                for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
+                    if (!entry.getKey().equals(TYPE)) {
+                        entry.setValue(entry.getValue() * num);
+                    }
+                }
+                stack.push(map);
+            } else if (formula[i] == '(') {
+                Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
+                map.put(TYPE, BRACKET);
+                stack.push(map);
+                ++i;
+            } else {
+                Map&lt;String, Integer&gt; map = stack.peek();
+                Map&lt;String, Integer&gt; base = stack.pop();
+                while (!map.get(TYPE).equals(BRACKET)) {
+                    map = stack.pop();
+                    for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
+                        if (!entry.getKey().equals(TYPE)) {
+                            base.put(entry.getKey(), base.getOrDefault(entry.getKey(), 0) + entry.getValue());
+                        }
+                    }
+                }
+                stack.push(base);
+                ++i;
+            }
+        }
+        Map&lt;String,Integer&gt; base = stack.pop();
+        while(!stack.isEmpty()){
+            Map&lt;String,Integer&gt; map = stack.pop();
+            for (Map.Entry&lt;String,Integer&gt; entry:map.entrySet()){
+                if (!entry.getKey().equals(TYPE)) {
+                    base.put(entry.getKey(), base.getOrDefault(entry.getKey(), 0) + entry.getValue());
+                }
+            }
+        }
+        return base;
+    }
+}
+</code></pre>
+<p>最后经过两个小时的修改和煎熬终于<code>AC</code>了：</p>
+<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625467441798.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1625467445201.png" alt="" loading="lazy"></figure>
+<p>最后优化了几ms：</p>
+<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1625467745085.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第384期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-384-qi/</id>
@@ -1208,167 +1527,6 @@ set persist binlog_encryption=ON;
 <li><a href="https://mysqlhighavailability.com/binary-log-encryption-at-rest/">MySQL High Availablity-Binary log encryption at rest</a></li>
 <li><a href="https://stackoverflow.com/questions/59036777/mysql-ssl-is-required-but-the-server-doesnt-support-it">StackOverflow-MySQL - SSL is required but the server doesn't support it</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第376期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-376-qi/">
-        </link>
-        <updated>2021-06-25T17:58:49.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你老是这么抠门，门都被你，抠坏了好几扇。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>客从洞庭来，婉娈潇湘深。<br>
-——顾况《游子吟》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>原谅他是上帝的事情，我的事情就是送他去见上帝。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624643946338.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>还是广搜题：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int slidingPuzzle(int[][] board) {
-        final int[][] target = {
-                {1,2,3},
-                {4,5,0}
-        };
-        if(Arrays.deepEquals(target,board)){
-            return 0;
-        }
-        Set&lt;Node&gt; set = new HashSet&lt;&gt;();
-        Queue&lt;int[][]&gt; queue = new LinkedList&lt;&gt;();
-        queue.add(board);
-        int res = 0;
-        set.add(new Node(board));
-        while (!queue.isEmpty()) {
-            ++res;
-            int size = queue.size();
-            for (int i = 0; i &lt; size; ++i) {
-                int[][] top = queue.remove();
-                for (int[][] s : get(top)) {
-                    if (!set.contains(new Node(s))) {
-                        if (Arrays.deepEquals(s, target)) {
-                            return res;
-                        }
-                        queue.offer(s);
-                        set.add(new Node(s));
-                    }
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    private static class Node{
-        int [][] board;
-        public Node(int [][]board){
-            this.board = board;
-        }
-
-        @Override
-        public int hashCode() {
-            return Arrays.deepHashCode(board);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if(!(obj instanceof Node)){
-                return false;
-            }
-            Node node = (Node) obj;
-            return Arrays.deepEquals(board,node.board);
-        }
-
-        @Override
-        public String toString() {
-            return Arrays.deepToString(board);
-        }
-    }
-
-    private int[][][] get(int[][] board) {
-        int zi = -1;
-        int zj = -1;
-        for (int i = 0; i &lt; board.length; i++) {
-            for (int j = 0; j &lt; board[i].length; j++) {
-                if (board[i][j] == 0) {
-                    zi = i;
-                    zj = j;
-                    break;
-                }
-            }
-            if (zi != -1) {
-                break;
-            }
-        }
-
-        int[][] state1 = new int[2][3];
-        int[][] state2 = new int[2][3];
-        int[][] state3 = new int[2][3];
-        int num = 2;
-        if (zi == 0 &amp;&amp; zj == 0) {
-            state1[0] = new int[]{board[0][1], 0, board[0][2]};
-            state1[1] = new int[]{board[1][0], board[1][1], board[1][2]};
-            state2[0] = new int[]{board[1][0], board[0][1], board[0][2]};
-            state2[1] = new int[]{0, board[1][1], board[1][2]};
-        } else if (zi == 0 &amp;&amp; zj == 1) {
-            state1[0] = new int[]{0, board[0][0], board[0][2]};
-            state1[1] = new int[]{board[1][0], board[1][1], board[1][2]};
-            state2[0] = new int[]{board[0][0], board[0][2], 0};
-            state2[1] = new int[]{board[1][0], board[1][1], board[1][2]};
-            state3[0] = new int[]{board[0][0], board[1][1], board[0][2]};
-            state3[1] = new int[]{board[1][0], 0, board[1][2]};
-            num = 3;
-        } else if (zi == 0 &amp;&amp; zj == 2) {
-            state1[0] = new int[]{board[0][0], 0, board[0][1]};
-            state1[1] = new int[]{board[1][0], board[1][1], board[1][2]};
-            state2[0] = new int[]{board[0][0], board[0][1], board[1][2]};
-            state2[1] = new int[]{board[1][0], board[1][1], 0};
-        } else if (zi == 1 &amp;&amp; zj == 0) {
-            state1[0] = new int[]{0, board[0][1], board[0][2]};
-            state1[1] = new int[]{board[0][0], board[1][1], board[1][2]};
-            state2[0] = new int[]{board[0][0], board[0][1], board[0][2]};
-            state2[1] = new int[]{board[1][1], 0, board[1][2]};
-        } else if (zi == 1 &amp;&amp; zj == 1) {
-            state1[0] = new int[]{board[0][0], 0, board[0][2]};
-            state1[1] = new int[]{board[1][0], board[0][1], board[1][2]};
-            state2[0] = new int[]{board[0][0], board[0][1], board[0][2]};
-            state2[1] = new int[]{board[1][0], board[1][2], 0};
-            state3[0] = new int[]{board[0][0], board[0][1], board[0][2]};
-            state3[1] = new int[]{0, board[1][0], board[1][2]};
-            num = 3;
-        } else {
-            state1[0] = new int[]{board[0][0], board[0][1], 0};
-            state1[1] = new int[]{board[1][0], board[1][1], board[0][2]};
-            state2[0] = new int[]{board[0][0], board[0][1], board[0][2]};
-            state2[1] = new int[]{board[1][0], 0, board[1][1]};
-        }
-        int[][][] res = new int[num][2][3];
-        res[0] = state1;
-        res[1] = state2;
-        if(num == 3){
-            res[2] = state3;
-        }
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624643984398.png" alt="" loading="lazy"></figure>
-<p>首先判断传进来的是否与目标相等，如果相等直接返回，否则添加到队列还有集合里面。</p>
-<p>注意集合需要使用一个包装类，重写<code>equals</code>以及<code>hashCode</code>，这样才能正确判断数组。</p>
-<p>进行循环后，首先将结果加1，并计算队列个数<code>size</code>，取<code>size</code>个队首，获取它们可能到达的位置，然后判断该位置是否已经出现过，如果出现过，直接忽略，如果没有出现过，首先判断数组是否与目标相等，若相等直接返回结果，若不等，添加到队列以及集合中。</p>
-<p>然后翻了一下1ms提交的，好家伙，这肯定<code>O(1)</code>啊：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1624644163305.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
