@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-06T10:39:30.137Z</updated>
+    <updated>2021-07-07T03:00:45.562Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,94 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第387期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-387-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-387-qi/">
+        </link>
+        <updated>2021-07-07T02:53:22.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>脱发怎么办？要健康饮食保持良好心态，这样就能接受这个事实了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>黄沙百战穿金甲，不破楼兰终不还。<br>
+——王昌龄《从军行七首·其四》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>如果有一个喜欢你的人出现，一定不要凶她哦！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625626553273.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>使用哈希表存储个数，键就是美味程度，值就是该美味程度出现的个数，重复出现的时候直接从哈希表里面<code>get</code>：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int countPairs(int[] deliciousness) {
+        int n = deliciousness.length;
+        int ans = 0;
+        final int MOD = 1_0000_0000_0 + 7;
+        Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;(n);
+        for (int i = 0; i &lt; n; i++) {
+            int val = deliciousness[i];
+            for (int sum = 1; sum &gt; 0; sum &lt;&lt;= 1) {
+                int count = map.getOrDefault(sum - val, 0);
+                if (count != 0) {
+                    ans = (ans + count) % MOD;
+                }
+            }
+            map.put(val, map.getOrDefault(val,0) + 1);
+        }
+        return ans;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625626628192.png" alt="" loading="lazy"></figure>
+<p>中规中矩的时间。</p>
+<p>参考第一名优化了一下：</p>
+<ul>
+<li>使用数组代替<code>HashMap</code></li>
+<li>利用最大值与最小值减小<code>map</code>数组需要开辟的空间（<code>int []map = new int [max - min + 1]</code>）</li>
+<li>使用<code>long</code>代替<code>int</code>存储结果，减小求模的次数</li>
+</ul>
+<pre><code class="language-java">public class Solution {
+    public int countPairs(int[] deliciousness) {
+        long ans = 0;
+        int max = deliciousness[0];
+        int min = deliciousness[0];
+        for (int v : deliciousness) {
+            if (v &gt; max) {
+                max = v;
+            }
+            if (v &lt; min) {
+                min = v;
+            }
+        }
+        int[] map = new int[max - min + 1];
+        for (int v : deliciousness) {
+            for (int s = 1; ; s &lt;&lt;= 1) {
+                int x = s - v;
+                if(x &lt; min){
+                    continue;
+                }
+                if(x &gt; max){
+                    break;
+                }
+                ans += map[x-min];
+            }
+            ++map[v-min];
+        }
+        return (int)(ans % 1_000_000_007L);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625626543216.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Spring Boot demo系列（十三）：ShardingSphere + MyBatisPlus 分库分表]]></title>
         <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-san-shardingsphere-mybatisplus-fen-ku-fen-biao/</id>
@@ -1527,87 +1615,6 @@ public class Codec {
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第378期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-378-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-378-qi/">
-        </link>
-        <updated>2021-06-28T13:24:20.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>都说姐漂亮，其实都是妆出来的。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>此花此叶常相映，翠减红哀愁杀人。<br>
-——李商隐《赠荷花》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>用我一生，换你十年天真无邪。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1624886536347.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>复制的，想了一下好像做不出来。。。（<s>太菜了</s>）</p>
-<pre><code class="language-java">class Solution {
-    int s, t;
-    int[][] rs;
-    public int numBusesToDestination(int[][] _rs, int _s, int _t) {
-        rs = _rs; s = _s; t = _t;
-        if (s == t) return 0;
-        int ans = bfs();
-        return ans;
-    }
-    int bfs() {
-        // 记录某个车站可以进入的路线
-        Map&lt;Integer, Set&lt;Integer&gt;&gt; map = new HashMap&lt;&gt;();
-        // 队列存的是经过的路线
-        Deque&lt;Integer&gt; d = new ArrayDeque&lt;&gt;();
-        // 哈希表记录的进入该路线所使用的距离
-        Map&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
-        int n = rs.length;
-        for (int i = 0; i &lt; n; i++) {
-            for (int station : rs[i]) {
-                // 将从起点可以进入的路线加入队列
-                if (station == s) {
-                    d.addLast(i);
-                    m.put(i, 1);
-                }
-                Set&lt;Integer&gt; set = map.getOrDefault(station, new HashSet&lt;&gt;());
-                set.add(i);
-                map.put(station, set);
-            }
-        }
-        while (!d.isEmpty()) {
-            // 取出当前所在的路线，与进入该路线所花费的距离
-            int poll = d.pollFirst();
-            int step = m.get(poll);
-
-            // 遍历该路线所包含的车站
-            for (int station : rs[poll]) {
-                // 如果包含终点，返回进入该路线花费的距离即可
-                if (station == t) return step;
-
-                // 将由该线路的车站发起的路线，加入队列
-                Set&lt;Integer&gt; lines = map.get(station);
-                if (lines == null) continue;
-                for (int nr : lines) {
-                    if (!m.containsKey(nr)) {
-                        m.put(nr, step + 1);
-                        d.add(nr);
-                    }
-                }
-            }
-        }
-        return -1;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1624886541130.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
