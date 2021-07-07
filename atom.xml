@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-07T03:00:45.562Z</updated>
+    <updated>2021-07-07T07:15:48.045Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,256 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Spring Boot demo系列（十四）：ShardingSphere + MyBatisPlus 分库分表 + 读写分离]]></title>
+        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-si-shardingsphere-mybatisplus-fen-ku-fen-biao-du-xie-fen-chi/</id>
+        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-si-shardingsphere-mybatisplus-fen-ku-fen-biao-du-xie-fen-chi/">
+        </link>
+        <updated>2021-07-07T07:15:06.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-概述">1 概述</h1>
+<p>之前笔者写过两篇文章：</p>
+<ul>
+<li><a href="https://blog.csdn.net/qq_27525611/article/details/118218614?spm=1001.2014.3001.5501">ShardingSphere 读写分离</a></li>
+<li><a href="https://blog.csdn.net/qq_27525611/article/details/118521446">ShardingSphere 分库分表</a></li>
+</ul>
+<p>这里将两者结合起来，实现读写分离+分库分表的功能。关于环境的配置本文将进行简化叙述，详细可以参考前两篇文章。</p>
+<h1 id="2-环境">2 环境</h1>
+<ul>
+<li><code>MySQL 8.0.25</code>（<code>Docker</code>）</li>
+<li><code>MyBatis Plus 3.4.3.1</code></li>
+<li><code>MyBatis Plus Generator 3.5.0</code></li>
+<li><code>Druid 1.2.6</code></li>
+<li><code>ShardingSphere 4.1.1</code></li>
+<li><code>Yitter 1.0.6</code>（一个雪花<code>id</code>生成器）</li>
+</ul>
+<h1 id="3-数据库环境准备">3 数据库环境准备</h1>
+<p>由于环境准备不是本文的重点，一主一从的主从复制环境可以参考<a href="https://blog.csdn.net/qq_27525611/article/details/118218614">此处</a>搭建。</p>
+<p>准备好环境，本地启动两个<code>MySQL</code>，主节点环境：</p>
+<ul>
+<li>名字：<code>master</code></li>
+<li>端口：<code>3306</code></li>
+<li>数据库：两个库（<code>test0</code>、<code>test1</code>）</li>
+<li>数据表：六个表，每个库三个（<code>test0.user0</code>、<code>test0.user1</code>、<code>test0.user2</code>、<code>test1.user0</code>、<code>test1.user1</code>、<code>test1.user2</code>）</li>
+</ul>
+<p>从节点环境：</p>
+<ul>
+<li>名字：<code>slave</code></li>
+<li>端口：<code>3307</code></li>
+<li>数据库：两个库（<code>test0</code>、<code>test1</code>）</li>
+<li>数据表：六个表，每个库三个（<code>test0.user0</code>、<code>test0.user1</code>、<code>test0.user2</code>、<code>test1.user0</code>、<code>test1.user1</code>、<code>test1.user2</code>）</li>
+</ul>
+<p>主库配置文件：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=1
+binlog-do-db=test0
+binlog-do-db=test1
+</code></pre>
+<p>从库配置文件：</p>
+<pre><code class="language-bash">[mysqld]
+server-id=2
+replicate-do-db=test0
+replicate-do-db=test1
+</code></pre>
+<p>完整的数据库脚本和<code>MySQL</code>配置文件放在文末的源码链接中。</p>
+<h1 id="4-新建项目">4 新建项目</h1>
+<p>新建项目并引入如下依赖：</p>
+<ul>
+<li><code>Druid</code></li>
+<li><code>MyBatis Plus starter</code></li>
+<li><code>MyBaits Plus Generator</code></li>
+<li><code>Velocity core</code></li>
+<li><code>ShardingSphere</code></li>
+<li><code>Yitter</code></li>
+</ul>
+<p><code>Maven</code>如下：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;3.4.3.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;
+    &lt;version&gt;3.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
+    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
+    &lt;version&gt;2.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.realityforge.org.jetbrains.annotations&lt;/groupId&gt;
+    &lt;artifactId&gt;org.jetbrains.annotations&lt;/artifactId&gt;
+    &lt;version&gt;1.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;druid&lt;/artifactId&gt;
+    &lt;version&gt;1.2.6&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.shardingsphere&lt;/groupId&gt;
+    &lt;artifactId&gt;sharding-jdbc-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;4.1.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.github.yitter&lt;/groupId&gt;
+    &lt;artifactId&gt;yitter-idgenerator&lt;/artifactId&gt;
+    &lt;version&gt;1.0.6&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>Gradle</code>如下：</p>
+<pre><code class="language-bash">implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.3.1'
+implementation 'org.apache.velocity:velocity-engine-core:2.3'
+implementation 'org.realityforge.org.jetbrains.annotations:org.jetbrains.annotations:1.7.0'
+implementation 'com.alibaba:druid:1.2.6'
+implementation 'org.apache.shardingsphere:sharding-jdbc-spring-boot-starter:4.1.1'
+implementation 'com.github.yitter:yitter-idgenerator:1.0.6'
+</code></pre>
+<h1 id="5-配置文件">5 配置文件</h1>
+<pre><code class="language-yml">spring:
+  shardingsphere:
+    datasource:
+      names: master-test0,master-test1,slave-test0,slave-test1                 # 数据源节点名字
+                                                                               # master-test0表示主节点的test0库，master-test1表示主节点的test1库
+                                                                               # slave-test0表示从节点的test0库，slave-test1表示从节点的test1库
+      master-test0:
+        type: com.alibaba.druid.pool.DruidDataSource                           # 连接池
+        url: jdbc:mysql://127.0.0.1:3306/test0                                 # 主节点的test0库
+        username: root
+        password: 123456
+      master-test1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3306/test1                                 # 主节点的test1库
+        username: root
+        password: 123456
+      slave-test0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3307/test0                                 # 从节点的test0库，端口3307
+        username: root
+        password: 123456
+      slave-test1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3307/test1                                 # 从节点的test1库，端口3307
+        username: root
+        password: 123456
+    sharding:
+      default-database-strategy:
+        inline:
+          sharding-column: age                                                 # 按照哪一列分库
+          algorithm-expression: master-test$-&gt;{age % 2}                        # 分库规则为对年龄取模
+      tables:
+        user:
+          actual-data-nodes: master-test$-&gt;{0..1}.user$-&gt;{0..2}                # 分表的节点，格式为 [数据源.表名]
+          table-strategy:
+            inline:
+              sharding-column: id                                              # 按照哪一列分表
+              algorithm-expression: user$-&gt;{id%3}                              # 分表规则，对id取模
+
+      master-slave-rules:                                                      # 读写分离的规则
+        master-test0:                                                          # 哪一个主节点
+          master-datasource-name: master-test0                                 # 指定主节点名字
+          slave-data-source-names: slave-test0                                 # 指定从节点名字
+        master-test1:
+          master-datasource-name: master-test1
+          slave-data-source-names: slave-test1
+    props:
+      sql:
+        show:
+          true                                                                 # 打印SQL
+</code></pre>
+<h1 id="6-准备测试代码">6 准备测试代码</h1>
+<p>使用<code>MyBatis Plus Generator</code>生成器类生成代码：</p>
+<pre><code class="language-java">import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.config.*;
+
+public class MyBatisPlusGenerator {
+    public static void main(String[] args) {
+        DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(&quot;jdbc:mysql://localhost:3306/test0&quot;, &quot;root&quot;, &quot;123456&quot;).build();
+        String projectPath = System.getProperty(&quot;user.dir&quot;);
+        StrategyConfig strategyConfig = new StrategyConfig.Builder().addInclude(&quot;user&quot;).build();
+        GlobalConfig globalConfig = new GlobalConfig.Builder().outputDir(projectPath + &quot;/src/main/java&quot;).openDir(false).build();
+        PackageConfig packageConfig = new PackageConfig.Builder().moduleName(&quot;user&quot;).parent(&quot;com.example.demo&quot;).serviceImpl(&quot;service&quot;).build();
+        new AutoGenerator(dataSourceConfig).global(globalConfig).packageInfo(packageConfig).strategy(strategyConfig).execute();
+    }
+}
+</code></pre>
+<p>实体类加上<code>@Builder</code>，同时设置<code>id</code>类型为<code>IdType.ASSIGN_ID</code>：</p>
+<pre><code class="language-java">@Builder
+public class User implements Serializable {
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
+    //...
+}
+</code></pre>
+<p>修改<code>Controller</code>类：</p>
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;/user&quot;)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class UserController {
+    private final Random random = new Random();
+    private final UserServiceImpl service;
+    @GetMapping(&quot;/select&quot;)
+    public List&lt;User&gt; select(){
+        return service.list();
+    }
+
+    @GetMapping(&quot;/insert&quot;)
+    public boolean insert(){
+        return service.save(User.builder().age(random.nextInt(80)+20).name(&quot;test name&quot;).email(&quot;test@test.com&quot;).build());
+    }
+}
+</code></pre>
+<p>同时新增一个雪花<code>id</code>生成器类（具体配置方法可以参考<code>MyBatis Plus</code><a href="https://mybatis.plus/guide/id-generator.html">官方文档</a>）：</p>
+<pre><code class="language-java">import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
+import com.github.yitter.contract.IdGeneratorOptions;
+import com.github.yitter.idgen.YitIdHelper;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+
+@Component
+public class IdGenerator implements IdentifierGenerator {
+    final IdGeneratorOptions options = new IdGeneratorOptions((short) 1);
+
+    @PostConstruct
+    public void init() {
+        YitIdHelper.setIdGenerator(options);
+    }
+
+    @Override
+    public Long nextId(Object entity) {
+        return YitIdHelper.nextId();
+    }
+}
+</code></pre>
+<h1 id="7-测试">7 测试</h1>
+<p>刷新几次插入页面：</p>
+<pre><code class="language-bash">http://localhost:8080/user/insert
+</code></pre>
+<p>从输出可以看到插入都是在主节点中进行的：</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210707004418800.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>而查询的时候：</p>
+<pre><code class="language-bash">http://localhost:8080/user/select
+</code></pre>
+<p>输出如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210707004509588.png" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>是在从节点查询的。</p>
+<h1 id="8-参考代码">8 参考代码</h1>
+<p><code>Java</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">CODE CHINA</a></li>
+</ul>
+<p><code>Kotlin</code>版：</p>
+<ul>
+<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">Github</a></li>
+<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">码云</a></li>
+<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">CODE CHINA</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第387期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-387-qi/</id>
@@ -207,10 +457,6 @@ implementation 'com.github.yitter:yitter-idgenerator:1.0.6'
 <h1 id="4-配置文件">4 配置文件</h1>
 <p>配置文件可以参考<a href="https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/yaml/sharding/">ShardingSphere文档</a>，这里给出一个示例配置：</p>
 <pre><code class="language-yml">spring:
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/test                       # spring 数据源
-    username: root                                              # 用户名
-    password: 123456                                            # 密码
   shardingsphere:
     datasource:
       names: test0,test1                                        # 数据源，这里为了方便直接使用库名的名称
@@ -1567,54 +1813,6 @@ public class Codec {
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625070696173.png" alt="" loading="lazy"></figure>
 <p>好家伙。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第379期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-379-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-379-qi/">
-        </link>
-        <updated>2021-06-28T16:22:09.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>问渠那得清如许，唯有毒汤活水来！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>藕花珠缀，犹似汗凝妆。<br>
-——阎选《临江仙·雨停荷荠逗浓香》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>宣纸泛黄，时间流逝，即使眨眼即过，也要抓住那瞬间的辉煌。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625070154587.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>简单题，顺便也把类似的171题答案附上（注意1！！）：</p>
-<pre><code class="language-java">public class Solution {
-    public String convertToTitle(int columnNumber) {
-        StringBuilder builder = new StringBuilder();
-        while (columnNumber != 0) {
-            --columnNumber;
-            builder.append((char) (columnNumber % 26 + 'A'));
-            columnNumber /= 26;
-        }
-        return builder.reverse().toString();
-    }
-
-    public int titleToNumber(String columnTitle) {
-        int sum = 0;
-        int base = 1;
-        for (int i = columnTitle.length() - 1; i &gt;= 0; --i) {
-            sum += (columnTitle.charAt(i) - 'A' + 1) * base;
-            base *= 26;
-        }
-        return sum;
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
