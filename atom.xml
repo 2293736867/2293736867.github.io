@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-07T07:23:23.129Z</updated>
+    <updated>2021-07-08T04:58:15.788Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,74 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第388期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-388-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-388-qi/">
+        </link>
+        <updated>2021-07-08T04:45:57.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>这年头有些人靠脸吃饭，而有些人，靠不要脸吃饭。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>坐睡觉来无一事，满窗晴日看蚕生。<br>
+——范成大《春日田园杂兴》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>别的禅，我都不修。独你是我的禅，秀色可餐。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625719676250.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>用哈希表存储前缀和为<code>sum</code>的个数，如果当前的前缀和大于目标，直接加上<code>前缀和-目标</code>对应的哈希表的个数：</p>
+<pre><code class="language-java">public class Solution {
+    public int numSubarraysWithSum(int[] nums, int goal) {
+        int [] pre = new int[nums.length+1];
+        pre[0] = 1;
+        int sum = 0;
+        int res = 0;
+        for (int num:nums){
+            sum += num;
+            if(sum &gt;= goal){
+                res += pre[sum-goal];
+            }
+            ++pre[sum];
+        }
+        return res;
+    }
+}
+</code></pre>
+<p>官方题解还有个滑动窗口解法：</p>
+<pre><code class="language-java">class Solution {
+    public int numSubarraysWithSum(int[] nums, int goal) {
+        int n = nums.length;
+        int left1 = 0, left2 = 0, right = 0;
+        int sum1 = 0, sum2 = 0;
+        int ret = 0;
+        while (right &lt; n) {
+            sum1 += nums[right];
+            while (left1 &lt;= right &amp;&amp; sum1 &gt; goal) {
+                sum1 -= nums[left1];
+                left1++;
+            }
+            sum2 += nums[right];
+            while (left2 &lt;= right &amp;&amp; sum2 &gt;= goal) {
+                sum2 -= nums[left2];
+                left2++;
+            }
+            ret += left2 - left1;
+            right++;
+        }
+        return ret;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Spring Boot demo系列（十四）：ShardingSphere + MyBatisPlus 分库分表 + 读写分离]]></title>
         <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-si-shardingsphere-mybatisplus-fen-ku-fen-biao-du-xie-fen-chi/</id>
@@ -1722,108 +1790,6 @@ public class Solution {
 <h1 id="100周年">100周年</h1>
 <p>建党100周年！</p>
 <p>刚过12点就朋友圈刷屏了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第380期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-380-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-380-qi/">
-        </link>
-        <updated>2021-06-29T16:29:16.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>宁可美的千篇一律，也不要丑的各有千秋。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>月明船笛参差起，风定池莲自在香。<br>
-——秦观《纳凉》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>清晨、黄昏、天空和飞鸟，代码、诗歌、活着和爱你。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625070598099.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>还是广搜题，序列化和反序列化都用的广搜：</p>
-<pre><code class="language-java">import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
-public class Codec {
-    public String serialize(TreeNode root) {
-        if (root == null) {
-            return &quot;&quot;;
-        }
-
-        StringBuilder builder = new StringBuilder();
-        Queue&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();
-
-        queue.add(root);
-        while (!queue.isEmpty()) {
-            TreeNode temp = queue.poll();
-
-            if (temp == null) {
-                builder.append(&quot;null,&quot;);
-            } else {
-                builder.append(temp.val).append(&quot;,&quot;);
-                queue.add(temp.left);
-                queue.add(temp.right);
-            }
-        }
-        return &quot;[&quot; + builder.substring(0, builder.length() - 1) + &quot;]&quot;;
-    }
-
-    public TreeNode deserialize(String data) {
-        int len = data.length();
-        if (len == 0) {
-            return null;
-        }
-        String[] strs = data.substring(1, len - 1).split(&quot;,&quot;);
-        int n = strs.length;
-        if (strs[0].charAt(0) == 'n') {
-            return null;
-        }
-        TreeNode root = new TreeNode(Integer.parseInt(strs[0]));
-        Queue&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();
-        queue.add(root);
-        for (int i = 1; i &lt; n; ) {
-            TreeNode temp = queue.poll();
-            if (temp != null) {
-                TreeNode left = (strs[i].charAt(0) == 'n' ? null : new TreeNode(Integer.parseInt(strs[i])));
-                TreeNode right = (strs[i + 1].charAt(0) == 'n' ? null : new TreeNode(Integer.parseInt(strs[i + 1])));
-                temp.left = left;
-                temp.right = right;
-                queue.add(left);
-                queue.add(right);
-                i += 2;
-            } else {
-                while (queue.peek() == null) {
-                    queue.poll();
-                }
-            }
-        }
-        return root;
-    }
-}
-</code></pre>
-<p>最离谱的第一名居然0ms：</p>
-<pre><code class="language-java">public class Codec {
-    private TreeNode root;
-    public String serialize(TreeNode root) {
-        this.root = root;
-        return &quot;&quot;;
-    }
-
-    public TreeNode deserialize(String data) {
-        return this.root;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625070696173.png" alt="" loading="lazy"></figure>
-<p>好家伙。</p>
 ]]></content>
     </entry>
 </feed>
