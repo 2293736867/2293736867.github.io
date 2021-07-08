@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-08T04:58:15.788Z</updated>
+    <updated>2021-07-08T18:06:41.635Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,66 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第389期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-389-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-389-qi/">
+        </link>
+        <updated>2021-07-08T18:00:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>倘若互不相欠，怎会再次相见。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>朔风吹散三更雪，倩魂犹恋桃花月。<br>
+——纳兰性德《菩萨蛮·朔风吹散三更雪》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>记忆，总会传承下去，无论是用何种方式。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625767355965.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p><code>Boyer-Moore</code>投票算法：</p>
+<ul>
+<li>初始化计数<code>count=0</code>，结果用<code>res</code>保存</li>
+<li>遍历数组中的每个数<code>v</code></li>
+<li>如果<code>count==0</code>，更新<code>count=1,res=v</code></li>
+<li>否则如果<code>res==v</code>，<code>++count</code></li>
+<li>否则<code>--count</code></li>
+</ul>
+<p>得出来的就是最后可能的结果<code>res</code>，也就是说如果存在的话，<code>res</code>就一定是主要元素，否则可能是数组中的任意一个元素，需要第二次遍历，计算<code>res</code>的出现次数，判断是否大于其他元素的出现次数。</p>
+<pre><code class="language-java">public class Solution {
+    public int majorityElement(int[] nums) {
+        int res = 0;
+        int count = 0;
+        for(int v:nums){
+            if(count == 0){
+                res = v;
+                count = 1;
+            }else if(res == v){
+                ++count;
+            }else {
+                --count;
+            }
+        }
+
+        count = 0;
+        for(int v:nums){
+            if(v == res){
+                ++count;
+            }
+        }
+        return count &gt; nums.length/2 ? res : -1;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625767374739.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第388期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-388-qi/</id>
@@ -1598,198 +1658,6 @@ public class Solution {
 </code></pre>
 <figure data-type="image" tabindex="7"><img src="https://2293736867.github.io/post-images/1625200817021.png" alt="" loading="lazy"></figure>
 <p>尽梨了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第381期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-381-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-381-qi/">
-        </link>
-        <updated>2021-06-30T16:33:26.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>对于穷人，生活不累的话，那就不叫生活！</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>烛摧花，鹤惊露，忽三更。<br>
-——朱敦儒《水调歌头》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>我只是不想再失去他——哪怕是仅存在一瞬的幻影！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625070969908.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int numWays(int n, int[][] relation, int k) {
-        Map&lt;Integer, List&lt;Integer&gt;&gt; map = new HashMap&lt;&gt;();
-        for (int i = 0; i &lt; relation.length; i++) {
-            int fromPlayer = relation[i][0];
-            int toPlayer = relation[i][1];
-            if(map.containsKey(fromPlayer)){
-                map.get(fromPlayer).add(toPlayer);
-            }else{
-                List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
-                list.add(toPlayer);
-                map.put(fromPlayer,list);
-            }
-        }
-
-        int res = 0;
-        Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
-        queue.add(0);
-        for (int i = 0; i &lt; k; i++) {
-            int size = queue.size();
-            for (int j = 0; j &lt; size; j++) {
-                int current = queue.remove();
-                List&lt;Integer&gt; list = map.get(current);
-                if(list != null){
-                    queue.addAll(list);
-                }
-            }
-        }
-        while(!queue.isEmpty()){
-            if(queue.remove() == n-1){
-                ++res;
-            }
-        }
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625071812210.png" alt="" loading="lazy"></figure>
-<p>这效率。。。</p>
-<p>稍微优化一下，使用数组代替<code>HashMap</code>，但是也没有提高多少效率：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int numWays(int n, int[][] relation, int k) {
-        int [][] map = new int[n][];
-        int [] mapLen = new int[n];
-        int [] mapIndex = new int[n];
-
-        for (int i = 0; i &lt; relation.length; i++) {
-            ++mapLen[relation[i][0]];
-        }
-
-        for (int i = 0; i &lt; relation.length; i++) {
-            int fromPlayer = relation[i][0];
-            int toPlayer = relation[i][1];
-            if(map[fromPlayer] == null){
-                map[fromPlayer] = new int[mapLen[fromPlayer]];
-                map[fromPlayer][0] = toPlayer;
-                mapIndex[fromPlayer] = 1;
-            }else{
-                map[fromPlayer][mapIndex[fromPlayer]++] = toPlayer;
-            }
-        }
-
-        int res = 0;
-        Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
-        queue.add(0);
-        for (int i = 0; i &lt; k; i++) {
-            int size = queue.size();
-            for (int j = 0; j &lt; size; j++) {
-                int current = queue.remove();
-                int [] value = map[current];
-                if(value != null){
-                    for (int l = 0; l &lt; value.length; l++) {
-                        queue.add(value[l]);
-                    }
-                }
-            }
-        }
-        while(!queue.isEmpty()){
-            if(queue.remove() == n-1){
-                ++res;
-            }
-        }
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625072240855.png" alt="" loading="lazy"></figure>
-<p>再优化一下下：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int numWays(int n, int[][] relation, int k) {
-        int [][] map = new int[n][];
-        int [] mapLen = new int[n];
-        int [] mapIndex = new int[n];
-
-        for (int i = 0; i &lt; relation.length; i++) {
-            ++mapLen[relation[i][0]];
-        }
-
-        for (int i = 0; i &lt; relation.length; i++) {
-            int fromPlayer = relation[i][0];
-            int toPlayer = relation[i][1];
-            if(map[fromPlayer] == null){
-                map[fromPlayer] = new int[mapLen[fromPlayer]];
-                map[fromPlayer][0] = toPlayer;
-                mapIndex[fromPlayer] = 1;
-            }else{
-                map[fromPlayer][mapIndex[fromPlayer]++] = toPlayer;
-            }
-        }
-
-        int res = 0;
-        Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
-        queue.add(0);
-        for (int i = 0; i &lt; k; i++) {
-            int size = queue.size();
-            for (int j = 0; j &lt; size; j++) {
-                int current = queue.remove();
-                int [] value = map[current];
-                if(value != null){
-                    for (int l = 0; l &lt; value.length; l++) {
-                        int v = value[l];
-                        if(i == k-1 &amp;&amp; v == n-1){
-                            ++res;
-                        }
-                        queue.add(v);
-                    }
-                }
-            }
-        }
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625072398603.png" alt="" loading="lazy"></figure>
-<p>极限了极限了。。。（<s>太菜了太菜了</s>）</p>
-<p>看了题解发现原来有三种方法：</p>
-<ul>
-<li>深搜</li>
-<li>广搜</li>
-<li>动归</li>
-</ul>
-<p>动归解法如下：</p>
-<pre><code class="language-java">class Solution {
-    public int numWays(int n, int[][] relation, int k) {
-        int[][] dp = new int[k + 1][n];
-        dp[0][0] = 1;
-        for (int i = 0; i &lt; k; i++) {
-            for (int[] edge : relation) {
-                int src = edge[0], dst = edge[1];
-                dp[i + 1][dst] += dp[i][src];
-            }
-        }
-        return dp[k][n - 1];
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1625072669552.png" alt="" loading="lazy"></figure>
-<p><s>BFS优化个der</s></p>
-<h1 id="100周年">100周年</h1>
-<p>建党100周年！</p>
-<p>刚过12点就朋友圈刷屏了。</p>
 ]]></content>
     </entry>
 </feed>
