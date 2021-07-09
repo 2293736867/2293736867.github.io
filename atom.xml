@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-08T18:06:41.635Z</updated>
+    <updated>2021-07-09T17:40:22.476Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,80 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第390期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-390-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-390-qi/">
+        </link>
+        <updated>2021-07-09T17:21:57.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>和对象吵架，先不要追究吵架原因，要弄明白他胆子怎么肥了。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>五月畲田收火米，三更津吏报潮鸡。<br>
+——李德裕《请岭南道中作》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>夕阳真实耀眼无比啊。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625851358861.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>简单题，因为时间戳单调递增，使用双链表存储即可，也就是<code>LinkedList</code>，操作如下：</p>
+<ul>
+<li><code>set</code>：首先判断是否出现过，出现过直接调用<code>addLast</code>，否则新增链表</li>
+<li><code>get</code>：首先判断是否存在<code>key</code>，不存在返回空，存在的话从链表末尾开始遍历，直到找到结点的时间戳小于给定的时间戳的结点值，并返回，如果没有找到，也就是链表遍历结束，则返回空</li>
+</ul>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+public class TimeMap {
+    private final Map&lt;String, LinkedList&lt;Node&gt;&gt; map = new HashMap&lt;&gt;();
+
+    public void set(String key, String value, int timestamp) {
+        Node node = new Node(value,timestamp);
+        if(map.containsKey(key)){
+            map.get(key).addLast(node);
+        }else{
+            LinkedList&lt;Node&gt; list = new LinkedList&lt;&gt;();
+            list.add(node);
+            map.put(key,list);
+        }
+    }
+
+    public String get(String key, int timestamp) {
+        if(!map.containsKey(key)){
+            return &quot;&quot;;
+        }
+        LinkedList&lt;Node&gt; list = map.get(key);
+        for (int i = list.size()-1; i &gt;= 0; --i) {
+            Node node = list.get(i);
+            if(node.timestamp &lt;= timestamp){
+                return node.value;
+            }
+        }
+        return &quot;&quot;;
+    }
+
+    private static class Node{
+        String value;
+        int timestamp;
+
+        public Node(String value,int timestamp){
+            this.value = value;
+            this.timestamp = timestamp;
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625851346173.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第389期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-389-qi/</id>
@@ -1456,208 +1530,6 @@ public class Solution {
 <p>（<s>为什么<code>Java</code>不支持泛型数组</s>）</p>
 <p>但还是一样的时间：</p>
 <figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1625285002545.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第382期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-382-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-382-qi/">
-        </link>
-        <updated>2021-07-02T04:10:05.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>好好过日子吧，每天都会有新打击。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>接天莲叶无穷碧，映日荷花别样红。<br>
-——杨万里《晓出净慈寺送林子方》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>没有一个世界会比活在这个世界痛苦。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625199129271.jpg" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>一开始直接上贪心：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int maxIceCream(int[] costs, int coins) {
-        Arrays.sort(costs);
-        int res = 0;
-        for (int i = 0; i &lt; costs.length &amp;&amp; coins &gt;= costs[i]; ++i, ++res) {
-            coins -= costs[i];
-        }
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625199695745.png" alt="" loading="lazy"></figure>
-<p>中规中矩的水平吧，上<code>Github</code>拿个快排优化一下：</p>
-<pre><code class="language-java">public class Solution {
-    public int maxIceCream(int[] costs, int coins) {
-        quicksort(costs, 0, costs.length - 1);
-        int res = 0;
-        for (int i = 0; i &lt; costs.length &amp;&amp; coins &gt;= costs[i]; ++i, ++res) {
-            coins -= costs[i];
-        }
-        return res;
-    }
-
-    private static void quicksort(int[] ar, int lo, int hi) {
-        if (lo &lt; hi) {
-            int splitPoint = partition(ar, lo, hi);
-            quicksort(ar, lo, splitPoint);
-            quicksort(ar, splitPoint + 1, hi);
-        }
-    }
-
-    private static int partition(int[] ar, int lo, int hi) {
-        int pivot = ar[lo];
-        int i = lo - 1, j = hi + 1;
-        while (true) {
-            do {
-                i++;
-            } while (ar[i] &lt; pivot);
-            do {
-                j--;
-            } while (ar[j] &gt; pivot);
-            if (i &lt; j) swap(ar, i, j);
-            else return j;
-        }
-    }
-
-    private static void swap(int[] ar, int i, int j) {
-        int tmp = ar[i];
-        ar[i] = ar[j];
-        ar[j] = tmp;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625199743893.png" alt="" loading="lazy"></figure>
-<p><s>???</s></p>
-<p><s>离谱</s></p>
-<p><s>这优化</s></p>
-<p>然后想了一下怎么把时间优化到<code>O(n)</code>，看了一下题解居然是用计数排序（<s>怎么就没想到，裂开</s>）。</p>
-<p>然后肯定就是手写一个简陋的计数排序：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int maxIceCream(int[] costs, int coins) {
-        int [] ct = new int[10_0000+1];
-        for (int c:costs){
-            ++ct[c];
-        }
-        int index = 0;
-        for (int i = 1; i &lt;= 10_0000; i++) {
-            if(ct[i] != 0) {
-                for (int j = 0; j &lt; ct[i]; j++) {
-                    costs[index++] = i;
-                }
-            }
-        }
-        //System.out.println(Arrays.toString(costs));
-
-        int res = 0;
-        for (int i = 0; i &lt; costs.length &amp;&amp; coins &gt;= costs[i]; ++i, ++res) {
-            coins -= costs[i];
-        }
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625200111336.png" alt="" loading="lazy"></figure>
-<p>u1s1还真有点效果。</p>
-<p>但是还是不够快，想了一下因为是求最后的数量，计数后不需要把数放回原来的数组，直接从<code>coins</code>里面减就行了，如果变成负数了直接返回：</p>
-<pre><code class="language-java">public class Solution {
-    public int maxIceCream(int[] costs, int coins) {
-        int[] ct = new int[10_0000 + 1];
-        for (int c : costs) {
-            ++ct[c];
-        }
-        int index = 0;
-        int res = 0;
-        for (int i = 1; i &lt;= 10_0000; i++) {
-            for (int j = 0; j &lt; ct[i]; j++) {
-                costs[index++] = i;
-                if (coins &gt;= i) {
-                    coins -= i;
-                    ++res;
-                } else {
-                    return res;
-                }
-            }
-        }
-
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1625200311409.png" alt="" loading="lazy"></figure>
-<p>u1s1这才叫优化。</p>
-<p>再优化一下下，如果是所有同样定价的雪糕可以同时买下，直接用倍数去乘，而不是循环去减：</p>
-<pre><code class="language-java">public class Solution {
-    public int maxIceCream(int[] costs, int coins) {
-        int[] ct = new int[10_0000 + 1];
-        for (int c : costs) {
-            ++ct[c];
-        }
-        int index = 0;
-        int res = 0;
-        for (int i = 1; i &lt;= 10_0000; i++) {
-            if (ct[i] != 0) {
-                if (coins &gt;= ct[i] * i) {
-                    coins -= ct[i] * i;
-                    res += ct[i];
-                } else {
-                    for (int j = 0; j &lt; ct[i]; j++) {
-                        costs[index++] = i;
-                        if (coins &gt;= i) {
-                            coins -= i;
-                            ++res;
-                        } else {
-                            return res;
-                        }
-                    }
-                }
-            }
-        }
-
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1625200504043.png" alt="" loading="lazy"></figure>
-<p>但是好像没什么效果。</p>
-<p>不行，坚定信念要优化的笔者，决定再优化一下下，把循环去掉，用倍数加去代替逐个雪糕相减：</p>
-<pre><code class="language-java">public class Solution {
-    public int maxIceCream(int[] costs, int coins) {
-        int[] ct = new int[10_0000 + 1];
-        for (int c : costs) {
-            ++ct[c];
-        }
-        int res = 0;
-        for (int i = 1; i &lt;= 10_0000; i++) {
-            if (ct[i] != 0) {
-                if (coins &gt;= ct[i] * i) {
-                    coins -= ct[i] * i;
-                    res += ct[i];
-                } else {
-                    res += (coins / i);
-                    return res;
-                }
-            }
-        }
-
-        return res;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="7"><img src="https://2293736867.github.io/post-images/1625200817021.png" alt="" loading="lazy"></figure>
-<p>尽梨了。</p>
 ]]></content>
     </entry>
 </feed>
