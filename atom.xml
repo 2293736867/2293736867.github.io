@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-09T17:49:19.545Z</updated>
+    <updated>2021-07-11T03:10:18.655Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,57 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第391期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-391-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-391-qi/">
+        </link>
+        <updated>2021-07-11T03:06:12.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>出身好的努力是为了成功，而你是为了活下去。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>荷叶罗裙一色裁，芙蓉向脸两边开。<br>
+——王昌龄《采莲曲》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>小太阳很忙，小云朵想吃糖，长颈鹿嫌脖子不够长，喜欢你太难忘。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625972805479.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>其实一开始是没什么思路的，看了一下<code>275</code>题，<code>275</code>题是已经排序好的，并且有提示时间<code>O(log N)</code>，所以就直接排序上二分：</p>
+<pre><code class="language-java">import java.util.Arrays;
+
+public class Solution {
+    public int hIndex(int[] citations) {
+        Arrays.sort(citations);
+        int n = citations.length;
+        int l = 0;
+        int r = n - 1;
+        while (l &lt;= r) {
+            int m = (r + l) &gt;&gt; 1;
+            if (citations[m] == n - m) {
+                return n - m;
+            }
+            if (citations[m] &lt; n - m) {
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+        return n - l;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625972789942.png" alt="" loading="lazy"></figure>
+<p>第一次的1ms是因为直接<code>O(n)</code>扫描。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第390期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-390-qi/</id>
@@ -1368,168 +1419,6 @@ public class Solution {
 </ul>
 <p>说了这么多，但是时间还是不怎么样，虽然空间做到了<code>O(1)</code>，但是扫太多遍了：</p>
 <figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625363920298.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第383期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-383-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-383-qi/">
-        </link>
-        <updated>2021-07-03T02:41:49.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>遇到困难的三个步骤，面对它，处理它，放弃它。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>东边日出西边雨，道是无晴却有晴。<br>
-——刘禹锡《竹枝词二首·其一》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>I'm nothing without you.</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625280248893.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>虽然写着是中等题，但是感觉是简单题，统计计数后排序然后将结果添加到结果中即可，注意包含大小写字母和数字（题目又没写。。。）：</p>
-<pre><code class="language-java">import java.util.Arrays;
-
-public class Solution {
-    public String frequencySort(String s) {
-        if (s == null || s.isBlank()) {
-            return s;
-        }
-        int n = s.length();
-        char[] res = new char[n];
-        Node[] nodes = new Node[62];
-        for (int i = 0; i &lt; 26; i++) {
-            nodes[i] = new Node((char) ('a' + i));
-        }
-        for (int i = 26; i &lt; 52; i++) {
-            nodes[i] = new Node((char) ('A' + (i - 26)));
-        }
-        for (int i = 52; i &lt; 62; i++) {
-            nodes[i] = new Node((char) ('0' + (i - 52)));
-        }
-        for (char c : s.toCharArray()) {
-            if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') {
-                ++nodes[c - 'a'].count;
-            } else if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
-                ++nodes[c - 'A' + 26].count;
-            } else {
-                ++nodes[c - '0' + 52].count;
-            }
-        }
-
-        Arrays.sort(nodes);
-        int index = 0;
-        for (Node node:nodes){
-            int count = node.count;
-            char c = node.c;
-            for (int i = 0; i &lt; count; i++) {
-                res[index++] = c; 
-            }
-        }
-        return new String(res);
-    }
-
-    private static class Node implements Comparable&lt;Node&gt; {
-        char c;
-        int count = 0;
-
-        public Node(char c) {
-            this.c = c;
-        }
-
-        @Override
-        public int compareTo(Node node) {
-            return Integer.compare(node.count, count);
-        }
-
-        @Override
-        public String toString() {
-            return &quot;[c=&quot; + c + &quot;,count=&quot; + count + &quot;]&quot;;
-        }
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625280239823.png" alt="" loading="lazy"></figure>
-<p>寻思着好像没有什么优化方法，昨天的计排好像也用不上，看了题解用的居然是桶排，好家伙。</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625280765329.png" alt="" loading="lazy"></figure>
-<p>但是最快的第一名还是用的快排：</p>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625281014724.png" alt="" loading="lazy"></figure>
-<p>最后还是参考题解，配合栈用上了计排：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public String frequencySort(String s) {
-        int n = s.length();
-        char[] res = new char[n];
-        int[] count = new int[62];
-        for (char c : s.toCharArray()) {
-            ++count[charToIndex(c)];
-        }
-        int max = 0;
-        for (int c : count) {
-            if (c &gt; max) {
-                max = c;
-            }
-        }
-        Stack[] stacks = new Stack[max + 1];
-        for (int i = 0; i &lt; 62; ++i) {
-            if (count[i] != 0) {
-                int ct = count[i];
-                if (stacks[ct] == null) {
-                    stacks[ct] = new Stack&lt;&gt;();
-                    stacks[ct].push(indexToChar(i));
-                } else {
-                    stacks[ct].push(indexToChar(i));
-                }
-            }
-        }
-
-        int index = 0;
-        for (int i = max; i &gt;= 1; --i) {
-            Stack stack = stacks[i];
-            if (stack != null) {
-                while (!stack.isEmpty()) {
-                    char c = (Character) stack.pop();
-                    for (int j = 0; j &lt; i; j++) {
-                        res[index++] = c;
-                    }
-                }
-            }
-        }
-        return new String(res);
-    }
-
-    private int charToIndex(char c) {
-        if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') {
-            return c - 'a';
-        }
-        if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
-            return c - 'A' + 26;
-        }
-        return c - '0' + 52;
-    }
-
-    private char indexToChar(int index) {
-        if (index &gt;= 0 &amp;&amp; index &lt;= 25) {
-            return (char) ('a' + index);
-        }
-        if (index &gt;= 26 &amp;&amp; index &lt;= 51) {
-            return (char) ('A' + (index - 26));
-        }
-        return (char) ('0' + (index - 52));
-    }
-
-}
-</code></pre>
-<p>（<s>为什么<code>Java</code>不支持泛型数组</s>）</p>
-<p>但还是一样的时间：</p>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1625285002545.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
