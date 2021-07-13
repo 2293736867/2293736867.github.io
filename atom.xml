@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-12T00:37:18.208Z</updated>
+    <updated>2021-07-13T09:05:19.607Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,63 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第393期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-393-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-393-qi/">
+        </link>
+        <updated>2021-07-13T08:59:43.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>别人一看你就说你是学生，不是因为你看着年轻，而是因为穿的土。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>竹色溪下绿，荷花镜里香。<br>
+——李白《别储邕之剡中》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我会穿越那七大海洋，去和你相见。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1626166806315.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>真心不会做，直接放官方题解了：</p>
+<pre><code class="language-java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; getSkyline(int[][] buildings) {
+        PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;int[]&gt;((a, b) -&gt; b[1] - a[1]);
+        List&lt;Integer&gt; boundaries = new ArrayList&lt;Integer&gt;();
+        for (int[] building : buildings) {
+            boundaries.add(building[0]);
+            boundaries.add(building[1]);
+        }
+        Collections.sort(boundaries);
+
+        List&lt;List&lt;Integer&gt;&gt; ret = new ArrayList&lt;List&lt;Integer&gt;&gt;();
+        int n = buildings.length, idx = 0;
+        for (int boundary : boundaries) {
+            while (idx &lt; n &amp;&amp; buildings[idx][0] &lt;= boundary) {
+                pq.offer(new int[]{buildings[idx][1], buildings[idx][2]});
+                idx++;
+            }
+            while (!pq.isEmpty() &amp;&amp; pq.peek()[0] &lt;= boundary) {
+                pq.poll();
+            }
+
+            int maxn = pq.isEmpty() ? 0 : pq.peek()[1];
+            if (ret.size() == 0 || maxn != ret.get(ret.size() - 1).get(1)) {
+                ret.add(Arrays.asList(boundary, maxn));
+            }
+        }
+        return ret;
+    }
+}
+</code></pre>
+<p>不明白为什么是遇到左端点就入栈/入队，然后遇到右端点就出栈/出队。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第392期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-392-qi/</id>
@@ -1027,325 +1084,6 @@ public class Solution {
 </code></pre>
 <figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625543943000.png" alt="" loading="lazy"></figure>
 <p>好像有那么一点效果。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第385期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-385-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-385-qi/">
-        </link>
-        <updated>2021-07-05T06:34:10.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>你努力找他说话的样子，像极了商场里的导购。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>日啖荔枝三百颗，不辞长作岭南人。<br>
-——苏轼《食荔枝》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>卑屈游戏谁是先该离场的呢？</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625466878403.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>好家伙，真真正正的困难题，需要用到哈希表、栈以及字符串处理的一些方法。</p>
-<p>一开始朴素的想法是，将其分块处理，比如：</p>
-<pre><code class="language-bash">Mg(OH)2
-</code></pre>
-<p>可以分成三块：</p>
-<ul>
-<li><code>Mg</code></li>
-<li><code>OH</code></li>
-<li><code>2</code></li>
-</ul>
-<p>于是就写出了下面的代码：</p>
-<pre><code class="language-java">import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-public class Solution {
-    private char[] formula;
-    public String countOfAtoms(String formula) {
-        this.formula = formula.toCharArray();
-        TreeMap&lt;String,Integer&gt; map = new TreeMap&lt;&gt;(countFormula(0,formula.length()-1));
-        StringBuilder builder = new StringBuilder();
-        for(Map.Entry&lt;String,Integer&gt; entry:map.entrySet()){
-            builder.append(entry.getKey());
-            int value = entry.getValue();
-            if(value != 1){
-                builder.append(value);
-            }
-        }
-        return builder.toString();
-    }
-
-    private Map&lt;String,Integer&gt; countFormula(int begin,int end){
-        char [] formula = this.formula;
-        int beginBracket = begin;
-        while(beginBracket &lt;= end &amp;&amp; formula[beginBracket] != '('){
-            ++beginBracket;
-        }
-        if(beginBracket &gt; end){
-            return countAtom(begin,end);
-        }
-        int endBracket = end;
-        while(endBracket &gt;= begin &amp;&amp; formula[endBracket] != ')'){
-            --endBracket;
-        }
-        int num = Integer.parseInt(new String(formula,endBracket+1,end - endBracket));
-        Map&lt;String,Integer&gt; map = countFormula(beginBracket+1,endBracket-1);
-        for (Map.Entry&lt;String,Integer&gt; entry:map.entrySet()){
-            entry.setValue(entry.getValue() * num);
-        }
-        Map&lt;String,Integer&gt; prefix = countAtom(begin,beginBracket-1);
-        for (Map.Entry&lt;String,Integer&gt; entry:prefix.entrySet()){
-            map.put(entry.getKey(),map.getOrDefault(entry.getKey(),0)+entry.getValue());
-        }
-        return map;
-    }
-
-    private Map&lt;String,Integer&gt; countAtom(int begin,int end){
-        char[] formula = this.formula;
-        Map&lt;String,Integer&gt; map = new HashMap&lt;&gt;();
-        for (int i = begin; i &lt;= end; i++) {
-            if(Character.isUpperCase(formula[i])){
-                int j = i;
-                ++i;
-                while(i &lt;= end &amp;&amp; Character.isLowerCase(formula[i])){
-                    ++i;
-                }
-                String str = new String(formula,j,i-j);
-                StringBuilder num = new StringBuilder();
-                while(i &lt;= end &amp;&amp; Character.isDigit(formula[i])){
-                    num.append(formula[i]);
-                    ++i;
-                }
-                map.put(str,map.getOrDefault(str,0)+
-                    (num.length() == 0 ? 1 : Integer.parseInt(num.toString())
-                ));
-                --i;
-            }
-        }
-        return map;
-    }
-}
-</code></pre>
-<p>但是过不了下面的样例：</p>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625467206949.png" alt="" loading="lazy"></figure>
-<p>于是又改了一下：</p>
-<pre><code class="language-java">import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
-
-public class Solution {
-    private char[] formula;
-
-    public String countOfAtoms(String formula) {
-        this.formula = formula.toCharArray();
-        TreeMap&lt;String, Integer&gt; map = new TreeMap&lt;&gt;(count(this.formula));
-        StringBuilder builder = new StringBuilder();
-        for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
-            builder.append(entry.getKey());
-            int value = entry.getValue();
-            if (value != 1) {
-                builder.append(value);
-            }
-        }
-        return builder.toString();
-    }
-
-    private Map&lt;String,Integer&gt; count(char[] formula) {
-        int n = formula.length;
-        Stack&lt;Map&gt; stack = new Stack&lt;&gt;();
-        for (int i = 0; i &lt; n; i++) {
-            int j = i;
-            while (i &lt; n &amp;&amp; Character.isDigit(formula[i])){
-                ++i;
-            }
-            if(j != i){
-                int num = Integer.parseInt(new String(formula,j,i-j));
-                Map&lt;String, Integer&gt; top = stack.pop();
-                for (Map.Entry&lt;String, Integer&gt; entry : top.entrySet()) {
-                    entry.setValue(entry.getValue() * num);
-                }
-                if(!stack.isEmpty()) {
-                    Map&lt;String, Integer&gt; prefix = stack.pop();
-                    for (Map.Entry&lt;String, Integer&gt; entry : prefix.entrySet()) {
-                        top.put(entry.getKey(), top.getOrDefault(entry.getKey(), 0) + entry.getValue());
-                    }
-                }
-                stack.push(top);
-            }
-            j = i;
-            while (i &lt; n &amp;&amp; formula[i] != '(' &amp;&amp; formula[i] != ')') {
-                ++i;
-            }
-            Map&lt;String, Integer&gt; map = countAtom(j, i - 1);
-//            System.out.println(&quot;map is &quot; + map);
-            if(map.size() &gt; 0) {
-                stack.push(map);
-                if (i &lt; n &amp;&amp; formula[i] == ')') {
-                    StringBuilder number = new StringBuilder();
-                    ++i;
-                    while (i &lt; n &amp;&amp; Character.isDigit(formula[i])) {
-                        number.append(formula[i]);
-                        ++i;
-                    }
-                    int num = (number.length() == 0 ? 1 : Integer.parseInt(number.toString()));
-//                    System.out.println(&quot;num is &quot; + num);
-                    Map&lt;String, Integer&gt; top = stack.pop();
-                    for (Map.Entry&lt;String, Integer&gt; entry : top.entrySet()) {
-                        entry.setValue(entry.getValue() * num);
-                    }
-                    if(!stack.isEmpty()) {
-                        Map&lt;String, Integer&gt; prefix = stack.pop();
-                        for (Map.Entry&lt;String, Integer&gt; entry : prefix.entrySet()) {
-                            map.put(entry.getKey(), map.getOrDefault(entry.getKey(), 0) + entry.getValue());
-                        }
-                    }
-                    stack.push(top);
-//                    System.out.println(&quot;[i] is &quot; + formula[i]);
-                }
-            }
-        }
-//        System.out.println(stack);
-        return stack.pop();
-    }
-
-    private Map&lt;String, Integer&gt; countAtom(int begin, int end) {
-        char[] formula = this.formula;
-        Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
-        for (int i = begin; i &lt;= end; i++) {
-            if (Character.isUpperCase(formula[i])) {
-                int j = i;
-                ++i;
-                while (i &lt;= end &amp;&amp; Character.isLowerCase(formula[i])) {
-                    ++i;
-                }
-                String str = new String(formula, j, i - j);
-                StringBuilder num = new StringBuilder();
-                while (i &lt;= end &amp;&amp; Character.isDigit(formula[i])) {
-                    num.append(formula[i]);
-                    ++i;
-                }
-                map.put(str, map.getOrDefault(str, 0) +
-                        (num.length() == 0 ? 1 : Integer.parseInt(num.toString())
-                        ));
-                --i;
-            }
-        }
-        return map;
-    }
-}
-</code></pre>
-<p>但是：</p>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625467234437.png" alt="" loading="lazy"></figure>
-<p>后面重新换了一个思路，对单个原子进行处理，比如<code>Mg(OH)2</code>中的<code>OH</code>，不能直接看作一个<code>OH</code>，而是一个栈，从栈顶到栈底分别为：</p>
-<ul>
-<li><code>1</code></li>
-<li><code>H</code></li>
-<li><code>1</code></li>
-<li><code>O</code></li>
-</ul>
-<p>这样每次遇到数字的时候就进行合并，遇到左括号直接压栈，遇到右括号就进行弹栈操作：</p>
-<pre><code class="language-java">import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
-
-public class Solution {
-    private char[] formula;
-    private static final String TYPE = &quot;type&quot;;
-    private static final Integer ATOM = 0;
-    private static final Integer BRACKET = 1;
-
-    public String countOfAtoms(String formula) {
-        this.formula = formula.toCharArray();
-        TreeMap&lt;String, Integer&gt; map = new TreeMap&lt;&gt;(count(this.formula));
-        StringBuilder builder = new StringBuilder();
-        for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
-            if(!entry.getKey().equals(TYPE)) {
-                builder.append(entry.getKey());
-                int value = entry.getValue();
-                if (value != 1) {
-                    builder.append(value);
-                }
-            }
-        }
-        return builder.toString();
-    }
-
-    private Map&lt;String, Integer&gt; count(char[] formula) {
-        int n = formula.length;
-        Stack&lt;Map&gt; stack = new Stack&lt;&gt;();
-        for (int i = 0; i &lt; n; ) {
-            if (Character.isUpperCase(formula[i])) {
-                StringBuilder atom = new StringBuilder();
-                atom.append(formula[i++]);
-                while (i &lt; n &amp;&amp; Character.isLowerCase(formula[i])) {
-                    atom.append(formula[i++]);
-                }
-                Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
-                map.put(atom.toString(), 1);
-                map.put(TYPE, ATOM);
-                stack.push(map);
-            } else if (Character.isDigit(formula[i])) {
-                StringBuilder number = new StringBuilder();
-                number.append(formula[i++]);
-                while (i &lt; n &amp;&amp; Character.isDigit(formula[i])) {
-                    number.append(formula[i++]);
-                }
-                int num = Integer.parseInt(number.toString());
-                Map&lt;String, Integer&gt; map = stack.pop();
-                for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
-                    if (!entry.getKey().equals(TYPE)) {
-                        entry.setValue(entry.getValue() * num);
-                    }
-                }
-                stack.push(map);
-            } else if (formula[i] == '(') {
-                Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
-                map.put(TYPE, BRACKET);
-                stack.push(map);
-                ++i;
-            } else {
-                Map&lt;String, Integer&gt; map = stack.peek();
-                Map&lt;String, Integer&gt; base = stack.pop();
-                while (!map.get(TYPE).equals(BRACKET)) {
-                    map = stack.pop();
-                    for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
-                        if (!entry.getKey().equals(TYPE)) {
-                            base.put(entry.getKey(), base.getOrDefault(entry.getKey(), 0) + entry.getValue());
-                        }
-                    }
-                }
-                stack.push(base);
-                ++i;
-            }
-        }
-        Map&lt;String,Integer&gt; base = stack.pop();
-        while(!stack.isEmpty()){
-            Map&lt;String,Integer&gt; map = stack.pop();
-            for (Map.Entry&lt;String,Integer&gt; entry:map.entrySet()){
-                if (!entry.getKey().equals(TYPE)) {
-                    base.put(entry.getKey(), base.getOrDefault(entry.getKey(), 0) + entry.getValue());
-                }
-            }
-        }
-        return base;
-    }
-}
-</code></pre>
-<p>最后经过两个小时的修改和煎熬终于<code>AC</code>了：</p>
-<figure data-type="image" tabindex="4"><img src="https://2293736867.github.io/post-images/1625467441798.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="5"><img src="https://2293736867.github.io/post-images/1625467445201.png" alt="" loading="lazy"></figure>
-<p>最后优化了几ms：</p>
-<figure data-type="image" tabindex="6"><img src="https://2293736867.github.io/post-images/1625467745085.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
