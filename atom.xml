@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-13T09:05:19.607Z</updated>
+    <updated>2021-07-14T08:04:57.077Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,221 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第394期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-394-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-394-qi/">
+        </link>
+        <updated>2021-07-14T07:50:46.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>我知道虚度年华不对，但是这样，真的过得好瘾啊。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>千家山郭静朝晖，日日江楼座翠微。<br>
+——杜甫《秋兴八首》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>真正走掉那次，关门声最小。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1626249211179.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>排序+二分搜索，<code>O(n log n)</code>：</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+        long diff = 0;
+        int n = nums1.length;
+        int[] nums1Copy = Arrays.copyOf(nums1, n);
+        Arrays.sort(nums1Copy);
+        for (int i = 0; i &lt; n; i++) {
+            diff += Math.abs(nums1[i] - nums2[i]);
+        }
+        if (diff == 0) {
+            return 0;
+        }
+
+//        int[] nums2Copy = Arrays.copyOf(nums2, n);
+//        Arrays.sort(nums2Copy);
+//        System.out.println(Arrays.toString(nums1Copy));
+//        System.out.println(Arrays.toString(nums2Copy));
+//        System.out.println(&quot;diff is &quot; + diff);
+        int max = 0;
+        int originDiff = 0;
+        for (int i = 0; i &lt; n; i++) {
+            int closest = find(nums1Copy, nums2[i]);
+//            System.out.println(&quot;closest is &quot;+closest);
+//            System.out.println(&quot;nums[i] is &quot;+nums1[i]);
+            int abs = Math.abs(nums1[i] - nums2[i]) - Math.abs(closest - nums2[i]);
+//            if(nums2[i] == 7){
+//                System.out.println(&quot;closest is &quot;+closest);
+//                System.out.println(&quot;abs is &quot;+abs);
+//            }
+//            int abs = Math.min(Math.abs(closest-nums2[i]),Math.abs(nums1[i]-nums2[i]));
+//            if(closest &lt; nums1[i]){
+//                abs = nums2[i] - closest;
+//            }else{
+//                abs = closest - nums2[i];
+//            }
+//            int abs = Math.max(Math.abs(nums1[i] - closest),);
+            if (abs &gt; max) {
+                max = abs;
+//                System.out.println(&quot;max is &quot;+max);
+//            System.out.println(&quot;closest is &quot;+closest);
+//            System.out.println(&quot;nums[i] is &quot;+nums1[i]);
+//                originDiff = Math.abs(nums2[i] - nums1[i]);
+//                System.out.println(&quot;max is &quot;+max);
+//                System.out.println(&quot;originDiff is &quot;+originDiff);
+//                System.out.println(&quot;nums1[i] is &quot;+nums1[i]);
+//                System.out.println(&quot;nums2[i] is &quot;+nums2[i]);
+            }
+        }
+//        System.out.println(&quot;max is &quot;+max);
+        return (int) ((diff - max) % 1_000_000_007);
+    }
+
+    private int find(int[] arr, int val) {
+        int n = arr.length;
+        int l = 0;
+        int r = n - 1;
+        while (l &lt; r) {
+            int m = (l + r) &gt;&gt; 1;
+            if (arr[m] == val) {
+                return arr[m];
+            } else if (arr[m] &gt; val) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+//        if (val == 97) {
+//            System.out.println(&quot;arr[l] is &quot; + arr[l]);
+//        }
+//        System.out.println(&quot;arr[l] is &quot;+arr[l]);
+        if (n == 1) {
+            return arr[0];
+        }
+        if (l &gt; 0) {
+            if (Math.abs(arr[l - 1] - val) &lt; Math.abs(arr[l] - val)) {
+                return arr[l - 1];
+            }
+        }
+        if(l &lt; n-1){
+            if(Math.abs(arr[l+1] - val) &lt; Math.abs(arr[l] - val)){
+                return arr[l+1];
+            }
+        }
+        return arr[l];
+    }
+}
+</code></pre>
+<p>核心思想是遍历<code>nums2</code>中的每一个数，在<code>nums1</code>中找到一个最接近的，同时计算它们的差值，如果大于最大值，则更新最大值，公式为：</p>
+<pre><code class="language-java">int abs = Math.abs(nums1[i] - nums2[i]) - Math.abs(closest - nums2[i])
+</code></pre>
+<p>其中<code>closest</code>表示<code>nums1</code>中最接近<code>nums2[i]</code>的那个数。</p>
+<p>找到<code>closest</code>的算法如下：</p>
+<pre><code class="language-java">private int find(int[] arr, int val) {
+        int n = arr.length;
+        int l = 0;
+        int r = n - 1;
+        while (l &lt; r) {
+            int m = (l + r) &gt;&gt; 1;
+            if (arr[m] == val) {
+                return arr[m];
+            } else if (arr[m] &gt; val) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        if (l &gt; 0) {
+            if (Math.abs(arr[l - 1] - val) &lt; Math.abs(arr[l] - val)) {
+                return arr[l - 1];
+            }
+        }
+        if (l &lt; n - 1) {
+            if (Math.abs(arr[l + 1] - val) &lt; Math.abs(arr[l] - val)) {
+                return arr[l + 1];
+            }
+        }
+        return arr[l];
+}
+</code></pre>
+<p><code>arr</code>从<code>nums1</code>复制而来，并且已进行排序，搜索算法为二分搜索。注意找到索引下标后，需要判断前一个以及后一个，也就是假设找到下标<code>i</code>为最接近的数的下标，需要判断<code>i-1</code>以及<code>i+1</code>是不是比<code>i</code>更接近。</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1626249812199.png" alt="" loading="lazy"></figure>
+<p>因为数字不大，使用计排优化，同时进行小幅度优化：</p>
+<pre><code class="language-java">public class Solution {
+    public int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+        long diff = 0;
+        int n = nums1.length;
+        int[] nums1Copy = new int[n];
+        int[] count = new int[100_000 + 1];
+        int max = 0;
+        for (int i = 0; i &lt; n; i++) {
+            diff += Math.abs(nums1[i] - nums2[i]);
+            ++count[nums1[i]];
+            max = Math.max(nums1[i], max);
+        }
+
+        if (diff == 0) {
+            return 0;
+        }
+
+        int index = 0;
+        for (int i = 1; i &lt;= max; i++) {
+            int val = count[i];
+            for (int j = 0; j &lt; val; j++) {
+                nums1Copy[index++] = i;
+            }
+        }
+
+        max = 0;
+        for (int i = 0; i &lt; n; i++) {
+            int closest = find(nums1Copy, nums2[i]);
+            int abs = Math.abs(nums1[i] - nums2[i]) - Math.abs(closest - nums2[i]);
+            if (abs &gt; max) {
+                max = abs;
+            }
+        }
+        return (int) ((diff - max) % 1_000_000_007);
+    }
+
+    private int find(int[] arr, int val) {
+        int n = arr.length;
+        int l = 0;
+        int r = n - 1;
+        while (l &lt; r) {
+            int m = (l + r) &gt;&gt; 1;
+            if (arr[m] == val) {
+                return arr[m];
+            } else if (arr[m] &gt; val) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        if (l &gt; 0) {
+            if (Math.abs(arr[l - 1] - val) &lt; Math.abs(arr[l] - val)) {
+                return arr[l - 1];
+            }
+        }
+        if (l &lt; n - 1) {
+            if (Math.abs(arr[l + 1] - val) &lt; Math.abs(arr[l] - val)) {
+                return arr[l + 1];
+            }
+        }
+        return arr[l];
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1626249849956.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第393期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-393-qi/</id>
@@ -965,125 +1180,6 @@ public class IdGenerator implements IdentifierGenerator {
 <li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataSharding">码云</a></li>
 <li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/main/ShardingSphereMyBatisPlusDataSharding">CODE.CHINA</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第386期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-386-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-386-qi/">
-        </link>
-        <updated>2021-07-06T02:54:07.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>唯一比孤独更可怕的，是被人知道你孤独。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>酒困路长惟欲睡，日高人渴漫思茶。<br>
-——苏轼《浣溪沙·蔌蔌衣巾落枣花》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>回避现实的人，未来将更不理想。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625540146259.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>直接上两个<code>TreeMap</code>：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public List&lt;List&lt;String&gt;&gt; displayTable(List&lt;List&lt;String&gt;&gt; orders) {
-        Map&lt;Integer, Map&lt;String, Integer&gt;&gt; map = new TreeMap&lt;&gt;();
-        Set&lt;String&gt; foods = new TreeSet&lt;&gt;();
-        int n = orders.size();
-        for (int i = 0; i &lt; n; i++) {
-            Integer table = Integer.parseInt(orders.get(i).get(1));
-            String food = orders.get(i).get(2);
-            foods.add(food);
-            if (map.containsKey(table)) {
-                map.get(table).put(food, map.get(table).getOrDefault(food, 0) + 1);
-            }else{
-                Map&lt;String,Integer&gt; temp = new TreeMap&lt;&gt;();
-                temp.put(food,1);
-                map.put(table,temp);
-            }
-        }
-//        System.out.println(map);
-//        System.out.println(foods);
-        int foodsSize = foods.size();
-        List&lt;List&lt;String&gt;&gt; list = new ArrayList&lt;&gt;(map.size()+1);
-        List&lt;String&gt; temp = new ArrayList&lt;&gt;(foodsSize+1);
-        temp.add(&quot;Table&quot;);
-        temp.addAll(foods);
-        list.add(temp);
-        for (Map.Entry&lt;Integer,Map&lt;String,Integer&gt;&gt; entry:map.entrySet()){
-            temp = new ArrayList&lt;&gt;(foodsSize+1);
-            temp.add(String.valueOf(entry.getKey()));
-            Map&lt;String,Integer&gt; foodsMap = entry.getValue();
-            for (String s:foods){
-                temp.add(String.valueOf(foodsMap.getOrDefault(s,0)));
-            }
-            list.add(temp);
-        }
-        return list;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625540154308.png" alt="" loading="lazy"></figure>
-<p><s>好像有点慢。</s></p>
-<p>优化一点点：</p>
-<ul>
-<li>采用<code>HashMap</code>和<code>HashSet</code>，添加完毕再排序</li>
-<li>指定初始化<code>HashMap</code>的大小，降低动态扩容的开销</li>
-<li>缓存<code>table</code>的数字转字符串后的字符串</li>
-</ul>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public List&lt;List&lt;String&gt;&gt; displayTable(List&lt;List&lt;String&gt;&gt; orders) {
-        Map&lt;Integer, Map&lt;String, Integer&gt;&gt; map = new HashMap&lt;&gt;(512);
-        Set&lt;String&gt; foods = new HashSet&lt;&gt;();
-        String[] numberToString = new String[512];
-        int n = orders.size();
-        for (int i = 0; i &lt; n; i++) {
-            String tableStr = orders.get(i).get(1);
-            Integer table = Integer.parseInt(tableStr);
-            numberToString[table] = tableStr;
-            String food = orders.get(i).get(2);
-            foods.add(food);
-            if (map.containsKey(table)) {
-                map.get(table).put(food, map.get(table).getOrDefault(food, 0) + 1);
-            }else{
-                Map&lt;String,Integer&gt; temp = new HashMap&lt;&gt;();
-                temp.put(food,1);
-                map.put(table,temp);
-            }
-        }
-        int foodsSize = foods.size();
-        foods = new TreeSet&lt;&gt;(foods);
-        map = new TreeMap&lt;&gt;(map);
-        List&lt;List&lt;String&gt;&gt; list = new ArrayList&lt;&gt;(map.size()+1);
-        List&lt;String&gt; temp = new ArrayList&lt;&gt;(foodsSize+1);
-        temp.add(&quot;Table&quot;);
-        temp.addAll(foods);
-        list.add(temp);
-        for (Map.Entry&lt;Integer,Map&lt;String,Integer&gt;&gt; entry:map.entrySet()){
-            temp = new ArrayList&lt;&gt;(foodsSize+1);
-            temp.add(numberToString[entry.getKey()]);
-            Map&lt;String,Integer&gt; foodsMap = entry.getValue();
-            for (String s:foods){
-                temp.add(String.valueOf(foodsMap.getOrDefault(s,0)));
-            }
-            list.add(temp);
-        }
-        return list;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625543943000.png" alt="" loading="lazy"></figure>
-<p>好像有那么一点效果。</p>
 ]]></content>
     </entry>
 </feed>
