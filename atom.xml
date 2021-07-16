@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-14T08:04:57.077Z</updated>
+    <updated>2021-07-16T00:59:45.685Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,132 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第396期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-396-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-396-qi/">
+        </link>
+        <updated>2021-07-16T00:57:00.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>我连名牌都不认识几个，有时候，别人在炫富我都不知道。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>清风明月无人管，并作南楼一味凉。<br>
+——黄庭坚《鄂州南楼记事》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>物质之外亦有精神的世界。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1626397136865.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>简单题，直接二分：</p>
+<pre><code class="language-java">public class Solution {
+    public int search(int[] nums, int target) {
+        int n = nums.length;
+        if(n == 0){
+            return 0;
+        }
+        int l = 0;
+        int r = n - 1;
+        while (l &lt; r) {
+            int m = (l + r) &gt;&gt; 1;
+            if (nums[m] == target) {
+                int times = 1;
+                for (int i = m - 1; i &gt;= 0 &amp;&amp; nums[i] == target; --i) {
+                    ++times;
+                }
+
+                for (int i = m + 1; i &lt; n &amp;&amp; nums[i] == target; i++) {
+                    ++times;
+                }
+                return times;
+            } else if (nums[m] &gt; target) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        if(nums[l] == target){
+            int times = 1;
+            for (int i = l - 1; i &gt;= 0 &amp;&amp; nums[i] == target; --i) {
+                ++times;
+            }
+
+            for (int i = l + 1; i &lt; n &amp;&amp; nums[i] == target; i++) {
+                ++times;
+            }
+            return times;
+        }
+        return 0;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1626397168276.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第395期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-395-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-395-qi/">
+        </link>
+        <updated>2021-07-15T00:48:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>男人单身叫单身狗，女的单身叫狗不理。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>端午临中夏，时清日复长。<br>
+——李隆基《端午》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>我们在努力扩大自己，以靠近，以触及我们自身以外的世界。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1626396879917.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>直接排序然后累加就好了。</p>
+<p>但是感觉优点慢，使用计排优化了一下：</p>
+<pre><code class="language-java">public class Solution {
+    public int maximumElementAfterDecrementingAndRearranging(int[] arr) {
+        int n = arr.length;
+        int [] count = new int[n+1];
+        int index = n-1;
+        for (int i = 0; i &lt; n; i++) {
+            if(arr[i] &lt; n){
+                ++count[arr[i]];
+            }else{
+                arr[index--] = arr[i];
+            }
+        }
+        index = 0;
+        for (int i = 1; i &lt;= n; i++) {
+            int val = count[i];
+            for (int j = 0; j &lt; val; j++) {
+                arr[index++] = i;
+            }
+        }
+        arr[0] = 1;
+        for (int i = 1; i &lt; n; i++) {
+            if(Math.abs(arr[i] - arr[i-1]) &gt; 1){
+                arr[i] = arr[i-1] + 1;
+            }
+        }
+        return arr[n-1];
+    }
+}
+</code></pre>
+<p>需要注意的是这不是一个完整版的计排，因为超过了数组长度的数字可以不需要理会，到最后会变成前面的数+1，不然的话空间会爆，因为数字大小限制<code>10^9</code>，数组长度限制<code>10^5</code>。</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1626396919639.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第394期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-394-qi/</id>
@@ -841,344 +967,6 @@ public class IdGenerator implements IdentifierGenerator {
 <li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">Github</a></li>
 <li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">码云</a></li>
 <li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/main/ShardingSphereMyBatisPlusDataShardingAndReadWriteSplitting">CODE CHINA</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第387期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-387-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-387-qi/">
-        </link>
-        <updated>2021-07-07T02:53:22.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>脱发怎么办？要健康饮食保持良好心态，这样就能接受这个事实了。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>黄沙百战穿金甲，不破楼兰终不还。<br>
-——王昌龄《从军行七首·其四》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>如果有一个喜欢你的人出现，一定不要凶她哦！</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625626553273.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>使用哈希表存储个数，键就是美味程度，值就是该美味程度出现的个数，重复出现的时候直接从哈希表里面<code>get</code>：</p>
-<pre><code class="language-java">import java.util.*;
-
-public class Solution {
-    public int countPairs(int[] deliciousness) {
-        int n = deliciousness.length;
-        int ans = 0;
-        final int MOD = 1_0000_0000_0 + 7;
-        Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;(n);
-        for (int i = 0; i &lt; n; i++) {
-            int val = deliciousness[i];
-            for (int sum = 1; sum &gt; 0; sum &lt;&lt;= 1) {
-                int count = map.getOrDefault(sum - val, 0);
-                if (count != 0) {
-                    ans = (ans + count) % MOD;
-                }
-            }
-            map.put(val, map.getOrDefault(val,0) + 1);
-        }
-        return ans;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625626628192.png" alt="" loading="lazy"></figure>
-<p>中规中矩的时间。</p>
-<p>参考第一名优化了一下：</p>
-<ul>
-<li>使用数组代替<code>HashMap</code></li>
-<li>利用最大值与最小值减小<code>map</code>数组需要开辟的空间（<code>int []map = new int [max - min + 1]</code>）</li>
-<li>使用<code>long</code>代替<code>int</code>存储结果，减小求模的次数</li>
-</ul>
-<pre><code class="language-java">public class Solution {
-    public int countPairs(int[] deliciousness) {
-        long ans = 0;
-        int max = deliciousness[0];
-        int min = deliciousness[0];
-        for (int v : deliciousness) {
-            if (v &gt; max) {
-                max = v;
-            }
-            if (v &lt; min) {
-                min = v;
-            }
-        }
-        int[] map = new int[max - min + 1];
-        for (int v : deliciousness) {
-            for (int s = 1; ; s &lt;&lt;= 1) {
-                int x = s - v;
-                if(x &lt; min){
-                    continue;
-                }
-                if(x &gt; max){
-                    break;
-                }
-                ans += map[x-min];
-            }
-            ++map[v-min];
-        }
-        return (int)(ans % 1_000_000_007L);
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="3"><img src="https://2293736867.github.io/post-images/1625626543216.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Spring Boot demo系列（十三）：ShardingSphere + MyBatisPlus 分库分表]]></title>
-        <id>https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-san-shardingsphere-mybatisplus-fen-ku-fen-biao/</id>
-        <link href="https://2293736867.github.io/post/spring-boot-demo-xi-lie-shi-san-shardingsphere-mybatisplus-fen-ku-fen-biao/">
-        </link>
-        <updated>2021-07-06T10:30:17.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
-<li><a href="#1-%E6%A6%82%E8%BF%B0">1 概述</a></li>
-<li><a href="#2-%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE%E5%BA%93%E7%8E%AF%E5%A2%83">2 准备数据库环境</a>
-<ul>
-<li><a href="#21-%E4%B8%A4%E5%BA%93%E5%85%AD%E8%A1%A8">2.1 两库六表</a></li>
-<li><a href="#22-%E5%8F%AF%E9%80%89mybatis-plus-generator%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E8%A1%A8">2.2 （可选）<code>MyBatis Plus Generator</code>代码生成表</a></li>
-</ul>
-</li>
-<li><a href="#3-%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE">3 新建项目</a></li>
-<li><a href="#4-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">4 配置文件</a></li>
-<li><a href="#5-%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90">5 测试代码生成</a></li>
-<li><a href="#6-%E5%A2%9E%E5%8A%A0%E9%9B%AA%E8%8A%B1id%E7%94%9F%E6%88%90%E5%99%A8">6 增加雪花<code>id</code>生成器</a></li>
-<li><a href="#7-%E6%B5%8B%E8%AF%95">7 测试</a></li>
-<li><a href="#8-%E5%8F%82%E8%80%83%E6%BA%90%E7%A0%81">8 参考源码</a></li>
-</ul>
-</p>
-<h1 id="1-概述">1 概述</h1>
-<p>本文主要讲述了如何使用<code>ShardingSphere</code>（其中的<code>Sharding-JDBC</code>）和<code>MyBatisPlus</code>进行分库分表，具体步骤包括：</p>
-<ul>
-<li>准备数据库环境</li>
-<li>准备依赖</li>
-<li>编写配置文件</li>
-<li>测试</li>
-</ul>
-<h1 id="2-准备数据库环境">2 准备数据库环境</h1>
-<h2 id="21-两库六表">2.1 两库六表</h2>
-<p>准备好两个库：</p>
-<ul>
-<li><code>test0</code></li>
-<li><code>test1</code></li>
-</ul>
-<p>在两个库中分别建立三个字段一样的表：</p>
-<ul>
-<li><code>user0</code></li>
-<li><code>user1</code></li>
-<li><code>user2</code></li>
-</ul>
-<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/20210706152233931.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>字段如下：</p>
-<figure data-type="image" tabindex="2"><img src="https://img-blog.csdnimg.cn/20210706152320541.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>这样就准备了两个库以及其中的六个表了。</p>
-<h2 id="22-可选mybatis-plus-generator代码生成表">2.2 （可选）<code>MyBatis Plus Generator</code>代码生成表</h2>
-<p>因为<code>MyBatis Plus Generator</code>生成的<code>Controller</code>等代码默认是按照表名命名的，这样就会生成类似<code>User0</code>、<code>User0Controller</code>这样的命名，因此这里创建一个叫<code>user</code>的表，仅仅用于代码的生成，里面不会存放任何的数据：</p>
-<figure data-type="image" tabindex="3"><img src="https://img-blog.csdnimg.cn/20210706153020483.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<h1 id="3-新建项目">3 新建项目</h1>
-<p>新建<code>Spring Boot</code>项目并引入如下依赖：</p>
-<ul>
-<li><code>Druid</code></li>
-<li><code>MyBatis Plus starter</code></li>
-<li><code>MyBaits Plus Generator</code></li>
-<li><code>Velocity core</code></li>
-<li><code>ShardingSphere</code></li>
-<li><code>Yitter</code>（一个雪花<code>id</code>生成器）</li>
-</ul>
-<p><code>Maven</code>如下：</p>
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
-    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;3.4.3.1&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;
-    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;
-    &lt;version&gt;3.5.0&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
-    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
-    &lt;version&gt;2.3&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.realityforge.org.jetbrains.annotations&lt;/groupId&gt;
-    &lt;artifactId&gt;org.jetbrains.annotations&lt;/artifactId&gt;
-    &lt;version&gt;1.7.0&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
-    &lt;artifactId&gt;druid&lt;/artifactId&gt;
-    &lt;version&gt;1.2.6&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.shardingsphere&lt;/groupId&gt;
-    &lt;artifactId&gt;sharding-jdbc-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;4.1.1&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;com.github.yitter&lt;/groupId&gt;
-    &lt;artifactId&gt;yitter-idgenerator&lt;/artifactId&gt;
-    &lt;version&gt;1.0.6&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p><code>Gradle</code>如下：</p>
-<pre><code class="language-bash">implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.3.1'
-implementation 'org.apache.velocity:velocity-engine-core:2.3'
-implementation 'org.realityforge.org.jetbrains.annotations:org.jetbrains.annotations:1.7.0'
-implementation 'com.alibaba:druid:1.2.6'
-implementation 'org.apache.shardingsphere:sharding-jdbc-spring-boot-starter:4.1.1'
-implementation 'com.github.yitter:yitter-idgenerator:1.0.6'
-</code></pre>
-<h1 id="4-配置文件">4 配置文件</h1>
-<p>配置文件可以参考<a href="https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/yaml/sharding/">ShardingSphere文档</a>，这里给出一个示例配置：</p>
-<pre><code class="language-yml">spring:
-  shardingsphere:
-    datasource:
-      names: test0,test1                                        # 数据源，这里为了方便直接使用库名的名称
-      test0:                                                   
-        type: com.alibaba.druid.pool.DruidDataSource            # Druid连接池
-        url: jdbc:mysql://127.0.0.1:3306/test0                  # 连接test0的url
-        username: root
-        password: 123456
-      test1:
-        type: com.alibaba.druid.pool.DruidDataSource            # Druid连接池
-        url: jdbc:mysql://127.0.0.1:3306/test1                  # 连接test1的url
-        username: root
-        password: 123456
-    sharding:
-      default-database-strategy:                                # 默认分库策略
-        inline:  
-          sharding-column: age                                  # 表示根据age列进行分库
-          algorithm-expression: test$-&gt;{age % 2}                # 根据age对2的模进行分库，模为0表示test0库，模为1表示test1库
-      tables:
-        user:
-          actual-data-nodes: test$-&gt;{0..1}.user$-&gt;{0..2}        # 表的名字，test$-&gt;{0..1}可以表示test0、test1两个库
-                                                                # user$-&gt;{0..2}表示user0、user1、user2三个库
-          table-strategy:                                       # 分表策略
-            inline:
-              sharding-column: id                               # 根据哪一列进行分表，id表示根据列名为&quot;id&quot;的列分表
-              algorithm-expression: user$-&gt;{id%3}               # 分表规则为id对3取模，id%3为0表示分到user0表
-                                                                # id%3为1表示分到user1表，id%3为2表示分到user2表
-    props:
-      sql:
-        show:
-          true                                                  # 打印sql
-</code></pre>
-<p>这里使用自动取模分片策略，<code>ShardingShphere</code>内置了如下分片算法：</p>
-<ul>
-<li>自动分片算法：取模分片、哈希取模分片、基于分片容量的范围分片、基于分片边界的范围分片、自动时间段分片</li>
-<li>标准分片算法：行表达式分片、时间范围分片</li>
-<li>复合行表达式分片</li>
-<li><code>Hint</code>行表达式分片</li>
-</ul>
-<p>如果不能满足需要还可以自定义分片算法，具体请看<a href="https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/built-in-algorithm/sharding/">官方文档</a>。</p>
-<h1 id="5-测试代码生成">5 测试代码生成</h1>
-<p>使用<code>MyBaits Plus Generator</code>生成相应代码，具体使用可以参考笔者之前的文章，这里直接放上生成类的代码：</p>
-<pre><code class="language-java">import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.config.*;
-
-public class MyBatisPlusGenerator {
-    public static void main(String[] args) {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(&quot;jdbc:mysql://localhost:3306/test0&quot;, &quot;root&quot;, &quot;123456&quot;).build();
-        String projectPath = System.getProperty(&quot;user.dir&quot;);
-        StrategyConfig strategyConfig = new StrategyConfig.Builder().addInclude(&quot;user&quot;).build();
-        GlobalConfig globalConfig = new GlobalConfig.Builder().outputDir(projectPath + &quot;/src/main/java&quot;).openDir(false).build();
-        PackageConfig packageConfig = new PackageConfig.Builder().moduleName(&quot;user&quot;).parent(&quot;com.example.demo&quot;).serviceImpl(&quot;service&quot;).build();
-        new AutoGenerator(dataSourceConfig).global(globalConfig).packageInfo(packageConfig).strategy(strategyConfig).execute();
-    }
-}
-</code></pre>
-<p>把<code>UserController</code>类修改如下：</p>
-<pre><code class="language-java">@RestController
-@RequestMapping(&quot;/user&quot;)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserController {
-    private final Random random = new Random();
-    private final UserServiceImpl service;
-    @GetMapping(&quot;/select&quot;)
-    public List&lt;User&gt; select(){
-        return service.list();
-    }
-
-    @GetMapping(&quot;/insert&quot;)
-    public boolean insert(){
-        return service.save(User.builder().age(random.nextInt(80)+20).name(&quot;test name&quot;).email(&quot;test@test.com&quot;).build());
-    }
-}
-</code></pre>
-<h1 id="6-增加雪花id生成器">6 增加雪花<code>id</code>生成器</h1>
-<p>首先修改<code>User</code>类，增加一个<code>@Builder</code>注解，同时修改<code>id</code>的生成策略，使用<code>IdType.ASSIGN_ID</code>：</p>
-<pre><code class="language-java">@Builder
-public class User implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
-    //...
-}
-</code></pre>
-<p>新建<code>id</code>生成器类：</p>
-<pre><code class="language-java">import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import com.github.yitter.contract.IdGeneratorOptions;
-import com.github.yitter.idgen.YitIdHelper;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-
-@Component
-public class IdGenerator implements IdentifierGenerator {
-    final IdGeneratorOptions options = new IdGeneratorOptions((short) 1);
-
-    @PostConstruct
-    public void init() {
-        YitIdHelper.setIdGenerator(options);
-    }
-
-    @Override
-    public Long nextId(Object entity) {
-        return YitIdHelper.nextId();
-    }
-}
-</code></pre>
-<p>这样生成<code>id</code>的时候，就会自动调用<code>nextId()</code>方法，其中的<code>id</code>生成器可以根据需要进行替换，换成其他雪花<code>id</code>生成器或分布式<code>id</code>生成器。</p>
-<p>配置的时候可以参考<a href="https://mybatis.plus/guide/id-generator.html">MyBaits Plus 自定义ID生成器文档</a>。</p>
-<h1 id="7-测试">7 测试</h1>
-<p>先随机插入三条数据，刷新三次如下页面：</p>
-<pre><code class="language-bash">localhost:8080/test/user/insert
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://img-blog.csdnimg.cn/20210706155553392.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>可以看到执行了三次插入操作，插入的三个表分别是：</p>
-<ul>
-<li><code>test0.user2</code></li>
-<li><code>test0.user0</code></li>
-<li><code>test0.user2</code></li>
-</ul>
-<p>因为这里测试的时候年龄都恰好是偶数，都插入到了<code>test0</code>表。</p>
-<p>查看数据：</p>
-<pre><code class="language-bash">http://localhost:8080/user/select
-</code></pre>
-<figure data-type="image" tabindex="5"><img src="https://img-blog.csdnimg.cn/20210706160020660.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>日志输出如下：</p>
-<figure data-type="image" tabindex="6"><img src="https://img-blog.csdnimg.cn/2021070616012131.png" alt="在这里插入图片描述" loading="lazy"></figure>
-<p>表示这是对六个表查询的结果，并将最后的结果进行聚合返回。</p>
-<h1 id="8-参考源码">8 参考源码</h1>
-<p><code>Java</code>版：</p>
-<ul>
-<li><a href="https://github.com/2293736867/SpringBootDemoJava/tree/main/ShardingSphereMyBatisPlusDataSharding">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoJava/tree/main/ShardingSphereMyBatisPlusDataSharding">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoJava/-/tree/main/ShardingSphereMyBatisPlusDataSharding">CODE.CHINA</a></li>
-</ul>
-<p><code>Kotlin</code>版：</p>
-<ul>
-<li><a href="https://github.com/2293736867/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataSharding">Github</a></li>
-<li><a href="https://gitee.com/u6b7b5fc3/SpringBootDemoKotlin/tree/main/ShardingSphereMyBatisPlusDataSharding">码云</a></li>
-<li><a href="https://codechina.csdn.net/qq_27525611/SpringBootDemoKotlin/-/tree/main/ShardingSphereMyBatisPlusDataSharding">CODE.CHINA</a></li>
 </ul>
 ]]></content>
     </entry>
