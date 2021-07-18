@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-17T01:43:53.754Z</updated>
+    <updated>2021-07-18T00:40:36.177Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,67 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第398期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-398-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-398-qi/">
+        </link>
+        <updated>2021-07-18T00:32:31.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>没钱了来找我，让我告诉你没钱的日子，怎么过。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>绿叶阴阴占得春，草满莺啼处。<br>
+——徐俯《卜算子·天生百种愁》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>温柔解救不了这个世界。</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1626568373187.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>裂开，用纯质数模拟哈希表，结果死在109样例。。。</p>
+<p><s>为什么要模拟啊？？？</s></p>
+<p><s>裂开</s></p>
+<p>用<code>hashCode</code>不香吗？？</p>
+<pre><code class="language-java">import java.util.*;
+
+public class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        Map&lt;Integer, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;(strs.length);
+        List&lt;List&lt;String&gt;&gt; res = new LinkedList&lt;&gt;();
+        for (String s : strs) {
+            int key = hash(s);
+            if (map.containsKey(key)) {
+                map.get(key).add(s);
+            } else {
+                List&lt;String&gt; list = new LinkedList&lt;&gt;();
+                list.add(s);
+                res.add(list);
+                map.put(key, list);
+            }
+        }
+        return res;
+    }
+
+    private int hash(String s) {
+        int h = 0;
+        char[] ch = s.toCharArray();
+        Arrays.sort(ch);
+        for (char c : ch) {
+            h = h * 31 + c;
+        }
+        return h;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1626568575824.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第397期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-397-qi/</id>
@@ -691,74 +752,6 @@ public class TimeMap {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625767374739.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第388期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-388-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-388-qi/">
-        </link>
-        <updated>2021-07-08T04:45:57.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>这年头有些人靠脸吃饭，而有些人，靠不要脸吃饭。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>坐睡觉来无一事，满窗晴日看蚕生。<br>
-——范成大《春日田园杂兴》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>别的禅，我都不修。独你是我的禅，秀色可餐。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625719676250.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p>用哈希表存储前缀和为<code>sum</code>的个数，如果当前的前缀和大于目标，直接加上<code>前缀和-目标</code>对应的哈希表的个数：</p>
-<pre><code class="language-java">public class Solution {
-    public int numSubarraysWithSum(int[] nums, int goal) {
-        int [] pre = new int[nums.length+1];
-        pre[0] = 1;
-        int sum = 0;
-        int res = 0;
-        for (int num:nums){
-            sum += num;
-            if(sum &gt;= goal){
-                res += pre[sum-goal];
-            }
-            ++pre[sum];
-        }
-        return res;
-    }
-}
-</code></pre>
-<p>官方题解还有个滑动窗口解法：</p>
-<pre><code class="language-java">class Solution {
-    public int numSubarraysWithSum(int[] nums, int goal) {
-        int n = nums.length;
-        int left1 = 0, left2 = 0, right = 0;
-        int sum1 = 0, sum2 = 0;
-        int ret = 0;
-        while (right &lt; n) {
-            sum1 += nums[right];
-            while (left1 &lt;= right &amp;&amp; sum1 &gt; goal) {
-                sum1 -= nums[left1];
-                left1++;
-            }
-            sum2 += nums[right];
-            while (left2 &lt;= right &amp;&amp; sum2 &gt;= goal) {
-                sum2 -= nums[left2];
-                left2++;
-            }
-            ret += left2 - left1;
-            right++;
-        }
-        return ret;
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
