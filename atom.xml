@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://2293736867.github.io</id>
     <title>氷泠&apos;s blog</title>
-    <updated>2021-07-18T00:40:36.177Z</updated>
+    <updated>2021-07-19T01:04:03.212Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://2293736867.github.io"/>
     <link rel="self" href="https://2293736867.github.io/atom.xml"/>
@@ -11,6 +11,113 @@
     <logo>https://2293736867.github.io/images/avatar.png</logo>
     <icon>https://2293736867.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 氷泠&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[每日分享 第399期]]></title>
+        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-399-qi/</id>
+        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-399-qi/">
+        </link>
+        <updated>2021-07-19T00:09:21.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
+<blockquote>
+<p>英雄一怒为红颜，红颜一怒，得花钱。</p>
+</blockquote>
+<h1 id="每日诗词">每日诗词</h1>
+<blockquote>
+<p>若耶溪傍采莲女，笑隔荷花共人语。<br>
+——李白《采莲曲》</p>
+</blockquote>
+<h1 id="每日一句">每日一句</h1>
+<blockquote>
+<p>看看人间的苦难，听听人民的呐喊！</p>
+</blockquote>
+<h1 id="每日力扣">每日力扣</h1>
+<h2 id="题目">题目</h2>
+<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1626653492734.png" alt="" loading="lazy"></figure>
+<h2 id="解答">解答</h2>
+<p>笔者使用的方法是先排序，再结合滑动窗口计算最大值。</p>
+<p>方法的核心就是要知道每一次的增加操作是在<code>k</code>的范围内出现尽可能多相同的值，因此，在允许的情况下，会先把当前下标之前的数尽可能变为相同的数，比如下面的数组：</p>
+<pre><code class="language-bash">[1,3,7,8,9]
+</code></pre>
+<p>解释：</p>
+<ul>
+<li>从下标为<code>1</code>的地方开始遍历，因为从下标为<code>0</code>开始没有意义，值为1</li>
+<li>遍历<code>3</code>之前，把<code>3</code>前面的所有数变为<code>3</code>，同时累减<code>k</code>的值</li>
+<li>遍历<code>7</code>之前，把<code>7</code>前面的所有数变为<code>7</code>，因为经过前一步的遍历，<code>[1,3]</code>已经变成了<code>[3,3]</code>，这时候需要把两个<code>3</code>变为<code>7</code>，同时累减<code>k</code>的值</li>
+<li>遍历<code>8</code>之前，把<code>8</code>前面的所有数字变为<code>8</code>，因为经过前两步的遍历，<code>[1,3,7]</code>已经变成了<code>[7,7,7]</code>，这时候需要把三个<code>7</code>变为<code>8</code>，同时累减<code>k</code>的值</li>
+<li>以此类推，直到遍历结束</li>
+</ul>
+<p>大概流程就是上面的步骤，但是这里又引出了另一个核心的问题，如果<code>k</code>不够减怎么办？</p>
+<p>答案就是将左指针右移。</p>
+<p>在上面的步骤中，一开始初始化左指针为下标<code>0</code>，右指针为下标<code>1</code>，遍历移动右指针，区间为<code>[1,n)</code>，如果碰到<code>k</code>不够减的情况，将左指针右移，同时归还<code>k</code>值。</p>
+<p>比如：</p>
+<pre><code class="language-bash">[1,3,7,8,9]   k=5
+</code></pre>
+<p>流程：</p>
+<ul>
+<li>遍历下标<code>1</code>的位置，将<code>1</code>变为<code>3</code>，数组变为<code>[3,3,7,8,9]</code>，此时<code>k=3</code></li>
+<li>遍历下标<code>2</code>的位置，将<code>3</code>变为<code>7</code>，但是需要的数值为<code>(7-3) * 2 = 8 &gt; k = 3</code></li>
+<li>此时就需要将左指针右移，回收从<code>1</code>变为<code>3</code>所消耗的<code>k</code>值，回收后的<code>k</code>值为<code>k = 3 + 2 = 5</code></li>
+<li>此时将<code>3</code>变为<code>7</code>消耗的<code>k</code>为<code>4</code>，当前<code>k</code>的值满足，数组就变为<code>[1,7,7,8,9]</code>，此时<code>k=1</code></li>
+<li>以此类推</li>
+</ul>
+<p>在实际操作中，数值的增加并不需要在原数组中进行操作，只需要一个临时变量<code>total</code>保存即可，核心代码：</p>
+<pre><code class="language-java">for (int r = 1, l = 0, total = 0; r &lt; n; r++) {
+    total += (nums[r] - nums[r - 1]) * (r - l);                       // 1
+    while (total &gt; k) {                                               // 2
+        total -= (nums[r] - nums[l]);                                 // 3
+        ++l;                                                          // 4
+    }
+    res = Math.max(res, r - l);                                       // 5
+}
+</code></pre>
+<p>解释：</p>
+<ul>
+<li>第一行是计算将下标为<code>[l,r]</code>的值全部变为<code>nums[r]</code>所消耗的<code>k</code>值</li>
+<li>第二行计算是否超过了<code>k</code>值</li>
+<li>第三行就是归还<code>k</code>值，归还的同时第四行将左指针进行右移</li>
+<li>第五行就是更新结果</li>
+</ul>
+<p>完整代码：</p>
+<pre><code class="language-java">public class Solution {
+    public int maxFrequency(int[] nums, int k) {
+        int[] count = new int[100_000 + 1];
+        int n = nums.length;
+        int max = 0;
+        for (int v : nums) {
+            ++count[v];
+            if (v &gt; max) {
+                max = v;
+            }
+        }
+
+        int index = 0;
+        for (int i = 1; i &lt;= max; i++) {
+            int c = count[i];
+            for (int j = 0; j &lt; c; j++) {
+                nums[index++] = i;
+            }
+            if (index &gt;= n) {
+                break;
+            }
+        }
+
+        int res = 0;
+        for (int r = 1, l = 0, total = 0; r &lt; n; r++) {
+            total += (nums[r] - nums[r - 1]) * (r - l);
+            while (total &gt; k) {
+                total -= (nums[r] - nums[l]);
+                ++l;
+            }
+            res = Math.max(res, r - l);
+        }
+        return res + 1;
+    }
+}
+</code></pre>
+<p>没想到计排的优化效果如此明显，直接从<code>Arrays.sort()</code>的29ms变为计排的8ms，计排yyds：</p>
+<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1626656630552.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[每日分享 第398期]]></title>
         <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-398-qi/</id>
@@ -692,66 +799,6 @@ public class TimeMap {
 }
 </code></pre>
 <figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625851346173.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[每日分享 第389期]]></title>
-        <id>https://2293736867.github.io/post/mei-ri-fen-xiang-di-389-qi/</id>
-        <link href="https://2293736867.github.io/post/mei-ri-fen-xiang-di-389-qi/">
-        </link>
-        <updated>2021-07-08T18:00:28.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="每日鸡汤">每日鸡汤</h1>
-<blockquote>
-<p>倘若互不相欠，怎会再次相见。</p>
-</blockquote>
-<h1 id="每日诗词">每日诗词</h1>
-<blockquote>
-<p>朔风吹散三更雪，倩魂犹恋桃花月。<br>
-——纳兰性德《菩萨蛮·朔风吹散三更雪》</p>
-</blockquote>
-<h1 id="每日一句">每日一句</h1>
-<blockquote>
-<p>记忆，总会传承下去，无论是用何种方式。</p>
-</blockquote>
-<h1 id="每日力扣">每日力扣</h1>
-<h2 id="题目">题目</h2>
-<figure data-type="image" tabindex="1"><img src="https://2293736867.github.io/post-images/1625767355965.png" alt="" loading="lazy"></figure>
-<h2 id="解答">解答</h2>
-<p><code>Boyer-Moore</code>投票算法：</p>
-<ul>
-<li>初始化计数<code>count=0</code>，结果用<code>res</code>保存</li>
-<li>遍历数组中的每个数<code>v</code></li>
-<li>如果<code>count==0</code>，更新<code>count=1,res=v</code></li>
-<li>否则如果<code>res==v</code>，<code>++count</code></li>
-<li>否则<code>--count</code></li>
-</ul>
-<p>得出来的就是最后可能的结果<code>res</code>，也就是说如果存在的话，<code>res</code>就一定是主要元素，否则可能是数组中的任意一个元素，需要第二次遍历，计算<code>res</code>的出现次数，判断是否大于其他元素的出现次数。</p>
-<pre><code class="language-java">public class Solution {
-    public int majorityElement(int[] nums) {
-        int res = 0;
-        int count = 0;
-        for(int v:nums){
-            if(count == 0){
-                res = v;
-                count = 1;
-            }else if(res == v){
-                ++count;
-            }else {
-                --count;
-            }
-        }
-
-        count = 0;
-        for(int v:nums){
-            if(v == res){
-                ++count;
-            }
-        }
-        return count &gt; nums.length/2 ? res : -1;
-    }
-}
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://2293736867.github.io/post-images/1625767374739.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>
